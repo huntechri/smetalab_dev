@@ -193,7 +193,6 @@ export class MaterialsService {
                 synonymCount++;
             }
         });
-
         return { expandedQuery, tokens };
     }
 
@@ -217,7 +216,7 @@ export class MaterialsService {
             const ftsScore = sql<number>`
                 COALESCE(
                     ts_rank(
-                        ARRAY[${FTS_RANK_WEIGHTS[0]}, ${FTS_RANK_WEIGHTS[1]}, ${FTS_RANK_WEIGHTS[2]}, ${FTS_RANK_WEIGHTS[3]}]::real[],
+                        ARRAY[${sql`${FTS_RANK_WEIGHTS[0]}`}::float4, ${sql`${FTS_RANK_WEIGHTS[1]}`}::float4, ${sql`${FTS_RANK_WEIGHTS[2]}`}::float4, ${sql`${FTS_RANK_WEIGHTS[3]}`}::float4],
                         ${materials.searchVector},
                         ${tsQuery}
                     ),
@@ -225,7 +224,7 @@ export class MaterialsService {
                 )
             `;
             const trgmScore = sql<number>`COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)`;
-            const phraseBoost = sql<number>`CASE WHEN COALESCE(${materials.nameNorm}, '') ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
+            const phraseBoost = sql<number>`CASE WHEN COALESCE(${materials.nameNorm}, ${materials.name}) ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
             const vendorBoost = sql<number>`CASE WHEN COALESCE(${materials.vendor}, '') ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
             const vectorScore = shouldUseVector
                 ? sql<number>`
@@ -238,11 +237,11 @@ export class MaterialsService {
                 : sql<number>`0`;
             const vectorWeight = shouldUseVector ? SEARCH_SCORE_WEIGHTS.vector : 0;
             const totalScore = sql<number>`
-                (${ftsScore} * ${sql.raw(SEARCH_SCORE_WEIGHTS.fts.toString())})
-                + (${trgmScore} * ${sql.raw(SEARCH_SCORE_WEIGHTS.trgm.toString())})
-                + (${phraseBoost} * ${sql.raw(SEARCH_SCORE_WEIGHTS.phrase.toString())})
-                + (${vendorBoost} * ${sql.raw(SEARCH_SCORE_WEIGHTS.vendor.toString())})
-                + (${vectorScore} * ${sql.raw(vectorWeight.toString())})
+                (${ftsScore} * ${sql`${SEARCH_SCORE_WEIGHTS.fts}`}::float4)
+                + (${trgmScore} * ${sql`${SEARCH_SCORE_WEIGHTS.trgm}`}::float4)
+                + (${phraseBoost} * ${sql`${SEARCH_SCORE_WEIGHTS.phrase}`}::float4)
+                + (${vendorBoost} * ${sql`${SEARCH_SCORE_WEIGHTS.vendor}`}::float4)
+                + (${vectorScore} * ${sql`${vectorWeight}`}::float4)
             `;
 
             const results = await db.select({
