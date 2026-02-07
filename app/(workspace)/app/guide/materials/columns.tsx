@@ -145,9 +145,13 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-primary opacity-0 group-hover:opacity-100 transition-opacity"
-                        onClick={() => meta.onInsertRequest?.(row.original.id)}
+                        className="h-8 w-8 text-primary opacity-40 hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            meta.onInsertRequest?.(row.original.id);
+                        }}
                         aria-label="Добавить строку ниже"
+                        title="Добавить строку ниже"
                     >
                         <Plus className="h-4 w-4" />
                     </Button>
@@ -272,7 +276,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/[0.02]" placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
+                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/2" placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
             }
             return <div className="font-medium text-xs md:text-sm px-2 text-muted-foreground">{row.getValue("code")}</div>
         }
@@ -285,7 +289,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/[0.02]" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
+                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/2" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
             }
             return (
                 <div className="flex flex-col gap-0.5 py-1 min-w-0">
@@ -335,7 +339,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs text-center border-primary/20 bg-primary/[0.02]" placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
+                return <Input className="h-8 text-xs text-center border-primary/20 bg-primary/2" placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
             }
             return <div className="text-center text-xs md:text-sm text-muted-foreground font-medium">{row.getValue("unit")}</div>
         }
@@ -348,7 +352,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs text-center font-bold border-primary/20 bg-primary/[0.02]" type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
+                return <Input className="h-8 text-xs text-center font-bold border-primary/20 bg-primary/2" type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
             }
             const price = parseFloat(row.getValue("price"))
             const formatted = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", minimumFractionDigits: 0 }).format(price || 0)
@@ -384,10 +388,17 @@ export const columns: ColumnDef<MaterialRow>[] = [
         header: ({ table }) => {
             const meta = table.options.meta as TableMeta<MaterialRow>
             return (
-                <div className="flex justify-end pr-4">
+                <div className="flex justify-end pr-4 items-center gap-1">
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 text-primary/50 hover:text-primary" onClick={() => meta.onInsertRequest?.()} aria-label="Добавить строку">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-primary opacity-50 hover:opacity-100"
+                                onClick={() => meta.onInsertRequest?.()}
+                                aria-label="Добавить строку"
+                                title="Добавить строку"
+                            >
                                 <Plus className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>
@@ -395,6 +406,18 @@ export const columns: ColumnDef<MaterialRow>[] = [
                             <p>Добавить строку</p>
                         </TooltipContent>
                     </Tooltip>
+                    <DropdownMenu modal={false}>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
+                                <Settings className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => meta.onReorder?.()}>
+                                Сбросить сортировку
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
                 </div>
             )
         },
