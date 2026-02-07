@@ -182,6 +182,8 @@ export const activityLogs = pgTable('activity_logs', {
   ipAddress: varchar('ip_address', { length: 45 }),
 }, (table) => [
   index('activity_logs_tenant_user_timestamp_idx').on(table.teamId, table.userId, table.timestamp.desc()),
+  // Optimize fetching activity logs for a user (filters by userId, sorts by timestamp)
+  index('activity_logs_user_timestamp_idx').on(table.userId, table.timestamp.desc()),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
