@@ -1,0 +1,65 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# testing
+/coverage
+/test-results
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# local env files
+.env
+
+# vercel
+.vercel
+
+# materials images (S3 only)
+/public/materials
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+.vscode
+
+.env*.local
+
+# bin
+/bin
+.env.test
+\n*.png\n*.log
+*.csv
+
+# Sentry Config File
+.env.sentry-build-plugin
+
+# Playwright
+/playwright-report/
+test_output.txt
+test_output_*.txt
+
+# Temp
+/.tmp/
+debug.ts
+*.tmp
+*.bak
+

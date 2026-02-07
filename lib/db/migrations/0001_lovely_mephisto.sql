@@ -1,0 +1,1 @@
+ALTER TABLE "materials" ADD COLUMN "image_local_url" text;
