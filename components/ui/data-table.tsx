@@ -2,39 +2,13 @@
 
 import {
     ColumnDef,
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
     flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getSortedRowModel,
-    useReactTable,
     Row,
 } from "@tanstack/react-table"
 import { ChevronDown, ChevronUp, ChevronsUpDown, Search, Sparkles, Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useDeferredValue, memo, useMemo, useState, useEffect, useCallback, useTransition, forwardRef, HTMLAttributes } from "react"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
-import { useToast } from "@/components/ui/use-toast"
+import { memo, useState, useCallback, forwardRef, HTMLAttributes } from "react"
 
 import {
     Tooltip,
@@ -45,8 +19,8 @@ import {
 
 import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
 import { Switch } from "@/components/ui/switch"
+import { useDataTableState } from "@/hooks/use-data-table-state"
 
 /* -------------------------------------------------------------------------- */
 /*                               DataTable                                    */
@@ -79,9 +53,6 @@ interface DataTableProps<TData, TValue> {
     externalSearchValue?: string
     onSearchValueChange?: (val: string) => void
     actions?: React.ReactNode
-    onRowUpdate?: (id: string, data: Partial<TData>) => Promise<{ success: boolean; message?: string }>
-    onRowDelete?: (id: string) => Promise<{ success: boolean; message?: string }>
-    editDialogFields?: (data: TData, onChange: (field: string, val: unknown) => void) => React.ReactNode
 }
 
 // --- Stable Virtuoso Components ---
@@ -163,108 +134,27 @@ export function DataTable<TData, TValue>({
     onSearchValueChange,
     onEndReached,
     actions,
-    onRowUpdate,
-    onRowDelete,
-    editDialogFields,
 }: DataTableProps<TData, TValue>) {
-    const [sorting, setSorting] = useState<SortingState>([])
-    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-    const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
-    const [rowSelection, setRowSelection] = useState({})
     const [internalAiMode, setInternalAiMode] = useState(false)
 
     const isAiMode = externalAiMode ?? internalAiMode;
     const setIsAiMode = onAiModeChange ?? setInternalAiMode;
 
-    const [searchValue, setSearchValue] = useState("")
-    const deferredSearchValue = useDeferredValue(searchValue)
-    const { toast } = useToast()
-    const [editingRow, setEditingRow] = useState<TData | null>(null)
-    const [deletingRow, setDeletingRow] = useState<TData | null>(null)
-    const [isUpdating, startUpdateTransition] = useTransition()
-    const [isDeleting, startDeleteTransition] = useTransition()
-
-    // Form data for editing
-    const [editFormData, setEditFormData] = useState<TData | null>(null)
-
-    useEffect(() => {
-        if (editingRow) {
-            setEditFormData({ ...editingRow })
-        } else {
-            setEditFormData(null)
-        }
-    }, [editingRow])
-
-    const handleUpdate = (e: React.FormEvent) => {
-        e.preventDefault()
-        if (!editingRow || !editFormData || !onRowUpdate) return
-        startUpdateTransition(async () => {
-            const result = await onRowUpdate((editingRow as unknown as { id: string }).id, editFormData)
-            if (result.success) {
-                toast({ title: "Запись обновлена", description: result.message })
-                setEditingRow(null)
-            } else {
-                toast({ variant: "destructive", title: "Ошибка", description: result.message })
-            }
-        })
-    }
-
-    const handleDelete = () => {
-        if (!deletingRow || !onRowDelete) return
-        startDeleteTransition(async () => {
-            const result = await onRowDelete((deletingRow as unknown as { id: string }).id)
-            if (result.success) {
-                toast({ title: "Запись удалена", description: result.message })
-                setDeletingRow(null)
-            } else {
-                toast({ variant: "destructive", title: "Ошибка", description: result.message })
-            }
-        })
-    }
-
-    const tableState = useMemo(() => ({
-        sorting,
-        columnFilters: (isAiMode || externalSearchValue) ? [] : columnFilters,
-        columnVisibility,
-        rowSelection,
-    }), [sorting, columnFilters, isAiMode, externalSearchValue, columnVisibility, rowSelection]);
-
-    const table = useReactTable({
+    const {
+        table,
+        rows,
+        flatHeaders,
+        searchValue,
+        setSearchValue,
+    } = useDataTableState({
         data,
         columns,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getSortedRowModel: getSortedRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
-        getRowId: (row) => (row as unknown as { id: string }).id,
-        meta: {
-            ...meta,
-            setEditingRow,
-            setDeletingRow
-        },
-        state: tableState,
+        filterColumn,
+        externalSearchValue,
+        onSearchValueChange,
+        isAiMode,
+        meta,
     })
-
-    // Unified debounced/deferred search for table filtering
-    useEffect(() => {
-        if (!isAiMode && filterColumn && !onSearchValueChange) {
-            table.getColumn(filterColumn)?.setFilterValue(deferredSearchValue)
-        }
-    }, [deferredSearchValue, isAiMode, filterColumn, table, onSearchValueChange]);
-
-    // Sync input with table filter (if changed externally)
-    useEffect(() => {
-        if (!isAiMode && filterColumn) {
-            const val = (table.getColumn(filterColumn)?.getFilterValue() as string) ?? "";
-            setSearchValue(val);
-        }
-    }, [columnFilters, isAiMode, filterColumn, table]);
-
-    const { rows } = table.getRowModel()
-    const flatHeaders = table.getFlatHeaders();
 
     const handleSearchClick = useCallback(() => {
         if (searchValue.trim()) {
@@ -391,28 +281,38 @@ export function DataTable<TData, TValue>({
                             <thead className="z-40">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
-                                        {headerGroup.headers.map((header) => {
-                                            const isSortable = header.column.getCanSort()
-                                            const sortDirection = header.column.getIsSorted()
+                                            {headerGroup.headers.map((header) => {
+                                                const isSortable = header.column.getCanSort()
+                                                const sortDirection = header.column.getIsSorted()
+                                                const ariaSort = isSortable
+                                                    ? sortDirection === "asc"
+                                                        ? "ascending"
+                                                        : sortDirection === "desc"
+                                                            ? "descending"
+                                                            : "none"
+                                                    : undefined
 
-                                            return (
-                                                <th
-                                                    key={header.id}
-                                                    className="h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[11px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground border-b border-r last:border-r-0 transition-colors"
-                                                    style={{ width: header.getSize() }}
-                                                >
-                                                    {header.isPlaceholder ? null : (
-                                                        <div
-                                                            className={cn(
-                                                                "flex items-center gap-2 select-none w-full",
-                                                                isSortable && "cursor-pointer hover:text-foreground"
-                                                            )}
-                                                            onClick={header.column.getToggleSortingHandler()}
-                                                        >
-                                                            <div className="truncate flex-1 text-xs md:text-sm">
-                                                                {flexRender(
-                                                                    header.column.columnDef.header,
-                                                                    header.getContext()
+                                                return (
+                                                    <th
+                                                        key={header.id}
+                                                        className="h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[11px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground border-b border-r last:border-r-0 transition-colors"
+                                                        style={{ width: header.getSize() }}
+                                                        aria-sort={ariaSort}
+                                                    >
+                                                        {header.isPlaceholder ? null : (
+                                                            <button
+                                                                type="button"
+                                                                className={cn(
+                                                                    "flex items-center gap-2 select-none w-full text-left",
+                                                                    isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
+                                                                )}
+                                                                onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
+                                                                disabled={!isSortable}
+                                                            >
+                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    {flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext()
                                                                 )}
                                                             </div>
                                                             {isSortable && (
@@ -426,11 +326,11 @@ export function DataTable<TData, TValue>({
                                                                     )}
                                                                 </div>
                                                             )}
-                                                        </div>
-                                                    )}
-                                                </th>
-                                            )
-                                        })}
+                                                            </button>
+                                                        )}
+                                                    </th>
+                                                )
+                                            })}
                                     </tr>
                                 ))}
                             </thead>
@@ -460,6 +360,13 @@ export function DataTable<TData, TValue>({
                                             {headerGroup.headers.map((header) => {
                                                 const isSortable = header.column.getCanSort()
                                                 const sortDirection = header.column.getIsSorted()
+                                                const ariaSort = isSortable
+                                                    ? sortDirection === "asc"
+                                                        ? "ascending"
+                                                        : sortDirection === "desc"
+                                                            ? "descending"
+                                                            : "none"
+                                                    : undefined
 
                                                 return (
                                                     <th
@@ -469,14 +376,17 @@ export function DataTable<TData, TValue>({
                                                             isAiMode && "border-indigo-100/50 text-indigo-900/60"
                                                         )}
                                                         style={{ width: header.getSize() }}
+                                                        aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (
-                                                            <div
+                                                            <button
+                                                                type="button"
                                                                 className={cn(
-                                                                    "flex items-center gap-2 select-none w-full",
-                                                                    isSortable && "cursor-pointer hover:text-foreground"
+                                                                    "flex items-center gap-2 select-none w-full text-left",
+                                                                    isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
                                                                 )}
-                                                                onClick={header.column.getToggleSortingHandler()}
+                                                                onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
+                                                                disabled={!isSortable}
                                                             >
                                                                 <div className="truncate flex-1 text-xs md:text-sm">
                                                                     {flexRender(
@@ -490,12 +400,12 @@ export function DataTable<TData, TValue>({
                                                                             <ChevronUp className="h-4 w-4" />
                                                                         ) : sortDirection === "desc" ? (
                                                                             <ChevronDown className="h-4 w-4" />
-                                                                        ) : (
-                                                                            <ChevronsUpDown className="h-4 w-4 opacity-30" />
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </div>
+                                                                    ) : (
+                                                                        <ChevronsUpDown className="h-4 w-4 opacity-30" />
+                                                                    )}
+                                                                </div>
+                                                            )}
+                                                            </button>
                                                         )}
                                                     </th>
                                                 )
@@ -521,56 +431,6 @@ export function DataTable<TData, TValue>({
                     </div>
                 </div>
 
-                {/* --- Shared Dialog Manager --- */}
-                <Dialog open={!!editingRow} onOpenChange={(open) => !open && setEditingRow(null)}>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Изменить запись</DialogTitle>
-                            <DialogDescription>Внесите изменения и нажмите сохранить.</DialogDescription>
-                        </DialogHeader>
-                        {editFormData && onRowUpdate && (
-                            <form onSubmit={handleUpdate} className="grid gap-4 py-4">
-                                {editDialogFields ? (
-                                    editDialogFields(editFormData, (field, val) => setEditFormData({ ...editFormData, [field]: val } as unknown as TData))
-                                ) : (
-                                    <div className="text-sm text-muted-foreground p-4 text-center">
-                                        Форма редактирования не настроена
-                                    </div>
-                                )}
-                                <DialogFooter>
-                                    <Button type="submit" disabled={isUpdating} className="h-9 px-8">
-                                        {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                                        Сохранить
-                                    </Button>
-                                </DialogFooter>
-                            </form>
-                        )}
-                    </DialogContent>
-                </Dialog>
-
-                <AlertDialog open={!!deletingRow} onOpenChange={(open) => !open && setDeletingRow(null)}>
-                    <AlertDialogContent>
-                        <AlertDialogHeader>
-                            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
-                            <AlertDialogDescription>
-                                Запись {(deletingRow as unknown as { name?: string })?.name ? `"${(deletingRow as unknown as { name?: string }).name}"` : ""} будет удалена безвозвратно.
-                            </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                            <AlertDialogCancel>Отмена</AlertDialogCancel>
-                            <AlertDialogAction
-                                onClick={(e) => {
-                                    e.preventDefault()
-                                    handleDelete()
-                                }}
-                                className="bg-red-700 text-white hover:bg-red-800"
-                                disabled={isDeleting}
-                            >
-                                {isDeleting ? "Удаление..." : "Удалить"}
-                            </AlertDialogAction>
-                        </AlertDialogFooter>
-                    </AlertDialogContent>
-                </AlertDialog>
             </div>
         </TooltipProvider>
     );

@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Loader2 } from 'lucide-react';
 import { MaterialRow } from '@/types/material-row';
+import { MaterialsEditDialog } from './components/MaterialsEditDialog';
+import { MaterialsDeleteDialog } from './components/MaterialsDeleteDialog';
 
 // Internal Components
 import { MaterialsHeader } from './components/MaterialsHeader';
@@ -22,6 +24,8 @@ import { MaterialsTableWrapper } from './components/MaterialsTableWrapper';
 import { useMaterialsActions } from './hooks/useMaterialsActions';
 import { useMaterialsSearch } from './hooks/useMaterialsSearch';
 import { useMaterialsTable } from './hooks/useMaterialsTable';
+import { useMaterialsRowActions } from './hooks/useMaterialsRowActions';
+import { useDataTableEditor } from '@/hooks/use-data-table-editor';
 
 interface MaterialsClientProps {
     initialData: MaterialRow[];
@@ -45,6 +49,18 @@ export function MaterialsClient({ initialData, totalCount, tenantId }: Materials
     const actions = useMaterialsActions(data, setData, tenantId);
     const search = useMaterialsSearch(initialData, data, setData);
     const table = useMaterialsTable(data, setData, tenantId);
+    const rowActions = useMaterialsRowActions();
+    const editor = useDataTableEditor<MaterialRow>({
+        onRowUpdate: rowActions.handleRowUpdate,
+        onRowDelete: rowActions.handleRowDelete,
+    });
+
+    const handleEditFieldChange = useCallback((field: string, val: unknown) => {
+        editor.setEditFormData((prev) => {
+            if (!prev) return prev;
+            return { ...prev, [field]: val };
+        });
+    }, [editor.setEditFormData]);
 
     if (!mounted) return null;
 
@@ -107,10 +123,30 @@ export function MaterialsClient({ initialData, totalCount, tenantId }: Materials
                         onInsertRequest: table.onInsertRequest,
                         onCancelInsert: table.onCancelInsert,
                         onSaveInsert: actions.onSaveInsert,
-                        updatePlaceholderRow: table.updatePlaceholderRow
+                        updatePlaceholderRow: table.updatePlaceholderRow,
+                        setEditingRow: editor.setEditingRow,
+                        setDeletingRow: editor.setDeletingRow,
                     }}
                 />
             </div>
+
+            <MaterialsEditDialog
+                open={!!editor.editingRow}
+                data={editor.editFormData}
+                isUpdating={editor.isUpdating}
+                onOpenChange={(open) => !open && editor.setEditingRow(null)}
+                onFieldChange={handleEditFieldChange}
+                onSubmit={editor.handleUpdate}
+                onCancel={() => editor.setEditingRow(null)}
+            />
+
+            <MaterialsDeleteDialog
+                open={!!editor.deletingRow}
+                isDeleting={editor.isDeleting}
+                name={editor.deletingRow?.name}
+                onOpenChange={(open) => !open && editor.setDeletingRow(null)}
+                onConfirm={() => editor.handleDelete()}
+            />
         </div>
     );
 }
