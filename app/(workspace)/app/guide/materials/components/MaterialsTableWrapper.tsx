@@ -17,6 +17,8 @@ interface MaterialsTableWrapperProps {
         onCancelInsert: () => void;
         onSaveInsert: (id: string) => void;
         updatePlaceholderRow: (id: string, partial: Partial<MaterialRow>) => void;
+        setEditingRow?: (row: MaterialRow | null) => void;
+        setDeletingRow?: (row: MaterialRow | null) => void;
     };
 }
 
@@ -52,7 +54,9 @@ export function MaterialsTableWrapper({
                 onInsertRequest: tableActions.onInsertRequest,
                 onCancelInsert: tableActions.onCancelInsert,
                 onSaveInsert: tableActions.onSaveInsert,
-                updatePlaceholderRow: tableActions.updatePlaceholderRow
+                updatePlaceholderRow: tableActions.updatePlaceholderRow,
+                setEditingRow: tableActions.setEditingRow,
+                setDeletingRow: tableActions.setDeletingRow,
             }}
         />
     );
