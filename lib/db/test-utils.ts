@@ -38,8 +38,8 @@ export async function resetDatabase() {
     ];
 
     try {
-        // TRUNCATE CASCADE is the most robust way to clear tables with foreign keys
-        await db.execute(sql.raw(`TRUNCATE TABLE ${tables.map(t => `"${t}"`).join(', ')} CASCADE`));
+        // TRUNCATE RESTART IDENTITY CASCADE is the most robust way to clear tables and reset sequences
+        await db.execute(sql.raw(`TRUNCATE TABLE ${tables.map(t => `"${t}"`).join(', ')} RESTART IDENTITY CASCADE`));
         await db.execute(sql.raw(`
             CREATE OR REPLACE FUNCTION get_user_team_id(target_user_id integer)
             RETURNS integer
