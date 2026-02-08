@@ -18,6 +18,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/types/work-row"
 import { UnitSelect } from "@/components/unit-select"
@@ -27,6 +28,35 @@ interface RowActionsProps {
     row: { original: WorkRow };
     table: Table<WorkRow>;
 }
+
+const actionButtonStyles = cva("h-8 w-8", {
+    variants: {
+        tone: {
+            primary: "text-primary",
+            muted: "",
+        },
+    },
+    defaultVariants: {
+        tone: "muted",
+    },
+})
+
+const insertButtonStyles = cva("h-6 w-6", {
+    variants: {
+        tone: {
+            success: "text-green-600 hover:text-green-700",
+            danger: "text-destructive",
+        },
+    },
+})
+
+const indexInsertButtonStyles = cva("hidden md:flex absolute -left-10 h-7 w-7 rounded-full shadow-md border-2 border-background opacity-0 group-hover/row:opacity-100 transition-opacity z-50", {
+    variants: {
+        tone: {
+            success: "bg-lime-500 text-white hover:bg-lime-600",
+        },
+    },
+})
 
 const RowActions = React.memo(({ row, table }: RowActionsProps) => {
     const meta = table.options.meta as TableMeta<WorkRow> & {
@@ -40,7 +70,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 <Button
                     size="icon"
                     variant="ghost"
-                    className="h-6 w-6 text-green-600 hover:text-green-700"
+                    className={insertButtonStyles({ tone: "success" })}
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
                     aria-label="Сохранить строку"
                     title="Сохранить строку"
@@ -50,7 +80,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 <Button
                     size="icon"
                     variant="ghost"
-                    className="h-6 w-6 text-destructive"
+                    className={insertButtonStyles({ tone: "danger" })}
                     onClick={() => meta.onCancelInsert?.()}
                     aria-label="Отменить вставку"
                     title="Отменить вставку"
@@ -66,7 +96,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
             <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-primary"
+                className={actionButtonStyles({ tone: "primary" })}
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
                 title="Вставить строку ниже"
@@ -75,11 +105,11 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
             </Button>
 
             <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Действия" title="Действия">
-                        <Settings className="h-4 w-4" />
-                    </Button>
-                </DropdownMenuTrigger>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия" title="Действия">
+                    <Settings className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
                     <DropdownMenuItem onClick={() => meta.setEditingRow?.(row.original)}>
                         <Pencil className="mr-2 h-4 w-4" />
@@ -113,7 +143,7 @@ const IndexCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
                             <Button
                                 size="icon"
                                 variant="ghost"
-                                className="hidden md:flex absolute -left-10 h-7 w-7 rounded-full bg-lime-500 text-white opacity-0 group-hover/row:opacity-100 transition-opacity z-50 hover:bg-lime-600 shadow-md border-2 border-background"
+                                className={indexInsertButtonStyles({ tone: "success" })}
                                 onClick={() => meta.onInsertRequest?.(row.original.id)}
                                 aria-label="Вставить строку ниже"
                                 title="Вставить строку ниже"
