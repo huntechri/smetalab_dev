@@ -15,21 +15,30 @@ $$;
 --> statement-breakpoint
 
 -- Drizzle generated migrations (consolidated)
-DROP INDEX "materials_tenant_unit_idx";--> statement-breakpoint
-DROP INDEX "works_tenant_sort_order_idx";--> statement-breakpoint
-DROP INDEX "works_tenant_unit_idx";--> statement-breakpoint
+DROP INDEX IF EXISTS "materials_tenant_unit_idx";--> statement-breakpoint
+DROP INDEX IF EXISTS "works_tenant_sort_order_idx";--> statement-breakpoint
+DROP INDEX IF EXISTS "works_tenant_unit_idx";--> statement-breakpoint
 ALTER TABLE "materials" ALTER COLUMN "unit" SET DATA TYPE varchar(100);--> statement-breakpoint
 ALTER TABLE "works" ALTER COLUMN "unit" SET DATA TYPE varchar(100);--> statement-breakpoint
-ALTER TABLE "materials" ADD COLUMN "name_norm" text;--> statement-breakpoint
-ALTER TABLE "works" ADD COLUMN "name_norm" text;--> statement-breakpoint
-CREATE INDEX "activity_logs_user_timestamp_idx" ON "activity_logs" USING btree ("user_id","timestamp" DESC NULLS LAST);--> statement-breakpoint
-CREATE INDEX "invitations_email_idx" ON "invitations" USING btree ("email");--> statement-breakpoint
-CREATE INDEX "invitations_team_id_idx" ON "invitations" USING btree ("team_id");--> statement-breakpoint
-CREATE INDEX "materials_tenant_code_idx" ON "materials" USING btree ("tenant_id","code") WHERE deleted_at IS NULL;--> statement-breakpoint
-CREATE INDEX "notifications_user_created_at_idx" ON "notifications" USING btree ("user_id","created_at" DESC NULLS LAST);--> statement-breakpoint
-CREATE INDEX "materials_tenant_unit_idx" ON "materials" USING btree ("tenant_id","unit") WHERE deleted_at IS NULL;--> statement-breakpoint
-CREATE INDEX "works_tenant_sort_order_idx" ON "works" USING btree ("tenant_id","sort_order") WHERE deleted_at IS NULL;--> statement-breakpoint
-CREATE INDEX "works_tenant_unit_idx" ON "works" USING btree ("tenant_id","unit") WHERE deleted_at IS NULL;--> statement-breakpoint
+ALTER TABLE "materials" ADD COLUMN IF NOT EXISTS "name_norm" text;--> statement-breakpoint
+ALTER TABLE "works" ADD COLUMN IF NOT EXISTS "name_norm" text;--> statement-breakpoint
+
+-- Backfill name_norm
+UPDATE "materials" SET "name_norm" = LOWER("name") WHERE "name_norm" IS NULL;--> statement-breakpoint
+UPDATE "works" SET "name_norm" = LOWER("name") WHERE "name_norm" IS NULL;--> statement-breakpoint
+
+CREATE INDEX IF NOT EXISTS "activity_logs_user_timestamp_idx" ON "activity_logs" USING btree ("user_id","timestamp" DESC NULLS LAST);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invitations_email_idx" ON "invitations" USING btree ("email");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invitations_team_id_idx" ON "invitations" USING btree ("team_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "materials_tenant_code_idx" ON "materials" USING btree ("tenant_id","code") WHERE deleted_at IS NULL;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "notifications_user_created_at_idx" ON "notifications" USING btree ("user_id","created_at" DESC NULLS LAST);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "materials_tenant_unit_idx" ON "materials" USING btree ("tenant_id","unit") WHERE deleted_at IS NULL;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "works_tenant_sort_order_idx" ON "works" USING btree ("tenant_id","sort_order") WHERE deleted_at IS NULL;--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "works_tenant_unit_idx" ON "works" USING btree ("tenant_id","unit") WHERE deleted_at IS NULL;--> statement-breakpoint
+
+-- New Index for name_norm search optimization
+CREATE INDEX IF NOT EXISTS "materials_name_norm_trgm_idx" ON "materials" USING gin ("name_norm" gin_trgm_ops);--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "works_name_norm_trgm_idx" ON "works" USING gin ("name_norm" gin_trgm_ops);--> statement-breakpoint
 
 -- Row Level Security
 ALTER TABLE "works" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint

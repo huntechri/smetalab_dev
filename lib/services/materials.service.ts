@@ -74,7 +74,7 @@ export class MaterialsService {
             const normalizedCode = this.normalizeCode(data.code) ?? data.code;
             const [inserted] = await db.insert(materials).values({
                 ...data,
-                code: normalizedCode,
+                code: normalizedCode, nameNorm: data.name.toLowerCase(),
                 tenantId: teamId,
                 status: 'active',
             }).returning({ id: materials.id });
@@ -106,6 +106,10 @@ export class MaterialsService {
             const norm = this.normalizeCode(updateData.code);
             if (norm !== undefined) {
                 updateData.code = norm;
+            }
+
+            if (updateData.name) {
+                updateData.nameNorm = updateData.name.toLowerCase();
             }
 
             await db.update(materials)
@@ -313,7 +317,8 @@ export class MaterialsService {
                 for (let i = 0; i < totalToProcess.length; i += DB_BATCH_SIZE) {
                     const batch = totalToProcess.slice(i, i + DB_BATCH_SIZE).map(item => ({
                         ...item,
-                        tenantId: teamId
+                        tenantId: teamId,
+                        nameNorm: item.name.toLowerCase()
                     }));
 
                     await tx.insert(materials).values(batch)
@@ -321,6 +326,7 @@ export class MaterialsService {
                             target: [materials.tenantId, materials.code],
                             set: {
                                 name: sql`excluded.name`,
+                                nameNorm: sql`excluded.name_norm`,
                                 unit: sql`excluded.unit`,
                                 price: sql`excluded.price`,
                                 vendor: sql`excluded.vendor`,
