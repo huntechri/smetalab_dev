@@ -43,6 +43,13 @@
       "when": 1770546368431,
       "tag": "0005_opposite_ultron",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1770677719000,
+      "tag": "0006_search_triggers",
+      "breakpoints": true
     }
   ]
 }
