@@ -34,3 +34,18 @@ The migration uses `DROP INDEX` without `IF EXISTS`.
 I will apply the following fixes in this PR:
 1.  **Migration**: Add `IF EXISTS` to drop statements. Add backfill for `name_norm`. Add index on `name_norm`.
 2.  **Application**: Update `MaterialsService` and `WorksService` to populate `name_norm` on write.
+
+
+## Recommendation (Merge Strategy)
+**This PR (#207) supersedes and replaces PR #206.**
+
+It includes:
+1.  All original changes from PR #206.
+2.  **Critical Fixes**:
+    *   Safe database migrations (IF EXISTS).
+    *   Search performance optimization (Trigram index).
+    *   Data integrity fixes (Automatic population of `name_norm`).
+
+**Action:**
+1.  **Merge this PR (#207).**
+2.  Close PR #206 without merging.
