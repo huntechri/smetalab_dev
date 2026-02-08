@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '@/lib/db/drizzle';
 import { resolveTeamForUser, SYSTEM_TENANT_ID } from '@/lib/db/queries';
 import { teamMembers, teams, users } from '@/lib/db/schema';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { resetDatabase, syncTableSequence } from '@/lib/db/test-utils';
 
 describe('resolveTeamForUser', () => {
   beforeEach(async () => {
@@ -25,6 +25,7 @@ describe('resolveTeamForUser', () => {
 
   it('prefers explicit membership over the system team', async () => {
     await db.insert(teams).values({ id: SYSTEM_TENANT_ID, name: 'System' });
+    await syncTableSequence('teams');
     const [memberTeam] = await db.insert(teams).values({ name: 'Member Team' }).returning();
 
     const [superadmin] = await db.insert(users).values({
@@ -59,6 +60,7 @@ describe('resolveTeamForUser', () => {
 
   it('returns the member team for a regular user with membership', async () => {
     await db.insert(teams).values({ id: SYSTEM_TENANT_ID, name: 'System' });
+    await syncTableSequence('teams');
     const [memberTeam] = await db.insert(teams).values({ name: 'Member Team' }).returning();
 
     const [user] = await db.insert(users).values({
@@ -79,6 +81,7 @@ describe('resolveTeamForUser', () => {
 
   it('falls back to the membership team when tenant override is stale', async () => {
     await db.insert(teams).values({ id: SYSTEM_TENANT_ID, name: 'System' });
+    await syncTableSequence('teams');
     const [memberTeam] = await db.insert(teams).values({ name: 'Member Team' }).returning();
     const [otherTeam] = await db.insert(teams).values({ name: 'Other Team' }).returning();
 
