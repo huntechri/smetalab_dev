@@ -5,15 +5,20 @@ export async function resetDatabase() {
     // 🛡️ CRITICAL SAFETY CHECK: Prevent accidental wipe of production/dev database
     const dbUrl = process.env.DATABASE_URL || '';
     const isTestEnv = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true' || process.env.CI === 'true';
-    const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
-    const isNeonTest = dbUrl.includes('test') || dbUrl.includes('agrelo53');
+    const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1') || dbUrl.includes('postgres');
+    const isNeonTest = dbUrl.includes('test') || dbUrl.includes('agrelo53') || dbUrl.includes('db_test');
 
     // Safety check: must be a test environment AND (be a local DB OR a dedicated test branch)
     if (!isTestEnv || (!isLocal && !isNeonTest)) {
-        console.error('❌ SAFETY ABORT: resetDatabase() called in non-test environment or on non-test database!');
-        console.error('Environment:', process.env.NODE_ENV);
-        console.error('Database URL host:', dbUrl ? new URL(dbUrl).hostname : 'unknown');
-        throw new Error('Safety abort: Database reset is only allowed on the TEST database (localhost or Neon test branch) in TEST environment.');
+        console.error('❌ SAFETY ABORT: resetDatabase() blocked!');
+        console.error('This tool is designed to WIPE the database. For safety, it only runs if:');
+        console.error('1. NODE_ENV is "test" or CI=true');
+        console.error('2. DATABASE_URL points to localhost or a known test branch');
+        console.error('---');
+        console.error('Current Environment:', process.env.NODE_ENV || 'development');
+        console.error('CI detected:', process.env.CI || 'false');
+        console.error('Database Host:', dbUrl ? new URL(dbUrl).hostname : 'unknown');
+        throw new Error('Safety abort: Database reset is only allowed on the TEST database in TEST environment. Please check your DATABASE_URL.');
     }
 
     const tables = [
