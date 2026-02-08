@@ -11,44 +11,38 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-
-import { deleteMaterial, updateMaterial } from "@/app/actions/materials"
-import { useToast } from "@/components/ui/use-toast"
 import { MaterialRow } from "@/types/material-row"
 import { TableMeta } from "@/components/ui/data-table"
+import { cva } from "class-variance-authority"
+
+const actionButtonStyles = cva("h-8 w-8", {
+    variants: {
+        tone: {
+            primary: "text-primary opacity-40 hover:opacity-100 transition-opacity",
+            muted: "opacity-40 hover:opacity-100",
+        },
+    },
+    defaultVariants: {
+        tone: "muted",
+    },
+})
+
+const insertButtonStyles = cva("h-6 w-6", {
+    variants: {
+        tone: {
+            success: "text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm border border-transparent hover:border-green-100",
+            danger: "text-destructive hover:bg-destructive/5",
+        },
+    },
+})
 
 const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, table: Table<MaterialRow> }) => {
-    const { toast } = useToast()
-    const [isDeleteOpen, setIsDeleteOpen] = React.useState(false)
-    const [isEditOpen, setIsEditOpen] = React.useState(false)
-    const [isDeleting, startDeleteTransition] = React.useTransition()
-    const [isUpdating, startUpdateTransition] = React.useTransition()
-
     const meta = table.options.meta as TableMeta<MaterialRow>
 
     if (row.original.isPlaceholder) {
@@ -59,7 +53,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                         <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm border border-transparent hover:border-green-100"
+                            className={insertButtonStyles({ tone: "success" })}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 meta.onSaveInsert?.(row.original.id);
@@ -78,7 +72,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                         <Button
                             size="icon"
                             variant="ghost"
-                            className="h-6 w-6 text-destructive hover:bg-destructive/5"
+                            className={insertButtonStyles({ tone: "danger" })}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 meta.onCancelInsert?.();
@@ -96,48 +90,6 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
         )
     }
 
-    const [formData, setFormData] = React.useState({
-        code: row.original.code || "",
-        name: row.original.name || "",
-        price: row.original.price?.toString() || "",
-        unit: row.original.unit || "",
-        vendor: row.original.vendor || "",
-        weight: row.original.weight || "",
-        categoryLv1: row.original.categoryLv1 || "",
-        categoryLv2: row.original.categoryLv2 || "",
-        categoryLv3: row.original.categoryLv3 || "",
-        categoryLv4: row.original.categoryLv4 || "",
-        productUrl: row.original.productUrl || "",
-        imageUrl: row.original.imageUrl || "",
-    })
-
-    const handleDelete = () => {
-        startDeleteTransition(async () => {
-            const result = await deleteMaterial(row.original.id)
-            if (result.success) {
-                toast({ title: "Удалено", description: result.message })
-                setIsDeleteOpen(false)
-            } else {
-                toast({ variant: "destructive", title: "Ошибка", description: result.message })
-            }
-        })
-    }
-
-    const handleUpdate = () => {
-        startUpdateTransition(async () => {
-            const result = await updateMaterial(row.original.id, {
-                ...formData,
-                price: formData.price ? Number(formData.price) : undefined
-            })
-            if (result.success) {
-                toast({ title: "Обновлено", description: result.message })
-                setIsEditOpen(false)
-            } else {
-                toast({ variant: "destructive", title: "Ошибка", description: result.message })
-            }
-        })
-    }
-
     return (
         <div className="flex justify-end pr-2 items-center gap-1 group/actions">
             <Tooltip>
@@ -145,7 +97,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-primary opacity-40 hover:opacity-100 transition-opacity"
+                        className={actionButtonStyles({ tone: "primary" })}
                         onClick={(e) => {
                             e.stopPropagation();
                             meta.onInsertRequest?.(row.original.id);
@@ -165,7 +117,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-40 hover:opacity-100" aria-label="Действия">
+                            <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -175,94 +127,17 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                     </TooltipContent>
                 </Tooltip>
                 <DropdownMenuContent align="end" className="w-56 overflow-y-auto max-h-[80vh]">
-                    <DropdownMenuItem onClick={() => setIsEditOpen(true)}>
+                    <DropdownMenuItem onClick={() => meta.setEditingRow?.(row.original)}>
                         <Pencil className="mr-2 h-4 w-4" /> Изменить
                     </DropdownMenuItem>
-                    <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={() => setIsDeleteOpen(true)}>
+                    <DropdownMenuItem
+                        className="text-destructive focus:text-destructive"
+                        onClick={() => meta.setDeletingRow?.(row.original)}
+                    >
                         <Trash className="mr-2 h-4 w-4" /> Удалить
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
-
-            <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Запись будет безвозвратно удалена.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel disabled={isDeleting}>Отмена</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDelete} className="bg-red-700 text-white hover:bg-red-800" disabled={isDeleting}>
-                            {isDeleting ? "Удаление..." : "Удалить"}
-                        </AlertDialogAction>
-                    </AlertDialogFooter>
-                </AlertDialogContent>
-            </AlertDialog>
-
-            <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>Изменить материал</DialogTitle>
-                        <DialogDescription>Отредактируйте данные материала.</DialogDescription>
-                    </DialogHeader>
-                    <div className="grid grid-cols-2 gap-4 py-4">
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-code">Код</Label>
-                            <Input id="edit-code" value={formData.code} onChange={(e) => setFormData({ ...formData, code: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-name">Название</Label>
-                            <Input id="edit-name" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-price">Цена</Label>
-                            <Input id="edit-price" type="number" value={formData.price} onChange={(e) => setFormData({ ...formData, price: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-unit">Ед.изм.</Label>
-                            <Input id="edit-unit" value={formData.unit} onChange={(e) => setFormData({ ...formData, unit: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-vendor">Поставщик</Label>
-                            <Input id="edit-vendor" value={formData.vendor} onChange={(e) => setFormData({ ...formData, vendor: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-weight">Вес (кг)</Label>
-                            <Input id="edit-weight" value={formData.weight} onChange={(e) => setFormData({ ...formData, weight: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-cat1">Категория LV1</Label>
-                            <Input id="edit-cat1" value={formData.categoryLv1} onChange={(e) => setFormData({ ...formData, categoryLv1: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-cat2">Категория LV2</Label>
-                            <Input id="edit-cat2" value={formData.categoryLv2} onChange={(e) => setFormData({ ...formData, categoryLv2: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-cat3">Категория LV3</Label>
-                            <Input id="edit-cat3" value={formData.categoryLv3} onChange={(e) => setFormData({ ...formData, categoryLv3: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-cat4">Категория LV4</Label>
-                            <Input id="edit-cat4" value={formData.categoryLv4} onChange={(e) => setFormData({ ...formData, categoryLv4: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-purl">URL товара</Label>
-                            <Input id="edit-purl" value={formData.productUrl} onChange={(e) => setFormData({ ...formData, productUrl: e.target.value })} />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="edit-iurl">URL изображения</Label>
-                            <Input id="edit-iurl" value={formData.imageUrl} onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })} />
-                        </div>
-                    </div>
-                    <DialogFooter>
-                        <Button variant="outline" onClick={() => setIsEditOpen(false)} disabled={isUpdating}>Отмена</Button>
-                        <Button onClick={handleUpdate} disabled={isUpdating}>{isUpdating ? "Сохранение..." : "Сохранить"}</Button>
-                    </DialogFooter>
-                </DialogContent>
-            </Dialog>
         </div>
     )
 }
