@@ -40,50 +40,8 @@
     {
       "idx": 5,
       "version": "7",
-      "when": 1770116616919,
-      "tag": "0005_rls_policies",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1770165095284,
-      "tag": "0006_bitter_frog_thor",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1770298985517,
-      "tag": "0007_sudden_the_phantom",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1770359525650,
-      "tag": "0008_add_materials_name_norm",
-      "breakpoints": true
-    },
-    {
-      "idx": 9,
-      "version": "7",
-      "when": 1770363684251,
-      "tag": "0009_add_works_name_norm",
-      "breakpoints": true
-    },
-    {
-      "idx": 10,
-      "version": "7",
-      "when": 1770423755362,
-      "tag": "0010_breezy_bushwacker",
-      "breakpoints": true
-    },
-    {
-      "idx": 11,
-      "version": "7",
-      "when": 1770336957215,
-      "tag": "0011_daffy_stingray",
+      "when": 1770546368431,
+      "tag": "0005_opposite_ultron",
       "breakpoints": true
     }
   ]

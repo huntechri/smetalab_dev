@@ -22,7 +22,7 @@ export class WorksService {
                 filters.push(gt(works.sortOrder, lastSortOrder));
             }
 
-            const finalLimit = limit || (search ? 5 : 5);
+            const finalLimit = limit || (search ? 50 : 50);
 
             const data = await db
                 .select({
@@ -61,6 +61,7 @@ export class WorksService {
             const [inserted] = await db.insert(works).values({
                 ...data,
                 tenantId: teamId,
+                nameNorm: data.name.toLowerCase(),
                 status: 'active',
                 code: data.code || `W-${Date.now()}`,
                 sortOrder: data.sortOrder || 0,
@@ -88,10 +89,13 @@ export class WorksService {
 
     static async update(teamId: number, id: string, rawData: Partial<NewWork>): Promise<Result<void>> {
         try {
-            await db.update(works).set({
-                ...rawData,
-                updatedAt: new Date()
-            }).where(and(eq(works.id, id), eq(works.tenantId, teamId)));
+            const updateData = { ...rawData, updatedAt: new Date() };
+            if (updateData.name) {
+                updateData.nameNorm = updateData.name.toLowerCase();
+            }
+
+            await db.update(works).set(updateData)
+                .where(and(eq(works.id, id), eq(works.tenantId, teamId)));
 
             // Background embedding update
             if (rawData.name || rawData.category || rawData.subcategory || rawData.unit || rawData.description || rawData.shortDescription || rawData.phase || rawData.code) {
@@ -206,6 +210,7 @@ export class WorksService {
             await db.insert(works).values({
                 ...data,
                 tenantId: teamId,
+                nameNorm: data.name.toLowerCase(),
                 phase: targetPhase,
                 // Код теперь генерируем один раз, он не влияет на порядок
                 code: data.code || `W-${Date.now()}`,
@@ -245,7 +250,7 @@ export class WorksService {
                 updatedAt: works.updatedAt,
                 deletedAt: works.deletedAt,
                 // Сортировка по порядку, а не по релевантности (для таблицы важно положение)
-                // Но при поиске мы хотим видеть релевантные сверху? 
+                // Но при поиске мы хотим видеть релевантные сверху?
                 // Обычно в справочнике хотят видеть найденное по релевантности.
                 sortOrder: works.sortOrder,
                 similarity: sql<number>`1 - (${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector)`
@@ -270,7 +275,7 @@ export class WorksService {
 
     static async upsertMany(teamId: number, data: NewWork[]): Promise<Result<void>> {
         try {
-            // Удаляем дубликаты по коду внутри одного батча/запроса, 
+            // Удаляем дубликаты по коду внутри одного батча/запроса,
             // иначе Postgres выдаст ошибку "ON CONFLICT DO UPDATE command cannot affect row a second time"
             const uniqueDataMap = new Map<string, NewWork>();
             for (const item of data) {
@@ -293,6 +298,7 @@ export class WorksService {
                     const batch = uniqueData.slice(i, i + BATCH_SIZE).map((item, idx) => ({
                         ...item,
                         tenantId: teamId, // Принудительно ставим tenantId
+                        nameNorm: item.name.toLowerCase(),
                         // Если sortOrder не передан, добавляем в конец
                         sortOrder: item.sortOrder || (currentMaxSortOrder + (idx + 1) * 100)
                     }));
@@ -310,6 +316,7 @@ export class WorksService {
                             target: [works.tenantId, works.code],
                             set: {
                                 name: sql`excluded.name`,
+                                nameNorm: sql`excluded.name_norm`,
                                 unit: sql`excluded.unit`,
                                 price: sql`excluded.price`,
                                 phase: sql`excluded.phase`,
