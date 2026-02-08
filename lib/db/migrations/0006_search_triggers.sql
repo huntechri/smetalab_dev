@@ -1,13 +1,16 @@
 -- Migration: Add triggers for name_norm and search_vector auto-population
 -- These triggers automatically normalize names and build search vectors on INSERT/UPDATE
 
--- Helper function to normalize name (lowercase, trim, collapse whitespace)
+-- Enable unaccent extension for removing diacritical marks
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
+-- Helper function to normalize name (lowercase, trim, collapse whitespace, remove accents)
 CREATE OR REPLACE FUNCTION normalize_name(input text)
 RETURNS text
 LANGUAGE sql
 IMMUTABLE
 AS $$
-  SELECT LOWER(TRIM(regexp_replace(input, '\s+', ' ', 'g')));
+  SELECT LOWER(TRIM(regexp_replace(unaccent(input), '\s+', ' ', 'g')));
 $$;
 
 -- Trigger function for materials
