@@ -98,6 +98,7 @@
     "import-in-the-middle": "^2.0.6",
     "jsdom": "^28.0.0",
     "require-in-the-middle": "^8.0.1",
+    "tsx": "^4.21.0",
     "vitest": "^4.0.18"
   }
 }
