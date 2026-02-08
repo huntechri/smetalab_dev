@@ -60,6 +60,13 @@ const STATUS_TONE: Record<string, string> = {
     'Контроль качества': 'bg-rose-700 text-white',
 };
 
+const PROGRESS_COLORS: Record<string, string> = {
+    'В работе': 'bg-emerald-600',
+    'Пусконаладка': 'bg-sky-600',
+    'Проектирование': 'bg-amber-600',
+    'Контроль качества': 'bg-rose-600',
+};
+
 export default function Page() {
     return (
         <div className="space-y-8">
@@ -122,8 +129,25 @@ export default function Page() {
                                 </div>
                                 <div className="grid gap-2 sm:grid-cols-2">
                                     <div className="rounded-xl border border-border/60 bg-muted/40 px-2.5 py-2">
-                                        <p className="text-[11px] uppercase tracking-[0.25em] text-foreground/70">Готовность</p>
-                                        <p className="mt-1 text-sm font-semibold text-foreground">{project.progress}</p>
+                                        <div className="mb-2 flex items-center justify-between">
+                                            <p className="text-[11px] uppercase tracking-[0.25em] text-foreground/70">
+                                                Готовность
+                                            </p>
+                                            <p className="text-xs font-semibold text-foreground">{project.progress}</p>
+                                        </div>
+                                        <div
+                                            role="progressbar"
+                                            aria-valuenow={parseInt(project.progress)}
+                                            aria-valuemin={0}
+                                            aria-valuemax={100}
+                                            aria-label="Прогресс проекта"
+                                            className="h-1.5 w-full overflow-hidden rounded-full bg-background border border-border/20"
+                                        >
+                                            <div
+                                                className={`h-full rounded-full ${PROGRESS_COLORS[project.status] || 'bg-primary'}`}
+                                                style={{ width: project.progress }}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="rounded-xl border border-border/60 bg-muted/40 px-2.5 py-2">
                                         <p className="text-[11px] uppercase tracking-[0.25em] text-foreground/70">Бюджет</p>
