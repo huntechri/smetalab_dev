@@ -2,7 +2,7 @@ import { stripe } from '../payments/stripe';
 import { db } from './drizzle';
 import { users, teams, teamMembers, notifications } from './schema';
 import { hashPassword } from '@/lib/auth/session';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { seedPermissions } from './seed-permissions';
 
 async function createStripeProducts() {
@@ -58,6 +58,9 @@ async function seed() {
       id: 1,
       name: 'System (Global Guides)',
     }).onConflictDoNothing();
+
+    // Sync sequence after manual primary key insert
+    await db.execute(sql`SELECT setval('teams_id_seq', (SELECT MAX(id) FROM teams))`);
   }
 
   // 1. Upsert User
