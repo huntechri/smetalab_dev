@@ -30,7 +30,7 @@ export const importMaterials = safeAction(
         const materialsToUpsert: NewMaterial[] = parsedRows.map(row => ({
             tenantId: team.id,
             code: String(row.code),
-            name: String(row.name),
+            name: String(row.name), nameNorm: String(row.name).toLowerCase(),
             unit: row.unit ? String(row.unit) : undefined,
             price: row.price ? Number(row.price) : undefined,
             vendor: row.vendor ? String(row.vendor) : undefined,
