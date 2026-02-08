@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "works_tenant_sort_order_idx" ON "works" USING btree ("tenant_id","sort_order");

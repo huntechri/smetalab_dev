@@ -1,6 +1,6 @@
 {
-  "id": "7ff156be-ba8c-48da-8fba-8c0f95c62cc3",
-  "prevId": "cd7f6bda-00ba-4ad0-9078-a943a342070f",
+  "id": "67cdc8d6-99b7-4236-8875-f77edf8c9992",
+  "prevId": "30d1e9e1-f273-44fb-8594-f85c4c220ff6",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -56,6 +56,27 @@
               "asc": true,
               "nulls": "last"
             },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "timestamp",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "activity_logs_user_timestamp_idx": {
+          "name": "activity_logs_user_timestamp_idx",
+          "columns": [
             {
               "expression": "user_id",
               "isExpression": false,
@@ -663,6 +684,28 @@
           "method": "btree",
           "with": {}
         },
+        "materials_tenant_code_idx": {
+          "name": "materials_tenant_code_idx",
+          "columns": [
+            {
+              "expression": "tenant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "code",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "deleted_at IS NULL",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "materials_name_trgm_idx": {
           "name": "materials_name_trgm_idx",
           "columns": [
@@ -711,6 +754,7 @@
             }
           ],
           "isUnique": false,
+          "where": "deleted_at IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1586,6 +1630,7 @@
             }
           ],
           "isUnique": false,
+          "where": "deleted_at IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}
@@ -1644,6 +1689,7 @@
             }
           ],
           "isUnique": false,
+          "where": "deleted_at IS NULL",
           "concurrently": false,
           "method": "btree",
           "with": {}

@@ -291,10 +291,10 @@ export const works = pgTable('works', {
   index('works_tenant_status_idx').on(table.tenantId).where(sql`deleted_at IS NULL AND status = 'active'`),
   index('works_sort_order_idx').on(table.sortOrder),
   // Optimize fetching sorted works for a tenant (e.g. getWorks query)
-  index('works_tenant_sort_order_idx').on(table.tenantId, table.sortOrder), // Optimizes getWorks
+  index('works_tenant_sort_order_idx').on(table.tenantId, table.sortOrder).where(sql`deleted_at IS NULL`), // Optimizes getWorks
   uniqueIndex('idx_works_code_tenant_unique').on(table.tenantId, table.code),
   index('works_embedding_hnsw_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
-  index('works_tenant_unit_idx').on(table.tenantId, table.unit),
+  index('works_tenant_unit_idx').on(table.tenantId, table.unit).where(sql`deleted_at IS NULL`),
   index('works_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
   index('works_search_idx').using('gin', table.searchVector),
 ]);
@@ -340,9 +340,10 @@ export const materials = pgTable('materials', {
 }, (table) => [
   index('materials_tenant_status_idx').on(table.tenantId).where(sql`deleted_at IS NULL AND status = 'active'`),
   uniqueIndex('idx_materials_code_tenant_unique').on(table.tenantId, table.code),
+  index('materials_tenant_code_idx').on(table.tenantId, table.code).where(sql`deleted_at IS NULL`),
   index('materials_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
   index('materials_embedding_hnsw_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
-  index('materials_tenant_unit_idx').on(table.tenantId, table.unit),
+  index('materials_tenant_unit_idx').on(table.tenantId, table.unit).where(sql`deleted_at IS NULL`),
   index('materials_search_idx').using('gin', table.searchVector),
 ]);
 
