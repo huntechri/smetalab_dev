@@ -61,3 +61,6 @@ export async function resetDatabase() {
         throw error;
     }
 }
+export async function syncTableSequence(tableName: string, column: string = 'id') {
+    await db.execute(sql.raw(`SELECT setval('${tableName}_${column}_seq', (SELECT MAX("${column}") FROM "${tableName}"))`));
+}
