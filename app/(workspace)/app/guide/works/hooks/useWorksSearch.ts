@@ -64,12 +64,12 @@ export function useWorksSearch(
         const res = await fetchMoreWorks({
             query: searchTerm,
             lastSortOrder: lastItem?.sortOrder,
-            limit: 1
+            limit: 50
         });
 
         if (res.success && res.data.length > 0) {
             setData(prev => [...prev, ...res.data]);
-            setHasMore(res.data.length === 1);
+            setHasMore(res.data.length === 50);
         } else {
             setHasMore(false);
         }

@@ -22,7 +22,7 @@ export class WorksService {
                 filters.push(gt(works.sortOrder, lastSortOrder));
             }
 
-            const finalLimit = limit || (search ? 5 : 5);
+            const finalLimit = limit || (search ? 50 : 50);
 
             const data = await db
                 .select({
