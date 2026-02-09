@@ -6,7 +6,7 @@ import { columns } from "./columns";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { CreateCounterpartySheet } from "./components/CreateCounterpartySheet";
+import { CreateCounterpartySheet } from "./CreateCounterpartySheet";
 import { toast } from "sonner";
 import { deleteCounterparty } from "@/app/actions/counterparties";
 import {
