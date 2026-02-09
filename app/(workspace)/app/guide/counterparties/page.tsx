@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { Metadata } from 'next';
-import { CounterpartiesClient } from './CounterpartiesClient';
+import { CounterpartiesClient } from './components/CounterpartiesClient';
 import { getCounterparties, getUser } from '@/lib/db/queries';
 import { redirect } from 'next/navigation';
 
