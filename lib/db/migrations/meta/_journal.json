@@ -50,6 +50,13 @@
       "when": 1770677719000,
       "tag": "0006_search_triggers",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1770595722827,
+      "tag": "0007_neat_amphibian",
+      "breakpoints": true
     }
   ]
 }
