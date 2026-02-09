@@ -165,7 +165,10 @@ export const impersonationSessions = pgTable('impersonation_sessions', {
   startedAt: timestamp('started_at').notNull().defaultNow(),
   endedAt: timestamp('ended_at'),
   ipAddress: varchar('ip_address', { length: 45 }),
-});
+}, (table) => [
+  index('impersonation_sessions_superadmin_idx').on(table.superadminUserId),
+  index('impersonation_sessions_team_idx').on(table.targetTeamId),
+]);
 
 // ═══════════════════════════════════════════════════════════════
 // ACTIVITY LOGS
@@ -181,7 +184,7 @@ export const activityLogs = pgTable('activity_logs', {
   timestamp: timestamp('timestamp').notNull().defaultNow(),
   ipAddress: varchar('ip_address', { length: 45 }),
 }, (table) => [
-  index('activity_logs_tenant_user_timestamp_idx').on(table.teamId, table.userId, table.timestamp.desc()),
+  index('activity_logs_team_timestamp_idx').on(table.teamId, table.timestamp.desc()),
   // Optimize fetching activity logs for a user (filters by userId, sorts by timestamp)
   index('activity_logs_user_timestamp_idx').on(table.userId, table.timestamp.desc()),
 ]);
