@@ -1,1 +1,0 @@
-ALTER TABLE "counterparties" ADD COLUMN "deleted_at" timestamp;
