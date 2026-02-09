@@ -1,12 +1,15 @@
 import { desc, and, eq, isNull, or, ilike, AnyColumn, sql, gt } from 'drizzle-orm';
 import { db } from './drizzle';
-import { activityLogs, teamMembers, teams, users, works, materials, type User, impersonationSessions } from './schema';
+import { activityLogs, teamMembers, teams, users, works, materials, counterparties, type User, impersonationSessions } from './schema';
 import { cookies } from 'next/headers';
 import { getSession } from '@/lib/auth/session';
 import { cache } from 'react';
 import { unstable_cache } from 'next/cache';
+
+
 import { WorkRow } from '@/types/work-row';
 import { MaterialRow } from '@/types/material-row';
+import { CounterpartyRow } from '@/types/counterparty-row';
 
 export const SYSTEM_TENANT_ID = 1;
 
@@ -47,8 +50,13 @@ export const getUser = cache(async () => {
   }
 
   const user = await db
-    .select()
+    .select({
+      user: users,
+      teamId: teamMembers.teamId,
+      role: teamMembers.role,
+    })
     .from(users)
+    .leftJoin(teamMembers, eq(users.id, teamMembers.userId))
     .where(and(eq(users.id, sessionData.user.id), isNull(users.deletedAt)))
     .limit(1);
 
@@ -56,7 +64,12 @@ export const getUser = cache(async () => {
     return null;
   }
 
-  return user[0];
+  return {
+    ...user[0].user,
+    tenantId: user[0].teamId,
+    teamRole: user[0].role,
+  };
+
 });
 
 export async function getTeamByStripeCustomerId(customerId: string) {
@@ -452,6 +465,49 @@ export async function getMaterialsCount(search?: string) {
   const result = await db
     .select({ count: sql<number>`count(*)` })
     .from(materials)
+    .where(and(...filters));
+
+  return Number(result[0].count);
+}
+
+export async function getCounterparties(teamId: number, options: { limit?: number; offset?: number; search?: string } = {}) {
+  const { limit = 50, offset = 0, search } = options;
+
+  const filters = [withActiveTenant(counterparties, teamId)];
+
+  if (search) {
+    filters.push(ilike(counterparties.name, `%${search}%`));
+  }
+
+  const data = await db
+    .select()
+    .from(counterparties)
+    .where(and(...filters))
+    .orderBy(desc(counterparties.updatedAt))
+    .limit(limit)
+    .offset(offset);
+
+  const countQuery = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(counterparties)
+    .where(and(...filters));
+
+  return {
+    data: data as unknown as CounterpartyRow[],
+    count: Number(countQuery[0].count),
+  };
+}
+
+export async function getCounterpartiesCount(teamId: number, search?: string) {
+  const filters = [withActiveTenant(counterparties, teamId)];
+
+  if (search) {
+    filters.push(ilike(counterparties.name, `%${search}%`));
+  }
+
+  const result = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(counterparties)
     .where(and(...filters));
 
   return Number(result[0].count);

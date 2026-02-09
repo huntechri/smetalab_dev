@@ -48,7 +48,7 @@ describe('Works Integration Tests', () => {
 
         await db.insert(teamMembers).values({ userId: testUserId, teamId: testTeamId, role: 'admin' });
 
-        vi.mocked(getUser).mockResolvedValue(user);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
         vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
     });
 
