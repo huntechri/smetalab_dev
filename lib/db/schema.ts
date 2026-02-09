@@ -26,6 +26,8 @@ export const permissionScopeEnum = pgEnum('permission_scope', ['platform', 'tena
 export const accessLevelEnum = pgEnum('access_level', ['view', 'comment', 'download']);
 export const rbacLevelEnum = pgEnum('rbac_level', ['none', 'read', 'manage']);
 export const workStatusEnum = pgEnum('work_status', ['active', 'draft', 'archived', 'deleted']);
+export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'contractor', 'supplier']);
+export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -351,6 +353,65 @@ export const materials = pgTable('materials', {
 ]);
 
 // ═══════════════════════════════════════════════════════════════
+// COUNTERPARTIES
+// ═══════════════════════════════════════════════════════════════
+
+export const counterparties = pgTable('counterparties', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+
+  name: text('name').notNull(),
+  type: counterpartyTypeEnum('type').notNull(),
+  legalStatus: legalStatusEnum('legal_status').notNull(),
+
+  // Individual specific
+  birthDate: varchar('birth_date', { length: 20 }), // Keeping as string for flexibility or use date
+  passportSeriesNumber: varchar('passport_series_number', { length: 50 }),
+  passportIssuedBy: text('passport_issued_by'),
+  passportIssuedDate: varchar('passport_issued_date', { length: 20 }),
+  departmentCode: varchar('department_code', { length: 20 }),
+
+  // Company specific
+  ogrn: varchar('ogrn', { length: 50 }),
+  inn: varchar('inn', { length: 50 }),
+  kpp: varchar('kpp', { length: 50 }),
+
+  // Contact
+  address: text('address'),
+  phone: varchar('phone', { length: 50 }),
+  email: varchar('email', { length: 255 }),
+
+  // Bank Details
+  bankName: text('bank_name'),
+  bankAccount: varchar('bank_account', { length: 50 }),
+  corrAccount: varchar('corr_account', { length: 50 }),
+  bankInn: varchar('bank_inn', { length: 50 }),
+  bankKpp: varchar('bank_kpp', { length: 50 }),
+
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('counterparties_tenant_updated_idx').on(table.tenantId, table.updatedAt.desc()),
+  index('counterparties_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
+  index('counterparties_address_trgm_idx').using('gin', sql`${table.address} gin_trgm_ops`),
+  index('counterparties_inn_tenant_idx').on(table.tenantId, table.inn),
+  index('counterparties_ogrn_tenant_idx').on(table.tenantId, table.ogrn),
+  index('counterparties_phone_trgm_idx').using('gin', sql`${table.phone} gin_trgm_ops`),
+  index('counterparties_email_trgm_idx').using('gin', sql`${table.email} gin_trgm_ops`),
+
+  // Unique identification within tenant (preventing duplicates for docs)
+  uniqueIndex('counterparties_company_inn_kpp_tenant_idx')
+    .on(table.tenantId, table.inn, table.kpp)
+    .where(sql`deleted_at IS NULL AND legal_status = 'company'`),
+  uniqueIndex('counterparties_individual_inn_tenant_idx')
+    .on(table.tenantId, table.inn)
+    .where(sql`deleted_at IS NULL AND legal_status = 'individual'`),
+]);
+
+// ═══════════════════════════════════════════════════════════════
 // RELATIONS
 // ═══════════════════════════════════════════════════════════════
 
@@ -362,6 +423,7 @@ export const teamsRelations = relations(teams, ({ many }) => ({
   impersonationSessions: many(impersonationSessions),
   works: many(works),
   materials: many(materials),
+  counterparties: many(counterparties),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -471,6 +533,13 @@ export const materialsRelations = relations(materials, ({ one }) => ({
   }),
 }));
 
+export const counterpartiesRelations = relations(counterparties, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [counterparties.tenantId],
+    references: [teams.id],
+  }),
+}));
+
 // ═══════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════
@@ -497,6 +566,8 @@ export type Work = typeof works.$inferSelect;
 export type NewWork = typeof works.$inferInsert;
 export type Material = typeof materials.$inferSelect;
 export type NewMaterial = typeof materials.$inferInsert;
+export type Counterparty = typeof counterparties.$inferSelect;
+export type NewCounterparty = typeof counterparties.$inferInsert;
 
 export type TeamDataWithMembers = Team & {
   teamMembers: (TeamMember & {

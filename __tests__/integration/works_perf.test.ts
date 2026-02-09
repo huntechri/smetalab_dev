@@ -48,7 +48,7 @@ describe('Works Reordering Performance', () => {
         const [insertedTeam] = await db.select().from(teams).where(eq(teams.id, testTeamId));
 
         // Mock return values
-        vi.mocked(getUser).mockResolvedValue(insertedUser);
+        vi.mocked(getUser).mockResolvedValue({ ...insertedUser, tenantId: testTeamId, teamRole: 'admin' } as any);
         vi.mocked(getTeamForUser).mockResolvedValue(insertedTeam as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
     });
 

@@ -65,7 +65,7 @@ describe('Materials Integration Tests', () => {
         });
 
         // 4. Mock the session queries to return this user/team
-        vi.mocked(getUser).mockResolvedValue(user);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
         vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
 
         return { user, team };

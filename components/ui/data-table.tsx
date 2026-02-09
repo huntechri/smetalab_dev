@@ -34,6 +34,8 @@ export interface TableMeta<TData> {
     onReorder?: () => void
     setEditingRow?: (row: TData | null) => void
     setDeletingRow?: (row: TData | null) => void
+    onEdit?: (row: TData) => void
+    onDelete?: (row: TData) => void
 }
 
 interface DataTableProps<TData, TValue> {
@@ -281,38 +283,44 @@ export function DataTable<TData, TValue>({
                             <thead className="z-40">
                                 {table.getHeaderGroups().map((headerGroup) => (
                                     <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
-                                            {headerGroup.headers.map((header) => {
-                                                const isSortable = header.column.getCanSort()
-                                                const sortDirection = header.column.getIsSorted()
-                                                const ariaSort = isSortable
-                                                    ? sortDirection === "asc"
-                                                        ? "ascending"
-                                                        : sortDirection === "desc"
-                                                            ? "descending"
-                                                            : "none"
-                                                    : undefined
+                                        {headerGroup.headers.map((header) => {
+                                            const isSortable = header.column.getCanSort()
+                                            const sortDirection = header.column.getIsSorted()
+                                            const ariaSort = isSortable
+                                                ? sortDirection === "asc"
+                                                    ? "ascending"
+                                                    : sortDirection === "desc"
+                                                        ? "descending"
+                                                        : "none"
+                                                : undefined
 
-                                                return (
-                                                    <th
-                                                        key={header.id}
-                                                        className="h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[11px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground border-b border-r last:border-r-0 transition-colors"
-                                                        style={{ width: header.getSize() }}
-                                                        aria-sort={ariaSort}
-                                                    >
-                                                        {header.isPlaceholder ? null : (
-                                                            <button
-                                                                type="button"
-                                                                className={cn(
-                                                                    "flex items-center gap-2 select-none w-full text-left",
-                                                                    isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
-                                                                )}
-                                                                onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
-                                                                disabled={!isSortable}
-                                                            >
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
-                                                                    {flexRender(
-                                                                        header.column.columnDef.header,
-                                                                        header.getContext()
+                                            return (
+                                                <th
+                                                    key={header.id}
+                                                    className="h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[11px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground border-b border-r last:border-r-0 transition-colors"
+                                                    style={{ width: header.getSize() }}
+                                                    aria-sort={ariaSort}
+                                                >
+                                                    {header.isPlaceholder ? null : (
+                                                        <div
+                                                            className={cn(
+                                                                "flex items-center gap-2 select-none w-full text-left",
+                                                                isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
+                                                            )}
+                                                            onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
+                                                            role={isSortable ? "button" : undefined}
+                                                            tabIndex={isSortable ? 0 : undefined}
+                                                            onKeyDown={isSortable ? (e) => {
+                                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                                    e.preventDefault();
+                                                                    header.column.getToggleSortingHandler()?.(e);
+                                                                }
+                                                            } : undefined}
+                                                        >
+                                                            <div className="truncate flex-1 text-xs md:text-sm">
+                                                                {flexRender(
+                                                                    header.column.columnDef.header,
+                                                                    header.getContext()
                                                                 )}
                                                             </div>
                                                             {isSortable && (
@@ -326,11 +334,11 @@ export function DataTable<TData, TValue>({
                                                                     )}
                                                                 </div>
                                                             )}
-                                                            </button>
-                                                        )}
-                                                    </th>
-                                                )
-                                            })}
+                                                        </div>
+                                                    )}
+                                                </th>
+                                            )
+                                        })}
                                     </tr>
                                 ))}
                             </thead>
@@ -379,14 +387,20 @@ export function DataTable<TData, TValue>({
                                                         aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (
-                                                            <button
-                                                                type="button"
+                                                            <div
                                                                 className={cn(
                                                                     "flex items-center gap-2 select-none w-full text-left",
                                                                     isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
                                                                 )}
                                                                 onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
-                                                                disabled={!isSortable}
+                                                                role={isSortable ? "button" : undefined}
+                                                                tabIndex={isSortable ? 0 : undefined}
+                                                                onKeyDown={isSortable ? (e) => {
+                                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                                        e.preventDefault();
+                                                                        header.column.getToggleSortingHandler()?.(e);
+                                                                    }
+                                                                } : undefined}
                                                             >
                                                                 <div className="truncate flex-1 text-xs md:text-sm">
                                                                     {flexRender(
@@ -400,12 +414,12 @@ export function DataTable<TData, TValue>({
                                                                             <ChevronUp className="h-4 w-4" />
                                                                         ) : sortDirection === "desc" ? (
                                                                             <ChevronDown className="h-4 w-4" />
-                                                                    ) : (
-                                                                        <ChevronsUpDown className="h-4 w-4 opacity-30" />
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                            </button>
+                                                                        ) : (
+                                                                            <ChevronsUpDown className="h-4 w-4 opacity-30" />
+                                                                        )}
+                                                                    </div>
+                                                                )}
+                                                            </div>
                                                         )}
                                                     </th>
                                                 )
@@ -435,3 +449,4 @@ export function DataTable<TData, TValue>({
         </TooltipProvider>
     );
 }
+

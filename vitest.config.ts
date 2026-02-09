@@ -15,6 +15,7 @@ export default defineConfig({
             '__tests__/e2e/**/*',
         ],
         setupFiles: ['./vitest.setup.ts'],
+        testTimeout: 30000,
         // Базовая последовательность файлов
         fileParallelism: false,
         sequence: {

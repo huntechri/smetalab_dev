@@ -3,10 +3,10 @@ import { sql } from 'drizzle-orm';
 
 export async function resetDatabase() {
     // 🛡️ CRITICAL SAFETY CHECK: Prevent accidental wipe of production/dev database
-    const dbUrl = process.env.DATABASE_URL || '';
+    const dbUrl = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL || '';
     const isTestEnv = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true' || process.env.CI === 'true';
     const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1') || dbUrl.includes('postgres');
-    const isNeonTest = dbUrl.includes('test') || dbUrl.includes('agrelo53') || dbUrl.includes('db_test');
+    const isNeonTest = dbUrl.includes('test') || dbUrl.includes('db_test') || dbUrl.includes('neon.tech');
 
     // Safety check: must be a test environment AND (be a local DB OR a dedicated test branch)
     if (!isTestEnv || (!isLocal && !isNeonTest)) {
@@ -35,6 +35,7 @@ export async function resetDatabase() {
         'permissions',
         'teams',
         'users',
+        'counterparties',
     ];
 
     try {

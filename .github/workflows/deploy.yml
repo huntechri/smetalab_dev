@@ -98,20 +98,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'schedule'
 
-    services:
-      postgres:
-        image: pgvector/pgvector:pg17
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: smetalab
-        options: >-
-          --health-cmd "pg_isready -U postgres -d smetalab"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+
 
     env:
       DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
@@ -146,24 +133,14 @@ jobs:
 
       - name: Ensure database env
         run: |
-          set -e
-          DEFAULT_DB_PORT="${{ job.services.postgres.ports[5432] }}"
-          DEFAULT_DB_URL="postgresql://postgres:postgres@localhost:${DEFAULT_DB_PORT}/smetalab"
-          
-          echo "Checking for local Postgres service..."
-          if [ -n "$DEFAULT_DB_PORT" ]; then
-            echo "✅ Local Postgres detected on port $DEFAULT_DB_PORT. Using it for all tests."
-            echo "DATABASE_URL=$DEFAULT_DB_URL" >> "$GITHUB_ENV"
-            echo "POSTGRES_URL=$DEFAULT_DB_URL" >> "$GITHUB_ENV"
-            echo "LOCAL_DATABASE_URL=$DEFAULT_DB_URL" >> "$GITHUB_ENV"
-          else
-            echo "⚠️ No local Postgres detected. Falling back to secrets if defined."
-            if [ -z "$DATABASE_URL" ]; then
-               if [ -n "${{ secrets.TEST_DATABASE_URL }}" ]; then
-                 echo "DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
-               fi
-            fi
-          fi
+          echo "Using Neon Test Branch for CI"
+          echo "DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
+          echo "POSTGRES_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
+          # LOCAL_DATABASE_URL is used in some scripts/configs
+          echo "LOCAL_DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
 
       - name: Database Migrations
         run: |
@@ -206,7 +183,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
-      name: production
+      name: "production"
       url: https://smetalabv3.vercel.app
     steps:
       - name: Checkout code
@@ -220,7 +197,7 @@ jobs:
       - name: Deployment
         run: |
           set -ex
-          vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+          vercel pull --yes --environment production --token=${{ secrets.VERCEL_TOKEN }}
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
           vercel deploy --prebuilt --prod --archive=tgz --token=${{ secrets.VERCEL_TOKEN }}
         env:
