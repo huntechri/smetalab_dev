@@ -49,25 +49,41 @@ ALTER TABLE "estimate_shares" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "invitations" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 ALTER TABLE "team_members" ENABLE ROW LEVEL SECURITY;--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_works ON "works";
 CREATE POLICY superadmin_all_works ON "works" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS global_read_works ON "works";
 CREATE POLICY global_read_works ON "works" FOR SELECT USING (tenant_id = 1);--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_works ON "works";
 CREATE POLICY tenant_isolation_works ON "works" FOR ALL USING (tenant_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_materials ON "materials";
 CREATE POLICY superadmin_all_materials ON "materials" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS global_read_materials ON "materials";
 CREATE POLICY global_read_materials ON "materials" FOR SELECT USING (tenant_id = 1);--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_materials ON "materials";
 CREATE POLICY tenant_isolation_materials ON "materials" FOR ALL USING (tenant_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (tenant_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_activity_logs ON "activity_logs";
 CREATE POLICY superadmin_all_activity_logs ON "activity_logs" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_activity_logs ON "activity_logs";
 CREATE POLICY tenant_isolation_activity_logs ON "activity_logs" FOR ALL USING (team_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (team_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_notifications ON "notifications";
 CREATE POLICY superadmin_all_notifications ON "notifications" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_notifications ON "notifications";
 CREATE POLICY tenant_isolation_notifications ON "notifications" FOR ALL USING (team_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (team_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_estimate_shares ON "estimate_shares";
 CREATE POLICY superadmin_all_estimate_shares ON "estimate_shares" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_estimate_shares ON "estimate_shares";
 CREATE POLICY tenant_isolation_estimate_shares ON "estimate_shares" FOR ALL USING (team_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (team_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_invitations ON "invitations";
 CREATE POLICY superadmin_all_invitations ON "invitations" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_invitations ON "invitations";
 CREATE POLICY tenant_isolation_invitations ON "invitations" FOR ALL USING (team_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (team_id = current_setting('app.tenant_id', true)::integer);--> statement-breakpoint
 
+DROP POLICY IF EXISTS superadmin_all_team_members ON "team_members";
 CREATE POLICY superadmin_all_team_members ON "team_members" FOR ALL USING (current_setting('app.platform_role', true) = 'superadmin');--> statement-breakpoint
+DROP POLICY IF EXISTS tenant_isolation_team_members ON "team_members";
 CREATE POLICY tenant_isolation_team_members ON "team_members" FOR ALL USING (team_id = current_setting('app.tenant_id', true)::integer) WITH CHECK (team_id = current_setting('app.tenant_id', true)::integer);
