@@ -63,3 +63,4 @@ debug.ts
 *.tmp
 *.bak
 
+storybook-static

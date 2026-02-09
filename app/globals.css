@@ -1,10 +1,10 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
 /*
   ---break---
 */
 @custom-variant dark (&:is(.dark *));
-
-@import "tw-animate-css";
 
 @variant dark (&:is(.dark *));
 
@@ -161,16 +161,12 @@
   body {
     @apply bg-background text-foreground;
   }
-  
+
   /* Focus indicator */
   :focus-visible {
     @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-background;
   }
 }
-
-/*
-  ---break---
-*/
 
 :root {
   --background: hsl(0 0% 100%);
@@ -208,10 +204,6 @@
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
-/*
-  ---break---
-*/
-
 .dark {
   --background: hsl(240 10% 3.9%);
   --foreground: hsl(0 0% 98%);
@@ -246,10 +238,6 @@
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
-
-/*
-  ---break---
-*/
 
 @theme inline {
   --color-background: var(--background);
@@ -290,10 +278,6 @@
   --color-sidebar: var(--sidebar);
 }
 
-/*
-  ---break---
-*/
-
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -315,7 +299,7 @@
   .glass-card {
     @apply bg-background/40 backdrop-blur-md border border-border/40 shadow-xl shadow-black/5 transition-all duration-300;
   }
-  
+
   .glass-morphism {
     @apply bg-background/60 backdrop-blur-lg border border-border/50;
   }
