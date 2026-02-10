@@ -1,7 +1,7 @@
-import { db } from '../lib/db/drizzle';
-import { materials } from '../lib/db/schema';
+import { db } from '../lib/data/db/drizzle';
+import { materials } from '../lib/data/db/schema';
 import { sql } from 'drizzle-orm';
-import { MaterialsService } from '../lib/services/materials.service';
+import { MaterialsService } from '../lib/domain/materials/materials.service';
 import dotenv from 'dotenv';
 import { performance } from 'perf_hooks';
 

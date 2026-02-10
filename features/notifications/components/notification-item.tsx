@@ -1,0 +1,85 @@
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { NotificationPayload } from '@/features/notifications/components/types';
+
+interface NotificationItemProps {
+  notification: NotificationPayload;
+  onMarkAsRead?: (id: number) => void;
+}
+
+function formatRelativeTime(dateString: string) {
+  const date = new Date(dateString);
+  const now = new Date();
+  const seconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  const intervals: Array<[number, string]> = [
+    [31536000, 'г. назад'],
+    [2592000, 'мес. назад'],
+    [86400, 'дн. назад'],
+    [3600, 'ч. назад'],
+    [60, 'мин. назад'],
+  ];
+
+  for (const [intervalSeconds, label] of intervals) {
+    const interval = seconds / intervalSeconds;
+    if (interval > 1) {
+      return `${Math.floor(interval)} ${label}`;
+    }
+  }
+
+  return 'менее минуты назад';
+}
+
+export function NotificationItem({ notification, onMarkAsRead }: NotificationItemProps) {
+  const timeLabel = formatRelativeTime(notification.createdAt);
+  const baseClasses = 'w-full text-left p-3 rounded-lg transition-colors flex items-start gap-3';
+
+  if (notification.read) {
+    return (
+      <div
+        role="article"
+        className={cn(baseClasses, 'cursor-default opacity-75 bg-muted/20')}
+        aria-label={`Прочитано: ${notification.title}`}
+      >
+        <div className="min-w-0">
+          <div className="flex items-center gap-2">
+            <p className="text-sm font-medium">{notification.title}</p>
+            <Badge variant="outline" className="text-[10px] uppercase">
+              Прочитано
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1">
+            {notification.description}
+          </p>
+          <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      onClick={() => onMarkAsRead?.(notification.id)}
+      className={cn(baseClasses, 'bg-muted/60 hover:bg-muted justify-start h-auto whitespace-normal')}
+      aria-label={`Пометить как прочитанное: ${notification.title}`}
+      title="Нажмите, чтобы отметить как прочитанное"
+    >
+      <div className="mt-1 h-2 w-2 rounded-full bg-orange-500 shrink-0" aria-hidden="true" />
+      <div className="min-w-0">
+        <div className="flex items-center gap-2">
+          <p className="text-sm font-semibold">{notification.title}</p>
+          <Badge variant="secondary" className="text-[10px] uppercase">
+            Новое
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          {notification.description}
+        </p>
+        <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
+      </div>
+    </Button>
+  );
+}

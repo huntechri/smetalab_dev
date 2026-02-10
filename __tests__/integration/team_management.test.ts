@@ -1,15 +1,15 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { users, teams, teamMembers, invitations, permissions, rolePermissions } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { users, teams, teamMembers, invitations, permissions, rolePermissions } from '@/lib/data/db/schema';
 import { inviteTeamMember, removeTeamMember } from '@/app/(login)/actions';
 import { eq } from 'drizzle-orm';
-import * as emailUtils from '@/lib/email/email';
-import * as queryUtils from '@/lib/db/queries';
-import { resetDatabase } from '@/lib/db/test-utils';
+import * as emailUtils from '@/lib/infrastructure/email/email';
+import * as queryUtils from '@/lib/data/db/queries';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 // Mock auth middleware and dependencies
-vi.mock('@/lib/auth/middleware', () => ({
+vi.mock('@/lib/infrastructure/auth/middleware', () => ({
     validatedAction: (schema: unknown, handler: (data: unknown, formData: FormData) => Promise<unknown>) => {
         return async (data: unknown, formData: FormData) => {
             return handler(data, formData);
@@ -23,12 +23,12 @@ vi.mock('@/lib/auth/middleware', () => ({
     }
 }));
 
-vi.mock('@/lib/db/queries', () => ({
+vi.mock('@/lib/data/db/queries', () => ({
     getUser: vi.fn(),
     getUserWithTeam: vi.fn(),
 }));
 
-vi.mock('@/lib/email/email', () => ({
+vi.mock('@/lib/infrastructure/email/email', () => ({
     sendInvitationEmail: vi.fn(),
 }));
 

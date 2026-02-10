@@ -1,6 +1,6 @@
 import 'dotenv/config';
-import { db } from '@/lib/db/drizzle';
-import { materials, works } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { materials, works } from '@/lib/data/db/schema';
 import { generateEmbeddingsBatch } from '@/lib/ai/embeddings';
 import { buildMaterialContext, buildWorkContext, MaterialContextInput, WorkContextInput } from '@/lib/ai/embedding-context';
 import { eq, isNull, sql, inArray } from 'drizzle-orm';

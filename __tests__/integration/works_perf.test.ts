@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { works, users, teams, teamMembers, NewWork } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { works, users, teams, teamMembers, NewWork } from '@/lib/data/db/schema';
 import { reorderWorks } from '@/app/actions/works';
 import { eq } from 'drizzle-orm';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 // Mock revalidatePath
 vi.mock('next/cache', () => ({
@@ -12,7 +12,7 @@ vi.mock('next/cache', () => ({
 }));
 
 // Mock the queries
-vi.mock('@/lib/db/queries', async (importOriginal) => {
+vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...(actual as object),

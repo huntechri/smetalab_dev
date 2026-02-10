@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { getUser } from '@/lib/db/queries';
-import { getUserPermissions } from '@/lib/auth/rbac';
-import { db } from '@/lib/db/drizzle';
-import { teamMembers } from '@/lib/db/schema';
+import { getUser } from '@/lib/data/db/queries';
+import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
+import { db } from '@/lib/data/db/drizzle';
+import { teamMembers } from '@/lib/data/db/schema';
 import { eq } from 'drizzle-orm';
 
 export async function GET(request: Request) {

@@ -3,7 +3,7 @@
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import { usePageTitle } from '@/hooks/use-page-title';
-import { NotificationBell } from '@/components/notification-bell';
+import { NotificationBell } from '@/features/notifications/components/notification-bell';
 import { UserMenu } from '@/components/user-menu';
 import { ActiveTeamIndicator } from '@/components/active-team-indicator';
 

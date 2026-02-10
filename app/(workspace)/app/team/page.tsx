@@ -1,5 +1,5 @@
 
-import { checkAccess } from '@/lib/auth/access';
+import { checkAccess } from '@/lib/infrastructure/auth/access';
 import { redirect } from 'next/navigation';
 import TeamPageClient from './client-page';
 

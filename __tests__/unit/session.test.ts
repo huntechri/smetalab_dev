@@ -23,7 +23,7 @@ describe('getSession', () => {
 
     vi.mocked(cookies).mockResolvedValue(cookieStore);
 
-    const { getSession } = await import('@/lib/auth/session');
+    const { getSession } = await import('@/lib/infrastructure/auth/session');
     const result = await getSession();
 
     expect(getCookie).toHaveBeenCalledWith('access_token');

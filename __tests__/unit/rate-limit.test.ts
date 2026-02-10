@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { rateLimit } from '@/lib/auth/rate-limit';
+import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
 
 const mockGet = vi.fn();
 

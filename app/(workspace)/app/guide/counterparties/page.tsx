@@ -1,7 +1,7 @@
 import { Metadata } from 'next';
 import { CounterpartiesClient } from './components/CounterpartiesClient';
 import { ForbiddenState } from '@/components/ui/states';
-import { getCounterparties, getUser } from '@/lib/db/queries';
+import { getCounterparties, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {

@@ -1,5 +1,5 @@
-import { db } from '../lib/db/drizzle';
-import { MaterialsService } from '../lib/services/materials.service';
+import { db } from '../lib/data/db/drizzle';
+import { MaterialsService } from '../lib/domain/materials/materials.service';
 import dotenv from 'dotenv';
 
 dotenv.config();

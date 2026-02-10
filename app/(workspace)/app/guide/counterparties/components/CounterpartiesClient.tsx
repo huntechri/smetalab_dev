@@ -7,7 +7,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CreateCounterpartySheet } from "./CreateCounterpartySheet";
-import { notify } from "@/lib/notifications/notify";
+import { notify } from "@/lib/infrastructure/notifications/notify";
 import { deleteCounterparty } from "@/app/actions/counterparties";
 import {
     Breadcrumb,

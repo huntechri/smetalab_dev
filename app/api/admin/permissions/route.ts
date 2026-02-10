@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/lib/db/drizzle';
-import { permissions, rolePermissions, platformRolePermissions } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { permissions, rolePermissions, platformRolePermissions } from '@/lib/data/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { getUser } from '@/lib/db/queries';
+import { getUser } from '@/lib/data/db/queries';
 
 export async function GET() {
     try {

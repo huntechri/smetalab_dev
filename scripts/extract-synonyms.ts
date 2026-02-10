@@ -3,8 +3,8 @@
  * Запуск: pnpm tsx scripts/extract-synonyms.ts
  */
 
-import { db } from '@/lib/db/drizzle';
-import { materials } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { materials } from '@/lib/data/db/schema';
 import { sql } from 'drizzle-orm';
 import * as fs from 'fs';
 import * as path from 'path';
