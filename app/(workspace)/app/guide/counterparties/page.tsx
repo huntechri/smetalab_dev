@@ -1,6 +1,6 @@
-import { Suspense } from 'react';
 import { Metadata } from 'next';
 import { CounterpartiesClient } from './components/CounterpartiesClient';
+import { ForbiddenState } from '@/components/ui/states';
 import { getCounterparties, getUser } from '@/lib/db/queries';
 import { redirect } from 'next/navigation';
 
@@ -15,12 +15,11 @@ export default async function CounterpartiesPage() {
 
     if (!user.tenantId) {
         return (
-            <div className="flex items-center justify-center h-full p-8">
-                <div className="text-center">
-                    <h2 className="text-lg font-semibold">Нет доступа к организации</h2>
-                    <p className="text-muted-foreground mt-2">Обратитесь к администратору для добавления в команду.</p>
-                </div>
-            </div>
+            <ForbiddenState
+                title="Нет доступа к организации"
+                description="Обратитесь к администратору для добавления в команду."
+                className="min-h-[40vh]"
+            />
         )
     }
 
@@ -28,13 +27,11 @@ export default async function CounterpartiesPage() {
 
     return (
         <div className="flex-1 w-full flex flex-col">
-            <Suspense fallback={<div>Loading...</div>}>
-                <CounterpartiesClient
-                    initialData={data}
-                    totalCount={count}
-                    tenantId={user.tenantId}
-                />
-            </Suspense>
+            <CounterpartiesClient
+                initialData={data}
+                totalCount={count}
+                tenantId={user.tenantId}
+            />
         </div>
     );
 }

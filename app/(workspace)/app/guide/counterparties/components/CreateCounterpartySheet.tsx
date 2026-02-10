@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -34,7 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { toast } from "sonner";
+import { notify } from "@/lib/notifications/notify";
 import { useRouter } from "next/navigation";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import {
@@ -42,10 +42,7 @@ import {
     User,
     FileText,
     Landmark,
-    Mail,
     Phone,
-    MapPin,
-    Briefcase,
 } from "lucide-react";
 
 interface CreateCounterpartySheetProps {
@@ -92,7 +89,7 @@ export function CreateCounterpartySheet({
     open,
     onOpenChange,
     counterparty,
-    tenantId,
+    tenantId: _tenantId,
     onSaved,
 }: CreateCounterpartySheetProps) {
     const router = useRouter();
@@ -179,26 +176,26 @@ export function CreateCounterpartySheet({
                 if (counterparty) {
                     const result = await updateCounterparty({ id: counterparty.id, data: values });
                     if (result.success) {
-                        toast.success("Контрагент обновлен");
+                        notify({ title: "Контрагент обновлен", intent: "success" });
                         onOpenChange(false);
                         onSaved?.();
                         router.refresh();
                     } else {
-                        toast.error(result.message || "Произошла ошибка при сохранении");
+                        notify({ title: result.message || "Произошла ошибка при сохранении", intent: "error" });
                     }
                 } else {
                     const result = await createCounterparty(values);
                     if (result.success) {
-                        toast.success("Контрагент создан");
+                        notify({ title: "Контрагент создан", intent: "success" });
                         onOpenChange(false);
                         onSaved?.();
                         router.refresh();
                     } else {
-                        toast.error(result.message || "Произошла ошибка при сохранении");
+                        notify({ title: result.message || "Произошла ошибка при сохранении", intent: "error" });
                     }
                 }
             } catch (_error) {
-                toast.error("Произошла ошибка при сохранении");
+                notify({ title: "Произошла ошибка при сохранении", intent: "error" });
             }
         });
     };

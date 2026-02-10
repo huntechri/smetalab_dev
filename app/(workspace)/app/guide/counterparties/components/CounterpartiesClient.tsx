@@ -7,7 +7,7 @@ import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { CreateCounterpartySheet } from "./CreateCounterpartySheet";
-import { toast } from "sonner";
+import { notify } from "@/lib/notifications/notify";
 import { deleteCounterparty } from "@/app/actions/counterparties";
 import {
     Breadcrumb,
@@ -24,7 +24,7 @@ interface CounterpartiesClientProps {
     tenantId: number;
 }
 
-export function CounterpartiesClient({ initialData, totalCount, tenantId }: CounterpartiesClientProps) {
+export function CounterpartiesClient({ initialData, totalCount: _totalCount, tenantId }: CounterpartiesClientProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
 
@@ -43,12 +43,12 @@ export function CounterpartiesClient({ initialData, totalCount, tenantId }: Coun
             try {
                 const result = await deleteCounterparty(counterparty.id);
                 if (result.success) {
-                    toast.success("Контрагент удален");
+                    notify({ title: "Контрагент удален", intent: "success" });
                 } else {
-                    toast.error(result.message || "Не удалось удалить контрагента");
+                    notify({ title: result.message || "Не удалось удалить контрагента", intent: "error" });
                 }
             } catch (_error) {
-                toast.error("Не удалось удалить контрагента");
+                notify({ title: "Не удалось удалить контрагента", intent: "error" });
             }
         }
     };
