@@ -2,13 +2,12 @@
 
 import { useState } from "react";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { columns } from "./columns";
+import { columns } from "../components/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { CreateCounterpartySheet } from "./CreateCounterpartySheet";
-import { notify } from "@/lib/infrastructure/notifications/notify";
-import { deleteCounterparty } from "@/app/actions/counterparties";
+import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
+import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -18,13 +17,13 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
-interface CounterpartiesClientProps {
+interface CounterpartiesScreenProps {
     initialData: CounterpartyRow[];
     totalCount: number;
     tenantId: number;
 }
 
-export function CounterpartiesClient({ initialData, totalCount: _totalCount, tenantId }: CounterpartiesClientProps) {
+export function CounterpartiesScreen({ initialData, totalCount: _totalCount, tenantId }: CounterpartiesScreenProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
 
@@ -38,20 +37,7 @@ export function CounterpartiesClient({ initialData, totalCount: _totalCount, ten
         setIsSheetOpen(true);
     };
 
-    const handleDelete = async (counterparty: CounterpartyRow) => {
-        if (confirm("Вы уверены, что хотите удалить этого контрагента?")) {
-            try {
-                const result = await deleteCounterparty(counterparty.id);
-                if (result.success) {
-                    notify({ title: "Контрагент удален", intent: "success" });
-                } else {
-                    notify({ title: result.message || "Не удалось удалить контрагента", intent: "error" });
-                }
-            } catch (_error) {
-                notify({ title: "Не удалось удалить контрагента", intent: "error" });
-            }
-        }
-    };
+    const { handleDelete } = useCounterpartiesActions();
 
     const onSaved = () => {
         setIsSheetOpen(false);
@@ -98,3 +84,4 @@ export function CounterpartiesClient({ initialData, totalCount: _totalCount, ten
         </div>
     );
 }
+export const CounterpartiesClient = CounterpartiesScreen;

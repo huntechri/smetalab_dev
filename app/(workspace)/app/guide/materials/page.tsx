@@ -1,5 +1,5 @@
 import { getMaterials, getMaterialsCount, getTeamForUser } from "@/lib/data/db/queries";
-import { MaterialsClient } from "./materials-client";
+import { MaterialsScreen } from "@/features/materials";
 
 export default async function MaterialsPage() {
     const [materials, totalCount, team] = await Promise.all([
@@ -9,7 +9,7 @@ export default async function MaterialsPage() {
     ]);
 
     return (
-        <MaterialsClient
+        <MaterialsScreen
             initialData={materials}
             totalCount={totalCount}
             tenantId={team?.id || 1}
