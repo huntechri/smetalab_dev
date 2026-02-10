@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react"
 import { describe, it, expect, vi } from "vitest"
-import { useMaterialsRowActions } from "@/app/(workspace)/app/guide/materials/hooks/useMaterialsRowActions"
+import { useMaterialsRowActions } from "@/features/materials/hooks/useMaterialsRowActions"
 
 const materialsMocks = vi.hoisted(() => ({
   updateMaterial: vi.fn(),

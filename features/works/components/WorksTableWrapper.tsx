@@ -1,5 +1,5 @@
 import { DataTable } from "@/components/ui/data-table";
-import { columns } from "../columns";
+import { columns } from "./columns";
 import { WorkRow } from '@/types/work-row';
 
 interface WorksTableWrapperProps {

@@ -14,27 +14,27 @@ import {
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 import { WorkRow } from '@/types/work-row';
-import { WorksEditDialog } from './components/WorksEditDialog';
-import { WorksDeleteDialog } from './components/WorksDeleteDialog';
+import { WorksEditDialog } from '../components/WorksEditDialog';
+import { WorksDeleteDialog } from '../components/WorksDeleteDialog';
 
 // Internal Components
-import { WorksHeader } from './components/WorksHeader';
-import { WorksToolbar } from './components/WorksToolbar';
-import { WorksTableWrapper } from './components/WorksTableWrapper';
+import { WorksHeader } from '../components/WorksHeader';
+import { WorksToolbar } from '../components/WorksToolbar';
+import { WorksTableWrapper } from '../components/WorksTableWrapper';
 
 // Internal Hooks
-import { useWorksTable } from './hooks/useWorksTable';
-import { useWorksActions } from './hooks/useWorksActions';
-import { useWorksSearch } from './hooks/useWorksSearch';
+import { useWorksTable } from '../hooks/useWorksTable';
+import { useWorksActions } from '../hooks/useWorksActions';
+import { useWorksSearch } from '../hooks/useWorksSearch';
 import { useDataTableEditor } from '@/hooks/use-data-table-editor';
 
-interface WorksClientProps {
+interface WorksScreenProps {
     initialData: WorkRow[];
     totalCount: number;
     tenantId: number;
 }
 
-export function WorksClient({ initialData, totalCount, tenantId }: WorksClientProps) {
+export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -163,3 +163,4 @@ export function WorksClient({ initialData, totalCount, tenantId }: WorksClientPr
         </div>
     );
 }
+export const WorksClient = WorksScreen;

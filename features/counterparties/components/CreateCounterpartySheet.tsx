@@ -3,7 +3,6 @@
 import { useEffect, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
     Sheet,
     SheetContent,
@@ -34,9 +33,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { notify } from "@/lib/infrastructure/notifications/notify";
+import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
+import { counterpartyFormSchema, type CounterpartyFormValues } from "../schemas/counterparty-form.schema";
 import {
     Loader2,
     User,
@@ -53,38 +53,6 @@ interface CreateCounterpartySheetProps {
     onSaved?: () => void;
 }
 
-const formSchema = z.object({
-    name: z.string().min(1, "Обязательное поле"),
-    type: z.enum(["customer", "contractor", "supplier"]),
-    legalStatus: z.enum(["individual", "company"]),
-
-    // Individual
-    birthDate: z.string().optional(),
-    passportSeriesNumber: z.string().optional(),
-    passportIssuedBy: z.string().optional(),
-    passportIssuedDate: z.string().optional(),
-    departmentCode: z.string().optional(),
-
-    // Company
-    ogrn: z.string().optional(),
-    inn: z.string().optional(),
-    kpp: z.string().optional(),
-
-    // Contact
-    address: z.string().optional(),
-    phone: z.string().optional(),
-    email: z.string().email("Некорректный email").optional().or(z.literal("")),
-
-    // Bank
-    bankName: z.string().optional(),
-    bankAccount: z.string().optional(),
-    corrAccount: z.string().optional(),
-    bankInn: z.string().optional(),
-    bankKpp: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 export function CreateCounterpartySheet({
     open,
     onOpenChange,
@@ -94,9 +62,10 @@ export function CreateCounterpartySheet({
 }: CreateCounterpartySheetProps) {
     const router = useRouter();
     const [isPending, startTransition] = useTransition();
+    const { toast } = useToast();
 
-    const form = useForm<FormValues>({
-        resolver: zodResolver(formSchema),
+    const form = useForm<CounterpartyFormValues>({
+        resolver: zodResolver(counterpartyFormSchema),
         defaultValues: {
             name: "",
             type: "customer",
@@ -170,32 +139,32 @@ export function CreateCounterpartySheet({
         }
     }, [counterparty, form, open]);
 
-    const onSubmit = (values: FormValues) => {
+    const onSubmit = (values: CounterpartyFormValues) => {
         startTransition(async () => {
             try {
                 if (counterparty) {
                     const result = await updateCounterparty({ id: counterparty.id, data: values });
                     if (result.success) {
-                        notify({ title: "Контрагент обновлен", intent: "success" });
+                        toast({ title: "Контрагент обновлен" });
                         onOpenChange(false);
                         onSaved?.();
                         router.refresh();
                     } else {
-                        notify({ title: result.message || "Произошла ошибка при сохранении", intent: "error" });
+                        toast({ variant: "destructive", title: result.message || "Произошла ошибка при сохранении" });
                     }
                 } else {
                     const result = await createCounterparty(values);
                     if (result.success) {
-                        notify({ title: "Контрагент создан", intent: "success" });
+                        toast({ title: "Контрагент создан" });
                         onOpenChange(false);
                         onSaved?.();
                         router.refresh();
                     } else {
-                        notify({ title: result.message || "Произошла ошибка при сохранении", intent: "error" });
+                        toast({ variant: "destructive", title: result.message || "Произошла ошибка при сохранении" });
                     }
                 }
             } catch (_error) {
-                notify({ title: "Произошла ошибка при сохранении", intent: "error" });
+                toast({ variant: "destructive", title: "Произошла ошибка при сохранении" });
             }
         });
     };

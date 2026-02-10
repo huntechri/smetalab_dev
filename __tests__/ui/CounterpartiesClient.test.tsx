@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react';
-import { CounterpartiesClient } from '@/app/(workspace)/app/guide/counterparties/components/CounterpartiesClient';
+import { CounterpartiesClient } from '@/features/counterparties';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
 import type { Counterparty } from '@/lib/data/db/schema';
