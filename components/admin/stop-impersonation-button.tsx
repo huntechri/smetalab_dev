@@ -4,7 +4,7 @@ import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { stopImpersonation } from '@/app/actions/admin/impersonation';
 import { LogOut } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notifications/notify';
 import { useRouter } from 'next/navigation';
 
 export function StopImpersonationButton() {
@@ -15,11 +15,11 @@ export function StopImpersonationButton() {
         startTransition(async () => {
             const result = await stopImpersonation();
             if (result.success) {
-                toast.success(result.success);
+                notify({ title: result.success, intent: "success" });
                 router.refresh(); // Refresh to update server components (getTeamForUser)
             } else {
                 // @ts-expect-error handling potential error return structure
-                toast.error(result.error || 'Ошибка при выходе');
+                notify({ title: result.error || 'Ошибка при выходе', intent: 'error' });
             }
         });
     };

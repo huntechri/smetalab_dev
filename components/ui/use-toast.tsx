@@ -1,18 +1,20 @@
 'use client';
-import { toast as sonnerToast } from "sonner"
+
+import { notify } from '@/lib/notifications/notify';
 
 export const useToast = () => {
   return {
     toast: ({ title, description, variant }: { title: string, description?: string, variant?: 'default' | 'destructive' }) => {
-      if (variant === 'destructive') {
-        sonnerToast.error(title, { description })
-      } else {
-        sonnerToast.success(title, { description })
-      }
+      notify({
+        title,
+        description,
+        intent: variant === 'destructive' ? 'error' : 'success',
+        channel: 'toast',
+      });
     },
     dismiss: () => null
-  }
-}
+  };
+};
 
 export function ToastProvider({ children }: { children: React.ReactNode }) {
   return <>{children}</>;

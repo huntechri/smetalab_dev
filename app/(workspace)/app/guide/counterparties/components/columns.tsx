@@ -5,7 +5,7 @@ import { ColumnDef } from "@tanstack/react-table"
 import { CounterpartyRow } from "@/types/counterparty-row"
 import { TableMeta } from "@/components/ui/data-table"
 import { Button } from "@/components/ui/button"
-import { MoreHorizontal, Pencil, Trash, Settings } from "lucide-react"
+import { Pencil, Trash, Settings } from "lucide-react"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -72,8 +72,8 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 <div className="text-right pr-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
+                            <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Открыть меню действий">
+                                <span className="sr-only">Открыть меню действий</span>
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
