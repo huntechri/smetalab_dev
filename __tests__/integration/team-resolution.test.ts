@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { resolveTeamForUser, SYSTEM_TENANT_ID } from '@/lib/db/queries';
-import { teamMembers, teams, users } from '@/lib/db/schema';
-import { resetDatabase, syncTableSequence } from '@/lib/db/test-utils';
+import { db } from '@/lib/data/db/drizzle';
+import { resolveTeamForUser, SYSTEM_TENANT_ID } from '@/lib/data/db/queries';
+import { teamMembers, teams, users } from '@/lib/data/db/schema';
+import { resetDatabase, syncTableSequence } from '@/lib/data/db/test-utils';
 
 describe('resolveTeamForUser', () => {
   beforeEach(async () => {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { hashPassword, comparePasswords } from '@/lib/auth/session';
+import { hashPassword, comparePasswords } from '@/lib/infrastructure/auth/session';
 
 describe('Auth Session Utility', () => {
     it('should hash and compare passwords correctly', async () => {

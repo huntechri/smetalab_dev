@@ -1,4 +1,4 @@
-import { getTeamDetails } from '@/lib/db/admin-queries';
+import { getTeamDetails } from '@/lib/data/db/admin-queries';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,7 +13,7 @@ import {
     Clock
 } from 'lucide-react';
 import Link from 'next/link';
-import { ImpersonateButton } from '@/components/admin/impersonate-button';
+import { ImpersonateButton } from '@/features/admin/components/impersonate-button';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 

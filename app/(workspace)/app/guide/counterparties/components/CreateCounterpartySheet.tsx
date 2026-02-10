@@ -34,7 +34,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { notify } from "@/lib/notifications/notify";
+import { notify } from "@/lib/infrastructure/notifications/notify";
 import { useRouter } from "next/navigation";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import {

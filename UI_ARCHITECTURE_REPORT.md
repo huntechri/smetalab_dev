@@ -211,7 +211,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/card, @/lib/db/schema, @/lib/db/queries, next/navigation.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/card, @/lib/data/db/schema, @/lib/data/db/queries, next/navigation.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -245,7 +245,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): react, @/components/ui/button, @/components/ui/input, @/components/ui/card, @/components/ui/label, lucide-react, @/app/(login)/actions, @/lib/db/schema, swr.
+- External dependencies (Radix/shadcn/forms/state libs): react, @/components/ui/button, @/components/ui/input, @/components/ui/card, @/components/ui/label, lucide-react, @/app/(login)/actions, @/lib/data/db/schema, swr.
 **Internal behavior:**
 - State and hooks used: useActionState, useSWR.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -279,7 +279,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/components/admin-sidebar, @/lib/db/queries, @/components/permissions-provider, @/lib/auth/rbac.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/features/admin/components/admin-sidebar, @/lib/data/db/queries, @/components/providers/permissions-provider, @/lib/infrastructure/auth/rbac.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -347,7 +347,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/permissions-matrix.
+- External dependencies (Radix/shadcn/forms/state libs): @/features/permissions/components/permissions-matrix.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -415,7 +415,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/db/admin-queries, next/navigation, @/components/ui/card, @/components/ui/badge, @/components/ui/button, @/components/ui/tabs, next/link, @/components/admin/impersonate-button, date-fns, date-fns/locale.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/data/db/admin-queries, next/navigation, @/components/ui/card, @/components/ui/badge, @/components/ui/button, @/components/ui/tabs, next/link, @/features/admin/components/impersonate-button, date-fns, date-fns/locale.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -449,7 +449,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/db/admin-queries, @/components/ui/card, @/components/ui/badge, @/components/ui/button, lucide-react, next/link.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/data/db/admin-queries, @/components/ui/card, @/components/ui/badge, @/components/ui/button, lucide-react, next/link.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -483,7 +483,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next/link, react, @/components/ui/button, lucide-react, @/components/ui/avatar, @/app/(login)/actions, next/navigation, @/lib/db/schema, swr.
+- External dependencies (Radix/shadcn/forms/state libs): next/link, react, @/components/ui/button, lucide-react, @/components/ui/avatar, @/app/(login)/actions, next/navigation, @/lib/data/db/schema, swr.
 **Internal behavior:**
 - State and hooks used: useRouter, useSWR.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -551,7 +551,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/payments/actions, lucide-react, @/lib/payments/stripe.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/infrastructure/payments/actions, lucide-react, @/lib/infrastructure/payments/stripe.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -653,7 +653,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next/link, react, next/navigation, @/components/ui/button, @/components/ui/input, @/components/ui/label, lucide-react, @/lib/auth/middleware.
+- External dependencies (Radix/shadcn/forms/state libs): next/link, react, next/navigation, @/components/ui/button, @/components/ui/input, @/components/ui/label, lucide-react, @/lib/infrastructure/auth/middleware.
 **Internal behavior:**
 - State and hooks used: useActionState, useSearchParams, useState.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -891,7 +891,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): react, next, @/lib/db/queries, next/navigation.
+- External dependencies (Radix/shadcn/forms/state libs): react, next, @/lib/data/db/queries, next/navigation.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -1367,7 +1367,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/db/queries.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/data/db/queries.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -1775,7 +1775,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/db/queries.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/data/db/queries.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -1843,7 +1843,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/components/app-sidebar, @/components/app-header, @/lib/db/queries, @/lib/auth/rbac, @/components/permissions-provider, @/components/admin/impersonation-banner.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/components/app-sidebar, @/components/app-header, @/lib/data/db/queries, @/lib/infrastructure/auth/rbac, @/components/providers/permissions-provider, @/features/admin/components/impersonation-banner.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2285,7 +2285,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/lib/auth/access, next/navigation.
+- External dependencies (Radix/shadcn/forms/state libs): @/lib/infrastructure/auth/access, next/navigation.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2421,7 +2421,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next/navigation, @/lib/db/drizzle, @/lib/db/schema, drizzle-orm, @/lib/db/queries.
+- External dependencies (Radix/shadcn/forms/state libs): next/navigation, @/lib/data/db/drizzle, @/lib/data/db/schema, drizzle-orm, @/lib/data/db/queries.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2455,7 +2455,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next, @/lib/db/queries, @/components/ui/sonner, next/font/google, react, @/components/swr-wrapper, @/components/web-vitals.
+- External dependencies (Radix/shadcn/forms/state libs): next, @/lib/data/db/queries, @/components/ui/sonner, next/font/google, react, @/components/swr-wrapper, @/components/web-vitals.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2557,7 +2557,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/badge, @/components/ui/tooltip, @/components/permissions-provider.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/badge, @/components/ui/tooltip, @/components/providers/permissions-provider.
 **Internal behavior:**
 - State and hooks used: useUserContext.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2591,7 +2591,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next/link, next/navigation, @/lib/db/schema.
+- External dependencies (Radix/shadcn/forms/state libs): next/link, next/navigation, @/lib/data/db/schema.
 **Internal behavior:**
 - State and hooks used: usePathname.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2625,7 +2625,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): react, @/components/ui/button, @/app/actions/admin/impersonation, lucide-react, sonner, @/lib/auth/middleware.
+- External dependencies (Radix/shadcn/forms/state libs): react, @/components/ui/button, @/app/actions/admin/impersonation, lucide-react, sonner, @/lib/infrastructure/auth/middleware.
 **Internal behavior:**
 - State and hooks used: useActionState, useEffect.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2659,7 +2659,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): next/headers, @/lib/db/drizzle, @/lib/db/schema, drizzle-orm, lucide-react.
+- External dependencies (Radix/shadcn/forms/state libs): next/headers, @/lib/data/db/drizzle, @/lib/data/db/schema, drizzle-orm, lucide-react.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2727,7 +2727,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/components/ui/separator, @/hooks/use-page-title, @/components/notification-bell, @/components/user-menu, @/components/active-team-indicator.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/sidebar, @/components/ui/separator, @/hooks/use-page-title, @/features/notifications/components/notification-bell, @/components/user-menu, @/components/active-team-indicator.
 **Internal behavior:**
 - State and hooks used: usePageTitle.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2795,7 +2795,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): lucide-react, @/components/ui/button, @/components/ui/badge, swr, react, @/components/notifications/notifications-list, @/components/notifications/types.
+- External dependencies (Radix/shadcn/forms/state libs): lucide-react, @/components/ui/button, @/components/ui/badge, swr, react, @/features/notifications/components/notifications-list, @/features/notifications/components/types.
 **Internal behavior:**
 - State and hooks used: useEffect, useSWR, useState.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2829,7 +2829,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/badge, @/components/ui/button, @/lib/utils, @/components/notifications/types.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/ui/badge, @/components/ui/button, @/lib/utils, @/features/notifications/components/types.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2863,7 +2863,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): lucide-react, @/components/notifications/notification-item, @/components/notifications/types, @/components/ui/loading-indicator, @/components/ui/scroll-area, @/lib/utils.
+- External dependencies (Radix/shadcn/forms/state libs): lucide-react, @/features/notifications/components/notification-item, @/features/notifications/components/types, @/components/ui/loading-indicator, @/components/ui/scroll-area, @/lib/utils.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2965,7 +2965,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): react, @/lib/db/schema.
+- External dependencies (Radix/shadcn/forms/state libs): react, @/lib/data/db/schema.
 **Internal behavior:**
 - State and hooks used: useContext, usePermissionsContext, useUserContext.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -2999,7 +2999,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): swr, react, @/lib/db/schema.
+- External dependencies (Radix/shadcn/forms/state libs): swr, react, @/lib/data/db/schema.
 **Internal behavior:**
 - State and hooks used: No React/custom hook calls found.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -4019,7 +4019,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): react, lucide-react, @/components/ui/avatar, @/components/ui/button, @/app/(login)/actions, next/navigation, @/lib/db/schema, @/hooks/use-permissions, @/components/permissions-provider.
+- External dependencies (Radix/shadcn/forms/state libs): react, lucide-react, @/components/ui/avatar, @/components/ui/button, @/app/(login)/actions, next/navigation, @/lib/data/db/schema, @/hooks/use-permissions, @/components/providers/permissions-provider.
 **Internal behavior:**
 - State and hooks used: useEffect, usePathname, usePermissions, useRouter, useState, useUserContext.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.
@@ -4223,7 +4223,7 @@
 |---|---|---|---|---|
 | props / parameters | inferred from source signature | varies | none | See exported component or hook declaration in this file for exact contract. |
 - Events/callbacks (if any): implemented as prop callbacks and local handlers bound to UI interactions in this module.
-- External dependencies (Radix/shadcn/forms/state libs): @/components/permissions-provider, react.
+- External dependencies (Radix/shadcn/forms/state libs): @/components/providers/permissions-provider, react.
 **Internal behavior:**
 - State and hooks used: useCallback, usePermissions, usePermissionsContext.
 - Data flow: inputs/params/context -> derived values -> conditional JSX/render output -> side effects (navigation, mutations, telemetry, toasts) when triggered.

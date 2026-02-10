@@ -15,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from './actions';
-import { ActionState } from '@/lib/auth/middleware';
+import { ActionState } from '@/lib/infrastructure/auth/middleware';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const searchParams = useSearchParams();

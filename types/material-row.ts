@@ -1,4 +1,4 @@
-import { Material } from '@/lib/db/schema';
+import { Material } from '@/lib/data/db/schema';
 
 export type MaterialRow = Omit<Material, 'embedding' | 'searchVector'> & {
     embedding?: number[] | null;

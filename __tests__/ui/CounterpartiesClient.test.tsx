@@ -2,7 +2,7 @@ import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-li
 import { CounterpartiesClient } from '@/app/(workspace)/app/guide/counterparties/components/CounterpartiesClient';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import React from 'react';
-import type { Counterparty } from '@/lib/db/schema';
+import type { Counterparty } from '@/lib/data/db/schema';
 
 // Mock react-virtuoso to render all items in jsdom
 vi.mock('react-virtuoso', async () => {

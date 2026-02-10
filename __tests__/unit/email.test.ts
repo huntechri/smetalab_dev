@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, type Mock } from 'vitest';
-import { sendInvitationEmail } from '@/lib/email/email';
+import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
 import { Resend } from 'resend';
 
 // Mock the Resend client

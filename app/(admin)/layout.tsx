@@ -13,7 +13,7 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { signOut } from '@/app/(login)/actions';
 import { useRouter } from 'next/navigation';
-import { User } from '@/lib/db/schema';
+import { User } from '@/lib/data/db/schema';
 import useSWR, { mutate } from 'swr';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());

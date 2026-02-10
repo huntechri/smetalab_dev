@@ -1,4 +1,4 @@
-import { getMaterials, getMaterialsCount, getTeamForUser } from "@/lib/db/queries";
+import { getMaterials, getMaterialsCount, getTeamForUser } from "@/lib/data/db/queries";
 import { MaterialsClient } from "./materials-client";
 
 export default async function MaterialsPage() {
