@@ -39,5 +39,28 @@ export default [
             "no-restricted-imports": ["error", { patterns: ["@/components/*", "@/features/*"] }],
         },
     },
+    {
+        files: [
+            "lib/data/db/seed.ts",
+            "lib/data/db/seed-permissions.ts",
+            "lib/data/db/assign-role.ts",
+            "lib/data/db/reset-password.ts",
+            "lib/data/db/create-user.ts",
+            "lib/data/db/test-utils.ts",
+        ],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    paths: [
+                        "./drizzle",
+                        "./drizzle.server",
+                        "@/lib/data/db/drizzle",
+                        "@/lib/data/db/drizzle.server",
+                    ],
+                },
+            ],
+        },
+    },
     { ignores: ["node_modules/**", ".next/**", "bin/**", "test-results/**"] },
 ];

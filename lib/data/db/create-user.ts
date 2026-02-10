@@ -5,7 +5,7 @@
  *   pnpm db:create-user <email> <password>
  */
 
-import { db } from './drizzle';
+import { db } from './drizzle.node';
 import { users } from './schema';
 import { hashPassword } from '../../infrastructure/auth/session';
 

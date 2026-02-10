@@ -1,4 +1,4 @@
-import { db } from './drizzle';
+import { db } from './drizzle.node';
 import { sql } from 'drizzle-orm';
 
 export async function resetDatabase() {
