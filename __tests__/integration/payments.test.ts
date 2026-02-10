@@ -1,11 +1,11 @@
 
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { teams } from '@/lib/db/schema';
-import { handleSubscriptionChange } from '@/lib/payments/stripe';
+import { db } from '@/lib/data/db/drizzle';
+import { teams } from '@/lib/data/db/schema';
+import { handleSubscriptionChange } from '@/lib/infrastructure/payments/stripe';
 import { eq } from 'drizzle-orm';
 import type Stripe from 'stripe';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 describe('Payments Integration Tests', () => {
     let testTeamId: number;

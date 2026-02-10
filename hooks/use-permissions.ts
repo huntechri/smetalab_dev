@@ -1,6 +1,6 @@
 'use client';
 
-import { usePermissionsContext } from '@/components/permissions-provider';
+import { usePermissionsContext } from '@/components/providers/permissions-provider';
 import { useCallback } from 'react';
 
 // Re-export type if needed, or import from provider

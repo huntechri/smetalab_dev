@@ -1,18 +1,18 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { materials, users, teams, teamMembers } from '@/lib/db/schema';
-import { MaterialsService } from '@/lib/services/materials.service';
+import { db } from '@/lib/data/db/drizzle';
+import { materials, users, teams, teamMembers } from '@/lib/data/db/schema';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { generateEmbedding } from '@/lib/ai/embeddings';
 import { eq, sql } from 'drizzle-orm';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 vi.mock('@/lib/ai/embeddings', () => ({
     generateEmbedding: vi.fn().mockResolvedValue(new Array(1536).fill(0.01)),
     generateEmbeddingsBatch: vi.fn().mockResolvedValue([new Array(1536).fill(0.01)]),
 }));
 
-vi.mock('@/lib/db/queries', async (importOriginal) => {
+vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...(actual as object),

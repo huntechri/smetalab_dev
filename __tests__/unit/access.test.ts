@@ -1,14 +1,14 @@
 /* eslint-disable */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { checkAccess, isPlatformAdmin, isSuperadmin, getUserTeamRole } from '@/lib/auth/access';
-import { getUser } from '@/lib/db/queries';
-import { db } from '@/lib/db/drizzle';
-import { hasPermission } from '@/lib/auth/rbac';
+import { checkAccess, isPlatformAdmin, isSuperadmin, getUserTeamRole } from '@/lib/infrastructure/auth/access';
+import { getUser } from '@/lib/data/db/queries';
+import { db } from '@/lib/data/db/drizzle';
+import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 
 // Mock dependencies
-vi.mock('@/lib/db/queries');
-vi.mock('@/lib/db/drizzle');
-vi.mock('@/lib/auth/rbac');
+vi.mock('@/lib/data/db/queries');
+vi.mock('@/lib/data/db/drizzle');
+vi.mock('@/lib/infrastructure/auth/rbac');
 
 const mockGetUser = vi.mocked(getUser);
 const mockDb = vi.mocked(db, true);

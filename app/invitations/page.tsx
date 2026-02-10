@@ -1,8 +1,8 @@
 import { redirect } from 'next/navigation';
-import { db } from '@/lib/db/drizzle';
-import { invitations, teamMembers, activityLogs, users } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { invitations, teamMembers, activityLogs, users } from '@/lib/data/db/schema';
 import { eq, and } from 'drizzle-orm';
-import { getUser } from '@/lib/db/queries';
+import { getUser } from '@/lib/data/db/queries';
 
 export default async function InvitationPage({
     searchParams,

@@ -1,10 +1,10 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { users, teams, permissions, impersonationSessions } from '@/lib/db/schema';
-import { hasPermission } from '@/lib/auth/rbac';
+import { db } from '@/lib/data/db/drizzle';
+import { users, teams, permissions, impersonationSessions } from '@/lib/data/db/schema';
+import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { eq as drizzleEq } from 'drizzle-orm';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 describe('RBAC Security Regression', () => {
     let testAdminId: number;

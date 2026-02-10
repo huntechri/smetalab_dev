@@ -1,10 +1,10 @@
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { users, teams, teamMembers, permissions, rolePermissions, platformRolePermissions, type User, type Team } from '@/lib/db/schema';
-import { hasPermission } from '@/lib/auth/rbac';
+import { db } from '@/lib/data/db/drizzle';
+import { users, teams, teamMembers, permissions, rolePermissions, platformRolePermissions, type User, type Team } from '@/lib/data/db/schema';
+import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { eq, and } from 'drizzle-orm';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 describe('RBAC Integration Tests', () => {
     let testUser: User;

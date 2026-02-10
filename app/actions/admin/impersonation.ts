@@ -1,11 +1,9 @@
 'use server';
 
 import { z } from 'zod';
-import { db } from '@/lib/db/drizzle';
-import { impersonationSessions } from '@/lib/db/schema';
-import { requirePermission } from '@/lib/auth/access';
-import { protectedAction } from '@/lib/auth/middleware';
-import { eq, sql } from 'drizzle-orm';
+import { requirePermission } from '@/lib/infrastructure/auth/access';
+import { protectedAction } from '@/lib/infrastructure/auth/middleware';
+import { startImpersonationUseCase, stopImpersonationUseCase } from '@/lib/domain/admin/use-cases';
 import { cookies, headers } from 'next/headers';
 
 import { redirect } from 'next/navigation';
@@ -25,12 +23,7 @@ export const startImpersonation = protectedAction(
         const sessionToken = Buffer.from(globalThis.crypto.getRandomValues(new Uint8Array(32))).toString('hex');
         const ip = (await headers()).get('x-forwarded-for') || 'unknown';
 
-        await db.insert(impersonationSessions).values({
-            superadminUserId: user.id,
-            targetTeamId: data.targetTeamId,
-            sessionToken: sessionToken,
-            ipAddress: ip,
-        });
+        await startImpersonationUseCase(user.id, data.targetTeamId, sessionToken, ip);
 
         const cookieStore = await cookies();
         cookieStore.set('impersonation_id', sessionToken, {
@@ -51,9 +44,7 @@ export const stopImpersonation = async () => {
     const sessionToken = cookieStore.get('impersonation_id')?.value;
 
     if (sessionToken) {
-        await db.update(impersonationSessions)
-            .set({ endedAt: sql`CURRENT_TIMESTAMP` })
-            .where(eq(impersonationSessions.sessionToken, sessionToken));
+        await stopImpersonationUseCase(sessionToken);
 
         cookieStore.delete('impersonation_id');
     }

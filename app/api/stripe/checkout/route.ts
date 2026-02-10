@@ -1,9 +1,9 @@
 import { eq } from 'drizzle-orm';
-import { db } from '@/lib/db/drizzle';
-import { users, teams, teamMembers } from '@/lib/db/schema';
-import { setSession } from '@/lib/auth/session';
+import { db } from '@/lib/data/db/drizzle';
+import { users, teams, teamMembers } from '@/lib/data/db/schema';
+import { setSession } from '@/lib/infrastructure/auth/session';
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/payments/stripe';
+import { stripe } from '@/lib/infrastructure/payments/stripe';
 import Stripe from 'stripe';
 
 export async function GET(request: NextRequest) {

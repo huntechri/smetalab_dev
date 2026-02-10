@@ -1,16 +1,16 @@
 import { describe, it, expect, vi } from 'vitest';
 import { GET } from '@/app/api/user/route';
-import * as queries from '@/lib/db/queries';
-import { User } from '@/lib/db/schema';
+import * as queries from '@/lib/data/db/queries';
+import { User } from '@/lib/data/db/schema';
 
-import * as rbac from '@/lib/auth/rbac';
+import * as rbac from '@/lib/infrastructure/auth/rbac';
 
-vi.mock('@/lib/db/queries', () => ({
+vi.mock('@/lib/data/db/queries', () => ({
     getUser: vi.fn(),
     getUserWithTeam: vi.fn(),
 }));
 
-vi.mock('@/lib/auth/rbac', () => ({
+vi.mock('@/lib/infrastructure/auth/rbac', () => ({
     getUserPermissions: vi.fn(),
 }));
 

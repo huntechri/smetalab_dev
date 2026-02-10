@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { NotificationsList } from '@/components/notifications/notifications-list';
-import { NotificationPayload } from '@/components/notifications/types';
+import { NotificationsList } from '@/features/notifications/components/notifications-list';
+import { NotificationPayload } from '@/features/notifications/components/types';
 
 const notifications: NotificationPayload[] = [
   {

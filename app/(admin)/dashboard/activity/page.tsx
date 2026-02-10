@@ -13,8 +13,8 @@ import {
   EyeOff,
   type LucideIcon,
 } from 'lucide-react';
-import { ActivityType } from '@/lib/db/schema';
-import { getActivityLogs, getUser } from '@/lib/db/queries';
+import { ActivityType } from '@/lib/data/db/schema';
+import { getActivityLogs, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 
 const iconMap: Record<ActivityType, LucideIcon> = {

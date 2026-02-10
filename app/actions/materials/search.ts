@@ -1,6 +1,6 @@
 'use server';
 
-import { MaterialsService } from '@/lib/services/materials.service';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { safeAction } from '@/lib/actions/safe-action';
 
 export const fetchMoreMaterials = safeAction(

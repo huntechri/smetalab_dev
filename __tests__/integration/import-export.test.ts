@@ -1,12 +1,12 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { materials, works, users, teams, teamMembers } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { materials, works, users, teams, teamMembers } from '@/lib/data/db/schema';
 import { importMaterials } from '@/app/actions/materials/import-export';
 import { importWorks } from '@/app/actions/works/import-export';
 import { and, eq } from 'drizzle-orm';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 import { ExcelService } from '@/lib/services/excel.service';
 // No changes here, just for context
 
@@ -32,7 +32,7 @@ vi.mock('@/lib/ai/embeddings', () => ({
     generateEmbeddingsBatch: vi.fn().mockResolvedValue([new Array(1536).fill(0.1)]),
 }));
 
-vi.mock('@/lib/db/queries', async (importOriginal) => {
+vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...(actual as object),

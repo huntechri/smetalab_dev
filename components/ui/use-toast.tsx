@@ -1,6 +1,6 @@
 'use client';
 
-import { notify } from '@/lib/notifications/notify';
+import { notify } from '@/lib/infrastructure/notifications/notify';
 
 export const useToast = () => {
   return {

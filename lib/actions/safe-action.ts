@@ -1,8 +1,8 @@
 import * as Sentry from '@sentry/nextjs';
 import { Result, error } from '@/lib/utils/result';
-import { User, Team, TenantRole, teamMembers } from '@/lib/db/schema';
-import { getUser } from '@/lib/db/queries';
-import { db, withTenantContext } from '@/lib/db/drizzle';
+import { User, Team, TenantRole, teamMembers } from '@/lib/data/db/schema';
+import { getUser } from '@/lib/data/db/queries';
+import { db, withTenantContext } from '@/lib/data/db/drizzle';
 import { eq } from 'drizzle-orm';
 
 export type ActionContext = {

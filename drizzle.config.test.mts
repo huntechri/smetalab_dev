@@ -10,8 +10,8 @@ if (!databaseUrl) {
 }
 
 export default {
-  schema: './lib/db/schema.ts',
-  out: './lib/db/migrations',
+  schema: './lib/data/db/schema.ts',
+  out: './lib/data/db/migrations',
   dialect: 'postgresql',
   dbCredentials: {
     url: databaseUrl,

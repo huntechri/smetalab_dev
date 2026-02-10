@@ -1,6 +1,6 @@
-import { db } from '@/lib/db/drizzle';
-import { notifications } from '@/lib/db/schema';
-import { getUser } from '@/lib/db/queries';
+import { db } from '@/lib/data/db/drizzle';
+import { notifications } from '@/lib/data/db/schema';
+import { getUser } from '@/lib/data/db/queries';
 import { eq, and } from 'drizzle-orm';
 import { NextRequest } from 'next/server';
 

@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { MaterialsService } from '@/lib/services/materials.service';
-import { db } from '@/lib/db/drizzle';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
+import { db } from '@/lib/data/db/drizzle';
 import { generateEmbeddingsBatch } from '@/lib/ai/embeddings';
 
 // Mock dependencies
-vi.mock('@/lib/db/drizzle');
+vi.mock('@/lib/data/db/drizzle');
 vi.mock('@/lib/ai/embeddings');
 
 // Types for mocks
