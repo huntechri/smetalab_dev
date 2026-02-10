@@ -1,10 +1,10 @@
 @import "tailwindcss";
-@import "tw-animate-css";
-
 /*
   ---break---
 */
 @custom-variant dark (&:is(.dark *));
+
+@import "tw-animate-css";
 
 @variant dark (&:is(.dark *));
 
@@ -168,6 +168,10 @@
   }
 }
 
+/*
+  ---break---
+*/
+
 :root {
   --background: hsl(0 0% 100%);
   --foreground: hsl(240 10% 3.9%);
@@ -204,6 +208,10 @@
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
 
+/*
+  ---break---
+*/
+
 .dark {
   --background: hsl(240 10% 3.9%);
   --foreground: hsl(0 0% 98%);
@@ -238,6 +246,10 @@
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
 }
+
+/*
+  ---break---
+*/
 
 @theme inline {
   --color-background: var(--background);
@@ -277,6 +289,10 @@
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
 }
+
+/*
+  ---break---
+*/
 
 @layer base {
   * {
