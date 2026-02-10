@@ -1,8 +1,8 @@
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
-import { AdminSidebar } from '@/components/admin-sidebar';
-import { getUser } from '@/lib/db/queries';
-import { UserProvider } from '@/components/permissions-provider';
-import { getUserPermissions } from '@/lib/auth/rbac';
+import { AdminSidebar } from '@/features/admin/components/admin-sidebar';
+import { getUser } from '@/lib/data/db/queries';
+import { UserProvider } from '@/components/providers/permissions-provider';
+import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await getUser();

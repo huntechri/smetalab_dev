@@ -1,10 +1,10 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
 import { AppSidebar } from '@/components/app-sidebar';
 import { AppHeader } from '@/components/app-header';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
-import { getUserPermissions } from '@/lib/auth/rbac';
-import { UserProvider } from '@/components/permissions-provider';
-import { ImpersonationBanner } from '@/components/admin/impersonation-banner';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
+import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
+import { UserProvider } from '@/components/providers/permissions-provider';
+import { ImpersonationBanner } from '@/features/admin/components/impersonation-banner';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
     const user = await getUser();

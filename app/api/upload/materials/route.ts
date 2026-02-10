@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { revalidatePath } from 'next/cache';
-import { MaterialsService } from '@/lib/services/materials.service';
-import { NewMaterial } from '@/lib/db/schema';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
+import { NewMaterial } from '@/lib/data/db/schema';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { materialsRequiredFields } from '@/lib/constants/import-configs';
 
 type RawMaterialRow = Record<string, unknown>;

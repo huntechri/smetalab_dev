@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { verifyToken, signToken } from '@/lib/auth/session';
-import { db } from '@/lib/db/drizzle';
-import { users } from '@/lib/db/schema';
+import { verifyToken, signToken } from '@/lib/infrastructure/auth/session';
+import { db } from '@/lib/data/db/drizzle';
+import { users } from '@/lib/data/db/schema';
 import { eq, isNull, and } from 'drizzle-orm';
 
 export async function POST(_req: NextRequest) {

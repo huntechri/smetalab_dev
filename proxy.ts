@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/auth/session';
+import { verifyToken } from '@/lib/infrastructure/auth/session';
 
 const protectedRoutes = ['/dashboard', '/app', '/admin'];
 

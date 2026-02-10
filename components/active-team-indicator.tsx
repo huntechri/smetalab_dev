@@ -2,7 +2,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
-import { useUserContext } from '@/components/permissions-provider';
+import { useUserContext } from '@/components/providers/permissions-provider';
 
 export function ActiveTeamIndicator() {
   const { team, loading } = useUserContext();

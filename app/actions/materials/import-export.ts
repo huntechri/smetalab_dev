@@ -1,10 +1,10 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { db } from '@/lib/db/drizzle';
-import { materials, NewMaterial } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { materials, NewMaterial } from '@/lib/data/db/schema';
 import { and, eq, isNull } from 'drizzle-orm';
-import { MaterialsService } from '@/lib/services/materials.service';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { safeAction } from '@/lib/actions/safe-action';
 import { ExcelService } from '@/lib/services/excel.service';
 import { success, error } from '@/lib/utils/result';

@@ -1,4 +1,4 @@
-import { PermissionsMatrix } from '@/components/permissions-matrix';
+import { PermissionsMatrix } from '@/features/permissions/components/permissions-matrix';
 
 export default function PermissionsPage() {
     return (

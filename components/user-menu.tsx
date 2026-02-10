@@ -15,9 +15,9 @@ import {
 import { signOut } from '@/app/(login)/actions';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { User as UserType } from '@/lib/db/schema';
+import { User as UserType } from '@/lib/data/db/schema';
 import { usePermissions } from '@/hooks/use-permissions';
-import { useUserContext } from '@/components/permissions-provider';
+import { useUserContext } from '@/components/providers/permissions-provider';
 
 
 

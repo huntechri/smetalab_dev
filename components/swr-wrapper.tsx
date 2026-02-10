@@ -2,7 +2,7 @@
 
 import { SWRConfig } from 'swr';
 import { use } from 'react';
-import { User, Team } from '@/lib/db/schema';
+import { User, Team } from '@/lib/data/db/schema';
 
 export function SWRWrapper({
     children,

@@ -1,12 +1,12 @@
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
-import { db } from '@/lib/db/drizzle';
-import { works, users, teams, teamMembers, NewWork } from '@/lib/db/schema';
+import { db } from '@/lib/data/db/drizzle';
+import { works, users, teams, teamMembers, NewWork } from '@/lib/data/db/schema';
 import { createWork, updateWork, deleteWork, insertWorkAfter } from '@/app/actions/works/crud';
 import { eq, and } from 'drizzle-orm';
-import { WorksService } from '@/lib/services/works.service';
-import { getUser, getTeamForUser } from '@/lib/db/queries';
-import { resetDatabase } from '@/lib/db/test-utils';
+import { WorksService } from '@/lib/domain/works/works.service';
+import { getUser, getTeamForUser } from '@/lib/data/db/queries';
+import { resetDatabase } from '@/lib/data/db/test-utils';
 
 // --- Mocks ---
 vi.mock('next/cache', () => ({
@@ -17,7 +17,7 @@ vi.mock('@/lib/ai/embeddings', () => ({
     generateEmbedding: vi.fn().mockResolvedValue(new Array(1536).fill(0.1)),
 }));
 
-vi.mock('@/lib/db/queries', async (importOriginal) => {
+vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     const actual = await importOriginal();
     return {
         ...(actual as object),

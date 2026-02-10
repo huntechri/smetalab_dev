@@ -1,4 +1,4 @@
-import { getWorks, getWorksCount, getTeamForUser } from "@/lib/db/queries";
+import { getWorks, getWorksCount, getTeamForUser } from "@/lib/data/db/queries";
 import { WorksClient } from "./works-client";
 
 export default async function WorksPage() {

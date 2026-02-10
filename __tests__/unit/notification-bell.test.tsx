@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { NotificationBell } from '@/components/notification-bell';
+import { NotificationBell } from '@/features/notifications/components/notification-bell';
 import { describe, it, expect, vi, Mock } from 'vitest';
 
 // Mock swr

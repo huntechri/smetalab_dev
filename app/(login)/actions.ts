@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { and, eq, sql } from 'drizzle-orm';
-import { db } from '@/lib/db/drizzle';
+import { db } from '@/lib/data/db/drizzle';
 import {
   User,
   users,
@@ -17,18 +17,18 @@ import {
   invitations,
   notifications,
   type TenantRole
-} from '@/lib/db/schema';
-import { comparePasswords, hashPassword, setSession, clearSession } from '@/lib/auth/session';
+} from '@/lib/data/db/schema';
+import { comparePasswords, hashPassword, setSession, clearSession } from '@/lib/infrastructure/auth/session';
 import { redirect } from 'next/navigation';
-import { createCheckoutSession } from '@/lib/payments/stripe';
-import { getUser, getUserWithTeam } from '@/lib/db/queries';
+import { createCheckoutSession } from '@/lib/infrastructure/payments/stripe';
+import { getUser, getUserWithTeam } from '@/lib/data/db/queries';
 import {
   validatedAction,
   validatedActionWithUser
-} from '@/lib/auth/middleware';
-import { sendInvitationEmail } from '@/lib/email/email';
-import { hasPermission } from '@/lib/auth/rbac';
-import { rateLimit } from '@/lib/auth/rate-limit';
+} from '@/lib/infrastructure/auth/middleware';
+import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
+import { hasPermission } from '@/lib/infrastructure/auth/rbac';
+import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
 
 async function logActivity(
   teamId: number | null | undefined,

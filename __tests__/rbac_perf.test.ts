@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { getUserPermissions } from '@/lib/auth/rbac';
-import { users, type User } from '@/lib/db/schema';
+import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
+import { users, type User } from '@/lib/data/db/schema';
 
 const mocks = vi.hoisted(() => {
   const mockLimit = vi.fn().mockResolvedValue([]);
@@ -21,7 +21,7 @@ const mocks = vi.hoisted(() => {
   return { mockSelect, mockFrom, mockLimit };
 });
 
-vi.mock('@/lib/db/drizzle', () => ({
+vi.mock('@/lib/data/db/drizzle', () => ({
   db: {
     select: mocks.mockSelect,
   },
