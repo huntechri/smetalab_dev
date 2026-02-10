@@ -39,5 +39,8 @@
 - `features/admin`
 - `features/notifications`
 - `features/permissions`
+- `features/materials`
+- `features/works`
+- `features/counterparties`
 
 These expose stable entrypoints with `index.ts` barrels.
