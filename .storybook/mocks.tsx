@@ -43,3 +43,7 @@ export const headers = () => new Map();
 export const revalidatePath = () => {};
 export const revalidateTag = () => {};
 export const unstable_cache = (fn: (...args: unknown[]) => Promise<unknown>) => fn;
+
+export const performance = {
+  now: () => Date.now(),
+};
