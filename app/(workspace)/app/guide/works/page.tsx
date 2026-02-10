@@ -1,5 +1,5 @@
 import { getWorks, getWorksCount, getTeamForUser } from "@/lib/data/db/queries";
-import { WorksClient } from "./works-client";
+import { WorksScreen } from "@/features/works";
 
 export default async function WorksPage() {
     const [works, totalCount, team] = await Promise.all([
@@ -9,7 +9,7 @@ export default async function WorksPage() {
     ]);
 
     return (
-        <WorksClient
+        <WorksScreen
             initialData={works}
             totalCount={totalCount}
             tenantId={team?.id || 1}
