@@ -1,5 +1,5 @@
 // Removed unused sql import
-import { db } from './drizzle';
+import { db } from './drizzle.node';
 import { permissions, rolePermissions, platformRolePermissions } from './schema';
 import type { TenantRole, PlatformRole, PermissionScope } from './schema';
 

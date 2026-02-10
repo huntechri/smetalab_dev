@@ -9,7 +9,7 @@
  *   pnpm db:assign-role support@example.com support
  */
 
-import { db } from './drizzle';
+import { db } from './drizzle.node';
 import { users } from './schema';
 import { eq } from 'drizzle-orm';
 import type { PlatformRole } from './schema';
