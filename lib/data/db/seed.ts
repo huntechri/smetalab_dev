@@ -1,5 +1,5 @@
-import { stripe } from '../../infrastructure/payments/stripe';
-import { db } from './drizzle';
+import Stripe from 'stripe';
+import { db } from './drizzle.node';
 import { users, teams, teamMembers, notifications } from './schema';
 import { hashPassword } from '@/lib/infrastructure/auth/session';
 import { eq, sql } from 'drizzle-orm';
@@ -7,6 +7,15 @@ import { seedPermissions } from './seed-permissions';
 
 async function createStripeProducts() {
   console.log('Creating Stripe products and prices...');
+
+  const secretKey = process.env.STRIPE_SECRET_KEY;
+  if (!secretKey) {
+    throw new Error('STRIPE_SECRET_KEY is not defined in environment variables');
+  }
+
+  const stripe = new Stripe(secretKey, {
+    apiVersion: '2026-01-28.clover',
+  });
 
   const baseProduct = await stripe.products.create({
     name: 'Base',

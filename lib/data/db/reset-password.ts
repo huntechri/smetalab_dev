@@ -8,7 +8,7 @@
  *   pnpm db:reset-password admin@example.com newpassword123
  */
 
-import { db } from './drizzle';
+import { db } from './drizzle.node';
 import { users } from './schema';
 import { eq } from 'drizzle-orm';
 import { hashPassword } from '@/lib/infrastructure/auth/session';
