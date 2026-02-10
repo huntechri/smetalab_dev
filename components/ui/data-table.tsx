@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils"
 import { Input } from "@/components/ui/input"
 import { Switch } from "@/components/ui/switch"
 import { useDataTableState } from "@/hooks/use-data-table-state"
+import { EmptyState } from "@/components/ui/states"
 
 /* -------------------------------------------------------------------------- */
 /*                               DataTable                                    */
@@ -55,6 +56,7 @@ interface DataTableProps<TData, TValue> {
     externalSearchValue?: string
     onSearchValueChange?: (val: string) => void
     actions?: React.ReactNode
+    emptyState?: React.ReactNode
 }
 
 // --- Stable Virtuoso Components ---
@@ -136,6 +138,7 @@ export function DataTable<TData, TValue>({
     onSearchValueChange,
     onEndReached,
     actions,
+    emptyState,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = useState(false)
 
@@ -302,29 +305,20 @@ export function DataTable<TData, TValue>({
                                                     aria-sort={ariaSort}
                                                 >
                                                     {header.isPlaceholder ? null : (
-                                                        <div
-                                                            className={cn(
-                                                                "flex items-center gap-2 select-none w-full text-left",
-                                                                isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
-                                                            )}
-                                                            onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
-                                                            role={isSortable ? "button" : undefined}
-                                                            tabIndex={isSortable ? 0 : undefined}
-                                                            onKeyDown={isSortable ? (e) => {
-                                                                if (e.key === 'Enter' || e.key === ' ') {
-                                                                    e.preventDefault();
-                                                                    header.column.getToggleSortingHandler()?.(e);
-                                                                }
-                                                            } : undefined}
-                                                        >
-                                                            <div className="truncate flex-1 text-xs md:text-sm">
-                                                                {flexRender(
-                                                                    header.column.columnDef.header,
-                                                                    header.getContext()
-                                                                )}
-                                                            </div>
-                                                            {isSortable && (
-                                                                <div className="shrink-0 w-4">
+                                                        isSortable ? (
+                                                            <button
+                                                                type="button"
+                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                onClick={header.column.getToggleSortingHandler()}
+                                                                aria-label="Сортировать столбец"
+                                                            >
+                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    {flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext()
+                                                                    )}
+                                                                </div>
+                                                                <div className="shrink-0 w-4" aria-hidden="true">
                                                                     {sortDirection === "asc" ? (
                                                                         <ChevronUp className="h-4 w-4" />
                                                                     ) : sortDirection === "desc" ? (
@@ -333,8 +327,17 @@ export function DataTable<TData, TValue>({
                                                                         <ChevronsUpDown className="h-4 w-4 opacity-30" />
                                                                     )}
                                                                 </div>
-                                                            )}
-                                                        </div>
+                                                            </button>
+                                                        ) : (
+                                                            <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
+                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    {flexRender(
+                                                                        header.column.columnDef.header,
+                                                                        header.getContext()
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )
                                                     )}
                                                 </th>
                                             )
@@ -348,7 +351,12 @@ export function DataTable<TData, TValue>({
                                         colSpan={flatHeaders.length}
                                         className="px-3 py-8 text-center text-sm text-muted-foreground"
                                     >
-                                        Нет данных для отображения
+                                        {emptyState ?? (
+                                            <EmptyState
+                                                title="Нет данных для отображения"
+                                                className="py-2"
+                                            />
+                                        )}
                                     </td>
                                 </tr>
                             </tbody>
@@ -387,29 +395,20 @@ export function DataTable<TData, TValue>({
                                                         aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (
-                                                            <div
-                                                                className={cn(
-                                                                    "flex items-center gap-2 select-none w-full text-left",
-                                                                    isSortable ? "cursor-pointer hover:text-foreground" : "cursor-default"
-                                                                )}
-                                                                onClick={isSortable ? header.column.getToggleSortingHandler() : undefined}
-                                                                role={isSortable ? "button" : undefined}
-                                                                tabIndex={isSortable ? 0 : undefined}
-                                                                onKeyDown={isSortable ? (e) => {
-                                                                    if (e.key === 'Enter' || e.key === ' ') {
-                                                                        e.preventDefault();
-                                                                        header.column.getToggleSortingHandler()?.(e);
-                                                                    }
-                                                                } : undefined}
-                                                            >
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
-                                                                    {flexRender(
-                                                                        header.column.columnDef.header,
-                                                                        header.getContext()
-                                                                    )}
-                                                                </div>
-                                                                {isSortable && (
-                                                                    <div className="shrink-0 w-4">
+                                                            isSortable ? (
+                                                                <button
+                                                                    type="button"
+                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                    onClick={header.column.getToggleSortingHandler()}
+                                                                    aria-label="Сортировать столбец"
+                                                                >
+                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                        {flexRender(
+                                                                            header.column.columnDef.header,
+                                                                            header.getContext()
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="shrink-0 w-4" aria-hidden="true">
                                                                         {sortDirection === "asc" ? (
                                                                             <ChevronUp className="h-4 w-4" />
                                                                         ) : sortDirection === "desc" ? (
@@ -418,8 +417,17 @@ export function DataTable<TData, TValue>({
                                                                             <ChevronsUpDown className="h-4 w-4 opacity-30" />
                                                                         )}
                                                                     </div>
-                                                                )}
-                                                            </div>
+                                                                </button>
+                                                            ) : (
+                                                                <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
+                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                        {flexRender(
+                                                                            header.column.columnDef.header,
+                                                                            header.getContext()
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )
                                                         )}
                                                     </th>
                                                 )

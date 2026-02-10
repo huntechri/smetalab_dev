@@ -4,9 +4,6 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
@@ -25,6 +22,7 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { User } from '@/lib/db/schema';
+import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const adminNavItems = [
     {
@@ -73,26 +71,12 @@ export function AdminSidebar({ user }: { user: Pick<User, 'name' | 'email'> | nu
                 </div>
             </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup>
-                    <SidebarGroupLabel>Управление</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {adminNavItems.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={pathname === item.url || pathname.startsWith(item.url + '/')}
-                                    >
-                                        <Link href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                <SidebarNav
+                    label="Управление"
+                    items={adminNavItems}
+                    pathname={pathname}
+                    isActive={(item) => pathname === item.url || pathname.startsWith(item.url + '/')}
+                />
             </SidebarContent>
             <SidebarFooter>
                 <SidebarMenu>

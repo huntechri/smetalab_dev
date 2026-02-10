@@ -4,13 +4,7 @@ import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import {
     FolderKanban,
@@ -21,9 +15,9 @@ import {
     Package,
     Users,
 } from 'lucide-react';
-import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { usePermissions } from '@/hooks/use-permissions';
+import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const mainNavItems = [
     {
@@ -134,48 +128,17 @@ export function AppSidebar() {
                 </div>
             </SidebarHeader>
             <SidebarContent>
-                {filteredMainNavItems.length > 0 && (
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Навигация</SidebarGroupLabel>
-                        <SidebarGroupContent>
-                            <SidebarMenu>
-                                {filteredMainNavItems.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton asChild isActive={pathname === item.url}>
-                                            <Link href={item.url}>
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                )}
+                <SidebarNav
+                    label="Навигация"
+                    items={filteredMainNavItems}
+                    pathname={pathname}
+                />
 
-                {filteredGuideNavItems.length > 0 && (
-                    <SidebarGroup>
-                        <SidebarGroupLabel>Справочники</SidebarGroupLabel>
-                        <SidebarGroupContent>
-                            <SidebarMenu>
-                                {filteredGuideNavItems.map((item) => (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton
-                                            asChild
-                                            isActive={pathname === item.url}
-                                        >
-                                            <Link href={item.url}>
-                                                <item.icon />
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                ))}
-                            </SidebarMenu>
-                        </SidebarGroupContent>
-                    </SidebarGroup>
-                )}
+                <SidebarNav
+                    label="Справочники"
+                    items={filteredGuideNavItems}
+                    pathname={pathname}
+                />
             </SidebarContent>
             <SidebarFooter />
         </Sidebar>
