@@ -4,7 +4,7 @@ import { useActionState } from 'react';
 import { Button } from '@/components/ui/button';
 import { startImpersonation } from '@/app/actions/admin/impersonation';
 import { ShieldAlert, Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { notify } from '@/lib/notifications/notify';
 import { useEffect } from 'react';
 import type { ActionState } from '@/lib/auth/middleware';
 
@@ -17,7 +17,7 @@ export function ImpersonateButton({ teamId }: ImpersonateButtonProps) {
 
     useEffect(() => {
         if (state?.error) {
-            toast.error(state.error);
+            notify({ title: state.error, intent: "error" });
         }
     }, [state]);
 

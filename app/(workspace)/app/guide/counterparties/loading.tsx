@@ -3,8 +3,8 @@ import { LoadingState } from '@/components/ui/states';
 export default function Loading() {
     return (
         <LoadingState
-            title="Загрузка материалов"
-            description="Подготавливаем справочник материалов..."
+            title="Загрузка контрагентов"
+            description="Подготавливаем справочник контрагентов..."
             className="min-h-[40vh]"
         />
     );
