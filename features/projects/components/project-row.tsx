@@ -11,14 +11,14 @@ type ProjectRowProps = {
 export function ProjectRow({ project, onDelete }: ProjectRowProps) {
     return (
         <Card className="py-0">
-            <CardContent className="space-y-3 p-4 lg:space-y-0 lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr_200px_260px] lg:items-center lg:gap-3">
-                <div className="flex items-center gap-2">
+            <CardContent className="min-w-0 space-y-3 p-4 lg:grid lg:grid-cols-[2fr_1fr_1fr_1fr_200px_260px] lg:items-center lg:gap-3 lg:space-y-0">
+                <div className="flex min-w-0 items-center gap-2">
                     <ProjectStatusDot status={project.status} />
-                    <p className="text-sm font-semibold">{project.name}</p>
+                    <p className="truncate text-sm font-semibold">{project.name}</p>
                 </div>
-                <p className="text-xs text-muted-foreground">{project.customerName}</p>
-                <p className="text-xs text-muted-foreground">{formatCurrency(project.contractAmount)}</p>
-                <p className="text-xs text-muted-foreground">{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
+                <p className="truncate text-xs text-muted-foreground">{project.customerName}</p>
+                <p className="truncate text-xs text-muted-foreground">{formatCurrency(project.contractAmount)}</p>
+                <p className="truncate text-xs text-muted-foreground">{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
                 <div
                     role="progressbar"
                     aria-valuenow={project.progress}
