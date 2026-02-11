@@ -19,7 +19,7 @@ export function ProjectsList({ projects, viewMode, onDelete }: ProjectsListProps
 
     if (viewMode === 'list') {
         return (
-            <div className="space-y-3">
+            <div className="flex flex-col gap-2">
                 {projects.map((project) => (
                     <ProjectRow key={project.id} project={project} onDelete={onDelete} />
                 ))}
@@ -28,7 +28,7 @@ export function ProjectsList({ projects, viewMode, onDelete }: ProjectsListProps
     }
 
     return (
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-5">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
             {projects.map((project) => (
                 <ProjectCard key={project.id} project={project} onDelete={onDelete} />
             ))}
