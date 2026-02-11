@@ -8,6 +8,7 @@ export default defineConfig({
         environment: 'jsdom',
         alias: {
             '@': path.resolve(__dirname, './'),
+            'server-only': path.resolve(__dirname, './__tests__/__mocks__/server-only.ts'),
         },
         include: ['**/*.{test,spec}.{ts,tsx}'],
         exclude: [
