@@ -56,7 +56,7 @@ const PROJECTS: ProjectListItem[] = [
 
 export default function Page() {
     return (
-        <div className="space-y-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-6">
             <header className="space-y-2">
                 <h1 className="text-3xl font-semibold">Проекты</h1>
                 <p className="text-sm text-muted-foreground">Компактный список проектов с быстрым поиском и сортировкой.</p>
