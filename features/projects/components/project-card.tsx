@@ -11,15 +11,15 @@ type ProjectCardProps = {
 export function ProjectCard({ project, onDelete }: ProjectCardProps) {
     return (
         <Card className="py-0">
-            <CardContent className="space-y-3 p-4">
-                <div className="flex items-start gap-2">
+            <CardContent className="min-w-0 space-y-3 p-4">
+                <div className="flex min-w-0 items-start gap-2">
                     <ProjectStatusDot status={project.status} />
-                    <h3 className="line-clamp-2 text-sm font-semibold">{project.name}</h3>
+                    <h3 className="truncate text-sm font-semibold">{project.name}</h3>
                 </div>
-                <div className="space-y-1 text-xs text-muted-foreground">
-                    <p>{project.customerName}</p>
-                    <p>{formatCurrency(project.contractAmount)}</p>
-                    <p>{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
+                <div className="min-w-0 space-y-1 text-xs text-muted-foreground">
+                    <p className="truncate">{project.customerName}</p>
+                    <p className="truncate">{formatCurrency(project.contractAmount)}</p>
+                    <p className="truncate">{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
                 </div>
                 <div
                     role="progressbar"
