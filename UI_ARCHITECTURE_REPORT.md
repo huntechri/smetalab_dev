@@ -23,6 +23,18 @@
 - **P1 risk:** duplicated business-UI hooks increase drift and bug-fix cost.
 - **P2 risk:** some generic wrappers have weakly explicit APIs (implicit props contracts), reducing maintainability.
 
+## 0.1 Update status (2026-02)
+- The repository has been partially migrated from `app/(workspace)/app/guide/**/{components,hooks}` to `features/**` modules.
+- Current source of truth for guide UIs is:
+  - `features/materials/**`
+  - `features/works/**`
+  - `features/counterparties/**`
+- Route pages under `app/(workspace)/app/guide/**/page.tsx` now act as thin server wrappers that fetch initial data and render feature screens.
+- Shared table orchestration logic is consolidated in `hooks/use-guide-table-search.ts` and consumed by feature adapters.
+- `components/ui/states/**` is the canonical layer for shared loading/empty/error/forbidden UI states.
+
+> ⚠️ Note: the long per-file inventory below still contains historical file paths from the pre-migration layout and must be treated as archival context, not as the current module map.
+
 ## 1. Inventory
 - **app/(admin)**
   - `app/(admin)/dashboard/activity/loading.tsx`
