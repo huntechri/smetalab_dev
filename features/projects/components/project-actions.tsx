@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Edit, ExternalLink, MoreHorizontal, Trash2 } from 'lucide-react';
+import { Edit, ExternalLink, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
     AlertDialog,
@@ -12,12 +12,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 type ProjectActionsProps = {
     projectId: string;
@@ -35,30 +29,26 @@ export function ProjectActions({
     if (density === 'compact') {
         return (
             <AlertDialog>
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            className="h-11 w-11 shrink-0 p-0"
-                            aria-label={`Open actions menu for ${projectName}`}
-                        >
-                            <MoreHorizontal className="size-4" />
-                            <span className="sr-only">Open menu</span>
+                <div className="grid shrink-0 grid-cols-3 gap-1.5">
+                    <Button asChild size="sm" variant="outline" className="h-10 min-w-0 px-2 sm:h-8">
+                        <Link href={`/app/projects/${projectId}`} aria-label={`Open ${projectName}`}>
+                            <ExternalLink className="size-4 sm:hidden" />
+                            <span className="hidden sm:inline">Open</span>
+                        </Link>
+                    </Button>
+                    <Button asChild size="sm" variant="outline" className="h-10 min-w-0 px-2 sm:h-8">
+                        <Link href={`/app/projects/${projectId}?mode=edit`} aria-label={`Edit ${projectName}`}>
+                            <Edit className="size-4 sm:hidden" />
+                            <span className="hidden sm:inline">Edit</span>
+                        </Link>
+                    </Button>
+                    <AlertDialogTrigger asChild>
+                        <Button size="sm" variant="outline" className="h-10 px-2 sm:h-8" aria-label={`Delete ${projectName}`}>
+                            <Trash2 className="size-4 sm:hidden" />
+                            <span className="hidden sm:inline">Delete</span>
                         </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-36">
-                        <DropdownMenuItem asChild>
-                            <Link href={`/app/projects/${projectId}`}>Open</Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem asChild>
-                            <Link href={`/app/projects/${projectId}?mode=edit`}>Edit</Link>
-                        </DropdownMenuItem>
-                        <AlertDialogTrigger asChild>
-                            <DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
-                        </AlertDialogTrigger>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                    </AlertDialogTrigger>
+                </div>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Delete project?</AlertDialogTitle>
