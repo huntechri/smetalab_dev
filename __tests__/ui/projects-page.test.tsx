@@ -2,6 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 import Page from '@/app/(workspace)/app/projects/page';
+import { ProjectRow } from '@/features/projects/components/project-row';
 
 let mockedSearchParams = '';
 
@@ -30,20 +31,39 @@ test('projects page renders toolbar and project cards', () => {
     expect(screen.getByText('ООО СеверСтрой')).toBeInTheDocument();
 });
 
-test('projects page uses desktop 4-column placeholders and 5-column grid layout classes', () => {
+test('projects page uses desktop 4-column placeholders and 4-column grid layout classes', () => {
     mockedSearchParams = '';
     const { container } = render(<Page />);
 
     const placeholdersGrid = container.querySelector('.lg\\:grid-cols-4');
     expect(placeholdersGrid).toHaveClass('grid', 'grid-cols-1', 'gap-3', 'lg:grid-cols-4');
 
-    const projectsGrid = container.querySelector('.lg\\:grid-cols-5');
-    expect(projectsGrid).toHaveClass('grid', 'grid-cols-1', 'gap-3', 'lg:grid-cols-5');
+    const projectsGrid = container.querySelector('.grid.grid-cols-1.gap-4.lg\\:grid-cols-4');
+    expect(projectsGrid).toHaveClass('grid', 'grid-cols-1', 'gap-4', 'lg:grid-cols-4');
 });
 
-test('list view uses compact actions menu trigger', () => {
-    mockedSearchParams = 'view=list';
-    render(<Page />);
+test('list rows keep compact actions and smaller progress bar', () => {
+    const onDelete = vi.fn();
+    const { container } = render(
+        <ProjectRow
+            project={{
+                id: 'north-park',
+                name: 'ЖК «Северный парк»',
+                customerName: 'ООО СеверСтрой',
+                contractAmount: 84_300_000,
+                startDate: '2025-01-10T00:00:00.000Z',
+                endDate: '2025-06-18T00:00:00.000Z',
+                progress: 62,
+                status: 'active',
+            }}
+            onDelete={onDelete}
+        />,
+    );
 
-    expect(screen.getAllByLabelText(/Open actions menu for/i).length).toBeGreaterThan(0);
+    expect(container.querySelector('a[href="/app/projects/north-park"]')).toBeInTheDocument();
+    expect(container.querySelector('a[href="/app/projects/north-park?mode=edit"]')).toBeInTheDocument();
+    expect(container.querySelector('button[aria-label="Delete ЖК «Северный парк»"]')).toBeInTheDocument();
+
+    const progressBars = container.querySelectorAll('.h-1.w-24');
+    expect(progressBars.length).toBeGreaterThan(0);
 });
