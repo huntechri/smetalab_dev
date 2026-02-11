@@ -1,3 +1,4 @@
+// @vitest-environment node
 /* eslint-disable */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { checkAccess, isPlatformAdmin, isSuperadmin, getUserTeamRole } from '@/lib/infrastructure/auth/access';
