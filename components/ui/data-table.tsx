@@ -310,6 +310,12 @@ export function DataTable<TData, TValue>({
                                                                 type="button"
                                                                 className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                 onClick={header.column.getToggleSortingHandler()}
+                                                                onKeyDown={(e) => {
+                                                                    if (e.key === 'Enter' || e.key === ' ') {
+                                                                        e.preventDefault();
+                                                                        header.column.getToggleSortingHandler()?.(e);
+                                                                    }
+                                                                }}
                                                                 aria-label="Сортировать столбец"
                                                             >
                                                                 <div className="truncate flex-1 text-xs md:text-sm">
@@ -400,6 +406,12 @@ export function DataTable<TData, TValue>({
                                                                     type="button"
                                                                     className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                     onClick={header.column.getToggleSortingHandler()}
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                                            e.preventDefault();
+                                                                            header.column.getToggleSortingHandler()?.(e);
+                                                                        }
+                                                                    }}
                                                                     aria-label="Сортировать столбец"
                                                                 >
                                                                     <div className="truncate flex-1 text-xs md:text-sm">

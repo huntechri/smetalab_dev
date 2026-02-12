@@ -5,7 +5,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
-import { ProjectSortOption } from '../types';
+import { ProjectSortOption } from '../../shared/types';
 
 type ProjectsSortSelectProps = {
     value: ProjectSortOption;

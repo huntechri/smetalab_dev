@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ProjectsSearchInput } from './projects-search-input';
 import { ProjectsSortSelect } from './projects-sort-select';
 import { ProjectsViewToggle } from './projects-view-toggle';
-import { ProjectSortOption, ProjectViewMode } from '../types';
+import { ProjectSortOption, ProjectViewMode } from '../../shared/types';
 
 type ProjectsToolbarProps = {
     searchQuery: string;

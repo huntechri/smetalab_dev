@@ -1,6 +1,6 @@
 import { Card, CardContent } from '@/components/ui/card';
-import { ProjectListItem } from '../types';
-import { ProjectStatusDot } from './project-status-dot';
+import { ProjectListItem } from '../../shared/types';
+import { ProjectStatusDot } from '../../shared/components/project-status-dot';
 import { ProjectActions } from './project-actions';
 
 function formatDate(dateString: string): string {

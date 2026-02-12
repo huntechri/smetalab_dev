@@ -1,6 +1,6 @@
-import { ProjectListItem } from '../types';
+import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
-import { ProjectStatusDot } from './project-status-dot';
+import { ProjectStatusDot } from '../../shared/components/project-status-dot';
 
 function formatDate(dateString: string): string {
     return new Date(dateString).toLocaleDateString('ru-RU');

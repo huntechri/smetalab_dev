@@ -40,11 +40,11 @@ import {
 } from '@/components/ui/command';
 import { DatePicker } from '@/components/ui/date-picker';
 
-import { createProjectSchema, type CreateProjectInput } from '../schemas/create-project.schema';
+import { createProjectSchema, type CreateProjectInput } from '../../shared/schemas/create-project.schema';
 import { createProjectAction } from '@/app/actions/projects/create';
 import { updateProjectAction } from '@/app/actions/projects/update';
 import { useRouter } from 'next/navigation';
-import { ProjectListItem } from '../types';
+import { ProjectListItem } from '../../shared/types';
 
 interface CreateProjectDialogProps {
     open: boolean;

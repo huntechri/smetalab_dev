@@ -1,4 +1,4 @@
-import { ProjectListItem, ProjectViewMode } from '../types';
+import { ProjectListItem, ProjectViewMode } from '../../shared/types';
 import { ProjectCard } from './project-card';
 import { ProjectRow } from './project-row';
 

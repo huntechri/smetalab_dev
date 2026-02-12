@@ -29,10 +29,11 @@
   - `features/materials/**`
   - `features/works/**`
   - `features/counterparties/**`
-  - `features/projects/**`
+  - `features/projects/**` (including new premium Dashboard module)
 - Route pages under `app/(workspace)/app/guide/**/page.tsx` and `app/(workspace)/app/projects/page.tsx` now act as thin server wrappers that fetch initial data and render feature screens.
 - Shared table orchestration logic is consolidated in `hooks/use-guide-table-search.ts` and consumed by feature adapters.
 - `components/ui/states/**` is the canonical layer for shared loading/empty/error/forbidden UI states.
+- `features/projects/dashboard/**` implements a premium, responsive dashboard with KPI cards, performance charts (AreaChart), and an interactive pill-style DataTable with drag-and-drop.
 
 > ⚠️ Note: the long per-file inventory below still contains historical file paths from the pre-migration layout and must be treated as archival context, not as the current module map.
 

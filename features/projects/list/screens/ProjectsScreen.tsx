@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { ProjectListItem, ProjectSortOption, ProjectViewMode } from '../types';
-import { filterProjects } from '../utils/filter';
-import { sortProjects } from '../utils/sort';
+import { ProjectListItem, ProjectSortOption, ProjectViewMode } from '../../shared/types';
+import { filterProjects } from '../../shared/utils/filter';
+import { sortProjects } from '../../shared/utils/sort';
 import { ProjectsKpiPlaceholders } from '../components/projects-kpi-placeholders';
 import { ProjectsToolbar } from '../components/projects-toolbar';
 import { ProjectsList } from '../components/projects-list';
