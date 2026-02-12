@@ -63,3 +63,5 @@ debug.ts
 *.tmp
 *.bak
 
+# Donor / reference code
+DONOR/

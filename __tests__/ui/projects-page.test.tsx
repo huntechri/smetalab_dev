@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 import Page from '@/app/(workspace)/app/projects/page';
-import { ProjectRow } from '@/features/projects/components/project-row';
+import { ProjectRow } from '@/features/projects/list/components/project-row';
 
 let mockedSearchParams = '';
 
