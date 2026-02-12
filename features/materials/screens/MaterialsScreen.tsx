@@ -89,7 +89,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
                 <div className="hidden" aria-hidden="true" />
             </div>
 
-            <div className="relative rounded-2xl border border-border/60 bg-card p-4 shadow-sm">
+            <div className="relative">
                 {(actions.isImporting || actions.isInserting) && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-[1px] rounded-2xl">
                         <div className="flex flex-col items-center gap-3 p-6 bg-card border shadow-xl rounded-xl">
