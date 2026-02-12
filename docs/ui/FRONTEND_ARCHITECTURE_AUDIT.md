@@ -2,7 +2,7 @@
 
 ## Scope
 - App Router layout and route composition.
-- Feature boundaries for guide modules (`materials`, `works`, `counterparties`).
+- Feature boundaries for guide modules (`materials`, `works`, `counterparties`, `projects`).
 - Shared UI primitives and state patterns.
 - Client/server boundary hygiene.
 

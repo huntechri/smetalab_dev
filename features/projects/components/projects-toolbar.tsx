@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import * as React from 'react';
 import { Button } from '@/components/ui/button';
 import { ProjectsSearchInput } from './projects-search-input';
 import { ProjectsSortSelect } from './projects-sort-select';
@@ -12,6 +14,7 @@ type ProjectsToolbarProps = {
     onSearchQueryChange: (value: string) => void;
     onSortOptionChange: (value: ProjectSortOption) => void;
     onViewModeChange: (value: ProjectViewMode) => void;
+    onAddClick: () => void;
 };
 
 export function ProjectsToolbar({
@@ -21,6 +24,7 @@ export function ProjectsToolbar({
     onSearchQueryChange,
     onSortOptionChange,
     onViewModeChange,
+    onAddClick,
 }: ProjectsToolbarProps) {
     return (
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -29,8 +33,8 @@ export function ProjectsToolbar({
                 <ProjectsSortSelect value={sortOption} onValueChange={onSortOptionChange} />
                 <ProjectsViewToggle value={viewMode} onValueChange={onViewModeChange} />
             </div>
-            <Button asChild>
-                <Link href="/app/projects?create=1">Create project</Link>
+            <Button onClick={onAddClick}>
+                Создать проект
             </Button>
         </div>
     );

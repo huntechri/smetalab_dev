@@ -42,5 +42,6 @@
 - `features/materials`
 - `features/works`
 - `features/counterparties`
+- `features/projects`
 
 These expose stable entrypoints with `index.ts` barrels.

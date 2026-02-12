@@ -29,7 +29,8 @@
   - `features/materials/**`
   - `features/works/**`
   - `features/counterparties/**`
-- Route pages under `app/(workspace)/app/guide/**/page.tsx` now act as thin server wrappers that fetch initial data and render feature screens.
+  - `features/projects/**`
+- Route pages under `app/(workspace)/app/guide/**/page.tsx` and `app/(workspace)/app/projects/page.tsx` now act as thin server wrappers that fetch initial data and render feature screens.
 - Shared table orchestration logic is consolidated in `hooks/use-guide-table-search.ts` and consumed by feature adapters.
 - `components/ui/states/**` is the canonical layer for shared loading/empty/error/forbidden UI states.
 

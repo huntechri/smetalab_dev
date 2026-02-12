@@ -11,6 +11,7 @@
 | **Estimate** | Смета | The document calculating the cost of works and materials. |
 | **Phase** | Этап / Фаза | A logical group of works in an estimate. |
 | **Sharing** | Поделиться / Доступ | Granting access to an estimate via a link. |
+| **Project** | Проект | The high-level container for estimates related to a specific client. |
 | **Impersonation** | Имперсонация | Admin acting on behalf of a user for support. |
 
 ## Tone & Voice Guidelines
