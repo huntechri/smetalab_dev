@@ -10,9 +10,9 @@ export function ProjectsSearchInput({ value, onChange }: ProjectsSearchInputProp
         <Input
             value={value}
             onChange={(event) => onChange(event.target.value)}
-            placeholder="Search by project or customer"
+            placeholder="Поиск по проекту или заказчику"
             className="w-full sm:w-72"
-            aria-label="Search projects"
+            aria-label="Поиск проектов"
         />
     );
 }

@@ -1,4 +1,4 @@
-export type ProjectStatus = 'active' | 'completed' | 'planned';
+export type ProjectStatus = 'active' | 'completed' | 'planned' | 'paused';
 
 export type ProjectViewMode = 'grid' | 'list';
 
@@ -13,6 +13,7 @@ export type ProjectListItem = {
     id: string;
     name: string;
     customerName: string;
+    counterpartyId?: string;
     contractAmount: number;
     startDate: string;
     endDate: string;

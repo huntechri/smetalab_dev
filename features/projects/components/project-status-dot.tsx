@@ -18,6 +18,10 @@ const STATUS_STYLES: Record<ProjectStatus, { dot: string; pulse: string }> = {
         dot: 'bg-blue-500',
         pulse: 'animate-pulse bg-blue-500/50',
     },
+    paused: {
+        dot: 'bg-amber-500',
+        pulse: 'bg-amber-500/40',
+    },
 };
 
 export function ProjectStatusDot({ status }: ProjectStatusDotProps) {

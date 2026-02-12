@@ -16,14 +16,14 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
     return (
         <Select value={value} onValueChange={(nextValue) => onValueChange(nextValue as ProjectSortOption)}>
             <SelectTrigger className="w-full sm:w-[220px]">
-                <SelectValue placeholder="Sort projects" />
+                <SelectValue placeholder="Сортировка проектов" />
             </SelectTrigger>
             <SelectContent>
-                <SelectItem value="name">Name (A→Z)</SelectItem>
-                <SelectItem value="contractAmount">Contract amount (desc)</SelectItem>
-                <SelectItem value="startDate">Start date (newest first)</SelectItem>
-                <SelectItem value="endDate">End date (nearest first)</SelectItem>
-                <SelectItem value="progress">Progress (desc)</SelectItem>
+                <SelectItem value="name">Название (А→Я)</SelectItem>
+                <SelectItem value="contractAmount">Сумма контракта (по убыв.)</SelectItem>
+                <SelectItem value="startDate">Дата начала (сначала новые)</SelectItem>
+                <SelectItem value="endDate">Дата окончания (ближайшие)</SelectItem>
+                <SelectItem value="progress">Прогресс (по убыв.)</SelectItem>
             </SelectContent>
         </Select>
     );
