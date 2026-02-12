@@ -137,7 +137,7 @@
 - **Framework**: Next.js 15+ (App Router)
 - **Database**: Postgres (Neon) + Drizzle ORM
 - **AI**: OpenAI (модель `text-embedding-3-small`) для умного поиска.
-- **UI**: Tailwind CSS 4 + Shadcn/UI.
+- **UI**: Tailwind CSS 4 + Shadcn/UI. Включает премиальный Dashboard для управления проектами.
 - **Monitoring**: Sentry (Error tracking & Performance)
 
 ## 🚦 Быстрый Старт

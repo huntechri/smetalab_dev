@@ -42,6 +42,6 @@
 - `features/materials`
 - `features/works`
 - `features/counterparties`
-- `features/projects`
+- `features/projects` (including `dashboard` submodule)
 
 These expose stable entrypoints with `index.ts` barrels.

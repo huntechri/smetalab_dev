@@ -1,6 +1,6 @@
 import { LayoutGrid, List } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ProjectViewMode } from '../types';
+import { ProjectViewMode } from '../../shared/types';
 
 type ProjectsViewToggleProps = {
     value: ProjectViewMode;
