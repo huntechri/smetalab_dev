@@ -82,6 +82,11 @@
 3. Экран использует `features/**/hooks/*` и `hooks/*` для поведения.
 4. Таблицы и диалоги рендерятся через `features/**/components/*` + `components/ui/*`.
 
+**Пример реализации (Projects):**
+- `app/(workspace)/app/projects/page.tsx` — серверная загрузка проектов и контрагентов.
+- `features/projects/list/screens/ProjectsScreen.tsx` — композиция экрана без низкоуровневой логики URL-параметров.
+- `features/projects/list/hooks/use-projects-screen.ts` — управление фильтрами, сортировкой, режимом отображения и действиями списка.
+
 ### 3) Server Actions
 **Файл-локатор:** `app/actions/**`.
 
