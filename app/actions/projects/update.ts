@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { createProjectSchema } from '@/features/projects/schemas/create-project.schema';
 import { db } from '@/lib/data/db/drizzle';
 import { projects } from '@/lib/data/db/schema';
@@ -41,8 +41,6 @@ export async function updateProjectAction(projectId: string, formData: unknown) 
                 )
             );
 
-        revalidateTag('projects');
-        revalidateTag(`projects-team-${team.id}`);
         revalidatePath('/app/projects');
         return { success: true };
     } catch (err) {
