@@ -3,12 +3,25 @@ import { ProjectListItem } from '../types';
 import { ProjectStatusDot } from './project-status-dot';
 import { ProjectActions } from './project-actions';
 
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('ru-RU');
+}
+
+function formatCurrency(value: number): string {
+    return new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        maximumFractionDigits: 0,
+    }).format(value);
+}
+
 type ProjectCardProps = {
     project: ProjectListItem;
     onDelete: (projectId: string) => void;
+    onEdit: (projectId: string) => void;
 };
 
-export function ProjectCard({ project, onDelete }: ProjectCardProps) {
+export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
     return (
         <Card className="py-0">
             <CardContent className="min-w-0 space-y-3 p-4">
@@ -35,20 +48,9 @@ export function ProjectCard({ project, onDelete }: ProjectCardProps) {
                     projectId={project.id}
                     projectName={project.name}
                     onDelete={onDelete}
+                    onEdit={onEdit}
                 />
             </CardContent>
         </Card>
     );
-}
-
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('ru-RU');
-}
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        maximumFractionDigits: 0,
-    }).format(value);
 }

@@ -1,0 +1,1 @@
+CREATE INDEX "projects_tenant_updated_at_idx" ON "projects" USING btree ("tenant_id","updated_at" DESC NULLS LAST) WHERE deleted_at IS NULL;
