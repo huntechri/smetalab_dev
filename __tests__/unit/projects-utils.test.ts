@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { filterProjects } from '@/features/projects/utils/filter';
-import { sortProjects } from '@/features/projects/utils/sort';
-import { ProjectListItem } from '@/features/projects/types';
+import { filterProjects } from '@/features/projects/shared/utils/filter';
+import { sortProjects } from '@/features/projects/shared/utils/sort';
+import { ProjectListItem } from '@/features/projects';
 
 const projects: ProjectListItem[] = [
     {

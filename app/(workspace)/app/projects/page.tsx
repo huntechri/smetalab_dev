@@ -2,7 +2,7 @@ import { ProjectsScreen } from '@/features/projects';
 import { getProjects } from '@/lib/data/projects/repo';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
-import { ProjectListItem, ProjectStatus } from '@/features/projects/types';
+import { ProjectListItem, ProjectStatus } from '@/features/projects';
 
 export default async function Page() {
     const team = await getTeamForUser();
