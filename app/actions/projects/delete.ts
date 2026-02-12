@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { deleteProject } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 
@@ -17,8 +17,6 @@ export async function deleteProjectAction(projectId: string) {
             return { error: 'Проект не найден или у вас нет прав на его удаление' };
         }
 
-        revalidateTag('projects');
-        revalidateTag(`projects-team-${team.id}`);
         revalidatePath('/app/projects');
         return { success: true };
     } catch (err) {

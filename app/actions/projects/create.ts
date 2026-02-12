@@ -1,6 +1,6 @@
 'use server';
 
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { createProjectSchema } from '@/features/projects/schemas/create-project.schema';
 import { createProjectUseCase } from '@/lib/domain/projects/use-cases';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
@@ -35,8 +35,6 @@ export async function createProjectAction(formData: unknown) {
 
         await createProjectUseCase(projectData);
 
-        revalidateTag('projects');
-        revalidateTag(`projects-team-${team.id}`);
         revalidatePath('/app/projects');
         return { success: true };
     } catch (err) {
