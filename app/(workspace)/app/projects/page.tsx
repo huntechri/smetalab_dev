@@ -2,7 +2,7 @@ import { ProjectsScreen } from '@/features/projects';
 import { getProjects } from '@/lib/data/projects/repo';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
-import { ProjectListItem } from '@/features/projects/types';
+import { ProjectListItem, ProjectStatus } from '@/features/projects/types';
 
 export default async function Page() {
     const team = await getTeamForUser();
@@ -18,13 +18,13 @@ export default async function Page() {
     const projects: ProjectListItem[] = projectsData.map((p) => ({
         id: p.id,
         name: p.name,
-        customerName: p.customerName || (p as any).counterpartyName || '',
+        customerName: p.customerName || p.counterpartyName || '',
         counterpartyId: p.counterpartyId || undefined,
         contractAmount: p.contractAmount,
         startDate: p.startDate?.toISOString() || '',
         endDate: p.endDate?.toISOString() || '',
         progress: p.progress,
-        status: p.status as any,
+        status: p.status as ProjectStatus,
     }));
 
     const counterparties = counterpartiesData.map((c) => ({
