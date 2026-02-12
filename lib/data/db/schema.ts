@@ -28,6 +28,7 @@ export const rbacLevelEnum = pgEnum('rbac_level', ['none', 'read', 'manage']);
 export const workStatusEnum = pgEnum('work_status', ['active', 'draft', 'archived', 'deleted']);
 export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'contractor', 'supplier']);
 export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
+export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -412,6 +413,37 @@ export const counterparties = pgTable('counterparties', {
 ]);
 
 // ═══════════════════════════════════════════════════════════════
+// PROJECTS
+// ═══════════════════════════════════════════════════════════════
+
+export const projects = pgTable('projects', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+
+  name: text('name').notNull(),
+  counterpartyId: uuid('counterparty_id')
+    .references(() => counterparties.id),
+  customerName: text('customer_name'), // For manual entry
+
+  contractAmount: integer('contract_amount').notNull().default(0),
+  startDate: timestamp('start_date'),
+  endDate: timestamp('end_date'),
+  progress: integer('progress').notNull().default(0),
+  status: projectStatusEnum('status').notNull().default('planned'),
+
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('projects_tenant_status_idx').on(table.tenantId, table.status).where(sql`deleted_at IS NULL`),
+  index('projects_counterparty_idx').on(table.counterpartyId),
+  index('projects_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
+  index('projects_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+]);
+
+// ═══════════════════════════════════════════════════════════════
 // RELATIONS
 // ═══════════════════════════════════════════════════════════════
 
@@ -424,6 +456,7 @@ export const teamsRelations = relations(teams, ({ many }) => ({
   works: many(works),
   materials: many(materials),
   counterparties: many(counterparties),
+  projects: many(projects),
 }));
 
 export const usersRelations = relations(users, ({ many }) => ({
@@ -540,6 +573,17 @@ export const counterpartiesRelations = relations(counterparties, ({ one }) => ({
   }),
 }));
 
+export const projectsRelations = relations(projects, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [projects.tenantId],
+    references: [teams.id],
+  }),
+  counterparty: one(counterparties, {
+    fields: [projects.counterpartyId],
+    references: [counterparties.id],
+  }),
+}));
+
 // ═══════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════
@@ -568,6 +612,8 @@ export type Material = typeof materials.$inferSelect;
 export type NewMaterial = typeof materials.$inferInsert;
 export type Counterparty = typeof counterparties.$inferSelect;
 export type NewCounterparty = typeof counterparties.$inferInsert;
+export type Project = typeof projects.$inferSelect;
+export type NewProject = typeof projects.$inferInsert;
 
 export type TeamDataWithMembers = Team & {
   teamMembers: (TeamMember & {

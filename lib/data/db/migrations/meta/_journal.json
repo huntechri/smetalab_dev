@@ -71,6 +71,20 @@
       "when": 1770580086894,
       "tag": "0009_classy_tarantula",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1770897787320,
+      "tag": "0010_whole_magus",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1770903422371,
+      "tag": "0011_heavy_raider",
+      "breakpoints": true
     }
   ]
 }

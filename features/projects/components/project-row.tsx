@@ -2,12 +2,25 @@ import { ProjectListItem } from '../types';
 import { ProjectActions } from './project-actions';
 import { ProjectStatusDot } from './project-status-dot';
 
+function formatDate(dateString: string): string {
+    return new Date(dateString).toLocaleDateString('ru-RU');
+}
+
+function formatCurrency(value: number): string {
+    return new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        maximumFractionDigits: 0,
+    }).format(value);
+}
+
 type ProjectRowProps = {
     project: ProjectListItem;
     onDelete: (projectId: string) => void;
+    onEdit: (projectId: string) => void;
 };
 
-export function ProjectRow({ project, onDelete }: ProjectRowProps) {
+export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
     return (
         <div className="rounded-md border px-3 py-2">
             <div className="flex min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
@@ -36,21 +49,10 @@ export function ProjectRow({ project, onDelete }: ProjectRowProps) {
                     projectId={project.id}
                     projectName={project.name}
                     onDelete={onDelete}
+                    onEdit={onEdit}
                     density="compact"
                 />
             </div>
         </div>
     );
-}
-
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('ru-RU');
-}
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        maximumFractionDigits: 0,
-    }).format(value);
 }

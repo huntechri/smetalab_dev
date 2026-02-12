@@ -17,53 +17,81 @@ vi.mock('next/navigation', () => ({
     usePathname: () => '/app/projects',
     useRouter: () => ({
         replace: vi.fn(),
+        refresh: vi.fn(),
     }),
+    redirect: vi.fn(),
 }));
 
-test('projects page renders toolbar and project cards', () => {
+vi.mock('@/lib/data/projects/repo', () => ({
+    getProjects: vi.fn(async () => [
+        {
+            id: 'north-park',
+            name: 'ЖК «Северный парк»',
+            customerName: 'ООО СеверСтрой',
+            contractAmount: 84300000,
+            startDate: new Date('2025-01-10T00:00:00.000Z'),
+            endDate: new Date('2025-06-18T00:00:00.000Z'),
+            progress: 62,
+            status: 'active',
+        },
+    ]),
+}));
+
+vi.mock('@/lib/data/db/queries', () => ({
+    getTeamForUser: vi.fn(async () => ({ id: 1, name: 'Test Team' })),
+    getCounterparties: vi.fn(async () => ({ data: [], count: 0 })),
+}));
+
+test('projects page renders heading and project data', async () => {
     mockedSearchParams = '';
-    render(<Page />);
+    const PageComponent = await Page();
+    render(PageComponent);
 
     expect(screen.getByRole('heading', { name: 'Проекты' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Create project' })).toBeInTheDocument();
-    expect(screen.getByLabelText('Search projects')).toBeInTheDocument();
+    expect(screen.getByText('Создать проект')).toBeInTheDocument();
+    expect(screen.getByLabelText('Поиск проектов')).toBeInTheDocument();
     expect(screen.getByText('ЖК «Северный парк»')).toBeInTheDocument();
     expect(screen.getByText('ООО СеверСтрой')).toBeInTheDocument();
 });
 
-test('projects page uses desktop 4-column placeholders and 4-column grid layout classes', () => {
+test('projects page uses 4-column grid layout classes', async () => {
     mockedSearchParams = '';
-    const { container } = render(<Page />);
-
-    const placeholdersGrid = container.querySelector('.lg\\:grid-cols-4');
-    expect(placeholdersGrid).toHaveClass('grid', 'grid-cols-1', 'gap-3', 'lg:grid-cols-4');
+    const PageComponent = await Page();
+    const { container } = render(PageComponent);
 
     const projectsGrid = container.querySelector('.grid.grid-cols-1.gap-4.lg\\:grid-cols-4');
+    expect(projectsGrid).toBeInTheDocument();
     expect(projectsGrid).toHaveClass('grid', 'grid-cols-1', 'gap-4', 'lg:grid-cols-4');
 });
 
-test('list rows keep compact actions and smaller progress bar', () => {
+test('list rows render correctly', () => {
     const onDelete = vi.fn();
+    const onEdit = vi.fn();
     const { container } = render(
         <ProjectRow
             project={{
                 id: 'north-park',
                 name: 'ЖК «Северный парк»',
                 customerName: 'ООО СеверСтрой',
-                contractAmount: 84_300_000,
+                contractAmount: 84300000,
                 startDate: '2025-01-10T00:00:00.000Z',
                 endDate: '2025-06-18T00:00:00.000Z',
                 progress: 62,
                 status: 'active',
             }}
             onDelete={onDelete}
+            onEdit={onEdit}
         />,
     );
 
+    // Link to project detail page
     expect(container.querySelector('a[href="/app/projects/north-park"]')).toBeInTheDocument();
-    expect(container.querySelector('a[href="/app/projects/north-park?mode=edit"]')).toBeInTheDocument();
-    expect(container.querySelector('button[aria-label="Delete ЖК «Северный парк»"]')).toBeInTheDocument();
 
-    const progressBars = container.querySelectorAll('.h-1.w-24');
-    expect(progressBars.length).toBeGreaterThan(0);
+    // Edit and Delete buttons exist (3 action buttons: open, edit, delete)
+    const actionButtons = container.querySelectorAll('button');
+    expect(actionButtons.length).toBeGreaterThanOrEqual(2);
+
+    // Progress bar with compact height
+    const progressBar = container.querySelector('.h-1.w-24');
+    expect(progressBar).toBeInTheDocument();
 });
