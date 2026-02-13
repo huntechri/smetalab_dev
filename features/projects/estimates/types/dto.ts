@@ -1,0 +1,45 @@
+import { z } from 'zod';
+
+export const estimateStatusSchema = z.enum(['draft', 'in_progress', 'approved']);
+export type EstimateStatus = z.infer<typeof estimateStatusSchema>;
+
+export const estimateRowKindSchema = z.enum(['work', 'material']);
+export type EstimateRowKind = z.infer<typeof estimateRowKindSchema>;
+
+export const estimateMetaSchema = z.object({
+    id: z.string(),
+    projectId: z.string(),
+    name: z.string(),
+    status: estimateStatusSchema,
+    total: z.number(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+});
+
+export type EstimateMeta = z.infer<typeof estimateMetaSchema>;
+
+export const estimateRowSchema = z.object({
+    id: z.string(),
+    kind: estimateRowKindSchema,
+    parentWorkId: z.string().optional(),
+    code: z.string(),
+    name: z.string(),
+    imageUrl: z.string().nullable().optional(),
+    unit: z.string(),
+    qty: z.number(),
+    price: z.number(),
+    sum: z.number(),
+    expense: z.number(),
+    order: z.number(),
+});
+
+export type EstimateRow = z.infer<typeof estimateRowSchema>;
+
+export const rowPatchSchema = z.object({
+    name: z.string().min(1).optional(),
+    qty: z.number().nonnegative().optional(),
+    price: z.number().nonnegative().optional(),
+    expense: z.number().nonnegative().optional(),
+});
+
+export type RowPatch = z.infer<typeof rowPatchSchema>;
