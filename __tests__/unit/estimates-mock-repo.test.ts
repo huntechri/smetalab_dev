@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { estimatesMockRepo } from '@/features/projects/estimates/api/estimates.mock';
+import { estimatesMockRepo } from '@/features/projects/estimates/repository/estimates.mock';
 
 describe('estimatesMockRepo', () => {
     it('patches a row and recalculates sum', async () => {

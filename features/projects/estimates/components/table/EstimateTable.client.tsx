@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/ui/data-table';
 import { useToast } from '@/components/ui/use-toast';
-import { estimatesMockRepo } from '../../api';
+import { estimatesMockRepo } from '../../repository';
 import { getVisibleRows } from '../../lib/rows-visible';
 import { EstimateRow } from '../../types/dto';
 import { getEstimateColumns } from './columns';
