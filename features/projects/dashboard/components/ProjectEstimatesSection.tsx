@@ -11,7 +11,7 @@ export function ProjectEstimatesSection({ projectId }: { projectId: string }) {
             </CardHeader>
             <CardContent>
                 <Button asChild>
-                    <Link href={`/projects/${projectId}/estimates`}>Все сметы</Link>
+                    <Link href={`/app/projects/${projectId}/estimates`}>Все сметы</Link>
                 </Button>
             </CardContent>
         </Card>
