@@ -11,6 +11,11 @@ export async function createProject(data: NewProject) {
 
 
 export async function getProjects(teamId: number) {
+    if (!process.env.DATABASE_URL) {
+        console.warn('⚠️ getProjects: DATABASE_URL not set, returning empty array (build mode)');
+        return [];
+    }
+
     return await db
         .select({
             id: projects.id,
