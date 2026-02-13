@@ -1,0 +1,49 @@
+import { and, desc, ilike, sql } from 'drizzle-orm';
+
+import { db } from './drizzle';
+import { counterparties } from './schema';
+import { withActiveTenant } from './tenant';
+import { CounterpartyRow } from '@/types/counterparty-row';
+
+export async function getCounterparties(
+  teamId: number,
+  options: { limit?: number; offset?: number; search?: string } = {}
+) {
+  const { limit = 50, offset = 0, search } = options;
+
+  const filters = [withActiveTenant(counterparties, teamId)];
+
+  if (search) {
+    filters.push(ilike(counterparties.name, `%${search}%`));
+  }
+
+  const data = await db
+    .select()
+    .from(counterparties)
+    .where(and(...filters))
+    .orderBy(desc(counterparties.updatedAt))
+    .limit(limit)
+    .offset(offset);
+
+  const countQuery = await db.select({ count: sql<number>`count(*)` }).from(counterparties).where(and(...filters));
+
+  return {
+    data: data as unknown as CounterpartyRow[],
+    count: Number(countQuery[0].count),
+  };
+}
+
+export async function getCounterpartiesCount(teamId: number, search?: string) {
+  const filters = [withActiveTenant(counterparties, teamId)];
+
+  if (search) {
+    filters.push(ilike(counterparties.name, `%${search}%`));
+  }
+
+  const result = await db
+    .select({ count: sql<number>`count(*)` })
+    .from(counterparties)
+    .where(and(...filters));
+
+  return Number(result[0].count);
+}

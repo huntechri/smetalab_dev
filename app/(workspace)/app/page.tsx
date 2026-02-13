@@ -1,5 +1,3 @@
-'use client';
-
 import {
     Card,
     CardContent,
@@ -72,7 +70,7 @@ export default function AppHomePage() {
                         <Card key={item.title} className={cn(
                             "glass-card hover:border-primary/20",
                             "flex flex-col justify-between p-4"
-                        )} style={{ "--idx": idx } as CSSProperties}>
+                        )} style={{ '--idx': idx } as CSSProperties}>
                             <div className="flex items-center justify-between mb-2">
                                 <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{item.title}</p>
                                 <div className={cn("rounded-md p-1.5", item.bg, item.color)}>
