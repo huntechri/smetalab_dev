@@ -3,6 +3,11 @@ import { teams, teamMembers, works, materials, activityLogs } from './schema';
 import { desc, eq, sql } from 'drizzle-orm';
 
 export async function getAllTeams() {
+    if (!process.env.DATABASE_URL) {
+        console.warn('⚠️ getAllTeams: DATABASE_URL not set, returning empty array (build mode)');
+        return [];
+    }
+
     return await db
         .select({
             id: teams.id,
@@ -19,6 +24,11 @@ export async function getAllTeams() {
 }
 
 export async function getTeamDetails(teamId: number) {
+    if (!process.env.DATABASE_URL) {
+        console.warn('⚠️ getTeamDetails: DATABASE_URL not set, returning null (build mode)');
+        return null;
+    }
+
     const team = await db.query.teams.findFirst({
         where: eq(teams.id, teamId),
         with: {
