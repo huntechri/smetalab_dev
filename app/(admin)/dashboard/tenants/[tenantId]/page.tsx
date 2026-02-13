@@ -21,6 +21,8 @@ interface PageProps {
     params: Promise<{ tenantId: string }>;
 }
 
+export const dynamic = 'force-dynamic';
+
 export default async function TenantDetailsPage({ params }: PageProps) {
     const { tenantId } = await params;
     const team = await getTeamDetails(parseInt(tenantId));

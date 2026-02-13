@@ -4,10 +4,15 @@ import { drizzle, PostgresJsDatabase, PostgresJsQueryResultHKT } from 'drizzle-o
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL;
+let connectionString = process.env.DATABASE_URL;
 
 if (!connectionString) {
-  throw new Error('DATABASE_URL environment variable is not set');
+  if (process.env.NODE_ENV === 'production') {
+    console.warn('⚠️  DATABASE_URL is not set. Using dummy connection string for build.');
+    connectionString = 'postgres://dummy:dummy@localhost:5432/dummy';
+  } else {
+    throw new Error('DATABASE_URL environment variable is not set');
+  }
 }
 
 /**

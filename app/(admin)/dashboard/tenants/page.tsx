@@ -5,6 +5,8 @@ import { Button } from '@/components/ui/button';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default async function TenantsPage() {
     const teams = await getAllTeams();
 
