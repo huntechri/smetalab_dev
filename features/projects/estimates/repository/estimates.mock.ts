@@ -30,6 +30,24 @@ export const estimatesMockRepo: EstimatesRepository = {
         await delay(120, 360);
         return [...metaStore.values()].filter((item) => item.projectId === projectId).map((item) => estimateMetaSchema.parse(item));
     },
+    async createEstimate(projectId, payload) {
+        await delay(120, 320);
+        const now = new Date().toISOString();
+        const estimateId = `est-${crypto.randomUUID().slice(0, 8)}`;
+        const estimate = estimateMetaSchema.parse({
+            id: estimateId,
+            projectId,
+            name: payload?.name?.trim() ? payload.name.trim() : `Смета ${new Date().toLocaleDateString('ru-RU')}`,
+            status: 'draft',
+            total: 0,
+            createdAt: now,
+            updatedAt: now,
+        });
+
+        metaStore.set(estimateId, estimate);
+        rowStore.set(estimateId, []);
+        return estimate;
+    },
     async getEstimateMeta(projectId, estimateId) {
         await delay(80, 220);
         const meta = metaStore.get(estimateId);
