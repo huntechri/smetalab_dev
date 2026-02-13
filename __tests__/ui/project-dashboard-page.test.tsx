@@ -3,12 +3,15 @@ import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 import Page from '@/app/(workspace)/app/projects/[projectId]/page';
 
-const projectDashboardSpy = vi.fn(({ project }: { project: { name: string } }) => (
+const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
     <div data-testid="project-dashboard">{project.name}</div>
 ));
 
 vi.mock('@/features/projects', () => ({
-    ProjectDashboard: (props: { project: { name: string } }) => projectDashboardSpy(props),
+    ProjectDashboard: (props: { project: { name: string }; estimates: Array<{ id: string }> }) => projectDashboardSpy(props),
+    estimatesMockRepo: {
+        listEstimates: vi.fn(async () => [{ id: 'est-100' }]),
+    },
 }));
 
 vi.mock('next/navigation', () => ({
@@ -50,4 +53,5 @@ test('project dashboard page maps project data and renders feature screen', asyn
         progress: 62,
         status: 'active',
     });
+    expect(projectDashboardSpy.mock.calls[0]?.[0]?.estimates).toEqual([{ id: 'est-100' }]);
 });

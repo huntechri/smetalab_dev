@@ -1,4 +1,4 @@
-import { ProjectDashboard } from '@/features/projects';
+import { ProjectDashboard, estimatesMockRepo } from '@/features/projects';
 import { getProjectById } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { redirect, notFound } from 'next/navigation';
@@ -22,6 +22,8 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
+    const estimates = await estimatesMockRepo.listEstimates(projectId);
+
     const project: ProjectListItem = {
         id: projectData.id,
         name: projectData.name,
@@ -34,5 +36,5 @@ export default async function Page({ params }: PageProps) {
         status: projectData.status as ProjectStatus,
     };
 
-    return <ProjectDashboard project={project} />;
+    return <ProjectDashboard project={project} estimates={estimates} />;
 }

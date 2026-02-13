@@ -12,4 +12,14 @@ describe('estimatesMockRepo', () => {
         expect(material.parentWorkId).toBe('w-1');
         expect(material.kind).toBe('material');
     });
+
+    it('creates a draft estimate for the selected project', async () => {
+        const created = await estimatesMockRepo.createEstimate('demo-project', { name: 'Смета на электрику' });
+        expect(created.projectId).toBe('demo-project');
+        expect(created.name).toBe('Смета на электрику');
+        expect(created.status).toBe('draft');
+
+        const list = await estimatesMockRepo.listEstimates('demo-project');
+        expect(list.some((estimate) => estimate.id === created.id)).toBe(true);
+    });
 });
