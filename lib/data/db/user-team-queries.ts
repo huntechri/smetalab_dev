@@ -1,0 +1,241 @@
+import { and, desc, eq, isNull, sql } from 'drizzle-orm';
+import { cache } from 'react';
+import { cookies } from 'next/headers';
+
+import { db } from './drizzle';
+import { activityLogs, impersonationSessions, teamMembers, teams, users, type User } from './schema';
+import { getSession } from '@/lib/infrastructure/auth/session';
+import { SYSTEM_TENANT_ID } from './tenant';
+
+export const getUser = cache(async () => {
+  const sessionData = await getSession();
+  if (!sessionData || !sessionData.user || typeof sessionData.user.id !== 'number') {
+    return null;
+  }
+
+  if (new Date(sessionData.expires) < new Date()) {
+    return null;
+  }
+
+  const user = await db
+    .select({
+      user: users,
+      teamId: teamMembers.teamId,
+      role: teamMembers.role,
+    })
+    .from(users)
+    .leftJoin(teamMembers, eq(users.id, teamMembers.userId))
+    .where(and(eq(users.id, sessionData.user.id), isNull(users.deletedAt)))
+    .limit(1);
+
+  if (user.length === 0) {
+    return null;
+  }
+
+  return {
+    ...user[0].user,
+    tenantId: user[0].teamId,
+    teamRole: user[0].role,
+  };
+});
+
+export async function getUserWithTeam(userId: number) {
+  const result = await db
+    .select({
+      user: users,
+      teamId: teamMembers.teamId,
+    })
+    .from(users)
+    .leftJoin(teamMembers, eq(users.id, teamMembers.userId))
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  return result[0];
+}
+
+export async function getActivityLogs(userId?: number) {
+  let targetUserId = userId;
+
+  if (!targetUserId) {
+    const user = await getUser();
+    if (!user) {
+      throw new Error('User not authenticated');
+    }
+    targetUserId = user.id;
+  }
+
+  return await db
+    .select({
+      id: activityLogs.id,
+      action: activityLogs.action,
+      timestamp: activityLogs.timestamp,
+      ipAddress: activityLogs.ipAddress,
+      userName: users.name,
+    })
+    .from(activityLogs)
+    .leftJoin(users, eq(activityLogs.userId, users.id))
+    .where(eq(activityLogs.userId, targetUserId))
+    .orderBy(desc(activityLogs.timestamp))
+    .limit(10);
+}
+
+const TENANT_ID_COOKIE_KEYS = ['tenant_id', 'team_id'];
+
+async function getTenantIdFromCookies(): Promise<number | null> {
+  const cookieStore = await cookies();
+  const rawTenantId = TENANT_ID_COOKIE_KEYS.map((key) => cookieStore.get(key)?.value).find(Boolean);
+
+  if (!rawTenantId) {
+    return null;
+  }
+
+  const tenantId = Number.parseInt(rawTenantId, 10);
+  return Number.isNaN(tenantId) ? null : tenantId;
+}
+
+async function getUserTeamIdWithoutRls(userId: number): Promise<number | null> {
+  const result = await db.execute(sql`SELECT get_user_team_id(${userId}) AS team_id`);
+  const rows = result as unknown as { team_id: number | null }[];
+  return rows[0]?.team_id ?? null;
+}
+
+export const getTeamForUser = cache(async () => {
+  const cookieStore = await cookies();
+  const impersonationToken = cookieStore.get('impersonation_id')?.value;
+
+  if (impersonationToken) {
+    const session = await db.query.impersonationSessions.findFirst({
+      where: eq(impersonationSessions.sessionToken, impersonationToken),
+      with: {
+        targetTeam: {
+          with: {
+            teamMembers: {
+              with: {
+                user: {
+                  columns: {
+                    id: true,
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (session?.targetTeam) {
+      return session.targetTeam;
+    }
+  }
+
+  const user = await getUser();
+  if (!user) {
+    return null;
+  }
+
+  const tenantId = await getTenantIdFromCookies();
+  return resolveTeamForUser(user, tenantId);
+});
+
+export async function resolveTeamForUser(
+  user: Pick<User, 'id' | 'platformRole'>,
+  tenantIdOverride?: number | null
+) {
+  const resolveMembershipTeam = async (tenantId: number) => {
+    return db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT set_config('app.tenant_id', ${tenantId.toString()}, true)`);
+
+      const membership = await tx.query.teamMembers.findFirst({
+        where: eq(teamMembers.userId, user.id),
+        with: {
+          team: {
+            with: {
+              teamMembers: {
+                with: {
+                  user: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return membership?.team ?? null;
+    });
+  };
+
+  if (user.platformRole === 'superadmin') {
+    return db.transaction(async (tx) => {
+      await tx.execute(sql`SELECT set_config('app.platform_role', 'superadmin', true)`);
+
+      const membership = await tx.query.teamMembers.findFirst({
+        where: eq(teamMembers.userId, user.id),
+        with: {
+          team: {
+            with: {
+              teamMembers: {
+                with: {
+                  user: {
+                    columns: {
+                      id: true,
+                      name: true,
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (membership?.team) {
+        return membership.team;
+      }
+
+      const systemTeam = await tx.query.teams.findFirst({
+        where: eq(teams.id, SYSTEM_TENANT_ID),
+        with: {
+          teamMembers: {
+            with: {
+              user: {
+                columns: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return systemTeam ?? null;
+    });
+  }
+
+  const tenantId = tenantIdOverride ?? (await getUserTeamIdWithoutRls(user.id));
+  if (!tenantId) {
+    return null;
+  }
+
+  const team = await resolveMembershipTeam(tenantId);
+  if (team || !tenantIdOverride) {
+    return team;
+  }
+
+  const fallbackTenantId = await getUserTeamIdWithoutRls(user.id);
+  if (!fallbackTenantId || fallbackTenantId === tenantId) {
+    return team;
+  }
+
+  return resolveMembershipTeam(fallbackTenantId);
+}
