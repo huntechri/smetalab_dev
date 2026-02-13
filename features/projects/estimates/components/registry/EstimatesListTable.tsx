@@ -11,7 +11,7 @@ const columns: ColumnDef<EstimateMeta>[] = [
         accessorKey: 'name',
         header: 'Название',
         cell: ({ row }) => (
-            <Link className="font-medium hover:underline" href={`/projects/${row.original.projectId}/estimates/${row.original.id}`}>
+            <Link className="font-medium hover:underline" href={`/app/projects/${row.original.projectId}/estimates/${row.original.id}`}>
                 {row.original.name}
             </Link>
         ),
