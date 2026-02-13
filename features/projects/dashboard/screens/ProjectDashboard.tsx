@@ -4,6 +4,7 @@ import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { DashboardDataTable } from '../components/DashboardDataTable';
+import { ProjectEstimatesSection } from '../components/ProjectEstimatesSection';
 
 type ProjectDashboardProps = {
     project: ProjectListItem;
@@ -25,6 +26,7 @@ export function ProjectDashboard({ project }: ProjectDashboardProps) {
                 <div className="@container/main px-4 lg:px-6 space-y-6 lg:space-y-10">
                     <DashboardKpiCards project={project} />
                     <DashboardChart />
+                    <ProjectEstimatesSection projectId={project.id} />
                 </div>
 
                 <DashboardDataTable />
