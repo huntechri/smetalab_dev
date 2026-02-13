@@ -292,7 +292,11 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof taskSchema>> }) {
     )
 }
 
-export function DashboardDataTable() {
+type DashboardDataTableProps = {
+    addButtonLabel?: string;
+};
+
+export function DashboardDataTable({ addButtonLabel = 'Add Section' }: DashboardDataTableProps) {
     const [data, setData] = React.useState(() => demoData)
     const [rowSelection, setRowSelection] = React.useState({})
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
@@ -421,7 +425,7 @@ export function DashboardDataTable() {
                     </DropdownMenu>
                     <Button variant="outline" size="sm" className="cursor-pointer">
                         <Plus className="size-4" />
-                        <span className="hidden lg:inline">Add Section</span>
+                        <span className="hidden lg:inline">{addButtonLabel}</span>
                     </Button>
                 </div>
             </div>
