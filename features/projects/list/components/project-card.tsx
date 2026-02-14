@@ -2,18 +2,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { ProjectListItem } from '../../shared/types';
 import { ProjectStatusDot } from '../../shared/components/project-status-dot';
 import { ProjectActions } from './project-actions';
-
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('ru-RU');
-}
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        maximumFractionDigits: 0,
-    }).format(value);
-}
+import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
 
 type ProjectCardProps = {
     project: ProjectListItem;
@@ -31,8 +20,8 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                 </div>
                 <div className="min-w-0 space-y-1 text-xs text-muted-foreground">
                     <p className="truncate">{project.customerName}</p>
-                    <p className="truncate">{formatCurrency(project.contractAmount)}</p>
-                    <p className="truncate">{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
+                    <p className="truncate">{formatProjectCurrency(project.contractAmount)}</p>
+                    <p className="truncate">{`${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`}</p>
                 </div>
                 <div
                     role="progressbar"
