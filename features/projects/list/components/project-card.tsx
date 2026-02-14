@@ -46,6 +46,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                 </div>
                 <ProjectActions
                     projectId={project.id}
+                    projectSlug={project.slug}
                     projectName={project.name}
                     onDelete={onDelete}
                     onEdit={onEdit}

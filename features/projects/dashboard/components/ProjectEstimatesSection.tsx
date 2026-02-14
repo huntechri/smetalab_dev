@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 
-export function ProjectEstimatesSection({ projectId }: { projectId: string }) {
+export function ProjectEstimatesSection({ projectSlug }: { projectSlug: string }) {
     return (
         <Card>
             <CardHeader>
@@ -11,7 +11,7 @@ export function ProjectEstimatesSection({ projectId }: { projectId: string }) {
             </CardHeader>
             <CardContent>
                 <Button asChild>
-                    <Link href={`/app/projects/${projectId}/estimates`}>Все сметы</Link>
+                    <Link href={`/app/projects/${projectSlug}/estimates`}>Все сметы</Link>
                 </Button>
             </CardContent>
         </Card>

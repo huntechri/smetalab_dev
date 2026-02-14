@@ -25,7 +25,8 @@ vi.mock('next/navigation', () => ({
 vi.mock('@/lib/data/projects/repo', () => ({
     getProjects: vi.fn(async () => [
         {
-            id: 'north-park',
+            id: 'uuid-1',
+            slug: 'north-park',
             name: 'ЖК «Северный парк»',
             customerName: 'ООО СеверСтрой',
             contractAmount: 84300000,
@@ -70,7 +71,8 @@ test('list rows render correctly', () => {
     const { container } = render(
         <ProjectRow
             project={{
-                id: 'north-park',
+                id: 'uuid-1',
+                slug: 'north-park',
                 name: 'ЖК «Северный парк»',
                 customerName: 'ООО СеверСтрой',
                 contractAmount: 84300000,

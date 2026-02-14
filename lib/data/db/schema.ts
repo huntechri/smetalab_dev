@@ -29,6 +29,7 @@ export const workStatusEnum = pgEnum('work_status', ['active', 'draft', 'archive
 export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'contractor', 'supplier']);
 export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
 export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
+export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -126,6 +127,32 @@ export const platformRolePermissions = pgTable('platform_role_permissions', {
   accessLevel: rbacLevelEnum('access_level').notNull().default('manage'),
 }, (table) => [
   uniqueIndex('platform_role_permissions_unique').on(table.platformRole, table.permissionId),
+]);
+
+// ═══════════════════════════════════════════════════════════════
+// ESTIMATES
+// ═══════════════════════════════════════════════════════════════
+
+export const estimates = pgTable('estimates', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  projectId: uuid('project_id')
+    .notNull()
+    .references(() => projects.id),
+  name: text('name').notNull(),
+  slug: varchar('slug', { length: 120 }).notNull(),
+  status: estimateStatusEnum('status').notNull().default('draft'),
+  total: integer('total').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  uniqueIndex('estimates_project_slug_idx').on(table.projectId, table.slug).where(sql`deleted_at IS NULL`),
+  index('estimates_tenant_project_idx').on(table.tenantId, table.projectId).where(sql`deleted_at IS NULL`),
+  index('estimates_project_idx').on(table.projectId).where(sql`deleted_at IS NULL`),
+  index('estimates_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
@@ -425,6 +452,7 @@ export const projects = pgTable('projects', {
     .references(() => teams.id),
 
   name: text('name').notNull(),
+  slug: varchar('slug', { length: 120 }).notNull(),
   counterpartyId: uuid('counterparty_id')
     .references(() => counterparties.id),
   customerName: text('customer_name'), // For manual entry
@@ -439,6 +467,7 @@ export const projects = pgTable('projects', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
+  uniqueIndex('projects_tenant_slug_idx').on(table.tenantId, table.slug).where(sql`deleted_at IS NULL`),
   index('projects_tenant_status_idx').on(table.tenantId, table.status).where(sql`deleted_at IS NULL`),
   index('projects_counterparty_idx').on(table.counterpartyId),
   index('projects_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
@@ -453,6 +482,7 @@ export const teamsRelations = relations(teams, ({ many }) => ({
   teamMembers: many(teamMembers),
   activityLogs: many(activityLogs),
   invitations: many(invitations),
+  estimates: many(estimates),
   estimateShares: many(estimateShares),
   impersonationSessions: many(impersonationSessions),
   works: many(works),
@@ -575,7 +605,7 @@ export const counterpartiesRelations = relations(counterparties, ({ one }) => ({
   }),
 }));
 
-export const projectsRelations = relations(projects, ({ one }) => ({
+export const projectsRelations = relations(projects, ({ one, many }) => ({
   tenant: one(teams, {
     fields: [projects.tenantId],
     references: [teams.id],
@@ -583,6 +613,18 @@ export const projectsRelations = relations(projects, ({ one }) => ({
   counterparty: one(counterparties, {
     fields: [projects.counterpartyId],
     references: [counterparties.id],
+  }),
+  estimates: many(estimates),
+}));
+
+export const estimatesRelations = relations(estimates, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [estimates.tenantId],
+    references: [teams.id],
+  }),
+  project: one(projects, {
+    fields: [estimates.projectId],
+    references: [projects.id],
   }),
 }));
 
@@ -604,6 +646,8 @@ export type Permission = typeof permissions.$inferSelect;
 export type NewPermission = typeof permissions.$inferInsert;
 export type RolePermission = typeof rolePermissions.$inferSelect;
 export type PlatformRolePermission = typeof platformRolePermissions.$inferSelect;
+export type Estimate = typeof estimates.$inferSelect;
+export type NewEstimate = typeof estimates.$inferInsert;
 export type EstimateShare = typeof estimateShares.$inferSelect;
 export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;

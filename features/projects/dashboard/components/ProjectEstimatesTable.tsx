@@ -1,37 +1,64 @@
 'use client';
 
-import { useTransition, useState } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
-import { EstimateMeta } from '@/features/projects/estimates/types/dto';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
-import { estimatesMockRepo } from '@/features/projects/estimates/repository';
+import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
+import { useRouter } from 'next/navigation';
+
+type EstimateListItem = {
+    id: string;
+    projectId: string;
+    name: string;
+    slug: string;
+    status: string;
+    total: number;
+    createdAt: Date;
+    updatedAt: Date;
+};
 
 type ProjectEstimatesTableProps = {
     projectId: string;
-    initialEstimates: EstimateMeta[];
+    projectSlug: string;
+    initialEstimates: EstimateListItem[];
 };
 
-export function ProjectEstimatesTable({ projectId, initialEstimates }: ProjectEstimatesTableProps) {
-    const [estimates, setEstimates] = useState(initialEstimates);
-    const [isPending, startTransition] = useTransition();
+export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates }: ProjectEstimatesTableProps) {
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const router = useRouter();
 
-    const handleCreateEstimate = () => {
-        startTransition(async () => {
-            const created = await estimatesMockRepo.createEstimate(projectId);
-            setEstimates((current) => [created, ...current]);
-        });
+    const mappedEstimates = initialEstimates.map((item) => ({
+        id: item.id,
+        projectId: item.projectId,
+        name: item.name,
+        slug: item.slug,
+        status: item.status as 'draft' | 'in_progress' | 'approved',
+        total: item.total,
+        createdAt: item.createdAt instanceof Date ? item.createdAt.toISOString() : String(item.createdAt),
+        updatedAt: item.updatedAt instanceof Date ? item.updatedAt.toISOString() : String(item.updatedAt),
+    }));
+
+    const handleSuccess = () => {
+        router.refresh();
     };
 
     return (
         <div className="space-y-4 px-4 lg:px-6">
             <div className="flex justify-end">
-                <Button onClick={handleCreateEstimate} disabled={isPending}>
+                <Button onClick={() => setIsDialogOpen(true)}>
                     <Plus className="size-4" />
                     Создать смету
                 </Button>
             </div>
-            <EstimatesListTable estimates={estimates} />
+            <EstimatesListTable estimates={mappedEstimates} projectSlug={projectSlug} />
+
+            <CreateEstimateDialog
+                open={isDialogOpen}
+                onOpenChange={setIsDialogOpen}
+                projectId={projectId}
+                onSuccess={handleSuccess}
+            />
         </div>
     );
 }

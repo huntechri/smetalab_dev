@@ -5,6 +5,7 @@ import { createProjectSchema } from '@/features/projects/shared/schemas/create-p
 import { createProjectUseCase } from '@/lib/domain/projects/use-cases';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
 import { NewProject } from '@/lib/data/db/schema';
+import { generateUniqueSlug } from '@/lib/utils/slug';
 
 export async function createProjectAction(formData: unknown) {
     const team = await getTeamForUser();
@@ -26,6 +27,7 @@ export async function createProjectAction(formData: unknown) {
         const projectData: NewProject = {
             tenantId: team.id,
             name,
+            slug: generateUniqueSlug(name),
             counterpartyId: counterpartyId,
             customerName: cp?.name || null,
             status: 'planned',

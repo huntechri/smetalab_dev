@@ -4,11 +4,21 @@ import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
-import { EstimateMeta } from '../../estimates/types/dto';
+
+type EstimateListItem = {
+    id: string;
+    projectId: string;
+    name: string;
+    slug: string;
+    status: string;
+    total: number;
+    createdAt: Date;
+    updatedAt: Date;
+};
 
 type ProjectDashboardProps = {
     project: ProjectListItem;
-    estimates: EstimateMeta[];
+    estimates: EstimateListItem[];
 };
 
 export function ProjectDashboard({ project, estimates }: ProjectDashboardProps) {
@@ -27,7 +37,11 @@ export function ProjectDashboard({ project, estimates }: ProjectDashboardProps) 
                     <DashboardChart />
                 </div>
 
-                <ProjectEstimatesTable projectId={project.id} initialEstimates={estimates} />
+                <ProjectEstimatesTable
+                    projectId={project.id}
+                    projectSlug={project.slug}
+                    initialEstimates={estimates}
+                />
 
                 <div className="px-4 lg:px-6">
                     <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">

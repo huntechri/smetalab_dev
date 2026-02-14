@@ -1,5 +1,6 @@
-import { ProjectDashboard, estimatesMockRepo } from '@/features/projects';
-import { getProjectById } from '@/lib/data/projects/repo';
+import { ProjectDashboard } from '@/features/projects';
+import { getProjectBySlug } from '@/lib/data/projects/repo';
+import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { redirect, notFound } from 'next/navigation';
 import { ProjectListItem, ProjectStatus } from '@/features/projects';
@@ -9,24 +10,25 @@ type PageProps = {
 };
 
 export default async function Page({ params }: PageProps) {
-    const { projectId } = await params;
+    const { projectId: projectSlug } = await params;
     const team = await getTeamForUser();
 
     if (!team) {
         redirect('/login');
     }
 
-    const projectData = await getProjectById(projectId, team.id);
+    const projectData = await getProjectBySlug(projectSlug, team.id);
 
     if (!projectData) {
         notFound();
     }
 
-    const estimates = await estimatesMockRepo.listEstimates(projectId);
+    const estimates = await getEstimatesByProjectId(projectData.id, team.id);
 
     const project: ProjectListItem = {
         id: projectData.id,
         name: projectData.name,
+        slug: projectData.slug,
         customerName: projectData.customerName || '',
         counterpartyId: projectData.counterpartyId || undefined,
         contractAmount: projectData.contractAmount,

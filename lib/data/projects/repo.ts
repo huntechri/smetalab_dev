@@ -20,6 +20,7 @@ export async function getProjects(teamId: number) {
         .select({
             id: projects.id,
             name: projects.name,
+            slug: projects.slug,
             tenantId: projects.tenantId,
             counterpartyId: projects.counterpartyId,
             customerName: projects.customerName,
@@ -50,6 +51,21 @@ export async function getProjectById(id: string, teamId: number) {
         .where(
             and(
                 eq(projects.id, id),
+                isNull(projects.deletedAt),
+                withActiveTenant(projects, teamId)
+            )
+        )
+        .limit(1);
+    return result[0] || null;
+}
+
+export async function getProjectBySlug(slug: string, teamId: number) {
+    const result = await db
+        .select()
+        .from(projects)
+        .where(
+            and(
+                eq(projects.slug, slug),
                 isNull(projects.deletedAt),
                 withActiveTenant(projects, teamId)
             )

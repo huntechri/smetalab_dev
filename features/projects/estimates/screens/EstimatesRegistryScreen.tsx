@@ -1,15 +1,21 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { DashboardDataTable } from '../../dashboard/components/DashboardDataTable';
+import { EstimatesListTable } from '../components/registry/EstimatesListTable';
 import { EstimateMeta } from '../types/dto';
 
-export function EstimatesRegistryScreen({ estimates: _estimates }: { estimates: EstimateMeta[] }) {
+export function EstimatesRegistryScreen({
+    estimates,
+    projectSlug
+}: {
+    estimates: EstimateMeta[],
+    projectSlug?: string
+}) {
     return (
         <Card>
             <CardHeader>
                 <CardTitle>Сметы проекта</CardTitle>
             </CardHeader>
             <CardContent>
-                <DashboardDataTable addButtonLabel="Создать смету" />
+                <EstimatesListTable estimates={estimates} projectSlug={projectSlug} />
             </CardContent>
         </Card>
     );

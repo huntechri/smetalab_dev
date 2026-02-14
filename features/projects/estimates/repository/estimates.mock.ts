@@ -34,10 +34,12 @@ export const estimatesMockRepo: EstimatesRepository = {
         await delay(120, 320);
         const now = new Date().toISOString();
         const estimateId = `est-${crypto.randomUUID().slice(0, 8)}`;
+        const name = payload?.name?.trim() ? payload.name.trim() : `Смета ${new Date().toLocaleDateString('ru-RU')}`;
         const estimate = estimateMetaSchema.parse({
             id: estimateId,
             projectId,
-            name: payload?.name?.trim() ? payload.name.trim() : `Смета ${new Date().toLocaleDateString('ru-RU')}`,
+            name,
+            slug: name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || 'estimate',
             status: 'draft',
             total: 0,
             createdAt: now,
