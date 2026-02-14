@@ -11,6 +11,7 @@ export type ProjectSortOption =
 
 export type ProjectListItem = {
     id: string;
+    slug: string;
     name: string;
     customerName: string;
     counterpartyId?: string;

@@ -27,22 +27,24 @@ import { EstimatesListTable } from '@/features/projects/estimates/components/reg
 
 describe('estimates navigation links', () => {
     it('renders app-scoped project estimates link in project card section', () => {
-        render(<ProjectEstimatesSection projectId="project-42" />);
+        render(<ProjectEstimatesSection projectSlug="north-park" />);
 
         expect(screen.getByRole('link', { name: 'Все сметы' })).toHaveAttribute(
             'href',
-            '/app/projects/project-42/estimates',
+            '/app/projects/north-park/estimates',
         );
     });
 
     it('renders app-scoped estimate details link in estimates table', () => {
         render(
             <EstimatesListTable
+                projectSlug="north-park"
                 estimates={[
                     {
-                        id: 'estimate-7',
-                        projectId: 'project-42',
+                        id: 'uuid-1',
+                        projectId: 'uuid-project',
                         name: 'Смета A',
+                        slug: 'smeta-a',
                         total: 1000,
                         status: 'draft',
                         createdAt: new Date('2025-01-01T00:00:00.000Z').toISOString(),
@@ -54,7 +56,7 @@ describe('estimates navigation links', () => {
 
         expect(screen.getByRole('link', { name: 'Смета A' })).toHaveAttribute(
             'href',
-            '/app/projects/project-42/estimates/estimate-7',
+            '/app/projects/north-park/estimates/smeta-a',
         );
     });
 });

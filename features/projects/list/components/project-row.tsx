@@ -47,6 +47,7 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                 </div>
                 <ProjectActions
                     projectId={project.id}
+                    projectSlug={project.slug}
                     projectName={project.name}
                     onDelete={onDelete}
                     onEdit={onEdit}

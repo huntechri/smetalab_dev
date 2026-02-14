@@ -9,9 +9,6 @@ const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; est
 
 vi.mock('@/features/projects', () => ({
     ProjectDashboard: (props: { project: { name: string }; estimates: Array<{ id: string }> }) => projectDashboardSpy(props),
-    estimatesMockRepo: {
-        listEstimates: vi.fn(async () => [{ id: 'est-100' }]),
-    },
 }));
 
 vi.mock('next/navigation', () => ({
@@ -24,8 +21,9 @@ vi.mock('@/lib/data/db/queries', () => ({
 }));
 
 vi.mock('@/lib/data/projects/repo', () => ({
-    getProjectById: vi.fn(async () => ({
-        id: 'north-park',
+    getProjectBySlug: vi.fn(async () => ({
+        id: 'uuid-1',
+        slug: 'north-park',
         name: 'ЖК «Северный парк»',
         customerName: 'ООО СеверСтрой',
         counterpartyId: 'f95e8f2a-918e-4594-95fb-c74c6ca5bdbf',
@@ -35,6 +33,12 @@ vi.mock('@/lib/data/projects/repo', () => ({
         progress: 62,
         status: 'active',
     })),
+}));
+
+vi.mock('@/lib/data/estimates/repo', () => ({
+    getEstimatesByProjectId: vi.fn(async () => [
+        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }
+    ]),
 }));
 
 test('project dashboard page maps project data and renders feature screen', async () => {
@@ -47,11 +51,14 @@ test('project dashboard page maps project data and renders feature screen', asyn
     expect(screen.getByTestId('project-dashboard')).toHaveTextContent('ЖК «Северный парк»');
     expect(projectDashboardSpy).toHaveBeenCalledTimes(1);
     expect(projectDashboardSpy.mock.calls[0]?.[0]?.project).toMatchObject({
-        id: 'north-park',
+        id: 'uuid-1',
+        slug: 'north-park',
         name: 'ЖК «Северный парк»',
         customerName: 'ООО СеверСтрой',
         progress: 62,
         status: 'active',
     });
-    expect(projectDashboardSpy.mock.calls[0]?.[0]?.estimates).toEqual([{ id: 'est-100' }]);
+    expect(projectDashboardSpy.mock.calls[0]?.[0]?.estimates).toEqual([
+        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }
+    ]);
 });

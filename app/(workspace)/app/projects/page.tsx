@@ -18,6 +18,7 @@ export default async function Page() {
     const projects: ProjectListItem[] = projectsData.map((p) => ({
         id: p.id,
         name: p.name,
+        slug: p.slug,
         customerName: p.customerName || p.counterpartyName || '',
         counterpartyId: p.counterpartyId || undefined,
         contractAmount: p.contractAmount,

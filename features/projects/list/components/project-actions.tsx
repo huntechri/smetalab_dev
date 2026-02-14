@@ -15,6 +15,7 @@ import {
 
 type ProjectActionsProps = {
     projectId: string;
+    projectSlug: string;
     projectName: string;
     onDelete: (projectId: string) => void;
     onEdit: (projectId: string) => void;
@@ -23,6 +24,7 @@ type ProjectActionsProps = {
 
 export function ProjectActions({
     projectId,
+    projectSlug,
     projectName,
     onDelete,
     onEdit,
@@ -33,7 +35,7 @@ export function ProjectActions({
             <AlertDialog>
                 <div className="grid shrink-0 grid-cols-3 gap-1.5">
                     <Button asChild size="sm" variant="outline" className="h-10 min-w-0 px-2 sm:h-8">
-                        <Link href={`/app/projects/${projectId}`} aria-label={`Открыть ${projectName}`}>
+                        <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                             <ExternalLink className="size-4 sm:hidden" />
                             <span className="hidden sm:inline">Открыть</span>
                         </Link>
@@ -74,7 +76,7 @@ export function ProjectActions({
     return (
         <div className="grid grid-cols-3 gap-2 pt-1">
             <Button asChild size="sm" variant="outline" className="min-w-0">
-                <Link href={`/app/projects/${projectId}`} aria-label={`Открыть ${projectName}`}>
+                <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                     <ExternalLink className="size-4 sm:hidden" />
                     <span className="hidden sm:inline">Открыть</span>
                 </Link>

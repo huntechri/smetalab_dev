@@ -10,6 +10,7 @@ export const estimateMetaSchema = z.object({
     id: z.string(),
     projectId: z.string(),
     name: z.string(),
+    slug: z.string(),
     status: estimateStatusSchema,
     total: z.number(),
     createdAt: z.string(),

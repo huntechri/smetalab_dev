@@ -5,7 +5,8 @@ import { ProjectListItem } from '@/features/projects';
 
 const projects: ProjectListItem[] = [
     {
-        id: 'alpha',
+        id: 'uuid-1',
+        slug: 'alpha',
         name: 'Alpha Tower',
         customerName: 'North Build',
         contractAmount: 100,
@@ -15,7 +16,8 @@ const projects: ProjectListItem[] = [
         status: 'planned',
     },
     {
-        id: 'bravo',
+        id: 'uuid-2',
+        slug: 'bravo',
         name: 'Bravo Port',
         customerName: 'Logistics Inc',
         contractAmount: 500,
@@ -25,7 +27,8 @@ const projects: ProjectListItem[] = [
         status: 'active',
     },
     {
-        id: 'charlie',
+        id: 'uuid-3',
+        slug: 'charlie',
         name: 'Charlie Yard',
         customerName: 'North Build',
         contractAmount: 300,
@@ -50,16 +53,16 @@ describe('filterProjects', () => {
 describe('sortProjects', () => {
     it('sorts by contract amount descending', () => {
         const result = sortProjects(projects, 'contractAmount');
-        expect(result.map((item) => item.id)).toEqual(['bravo', 'charlie', 'alpha']);
+        expect(result.map((item) => item.id)).toEqual(['uuid-2', 'uuid-3', 'uuid-1']);
     });
 
     it('sorts by end date nearest first', () => {
         const result = sortProjects(projects, 'endDate');
-        expect(result.map((item) => item.id)).toEqual(['bravo', 'alpha', 'charlie']);
+        expect(result.map((item) => item.id)).toEqual(['uuid-2', 'uuid-1', 'uuid-3']);
     });
 
     it('sorts by progress descending', () => {
         const result = sortProjects(projects, 'progress');
-        expect(result.map((item) => item.id)).toEqual(['bravo', 'charlie', 'alpha']);
+        expect(result.map((item) => item.id)).toEqual(['uuid-2', 'uuid-3', 'uuid-1']);
     });
 });
