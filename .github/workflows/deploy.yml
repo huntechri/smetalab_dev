@@ -150,6 +150,7 @@ jobs:
       - name: Database Migrations
         run: |
           set -ex
+          pnpm db:reset
           pnpm db:migrate
 
       - name: Database Seeding
