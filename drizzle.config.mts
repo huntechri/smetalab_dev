@@ -3,11 +3,8 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error('DATABASE_URL environment variable is not set');
-}
+const databaseUrl =
+  process.env.DATABASE_URL || 'postgres://dummy:dummy@localhost:5432/dummy';
 
 export default {
   schema: './lib/data/db/schema.ts',
