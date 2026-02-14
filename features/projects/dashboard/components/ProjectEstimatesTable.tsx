@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
@@ -28,20 +28,24 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const router = useRouter();
 
-    const mappedEstimates = initialEstimates.map((item) => ({
-        id: item.id,
-        projectId: item.projectId,
-        name: item.name,
-        slug: item.slug,
-        status: item.status as 'draft' | 'in_progress' | 'approved',
-        total: item.total,
-        createdAt: item.createdAt instanceof Date ? item.createdAt.toISOString() : String(item.createdAt),
-        updatedAt: item.updatedAt instanceof Date ? item.updatedAt.toISOString() : String(item.updatedAt),
-    }));
+    const mappedEstimates = useMemo(
+        () =>
+            initialEstimates.map((item) => ({
+                id: item.id,
+                projectId: item.projectId,
+                name: item.name,
+                slug: item.slug,
+                status: item.status as 'draft' | 'in_progress' | 'approved',
+                total: item.total,
+                createdAt: item.createdAt instanceof Date ? item.createdAt.toISOString() : String(item.createdAt),
+                updatedAt: item.updatedAt instanceof Date ? item.updatedAt.toISOString() : String(item.updatedAt),
+            })),
+        [initialEstimates]
+    );
 
-    const handleSuccess = () => {
+    const handleSuccess = useCallback(() => {
         router.refresh();
-    };
+    }, [router]);
 
     return (
         <div className="space-y-4 px-4 lg:px-6">

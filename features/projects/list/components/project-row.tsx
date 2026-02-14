@@ -1,18 +1,7 @@
 import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
+import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
 import { ProjectStatusDot } from '../../shared/components/project-status-dot';
-
-function formatDate(dateString: string): string {
-    return new Date(dateString).toLocaleDateString('ru-RU');
-}
-
-function formatCurrency(value: number): string {
-    return new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        maximumFractionDigits: 0,
-    }).format(value);
-}
 
 type ProjectRowProps = {
     project: ProjectListItem;
@@ -32,8 +21,8 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                         </div>
                         <p className="truncate text-xs text-muted-foreground">{project.customerName}</p>
                     </div>
-                    <p className="truncate text-xs text-muted-foreground">{formatCurrency(project.contractAmount)}</p>
-                    <p className="truncate text-xs text-muted-foreground">{`${formatDate(project.startDate)} — ${formatDate(project.endDate)}`}</p>
+                    <p className="truncate text-xs text-muted-foreground">{formatProjectCurrency(project.contractAmount)}</p>
+                    <p className="truncate text-xs text-muted-foreground">{`${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`}</p>
                     <div
                         role="progressbar"
                         aria-valuenow={project.progress}
