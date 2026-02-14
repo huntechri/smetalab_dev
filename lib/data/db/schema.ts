@@ -150,6 +150,7 @@ export const estimateShares = pgTable('estimate_shares', {
 }, (table) => [
   index('estimate_shares_team_estimate_idx').on(table.teamId, table.estimateId),
   index('estimate_shares_expires_idx').on(table.expiresAt),
+  index('estimate_shares_created_by_user_idx').on(table.createdByUserId),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
@@ -213,6 +214,7 @@ export const invitations = pgTable('invitations', {
   index('invitations_email_idx').on(table.email),
   // Optimize fetching invitations by team
   index('invitations_team_id_idx').on(table.teamId),
+  index('invitations_invited_by_idx').on(table.invitedBy),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
