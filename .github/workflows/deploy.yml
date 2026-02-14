@@ -6,10 +6,14 @@ permissions:
   deployments: write
   actions: read
   security-events: write
+  pull-requests: write
 
 on:
   push:
     branches: ["main"]
+  pull_request:
+    branches: ["main"]
+    types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: '23 5 * * 1'  # Weekly on Monday at 05:23 UTC
 
@@ -70,6 +74,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -94,7 +100,7 @@ jobs:
   ci:
     name: Quality Checks
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'schedule'
+    if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
 
 
 
@@ -113,6 +119,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -173,6 +182,54 @@ jobs:
         env:
           CI: true
 
+
+  deploy-preview:
+    name: Deploy to Vercel Preview
+    needs: [ci]
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    environment:
+      name: "preview"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Deploy preview
+        id: deploy_preview
+        run: |
+          set -ex
+          vercel pull --yes --environment preview --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          PREVIEW_URL=$(vercel deploy --prebuilt --archive=tgz --token=${{ secrets.VERCEL_TOKEN }})
+          echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Comment preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const previewUrl = `${{ steps.deploy_preview.outputs.preview_url }}`;
+            const body = `✅ Vercel Preview готово: ${previewUrl}`;
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              body
+            });
+
   deploy-production:
     name: Deploy to Vercel Production
     needs: [codeql-analysis, trivy-scan, dependency-check, ci]
@@ -191,7 +248,7 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
       - name: Install Vercel CLI
-        run: pnpm add -g vercel@latest
+        run: npm install --global vercel@latest
       - name: Deployment
         run: |
           set -ex
