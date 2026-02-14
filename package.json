@@ -1,5 +1,6 @@
 {
   "private": true,
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "concurrently \"pnpm dev:next\" \"pnpm db:studio\"",
     "dev:next": "next dev --turbopack",
