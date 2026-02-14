@@ -85,6 +85,13 @@
       "when": 1770903422371,
       "tag": "0011_heavy_raider",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1771029488033,
+      "tag": "0012_quick_nico_minoru",
+      "breakpoints": true
     }
   ]
 }

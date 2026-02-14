@@ -1,0 +1,2 @@
+CREATE INDEX IF NOT EXISTS "estimate_shares_created_by_user_idx" ON "estimate_shares" USING btree ("created_by_user_id");--> statement-breakpoint
+CREATE INDEX IF NOT EXISTS "invitations_invited_by_idx" ON "invitations" USING btree ("invited_by");
