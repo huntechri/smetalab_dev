@@ -52,7 +52,7 @@ export function ProjectsScreen({ initialProjects, counterparties }: ProjectsScre
 
     return (
         <div className="space-y-4">
-            <ProjectsKpiPlaceholders />
+            <ProjectsKpiPlaceholders projects={projects} />
             <ProjectsToolbar
                 searchQuery={searchQuery}
                 sortOption={sortOption}
