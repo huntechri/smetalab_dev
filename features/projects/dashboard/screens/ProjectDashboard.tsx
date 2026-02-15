@@ -4,6 +4,15 @@ import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from 'next/link';
 
 type EstimateListItem = {
     id: string;
@@ -23,8 +32,27 @@ type ProjectDashboardProps = {
 
 export function ProjectDashboard({ project, estimates }: ProjectDashboardProps) {
     return (
-        <div className="flex flex-col gap-6 lg:gap-8 py-4 lg:py-6">
+        <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
             <div className="px-4 lg:px-6">
+                <Breadcrumb className="mb-2">
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link href="/app">Главная</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink asChild>
+                                <Link href="/app/projects">Проекты</Link>
+                            </BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>{project.name}</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
                 <div className="flex flex-col gap-2">
                     <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
                     <p className="text-muted-foreground">Управление проектом и мониторинг основных показателей</p>

@@ -3,6 +3,15 @@ import { getProjects } from '@/lib/data/projects/repo';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 import { ProjectListItem, ProjectStatus } from '@/features/projects';
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import Link from 'next/link';
 
 export default async function Page() {
     const team = await getTeamForUser();
@@ -34,7 +43,20 @@ export default async function Page() {
     }));
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-6">
+        <div className="mx-auto w-full max-w-[1600px] space-y-3 pt-0.5 pb-4">
+            <Breadcrumb>
+                <BreadcrumbList>
+                    <BreadcrumbItem>
+                        <BreadcrumbLink asChild>
+                            <Link href="/app">Главная</Link>
+                        </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbPage>Проекты</BreadcrumbPage>
+                    </BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
             <header className="space-y-2">
                 <h1 className="text-3xl font-semibold">Проекты</h1>
                 <p className="text-sm text-muted-foreground">Компактный список проектов с быстрым поиском и сортировкой.</p>

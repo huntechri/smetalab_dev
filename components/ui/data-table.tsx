@@ -455,15 +455,7 @@ export function DataTable<TData, TValue>({
                     )}
                 </div>
 
-                {/* Footer / Row Count */}
-                <div className="flex items-center justify-between px-1 md:px-0">
-                    <div className="text-xs md:text-sm text-muted-foreground font-medium">
-                        Всего записей: <span className="text-foreground">{data.length}</span>
-                        {table.getFilteredRowModel().rows.length !== data.length && (
-                            <> (отфильтровано: <span className="text-foreground">{table.getFilteredRowModel().rows.length}</span>)</>
-                        )}
-                    </div>
-                </div>
+
 
             </div>
         </TooltipProvider>

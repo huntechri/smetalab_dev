@@ -43,11 +43,11 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 <ChevronRight className="size-4 text-muted-foreground transition-transform duration-200" />
                             )}
                         </Button>
-                        <span className="font-semibold tabular-nums text-sm">{item.code}</span>
+                        <span className="font-normal tabular-nums text-sm">{item.code}</span>
                     </div>
                 );
             }
-            return <div className="pl-9 text-xs text-muted-foreground/80 font-medium tabular-nums">{item.code}</div>;
+            return <div className="pl-9 text-xs text-muted-foreground/80 font-normal tabular-nums">{item.code}</div>;
         },
     },
     {
@@ -59,7 +59,13 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             const item = row.original;
             return (
                 <div className={item.kind === 'material' ? 'pl-8' : ''}>
-                    <div className="text-sm font-medium">{item.name}</div>
+                    <div className={
+                        item.kind === 'work'
+                            ? "text-sm font-normal"
+                            : "text-[13px] italic font-normal text-muted-foreground"
+                    }>
+                        {item.name}
+                    </div>
                 </div>
             );
         },
@@ -80,30 +86,63 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         accessorKey: 'unit',
         header: 'Ед. изм.',
         size: 100,
+        cell: ({ row }) => (
+            <div className={row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}>
+                {row.original.unit}
+            </div>
+        )
     },
     {
         accessorKey: 'qty',
         size: 100,
         header: () => <div className="text-right">Кол-во</div>,
-        cell: ({ row }) => <div className="text-right font-medium pr-6"><EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} /></div>
+        cell: ({ row }) => (
+            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}`}>
+                <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} />
+            </div>
+        )
     },
     {
         accessorKey: 'price',
         size: 110,
         header: () => <div className="text-right">Цена</div>,
-        cell: ({ row }) => <div className="text-right font-medium pr-6"><EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} /></div>
+        cell: ({ row }) => (
+            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}`}>
+                <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} />
+            </div>
+        )
     },
     {
         accessorKey: 'sum',
         size: 120,
         header: () => <div className="text-right">Сумма</div>,
-        cell: ({ row }) => <div className="text-right font-semibold text-primary/90 pr-6"><MoneyCell value={row.original.sum} /></div>
+        cell: ({ row }) => (
+            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-medium text-primary/90"}`}>
+                <MoneyCell value={row.original.sum} />
+            </div>
+        )
     },
     {
         accessorKey: 'expense',
         size: 100,
         header: () => <div className="text-right">Расход</div>,
-        cell: ({ row }) => <div className="text-right pr-6"><EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.expense} onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)} /></div>
+        cell: ({ row }) => {
+            if (row.original.kind === 'work') {
+                return <div className="text-right pr-6" />;
+            }
+            return (
+                <div className="text-right pr-6">
+                    <EditableCell
+                        type="number"
+                        align="right"
+                        clearOnFocus
+                        cancelOnEmpty
+                        value={row.original.expense}
+                        onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)}
+                    />
+                </div>
+            );
+        }
     },
     {
         id: 'actions',

@@ -5,12 +5,14 @@ import Image from 'next/image';
 import { Check, FolderOpen, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import { catalogRepository } from '../repository';
 import { CatalogMaterial } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
 
 interface MaterialCatalogPickerProps {
     onAddMaterial: (material: CatalogMaterial) => Promise<void>;
+    addedMaterialNames?: Set<string>;
 }
 
 interface SearchCriteria {
@@ -19,7 +21,7 @@ interface SearchCriteria {
     isAiMode: boolean;
 }
 
-export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerProps) {
+export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new Set() }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isAiMode, setIsAiMode] = useState(false);
@@ -110,6 +112,7 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
                         increaseViewportBy={300}
                         itemContent={(_index, material) => {
                             const isAdding = addingIds.has(material.id);
+                            const isAlreadyAdded = addedMaterialNames.has(material.name);
 
                             return (
                                 <div className="px-2 py-0.5">
@@ -155,11 +158,16 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
                                             <Button
                                                 size="icon"
                                                 variant="outline"
-                                                disabled={isAdding}
-                                                className="h-7 w-7 rounded-full border-border/50 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shrink-0 active:scale-90"
+                                                disabled={isAdding || isAlreadyAdded}
+                                                className={cn(
+                                                    "h-7 w-7 rounded-full border-border/50 transition-all shrink-0 active:scale-90",
+                                                    isAlreadyAdded
+                                                        ? "bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default"
+                                                        : "hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                                                )}
                                                 onClick={() => void addMaterial(material)}
                                             >
-                                                {isAdding ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                                                {isAdding || isAlreadyAdded ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
                                             </Button>
                                         </div>
                                     </div>

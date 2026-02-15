@@ -10,9 +10,10 @@ interface MaterialCatalogDialogProps {
     onSelect: (material: CatalogMaterial) => Promise<void>;
     parentWorkName: string;
     mode?: 'add' | 'replace';
+    addedMaterialNames?: Set<string>;
 }
 
-export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkName, mode = 'add' }: MaterialCatalogDialogProps) {
+export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkName, mode = 'add', addedMaterialNames }: MaterialCatalogDialogProps) {
     const isReplaceMode = mode === 'replace';
 
     return (
@@ -33,7 +34,10 @@ export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkNam
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 min-h-0">
-                    <MaterialCatalogPicker onAddMaterial={onSelect} />
+                    <MaterialCatalogPicker
+                        onAddMaterial={onSelect}
+                        addedMaterialNames={addedMaterialNames}
+                    />
                 </div>
             </DialogContent>
         </Dialog>

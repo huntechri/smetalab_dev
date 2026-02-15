@@ -76,4 +76,32 @@ describe('MaterialCatalogPicker', () => {
             expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false);
         });
     });
+
+    it('disables add button if material is already added', async () => {
+        const mockMaterial = {
+            id: '1',
+            name: 'Тестовый материал',
+            price: 100,
+            unit: 'кг',
+            category: 'test'
+        };
+        catalogRepositoryMocks.searchMaterials.mockResolvedValue([mockMaterial]);
+
+        const addedMaterialNames = new Set(['Тестовый материал']);
+        render(
+            <MaterialCatalogPicker
+                onAddMaterial={vi.fn()}
+                addedMaterialNames={addedMaterialNames}
+            />
+        );
+
+        await waitFor(() => {
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalled();
+        });
+
+        const button = screen.getByRole('button', { name: '' }); // The icon button has no accessible name, but we can find it by className or icon
+        // Actually, Button with icon might not have a name. Let's find it by Check icon if it exists
+        expect(button).toBeDisabled();
+        expect(button.querySelector('svg')).toHaveClass('lucide-check');
+    });
 });
