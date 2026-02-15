@@ -12,6 +12,7 @@ type CacheEntry<T> = {
 };
 
 const materialsSearchCache = new Map<string, CacheEntry<CatalogMaterial[]>>();
+const worksSearchCache = new Map<string, CacheEntry<CatalogWork[]>>();
 let materialCategoriesCache: CacheEntry<string[]> | null = null;
 
 function getCached<T>(entry: CacheEntry<T> | undefined | null, ttlMs: number): T | null {
@@ -30,10 +31,23 @@ function buildMaterialsSearchKey(query: string, category?: string, isAiMode?: bo
     return `${query}::${category ?? ''}::${Boolean(isAiMode)}::${limit}`;
 }
 
+function buildWorksSearchKey(query: string, category?: string, isAiMode?: boolean, limit = 200): string {
+    return `${query}::${category ?? ''}::${Boolean(isAiMode)}::${limit}`;
+}
+
 export const catalogRepository = {
     async searchWorks(query: string, category?: string, isAiMode?: boolean, limit = 200): Promise<CatalogWork[]> {
+        const cacheKey = buildWorksSearchKey(query, category, isAiMode, limit);
+        const cached = getCached(worksSearchCache.get(cacheKey), SEARCH_CACHE_TTL_MS);
+        if (cached) {
+            return cached;
+        }
+
         const result = await searchCatalogWorks({ query, category, isAiMode, limit });
-        return result.success ? result.data : [];
+        const value = result.success ? result.data : [];
+        worksSearchCache.set(cacheKey, { createdAt: Date.now(), value });
+
+        return value;
     },
 
     async getCategories(): Promise<string[]> {
@@ -72,6 +86,7 @@ export const catalogRepository = {
 export const __catalogRepositoryInternal = {
     clearCaches: () => {
         materialsSearchCache.clear();
+        worksSearchCache.clear();
         materialCategoriesCache = null;
     }
 };

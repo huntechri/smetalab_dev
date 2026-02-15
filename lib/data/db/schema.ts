@@ -361,7 +361,9 @@ export const works = pgTable('works', {
   uniqueIndex('idx_works_code_tenant_unique').on(table.tenantId, table.code),
   index('works_embedding_hnsw_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
   index('works_tenant_unit_idx').on(table.tenantId, table.unit).where(sql`deleted_at IS NULL`),
+  index('works_tenant_active_category_idx').on(table.tenantId, table.category).where(sql`deleted_at IS NULL AND status = 'active'`),
   index('works_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
+  index('works_name_norm_trgm_idx').using('gin', sql`${table.nameNorm} gin_trgm_ops`),
   index('works_search_idx').using('gin', table.searchVector),
 ]);
 

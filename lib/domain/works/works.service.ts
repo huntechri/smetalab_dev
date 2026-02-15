@@ -234,19 +234,71 @@ export class WorksService {
         }
     }
 
-    static async search(teamId: number, query: string): Promise<Result<WorkRow[]>> {
+    static async search(teamId: number, query: string, category?: string): Promise<Result<WorkRow[]>> {
         if (!query || query.trim().length < 2) return error('Короткий запрос');
 
         const normalizedQuery = query.trim().toLowerCase();
         const tokens = normalizedQuery.split(/\s+/).filter(t => t.length > 0);
         const shouldUseVector = tokens.length >= 2;
 
+        const MAX_RESULTS = 200;
+        const LEXICAL_CANDIDATES_LIMIT = 350;
+        const VECTOR_CANDIDATES_LIMIT = 140;
+
         try {
             const queryEmbedding = shouldUseVector ? await generateEmbedding(normalizedQuery) : null;
             if (shouldUseVector && !queryEmbedding) return error('Ошибка ИИ');
 
             const queryLike = `%${normalizedQuery}%`;
-            const nameSource = works.name;
+            const tsQuery = sql`websearch_to_tsquery('simple', ${normalizedQuery})`;
+            const nameSource = sql<string>`COALESCE(${works.nameNorm}, ${works.name})`;
+            const lexicalFilter = sql<boolean>`(
+                ${works.searchVector} @@ ${tsQuery}
+                OR ${works.nameNorm} % ${normalizedQuery}
+                OR ${works.name} % ${normalizedQuery}
+                OR ${nameSource} ILIKE ${queryLike}
+                OR ${works.code} ILIKE ${queryLike}
+            )`;
+            const lexicalRank = sql<number>`(
+                COALESCE(ts_rank(${works.searchVector}, ${tsQuery}), 0)
+                + COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)
+                + CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 0.8 ELSE 0 END
+                + CASE WHEN ${works.code} ILIKE ${queryLike} THEN 1.0 ELSE 0 END
+            )`;
+
+            const baseFilters = [
+                withActiveTenant(works, teamId),
+                eq(works.status, 'active'),
+            ];
+
+            if (category && category !== 'all') {
+                baseFilters.push(eq(works.category, category));
+            }
+
+            const lexicalCandidates = await db
+                .select({ id: works.id })
+                .from(works)
+                .where(and(...baseFilters, lexicalFilter))
+                .orderBy(sql`${lexicalRank} DESC`, works.sortOrder, works.id)
+                .limit(LEXICAL_CANDIDATES_LIMIT);
+
+            const vectorCandidates = shouldUseVector
+                ? await db
+                    .select({ id: works.id })
+                    .from(works)
+                    .where(and(...baseFilters, sql`${works.embedding} IS NOT NULL`))
+                    .orderBy(sql`${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`, works.sortOrder, works.id)
+                    .limit(VECTOR_CANDIDATES_LIMIT)
+                : [];
+
+            const candidateIds = Array.from(new Set([
+                ...lexicalCandidates.map((row) => row.id),
+                ...vectorCandidates.map((row) => row.id),
+            ]));
+
+            if (candidateIds.length === 0) {
+                return success([]);
+            }
 
             const trgmScore = sql<number>`COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)`;
             const phraseBoost = sql<number>`CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
@@ -283,17 +335,9 @@ export class WorksService {
                 score: totalScore
             })
                 .from(works)
-                .where(and(
-                    withActiveTenant(works, teamId),
-                    eq(works.status, 'active'),
-                    sql`(
-                        ${works.name} ILIKE ${queryLike}
-                        OR ${works.code} ILIKE ${queryLike}
-                        OR similarity(${works.name}, ${normalizedQuery}) > 0.08
-                    )`
-                ))
+                .where(and(...baseFilters, inArray(works.id, candidateIds)))
                 .orderBy(sql`${totalScore} DESC`, works.sortOrder)
-                .limit(200);
+                .limit(MAX_RESULTS);
 
             return success(results as unknown as WorkRow[]);
         } catch (e) {
