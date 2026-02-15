@@ -60,7 +60,7 @@ export function EditableCell({
     return (
         <Input
             autoFocus
-            className={`h-7 px-1 text-inherit font-inherit ${alignmentClass}`}
+            className={`h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80 ${alignmentClass}`}
             value={draft}
             type={type}
             onChange={(event) => setDraft(event.target.value)}
