@@ -64,12 +64,12 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     {
         accessorKey: 'qty',
         header: () => <div className="text-right">Кол-во</div>,
-        cell: ({ row }) => <div className="text-right font-medium"><EditableCell type="number" value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} /></div>
+        cell: ({ row }) => <div className="text-right font-medium"><EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} /></div>
     },
     {
         accessorKey: 'price',
         header: () => <div className="text-right">Цена</div>,
-        cell: ({ row }) => <div className="text-right font-medium"><EditableCell type="number" value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} /></div>
+        cell: ({ row }) => <div className="text-right font-medium"><EditableCell type="number" align="right" value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} /></div>
     },
     {
         accessorKey: 'sum',
@@ -79,7 +79,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     {
         accessorKey: 'expense',
         header: () => <div className="text-right">Расход</div>,
-        cell: ({ row }) => <div className="text-right"><EditableCell type="number" value={row.original.expense} onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)} /></div>
+        cell: ({ row }) => <div className="text-right"><EditableCell type="number" align="right" value={row.original.expense} onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)} /></div>
     },
     {
         id: 'actions',
