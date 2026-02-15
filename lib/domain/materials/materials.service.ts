@@ -218,6 +218,10 @@ export class MaterialsService {
         const normalizedQuery = query.trim().toLowerCase();
         const shouldUseVector = tokens.length >= 3;
 
+        const MAX_RESULTS = 300;
+        const LEXICAL_CANDIDATES_LIMIT = 450;
+        const VECTOR_CANDIDATES_LIMIT = 180;
+
         try {
             const queryEmbedding = shouldUseVector ? await generateEmbedding(expandedQuery) : null;
             if (shouldUseVector && !queryEmbedding) {
@@ -228,12 +232,56 @@ export class MaterialsService {
             const queryLike = `%${normalizedQuery}%`;
             const tsQuery = sql`websearch_to_tsquery('simple', ${expandedQuery})`;
             const nameSource = sql<string>`COALESCE(${materials.nameNorm}, ${materials.name})`;
-            const searchFilter = sql<boolean>`(
+            const lexicalFilter = sql<boolean>`(
                 ${materials.searchVector} @@ ${tsQuery}
+                OR ${materials.nameNorm} % ${normalizedQuery}
                 OR ${materials.name} % ${normalizedQuery}
                 OR ${nameSource} ILIKE ${queryLike}
                 OR COALESCE(${materials.vendor}, '') ILIKE ${queryLike}
             )`;
+            const lexicalRank = sql<number>`
+                (
+                    COALESCE(ts_rank(${materials.searchVector}, ${tsQuery}), 0)
+                    + COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)
+                    + CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 0.8 ELSE 0 END
+                    + CASE WHEN COALESCE(${materials.vendor}, '') ILIKE ${queryLike} THEN 0.6 ELSE 0 END
+                )
+            `;
+
+            const baseFilters = [
+                withActiveTenant(materials, teamId),
+                eq(materials.status, 'active'),
+            ];
+
+            if (categoryLv1 && categoryLv1 !== 'all') {
+                baseFilters.push(eq(materials.categoryLv1, categoryLv1));
+            }
+
+            const lexicalCandidates = await db
+                .select({ id: materials.id })
+                .from(materials)
+                .where(and(...baseFilters, lexicalFilter))
+                .orderBy(sql`${lexicalRank} DESC`, materials.id)
+                .limit(LEXICAL_CANDIDATES_LIMIT);
+
+            const vectorCandidates = shouldUseVector
+                ? await db
+                    .select({ id: materials.id })
+                    .from(materials)
+                    .where(and(...baseFilters, sql`${materials.embedding} IS NOT NULL`))
+                    .orderBy(sql`${materials.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`, materials.id)
+                    .limit(VECTOR_CANDIDATES_LIMIT)
+                : [];
+
+            const candidateIds = Array.from(new Set([
+                ...lexicalCandidates.map((row) => row.id),
+                ...vectorCandidates.map((row) => row.id),
+            ]));
+
+            if (candidateIds.length === 0) {
+                return success([]);
+            }
+
             const ftsScore = sql<number>`
                 COALESCE(
                     ts_rank(
@@ -264,16 +312,6 @@ export class MaterialsService {
                 + (${vendorBoost} * ${sql`${SEARCH_SCORE_WEIGHTS.vendor}`}::float4)
                 + (${vectorScore} * ${sql`${vectorWeight}`}::float4)
             `;
-
-            const baseFilters = [
-                withActiveTenant(materials, teamId),
-                eq(materials.status, 'active'),
-                searchFilter,
-            ];
-
-            if (categoryLv1 && categoryLv1 !== 'all') {
-                baseFilters.push(eq(materials.categoryLv1, categoryLv1));
-            }
 
             const results = await db.select({
                 id: materials.id,
@@ -307,9 +345,9 @@ export class MaterialsService {
                 score: totalScore,
             })
                 .from(materials)
-                .where(and(...baseFilters))
+                .where(and(...baseFilters, inArray(materials.id, candidateIds)))
                 .orderBy(sql`${vendorBoost} DESC`, sql`${phraseBoost} DESC`, sql`${totalScore} DESC`, materials.code, materials.id)
-                .limit(300);
+                .limit(MAX_RESULTS);
 
             return success(results as MaterialRow[]);
         } catch (e) {

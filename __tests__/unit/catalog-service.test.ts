@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CatalogService } from '@/lib/services/catalog.service';
+import { __catalogServiceInternal, CatalogService } from '@/lib/services/catalog.service';
 
 const worksServiceMocks = vi.hoisted(() => ({
     getMany: vi.fn(),
@@ -29,6 +29,7 @@ describe('CatalogService', () => {
         materialsServiceMocks.getMany.mockReset();
         materialsServiceMocks.search.mockReset();
         materialsServiceMocks.getCategories.mockReset();
+        __catalogServiceInternal.clearMaterialSearchCache();
     });
 
     it('uses AI search when ai mode is enabled and query is long enough', async () => {
@@ -115,6 +116,30 @@ describe('CatalogService', () => {
                 imageUrl: 'https://example.com/m300.jpg',
             });
         }
+    });
+
+
+    it('caches material search results on service layer for identical input', async () => {
+        materialsServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [{
+                id: 'm-cache',
+                code: 'c-1',
+                name: 'Клей монтажный',
+                unit: 'шт',
+                price: 900,
+                categoryLv1: 'Клеи',
+                categoryLv2: 'Монтажные',
+                imageUrl: null,
+            }],
+        });
+
+        const first = await CatalogService.searchMaterials(12, { query: 'клей', category: 'all', isAiMode: false, limit: 40 });
+        const second = await CatalogService.searchMaterials(12, { query: 'клей', category: 'all', isAiMode: false, limit: 40 });
+
+        expect(first.success).toBe(true);
+        expect(second.success).toBe(true);
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledTimes(1);
     });
 
     it('returns material categories list', async () => {
