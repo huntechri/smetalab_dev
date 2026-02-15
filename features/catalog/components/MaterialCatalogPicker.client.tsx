@@ -15,6 +15,7 @@ interface MaterialCatalogPickerProps {
 export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [isAiMode, setIsAiMode] = useState(false);
     const [materials, setMaterials] = useState<CatalogMaterial[]>([]);
     const [loading, setLoading] = useState(true);
     const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
@@ -26,7 +27,7 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
         const fetchData = async () => {
             setLoading(true);
             try {
-                const results = await catalogRepository.searchMaterials(searchQuery, selectedCategory, false);
+                const results = await catalogRepository.searchMaterials(searchQuery, selectedCategory, isAiMode);
                 if (isCancelled) return;
                 setMaterials(results);
                 virtuosoRef.current?.scrollTo({ top: 0 });
@@ -42,7 +43,7 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
             isCancelled = true;
             clearTimeout(timer);
         };
-    }, [searchQuery, selectedCategory]);
+    }, [searchQuery, selectedCategory, isAiMode]);
 
     const addMaterial = async (material: CatalogMaterial) => {
         setAddingIds((prev) => new Set(prev).add(material.id));
@@ -65,6 +66,8 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
                 onSearchChange={setSearchQuery}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
+                isAiMode={isAiMode}
+                onAiModeChange={setIsAiMode}
                 loadCategories={() => catalogRepository.getMaterialCategories()}
                 allCategoriesLabel="Все категории"
             />
