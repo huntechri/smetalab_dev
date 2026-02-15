@@ -3,7 +3,7 @@ import { getEstimateBySlug } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { notFound, redirect } from 'next/navigation';
-import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateRow, EstimateMeta } from '@/features/projects/estimates/types/dto';
 import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
 
 type PageProps = {
@@ -31,8 +31,13 @@ export default async function Page({ params }: PageProps) {
     const rowsPromise: Promise<EstimateRow[]> = EstimateRowsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-6 py-4">
-            <EstimateDetailsShell estimateId={estimate.id} rowsPromise={rowsPromise} />
+        <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-4">
+            <EstimateDetailsShell
+                estimateId={estimate.id}
+                rowsPromise={rowsPromise}
+                project={{ name: project.name, slug: project.slug }}
+                estimate={{ name: estimate.name, slug: estimate.slug }}
+            />
         </div>
     );
 }

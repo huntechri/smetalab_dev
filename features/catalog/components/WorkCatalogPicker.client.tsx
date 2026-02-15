@@ -1,18 +1,20 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Plus, FolderOpen } from 'lucide-react';
+import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
+import { cn } from '@/lib/utils';
 import { catalogRepository } from '../repository';
 import { CatalogWork } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
 
 interface Props {
     onAddWork: (work: CatalogWork) => void;
+    addedWorkNames?: Set<string>;
 }
 
-export function WorkCatalogPicker({ onAddWork }: Props) {
+export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isAiMode, setIsAiMode] = useState(false);
@@ -112,13 +114,23 @@ export function WorkCatalogPicker({ onAddWork }: Props) {
                                         <Button
                                             size="icon"
                                             variant="outline"
-                                            className="h-7 w-7 rounded-full border-border/50 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all shrink-0 active:scale-90"
+                                            disabled={addedWorkNames.has(work.name)}
+                                            className={cn(
+                                                "h-7 w-7 rounded-full border-border/50 transition-all shrink-0 active:scale-90",
+                                                addedWorkNames.has(work.name)
+                                                    ? "bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default"
+                                                    : "hover:bg-primary hover:text-primary-foreground hover:border-primary"
+                                            )}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onAddWork(work);
                                             }}
                                         >
-                                            <Plus className="h-3.5 w-3.5" />
+                                            {addedWorkNames.has(work.name) ? (
+                                                <Check className="h-3.5 w-3.5" />
+                                            ) : (
+                                                <Plus className="h-3.5 w-3.5" />
+                                            )}
                                         </Button>
                                     </div>
                                 </div>

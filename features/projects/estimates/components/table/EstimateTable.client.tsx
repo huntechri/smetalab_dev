@@ -14,6 +14,7 @@ import {
     Trash2,
     MoreHorizontal
 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import {
     Sheet,
     SheetContent,
@@ -28,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { estimatesActionRepo } from '../../repository/estimates.actions';
 import { getVisibleRows } from '../../lib/rows-visible';
-import { EstimateRow } from '../../types/dto';
+import { EstimateRow, RowPatch } from '../../types/dto';
 import { getEstimateColumns } from './columns';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
@@ -54,6 +55,27 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
     const { toast } = useToast();
 
     const visibleRows = useMemo(() => getVisibleRows(rows, expandedWorkIds), [rows, expandedWorkIds]);
+    const totals = useMemo(() => {
+        return rows.reduce((acc, row) => {
+            if (row.kind === 'work') acc.works += row.sum || 0;
+            if (row.kind === 'material') acc.materials += row.sum || 0;
+            return acc;
+        }, { works: 0, materials: 0 });
+    }, [rows]);
+
+    const addedWorkNames = useMemo(() =>
+        new Set(rows.filter(r => r.kind === 'work').map(r => r.name)),
+        [rows]
+    );
+
+    const addedMaterialNamesForActiveWork = useMemo(() => {
+        if (!activeWorkForMaterial) return new Set<string>();
+        return new Set(
+            rows
+                .filter(r => r.kind === 'material' && r.parentWorkId === activeWorkForMaterial.id)
+                .map(r => r.name)
+        );
+    }, [rows, activeWorkForMaterial]);
 
     const setSaving = (rowId: string, saving: boolean) => {
         setSavingRowIds((prev) => {
@@ -69,13 +91,47 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
 
     const patch = async (rowId: string, field: 'name' | 'qty' | 'price' | 'expense', rawValue: string) => {
         const previousRows = rows;
-        const parsedValue = field === 'name' ? rawValue : Number(rawValue);
-        const optimistic = rows.map((row) => row.id === rowId ? { ...row, [field]: parsedValue, sum: field === 'qty' || field === 'price' ? (field === 'qty' ? Number(rawValue) : row.qty) * (field === 'price' ? Number(rawValue) : row.price) : row.sum } : row);
+        let parsedValue = field === 'name' ? rawValue : Number(rawValue);
+
+        // Всегда округляем количество в большую сторону до целого
+        if (field === 'qty') {
+            parsedValue = Math.ceil(Number(rawValue));
+        }
+
+        const targetRow = rows.find(r => r.id === rowId);
+        if (!targetRow) return;
+
+        const patchData: RowPatch = { [field]: parsedValue };
+
+        // Логика расчета количества для материалов на основе расхода
+        if (field === 'expense' && targetRow.kind === 'material' && targetRow.parentWorkId) {
+            const expense = Number(parsedValue);
+            if (expense > 0) {
+                const parentWork = rows.find(r => r.id === targetRow.parentWorkId);
+                if (parentWork) {
+                    // Округляем результат расчета расхода в большую сторону
+                    patchData.qty = Math.ceil(parentWork.qty * expense);
+                }
+            } else {
+                // Если расход сброшен в 0, возвращаем количество к дефолту (1)
+                patchData.qty = 1;
+            }
+        }
+
+        const optimistic = rows.map((row) => {
+            if (row.id !== rowId) return row;
+            const updated = { ...row, ...patchData };
+            if (field === 'qty' || field === 'price' || field === 'expense') {
+                updated.sum = updated.qty * updated.price;
+            }
+            return updated;
+        });
+
         setRows(optimistic);
         setSaving(rowId, true);
 
         try {
-            const updated = await estimatesActionRepo.patchRow(estimateId, rowId, { [field]: parsedValue });
+            const updated = await estimatesActionRepo.patchRow(estimateId, rowId, patchData);
             setRows((currentRows) => currentRows.map((row) => row.id === rowId ? updated : row));
         } catch {
             setRows(previousRows);
@@ -227,7 +283,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                 data={visibleRows}
                 filterColumn="name"
                 filterPlaceholder="Поиск по строкам сметы..."
-                height="520px"
+                height="580px"
                 actions={
                     <div className="flex items-center gap-1.5 sm:gap-2">
                         <Button
@@ -299,7 +355,18 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                     </div>
                 }
             />
-            {savingRowIds.size > 0 && <p className="text-xs text-muted-foreground">Сохранение: {Array.from(savingRowIds).join(', ')}</p>}
+
+            <div className="flex flex-wrap items-center justify-end gap-2 px-1 py-1">
+                <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 hover:bg-blue-500/10 border-none px-2 py-0.5 h-6 text-[9px] font-bold uppercase tracking-wider">
+                    Итого работы: {new Intl.NumberFormat('ru-RU').format(totals.works)} ₽
+                </Badge>
+                <div className="text-muted-foreground/20 font-light select-none text-[10px]">|</div>
+                <Badge variant="secondary" className="bg-amber-500/5 text-amber-700/80 hover:bg-amber-500/10 border-none px-2 py-0.5 h-6 text-[9px] font-bold uppercase tracking-wider">
+                    Итого материалы: {new Intl.NumberFormat('ru-RU').format(totals.materials)} ₽
+                </Badge>
+            </div>
+
+
 
             <Sheet open={isCalculationModeOpen} onOpenChange={setIsCalculationModeOpen}>
                 <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col">
@@ -312,6 +379,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                     <div className="flex-1 overflow-hidden flex flex-col">
                         <WorkCatalogPicker
                             onAddWork={addWorkFromCatalog}
+                            addedWorkNames={addedWorkNames}
                         />
                     </div>
                 </SheetContent>
@@ -322,6 +390,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                 onClose={() => setActiveWorkForMaterial(null)}
                 onSelect={addMaterialFromCatalog}
                 parentWorkName={activeWorkForMaterial?.name ?? ''}
+                addedMaterialNames={addedMaterialNamesForActiveWork}
             />
 
             <MaterialCatalogDialog
