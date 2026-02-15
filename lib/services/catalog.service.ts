@@ -31,7 +31,7 @@ export class CatalogService {
             code: work.code || '',
             name: work.name,
             unit: work.unit || '',
-            price: work.price || 0,
+            price: typeof work.price === 'number' ? work.price : Number(work.price ?? 0) || 0,
             category: work.category || '',
             subcategory: work.subcategory || '',
         })));

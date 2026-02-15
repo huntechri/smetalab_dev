@@ -30,6 +30,7 @@ export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'co
 export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
 export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
 export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
+export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['work', 'material']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -153,6 +154,36 @@ export const estimates = pgTable('estimates', {
   index('estimates_tenant_project_idx').on(table.tenantId, table.projectId).where(sql`deleted_at IS NULL`),
   index('estimates_project_idx').on(table.projectId).where(sql`deleted_at IS NULL`),
   index('estimates_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+]);
+
+
+
+export const estimateRows = pgTable('estimate_rows', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  estimateId: uuid('estimate_id')
+    .notNull()
+    .references(() => estimates.id),
+  kind: estimateRowKindEnum('kind').notNull().default('work'),
+  parentWorkId: uuid('parent_work_id'),
+  code: varchar('code', { length: 120 }).notNull(),
+  name: text('name').notNull(),
+  imageUrl: text('image_url'),
+  unit: varchar('unit', { length: 50 }).notNull(),
+  qty: doublePrecision('qty').notNull().default(1),
+  price: doublePrecision('price').notNull().default(0),
+  sum: doublePrecision('sum').notNull().default(0),
+  expense: doublePrecision('expense').notNull().default(0),
+  order: integer('order').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
@@ -617,7 +648,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
   estimates: many(estimates),
 }));
 
-export const estimatesRelations = relations(estimates, ({ one }) => ({
+export const estimatesRelations = relations(estimates, ({ one, many }) => ({
   tenant: one(teams, {
     fields: [estimates.tenantId],
     references: [teams.id],
@@ -625,6 +656,18 @@ export const estimatesRelations = relations(estimates, ({ one }) => ({
   project: one(projects, {
     fields: [estimates.projectId],
     references: [projects.id],
+  }),
+  rows: many(estimateRows),
+}));
+
+export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [estimateRows.tenantId],
+    references: [teams.id],
+  }),
+  estimate: one(estimates, {
+    fields: [estimateRows.estimateId],
+    references: [estimates.id],
   }),
 }));
 
@@ -648,6 +691,8 @@ export type RolePermission = typeof rolePermissions.$inferSelect;
 export type PlatformRolePermission = typeof platformRolePermissions.$inferSelect;
 export type Estimate = typeof estimates.$inferSelect;
 export type NewEstimate = typeof estimates.$inferInsert;
+export type EstimateRowEntity = typeof estimateRows.$inferSelect;
+export type NewEstimateRowEntity = typeof estimateRows.$inferInsert;
 export type EstimateShare = typeof estimateShares.$inferSelect;
 export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
