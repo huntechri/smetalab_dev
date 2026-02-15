@@ -10,9 +10,11 @@ interface Props {
     selectedCategory: string;
     onCategoryChange: (category: string) => void;
     className?: string;
+    loadCategories?: () => Promise<string[]>;
+    allLabel?: string;
 }
 
-export function WorkCatalogCategories({ selectedCategory, onCategoryChange, className }: Props) {
+export function WorkCatalogCategories({ selectedCategory, onCategoryChange, className, loadCategories: loadCategoriesProp, allLabel = 'Все разделы' }: Props) {
     const [categories, setCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -58,7 +60,7 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
     useEffect(() => {
         async function loadCategories() {
             try {
-                const data = await catalogRepository.getCategories();
+                const data = loadCategoriesProp ? await loadCategoriesProp() : await catalogRepository.getCategories();
                 setCategories(data);
             } catch (error) {
                 console.error('Failed to load categories:', error);
@@ -67,7 +69,7 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
             }
         }
         loadCategories();
-    }, []);
+    }, [loadCategoriesProp]);
 
     if (loading && categories.length === 0) {
         return (
@@ -106,7 +108,7 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                     )}
                     onClick={() => !isDragging && onCategoryChange('all')}
                 >
-                    Все разделы
+                    {allLabel}
                 </Button>
                 {categories.map((category) => (
                     <Button

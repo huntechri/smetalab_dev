@@ -1,6 +1,5 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
@@ -14,7 +13,7 @@ export type EstimateColumnActions = {
     expandedWorkIds: Set<string>;
     onToggleExpand: (workId: string) => void;
     onPatch: (rowId: string, field: 'name' | 'qty' | 'price' | 'expense', rawValue: string) => Promise<void>;
-    onAddMaterial: (workId: string) => Promise<void>;
+    onOpenMaterialCatalog: (workId: string, workName: string) => void;
 };
 
 export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<VisibleEstimateRow>[] => [
@@ -111,7 +110,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             {item.kind === 'work' ? (
-                                <DropdownMenuItem onClick={() => void actions.onAddMaterial(item.id)}>Добавить материал</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}>Добавить материал</DropdownMenuItem>
                             ) : (
                                 <DropdownMenuItem className="text-destructive">Удалить (скоро)</DropdownMenuItem>
                             )}

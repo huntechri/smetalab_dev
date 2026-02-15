@@ -31,13 +31,20 @@ import { getVisibleRows } from '../../lib/rows-visible';
 import { EstimateRow } from '../../types/dto';
 import { getEstimateColumns } from './columns';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
-import { CatalogWork } from '@/features/catalog/types/dto';
+import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
+import { CatalogMaterial, CatalogWork } from '@/features/catalog/types/dto';
+
+type ActiveWorkForMaterial = {
+    id: string;
+    name: string;
+};
 
 export function EstimateTable({ estimateId, initialRows }: { estimateId: string; initialRows: EstimateRow[] }) {
     const [rows, setRows] = useState(initialRows);
     const [expandedWorkIds, setExpandedWorkIds] = useState<Set<string>>(new Set(rows.filter((r) => r.kind === 'work').map((r) => r.id)));
     const [savingRowIds, setSavingRowIds] = useState<Set<string>>(new Set());
     const [isCalculationModeOpen, setIsCalculationModeOpen] = useState(false);
+    const [activeWorkForMaterial, setActiveWorkForMaterial] = useState<ActiveWorkForMaterial | null>(null);
     const { toast } = useToast();
 
     const visibleRows = useMemo(() => getVisibleRows(rows, expandedWorkIds), [rows, expandedWorkIds]);
@@ -72,10 +79,33 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
         }
     };
 
-    const addMaterial = async (workId: string) => {
-        const created = await estimatesActionRepo.addMaterial(estimateId, workId);
-        setRows((prev) => [...prev, created]);
-        setExpandedWorkIds((prev) => new Set([...prev, workId]));
+    const addMaterialFromCatalog = async (material: CatalogMaterial) => {
+        if (!activeWorkForMaterial) {
+            return;
+        }
+
+        try {
+            const safePrice = Number(material.price);
+            const created = await estimatesActionRepo.addMaterial(estimateId, activeWorkForMaterial.id, {
+                name: material.name,
+                unit: material.unit || 'шт',
+                price: Number.isFinite(safePrice) ? safePrice : 0,
+                qty: 1,
+            });
+
+            setRows((prev) => [...prev, created]);
+            setExpandedWorkIds((prev) => new Set([...prev, activeWorkForMaterial.id]));
+            toast({
+                title: 'Материал добавлен',
+                description: material.name,
+            });
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось добавить материал из справочника.',
+            });
+        }
     };
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
@@ -117,7 +147,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                         return next;
                     }),
                     onPatch: patch,
-                    onAddMaterial: addMaterial,
+                    onOpenMaterialCatalog: (workId, workName) => setActiveWorkForMaterial({ id: workId, name: workName }),
                 })}
                 data={visibleRows}
                 filterColumn="name"
@@ -213,6 +243,13 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                     </div>
                 </SheetContent>
             </Sheet>
+
+            <MaterialCatalogDialog
+                isOpen={Boolean(activeWorkForMaterial)}
+                onClose={() => setActiveWorkForMaterial(null)}
+                onSelect={addMaterialFromCatalog}
+                parentWorkName={activeWorkForMaterial?.name ?? ''}
+            />
         </div>
     );
 }
