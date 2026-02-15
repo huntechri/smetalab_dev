@@ -1,4 +1,4 @@
-import { and, eq, sql, gt, ilike, isNull, inArray } from 'drizzle-orm';
+import { and, eq, sql, gt, isNull, inArray } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { works, NewWork } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
@@ -10,19 +10,23 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { after } from 'next/server';
 
 export class WorksService {
-    static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number): Promise<Result<WorkRow[]>> {
+    static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
         try {
             const filters = [withActiveTenant(works, teamId)];
 
             if (search) {
-                filters.push(ilike(works.name, `%${search}%`));
+                filters.push(sql`(${works.name} ILIKE ${'%' + search + '%'} OR ${works.code} ILIKE ${'%' + search + '%'})`);
+            }
+
+            if (category && category !== 'all') {
+                filters.push(eq(works.category, category));
             }
 
             if (typeof lastSortOrder === 'number') {
                 filters.push(gt(works.sortOrder, lastSortOrder));
             }
 
-            const finalLimit = limit || (search ? 50 : 50);
+            const finalLimit = Math.min(limit ?? 200, 500);
 
             const data = await db
                 .select({
@@ -42,7 +46,11 @@ export class WorksService {
                 })
                 .from(works)
                 .where(and(...filters))
-                .orderBy(works.sortOrder)
+                .orderBy(
+                    sql`CASE WHEN ${works.code} ~ '^[0-9]+(\.[0-9]+)*$' THEN string_to_array(${works.code}, '.')::int[] ELSE ARRAY[2147483647] END`,
+                    works.sortOrder,
+                    works.code
+                )
                 .limit(finalLimit);
 
             return success(data as WorkRow[]);
@@ -229,9 +237,31 @@ export class WorksService {
     static async search(teamId: number, query: string): Promise<Result<WorkRow[]>> {
         if (!query || query.trim().length < 2) return error('Короткий запрос');
 
+        const normalizedQuery = query.trim().toLowerCase();
+        const tokens = normalizedQuery.split(/\s+/).filter(t => t.length > 0);
+        const shouldUseVector = tokens.length >= 2;
+
         try {
-            const queryEmbedding = await generateEmbedding(query);
-            if (!queryEmbedding) return error('Ошибка ИИ');
+            const queryEmbedding = shouldUseVector ? await generateEmbedding(normalizedQuery) : null;
+            if (shouldUseVector && !queryEmbedding) return error('Ошибка ИИ');
+
+            const queryLike = `%${normalizedQuery}%`;
+            const nameSource = works.name;
+
+            const trgmScore = sql<number>`COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)`;
+            const phraseBoost = sql<number>`CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
+            const codeBoost = sql<number>`CASE WHEN ${works.code} ILIKE ${queryLike} THEN 1.2 ELSE 0.0 END`;
+
+            const vectorScore = queryEmbedding
+                ? sql<number>`1 - (${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector)`
+                : sql<number>`0`;
+
+            const totalScore = sql<number>`
+                (${trgmScore} * 0.3)
+                + (${phraseBoost} * 0.4)
+                + (${codeBoost} * 0.5)
+                + (${vectorScore} * 0.8)
+            `;
 
             const results = await db.select({
                 id: works.id,
@@ -249,27 +279,46 @@ export class WorksService {
                 createdAt: works.createdAt,
                 updatedAt: works.updatedAt,
                 deletedAt: works.deletedAt,
-                // Сортировка по порядку, а не по релевантности (для таблицы важно положение)
-                // Но при поиске мы хотим видеть релевантные сверху?
-                // Обычно в справочнике хотят видеть найденное по релевантности.
                 sortOrder: works.sortOrder,
-                similarity: sql<number>`1 - (${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector)`
+                score: totalScore
             })
                 .from(works)
                 .where(and(
                     withActiveTenant(works, teamId),
                     eq(works.status, 'active'),
-                    sql`${works.embedding} IS NOT NULL`
+                    sql`(
+                        ${works.name} ILIKE ${queryLike}
+                        OR ${works.code} ILIKE ${queryLike}
+                        OR similarity(${works.name}, ${normalizedQuery}) > 0.08
+                    )`
                 ))
-                .orderBy(sql`${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`)
-                .limit(100);
+                .orderBy(sql`${totalScore} DESC`, works.sortOrder)
+                .limit(200);
 
-            // ...boost logic omitted for brevity, keeping existing...
-            // Возвращаем как есть
-            return success(results as WorkRow[]);
+            return success(results as unknown as WorkRow[]);
         } catch (e) {
             console.error('searchWorks error:', e);
             return error('Ошибка поиска');
+        }
+    }
+
+    static async getCategories(teamId: number | null): Promise<Result<string[]>> {
+        try {
+            const categories = await db
+                .selectDistinct({ category: works.category })
+                .from(works)
+                .where(and(
+                    withActiveTenant(works, teamId),
+                    isNull(works.deletedAt),
+                    sql`${works.category} IS NOT NULL`,
+                    sql`length(trim(${works.category})) > 0`
+                ))
+                .orderBy(works.category);
+
+            return success(categories.map(({ category }) => category as string));
+        } catch (e) {
+            console.error('getWorkCategories error:', e);
+            return error('Ошибка при получении категорий работ');
         }
     }
 
