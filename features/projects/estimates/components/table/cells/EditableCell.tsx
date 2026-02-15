@@ -30,7 +30,11 @@ export function EditableCell({
 
     if (!editing) {
         return (
-            <button className="text-left w-full hover:underline" disabled={disabled} onClick={() => setEditing(true)}>
+            <button
+                className="text-left w-full hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-[1.25rem]"
+                disabled={disabled}
+                onClick={() => setEditing(true)}
+            >
                 {String(value)}
             </button>
         );
@@ -39,6 +43,7 @@ export function EditableCell({
     return (
         <Input
             autoFocus
+            className="h-7 px-1 text-inherit font-inherit"
             value={draft}
             type={type}
             onChange={(event) => setDraft(event.target.value)}

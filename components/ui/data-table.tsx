@@ -101,7 +101,7 @@ const DataTableRow = memo(<TData,>({ row }: DataTableRowProps<TData>) => {
             {row.getVisibleCells().map((cell) => (
                 <td
                     key={cell.id}
-                    className="p-2.5 md:p-3 align-middle border-b border-r last:border-r-0"
+                    className="p-3 md:p-4 align-middle border-b transition-colors"
                     style={{ width: cell.column.getSize() }}
                 >
                     <div className="w-full text-xs md:text-sm">
@@ -260,8 +260,8 @@ export function DataTable<TData, TValue>({
                 {/* Virtualized Table Container */}
                 <div
                     className={cn(
-                        "rounded-2xl border border-border/60 bg-card shadow-sm overflow-x-auto relative",
-                        isAiMode && "border-indigo-400/30 shadow-[0_0_20px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/10"
+                        "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
+                        isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20"
                     )}
                     style={{ contain: 'layout style paint' }}
                 >
@@ -300,7 +300,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[11px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground border-b border-r last:border-r-0 transition-colors"
+                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground border-b transition-colors bg-muted/5 font-medium tracking-tight"
                                                     style={{ width: header.getSize() }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -394,8 +394,8 @@ export function DataTable<TData, TValue>({
                                                     <th
                                                         key={header.id}
                                                         className={cn(
-                                                            "h-10 md:h-11 px-2.5 md:px-3 text-left align-middle text-[10px] md:text-[11px] uppercase tracking-wider font-semibold text-muted-foreground border-b border-r last:border-r-0 transition-colors bg-muted/30",
-                                                            isAiMode && "border-indigo-100/50 text-indigo-900/60"
+                                                            "h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
+                                                            isAiMode && "border-indigo-100/50 text-indigo-900/60 bg-indigo-50/10"
                                                         )}
                                                         style={{ width: header.getSize() }}
                                                         aria-sort={ariaSort}
