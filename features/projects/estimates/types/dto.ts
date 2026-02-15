@@ -38,6 +38,8 @@ export type EstimateRow = z.infer<typeof estimateRowSchema>;
 
 export const rowPatchSchema = z.object({
     name: z.string().min(1).optional(),
+    unit: z.string().min(1).optional(),
+    imageUrl: z.string().url().nullable().optional(),
     qty: z.number().nonnegative().optional(),
     price: z.number().nonnegative().optional(),
     expense: z.number().nonnegative().optional(),
