@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Check, FolderOpen, Plus } from 'lucide-react';
+import Image from 'next/image';
+import { Check, FolderOpen, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/components/ui/button';
 import { catalogRepository } from '../repository';
@@ -12,9 +13,17 @@ interface MaterialCatalogPickerProps {
     onAddMaterial: (material: CatalogMaterial) => Promise<void>;
 }
 
+interface SearchCriteria {
+    query: string;
+    category: string;
+    isAiMode: boolean;
+}
+
 export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const [isAiMode, setIsAiMode] = useState(false);
+    const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({ query: '', category: 'all', isAiMode: false });
     const [materials, setMaterials] = useState<CatalogMaterial[]>([]);
     const [loading, setLoading] = useState(true);
     const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
@@ -26,7 +35,7 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
         const fetchData = async () => {
             setLoading(true);
             try {
-                const results = await catalogRepository.searchMaterials(searchQuery, selectedCategory, false);
+                const results = await catalogRepository.searchMaterials(searchCriteria.query, searchCriteria.category, searchCriteria.isAiMode);
                 if (isCancelled) return;
                 setMaterials(results);
                 virtuosoRef.current?.scrollTo({ top: 0 });
@@ -37,12 +46,20 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
             }
         };
 
-        const timer = setTimeout(fetchData, 300);
+        void fetchData();
+
         return () => {
             isCancelled = true;
-            clearTimeout(timer);
         };
-    }, [searchQuery, selectedCategory]);
+    }, [searchCriteria]);
+
+    const submitSearch = () => {
+        setSearchCriteria({
+            query: searchQuery.trim(),
+            category: selectedCategory,
+            isAiMode,
+        });
+    };
 
     const addMaterial = async (material: CatalogMaterial) => {
         setAddingIds((prev) => new Set(prev).add(material.id));
@@ -65,6 +82,10 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
                 onSearchChange={setSearchQuery}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
+                isAiMode={isAiMode}
+                onAiModeChange={setIsAiMode}
+                onSearchSubmit={submitSearch}
+                isSearching={loading}
                 loadCategories={() => catalogRepository.getMaterialCategories()}
                 allCategoriesLabel="Все категории"
             />
@@ -94,8 +115,19 @@ export function MaterialCatalogPicker({ onAddMaterial }: MaterialCatalogPickerPr
                                 <div className="px-2 py-0.5">
                                     <div className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 transition-all border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden">
                                         <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                            <div className="hidden xs:flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-muted text-[9px] font-mono text-muted-foreground border border-border/50">
-                                                {material.code.split('.').pop()}
+                                            <div className="relative hidden xs:flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-muted">
+                                                {material.imageUrl ? (
+                                                    <Image
+                                                        src={material.imageUrl}
+                                                        alt={material.name}
+                                                        fill
+                                                        unoptimized
+                                                        sizes="40px"
+                                                        className="object-cover"
+                                                    />
+                                                ) : (
+                                                    <ImageOff className="h-4 w-4 text-muted-foreground/70" />
+                                                )}
                                             </div>
                                             <div className="space-y-0.5 min-w-0 flex-1">
                                                 <div className="flex items-center gap-1.5 flex-wrap">
