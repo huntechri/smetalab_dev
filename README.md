@@ -138,7 +138,7 @@
 - `lib/domain/`: **Ядро бизнес-логики**. Use-cases и сервисы предметной области.
 - `lib/infrastructure/auth/`: Логика RBAC и контроля доступа.
 - `components/ui/`: Библиотека Shadcn/UI (базовые блоки).
-- `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details с мок-репозиторием и иерархией Work -> Materials).
+- `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials.
 
 ## 🛠 Технологии
 

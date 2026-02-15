@@ -13,6 +13,23 @@ describe('estimatesMockRepo', () => {
         expect(material.kind).toBe('material');
     });
 
+
+    it('adds work for estimate ids loaded from DB even when mock store is empty', async () => {
+        const row = await estimatesMockRepo.addWork('db-estimate-42', {
+            name: 'Очистка потолка',
+            unit: 'м2',
+            price: 230,
+            qty: 1,
+        });
+
+        expect(row.kind).toBe('work');
+        expect(row.name).toBe('Очистка потолка');
+
+        const rows = await estimatesMockRepo.getEstimateRows('db-estimate-42');
+        expect(rows).toHaveLength(1);
+        expect(rows[0].id).toBe(row.id);
+    });
+
     it('creates a draft estimate for the selected project', async () => {
         const created = await estimatesMockRepo.createEstimate('demo-project', { name: 'Смета на электрику' });
         expect(created.projectId).toBe('demo-project');

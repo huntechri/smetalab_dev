@@ -25,6 +25,7 @@ export async function resetDatabase() {
         'notifications',
         'activity_logs',
         'invitations',
+        'estimate_rows',
         'estimates',
         'estimate_shares',
         'impersonation_sessions',

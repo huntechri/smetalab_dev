@@ -26,7 +26,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { estimatesMockRepo } from '../../repository';
+import { estimatesActionRepo } from '../../repository/estimates.actions';
 import { getVisibleRows } from '../../lib/rows-visible';
 import { EstimateRow } from '../../types/dto';
 import { getEstimateColumns } from './columns';
@@ -62,7 +62,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
         setSaving(rowId, true);
 
         try {
-            const updated = await estimatesMockRepo.patchRow(estimateId, rowId, { [field]: parsedValue });
+            const updated = await estimatesActionRepo.patchRow(estimateId, rowId, { [field]: parsedValue });
             setRows((currentRows) => currentRows.map((row) => row.id === rowId ? updated : row));
         } catch {
             setRows(previousRows);
@@ -73,17 +73,18 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
     };
 
     const addMaterial = async (workId: string) => {
-        const created = await estimatesMockRepo.addMaterial(estimateId, workId);
+        const created = await estimatesActionRepo.addMaterial(estimateId, workId);
         setRows((prev) => [...prev, created]);
         setExpandedWorkIds((prev) => new Set([...prev, workId]));
     };
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
-            const created = await estimatesMockRepo.addWork(estimateId, {
+            const safePrice = Number(catalogWork.price);
+            const created = await estimatesActionRepo.addWork(estimateId, {
                 name: catalogWork.name,
-                unit: catalogWork.unit,
-                price: catalogWork.price,
+                unit: catalogWork.unit || 'шт',
+                price: Number.isFinite(safePrice) ? safePrice : 0,
                 qty: 1
             });
             setRows((prev) => [...prev, created]);
