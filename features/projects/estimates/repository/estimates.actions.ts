@@ -2,6 +2,7 @@ import {
     addEstimateMaterialAction,
     addEstimateWorkAction,
     patchEstimateRowAction,
+    removeEstimateRowAction,
 } from '@/app/actions/estimates/rows';
 import { EstimateRow, RowPatch } from '../types/dto';
 
@@ -30,8 +31,18 @@ export const estimatesActionRepo = {
         return result.data;
     },
 
-    async addMaterial(estimateId: string, parentWorkId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'unit' | 'qty' | 'price' | 'expense'>>): Promise<EstimateRow> {
+    async addMaterial(estimateId: string, parentWorkId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'unit' | 'imageUrl' | 'qty' | 'price' | 'expense'>>): Promise<EstimateRow> {
         const result = await addEstimateMaterialAction(estimateId, parentWorkId, payload);
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+    async removeRow(estimateId: string, rowId: string): Promise<{ removedIds: string[] }> {
+        const result = await removeEstimateRowAction(estimateId, rowId);
 
         if (!result.success) {
             throw new Error(result.error.message);

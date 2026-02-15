@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
+import { ChevronDown, ChevronRight, Plus, Settings } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { EditableCell } from './cells/EditableCell';
 import { ImageCell } from './cells/ImageCell';
@@ -14,6 +14,8 @@ export type EstimateColumnActions = {
     onToggleExpand: (workId: string) => void;
     onPatch: (rowId: string, field: 'name' | 'qty' | 'price' | 'expense', rawValue: string) => Promise<void>;
     onOpenMaterialCatalog: (workId: string, workName: string) => void;
+    onReplaceMaterial: (materialId: string, materialName: string) => void;
+    onRemoveRow: (rowId: string) => Promise<void>;
 };
 
 export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<VisibleEstimateRow>[] => [
@@ -66,7 +68,13 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         accessorKey: 'imageUrl',
         header: 'Изображение',
         size: 110,
-        cell: ({ row }) => <ImageCell imageUrl={row.original.imageUrl} name={row.original.name} />
+        cell: ({ row }) => {
+            if (row.original.kind === 'work') {
+                return null;
+            }
+
+            return <ImageCell imageUrl={row.original.imageUrl} name={row.original.name} />;
+        }
     },
     {
         accessorKey: 'unit',
@@ -103,17 +111,27 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         cell: ({ row }) => {
             const item = row.original;
             return (
-                <div className="flex justify-center">
+                <div className="flex items-center justify-center gap-1">
+                    {item.kind === 'work' ? (
+                        <Button
+                            size="icon"
+                            variant="ghost"
+                            className="size-8"
+                            onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
+                            title="Добавить материал"
+                        >
+                            <Plus className="size-4 text-muted-foreground" />
+                        </Button>
+                    ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button size="icon" variant="ghost" className="size-8"><Settings className="size-4 text-muted-foreground" /></Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            {item.kind === 'work' ? (
-                                <DropdownMenuItem onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}>Добавить материал</DropdownMenuItem>
-                            ) : (
-                                <DropdownMenuItem className="text-destructive">Удалить (скоро)</DropdownMenuItem>
-                            )}
+                            {item.kind === 'material' ? (
+                                <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
+                            ) : null}
+                            <DropdownMenuItem className="text-destructive" onClick={() => void actions.onRemoveRow(item.id)}>Удалить</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>

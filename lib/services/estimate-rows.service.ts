@@ -1,4 +1,4 @@
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateRows, estimates } from '@/lib/data/db/schema';
@@ -17,6 +17,7 @@ const addWorkSchema = z.object({
 const addMaterialSchema = z.object({
     name: z.string().trim().min(1).optional().default('Новый материал'),
     unit: z.string().trim().min(1).default('шт'),
+    imageUrl: z.string().url().nullable().optional(),
     qty: z.number().nonnegative().default(1),
     price: z.number().nonnegative().default(0),
     expense: z.number().nonnegative().default(0),
@@ -24,6 +25,8 @@ const addMaterialSchema = z.object({
 
 const patchRowSchema = z.object({
     name: z.string().trim().min(1).optional(),
+    unit: z.string().trim().min(1).optional(),
+    imageUrl: z.string().url().nullable().optional(),
     qty: z.number().nonnegative().optional(),
     price: z.number().nonnegative().optional(),
     expense: z.number().nonnegative().optional(),
@@ -181,6 +184,7 @@ export class EstimateRowsService {
                         parentWorkId,
                         code: `${parent.code}.${children.length + 1}`,
                         name: payload.name,
+                        imageUrl: payload.imageUrl ?? null,
                         unit: payload.unit,
                         qty: payload.qty,
                         price: payload.price,
@@ -246,6 +250,51 @@ export class EstimateRowsService {
         } catch (e) {
             console.error('EstimateRowsService.patch error:', e);
             return error('Ошибка при обновлении строки сметы');
+        }
+    }
+
+    static async remove(teamId: number, estimateId: string, rowId: string): Promise<Result<{ removedIds: string[] }>> {
+        try {
+            const estimate = await ensureEstimateAccess(teamId, estimateId);
+            if (!estimate) {
+                return error('Смета не найдена', 'NOT_FOUND');
+            }
+
+            const deletedAt = new Date();
+            const removedIds = await db.transaction(async (tx) => {
+                const row = await tx.query.estimateRows.findFirst({
+                    where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)),
+                });
+
+                if (!row) {
+                    throw new Error('Row not found');
+                }
+
+                const idsToDelete = row.kind === 'work'
+                    ? [
+                        row.id,
+                        ...(await tx
+                            .select({ id: estimateRows.id })
+                            .from(estimateRows)
+                            .where(and(eq(estimateRows.parentWorkId, row.id), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt))))
+                            .map((item) => item.id),
+                    ]
+                    : [row.id];
+
+                await tx
+                    .update(estimateRows)
+                    .set({ deletedAt, updatedAt: deletedAt })
+                    .where(and(eq(estimateRows.estimateId, estimateId), inArray(estimateRows.id, idsToDelete)));
+
+                await recalculateEstimateTotal(tx, estimateId);
+
+                return idsToDelete;
+            });
+
+            return success({ removedIds });
+        } catch (e) {
+            console.error('EstimateRowsService.remove error:', e);
+            return error('Ошибка при удалении строки сметы');
         }
     }
 }
