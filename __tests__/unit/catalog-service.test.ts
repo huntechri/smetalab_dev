@@ -30,6 +30,7 @@ describe('CatalogService', () => {
         materialsServiceMocks.search.mockReset();
         materialsServiceMocks.getCategories.mockReset();
         __catalogServiceInternal.clearMaterialSearchCache();
+        __catalogServiceInternal.clearWorkSearchCache();
     });
 
     it('uses AI search when ai mode is enabled and query is long enough', async () => {
@@ -37,8 +38,23 @@ describe('CatalogService', () => {
 
         await CatalogService.searchWorks(7, { query: 'бетон м300', isAiMode: true });
 
-        expect(worksServiceMocks.search).toHaveBeenCalledWith(7, 'бетон м300');
+        expect(worksServiceMocks.search).toHaveBeenCalledWith(7, 'бетон м300', undefined);
         expect(worksServiceMocks.getMany).not.toHaveBeenCalled();
+    });
+
+
+    it('caches work search results on service layer for identical input', async () => {
+        worksServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [{ id: 'w1', code: '1.1', name: 'Штукатурка стен', unit: 'м2', price: 1200, category: 'Отделка', subcategory: 'Стены' }],
+        });
+
+        const first = await CatalogService.searchWorks(5, { query: 'штукатурка', isAiMode: false, category: 'Отделка', limit: 50 });
+        const second = await CatalogService.searchWorks(5, { query: 'штукатурка', isAiMode: false, category: 'Отделка', limit: 50 });
+
+        expect(first.success).toBe(true);
+        expect(second.success).toBe(true);
+        expect(worksServiceMocks.getMany).toHaveBeenCalledTimes(1);
     });
 
     it('validates input and returns validation error for invalid limit', async () => {
