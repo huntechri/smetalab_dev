@@ -1,8 +1,5 @@
 import { Resend } from 'resend';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // Email from address - use your verified domain or Resend's test address
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Smetalab <onboarding@resend.dev>';
 
@@ -27,6 +24,16 @@ export async function sendInvitationEmail({
   inviteId,
   inviterEmail,
 }: SendInvitationEmailParams): Promise<{ success: boolean; error?: string }> {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    return {
+      success: false,
+      error: 'RESEND_API_KEY is not configured',
+    };
+  }
+
+  const resend = new Resend(apiKey);
   const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
   const inviteUrl = `${baseUrl}/invitations?inviteId=${inviteId}`;
   const roleLabel = ROLE_LABELS[role] || role;
@@ -117,7 +124,13 @@ ${inviteUrl}
 
     if (error) {
       console.error('Email send error:', error);
-      return { success: false, error: error.message };
+      const errorMessage = error.message ?? 'Unknown Resend error';
+      const onboardingHint =
+        FROM_EMAIL.includes('onboarding@resend.dev')
+          ? ' Для onboarding@resend.dev Resend принимает письма только на проверенный email аккаунта.'
+          : '';
+
+      return { success: false, error: `${errorMessage}${onboardingHint}` };
     }
 
     return { success: true };

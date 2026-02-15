@@ -14,7 +14,6 @@ vi.mock('resend', () => {
 const resendInstance = new Resend();
 
 describe('Email Sending Logic', () => {
-
     it('should call the Resend API with the correct parameters', async () => {
         const params = {
             to: 'test@example.com',
@@ -52,6 +51,23 @@ describe('Email Sending Logic', () => {
 
         expect(result.success).toBe(false);
         consoleErrorSpy.mockRestore();
-        expect(result.error).toBe(errorMessage);
+        expect(result.error).toContain(errorMessage);
+    });
+
+    it('should fail early when RESEND_API_KEY is missing', async () => {
+        const originalApiKey = process.env.RESEND_API_KEY;
+        delete process.env.RESEND_API_KEY;
+
+        const result = await sendInvitationEmail({
+            to: 'test@example.com',
+            teamName: 'Test Team',
+            role: 'admin',
+            inviteId: 123,
+        });
+
+        process.env.RESEND_API_KEY = originalApiKey;
+
+        expect(result.success).toBe(false);
+        expect(result.error).toBe('RESEND_API_KEY is not configured');
     });
 });

@@ -645,7 +645,12 @@ export const inviteTeamMember = validatedActionWithUser(
     if (!emailResult.success) {
       console.error('Failed to send invitation email:', emailResult.error);
       // Still return success - invitation was created, just email failed
-      return { success: 'Приглашение создано, но письмо не отправлено. Ссылка: ' + `${process.env.BASE_URL || 'http://localhost:3000'}/invitations?inviteId=${newInvitation.id}` };
+      const inviteLink = `${process.env.BASE_URL || 'http://localhost:3000'}/invitations?inviteId=${newInvitation.id}`;
+      const reasonSuffix = emailResult.error ? ` Причина: ${emailResult.error}.` : '';
+
+      return {
+        success: `Приглашение создано, но письмо не отправлено.${reasonSuffix} Ссылка: ${inviteLink}`
+      };
     }
 
     let successMessage = 'Приглашение отправлено на ' + email;
