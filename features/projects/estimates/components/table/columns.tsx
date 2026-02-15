@@ -57,8 +57,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         cell: ({ row }) => {
             const item = row.original;
             return (
-                <div className={item.kind === 'material' ? 'pl-8 flex items-center gap-2' : ''}>
-                    {item.kind === 'material' && <Badge variant="outline">Материал</Badge>}
+                <div className={item.kind === 'material' ? 'pl-8' : ''}>
                     <div className="text-sm font-medium">{item.name}</div>
                 </div>
             );
