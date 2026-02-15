@@ -1,4 +1,4 @@
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { MaterialCatalogPicker } from '@/features/catalog/components/MaterialCatalogPicker.client';
@@ -99,13 +99,23 @@ describe('MaterialCatalogPicker', () => {
             expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalled();
         });
 
-        const button = screen.getAllByRole('button').find((candidate) => candidate.hasAttribute('disabled'));
-        expect(button).toBeDefined();
-        if (!button) {
-            throw new Error('Expected disabled material add button');
+        const materialName = await screen.findByText('Тестовый материал');
+        const materialCard = materialName.closest<HTMLElement>('.group');
+
+        expect(materialCard).toBeTruthy();
+        if (!materialCard) {
+            throw new Error('Expected material card container');
         }
 
+        const button = within(materialCard).getByRole('button');
+
         expect(button).toBeDisabled();
-        expect(button.querySelector('svg')).toHaveClass('lucide-check');
+        const icon = button.querySelector('svg');
+        expect(icon).toBeTruthy();
+        if (!icon) {
+            throw new Error('Expected icon in disabled material add button');
+        }
+
+        expect(icon).toHaveClass('lucide-check');
     });
 });
