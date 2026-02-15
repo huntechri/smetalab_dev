@@ -7,8 +7,17 @@ const worksServiceMocks = vi.hoisted(() => ({
     getCategories: vi.fn(),
 }));
 
+const materialsServiceMocks = vi.hoisted(() => ({
+    getMany: vi.fn(),
+    search: vi.fn(),
+}));
+
 vi.mock('@/lib/domain/works/works.service', () => ({
     WorksService: worksServiceMocks,
+}));
+
+vi.mock('@/lib/domain/materials/materials.service', () => ({
+    MaterialsService: materialsServiceMocks,
 }));
 
 describe('CatalogService', () => {
@@ -16,6 +25,8 @@ describe('CatalogService', () => {
         worksServiceMocks.getMany.mockReset();
         worksServiceMocks.search.mockReset();
         worksServiceMocks.getCategories.mockReset();
+        materialsServiceMocks.getMany.mockReset();
+        materialsServiceMocks.search.mockReset();
     });
 
     it('uses AI search when ai mode is enabled and query is long enough', async () => {
@@ -68,6 +79,59 @@ describe('CatalogService', () => {
                 category: '',
                 subcategory: '',
             });
+        }
+    });
+
+    it('searches materials and maps category fields', async () => {
+        materialsServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [{
+                id: 'm1',
+                code: 'm-1',
+                name: 'Бетон М300',
+                unit: 'м3',
+                price: '6400',
+                categoryLv1: 'Бетон',
+                categoryLv2: 'Товарный',
+                imageUrl: 'https://example.com/m300.jpg',
+            }],
+        });
+
+        const result = await CatalogService.searchMaterials(7, { query: 'бетон', category: 'all', isAiMode: false, limit: 100 });
+
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон');
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data[0]).toEqual({
+                id: 'm1',
+                code: 'm-1',
+                name: 'Бетон М300',
+                unit: 'м3',
+                price: 6400,
+                categoryLv1: 'Бетон',
+                categoryLv2: 'Товарный',
+                imageUrl: 'https://example.com/m300.jpg',
+            });
+        }
+    });
+
+    it('returns material categories list', async () => {
+        materialsServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [
+                { categoryLv1: 'Метизы' },
+                { categoryLv1: 'Сухие смеси' },
+                { categoryLv1: 'Метизы' },
+                { categoryLv1: null },
+            ],
+        });
+
+        const result = await CatalogService.getMaterialCategories(9);
+
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(9, 1000);
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data).toEqual(['Метизы', 'Сухие смеси']);
         }
     });
 });
