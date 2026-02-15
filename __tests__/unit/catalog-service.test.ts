@@ -10,6 +10,7 @@ const worksServiceMocks = vi.hoisted(() => ({
 const materialsServiceMocks = vi.hoisted(() => ({
     getMany: vi.fn(),
     search: vi.fn(),
+    getCategories: vi.fn(),
 }));
 
 vi.mock('@/lib/domain/works/works.service', () => ({
@@ -27,6 +28,7 @@ describe('CatalogService', () => {
         worksServiceMocks.getCategories.mockReset();
         materialsServiceMocks.getMany.mockReset();
         materialsServiceMocks.search.mockReset();
+        materialsServiceMocks.getCategories.mockReset();
     });
 
     it('uses AI search when ai mode is enabled and query is long enough', async () => {
@@ -99,7 +101,7 @@ describe('CatalogService', () => {
 
         const result = await CatalogService.searchMaterials(7, { query: 'бетон', category: 'all', isAiMode: false, limit: 100 });
 
-        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон');
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон', undefined, undefined, 'all');
         expect(result.success).toBe(true);
         if (result.success) {
             expect(result.data[0]).toEqual({
@@ -116,19 +118,14 @@ describe('CatalogService', () => {
     });
 
     it('returns material categories list', async () => {
-        materialsServiceMocks.getMany.mockResolvedValue({
+        materialsServiceMocks.getCategories.mockResolvedValue({
             success: true,
-            data: [
-                { categoryLv1: 'Метизы' },
-                { categoryLv1: 'Сухие смеси' },
-                { categoryLv1: 'Метизы' },
-                { categoryLv1: null },
-            ],
+            data: ['Метизы', 'Сухие смеси'],
         });
 
         const result = await CatalogService.getMaterialCategories(9);
 
-        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(9, 1000);
+        expect(materialsServiceMocks.getCategories).toHaveBeenCalledWith(9);
         expect(result.success).toBe(true);
         if (result.success) {
             expect(result.data).toEqual(['Метизы', 'Сухие смеси']);

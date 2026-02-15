@@ -50,19 +50,16 @@ export class CatalogService {
 
         const { query, category, isAiMode, limit } = parsed.data;
         const result = isAiMode && query.length >= 2
-            ? await MaterialsService.search(teamId, query)
-            : await MaterialsService.getMany(teamId, limit, query || undefined);
+            ? await MaterialsService.search(teamId, query, category)
+            : await MaterialsService.getMany(teamId, limit, query || undefined, undefined, undefined, category);
 
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
         }
 
-        const normalizedCategory = category && category !== 'all' ? category : undefined;
-        const filtered = normalizedCategory
-            ? result.data.filter((material) => material.categoryLv1 === normalizedCategory)
-            : result.data;
+        const limitedData = result.data.slice(0, limit);
 
-        return success(filtered.map((material) => ({
+        return success(limitedData.map((material) => ({
             id: material.id,
             code: material.code || '',
             name: material.name,
@@ -75,17 +72,11 @@ export class CatalogService {
     }
 
     static async getMaterialCategories(teamId: number): Promise<Result<string[]>> {
-        const result = await MaterialsService.getMany(teamId, 1000);
+        const result = await MaterialsService.getCategories(teamId);
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
         }
 
-        const categories = Array.from(new Set(
-            result.data
-                .map((material) => material.categoryLv1?.trim())
-                .filter((category): category is string => Boolean(category && category.length > 0))
-        )).sort((a, b) => a.localeCompare(b, 'ru-RU'));
-
-        return success(categories);
+        return success(result.data);
     }
 }
