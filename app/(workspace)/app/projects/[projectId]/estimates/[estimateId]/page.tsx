@@ -4,6 +4,7 @@ import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { notFound, redirect } from 'next/navigation';
 import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
 
 type PageProps = {
     params: Promise<{ projectId: string; estimateId: string }>;
@@ -27,8 +28,7 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
-    // TODO: Replace with real DB query when estimate_rows table is created
-    const rowsPromise: Promise<EstimateRow[]> = Promise.resolve([]);
+    const rowsPromise: Promise<EstimateRow[]> = EstimateRowsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
 
     return (
         <div className="mx-auto w-full max-w-[1600px] space-y-6 py-4">
