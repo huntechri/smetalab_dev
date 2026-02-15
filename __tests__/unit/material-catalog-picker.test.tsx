@@ -99,8 +99,12 @@ describe('MaterialCatalogPicker', () => {
             expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalled();
         });
 
-        const button = screen.getByRole('button', { name: '' }); // The icon button has no accessible name, but we can find it by className or icon
-        // Actually, Button with icon might not have a name. Let's find it by Check icon if it exists
+        const button = screen.getAllByRole('button').find((candidate) => candidate.hasAttribute('disabled'));
+        expect(button).toBeDefined();
+        if (!button) {
+            throw new Error('Expected disabled material add button');
+        }
+
         expect(button).toBeDisabled();
         expect(button.querySelector('svg')).toHaveClass('lucide-check');
     });

@@ -40,6 +40,8 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
     return estimate;
 };
 
+const normalizeName = (value: string) => value.trim().toLocaleLowerCase();
+
 const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
     const [{ total }] = await tx
         .select({ total: sql<number>`COALESCE(SUM(${estimateRows.sum}), 0)` })
@@ -100,13 +102,20 @@ export class EstimateRowsService {
 
             const created = await db.transaction(async (tx) => {
                 const currentRows = await tx
-                    .select({ order: estimateRows.order, kind: estimateRows.kind })
+                    .select({ order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
                     .from(estimateRows)
-                    .where(and(eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+
+                const payload = parsed.data;
+                const normalizedWorkName = normalizeName(payload.name);
+                const duplicateWorkExists = currentRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
+
+                if (duplicateWorkExists) {
+                    throw new Error('DUPLICATE_WORK_NAME');
+                }
 
                 const maxOrder = currentRows.reduce((max, row) => Math.max(max, row.order), 0);
                 const nextCode = String(currentRows.filter((row) => row.kind === 'work').length + 1);
-                const payload = parsed.data;
                 const [row] = await tx
                     .insert(estimateRows)
                     .values({
@@ -130,6 +139,10 @@ export class EstimateRowsService {
 
             return success(created as EstimateRow);
         } catch (e) {
+            if (e instanceof Error && e.message === 'DUPLICATE_WORK_NAME') {
+                return error('Работа с таким названием уже добавлена в смету', 'CONFLICT');
+            }
+
             console.error('EstimateRowsService.addWork error:', e);
             return error('Ошибка при добавлении работы');
         }
@@ -153,7 +166,7 @@ export class EstimateRowsService {
                         eq(estimateRows.id, parentWorkId),
                         eq(estimateRows.estimateId, estimateId),
                         eq(estimateRows.kind, 'work'),
-                        isNull(estimateRows.deletedAt),
+                        withActiveTenant(estimateRows, teamId),
                     ),
                 });
 
@@ -162,19 +175,26 @@ export class EstimateRowsService {
                 }
 
                 const children = await tx
-                    .select({ order: estimateRows.order })
+                    .select({ order: estimateRows.order, name: estimateRows.name })
                     .from(estimateRows)
-                    .where(and(eq(estimateRows.parentWorkId, parentWorkId), isNull(estimateRows.deletedAt)))
+                    .where(and(eq(estimateRows.estimateId, estimateId), eq(estimateRows.parentWorkId, parentWorkId), withActiveTenant(estimateRows, teamId)))
                     .orderBy(estimateRows.order);
+
+                const payload = parsed.data;
+                const normalizedMaterialName = normalizeName(payload.name);
+                const duplicateMaterialExists = children.some((row) => normalizeName(row.name) === normalizedMaterialName);
+
+                if (duplicateMaterialExists) {
+                    throw new Error('DUPLICATE_MATERIAL_NAME');
+                }
 
                 const order = children.length > 0 ? children[children.length - 1].order + 1 : parent.order + 1;
 
                 await tx
                     .update(estimateRows)
                     .set({ order: sql`${estimateRows.order} + 1` })
-                    .where(and(eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt), sql`${estimateRows.order} >= ${order}`));
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${order}`));
 
-                const payload = parsed.data;
                 const [row] = await tx
                     .insert(estimateRows)
                     .values({
@@ -200,6 +220,10 @@ export class EstimateRowsService {
 
             return success(created as EstimateRow);
         } catch (e) {
+            if (e instanceof Error && e.message === 'DUPLICATE_MATERIAL_NAME') {
+                return error('Материал с таким названием уже добавлен в выбранную работу', 'CONFLICT');
+            }
+
             console.error('EstimateRowsService.addMaterial error:', e);
             return error('Ошибка при добавлении материала');
         }
