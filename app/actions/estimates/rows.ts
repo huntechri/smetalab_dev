@@ -15,13 +15,19 @@ export const addEstimateWorkAction = safeAction(
 );
 
 export const addEstimateMaterialAction = safeAction(
-    async ({ team }, estimateId: string, parentWorkId: string, payload?: { name?: string; unit?: string; qty?: number; price?: number; expense?: number }) =>
+    async ({ team }, estimateId: string, parentWorkId: string, payload?: { name?: string; unit?: string; imageUrl?: string | null; qty?: number; price?: number; expense?: number }) =>
         EstimateRowsService.addMaterial(team.id, estimateId, parentWorkId, payload),
     { name: 'addEstimateMaterialAction' }
 );
 
 export const patchEstimateRowAction = safeAction(
-    async ({ team }, estimateId: string, rowId: string, patch: { name?: string; qty?: number; price?: number; expense?: number }) =>
+    async ({ team }, estimateId: string, rowId: string, patch: { name?: string; unit?: string; imageUrl?: string | null; qty?: number; price?: number; expense?: number }) =>
         EstimateRowsService.patch(team.id, estimateId, rowId, patch),
     { name: 'patchEstimateRowAction' }
+);
+
+export const removeEstimateRowAction = safeAction(
+    async ({ team }, estimateId: string, rowId: string) =>
+        EstimateRowsService.remove(team.id, estimateId, rowId),
+    { name: 'removeEstimateRowAction' }
 );

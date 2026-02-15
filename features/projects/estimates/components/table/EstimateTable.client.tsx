@@ -39,12 +39,18 @@ type ActiveWorkForMaterial = {
     name: string;
 };
 
+type ActiveMaterialForReplace = {
+    id: string;
+    name: string;
+};
+
 export function EstimateTable({ estimateId, initialRows }: { estimateId: string; initialRows: EstimateRow[] }) {
     const [rows, setRows] = useState(initialRows);
     const [expandedWorkIds, setExpandedWorkIds] = useState<Set<string>>(new Set(rows.filter((r) => r.kind === 'work').map((r) => r.id)));
     const [savingRowIds, setSavingRowIds] = useState<Set<string>>(new Set());
     const [isCalculationModeOpen, setIsCalculationModeOpen] = useState(false);
     const [activeWorkForMaterial, setActiveWorkForMaterial] = useState<ActiveWorkForMaterial | null>(null);
+    const [activeMaterialForReplace, setActiveMaterialForReplace] = useState<ActiveMaterialForReplace | null>(null);
     const { toast } = useToast();
 
     const visibleRows = useMemo(() => getVisibleRows(rows, expandedWorkIds), [rows, expandedWorkIds]);
@@ -79,6 +85,41 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
         }
     };
 
+    const removeRow = async (rowId: string) => {
+        const previousRows = rows;
+        const rowToRemove = previousRows.find((row) => row.id === rowId);
+
+        if (!rowToRemove) {
+            return;
+        }
+
+        const optimisticRows = rowToRemove.kind === 'work'
+            ? previousRows.filter((row) => row.id !== rowId && row.parentWorkId !== rowId)
+            : previousRows.filter((row) => row.id !== rowId);
+
+        setRows(optimisticRows);
+
+        try {
+            const result = await estimatesActionRepo.removeRow(estimateId, rowId);
+            setRows((currentRows) => currentRows.filter((row) => !result.removedIds.includes(row.id)));
+            if (rowToRemove.kind === 'work') {
+                setExpandedWorkIds((prev) => {
+                    const next = new Set(prev);
+                    next.delete(rowToRemove.id);
+                    return next;
+                });
+            }
+
+            toast({
+                title: 'Строка удалена',
+                description: rowToRemove.name,
+            });
+        } catch {
+            setRows(previousRows);
+            toast({ variant: 'destructive', title: 'Ошибка удаления', description: 'Не удалось удалить строку.' });
+        }
+    };
+
     const addMaterialFromCatalog = async (material: CatalogMaterial) => {
         if (!activeWorkForMaterial) {
             return;
@@ -89,6 +130,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
             const created = await estimatesActionRepo.addMaterial(estimateId, activeWorkForMaterial.id, {
                 name: material.name,
                 unit: material.unit || 'шт',
+                imageUrl: material.imageUrl ?? null,
                 price: Number.isFinite(safePrice) ? safePrice : 0,
                 qty: 1,
             });
@@ -104,6 +146,37 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                 variant: 'destructive',
                 title: 'Ошибка',
                 description: 'Не удалось добавить материал из справочника.',
+            });
+        }
+    };
+
+    const replaceMaterialFromCatalog = async (material: CatalogMaterial) => {
+        if (!activeMaterialForReplace) {
+            return;
+        }
+
+        const targetMaterialId = activeMaterialForReplace.id;
+
+        try {
+            const safePrice = Number(material.price);
+            const updated = await estimatesActionRepo.patchRow(estimateId, targetMaterialId, {
+                name: material.name,
+                unit: material.unit || 'шт',
+                imageUrl: material.imageUrl ?? null,
+                price: Number.isFinite(safePrice) ? safePrice : 0,
+            });
+
+            setRows((prev) => prev.map((row) => row.id === targetMaterialId ? updated : row));
+            setActiveMaterialForReplace(null);
+            toast({
+                title: 'Материал обновлен',
+                description: material.name,
+            });
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось заменить материал.',
             });
         }
     };
@@ -148,6 +221,8 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                     }),
                     onPatch: patch,
                     onOpenMaterialCatalog: (workId, workName) => setActiveWorkForMaterial({ id: workId, name: workName }),
+                    onReplaceMaterial: (materialId, materialName) => setActiveMaterialForReplace({ id: materialId, name: materialName }),
+                    onRemoveRow: removeRow,
                 })}
                 data={visibleRows}
                 filterColumn="name"
@@ -169,7 +244,6 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                             <span className="hidden sm:inline text-xs md:text-sm">Сохранить</span>
                         </Button>
 
-                        {/* Desktop toolbar */}
                         <div className="hidden lg:flex items-center gap-1.5">
                             <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3">
                                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
@@ -189,7 +263,6 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                             </Button>
                         </div>
 
-                        {/* Mobile/Tablet dropdown */}
                         <div className="lg:hidden">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -249,6 +322,14 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                 onClose={() => setActiveWorkForMaterial(null)}
                 onSelect={addMaterialFromCatalog}
                 parentWorkName={activeWorkForMaterial?.name ?? ''}
+            />
+
+            <MaterialCatalogDialog
+                isOpen={Boolean(activeMaterialForReplace)}
+                onClose={() => setActiveMaterialForReplace(null)}
+                onSelect={replaceMaterialFromCatalog}
+                parentWorkName={activeMaterialForReplace?.name ?? ''}
+                mode="replace"
             />
         </div>
     );

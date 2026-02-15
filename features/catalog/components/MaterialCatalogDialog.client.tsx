@@ -9,9 +9,12 @@ interface MaterialCatalogDialogProps {
     onClose: () => void;
     onSelect: (material: CatalogMaterial) => Promise<void>;
     parentWorkName: string;
+    mode?: 'add' | 'replace';
 }
 
-export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkName }: MaterialCatalogDialogProps) {
+export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkName, mode = 'add' }: MaterialCatalogDialogProps) {
+    const isReplaceMode = mode === 'replace';
+
     return (
         <Dialog open={isOpen} onOpenChange={(open) => {
             if (!open) {
@@ -20,9 +23,13 @@ export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkNam
         }}>
             <DialogContent className="max-w-4xl h-[80vh] p-0 flex flex-col gap-0">
                 <DialogHeader className="p-6 border-b">
-                    <DialogTitle className="text-xl">Добавить материал в: {parentWorkName}</DialogTitle>
+                    <DialogTitle className="text-xl">
+                        {isReplaceMode ? `Заменить материал: ${parentWorkName}` : `Добавить материал в: ${parentWorkName}`}
+                    </DialogTitle>
                     <DialogDescription>
-                        Выберите позицию из справочника материалов, чтобы добавить её к выбранной работе.
+                        {isReplaceMode
+                            ? 'Выберите новую позицию из справочника материалов для замены текущей строки.'
+                            : 'Выберите позицию из справочника материалов, чтобы добавить её к выбранной работе.'}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex-1 min-h-0">
@@ -32,4 +39,3 @@ export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkNam
         </Dialog>
     );
 }
-
