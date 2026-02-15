@@ -17,12 +17,15 @@ const recalculateTotals = (estimateId: string) => {
     }
 };
 
-const getRowsOrThrow = (estimateId: string): EstimateRow[] => {
-    const rows = rowStore.get(estimateId);
-    if (!rows) {
-        throw new Error('Estimate rows not found');
+const getRowsOrCreate = (estimateId: string): EstimateRow[] => {
+    const existingRows = rowStore.get(estimateId);
+    if (existingRows) {
+        return existingRows;
     }
-    return rows;
+
+    const emptyRows: EstimateRow[] = [];
+    rowStore.set(estimateId, emptyRows);
+    return emptyRows;
 };
 
 export const estimatesMockRepo: EstimatesRepository = {
@@ -60,7 +63,7 @@ export const estimatesMockRepo: EstimatesRepository = {
     },
     async getEstimateRows(estimateId) {
         await delay(300, 800);
-        return getRowsOrThrow(estimateId)
+        return getRowsOrCreate(estimateId)
             .slice()
             .sort((a, b) => a.order - b.order)
             .map((row) => estimateRowSchema.parse(row));
@@ -68,7 +71,7 @@ export const estimatesMockRepo: EstimatesRepository = {
     async patchRow(estimateId, rowId, patch) {
         await delay(80, 250);
         const parsedPatch = rowPatchSchema.parse(patch);
-        const rows = getRowsOrThrow(estimateId);
+        const rows = getRowsOrCreate(estimateId);
         const row = rows.find((item) => item.id === rowId);
 
         if (!row) {
@@ -82,7 +85,7 @@ export const estimatesMockRepo: EstimatesRepository = {
     },
     async addWork(estimateId, payload) {
         await delay(120, 320);
-        const rows = getRowsOrThrow(estimateId);
+        const rows = getRowsOrCreate(estimateId);
         const maxOrder = Math.max(0, ...rows.map((row) => row.order));
         const nextCode = `${rows.filter((row) => row.kind === 'work').length + 1}`;
         const row: EstimateRow = {
@@ -103,7 +106,7 @@ export const estimatesMockRepo: EstimatesRepository = {
     },
     async addMaterial(estimateId, parentWorkId, payload) {
         await delay(120, 320);
-        const rows = getRowsOrThrow(estimateId);
+        const rows = getRowsOrCreate(estimateId);
         const parent = rows.find((row) => row.id === parentWorkId && row.kind === 'work');
 
         if (!parent) {
