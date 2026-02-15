@@ -323,4 +323,12 @@
   .text-gradient {
     @apply bg-linear-to-b from-foreground to-foreground/60 bg-clip-text text-transparent;
   }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }
