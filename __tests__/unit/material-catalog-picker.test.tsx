@@ -29,17 +29,51 @@ describe('MaterialCatalogPicker', () => {
         catalogRepositoryMocks.getMaterialCategories.mockResolvedValue([]);
     });
 
-    it('supports normal and AI search modes for materials', async () => {
+    it('runs search on Enter and keeps normal/AI modes explicit', async () => {
         render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
 
         await waitFor(() => {
             expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false);
         });
 
+        const input = screen.getByPlaceholderText('Поиск по названию или коду...');
+        fireEvent.change(input, { target: { value: 'штукатурка knauf' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', false);
+        });
+
         fireEvent.click(screen.getByRole('checkbox'));
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('', 'all', true);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledTimes(2);
+        });
+
+        fireEvent.keyDown(screen.getByPlaceholderText('Опишите, что нужно найти...'), { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', true);
+        });
+    });
+
+    it('supports repeated searches with different queries', async () => {
+        render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
+
+        const input = await screen.findByPlaceholderText('Поиск по названию или коду...');
+
+        fireEvent.change(input, { target: { value: 'штукатурка' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка', 'all', false);
+        });
+
+        fireEvent.change(input, { target: { value: 'шпаклевка' } });
+        fireEvent.keyDown(input, { key: 'Enter' });
+
+        await waitFor(() => {
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false);
         });
     });
 });
