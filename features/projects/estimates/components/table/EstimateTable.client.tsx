@@ -80,10 +80,11 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
+            const safePrice = Number(catalogWork.price);
             const created = await estimatesMockRepo.addWork(estimateId, {
                 name: catalogWork.name,
-                unit: catalogWork.unit,
-                price: catalogWork.price,
+                unit: catalogWork.unit || 'шт',
+                price: Number.isFinite(safePrice) ? safePrice : 0,
                 qty: 1
             });
             setRows((prev) => [...prev, created]);

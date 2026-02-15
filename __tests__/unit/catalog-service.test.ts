@@ -36,6 +36,19 @@ describe('CatalogService', () => {
         }
     });
 
+    it('coerces decimal price returned as string into number', async () => {
+        worksServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [{ id: '2', code: '1.2', name: 'Штукатурка', unit: 'м2', price: '1250.5', category: 'Отделка', subcategory: 'Стены' }],
+        });
+
+        const result = await CatalogService.searchWorks(4, { query: '', isAiMode: false, category: 'all', limit: 80 });
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data[0].price).toBe(1250.5);
+        }
+    });
     it('maps domain rows into catalog DTO', async () => {
         worksServiceMocks.getMany.mockResolvedValue({
             success: true,
