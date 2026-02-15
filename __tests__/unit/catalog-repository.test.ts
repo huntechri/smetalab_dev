@@ -4,6 +4,8 @@ import { catalogRepository } from '@/features/catalog/repository';
 const catalogActionMocks = vi.hoisted(() => ({
     searchCatalogWorks: vi.fn(),
     fetchCatalogCategories: vi.fn(),
+    searchCatalogMaterials: vi.fn(),
+    fetchCatalogMaterialCategories: vi.fn(),
 }));
 
 vi.mock('@/app/actions/catalog/search', () => ({
@@ -14,10 +16,17 @@ vi.mock('@/app/actions/catalog/categories', () => ({
     fetchCatalogCategories: catalogActionMocks.fetchCatalogCategories,
 }));
 
+vi.mock('@/app/actions/catalog/materials', () => ({
+    searchCatalogMaterials: catalogActionMocks.searchCatalogMaterials,
+    fetchCatalogMaterialCategories: catalogActionMocks.fetchCatalogMaterialCategories,
+}));
+
 describe('catalogRepository', () => {
     beforeEach(() => {
         catalogActionMocks.searchCatalogWorks.mockReset();
         catalogActionMocks.fetchCatalogCategories.mockReset();
+        catalogActionMocks.searchCatalogMaterials.mockReset();
+        catalogActionMocks.fetchCatalogMaterialCategories.mockReset();
     });
 
     it('returns works when catalog action succeeds', async () => {
@@ -54,5 +63,30 @@ describe('catalogRepository', () => {
 
         await expect(catalogRepository.getCategories()).resolves.toEqual(['Отделка', 'Фундамент']);
     });
-});
 
+    it('returns materials when materials action succeeds', async () => {
+        catalogActionMocks.searchCatalogMaterials.mockResolvedValue({
+            success: true,
+            data: [{ id: 'm1', code: '11', name: 'Кирпич', unit: 'шт', price: 25 }],
+        });
+
+        const result = await catalogRepository.searchMaterials('кирпич', 'Каменные', false, 80);
+
+        expect(catalogActionMocks.searchCatalogMaterials).toHaveBeenCalledWith({
+            query: 'кирпич',
+            category: 'Каменные',
+            isAiMode: false,
+            limit: 80,
+        });
+        expect(result).toEqual([{ id: 'm1', code: '11', name: 'Кирпич', unit: 'шт', price: 25 }]);
+    });
+
+    it('returns material categories when action succeeds', async () => {
+        catalogActionMocks.fetchCatalogMaterialCategories.mockResolvedValue({
+            success: true,
+            data: ['Каменные', 'Пиломатериалы'],
+        });
+
+        await expect(catalogRepository.getMaterialCategories()).resolves.toEqual(['Каменные', 'Пиломатериалы']);
+    });
+});

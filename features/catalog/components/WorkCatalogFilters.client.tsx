@@ -13,6 +13,8 @@ interface Props {
     onCategoryChange: (category: string) => void;
     isAiMode?: boolean;
     onAiModeChange?: (val: boolean) => void;
+    loadCategories?: () => Promise<string[]>;
+    allCategoriesLabel?: string;
 }
 
 export function WorkCatalogFilters({
@@ -21,7 +23,9 @@ export function WorkCatalogFilters({
     selectedCategory,
     onCategoryChange,
     isAiMode,
-    onAiModeChange
+    onAiModeChange,
+    loadCategories,
+    allCategoriesLabel,
 }: Props) {
     return (
         <div className="flex flex-col shrink-0 bg-background/95 backdrop-blur-sm z-20">
@@ -60,6 +64,8 @@ export function WorkCatalogFilters({
             <WorkCatalogCategories
                 selectedCategory={selectedCategory}
                 onCategoryChange={onCategoryChange}
+                loadCategories={loadCategories}
+                allLabel={allCategoriesLabel}
             />
         </div>
     );
