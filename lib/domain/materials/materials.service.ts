@@ -21,9 +21,16 @@ const SEARCH_SCORE_WEIGHTS = {
 } as const;
 
 export class MaterialsService {
-    static async getMany(teamId: number | null, limit?: number, search?: string, offset?: number, lastCode?: string): Promise<Result<MaterialRow[]>> {
+    static async getMany(
+        teamId: number | null,
+        limit?: number,
+        search?: string,
+        offset?: number,
+        lastCode?: string,
+        categoryLv1?: string
+    ): Promise<Result<MaterialRow[]>> {
         try {
-            const filters = [withActiveTenant(materials, teamId)];
+            const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
 
             if (search) {
                 filters.push(ilike(materials.name, `%${search}%`));
@@ -31,6 +38,10 @@ export class MaterialsService {
 
             if (lastCode) {
                 filters.push(sql`${materials.code} > ${lastCode}`);
+            }
+
+            if (categoryLv1 && categoryLv1 !== 'all') {
+                filters.push(eq(materials.categoryLv1, categoryLv1));
             }
 
             const finalLimit = limit || (search ? 50 : 50);
@@ -200,12 +211,16 @@ export class MaterialsService {
         return { expandedQuery, tokens };
     }
 
-    static async search(teamId: number, query: string): Promise<Result<MaterialRow[]>> {
+    static async search(teamId: number, query: string, categoryLv1?: string): Promise<Result<MaterialRow[]>> {
         if (!query || query.trim().length < 1) return error('Короткий запрос');
 
         const { expandedQuery, tokens } = this.preprocessSearchQuery(query);
         const normalizedQuery = query.trim().toLowerCase();
         const shouldUseVector = tokens.length >= 3;
+
+        const MAX_RESULTS = 300;
+        const LEXICAL_CANDIDATES_LIMIT = 450;
+        const VECTOR_CANDIDATES_LIMIT = 180;
 
         try {
             const queryEmbedding = shouldUseVector ? await generateEmbedding(expandedQuery) : null;
@@ -217,6 +232,56 @@ export class MaterialsService {
             const queryLike = `%${normalizedQuery}%`;
             const tsQuery = sql`websearch_to_tsquery('simple', ${expandedQuery})`;
             const nameSource = sql<string>`COALESCE(${materials.nameNorm}, ${materials.name})`;
+            const lexicalFilter = sql<boolean>`(
+                ${materials.searchVector} @@ ${tsQuery}
+                OR ${materials.nameNorm} % ${normalizedQuery}
+                OR ${materials.name} % ${normalizedQuery}
+                OR ${nameSource} ILIKE ${queryLike}
+                OR COALESCE(${materials.vendor}, '') ILIKE ${queryLike}
+            )`;
+            const lexicalRank = sql<number>`
+                (
+                    COALESCE(ts_rank(${materials.searchVector}, ${tsQuery}), 0)
+                    + COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)
+                    + CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 0.8 ELSE 0 END
+                    + CASE WHEN COALESCE(${materials.vendor}, '') ILIKE ${queryLike} THEN 0.6 ELSE 0 END
+                )
+            `;
+
+            const baseFilters = [
+                withActiveTenant(materials, teamId),
+                eq(materials.status, 'active'),
+            ];
+
+            if (categoryLv1 && categoryLv1 !== 'all') {
+                baseFilters.push(eq(materials.categoryLv1, categoryLv1));
+            }
+
+            const lexicalCandidates = await db
+                .select({ id: materials.id })
+                .from(materials)
+                .where(and(...baseFilters, lexicalFilter))
+                .orderBy(sql`${lexicalRank} DESC`, materials.id)
+                .limit(LEXICAL_CANDIDATES_LIMIT);
+
+            const vectorCandidates = shouldUseVector
+                ? await db
+                    .select({ id: materials.id })
+                    .from(materials)
+                    .where(and(...baseFilters, sql`${materials.embedding} IS NOT NULL`))
+                    .orderBy(sql`${materials.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`, materials.id)
+                    .limit(VECTOR_CANDIDATES_LIMIT)
+                : [];
+
+            const candidateIds = Array.from(new Set([
+                ...lexicalCandidates.map((row) => row.id),
+                ...vectorCandidates.map((row) => row.id),
+            ]));
+
+            if (candidateIds.length === 0) {
+                return success([]);
+            }
+
             const ftsScore = sql<number>`
                 COALESCE(
                     ts_rank(
@@ -280,12 +345,9 @@ export class MaterialsService {
                 score: totalScore,
             })
                 .from(materials)
-                .where(and(
-                    withActiveTenant(materials, teamId),
-                    eq(materials.status, 'active')
-                ))
+                .where(and(...baseFilters, inArray(materials.id, candidateIds)))
                 .orderBy(sql`${vendorBoost} DESC`, sql`${phraseBoost} DESC`, sql`${totalScore} DESC`, materials.code, materials.id)
-                .limit(300);
+                .limit(MAX_RESULTS);
 
             return success(results as MaterialRow[]);
         } catch (e) {
@@ -353,6 +415,29 @@ export class MaterialsService {
 
     static enqueueImageDownloads(_teamId: number, _data: Pick<NewMaterial, 'code' | 'imageUrl'>[]) {
         // Disabled Vercel Blob tasks
+    }
+
+    static async getCategories(teamId: number): Promise<Result<string[]>> {
+        try {
+            const rows = await db
+                .selectDistinct({ category: materials.categoryLv1 })
+                .from(materials)
+                .where(and(
+                    withActiveTenant(materials, teamId),
+                    eq(materials.status, 'active'),
+                    sql`${materials.categoryLv1} IS NOT NULL AND ${materials.categoryLv1} <> ''`
+                ));
+
+            const categories = rows
+                .map((row) => row.category)
+                .filter((category): category is string => Boolean(category && category.trim().length > 0))
+                .sort((a, b) => a.localeCompare(b, 'ru-RU'));
+
+            return success(categories);
+        } catch (e) {
+            console.error('getMaterialCategories error:', e);
+            return error('Ошибка получения категорий материалов');
+        }
     }
 
     static async generateMissingEmbeddings(teamId: number): Promise<Result<{ processed: number; remaining: number }>> {

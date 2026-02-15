@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { catalogRepository } from '@/features/catalog/repository';
+import { __catalogRepositoryInternal, catalogRepository } from '@/features/catalog/repository';
 
 const catalogActionMocks = vi.hoisted(() => ({
     searchCatalogWorks: vi.fn(),
@@ -27,6 +27,7 @@ describe('catalogRepository', () => {
         catalogActionMocks.fetchCatalogCategories.mockReset();
         catalogActionMocks.searchCatalogMaterials.mockReset();
         catalogActionMocks.fetchCatalogMaterialCategories.mockReset();
+        __catalogRepositoryInternal.clearCaches();
     });
 
     it('returns works when catalog action succeeds', async () => {
@@ -44,6 +45,20 @@ describe('catalogRepository', () => {
             limit: 150,
         });
         expect(result).toEqual([{ id: '1', code: '1.1', name: 'Штукатурка', unit: 'м2', price: 1000 }]);
+    });
+
+
+    it('caches works search results for identical queries', async () => {
+        catalogActionMocks.searchCatalogWorks.mockResolvedValue({
+            success: true,
+            data: [{ id: '2', code: '2.1', name: 'Кладка', unit: 'м2', price: 1500 }],
+        });
+
+        const first = await catalogRepository.searchWorks('кладка', 'Каменные', false, 120);
+        const second = await catalogRepository.searchWorks('кладка', 'Каменные', false, 120);
+
+        expect(first).toEqual(second);
+        expect(catalogActionMocks.searchCatalogWorks).toHaveBeenCalledTimes(1);
     });
 
     it('returns empty array when search action fails', async () => {
@@ -81,6 +96,19 @@ describe('catalogRepository', () => {
         expect(result).toEqual([{ id: 'm1', code: '11', name: 'Кирпич', unit: 'шт', price: 25 }]);
     });
 
+    it('caches materials search results for identical queries', async () => {
+        catalogActionMocks.searchCatalogMaterials.mockResolvedValue({
+            success: true,
+            data: [{ id: 'm2', code: '12', name: 'Клей', unit: 'кг', price: 50 }],
+        });
+
+        const first = await catalogRepository.searchMaterials('клей', 'Смеси', false, 80);
+        const second = await catalogRepository.searchMaterials('клей', 'Смеси', false, 80);
+
+        expect(first).toEqual(second);
+        expect(catalogActionMocks.searchCatalogMaterials).toHaveBeenCalledTimes(1);
+    });
+
     it('returns material categories when action succeeds', async () => {
         catalogActionMocks.fetchCatalogMaterialCategories.mockResolvedValue({
             success: true,
@@ -88,5 +116,18 @@ describe('catalogRepository', () => {
         });
 
         await expect(catalogRepository.getMaterialCategories()).resolves.toEqual(['Каменные', 'Пиломатериалы']);
+    });
+
+    it('caches material categories response', async () => {
+        catalogActionMocks.fetchCatalogMaterialCategories.mockResolvedValue({
+            success: true,
+            data: ['Каменные', 'Пиломатериалы'],
+        });
+
+        const first = await catalogRepository.getMaterialCategories();
+        const second = await catalogRepository.getMaterialCategories();
+
+        expect(first).toEqual(second);
+        expect(catalogActionMocks.fetchCatalogMaterialCategories).toHaveBeenCalledTimes(1);
     });
 });

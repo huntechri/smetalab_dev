@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { CatalogService } from '@/lib/services/catalog.service';
+import { __catalogServiceInternal, CatalogService } from '@/lib/services/catalog.service';
 
 const worksServiceMocks = vi.hoisted(() => ({
     getMany: vi.fn(),
@@ -10,6 +10,7 @@ const worksServiceMocks = vi.hoisted(() => ({
 const materialsServiceMocks = vi.hoisted(() => ({
     getMany: vi.fn(),
     search: vi.fn(),
+    getCategories: vi.fn(),
 }));
 
 vi.mock('@/lib/domain/works/works.service', () => ({
@@ -27,6 +28,9 @@ describe('CatalogService', () => {
         worksServiceMocks.getCategories.mockReset();
         materialsServiceMocks.getMany.mockReset();
         materialsServiceMocks.search.mockReset();
+        materialsServiceMocks.getCategories.mockReset();
+        __catalogServiceInternal.clearMaterialSearchCache();
+        __catalogServiceInternal.clearWorkSearchCache();
     });
 
     it('uses AI search when ai mode is enabled and query is long enough', async () => {
@@ -34,8 +38,23 @@ describe('CatalogService', () => {
 
         await CatalogService.searchWorks(7, { query: 'бетон м300', isAiMode: true });
 
-        expect(worksServiceMocks.search).toHaveBeenCalledWith(7, 'бетон м300');
+        expect(worksServiceMocks.search).toHaveBeenCalledWith(7, 'бетон м300', undefined);
         expect(worksServiceMocks.getMany).not.toHaveBeenCalled();
+    });
+
+
+    it('caches work search results on service layer for identical input', async () => {
+        worksServiceMocks.getMany.mockResolvedValue({
+            success: true,
+            data: [{ id: 'w1', code: '1.1', name: 'Штукатурка стен', unit: 'м2', price: 1200, category: 'Отделка', subcategory: 'Стены' }],
+        });
+
+        const first = await CatalogService.searchWorks(5, { query: 'штукатурка', isAiMode: false, category: 'Отделка', limit: 50 });
+        const second = await CatalogService.searchWorks(5, { query: 'штукатурка', isAiMode: false, category: 'Отделка', limit: 50 });
+
+        expect(first.success).toBe(true);
+        expect(second.success).toBe(true);
+        expect(worksServiceMocks.getMany).toHaveBeenCalledTimes(1);
     });
 
     it('validates input and returns validation error for invalid limit', async () => {
@@ -99,7 +118,7 @@ describe('CatalogService', () => {
 
         const result = await CatalogService.searchMaterials(7, { query: 'бетон', category: 'all', isAiMode: false, limit: 100 });
 
-        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон');
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон', undefined, undefined, 'all');
         expect(result.success).toBe(true);
         if (result.success) {
             expect(result.data[0]).toEqual({
@@ -115,20 +134,39 @@ describe('CatalogService', () => {
         }
     });
 
-    it('returns material categories list', async () => {
+
+    it('caches material search results on service layer for identical input', async () => {
         materialsServiceMocks.getMany.mockResolvedValue({
             success: true,
-            data: [
-                { categoryLv1: 'Метизы' },
-                { categoryLv1: 'Сухие смеси' },
-                { categoryLv1: 'Метизы' },
-                { categoryLv1: null },
-            ],
+            data: [{
+                id: 'm-cache',
+                code: 'c-1',
+                name: 'Клей монтажный',
+                unit: 'шт',
+                price: 900,
+                categoryLv1: 'Клеи',
+                categoryLv2: 'Монтажные',
+                imageUrl: null,
+            }],
+        });
+
+        const first = await CatalogService.searchMaterials(12, { query: 'клей', category: 'all', isAiMode: false, limit: 40 });
+        const second = await CatalogService.searchMaterials(12, { query: 'клей', category: 'all', isAiMode: false, limit: 40 });
+
+        expect(first.success).toBe(true);
+        expect(second.success).toBe(true);
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns material categories list', async () => {
+        materialsServiceMocks.getCategories.mockResolvedValue({
+            success: true,
+            data: ['Метизы', 'Сухие смеси'],
         });
 
         const result = await CatalogService.getMaterialCategories(9);
 
-        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(9, 1000);
+        expect(materialsServiceMocks.getCategories).toHaveBeenCalledWith(9);
         expect(result.success).toBe(true);
         if (result.success) {
             expect(result.data).toEqual(['Метизы', 'Сухие смеси']);

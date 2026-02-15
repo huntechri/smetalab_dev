@@ -11,6 +11,39 @@ const searchInputSchema = z.object({
     limit: z.number().int().positive().max(500).optional().default(200),
 });
 
+const MATERIAL_SEARCH_CACHE_TTL_MS = 20_000;
+const WORK_SEARCH_CACHE_TTL_MS = 20_000;
+
+type CacheEntry<T> = {
+    createdAt: number;
+    value: T;
+};
+
+const materialSearchCache = new Map<string, CacheEntry<CatalogMaterial[]>>();
+const workSearchCache = new Map<string, CacheEntry<CatalogWork[]>>();
+
+function getCachedValue<T>(cache: Map<string, CacheEntry<T>>, key: string, ttlMs: number): T | null {
+    const entry = cache.get(key);
+    if (!entry) {
+        return null;
+    }
+
+    if (Date.now() - entry.createdAt > ttlMs) {
+        cache.delete(key);
+        return null;
+    }
+
+    return entry.value;
+}
+
+function buildMaterialCacheKey(teamId: number, query: string, category: string | undefined, isAiMode: boolean, limit: number): string {
+    return `${teamId}::${query}::${category ?? ''}::${isAiMode}::${limit}`;
+}
+
+function buildWorkCacheKey(teamId: number, query: string, category: string | undefined, isAiMode: boolean, limit: number): string {
+    return `${teamId}::${query}::${category ?? ''}::${isAiMode}::${limit}`;
+}
+
 export class CatalogService {
     static async searchWorks(teamId: number, rawInput: unknown): Promise<Result<CatalogWork[]>> {
         const parsed = searchInputSchema.safeParse(rawInput);
@@ -19,15 +52,21 @@ export class CatalogService {
         }
 
         const { query, category, isAiMode, limit } = parsed.data;
+        const cacheKey = buildWorkCacheKey(teamId, query, category, isAiMode, limit);
+        const cached = getCachedValue(workSearchCache, cacheKey, WORK_SEARCH_CACHE_TTL_MS);
+        if (cached) {
+            return success(cached);
+        }
+
         const result = isAiMode && query.length >= 2
-            ? await WorksService.search(teamId, query)
+            ? await WorksService.search(teamId, query, category)
             : await WorksService.getMany(teamId, limit, query || undefined, undefined, category);
 
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
         }
 
-        return success(result.data.map((work) => ({
+        const normalized = result.data.map((work) => ({
             id: work.id,
             code: work.code || '',
             name: work.name,
@@ -35,7 +74,11 @@ export class CatalogService {
             price: typeof work.price === 'number' ? work.price : Number(work.price ?? 0) || 0,
             category: work.category || '',
             subcategory: work.subcategory || '',
-        })));
+        }));
+
+        workSearchCache.set(cacheKey, { createdAt: Date.now(), value: normalized });
+
+        return success(normalized);
     }
 
     static async getCategories(teamId: number): Promise<Result<string[]>> {
@@ -49,20 +92,21 @@ export class CatalogService {
         }
 
         const { query, category, isAiMode, limit } = parsed.data;
+        const cacheKey = buildMaterialCacheKey(teamId, query, category, isAiMode, limit);
+        const cached = getCachedValue(materialSearchCache, cacheKey, MATERIAL_SEARCH_CACHE_TTL_MS);
+        if (cached) {
+            return success(cached);
+        }
+
         const result = isAiMode && query.length >= 2
-            ? await MaterialsService.search(teamId, query)
-            : await MaterialsService.getMany(teamId, limit, query || undefined);
+            ? await MaterialsService.search(teamId, query, category)
+            : await MaterialsService.getMany(teamId, limit, query || undefined, undefined, undefined, category);
 
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
         }
 
-        const normalizedCategory = category && category !== 'all' ? category : undefined;
-        const filtered = normalizedCategory
-            ? result.data.filter((material) => material.categoryLv1 === normalizedCategory)
-            : result.data;
-
-        return success(filtered.map((material) => ({
+        const normalized = result.data.slice(0, limit).map((material) => ({
             id: material.id,
             code: material.code || '',
             name: material.name,
@@ -71,21 +115,28 @@ export class CatalogService {
             categoryLv1: material.categoryLv1 || '',
             categoryLv2: material.categoryLv2 || '',
             imageUrl: material.imageUrl,
-        })));
+        }));
+
+        materialSearchCache.set(cacheKey, { createdAt: Date.now(), value: normalized });
+
+        return success(normalized);
     }
 
     static async getMaterialCategories(teamId: number): Promise<Result<string[]>> {
-        const result = await MaterialsService.getMany(teamId, 1000);
+        const result = await MaterialsService.getCategories(teamId);
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
         }
 
-        const categories = Array.from(new Set(
-            result.data
-                .map((material) => material.categoryLv1?.trim())
-                .filter((category): category is string => Boolean(category && category.length > 0))
-        )).sort((a, b) => a.localeCompare(b, 'ru-RU'));
-
-        return success(categories);
+        return success(result.data);
     }
 }
+
+export const __catalogServiceInternal = {
+    clearMaterialSearchCache: () => {
+        materialSearchCache.clear();
+    },
+    clearWorkSearchCache: () => {
+        workSearchCache.clear();
+    }
+};
