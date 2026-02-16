@@ -46,6 +46,13 @@
   ],
   "exclude": [
     "node_modules",
-    "DONOR"
+    "DONOR",
+    "__tests__",
+    "**/*.test.ts",
+    "**/*.test.tsx",
+    "**/*.spec.ts",
+    "**/*.spec.tsx",
+    "vitest.config.ts",
+    "vitest.setup.ts"
   ]
 }
