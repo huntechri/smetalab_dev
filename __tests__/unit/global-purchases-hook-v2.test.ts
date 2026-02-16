@@ -80,6 +80,28 @@ describe('useGlobalPurchasesTable Concurrency', () => {
         });
     });
 
+    it('blocks duplicate update calls fired in the same tick', async () => {
+        const { result } = renderHook(() => useGlobalPurchasesTable([mockRow], { from: '2023-10-27', to: '2023-10-27' }));
+
+        let resolvePatch: (value: PurchaseRow) => void = () => {};
+        const patchPromise = new Promise<PurchaseRow>((resolve) => {
+            resolvePatch = resolve;
+        });
+        vi.mocked(globalPurchasesActionRepo.patch).mockReturnValue(patchPromise);
+
+        await act(async () => {
+            const firstCall = result.current.updateRow('row-1', { qty: 20 });
+            const secondCall = result.current.updateRow('row-1', { qty: 30 });
+            await secondCall;
+
+            resolvePatch({ ...mockRow, qty: 20, amount: 2000 });
+            await firstCall;
+        });
+
+        expect(globalPurchasesActionRepo.patch).toHaveBeenCalledTimes(1);
+        expect(result.current.rows[0].qty).toBe(20);
+    });
+
     it('rolls back specific row on failure without affecting others', async () => {
         const row2 = { ...mockRow, id: 'row-2', materialName: 'Stone' };
         const { result } = renderHook(() => useGlobalPurchasesTable([mockRow, row2], { from: '2023-10-27', to: '2023-10-27' }));
