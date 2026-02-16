@@ -1,7 +1,11 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { MaterialCatalogPicker } from '@/features/catalog/components/MaterialCatalogPicker.client';
+
+afterEach(() => {
+    cleanup();
+});
 
 const catalogRepositoryMocks = vi.hoisted(() => ({
     searchMaterials: vi.fn(),
@@ -122,5 +126,27 @@ describe('MaterialCatalogPicker', () => {
         }
 
         expect(icon).toHaveClass('lucide-check');
+    });
+
+    it('toggles category tree on mobile and collapses after category selection', async () => {
+        catalogRepositoryMocks.getMaterialCategories.mockResolvedValue(['Крепеж']);
+
+        render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
+
+        expect(screen.getByTestId('material-categories-panel').className).toContain('hidden');
+
+        fireEvent.click(screen.getByTestId('material-categories-toggle'));
+
+        await waitFor(() => {
+            expect(screen.getByTestId('material-categories-panel').className).toContain('block');
+        });
+
+        const categoryButton = await screen.findByRole('button', { name: 'Крепеж' });
+        fireEvent.click(categoryButton);
+
+        await waitFor(() => {
+            expect(screen.getByTestId('material-categories-panel').className).toContain('hidden');
+            expect(screen.getByRole('button', { name: /Категории: Крепеж/i })).toBeInTheDocument();
+        });
     });
 });
