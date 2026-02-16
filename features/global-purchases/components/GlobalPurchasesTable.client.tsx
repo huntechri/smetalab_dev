@@ -31,7 +31,7 @@ const toDate = (value: string) => {
 
 export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [defaultProjectId] = useState<string | null>(null);
+    const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const { toast } = useToast();
@@ -160,7 +160,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 height="580px"
                 actions={(
                     <div className="flex flex-wrap items-center gap-2">
-
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums">

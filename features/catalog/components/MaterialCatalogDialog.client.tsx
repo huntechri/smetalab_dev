@@ -41,12 +41,12 @@ export function MaterialCatalogDialog({
                 onClose();
             }
         }}>
-            <DialogContent className="w-[96vw] max-w-[1800px] h-[86vh] p-0 flex flex-col gap-0">
-                <DialogHeader className="p-6 border-b">
-                    <DialogTitle className="text-xl">
+            <DialogContent className="h-[100dvh] w-screen max-w-[1260px] rounded-none p-0 flex flex-col gap-0 sm:h-[86vh] sm:w-[96vw] sm:max-w-[1260px] sm:rounded-lg">
+                <DialogHeader className="border-b p-4 sm:p-6">
+                    <DialogTitle className="pr-8 text-base leading-tight sm:text-xl">
                         {isReplaceMode ? `Заменить материал: ${parentWorkName}` : `Добавить материал в: ${parentWorkName}`}
                     </DialogTitle>
-                    <DialogDescription>
+                    <DialogDescription className="text-xs sm:text-sm">
                         {isReplaceMode
                             ? 'Выберите новую позицию из справочника материалов для замены текущей строки.'
                             : 'Выберите позицию из справочника материалов, чтобы добавить её к выбранной работе.'}

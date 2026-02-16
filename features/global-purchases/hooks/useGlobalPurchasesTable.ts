@@ -6,24 +6,43 @@ import { patchPurchaseRow } from '../lib/rows';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
 
+const sortRowsByProjectId = (rows: PurchaseRow[]) => [...rows].sort((a, b) => {
+    const aProject = a.projectId;
+    const bProject = b.projectId;
+
+    if (!aProject && !bProject) {
+        return a.id.localeCompare(b.id, 'ru');
+    }
+
+    if (!aProject) {
+        return 1;
+    }
+
+    if (!bProject) {
+        return -1;
+    }
+
+    return aProject.localeCompare(bProject, 'ru');
+});
+
 export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange: PurchaseRowsRange) {
-    const [rows, setRows] = useState<PurchaseRow[]>(initialRows);
+    const [rows, setRows] = useState<PurchaseRow[]>(() => sortRowsByProjectId(initialRows));
     const [range, setRange] = useState<PurchaseRowsRange>(initialRange);
 
     const reloadRows = useCallback(async (nextRange: PurchaseRowsRange) => {
         const loadedRows = await globalPurchasesActionRepo.list(nextRange);
-        setRows(loadedRows);
+        setRows(sortRowsByProjectId(loadedRows));
     }, []);
 
     const addManualRow = useCallback(async (projectId: string | null) => {
         const created = await globalPurchasesActionRepo.addManual(projectId, range.from);
-        setRows((prev) => [created, ...prev]);
+        setRows((prev) => sortRowsByProjectId([...prev, created]));
         return created;
     }, [range.from]);
 
     const addCatalogRow = useCallback(async (material: CatalogMaterial, projectId: string | null) => {
         const created = await globalPurchasesActionRepo.addFromCatalog(material, projectId, range.from);
-        setRows((prev) => [created, ...prev]);
+        setRows((prev) => sortRowsByProjectId([...prev, created]));
         return created;
     }, [range.from]);
 
@@ -46,7 +65,7 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
 
         try {
             const updated = await globalPurchasesActionRepo.patch(rowId, patch);
-            setRows((current) => current.map((row) => (row.id === rowId ? updated : row)));
+            setRows((current) => sortRowsByProjectId(current.map((row) => (row.id === rowId ? updated : row))));
         } catch (serviceError) {
             setRows((current) => current.map((row) => (row.id === rowId && prevRow ? prevRow : row)));
             throw serviceError;
