@@ -40,9 +40,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next\\dev/types/**/*.ts",
-    ".next/dev/types/**/*.ts"
+    ".next/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -53,6 +51,12 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "vitest.config.ts",
-    "vitest.setup.ts"
+    "vitest.setup.ts",
+    "playwright.config.ts",
+    "drizzle.config.mts",
+    "drizzle.config.test.mts",
+    "commitlint.config.mjs",
+    "eslint.config.mjs",
+    "postcss.config.mjs"
   ]
 }
