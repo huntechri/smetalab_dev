@@ -37,6 +37,7 @@ describe('MaterialCatalogDialog', () => {
 
         expect(screen.getByTestId('dialog-content').className).toContain('h-[100dvh]');
         expect(screen.getByTestId('dialog-content').className).toContain('sm:h-[86vh]');
+        expect(screen.getByTestId('dialog-content').className).toContain('sm:max-w-[1800px]');
         expect(screen.getByTestId('dialog-content').className).toContain('rounded-none');
         expect(screen.getByTestId('dialog-header').className).toContain('p-4');
         expect(screen.getByText(/Добавить материал в:/i).className).toContain('text-base');
