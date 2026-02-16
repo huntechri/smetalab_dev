@@ -11,7 +11,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange } from '../types/dto';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
@@ -31,7 +31,7 @@ const toDate = (value: string) => {
 
 export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [defaultProjectId, setDefaultProjectId] = useState<string | null>(projectOptions[0]?.id ?? null);
+    const [defaultProjectId] = useState<string | null>(null);
     const [isAddingManual, setIsAddingManual] = useState(false);
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const { toast } = useToast();
@@ -159,21 +159,11 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 filterPlaceholder="Поиск по материалам..."
                 height="580px"
                 actions={(
-                    <div className="flex items-center gap-2">
-                        <Select value={defaultProjectId ?? 'none'} onValueChange={(value) => setDefaultProjectId(value === 'none' ? null : value)}>
-                            <SelectTrigger className="h-8 w-56">
-                                <SelectValue placeholder="Объект по умолчанию" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="none">Без привязки</SelectItem>
-                                {projectOptions.map((project) => (
-                                    <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
+                    <div className="flex flex-wrap items-center gap-2">
+
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-[255px] justify-between font-mono tabular-nums">
+                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums">
                                     <CalendarDays className="size-4" />
                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
                                 </Button>
@@ -192,23 +182,23 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             type="button"
                             variant="outline"
                             size="sm"
-                            className="h-8 gap-1.5"
+                            className="h-8 gap-1.5 w-full sm:w-auto"
                             onClick={() => void handleAddManualRow()}
                             disabled={isAddingManual}
                         >
                             <Plus className="size-4" />
-                            Строка вручную
+                            <span className="truncate">Строка вручную</span>
                         </Button>
                         <Button
                             type="button"
                             variant="outline"
                             size="sm"
-                            className="h-8 gap-1.5"
+                            className="h-8 gap-1.5 w-full sm:w-auto"
                             onClick={() => setIsCatalogOpen(true)}
                             disabled={isAddingCatalog}
                         >
                             <BookOpen className="size-4" />
-                            Из справочника
+                            <span className="truncate">Из справочника</span>
                         </Button>
                     </div>
                 )}
