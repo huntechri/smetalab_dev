@@ -114,6 +114,8 @@ export class CatalogService {
             price: typeof material.price === 'number' ? material.price : Number(material.price ?? 0) || 0,
             categoryLv1: material.categoryLv1 || '',
             categoryLv2: material.categoryLv2 || '',
+            categoryLv3: material.categoryLv3 || '',
+            categoryLv4: material.categoryLv4 || '',
             imageUrl: material.imageUrl,
         }));
 

@@ -112,6 +112,8 @@ describe('CatalogService', () => {
                 price: '6400',
                 categoryLv1: 'Бетон',
                 categoryLv2: 'Товарный',
+                categoryLv3: '',
+                categoryLv4: '',
                 imageUrl: 'https://example.com/m300.jpg',
             }],
         });
@@ -129,6 +131,8 @@ describe('CatalogService', () => {
                 price: 6400,
                 categoryLv1: 'Бетон',
                 categoryLv2: 'Товарный',
+                categoryLv3: '',
+                categoryLv4: '',
                 imageUrl: 'https://example.com/m300.jpg',
             });
         }

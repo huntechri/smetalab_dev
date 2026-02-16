@@ -33,7 +33,7 @@ describe('MaterialCatalogPicker', () => {
         render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false, 500);
         });
 
         const input = screen.getByPlaceholderText('Поиск по названию или коду...');
@@ -41,7 +41,7 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', false);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', false, 500);
         });
 
         fireEvent.click(screen.getByRole('checkbox'));
@@ -53,7 +53,7 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(screen.getByPlaceholderText('Опишите, что нужно найти...'), { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', true);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', true, 500);
         });
     });
 
@@ -66,14 +66,14 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка', 'all', false);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка', 'all', false, 500);
         });
 
         fireEvent.change(input, { target: { value: 'шпаклевка' } });
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false, 500);
         });
     });
 
@@ -83,7 +83,12 @@ describe('MaterialCatalogPicker', () => {
             name: 'Тестовый материал',
             price: 100,
             unit: 'кг',
-            category: 'test'
+            code: 'M-1',
+            categoryLv1: 'test',
+            categoryLv2: 'sub',
+            categoryLv3: 'sub2',
+            categoryLv4: 'sub3',
+            imageUrl: null,
         };
         catalogRepositoryMocks.searchMaterials.mockResolvedValue([mockMaterial]);
 

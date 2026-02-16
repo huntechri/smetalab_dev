@@ -31,11 +31,14 @@ const defaultCategorySelection: MaterialCategorySelection = {
     lv4: null,
 };
 
+const sortRu = (a: string, b: string) => a.localeCompare(b, 'ru');
+
 export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new Set(), allowDuplicateSelection = false }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const [isAiMode, setIsAiMode] = useState(false);
     const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({ query: '', isAiMode: false });
     const [materials, setMaterials] = useState<CatalogMaterial[]>([]);
+    const [allCategories, setAllCategories] = useState<string[]>([]);
     const [loading, setLoading] = useState(true);
     const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
     const [selectedCategory, setSelectedCategory] = useState<MaterialCategorySelection>(defaultCategorySelection);
@@ -44,10 +47,33 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
     useEffect(() => {
         let isCancelled = false;
 
+        const fetchCategories = async () => {
+            const loaded = await catalogRepository.getMaterialCategories();
+            if (!isCancelled) {
+                setAllCategories(loaded.sort(sortRu));
+            }
+        };
+
+        void fetchCategories();
+
+        return () => {
+            isCancelled = true;
+        };
+    }, []);
+
+    useEffect(() => {
+        let isCancelled = false;
+
         const fetchData = async () => {
             setLoading(true);
             try {
-                const results = await catalogRepository.searchMaterials(searchCriteria.query, 'all', searchCriteria.isAiMode);
+                const results = await catalogRepository.searchMaterials(
+                    searchCriteria.query,
+                    selectedCategory.lv1 ?? 'all',
+                    searchCriteria.isAiMode,
+                    500,
+                );
+
                 if (isCancelled) {
                     return;
                 }
@@ -66,7 +92,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
         return () => {
             isCancelled = true;
         };
-    }, [searchCriteria]);
+    }, [searchCriteria, selectedCategory.lv1]);
 
     const submitSearch = () => {
         setSearchCriteria({
@@ -90,10 +116,16 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
     };
 
     const categoryTree = useMemo(() => buildMaterialCategoryTree(materials), [materials]);
+    const categoryTreeMap = useMemo(() => new Map(categoryTree.map((node) => [node.name, node])), [categoryTree]);
+
+    const categoryLv1Items = useMemo(
+        () => Array.from(new Set([...allCategories, ...categoryTree.map((node) => node.name)])).sort(sortRu),
+        [allCategories, categoryTree],
+    );
 
     const filteredMaterials = useMemo(() => filterMaterialsByCategoryPath(materials, selectedCategory), [materials, selectedCategory]);
-
     const priceFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }), []);
+
 
     return (
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden">
@@ -105,7 +137,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                             placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
                             className={cn(
                                 'pl-9 h-10 bg-muted/30 focus-visible:ring-primary/20 transition-all border-none',
-                                isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]'
+                                isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]',
                             )}
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -123,7 +155,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     <div className="flex items-center gap-2 px-1">
                         <div className={cn(
                             'flex items-center justify-center h-8 w-8 rounded-full transition-all duration-300',
-                            isAiMode ? 'bg-primary/10 text-primary animate-pulse' : 'bg-muted text-muted-foreground'
+                            isAiMode ? 'bg-primary/10 text-primary animate-pulse' : 'bg-muted text-muted-foreground',
                         )}>
                             <Sparkles className="h-4 w-4" />
                         </div>
@@ -136,8 +168,8 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                 </div>
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-[320px_1fr] overflow-hidden">
-                <div className="border-r bg-muted/20 min-h-0">
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] overflow-hidden">
+                <div className="border-b lg:border-b-0 lg:border-r bg-muted/20 min-h-0 max-h-64 lg:max-h-none">
                     <div className="px-3 py-2 border-b text-xs font-medium text-muted-foreground">Категории материалов L1–L4</div>
                     <ScrollArea className="h-full">
                         <div className="p-2 space-y-1">
@@ -150,57 +182,61 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                 Все категории
                             </Button>
 
-                            {categoryTree.map((lv1) => (
-                                <div key={lv1.name} className="space-y-1">
-                                    <Button
-                                        variant={selectedCategory.lv1 === lv1.name && selectedCategory.lv2 === null ? 'secondary' : 'ghost'}
-                                        size="sm"
-                                        className="w-full justify-start"
-                                        onClick={() => setSelectedCategory({ lv1: lv1.name, lv2: null, lv3: null, lv4: null })}
-                                    >
-                                        {lv1.name}
-                                    </Button>
+                            {categoryLv1Items.map((lv1) => {
+                                const lv1Node = categoryTreeMap.get(lv1);
 
-                                    {selectedCategory.lv1 === lv1.name && lv1.children.map((lv2) => (
-                                        <div key={`${lv1.name}-${lv2.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
-                                            <Button
-                                                variant={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null ? 'secondary' : 'ghost'}
-                                                size="sm"
-                                                className="w-full justify-start"
-                                                onClick={() => setSelectedCategory({ lv1: lv1.name, lv2: lv2.name, lv3: null, lv4: null })}
-                                            >
-                                                {lv2.name}
-                                            </Button>
+                                return (
+                                    <div key={lv1} className="space-y-1">
+                                        <Button
+                                            variant={selectedCategory.lv1 === lv1 && selectedCategory.lv2 === null ? 'secondary' : 'ghost'}
+                                            size="sm"
+                                            className="w-full justify-start"
+                                            onClick={() => setSelectedCategory({ lv1, lv2: null, lv3: null, lv4: null })}
+                                        >
+                                            {lv1}
+                                        </Button>
 
-                                            {selectedCategory.lv2 === lv2.name && lv2.children.map((lv3) => (
-                                                <div key={`${lv1.name}-${lv2.name}-${lv3.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
-                                                    <Button
-                                                        variant={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null ? 'secondary' : 'ghost'}
-                                                        size="sm"
-                                                        className="w-full justify-start"
-                                                        onClick={() => setSelectedCategory({ lv1: lv1.name, lv2: lv2.name, lv3: lv3.name, lv4: null })}
-                                                    >
-                                                        {lv3.name}
-                                                    </Button>
+                                        {selectedCategory.lv1 === lv1 && lv1Node?.children.map((lv2) => (
+                                            <div key={`${lv1}-${lv2.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
+                                                <Button
+                                                    variant={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null ? 'secondary' : 'ghost'}
+                                                    size="sm"
+                                                    className="w-full justify-start"
+                                                    onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: null, lv4: null })}
+                                                >
+                                                    {lv2.name}
+                                                </Button>
 
-                                                    {selectedCategory.lv3 === lv3.name && lv3.children.map((lv4) => (
-                                                        <div key={`${lv1.name}-${lv2.name}-${lv3.name}-${lv4.name}`} className="pl-3 border-l border-border/60 ml-2">
-                                                            <Button
-                                                                variant={selectedCategory.lv4 === lv4.name ? 'secondary' : 'ghost'}
-                                                                size="sm"
-                                                                className="w-full justify-start"
-                                                                onClick={() => setSelectedCategory({ lv1: lv1.name, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
-                                                            >
-                                                                {lv4.name}
-                                                            </Button>
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
-                            ))}
+                                                {selectedCategory.lv2 === lv2.name && lv2.children.map((lv3) => (
+                                                    <div key={`${lv1}-${lv2.name}-${lv3.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
+                                                        <Button
+                                                            variant={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null ? 'secondary' : 'ghost'}
+                                                            size="sm"
+                                                            className="w-full justify-start"
+                                                            onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: null })}
+                                                        >
+                                                            {lv3.name}
+                                                        </Button>
+
+                                                        {selectedCategory.lv3 === lv3.name && lv3.children.map((lv4) => (
+                                                            <div key={`${lv1}-${lv2.name}-${lv3.name}-${lv4.name}`} className="pl-3 border-l border-border/60 ml-2">
+                                                                <Button
+                                                                    variant={selectedCategory.lv4 === lv4.name ? 'secondary' : 'ghost'}
+                                                                    size="sm"
+                                                                    className="w-full justify-start"
+                                                                    onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
+                                                                >
+                                                                    {lv4.name}
+                                                                </Button>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </div>
+                                );
+                            })}
                         </div>
                     </ScrollArea>
                 </div>
@@ -251,7 +287,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                             {material.code}
                                                         </span>
                                                         {material.categoryLv1 && (
-                                                            <span className="text-[9px] text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[80px] sm:max-w-[120px] leading-none">
+                                                            <span className="text-[9px] text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[120px] leading-none">
                                                                 {material.categoryLv1}
                                                             </span>
                                                         )}
@@ -276,7 +312,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                         'h-7 w-7 rounded-full border-border/50 transition-all shrink-0 active:scale-90',
                                                         isAlreadyAdded
                                                             ? 'bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default'
-                                                            : 'hover:bg-primary hover:text-primary-foreground hover:border-primary'
+                                                            : 'hover:bg-primary hover:text-primary-foreground hover:border-primary',
                                                     )}
                                                     onClick={() => void addMaterial(material)}
                                                 >
@@ -292,7 +328,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                     <div className="py-6 text-center text-xs text-muted-foreground opacity-50">
                                         Отображено {filteredMaterials.length} материалов
                                     </div>
-                                )
+                                ),
                             }}
                         />
                     )}
