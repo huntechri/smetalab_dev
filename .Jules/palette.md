@@ -5,3 +5,7 @@
 ## 2025-05-20 - Disabled Button Tooltips
 **Learning:** Disabled buttons (with `disabled` attribute) swallow pointer events in React/browsers, preventing tooltips from triggering.
 **Action:** Wrap disabled buttons in a `span` with `tabIndex={0}` and `className="block"` to ensure the tooltip trigger works for both mouse and keyboard users.
+
+## 2025-05-23 - Empty State Distinction
+**Learning:** Generic "Not Found" messages confuse users between "no data exists" (onboarding needed) and "no results found" (filtering issue).
+**Action:** Pass `totalCount` alongside filtered data to lists. Show "Create New" CTA for totalCount=0, and "Clear Filters" advice for filteredCount=0.
