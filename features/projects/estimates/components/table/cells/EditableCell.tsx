@@ -11,10 +11,12 @@ export function EditableCell({
     align = 'left',
     clearOnFocus = false,
     cancelOnEmpty = false,
+    displayValue,
 }: {
     value: string | number;
+    displayValue?: string;
     onCommit: (value: string) => Promise<void>;
-    type?: 'text' | 'number';
+    type?: 'text' | 'number' | 'date';
     disabled?: boolean;
     align?: 'left' | 'right' | 'center';
     clearOnFocus?: boolean;
@@ -44,7 +46,7 @@ export function EditableCell({
     if (!editing) {
         return (
             <button
-                className={`w-full hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-[1.25rem] ${alignmentClass}`}
+                className={`w-full hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 ${alignmentClass}`}
                 disabled={disabled}
                 onClick={() => {
                     wasClearedOnFocus.current = false;
@@ -52,7 +54,7 @@ export function EditableCell({
                     setEditing(true);
                 }}
             >
-                {String(value)}
+                {displayValue ?? String(value)}
             </button>
         );
     }

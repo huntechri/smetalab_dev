@@ -21,7 +21,11 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                 <div className="min-w-0 space-y-1 text-xs text-muted-foreground">
                     <p className="truncate">{project.customerName}</p>
                     <p className="truncate">{formatProjectCurrency(project.contractAmount)}</p>
-                    <p className="truncate">{`${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`}</p>
+                    {(project.startDate || project.endDate) && (
+                        <p className="truncate">
+                            {`${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`}
+                        </p>
+                    )}
                 </div>
                 <div
                     role="progressbar"

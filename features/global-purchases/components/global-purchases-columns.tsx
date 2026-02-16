@@ -66,6 +66,28 @@ export function getGlobalPurchasesColumns({
             ),
         },
         {
+            accessorKey: 'purchaseDate',
+            header: 'Дата',
+            size: 125,
+            minSize: 115,
+            cell: ({ row }) => {
+                // Преобразуем YYYY-MM-DD в более читаемый формат при отображении
+                const date = new Date(row.original.purchaseDate);
+                const displayValue = !isNaN(date.getTime())
+                    ? date.toLocaleDateString('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                    : row.original.purchaseDate;
+
+                return (
+                    <EditableCell
+                        type="date"
+                        value={row.original.purchaseDate}
+                        displayValue={displayValue}
+                        onCommit={(value) => onPatch(row.original.id, { purchaseDate: value })}
+                    />
+                );
+            }
+        },
+        {
             accessorKey: 'materialName',
             header: 'Наименование материала',
             size: 460,

@@ -134,6 +134,13 @@
       "when": 1771300000000,
       "tag": "0018_global_purchases",
       "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1771300000001,
+      "tag": "0019_global_purchases_schedule_project_id",
+      "breakpoints": true
     }
   ]
 }
