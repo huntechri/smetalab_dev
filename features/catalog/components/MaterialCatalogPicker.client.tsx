@@ -32,6 +32,8 @@ const defaultCategorySelection: MaterialCategorySelection = {
 };
 
 const sortRu = (a: string, b: string) => a.localeCompare(b, 'ru');
+const CATEGORY_BROWSE_LIMIT = 5000;
+const QUERY_SEARCH_LIMIT = 500;
 
 export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new Set(), allowDuplicateSelection = false }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');
@@ -68,11 +70,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
         const fetchData = async () => {
             setLoading(true);
             try {
+                const hasQuery = searchCriteria.query.trim().length > 0;
+                const limit = hasQuery ? QUERY_SEARCH_LIMIT : CATEGORY_BROWSE_LIMIT;
                 const results = await catalogRepository.searchMaterials(
                     searchCriteria.query,
                     selectedCategory.lv1 ?? 'all',
                     searchCriteria.isAiMode,
-                    500,
+                    limit,
                 );
 
                 if (isCancelled) {
