@@ -136,7 +136,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                 </div>
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-[280px_1fr] overflow-hidden">
+            <div className="flex-1 min-h-0 grid grid-cols-[320px_1fr] overflow-hidden">
                 <div className="border-r bg-muted/20 min-h-0">
                     <div className="px-3 py-2 border-b text-xs font-medium text-muted-foreground">Категории материалов L1–L4</div>
                     <ScrollArea className="h-full">
@@ -229,20 +229,20 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
                                 return (
                                     <div className="px-2 py-0.5">
-                                        <div className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 transition-all border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden">
+                                        <div className="group relative flex items-center justify-between gap-3 p-2.5 sm:p-3.5 rounded-lg hover:bg-muted/50 transition-all border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden">
                                             <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                                <div className="relative hidden xs:flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-muted">
+                                                <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/50 bg-muted">
                                                     {material.imageUrl ? (
                                                         <Image
                                                             src={material.imageUrl}
                                                             alt={material.name}
                                                             fill
                                                             unoptimized
-                                                            sizes="40px"
+                                                            sizes="56px"
                                                             className="object-cover"
                                                         />
                                                     ) : (
-                                                        <ImageOff className="h-4 w-4 text-muted-foreground/70" />
+                                                        <ImageOff className="h-5 w-5 text-muted-foreground/70" />
                                                     )}
                                                 </div>
                                                 <div className="space-y-0.5 min-w-0 flex-1">
