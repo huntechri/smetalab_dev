@@ -22,7 +22,11 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                         <p className="truncate text-xs text-muted-foreground">{project.customerName}</p>
                     </div>
                     <p className="truncate text-xs text-muted-foreground">{formatProjectCurrency(project.contractAmount)}</p>
-                    <p className="truncate text-xs text-muted-foreground">{`${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`}</p>
+                    <p className="truncate text-xs text-muted-foreground">
+                        {project.startDate || project.endDate
+                            ? `${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`
+                            : 'Сроки не указаны'}
+                    </p>
                     <div
                         role="progressbar"
                         aria-valuenow={project.progress}
