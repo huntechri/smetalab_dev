@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Check, FolderOpen, ImageOff, Plus, Search, Sparkles } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Search, Sparkles } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -42,6 +42,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
     const [loading, setLoading] = useState(true);
     const [addingIds, setAddingIds] = useState<Set<string>>(new Set());
     const [selectedCategory, setSelectedCategory] = useState<MaterialCategorySelection>(defaultCategorySelection);
+    const [isCategoryPanelOpen, setIsCategoryPanelOpen] = useState(false);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
 
     useEffect(() => {
@@ -125,6 +126,15 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
     const filteredMaterials = useMemo(() => filterMaterialsByCategoryPath(materials, selectedCategory), [materials, selectedCategory]);
     const priceFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }), []);
+    const selectedCategoryLabel = useMemo(() => {
+        const labels = [selectedCategory.lv1, selectedCategory.lv2, selectedCategory.lv3, selectedCategory.lv4].filter(Boolean);
+        return labels.length > 0 ? labels.join(' / ') : 'Все категории';
+    }, [selectedCategory]);
+
+    const applyCategorySelection = (nextSelection: MaterialCategorySelection) => {
+        setSelectedCategory(nextSelection);
+        setIsCategoryPanelOpen(false);
+    };
 
 
     return (
@@ -168,8 +178,25 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                 </div>
             </div>
 
+            <div className="border-b px-3 py-2 lg:hidden">
+                <Button
+                    data-testid="material-categories-toggle"
+                    type="button"
+                    variant="outline"
+                    className="h-8 w-full justify-between"
+                    onClick={() => setIsCategoryPanelOpen((prev) => !prev)}
+                >
+                    <span className="truncate text-xs">Категории: {selectedCategoryLabel}</span>
+                    {isCategoryPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                </Button>
+            </div>
+
             <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] overflow-hidden">
-                <div className="border-b lg:border-b-0 lg:border-r bg-muted/20 min-h-0 max-h-64 lg:max-h-none">
+                <div data-testid="material-categories-panel" className={cn(
+                    'border-b bg-muted/20 min-h-0 max-h-64 lg:max-h-none lg:border-b-0 lg:border-r',
+                    isCategoryPanelOpen ? 'block' : 'hidden',
+                    'lg:block',
+                )}>
                     <div className="px-3 py-2 border-b text-xs font-medium text-muted-foreground">Категории материалов L1–L4</div>
                     <ScrollArea className="h-full">
                         <div className="p-2 space-y-1">
@@ -177,7 +204,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                 variant={selectedCategory.lv1 === null ? 'secondary' : 'ghost'}
                                 size="sm"
                                 className="w-full justify-start"
-                                onClick={() => setSelectedCategory(defaultCategorySelection)}
+                                onClick={() => applyCategorySelection(defaultCategorySelection)}
                             >
                                 Все категории
                             </Button>
@@ -191,7 +218,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                             variant={selectedCategory.lv1 === lv1 && selectedCategory.lv2 === null ? 'secondary' : 'ghost'}
                                             size="sm"
                                             className="w-full justify-start"
-                                            onClick={() => setSelectedCategory({ lv1, lv2: null, lv3: null, lv4: null })}
+                                            onClick={() => applyCategorySelection({ lv1, lv2: null, lv3: null, lv4: null })}
                                         >
                                             {lv1}
                                         </Button>
@@ -202,7 +229,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     variant={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null ? 'secondary' : 'ghost'}
                                                     size="sm"
                                                     className="w-full justify-start"
-                                                    onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: null, lv4: null })}
+                                                    onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: null, lv4: null })}
                                                 >
                                                     {lv2.name}
                                                 </Button>
@@ -213,7 +240,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                             variant={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null ? 'secondary' : 'ghost'}
                                                             size="sm"
                                                             className="w-full justify-start"
-                                                            onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: null })}
+                                                            onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: null })}
                                                         >
                                                             {lv3.name}
                                                         </Button>
@@ -224,7 +251,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                                     variant={selectedCategory.lv4 === lv4.name ? 'secondary' : 'ghost'}
                                                                     size="sm"
                                                                     className="w-full justify-start"
-                                                                    onClick={() => setSelectedCategory({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
+                                                                    onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
                                                                 >
                                                                     {lv4.name}
                                                                 </Button>
