@@ -20,6 +20,8 @@ export const catalogMaterialSchema = z.object({
     price: z.number(),
     categoryLv1: z.string().optional(),
     categoryLv2: z.string().optional(),
+    categoryLv3: z.string().optional(),
+    categoryLv4: z.string().optional(),
     imageUrl: z.string().nullable().optional(),
 });
 

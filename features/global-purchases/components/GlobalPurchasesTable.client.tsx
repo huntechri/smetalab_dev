@@ -92,7 +92,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
         try {
             setIsAddingCatalog(true);
             await addCatalogRow(material, defaultProjectId);
-            setIsCatalogOpen(false);
             toast({ title: 'Материал добавлен', description: material.name });
         } catch {
             toast({
@@ -174,7 +173,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                         </Select>
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5">
+                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-[255px] justify-between font-mono tabular-nums">
                                     <CalendarDays className="size-4" />
                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
                                 </Button>
@@ -228,6 +227,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 onSelect={handleCatalogSelect}
                 parentWorkName={projectOptions.find((project) => project.id === defaultProjectId)?.name || 'Глобальные закупки'}
                 addedMaterialNames={addedMaterialNames}
+                closeOnSelect={false}
+                allowDuplicateSelection
             />
         </div>
     );
