@@ -1,14 +1,21 @@
-import { and, asc, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, between, eq, isNull, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { globalPurchases } from '@/lib/data/db/schema';
+import { globalPurchases, projects } from '@/lib/data/db/schema';
 import { error, Result, success } from '@/lib/utils/result';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
 const nonNegative = z.number().finite().min(0);
+const isoDateSchema = z.string().date();
+
+const listSchema = z.object({
+    from: isoDateSchema,
+    to: isoDateSchema,
+});
 
 const createSchema = z.object({
+    projectId: z.string().uuid().nullable().optional(),
     projectName: z.string().trim().max(160).default(''),
     materialName: z.string().trim().max(240).default(''),
     unit: z.string().trim().max(20).default('шт'),
@@ -16,22 +23,30 @@ const createSchema = z.object({
     price: nonNegative.default(0),
     note: z.string().trim().max(500).default(''),
     source: z.enum(['manual', 'catalog']).default('manual'),
+    purchaseDate: isoDateSchema.optional(),
 });
 
 const patchSchema = z.object({
-    projectName: z.string().trim().max(160).optional(),
+    projectId: z.string().uuid().nullable().optional(),
     materialName: z.string().trim().max(240).optional(),
     unit: z.string().trim().max(20).optional(),
     qty: nonNegative.optional(),
     price: nonNegative.optional(),
     note: z.string().trim().max(500).optional(),
+    purchaseDate: isoDateSchema.optional(),
+});
+
+const copyDaySchema = z.object({
+    sourceDate: isoDateSchema,
+    targetDate: isoDateSchema,
 });
 
 const calculateAmount = (qty: number, price: number) => Math.round((qty * price + Number.EPSILON) * 100) / 100;
 
-const toRow = (row: typeof globalPurchases.$inferSelect): PurchaseRow => ({
+const toRow = (row: typeof globalPurchases.$inferSelect, projectName: string | null): PurchaseRow => ({
     id: row.id,
-    projectName: row.projectName,
+    projectId: row.projectId,
+    projectName: projectName ?? row.projectName,
     materialName: row.materialName,
     unit: row.unit,
     qty: row.qty,
@@ -39,17 +54,39 @@ const toRow = (row: typeof globalPurchases.$inferSelect): PurchaseRow => ({
     amount: row.amount,
     note: row.note,
     source: row.source,
+    purchaseDate: row.purchaseDate,
+});
+
+const resolveProject = async (teamId: number, projectId: string) => db.query.projects.findFirst({
+    where: and(eq(projects.id, projectId), withActiveTenant(projects, teamId)),
+    columns: {
+        id: true,
+        name: true,
+    },
 });
 
 export class GlobalPurchasesService {
-    static async list(teamId: number): Promise<Result<PurchaseRow[]>> {
-        try {
-            const rows = await db.query.globalPurchases.findMany({
-                where: withActiveTenant(globalPurchases, teamId),
-                orderBy: [asc(globalPurchases.order), asc(globalPurchases.createdAt)],
-            });
+    static async list(teamId: number, rawFilters: unknown): Promise<Result<PurchaseRow[]>> {
+        const parsed = listSchema.safeParse(rawFilters);
+        if (!parsed.success) {
+            return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+        }
 
-            return success(rows.map(toRow));
+        try {
+            const rows = await db
+                .select({
+                    row: globalPurchases,
+                    projectName: projects.name,
+                })
+                .from(globalPurchases)
+                .leftJoin(projects, and(eq(globalPurchases.projectId, projects.id), withActiveTenant(projects, teamId)))
+                .where(and(
+                    withActiveTenant(globalPurchases, teamId),
+                    between(globalPurchases.purchaseDate, parsed.data.from, parsed.data.to),
+                ))
+                .orderBy(asc(globalPurchases.purchaseDate), asc(globalPurchases.order), asc(globalPurchases.createdAt));
+
+            return success(rows.map(({ row, projectName }) => toRow(row, projectName)));
         } catch (serviceError) {
             console.error('GlobalPurchasesService.list error', serviceError);
             return error('Не удалось загрузить закупки');
@@ -64,15 +101,23 @@ export class GlobalPurchasesService {
 
         try {
             const created = await db.transaction(async (tx) => {
+                const payload = parsed.data;
+                const purchaseDate = payload.purchaseDate ?? new Date().toISOString().slice(0, 10);
+
                 const [{ maxOrder }] = await tx
                     .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
                     .from(globalPurchases)
-                    .where(withActiveTenant(globalPurchases, teamId));
+                    .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, purchaseDate)));
 
-                const payload = parsed.data;
+                const project = payload.projectId ? await resolveProject(teamId, payload.projectId) : null;
+                if (payload.projectId && !project) {
+                    throw new Error('PROJECT_NOT_FOUND');
+                }
+
                 const [row] = await tx.insert(globalPurchases).values({
                     tenantId: teamId,
-                    projectName: payload.projectName,
+                    projectId: project?.id ?? null,
+                    projectName: project?.name ?? payload.projectName,
                     materialName: payload.materialName,
                     unit: payload.unit,
                     qty: payload.qty,
@@ -80,14 +125,22 @@ export class GlobalPurchasesService {
                     amount: calculateAmount(payload.qty, payload.price),
                     note: payload.note,
                     source: payload.source,
+                    purchaseDate,
                     order: maxOrder + 1,
                 }).returning();
 
-                return row;
+                return {
+                    row,
+                    projectName: project?.name ?? null,
+                };
             });
 
-            return success(toRow(created));
+            return success(toRow(created.row, created.projectName));
         } catch (serviceError) {
+            if (serviceError instanceof Error && serviceError.message === 'PROJECT_NOT_FOUND') {
+                return error('Проект не найден', 'NOT_FOUND');
+            }
+
             console.error('GlobalPurchasesService.create error', serviceError);
             return error('Не удалось создать строку закупки');
         }
@@ -112,9 +165,19 @@ export class GlobalPurchasesService {
             const nextQty = patch.qty ?? existing.qty;
             const nextPrice = patch.price ?? existing.price;
 
+            const project = patch.projectId ? await resolveProject(teamId, patch.projectId) : null;
+            if (patch.projectId && !project) {
+                return error('Проект не найден', 'NOT_FOUND');
+            }
+
             const [updated] = await db.update(globalPurchases)
                 .set({
-                    ...patch,
+                    materialName: patch.materialName,
+                    unit: patch.unit,
+                    note: patch.note,
+                    purchaseDate: patch.purchaseDate,
+                    projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
+                    projectName: project?.name ?? existing.projectName,
                     qty: nextQty,
                     price: nextPrice,
                     amount: calculateAmount(nextQty, nextPrice),
@@ -123,10 +186,69 @@ export class GlobalPurchasesService {
                 .where(and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)))
                 .returning();
 
-            return success(toRow(updated));
+            const resolvedProject = updated.projectId ? await resolveProject(teamId, updated.projectId) : null;
+
+            return success(toRow(updated, resolvedProject?.name ?? null));
         } catch (serviceError) {
             console.error('GlobalPurchasesService.patch error', serviceError);
             return error('Не удалось обновить строку закупки');
+        }
+    }
+
+    static async createNextDayList(teamId: number, rawPayload: unknown): Promise<Result<{ createdRows: number }>> {
+        const parsed = copyDaySchema.safeParse(rawPayload);
+        if (!parsed.success) {
+            return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+        }
+
+        const { sourceDate, targetDate } = parsed.data;
+
+        try {
+            const createdRows = await db.transaction(async (tx) => {
+                const sourceRows = await tx.query.globalPurchases.findMany({
+                    where: and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, sourceDate)),
+                    orderBy: [asc(globalPurchases.order), asc(globalPurchases.createdAt)],
+                });
+
+                if (sourceRows.length === 0) {
+                    return 0;
+                }
+
+                const targetExisting = await tx.query.globalPurchases.findFirst({
+                    where: and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, targetDate)),
+                    columns: { id: true },
+                });
+
+                if (targetExisting) {
+                    throw new Error('TARGET_EXISTS');
+                }
+
+                await tx.insert(globalPurchases).values(sourceRows.map((row, index) => ({
+                    tenantId: teamId,
+                    projectId: row.projectId,
+                    projectName: row.projectName,
+                    materialName: row.materialName,
+                    unit: row.unit,
+                    qty: row.qty,
+                    price: row.price,
+                    amount: row.amount,
+                    note: row.note,
+                    source: row.source,
+                    purchaseDate: targetDate,
+                    order: index + 1,
+                })));
+
+                return sourceRows.length;
+            });
+
+            return success({ createdRows });
+        } catch (serviceError) {
+            if (serviceError instanceof Error && serviceError.message === 'TARGET_EXISTS') {
+                return error('Список на выбранную дату уже существует', 'CONFLICT');
+            }
+
+            console.error('GlobalPurchasesService.createNextDayList error', serviceError);
+            return error('Не удалось создать список на следующий день');
         }
     }
 

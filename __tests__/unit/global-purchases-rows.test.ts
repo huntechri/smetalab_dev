@@ -11,12 +11,14 @@ describe('global purchases row helpers', () => {
     it('creates manual row with safe defaults', () => {
         const row = createManualPurchaseRow({ projectName: 'ЖК Сканди' });
 
+        expect(row.projectId).toBeNull();
         expect(row.projectName).toBe('ЖК Сканди');
         expect(row.materialName).toBe('');
         expect(row.qty).toBe(1);
         expect(row.price).toBe(0);
         expect(row.amount).toBe(0);
         expect(row.source).toBe('manual');
+        expect(row.purchaseDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
     });
 
     it('creates catalog row and calculates amount', () => {
@@ -29,6 +31,7 @@ describe('global purchases row helpers', () => {
         }, 'ЖК Речной');
 
         expect(row.projectName).toBe('ЖК Речной');
+        expect(row.projectId).toBeNull();
         expect(row.materialName).toBe('Цемент М500');
         expect(row.unit).toBe('мешок');
         expect(row.price).toBe(420);
@@ -53,6 +56,7 @@ describe('global purchases row helpers', () => {
     it('fails schema validation for negative qty', () => {
         const result = purchaseRowSchema.safeParse({
             id: '1',
+            projectId: null,
             projectName: 'Объект',
             materialName: 'Материал',
             unit: 'шт',
@@ -61,6 +65,7 @@ describe('global purchases row helpers', () => {
             amount: -100,
             note: '',
             source: 'manual',
+            purchaseDate: '2026-01-15',
         });
 
         expect(result.success).toBe(false);

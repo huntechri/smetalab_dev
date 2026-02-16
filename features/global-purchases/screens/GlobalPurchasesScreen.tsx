@@ -9,14 +9,15 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { GlobalPurchasesTable } from '../components/GlobalPurchasesTable.client';
-import type { ProjectOption, PurchaseRow } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowsRange } from '../types/dto';
 
 interface GlobalPurchasesScreenProps {
     initialRows: PurchaseRow[];
     projectOptions: ProjectOption[];
+    initialRange: PurchaseRowsRange;
 }
 
-export function GlobalPurchasesScreen({ initialRows, projectOptions }: GlobalPurchasesScreenProps) {
+export function GlobalPurchasesScreen({ initialRows, projectOptions, initialRange }: GlobalPurchasesScreenProps) {
     return (
         <div className="space-y-6">
             <Breadcrumb className="px-1 md:px-0">
@@ -32,7 +33,7 @@ export function GlobalPurchasesScreen({ initialRows, projectOptions }: GlobalPur
                 <p className="text-sm text-muted-foreground">Ежедневный список закупок по материалам с ручным вводом и выбором из справочника.</p>
             </div>
 
-            <GlobalPurchasesTable initialRows={initialRows} projectOptions={projectOptions} />
+            <GlobalPurchasesTable initialRows={initialRows} projectOptions={projectOptions} initialRange={initialRange} />
         </div>
     );
 }
