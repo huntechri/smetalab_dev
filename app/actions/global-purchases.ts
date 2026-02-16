@@ -41,3 +41,8 @@ export const removeGlobalPurchaseAction = safeAction(
     async ({ team }, rowId: string) => GlobalPurchasesService.remove(team.id, rowId),
     { name: 'removeGlobalPurchaseAction' }
 );
+
+export const copyGlobalPurchasesToNextDayAction = safeAction(
+    async ({ team }, sourceDate: string) => GlobalPurchasesService.copyRowsToNextDay(team.id, sourceDate),
+    { name: 'copyGlobalPurchasesToNextDayAction' }
+);

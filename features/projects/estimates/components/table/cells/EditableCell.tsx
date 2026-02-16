@@ -12,9 +12,11 @@ export function EditableCell({
     clearOnFocus = false,
     cancelOnEmpty = false,
     displayValue,
+    ariaLabel,
 }: {
     value: string | number;
     displayValue?: string;
+    ariaLabel?: string;
     onCommit: (value: string) => Promise<void>;
     type?: 'text' | 'number' | 'date';
     disabled?: boolean;
@@ -61,6 +63,7 @@ export function EditableCell({
 
     return (
         <Input
+            aria-label={ariaLabel}
             autoFocus
             className={`h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80 ${alignmentClass}`}
             value={draft}

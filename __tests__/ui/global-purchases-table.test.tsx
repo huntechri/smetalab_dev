@@ -5,6 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 
 const addManualRowMock = vi.fn();
 const addCatalogRowMock = vi.fn();
+const copyToNextDayMock = vi.fn();
 
 vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     useGlobalPurchasesTable: () => ({
@@ -16,8 +17,10 @@ vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
         addCatalogRow: addCatalogRowMock,
         updateRow: vi.fn().mockResolvedValue(undefined),
         removeRow: vi.fn().mockResolvedValue(undefined),
+        copyToNextDay: copyToNextDayMock,
         totals: { amount: 0 },
         addedMaterialNames: new Set<string>(),
+        pendingIds: new Set<string>(),
     }),
 }));
 
@@ -72,7 +75,8 @@ describe('GlobalPurchasesTable', () => {
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: /Строка вручную/i }));
-        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Из справочника/i })); // Click "Из справочника" to open dialog
+        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i })); // Click mock dialog select
 
         await waitFor(() => {
             expect(addManualRowMock).toHaveBeenCalledWith(null);

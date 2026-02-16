@@ -3,6 +3,7 @@ import {
     getGlobalPurchasesAction,
     patchGlobalPurchaseAction,
     removeGlobalPurchaseAction,
+    copyGlobalPurchasesToNextDayAction,
 } from '@/app/actions/global-purchases';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
@@ -73,6 +74,16 @@ export const globalPurchasesActionRepo = {
 
     async remove(rowId: string): Promise<{ removedId: string }> {
         const result = await removeGlobalPurchaseAction(rowId);
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+    async copyToNextDay(sourceDate: string): Promise<PurchaseRow[]> {
+        const result = await copyGlobalPurchasesToNextDayAction(sourceDate);
 
         if (!result.success) {
             throw new Error(result.error.message);
