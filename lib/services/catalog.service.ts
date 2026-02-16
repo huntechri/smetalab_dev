@@ -8,7 +8,7 @@ const searchInputSchema = z.object({
     query: z.string().trim().max(200).optional().default(''),
     category: z.string().trim().max(120).optional(),
     isAiMode: z.boolean().optional().default(false),
-    limit: z.number().int().positive().max(500).optional().default(200),
+    limit: z.number().int().positive().max(5000).optional().default(200),
 });
 
 const MATERIAL_SEARCH_CACHE_TTL_MS = 20_000;
