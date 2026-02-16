@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import { getTodayIsoLocal } from './date';
 import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
 
 const nonNegativeNumber = z.coerce.number().finite().min(0);
@@ -44,7 +45,7 @@ export function createManualPurchaseRow(defaults?: Partial<Pick<PurchaseRow, 'pr
         amount: 0,
         note: '',
         source: 'manual',
-        purchaseDate: new Date().toISOString().slice(0, 10),
+        purchaseDate: getTodayIsoLocal(),
     };
 
     return purchaseRowSchema.parse(row);
@@ -65,7 +66,7 @@ export function createCatalogPurchaseRow(material: CatalogMaterial, projectName:
         amount: calculatePurchaseAmount(1, price),
         note: '',
         source: 'catalog',
-        purchaseDate: new Date().toISOString().slice(0, 10),
+        purchaseDate: getTodayIsoLocal(),
     };
 
     return purchaseRowSchema.parse(row);

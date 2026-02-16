@@ -13,6 +13,8 @@ import {
 } from '@/components/ui/select';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch } from '../types/dto';
 
+const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
+
 type GlobalPurchasesColumnActions = {
     projectOptions: ProjectOption[];
     onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
@@ -154,7 +156,7 @@ export function getGlobalPurchasesColumns({
             minSize: 120,
             cell: ({ row }) => (
                 <div className="text-right text-sm font-medium pr-2">
-                    {new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(row.original.amount)} ₽
+                    {amountFormatter.format(row.original.amount)} ₽
                 </div>
             ),
         },

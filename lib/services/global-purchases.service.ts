@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { globalPurchases, projects } from '@/lib/data/db/schema';
+import { getTodayIsoLocal } from '@/features/global-purchases/lib/date';
 import { error, Result, success } from '@/lib/utils/result';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
@@ -36,11 +37,6 @@ const patchSchema = z.object({
     purchaseDate: isoDateSchema.optional(),
 });
 
-const copyDaySchema = z.object({
-    sourceDate: isoDateSchema,
-    targetDate: isoDateSchema,
-});
-
 const calculateAmount = (qty: number, price: number) => Math.round((qty * price + Number.EPSILON) * 100) / 100;
 
 const toRow = (row: typeof globalPurchases.$inferSelect, projectName: string | null): PurchaseRow => ({
@@ -57,7 +53,9 @@ const toRow = (row: typeof globalPurchases.$inferSelect, projectName: string | n
     purchaseDate: row.purchaseDate,
 });
 
-const resolveProject = async (teamId: number, projectId: string) => db.query.projects.findFirst({
+type DbLike = Pick<typeof db, 'query'>;
+
+const resolveProject = async (client: DbLike, teamId: number, projectId: string) => client.query.projects.findFirst({
     where: and(eq(projects.id, projectId), withActiveTenant(projects, teamId)),
     columns: {
         id: true,
@@ -70,6 +68,10 @@ export class GlobalPurchasesService {
         const parsed = listSchema.safeParse(rawFilters);
         if (!parsed.success) {
             return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+        }
+
+        if (parsed.data.from > parsed.data.to) {
+            return error('Некорректный период: дата начала больше даты окончания', 'VALIDATION_ERROR');
         }
 
         try {
@@ -102,14 +104,14 @@ export class GlobalPurchasesService {
         try {
             const created = await db.transaction(async (tx) => {
                 const payload = parsed.data;
-                const purchaseDate = payload.purchaseDate ?? new Date().toISOString().slice(0, 10);
+                const purchaseDate = payload.purchaseDate ?? getTodayIsoLocal();
 
                 const [{ maxOrder }] = await tx
                     .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
                     .from(globalPurchases)
                     .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, purchaseDate)));
 
-                const project = payload.projectId ? await resolveProject(teamId, payload.projectId) : null;
+                const project = payload.projectId ? await resolveProject(tx, teamId, payload.projectId) : null;
                 if (payload.projectId && !project) {
                     throw new Error('PROJECT_NOT_FOUND');
                 }
@@ -152,6 +154,10 @@ export class GlobalPurchasesService {
             return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
         }
 
+        if (Object.keys(parsed.data).length === 0) {
+            return error('Нет полей для обновления', 'VALIDATION_ERROR');
+        }
+
         try {
             const existing = await db.query.globalPurchases.findFirst({
                 where: and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)),
@@ -165,7 +171,7 @@ export class GlobalPurchasesService {
             const nextQty = patch.qty ?? existing.qty;
             const nextPrice = patch.price ?? existing.price;
 
-            const project = patch.projectId ? await resolveProject(teamId, patch.projectId) : null;
+            const project = patch.projectId ? await resolveProject(db, teamId, patch.projectId) : null;
             if (patch.projectId && !project) {
                 return error('Проект не найден', 'NOT_FOUND');
             }
@@ -186,69 +192,12 @@ export class GlobalPurchasesService {
                 .where(and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)))
                 .returning();
 
-            const resolvedProject = updated.projectId ? await resolveProject(teamId, updated.projectId) : null;
+            const resolvedProject = updated.projectId ? await resolveProject(db, teamId, updated.projectId) : null;
 
             return success(toRow(updated, resolvedProject?.name ?? null));
         } catch (serviceError) {
             console.error('GlobalPurchasesService.patch error', serviceError);
             return error('Не удалось обновить строку закупки');
-        }
-    }
-
-    static async createNextDayList(teamId: number, rawPayload: unknown): Promise<Result<{ createdRows: number }>> {
-        const parsed = copyDaySchema.safeParse(rawPayload);
-        if (!parsed.success) {
-            return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
-        }
-
-        const { sourceDate, targetDate } = parsed.data;
-
-        try {
-            const createdRows = await db.transaction(async (tx) => {
-                const sourceRows = await tx.query.globalPurchases.findMany({
-                    where: and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, sourceDate)),
-                    orderBy: [asc(globalPurchases.order), asc(globalPurchases.createdAt)],
-                });
-
-                if (sourceRows.length === 0) {
-                    return 0;
-                }
-
-                const targetExisting = await tx.query.globalPurchases.findFirst({
-                    where: and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, targetDate)),
-                    columns: { id: true },
-                });
-
-                if (targetExisting) {
-                    throw new Error('TARGET_EXISTS');
-                }
-
-                await tx.insert(globalPurchases).values(sourceRows.map((row, index) => ({
-                    tenantId: teamId,
-                    projectId: row.projectId,
-                    projectName: row.projectName,
-                    materialName: row.materialName,
-                    unit: row.unit,
-                    qty: row.qty,
-                    price: row.price,
-                    amount: row.amount,
-                    note: row.note,
-                    source: row.source,
-                    purchaseDate: targetDate,
-                    order: index + 1,
-                })));
-
-                return sourceRows.length;
-            });
-
-            return success({ createdRows });
-        } catch (serviceError) {
-            if (serviceError instanceof Error && serviceError.message === 'TARGET_EXISTS') {
-                return error('Список на выбранную дату уже существует', 'CONFLICT');
-            }
-
-            console.error('GlobalPurchasesService.createNextDayList error', serviceError);
-            return error('Не удалось создать список на следующий день');
         }
     }
 

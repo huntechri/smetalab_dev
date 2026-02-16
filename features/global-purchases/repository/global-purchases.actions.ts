@@ -1,6 +1,5 @@
 import {
     addGlobalPurchaseAction,
-    copyGlobalPurchasesDayAction,
     getGlobalPurchasesAction,
     patchGlobalPurchaseAction,
     removeGlobalPurchaseAction,
@@ -70,16 +69,6 @@ export const globalPurchasesActionRepo = {
         }
 
         return result.data;
-    },
-
-    async copyDay(sourceDate: string, targetDate: string): Promise<number> {
-        const result = await copyGlobalPurchasesDayAction({ sourceDate, targetDate });
-
-        if (!result.success) {
-            throw new Error(result.error.message);
-        }
-
-        return result.data.createdRows;
     },
 
     async remove(rowId: string): Promise<{ removedId: string }> {
