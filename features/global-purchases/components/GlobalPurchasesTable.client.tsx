@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { Plus, BookOpen, CalendarDays, ArrowRight } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { Plus, BookOpen, CalendarDays } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,6 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
+import { formatLocalDateToIso } from '../lib/date';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -28,16 +29,13 @@ const toDate = (value: string) => {
     return new Date(year, month - 1, day);
 };
 
-const toIsoDate = (value: Date) => {
-    const offset = value.getTimezoneOffset();
-    const normalized = new Date(value.getTime() - offset * 60_000);
-    return normalized.toISOString().slice(0, 10);
-};
-
 export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const [defaultProjectId, setDefaultProjectId] = useState<string | null>(projectOptions[0]?.id ?? null);
+    const [isAddingManual, setIsAddingManual] = useState(false);
+    const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const { toast } = useToast();
+    const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {
         rows,
@@ -47,11 +45,18 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
         addManualRow,
         addCatalogRow,
         updateRow,
-        copyRowsToNextDay,
         removeRow,
         totals,
         addedMaterialNames,
     } = useGlobalPurchasesTable(initialRows, initialRange);
+
+    useEffect(() => () => {
+        if (reloadTimeoutRef.current) {
+            clearTimeout(reloadTimeoutRef.current);
+        }
+    }, []);
+
+    const currencyFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }), []);
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
         projectOptions,
@@ -80,7 +85,12 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
     }), [projectOptions, removeRow, toast, updateRow]);
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
+        if (isAddingCatalog) {
+            return;
+        }
+
         try {
+            setIsAddingCatalog(true);
             await addCatalogRow(material, defaultProjectId);
             setIsCatalogOpen(false);
             toast({ title: 'Материал добавлен', description: material.name });
@@ -90,11 +100,18 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 title: 'Ошибка',
                 description: 'Не удалось добавить материал из справочника.',
             });
+        } finally {
+            setIsAddingCatalog(false);
         }
     };
 
     const handleAddManualRow = async () => {
+        if (isAddingManual) {
+            return;
+        }
+
         try {
+            setIsAddingManual(true);
             await addManualRow(defaultProjectId);
             toast({ title: 'Строка добавлена', description: 'Ручная строка закупки успешно создана.' });
         } catch {
@@ -103,44 +120,35 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 title: 'Ошибка',
                 description: 'Не удалось создать ручную строку закупки.',
             });
+        } finally {
+            setIsAddingManual(false);
         }
     };
 
-    const handleRangeChange = async (nextRange: DateRange | undefined) => {
+    const handleRangeChange = (nextRange: DateRange | undefined) => {
         if (!nextRange?.from) {
             return;
         }
 
-        const from = toIsoDate(nextRange.from);
-        const to = toIsoDate(nextRange.to ?? nextRange.from);
+        const from = formatLocalDateToIso(nextRange.from);
+        const to = formatLocalDateToIso(nextRange.to ?? nextRange.from);
 
-        try {
-            const payload = { from, to };
-            setRange(payload);
-            await reloadRows(payload);
-        } catch {
-            toast({
-                variant: 'destructive',
-                title: 'Ошибка',
-                description: 'Не удалось загрузить список закупок за выбранный период.',
-            });
-        }
-    };
+        const payload = { from, to };
+        setRange(payload);
 
-    const handleCreateNextDay = async () => {
-        try {
-            const { createdRows, targetDate } = await copyRowsToNextDay();
-            toast({
-                title: 'Список создан',
-                description: `Скопировано строк: ${createdRows}. Открыт список на ${targetDate}.`,
-            });
-        } catch {
-            toast({
-                variant: 'destructive',
-                title: 'Ошибка',
-                description: 'Не удалось создать список на следующий день.',
-            });
+        if (reloadTimeoutRef.current) {
+            clearTimeout(reloadTimeoutRef.current);
         }
+
+        reloadTimeoutRef.current = setTimeout(() => {
+            void reloadRows(payload).catch(() => {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка',
+                    description: 'Не удалось загрузить список закупок за выбранный период.',
+                });
+            });
+        }, 250);
     };
 
     return (
@@ -175,7 +183,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                                 <Calendar
                                     mode="range"
                                     selected={{ from: toDate(range.from), to: toDate(range.to) }}
-                                    onSelect={(value) => void handleRangeChange(value)}
+                                    onSelect={handleRangeChange}
                                     locale={ru}
                                     initialFocus
                                 />
@@ -186,17 +194,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             variant="outline"
                             size="sm"
                             className="h-8 gap-1.5"
-                            onClick={() => void handleCreateNextDay()}
-                        >
-                            <ArrowRight className="size-4" />
-                            Создать список на след. день
-                        </Button>
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1.5"
                             onClick={() => void handleAddManualRow()}
+                            disabled={isAddingManual}
                         >
                             <Plus className="size-4" />
                             Строка вручную
@@ -207,6 +206,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             size="sm"
                             className="h-8 gap-1.5"
                             onClick={() => setIsCatalogOpen(true)}
+                            disabled={isAddingCatalog}
                         >
                             <BookOpen className="size-4" />
                             Из справочника
@@ -216,9 +216,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
             />
 
             <div className="flex flex-wrap justify-between gap-2 px-1">
-                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период и автокопирование списка на следующий день.</p>
+                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период.</p>
                 <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider">
-                    Итого закупки: {new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(totals.amount)} ₽
+                    Итого закупки: {currencyFormatter.format(totals.amount)} ₽
                 </Badge>
             </div>
 

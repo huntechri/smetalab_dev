@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const actionMocks = vi.hoisted(() => ({
     getGlobalPurchasesAction: vi.fn(),
     addGlobalPurchaseAction: vi.fn(),
-    copyGlobalPurchasesDayAction: vi.fn(),
     patchGlobalPurchaseAction: vi.fn(),
     removeGlobalPurchaseAction: vi.fn(),
 }));
@@ -16,7 +15,6 @@ describe('globalPurchasesActionRepo', () => {
     beforeEach(() => {
         actionMocks.addGlobalPurchaseAction.mockReset();
         actionMocks.getGlobalPurchasesAction.mockReset();
-        actionMocks.copyGlobalPurchasesDayAction.mockReset();
         actionMocks.patchGlobalPurchaseAction.mockReset();
         actionMocks.removeGlobalPurchaseAction.mockReset();
     });
@@ -87,17 +85,5 @@ describe('globalPurchasesActionRepo', () => {
         });
 
         await expect(globalPurchasesActionRepo.remove('1')).rejects.toThrow('Ошибка удаления');
-    });
-
-    it('copies day rows', async () => {
-        actionMocks.copyGlobalPurchasesDayAction.mockResolvedValue({
-            success: true,
-            data: { createdRows: 7 },
-        });
-
-        const createdRows = await globalPurchasesActionRepo.copyDay('2026-01-15', '2026-01-16');
-
-        expect(createdRows).toBe(7);
-        expect(actionMocks.copyGlobalPurchasesDayAction).toHaveBeenCalledWith({ sourceDate: '2026-01-15', targetDate: '2026-01-16' });
     });
 });

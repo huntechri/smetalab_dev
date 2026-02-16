@@ -36,10 +36,6 @@ export const patchGlobalPurchaseAction = safeAction(
     { name: 'patchGlobalPurchaseAction' }
 );
 
-export const copyGlobalPurchasesDayAction = safeAction(
-    async ({ team }, payload: { sourceDate: string; targetDate: string }) => GlobalPurchasesService.createNextDayList(team.id, payload),
-    { name: 'copyGlobalPurchasesDayAction' }
-);
 
 export const removeGlobalPurchaseAction = safeAction(
     async ({ team }, rowId: string) => GlobalPurchasesService.remove(team.id, rowId),
