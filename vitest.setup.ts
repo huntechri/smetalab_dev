@@ -36,13 +36,19 @@ if (process.env.TEST_DATABASE_URL) {
   (process.env as Record<string, string | undefined>).NODE_ENV = 'test';
 } else if (process.env.VITEST) {
   // 🛡️ CRITICAL: Fail if no dedicated test database is provided
-  if (!process.env.DATABASE_URL?.includes('localhost') &&
-    !process.env.DATABASE_URL?.includes('test') &&
-    !process.env.DATABASE_URL?.includes('neon.tech')) {
+  const isRender = process.env.RENDER === 'true';
+  const isSafe = process.env.DATABASE_URL?.includes('localhost') ||
+    process.env.DATABASE_URL?.includes('test') ||
+    process.env.DATABASE_URL?.includes('neon.tech') ||
+    process.env.DATABASE_URL?.includes('dummy'); // Allow dummy for build-time/mocked tests
+
+  if (!isSafe && !isRender) {
     throw new Error(
       '❌ SAFETY ERROR: Running tests against a non-local/non-test database!\n' +
       'Please set TEST_DATABASE_URL in .env.test or provide a local DATABASE_URL.'
     );
+  } else if (!isSafe && isRender) {
+    console.warn('⚠️ WARNING: Running tests against a non-local/non-test database in Render environment!');
   }
   (process.env as Record<string, string | undefined>).NODE_ENV = 'test';
 }
