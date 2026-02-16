@@ -1,49 +1,68 @@
 'use client';
 
-import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash2 } from 'lucide-react';
 import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
-import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch } from '../types/dto';
 
 type GlobalPurchasesColumnActions = {
+    projectOptions: ProjectOption[];
     onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
     onRemove: (rowId: string) => Promise<void>;
 };
 
-function ProjectNameCell({ value, rowId, onPatch }: { value: string; rowId: string; onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void> }) {
-    const [draft, setDraft] = useState(value);
-
+function ProjectCell({
+    projectId,
+    rowId,
+    onPatch,
+    projectOptions,
+}: {
+    projectId: string | null;
+    rowId: string;
+    onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
+    projectOptions: ProjectOption[];
+}) {
     return (
-        <Input
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            onBlur={() => {
-                if (draft !== value) {
-                    void onPatch(rowId, { projectName: draft });
-                }
-            }}
-            placeholder="Укажите объект"
-            list="global-purchases-projects"
-            className="h-8"
-        />
+        <Select value={projectId ?? 'none'} onValueChange={(value) => void onPatch(rowId, { projectId: value === 'none' ? null : value })}>
+            <SelectTrigger className="h-8">
+                <SelectValue placeholder="Выберите объект" />
+            </SelectTrigger>
+            <SelectContent>
+                <SelectItem value="none">Без привязки</SelectItem>
+                {projectOptions.map((project) => (
+                    <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                ))}
+            </SelectContent>
+        </Select>
     );
 }
 
 export function getGlobalPurchasesColumns({
+    projectOptions,
     onPatch,
     onRemove,
 }: GlobalPurchasesColumnActions): ColumnDef<PurchaseRow>[] {
     return [
         {
             accessorKey: 'projectName',
-            header: 'Объект (наименование)',
-            size: 220,
-            minSize: 200,
+            header: 'Объект (ID)',
+            size: 260,
+            minSize: 240,
             cell: ({ row }) => (
-                <ProjectNameCell value={row.original.projectName} rowId={row.original.id} onPatch={onPatch} />
+                <ProjectCell
+                    projectId={row.original.projectId}
+                    rowId={row.original.id}
+                    onPatch={onPatch}
+                    projectOptions={projectOptions}
+                />
             ),
         },
         {

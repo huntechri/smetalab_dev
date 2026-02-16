@@ -1,39 +1,60 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Plus, BookOpen } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, ArrowRight } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { useToast } from '@/components/ui/use-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
-import type { ProjectOption, PurchaseRow } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowsRange } from '../types/dto';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import type { DateRange } from 'react-day-picker';
+import { ru } from 'date-fns/locale';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
     projectOptions: ProjectOption[];
+    initialRange: PurchaseRowsRange;
 }
 
-export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurchasesTableProps) {
+const toDate = (value: string) => {
+    const [year, month, day] = value.split('-').map(Number);
+    return new Date(year, month - 1, day);
+};
+
+const toIsoDate = (value: Date) => {
+    const offset = value.getTimezoneOffset();
+    const normalized = new Date(value.getTime() - offset * 60_000);
+    return normalized.toISOString().slice(0, 10);
+};
+
+export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
-    const [defaultProjectName, setDefaultProjectName] = useState(projectOptions[0]?.name ?? '');
+    const [defaultProjectId, setDefaultProjectId] = useState<string | null>(projectOptions[0]?.id ?? null);
     const { toast } = useToast();
 
     const {
         rows,
+        range,
+        setRange,
+        reloadRows,
         addManualRow,
         addCatalogRow,
         updateRow,
+        copyRowsToNextDay,
         removeRow,
         totals,
         addedMaterialNames,
-    } = useGlobalPurchasesTable(initialRows);
+    } = useGlobalPurchasesTable(initialRows, initialRange);
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
+        projectOptions,
         onPatch: async (rowId, patch) => {
             try {
                 await updateRow(rowId, patch);
@@ -56,11 +77,11 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
                 });
             }
         },
-    }), [removeRow, toast, updateRow]);
+    }), [projectOptions, removeRow, toast, updateRow]);
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
         try {
-            await addCatalogRow(material, defaultProjectName);
+            await addCatalogRow(material, defaultProjectId);
             setIsCatalogOpen(false);
             toast({ title: 'Материал добавлен', description: material.name });
         } catch {
@@ -74,7 +95,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
 
     const handleAddManualRow = async () => {
         try {
-            await addManualRow(defaultProjectName);
+            await addManualRow(defaultProjectId);
             toast({ title: 'Строка добавлена', description: 'Ручная строка закупки успешно создана.' });
         } catch {
             toast({
@@ -85,14 +106,45 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
         }
     };
 
+    const handleRangeChange = async (nextRange: DateRange | undefined) => {
+        if (!nextRange?.from) {
+            return;
+        }
+
+        const from = toIsoDate(nextRange.from);
+        const to = toIsoDate(nextRange.to ?? nextRange.from);
+
+        try {
+            const payload = { from, to };
+            setRange(payload);
+            await reloadRows(payload);
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось загрузить список закупок за выбранный период.',
+            });
+        }
+    };
+
+    const handleCreateNextDay = async () => {
+        try {
+            const { createdRows, targetDate } = await copyRowsToNextDay();
+            toast({
+                title: 'Список создан',
+                description: `Скопировано строк: ${createdRows}. Открыт список на ${targetDate}.`,
+            });
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось создать список на следующий день.',
+            });
+        }
+    };
+
     return (
         <div className="space-y-3">
-            <datalist id="global-purchases-projects">
-                {projectOptions.map((project) => (
-                    <option key={project.id} value={project.name} />
-                ))}
-            </datalist>
-
             <DataTable
                 columns={columns}
                 data={rows}
@@ -101,13 +153,44 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
                 height="580px"
                 actions={(
                     <div className="flex items-center gap-2">
-                        <Input
-                            list="global-purchases-projects"
-                            value={defaultProjectName}
-                            onChange={(event) => setDefaultProjectName(event.target.value)}
-                            placeholder="Объект по умолчанию"
-                            className="h-8 w-52"
-                        />
+                        <Select value={defaultProjectId ?? 'none'} onValueChange={(value) => setDefaultProjectId(value === 'none' ? null : value)}>
+                            <SelectTrigger className="h-8 w-56">
+                                <SelectValue placeholder="Объект по умолчанию" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="none">Без привязки</SelectItem>
+                                {projectOptions.map((project) => (
+                                    <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5">
+                                    <CalendarDays className="size-4" />
+                                    {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                                <Calendar
+                                    mode="range"
+                                    selected={{ from: toDate(range.from), to: toDate(range.to) }}
+                                    onSelect={(value) => void handleRangeChange(value)}
+                                    locale={ru}
+                                    initialFocus
+                                />
+                            </PopoverContent>
+                        </Popover>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1.5"
+                            onClick={() => void handleCreateNextDay()}
+                        >
+                            <ArrowRight className="size-4" />
+                            Создать список на след. день
+                        </Button>
                         <Button
                             type="button"
                             variant="outline"
@@ -133,7 +216,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
             />
 
             <div className="flex flex-wrap justify-between gap-2 px-1">
-                <p className="text-xs text-muted-foreground">Изменения сохраняются автоматически в БД после подтверждения редактирования ячейки.</p>
+                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период и автокопирование списка на следующий день.</p>
                 <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider">
                     Итого закупки: {new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(totals.amount)} ₽
                 </Badge>
@@ -143,7 +226,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
                 isOpen={isCatalogOpen}
                 onClose={() => setIsCatalogOpen(false)}
                 onSelect={handleCatalogSelect}
-                parentWorkName={defaultProjectName || 'Глобальные закупки'}
+                parentWorkName={projectOptions.find((project) => project.id === defaultProjectId)?.name || 'Глобальные закупки'}
                 addedMaterialNames={addedMaterialNames}
             />
         </div>

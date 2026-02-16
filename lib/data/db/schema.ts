@@ -13,6 +13,7 @@ import {
   jsonb,
   doublePrecision,
   uuid,
+  date,
 } from 'drizzle-orm/pg-core';
 import { relations, sql } from 'drizzle-orm';
 
@@ -192,6 +193,7 @@ export const globalPurchases = pgTable('global_purchases', {
   tenantId: integer('tenant_id')
     .notNull()
     .references(() => teams.id),
+  projectId: uuid('project_id'),
   projectName: varchar('project_name', { length: 160 }).notNull().default(''),
   materialName: text('material_name').notNull().default(''),
   unit: varchar('unit', { length: 20 }).notNull().default('шт'),
@@ -201,11 +203,13 @@ export const globalPurchases = pgTable('global_purchases', {
   note: text('note').notNull().default(''),
   source: globalPurchaseSourceEnum('source').notNull().default('manual'),
   order: integer('order').notNull().default(0),
+  purchaseDate: date('purchase_date', { mode: 'string' }).notNull().default(sql`CURRENT_DATE`),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
-  index('global_purchases_tenant_order_idx').on(table.tenantId, table.order).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_purchase_date_order_idx').on(table.tenantId, table.purchaseDate, table.order).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_project_date_idx').on(table.tenantId, table.projectId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 

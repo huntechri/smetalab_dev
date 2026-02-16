@@ -3,22 +3,28 @@
 import { useCallback, useMemo, useState } from 'react';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
-import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
+import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
 
-export function useGlobalPurchasesTable(initialRows: PurchaseRow[]) {
+export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange: PurchaseRowsRange) {
     const [rows, setRows] = useState<PurchaseRow[]>(initialRows);
+    const [range, setRange] = useState<PurchaseRowsRange>(initialRange);
 
-    const addManualRow = useCallback(async (projectName: string) => {
-        const created = await globalPurchasesActionRepo.addManual(projectName);
-        setRows((prev) => [created, ...prev]);
-        return created;
+    const reloadRows = useCallback(async (nextRange: PurchaseRowsRange) => {
+        const loadedRows = await globalPurchasesActionRepo.list(nextRange);
+        setRows(loadedRows);
     }, []);
 
-    const addCatalogRow = useCallback(async (material: CatalogMaterial, projectName: string) => {
-        const created = await globalPurchasesActionRepo.addFromCatalog(material, projectName);
+    const addManualRow = useCallback(async (projectId: string | null) => {
+        const created = await globalPurchasesActionRepo.addManual(projectId, range.from);
         setRows((prev) => [created, ...prev]);
         return created;
-    }, []);
+    }, [range.from]);
+
+    const addCatalogRow = useCallback(async (material: CatalogMaterial, projectId: string | null) => {
+        const created = await globalPurchasesActionRepo.addFromCatalog(material, projectId, range.from);
+        setRows((prev) => [created, ...prev]);
+        return created;
+    }, [range.from]);
 
     const updateRow = useCallback(async (rowId: string, patch: PurchaseRowPatch) => {
         const existing = rows.find((row) => row.id === rowId);
@@ -55,6 +61,20 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[]) {
         }
     }, [rows]);
 
+    const copyRowsToNextDay = useCallback(async () => {
+        const sourceDate = range.from;
+        const source = new Date(sourceDate);
+        source.setDate(source.getDate() + 1);
+        const targetDate = source.toISOString().slice(0, 10);
+        const createdRows = await globalPurchasesActionRepo.copyDay(sourceDate, targetDate);
+
+        const nextRange = { from: targetDate, to: targetDate };
+        setRange(nextRange);
+        await reloadRows(nextRange);
+
+        return { createdRows, targetDate };
+    }, [range.from, reloadRows]);
+
     const removeRow = useCallback(async (rowId: string) => {
         const prevRows = rows;
         setRows((current) => current.filter((row) => row.id !== rowId));
@@ -76,9 +96,13 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[]) {
 
     return {
         rows,
+        range,
+        setRange,
+        reloadRows,
         addManualRow,
         addCatalogRow,
         updateRow,
+        copyRowsToNextDay,
         removeRow,
         totals,
         addedMaterialNames,

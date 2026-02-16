@@ -1,35 +1,48 @@
 import {
     addGlobalPurchaseAction,
+    copyGlobalPurchasesDayAction,
+    getGlobalPurchasesAction,
     patchGlobalPurchaseAction,
     removeGlobalPurchaseAction,
 } from '@/app/actions/global-purchases';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
-import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
+import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
 
-const toPayloadFromCatalog = (material: CatalogMaterial, projectName: string) => {
+const toPayloadFromCatalog = (material: CatalogMaterial, projectId: string | null, purchaseDate: string) => {
     const safePrice = Number(material.price);
 
     return {
-        projectName,
+        projectId,
         materialName: material.name,
         unit: material.unit || 'шт',
         qty: 1,
         price: Number.isFinite(safePrice) ? safePrice : 0,
         note: '',
         source: 'catalog' as const,
+        purchaseDate,
     };
 };
 
 export const globalPurchasesActionRepo = {
-    async addManual(projectName: string): Promise<PurchaseRow> {
+    async list(range: PurchaseRowsRange): Promise<PurchaseRow[]> {
+        const result = await getGlobalPurchasesAction(range);
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+    async addManual(projectId: string | null, purchaseDate: string): Promise<PurchaseRow> {
         const result = await addGlobalPurchaseAction({
-            projectName,
+            projectId,
             materialName: '',
             unit: 'шт',
             qty: 1,
             price: 0,
             note: '',
             source: 'manual',
+            purchaseDate,
         });
 
         if (!result.success) {
@@ -39,8 +52,8 @@ export const globalPurchasesActionRepo = {
         return result.data;
     },
 
-    async addFromCatalog(material: CatalogMaterial, projectName: string): Promise<PurchaseRow> {
-        const result = await addGlobalPurchaseAction(toPayloadFromCatalog(material, projectName));
+    async addFromCatalog(material: CatalogMaterial, projectId: string | null, purchaseDate: string): Promise<PurchaseRow> {
+        const result = await addGlobalPurchaseAction(toPayloadFromCatalog(material, projectId, purchaseDate));
 
         if (!result.success) {
             throw new Error(result.error.message);
@@ -57,6 +70,16 @@ export const globalPurchasesActionRepo = {
         }
 
         return result.data;
+    },
+
+    async copyDay(sourceDate: string, targetDate: string): Promise<number> {
+        const result = await copyGlobalPurchasesDayAction({ sourceDate, targetDate });
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data.createdRows;
     },
 
     async remove(rowId: string): Promise<{ removedId: string }> {
