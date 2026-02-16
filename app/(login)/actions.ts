@@ -29,7 +29,7 @@ import {
 import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
 import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
-import { getBaseUrl } from '@/lib/utils/url';
+import { getInvitationBaseUrl } from '@/lib/utils/url';
 
 async function logActivity(
   teamId: number | null | undefined,
@@ -646,10 +646,7 @@ export const inviteTeamMember = validatedActionWithUser(
     if (!emailResult.success) {
       console.error('Failed to send invitation email:', emailResult.error);
       // Still return success - invitation was created, just email failed
-      const baseUrl = (process.env.BASE_URL || getBaseUrl()).includes('localhost')
-        ? 'https://smetalabv3.vercel.app'
-        : (process.env.BASE_URL || getBaseUrl());
-      const inviteLink = `${baseUrl.replace(/\/$/, '')}/invitations?inviteId=${newInvitation.id}`;
+      const inviteLink = `${getInvitationBaseUrl()}/invitations?inviteId=${newInvitation.id}`;
       const reasonSuffix = emailResult.error ? ` Причина: ${emailResult.error}.` : '';
 
       return {
@@ -660,10 +657,7 @@ export const inviteTeamMember = validatedActionWithUser(
     let successMessage = 'Приглашение отправлено на ' + email;
 
     if (process.env.NODE_ENV === 'development') {
-      const baseUrl = (process.env.BASE_URL || getBaseUrl()).includes('localhost')
-        ? 'https://smetalabv3.vercel.app'
-        : (process.env.BASE_URL || getBaseUrl());
-      successMessage += `. (Dev Link: ${baseUrl.replace(/\/$/, '')}/invitations?inviteId=${newInvitation.id})`;
+      successMessage += `. (Dev Link: ${getInvitationBaseUrl()}/invitations?inviteId=${newInvitation.id})`;
     }
 
     return { success: successMessage };
