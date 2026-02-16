@@ -1,0 +1,77 @@
+import { z } from 'zod';
+import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
+
+const nonNegativeNumber = z.coerce.number().finite().min(0);
+
+export const purchaseRowSchema = z.object({
+    id: z.string().min(1),
+    projectName: z.string().trim().max(160),
+    materialName: z.string().trim().max(240),
+    unit: z.string().trim().max(20),
+    qty: nonNegativeNumber,
+    price: nonNegativeNumber,
+    amount: nonNegativeNumber,
+    note: z.string().trim().max(500),
+    source: z.enum(['manual', 'catalog']),
+});
+
+export const purchaseRowPatchSchema = z.object({
+    projectName: z.string().trim().max(160).optional(),
+    materialName: z.string().trim().max(240).optional(),
+    unit: z.string().trim().max(20).optional(),
+    qty: nonNegativeNumber.optional(),
+    price: nonNegativeNumber.optional(),
+    note: z.string().trim().max(500).optional(),
+});
+
+export function calculatePurchaseAmount(qty: number, price: number): number {
+    return Math.round((qty * price + Number.EPSILON) * 100) / 100;
+}
+
+export function createManualPurchaseRow(defaults?: Partial<Pick<PurchaseRow, 'projectName'>>): PurchaseRow {
+    const row: PurchaseRow = {
+        id: crypto.randomUUID(),
+        projectName: defaults?.projectName ?? '',
+        materialName: '',
+        unit: 'шт',
+        qty: 1,
+        price: 0,
+        amount: 0,
+        note: '',
+        source: 'manual',
+    };
+
+    return purchaseRowSchema.parse(row);
+}
+
+export function createCatalogPurchaseRow(material: CatalogMaterial, projectName: string): PurchaseRow {
+    const safePrice = Number(material.price);
+    const price = Number.isFinite(safePrice) ? safePrice : 0;
+
+    const row: PurchaseRow = {
+        id: crypto.randomUUID(),
+        projectName,
+        materialName: material.name,
+        unit: material.unit || 'шт',
+        qty: 1,
+        price,
+        amount: calculatePurchaseAmount(1, price),
+        note: '',
+        source: 'catalog',
+    };
+
+    return purchaseRowSchema.parse(row);
+}
+
+export function patchPurchaseRow(row: PurchaseRow, patch: PurchaseRowPatch): PurchaseRow {
+    const normalizedPatch = purchaseRowPatchSchema.parse(patch);
+    const next: PurchaseRow = {
+        ...row,
+        ...normalizedPatch,
+    };
+
+    next.amount = calculatePurchaseAmount(next.qty, next.price);
+
+    return purchaseRowSchema.parse(next);
+}

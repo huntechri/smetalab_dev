@@ -31,6 +31,7 @@ export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company'])
 export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
 export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
 export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['work', 'material']);
+export const globalPurchaseSourceEnum = pgEnum('global_purchase_source', ['manual', 'catalog']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -184,6 +185,28 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
+]);
+
+export const globalPurchases = pgTable('global_purchases', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  projectName: varchar('project_name', { length: 160 }).notNull().default(''),
+  materialName: text('material_name').notNull().default(''),
+  unit: varchar('unit', { length: 20 }).notNull().default('шт'),
+  qty: doublePrecision('qty').notNull().default(1),
+  price: doublePrecision('price').notNull().default(0),
+  amount: doublePrecision('amount').notNull().default(0),
+  note: text('note').notNull().default(''),
+  source: globalPurchaseSourceEnum('source').notNull().default('manual'),
+  order: integer('order').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('global_purchases_tenant_order_idx').on(table.tenantId, table.order).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
