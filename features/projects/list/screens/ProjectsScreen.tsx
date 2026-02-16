@@ -64,7 +64,9 @@ export function ProjectsScreen({ initialProjects, counterparties }: ProjectsScre
             />
             <ProjectsList
                 projects={visibleProjects}
+                totalProjectsCount={projects.length}
                 viewMode={viewMode}
+                onCreate={handleAddClick}
                 onDelete={onDelete}
                 onEdit={handleEditProject}
             />
