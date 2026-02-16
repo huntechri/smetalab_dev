@@ -11,10 +11,29 @@ interface MaterialCatalogDialogProps {
     parentWorkName: string;
     mode?: 'add' | 'replace';
     addedMaterialNames?: Set<string>;
+    closeOnSelect?: boolean;
+    allowDuplicateSelection?: boolean;
 }
 
-export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkName, mode = 'add', addedMaterialNames }: MaterialCatalogDialogProps) {
+export function MaterialCatalogDialog({
+    isOpen,
+    onClose,
+    onSelect,
+    parentWorkName,
+    mode = 'add',
+    addedMaterialNames,
+    closeOnSelect = true,
+    allowDuplicateSelection = false,
+}: MaterialCatalogDialogProps) {
     const isReplaceMode = mode === 'replace';
+
+    const handleAddMaterial = async (material: CatalogMaterial) => {
+        await onSelect(material);
+
+        if (closeOnSelect) {
+            onClose();
+        }
+    };
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => {
@@ -22,7 +41,7 @@ export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkNam
                 onClose();
             }
         }}>
-            <DialogContent className="max-w-4xl h-[80vh] p-0 flex flex-col gap-0">
+            <DialogContent className="max-w-6xl h-[80vh] p-0 flex flex-col gap-0">
                 <DialogHeader className="p-6 border-b">
                     <DialogTitle className="text-xl">
                         {isReplaceMode ? `Заменить материал: ${parentWorkName}` : `Добавить материал в: ${parentWorkName}`}
@@ -35,8 +54,9 @@ export function MaterialCatalogDialog({ isOpen, onClose, onSelect, parentWorkNam
                 </DialogHeader>
                 <div className="flex-1 min-h-0">
                     <MaterialCatalogPicker
-                        onAddMaterial={onSelect}
+                        onAddMaterial={handleAddMaterial}
                         addedMaterialNames={addedMaterialNames}
+                        allowDuplicateSelection={allowDuplicateSelection}
                     />
                 </div>
             </DialogContent>
