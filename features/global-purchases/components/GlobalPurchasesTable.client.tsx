@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, BookOpen, CalendarDays } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, Copy } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +16,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
-import { formatLocalDateToIso } from '../lib/date';
+import { formatLocalDateToIso, parseIsoDateSafe, addDaysToIsoDate } from '../lib/date';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -24,16 +24,12 @@ interface GlobalPurchasesTableProps {
     initialRange: PurchaseRowsRange;
 }
 
-const toDate = (value: string) => {
-    const [year, month, day] = value.split('-').map(Number);
-    return new Date(year, month - 1, day);
-};
-
 export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
+    const [isCopying, setIsCopying] = useState(false);
     const { toast } = useToast();
     const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -46,8 +42,10 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
         addCatalogRow,
         updateRow,
         removeRow,
+        copyToNextDay,
         totals,
         addedMaterialNames,
+        pendingIds,
     } = useGlobalPurchasesTable(initialRows, initialRange);
 
     useEffect(() => () => {
@@ -56,10 +54,15 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
         }
     }, []);
 
-    const currencyFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }), []);
+    const currencyFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', {
+        style: 'currency',
+        currency: 'RUB',
+        maximumFractionDigits: 2
+    }), []);
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
         projectOptions,
+        pendingIds,
         onPatch: async (rowId, patch) => {
             try {
                 await updateRow(rowId, patch);
@@ -82,12 +85,10 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 });
             }
         },
-    }), [projectOptions, removeRow, toast, updateRow]);
+    }), [projectOptions, pendingIds, removeRow, toast, updateRow]);
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
-        if (isAddingCatalog) {
-            return;
-        }
+        if (isAddingCatalog) return;
 
         try {
             setIsAddingCatalog(true);
@@ -105,9 +106,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
     };
 
     const handleAddManualRow = async () => {
-        if (isAddingManual) {
-            return;
-        }
+        if (isAddingManual) return;
 
         try {
             setIsAddingManual(true);
@@ -124,10 +123,36 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
         }
     };
 
-    const handleRangeChange = (nextRange: DateRange | undefined) => {
-        if (!nextRange?.from) {
-            return;
+    const handleCopyToNextDay = async () => {
+        if (isCopying || rows.length === 0) return;
+
+        try {
+            setIsCopying(true);
+            const created = await copyToNextDay();
+            const nextDay = addDaysToIsoDate(range.from, 1);
+
+            toast({
+                title: 'Копирование завершено',
+                description: `Скопировано строк: ${created.length} на ${nextDay}`
+            });
+
+            // Автоматически переключаемся на следующий день
+            const nextRange = { from: nextDay, to: nextDay };
+            setRange(nextRange);
+            await reloadRows(nextRange);
+        } catch (err) {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка копирования',
+                description: err instanceof Error ? err.message : 'Не удалось скопировать данные.',
+            });
+        } finally {
+            setIsCopying(false);
         }
+    };
+
+    const handleRangeChange = (nextRange: DateRange | undefined) => {
+        if (!nextRange?.from) return;
 
         const from = formatLocalDateToIso(nextRange.from);
         const to = formatLocalDateToIso(nextRange.to ?? nextRange.from);
@@ -170,13 +195,14 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
                                     mode="range"
-                                    selected={{ from: toDate(range.from), to: toDate(range.to) }}
+                                    selected={{ from: parseIsoDateSafe(range.from), to: parseIsoDateSafe(range.to) }}
                                     onSelect={handleRangeChange}
                                     locale={ru}
                                     initialFocus
                                 />
                             </PopoverContent>
                         </Popover>
+
                         <Button
                             type="button"
                             variant="outline"
@@ -188,6 +214,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             <Plus className="size-4" />
                             <span className="truncate">Строка вручную</span>
                         </Button>
+
                         <Button
                             type="button"
                             variant="outline"
@@ -199,14 +226,27 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             <BookOpen className="size-4" />
                             <span className="truncate">Из справочника</span>
                         </Button>
+
+                        <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="h-8 gap-1.5 w-full sm:w-auto text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            onClick={() => void handleCopyToNextDay()}
+                            disabled={isCopying || rows.length === 0 || range.from !== range.to}
+                            title="Копировать все строки текущего дня на следующий"
+                        >
+                            <Copy className="size-4" />
+                            <span className="truncate">На след. день</span>
+                        </Button>
                     </div>
                 )}
             />
 
             <div className="flex flex-wrap justify-between gap-2 px-1">
-                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период.</p>
-                <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider">
-                    Итого закупки: {currencyFormatter.format(totals.amount)} ₽
+                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период и копирование.</p>
+                <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider tabular-nums">
+                    Итого закупки: {currencyFormatter.format(totals.amount)}
                 </Badge>
             </div>
 
