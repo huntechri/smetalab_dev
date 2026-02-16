@@ -1,9 +1,8 @@
 import { Resend } from 'resend';
-import { getBaseUrl } from '@/lib/utils/url';
+import { getInvitationBaseUrl } from '@/lib/utils/url';
 
 // Email from address - use your verified domain or Resend's test address
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Smetalab <onboarding@resend.dev>';
-const INVITATION_BASE_URL_FALLBACK = 'https://smetalabv3.vercel.app';
 
 interface SendInvitationEmailParams {
   to: string;
@@ -36,12 +35,7 @@ export async function sendInvitationEmail({
   }
 
   const resend = new Resend(apiKey);
-  const resolvedBaseUrl = process.env.BASE_URL || getBaseUrl();
-  const baseUrl = resolvedBaseUrl.includes('localhost')
-    ? INVITATION_BASE_URL_FALLBACK
-    : resolvedBaseUrl;
-  const normalizedBaseUrl = baseUrl.replace(/\/$/, '');
-  const inviteUrl = `${normalizedBaseUrl}/invitations?inviteId=${inviteId}`;
+  const inviteUrl = `${getInvitationBaseUrl()}/invitations?inviteId=${inviteId}`;
   const roleLabel = ROLE_LABELS[role] || role;
 
   try {
@@ -135,8 +129,9 @@ ${inviteUrl}
         FROM_EMAIL.includes('onboarding@resend.dev')
           ? ' Для onboarding@resend.dev Resend принимает письма только на проверенный email аккаунта.'
           : '';
+      const senderDomain = FROM_EMAIL.match(/@([^>\s]+)/)?.[1] ?? 'unknown';
       const domainVerificationHint = errorMessage.toLowerCase().includes('domain is not verified')
-        ? ' Проверьте, что RESEND_API_KEY принадлежит тому же аккаунту Resend, где верифицирован домен отправителя.'
+        ? ` Проверьте, что домен отправителя (${senderDomain}) верифицирован в том же аккаунте Resend, которому принадлежит текущий RESEND_API_KEY.`
         : '';
 
       return { success: false, error: `${errorMessage}${onboardingHint}${domainVerificationHint}` };
