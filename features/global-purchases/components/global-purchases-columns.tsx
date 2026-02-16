@@ -1,94 +1,109 @@
 'use client';
 
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash2 } from 'lucide-react';
+import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
 import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
 
 type GlobalPurchasesColumnActions = {
-    onPatch: (rowId: string, patch: PurchaseRowPatch) => void;
-    onRemove: (rowId: string) => void;
+    onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
+    onRemove: (rowId: string) => Promise<void>;
 };
+
+function ProjectNameCell({ value, rowId, onPatch }: { value: string; rowId: string; onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void> }) {
+    const [draft, setDraft] = useState(value);
+
+    return (
+        <Input
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            onBlur={() => {
+                if (draft !== value) {
+                    void onPatch(rowId, { projectName: draft });
+                }
+            }}
+            placeholder="Укажите объект"
+            list="global-purchases-projects"
+            className="h-8"
+        />
+    );
+}
 
 export function getGlobalPurchasesColumns({
     onPatch,
-    onRemove
+    onRemove,
 }: GlobalPurchasesColumnActions): ColumnDef<PurchaseRow>[] {
     return [
         {
             accessorKey: 'projectName',
             header: 'Объект (наименование)',
-            size: 240,
-            minSize: 220,
+            size: 220,
+            minSize: 200,
             cell: ({ row }) => (
-                <Input
-                    value={row.original.projectName}
-                    onChange={(event) => onPatch(row.original.id, { projectName: event.target.value })}
-                    placeholder="Укажите объект"
-                    list="global-purchases-projects"
-                    className="h-8"
-                />
+                <ProjectNameCell value={row.original.projectName} rowId={row.original.id} onPatch={onPatch} />
             ),
         },
         {
             accessorKey: 'materialName',
             header: 'Наименование материала',
-            size: 300,
-            minSize: 260,
+            size: 460,
+            minSize: 380,
             cell: ({ row }) => (
-                <Input
+                <EditableCell
                     value={row.original.materialName}
-                    onChange={(event) => onPatch(row.original.id, { materialName: event.target.value })}
-                    placeholder="Введите материал"
-                    className="h-8"
+                    onCommit={(value) => onPatch(row.original.id, { materialName: value })}
                 />
             ),
         },
         {
             accessorKey: 'unit',
             header: 'Ед. изм.',
-            size: 120,
-            minSize: 100,
+            size: 100,
+            minSize: 90,
             cell: ({ row }) => (
-                <Input
+                <EditableCell
                     value={row.original.unit}
-                    onChange={(event) => onPatch(row.original.id, { unit: event.target.value })}
-                    placeholder="шт"
-                    className="h-8"
+                    onCommit={(value) => onPatch(row.original.id, { unit: value })}
                 />
             ),
         },
         {
             accessorKey: 'qty',
             header: () => <div className="text-right">Кол-во</div>,
-            size: 120,
-            minSize: 100,
+            size: 110,
+            minSize: 90,
             cell: ({ row }) => (
-                <Input
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={row.original.qty}
-                    onChange={(event) => onPatch(row.original.id, { qty: Number(event.target.value) })}
-                    className="h-8 text-right"
-                />
+                <div className="text-right">
+                    <EditableCell
+                        type="number"
+                        align="right"
+                        clearOnFocus
+                        cancelOnEmpty
+                        value={row.original.qty}
+                        onCommit={(value) => onPatch(row.original.id, { qty: Number(value) })}
+                    />
+                </div>
             ),
         },
         {
             accessorKey: 'price',
             header: () => <div className="text-right">Цена</div>,
-            size: 140,
-            minSize: 120,
+            size: 130,
+            minSize: 110,
             cell: ({ row }) => (
-                <Input
-                    type="number"
-                    min={0}
-                    step="0.01"
-                    value={row.original.price}
-                    onChange={(event) => onPatch(row.original.id, { price: Number(event.target.value) })}
-                    className="h-8 text-right"
-                />
+                <div className="text-right">
+                    <EditableCell
+                        type="number"
+                        align="right"
+                        clearOnFocus
+                        cancelOnEmpty
+                        value={row.original.price}
+                        onCommit={(value) => onPatch(row.original.id, { price: Number(value) })}
+                    />
+                </div>
             ),
         },
         {
@@ -105,14 +120,12 @@ export function getGlobalPurchasesColumns({
         {
             accessorKey: 'note',
             header: 'Примечание',
-            size: 260,
-            minSize: 220,
+            size: 180,
+            minSize: 150,
             cell: ({ row }) => (
-                <Input
+                <EditableCell
                     value={row.original.note}
-                    onChange={(event) => onPatch(row.original.id, { note: event.target.value })}
-                    placeholder="Комментарий"
-                    className="h-8"
+                    onCommit={(value) => onPatch(row.original.id, { note: value })}
                 />
             ),
         },
@@ -127,13 +140,13 @@ export function getGlobalPurchasesColumns({
                         type="button"
                         variant="ghost"
                         size="icon"
-                        onClick={() => onRemove(row.original.id)}
+                        onClick={() => void onRemove(row.original.id)}
                         aria-label="Удалить строку"
                     >
                         <Trash2 className="size-4 text-muted-foreground" />
                     </Button>
                 </div>
             ),
-        }
+        },
     ];
 }

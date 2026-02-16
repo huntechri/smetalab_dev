@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import { useToast } from '@/components/ui/use-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow } from '../types/dto';
@@ -20,6 +21,7 @@ interface GlobalPurchasesTableProps {
 export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const [defaultProjectName, setDefaultProjectName] = useState(projectOptions[0]?.name ?? '');
+    const { toast } = useToast();
 
     const {
         rows,
@@ -32,13 +34,55 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
     } = useGlobalPurchasesTable(initialRows);
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
-        onPatch: updateRow,
-        onRemove: removeRow,
-    }), [removeRow, updateRow]);
+        onPatch: async (rowId, patch) => {
+            try {
+                await updateRow(rowId, patch);
+            } catch {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка сохранения',
+                    description: 'Не удалось сохранить изменения в строке закупки.',
+                });
+            }
+        },
+        onRemove: async (rowId) => {
+            try {
+                await removeRow(rowId);
+            } catch {
+                toast({
+                    variant: 'destructive',
+                    title: 'Ошибка удаления',
+                    description: 'Не удалось удалить строку закупки.',
+                });
+            }
+        },
+    }), [removeRow, toast, updateRow]);
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
-        addCatalogRow(material, defaultProjectName);
-        setIsCatalogOpen(false);
+        try {
+            await addCatalogRow(material, defaultProjectName);
+            setIsCatalogOpen(false);
+            toast({ title: 'Материал добавлен', description: material.name });
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось добавить материал из справочника.',
+            });
+        }
+    };
+
+    const handleAddManualRow = async () => {
+        try {
+            await addManualRow(defaultProjectName);
+            toast({ title: 'Строка добавлена', description: 'Ручная строка закупки успешно создана.' });
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка',
+                description: 'Не удалось создать ручную строку закупки.',
+            });
+        }
     };
 
     return (
@@ -62,14 +106,14 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
                             value={defaultProjectName}
                             onChange={(event) => setDefaultProjectName(event.target.value)}
                             placeholder="Объект по умолчанию"
-                         className="h-8 w-52"
+                            className="h-8 w-52"
                         />
                         <Button
                             type="button"
                             variant="outline"
                             size="sm"
                             className="h-8 gap-1.5"
-                            onClick={() => addManualRow(defaultProjectName)}
+                            onClick={() => void handleAddManualRow()}
                         >
                             <Plus className="size-4" />
                             Строка вручную
@@ -88,7 +132,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions }: GlobalPurc
                 )}
             />
 
-            <div className="flex justify-end px-1">
+            <div className="flex flex-wrap justify-between gap-2 px-1">
+                <p className="text-xs text-muted-foreground">Изменения сохраняются автоматически в БД после подтверждения редактирования ячейки.</p>
                 <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider">
                     Итого закупки: {new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 }).format(totals.amount)} ₽
                 </Badge>
