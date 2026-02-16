@@ -29,6 +29,7 @@ import {
 import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
 import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
+import { getInvitationBaseUrl } from '@/lib/utils/url';
 
 async function logActivity(
   teamId: number | null | undefined,
@@ -645,13 +646,18 @@ export const inviteTeamMember = validatedActionWithUser(
     if (!emailResult.success) {
       console.error('Failed to send invitation email:', emailResult.error);
       // Still return success - invitation was created, just email failed
-      return { success: 'Приглашение создано, но письмо не отправлено. Ссылка: ' + `${process.env.BASE_URL || 'http://localhost:3000'}/invitations?inviteId=${newInvitation.id}` };
+      const inviteLink = `${getInvitationBaseUrl()}/invitations?inviteId=${newInvitation.id}`;
+      const reasonSuffix = emailResult.error ? ` Причина: ${emailResult.error}.` : '';
+
+      return {
+        success: `Приглашение создано, но письмо не отправлено.${reasonSuffix} Ссылка: ${inviteLink}`
+      };
     }
 
     let successMessage = 'Приглашение отправлено на ' + email;
 
     if (process.env.NODE_ENV === 'development') {
-      successMessage += `. (Dev Link: ${process.env.BASE_URL || 'http://localhost:3000'}/invitations?inviteId=${newInvitation.id})`;
+      successMessage += `. (Dev Link: ${getInvitationBaseUrl()}/invitations?inviteId=${newInvitation.id})`;
     }
 
     return { success: successMessage };
