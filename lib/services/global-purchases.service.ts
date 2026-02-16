@@ -1,9 +1,9 @@
-import { and, asc, between, eq, isNull, sql } from 'drizzle-orm';
+import { and, asc, between, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { globalPurchases, projects } from '@/lib/data/db/schema';
-import { getTodayIsoLocal } from '@/features/global-purchases/lib/date';
+import { getTodayIsoLocal, addDaysToIsoDate } from '@/features/global-purchases/lib/date';
 import { error, Result, success } from '@/lib/utils/result';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
@@ -159,43 +159,52 @@ export class GlobalPurchasesService {
         }
 
         try {
-            const existing = await db.query.globalPurchases.findFirst({
-                where: and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)),
+            const result = await db.transaction(async (tx) => {
+                const existing = await tx.query.globalPurchases.findFirst({
+                    where: and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)),
+                });
+
+                if (!existing) {
+                    throw new Error('NOT_FOUND');
+                }
+
+                const patch = parsed.data;
+                const nextQty = patch.qty ?? existing.qty;
+                const nextPrice = patch.price ?? existing.price;
+
+                const project = patch.projectId ? await resolveProject(tx, teamId, patch.projectId) : null;
+                if (patch.projectId && !project) {
+                    throw new Error('PROJECT_NOT_FOUND');
+                }
+
+                const [updated] = await tx.update(globalPurchases)
+                    .set({
+                        materialName: patch.materialName,
+                        unit: patch.unit,
+                        note: patch.note,
+                        purchaseDate: patch.purchaseDate,
+                        projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
+                        projectName: project?.name ?? existing.projectName,
+                        qty: nextQty,
+                        price: nextPrice,
+                        amount: calculateAmount(nextQty, nextPrice),
+                        updatedAt: new Date(),
+                    })
+                    .where(and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)))
+                    .returning();
+
+                return {
+                    row: updated,
+                    projectName: project?.name ?? updated.projectName,
+                };
             });
 
-            if (!existing) {
-                return error('Строка закупки не найдена', 'NOT_FOUND');
-            }
-
-            const patch = parsed.data;
-            const nextQty = patch.qty ?? existing.qty;
-            const nextPrice = patch.price ?? existing.price;
-
-            const project = patch.projectId ? await resolveProject(db, teamId, patch.projectId) : null;
-            if (patch.projectId && !project) {
-                return error('Проект не найден', 'NOT_FOUND');
-            }
-
-            const [updated] = await db.update(globalPurchases)
-                .set({
-                    materialName: patch.materialName,
-                    unit: patch.unit,
-                    note: patch.note,
-                    purchaseDate: patch.purchaseDate,
-                    projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
-                    projectName: project?.name ?? existing.projectName,
-                    qty: nextQty,
-                    price: nextPrice,
-                    amount: calculateAmount(nextQty, nextPrice),
-                    updatedAt: new Date(),
-                })
-                .where(and(eq(globalPurchases.id, rowId), withActiveTenant(globalPurchases, teamId)))
-                .returning();
-
-            const resolvedProject = updated.projectId ? await resolveProject(db, teamId, updated.projectId) : null;
-
-            return success(toRow(updated, resolvedProject?.name ?? null));
+            return success(toRow(result.row, result.projectName));
         } catch (serviceError) {
+            if (serviceError instanceof Error) {
+                if (serviceError.message === 'NOT_FOUND') return error('Строка закупки не найдена', 'NOT_FOUND');
+                if (serviceError.message === 'PROJECT_NOT_FOUND') return error('Проект не найден', 'NOT_FOUND');
+            }
             console.error('GlobalPurchasesService.patch error', serviceError);
             return error('Не удалось обновить строку закупки');
         }
@@ -219,6 +228,73 @@ export class GlobalPurchasesService {
         } catch (serviceError) {
             console.error('GlobalPurchasesService.remove error', serviceError);
             return error('Не удалось удалить строку закупки');
+        }
+    }
+
+    static async copyRowsToNextDay(teamId: number, sourceDate: string): Promise<Result<PurchaseRow[]>> {
+        if (!isoDateSchema.safeParse(sourceDate).success) {
+            return error('Некорректная дата источника', 'VALIDATION_ERROR');
+        }
+
+        const targetDate = addDaysToIsoDate(sourceDate, 1);
+
+        try {
+            const createdRows = await db.transaction(async (tx) => {
+                const sourceRows = await tx.query.globalPurchases.findMany({
+                    where: and(
+                        eq(globalPurchases.purchaseDate, sourceDate),
+                        withActiveTenant(globalPurchases, teamId)
+                    ),
+                    orderBy: [asc(globalPurchases.order), asc(globalPurchases.createdAt)],
+                });
+
+                if (sourceRows.length === 0) {
+                    return [];
+                }
+
+                // Очищаем старые закупки на целевую дату перед копированием (опционально, но часто нужно для идемпотентности "копирования дня")
+                // В данном случае просто добавляем в конец, сохраняя порядок.
+
+                const [{ maxOrder }] = await tx
+                    .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
+                    .from(globalPurchases)
+                    .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, targetDate)));
+
+                const newRows = sourceRows.map((row, index) => ({
+                    tenantId: teamId,
+                    projectId: row.projectId,
+                    projectName: row.projectName,
+                    materialName: row.materialName,
+                    unit: row.unit,
+                    qty: row.qty,
+                    price: row.price,
+                    amount: row.amount,
+                    note: row.note,
+                    source: row.source,
+                    purchaseDate: targetDate,
+                    order: maxOrder + index + 1,
+                }));
+
+                const inserted = await tx.insert(globalPurchases).values(newRows).returning();
+
+                // Для возврата нужны имена проектов
+                const projectIds = [...new Set(inserted.map(r => r.projectId).filter((id): id is string => !!id))];
+                const projectsList = projectIds.length > 0
+                    ? await tx.query.projects.findMany({
+                        where: and(inArray(projects.id, projectIds), withActiveTenant(projects, teamId)),
+                        columns: { id: true, name: true }
+                      })
+                    : [];
+
+                const projectMap = new Map(projectsList.map(p => [p.id, p.name]));
+
+                return inserted.map(row => toRow(row, row.projectId ? projectMap.get(row.projectId) ?? null : null));
+            });
+
+            return success(createdRows);
+        } catch (serviceError) {
+            console.error('GlobalPurchasesService.copyRowsToNextDay error', serviceError);
+            return error('Не удалось скопировать закупки на следующий день');
         }
     }
 }

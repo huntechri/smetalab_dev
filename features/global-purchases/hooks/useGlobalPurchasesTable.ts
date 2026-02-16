@@ -28,6 +28,7 @@ const sortRowsByProjectId = (rows: PurchaseRow[]) => [...rows].sort((a, b) => {
 export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange: PurchaseRowsRange) {
     const [rows, setRows] = useState<PurchaseRow[]>(() => sortRowsByProjectId(initialRows));
     const [range, setRange] = useState<PurchaseRowsRange>(initialRange);
+    const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
 
     const reloadRows = useCallback(async (nextRange: PurchaseRowsRange) => {
         const loadedRows = await globalPurchasesActionRepo.list(nextRange);
@@ -47,65 +48,70 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     }, [range.from]);
 
     const updateRow = useCallback(async (rowId: string, patch: PurchaseRowPatch) => {
-        let prevRow: PurchaseRow | null = null;
+        if (pendingIds.has(rowId)) return;
 
-        setRows((current) => {
-            const existing = current.find((row) => row.id === rowId);
-            if (!existing) {
-                return current;
-            }
+        // Capture previous state for potential rollback
+        const existing = rows.find((r) => r.id === rowId);
+        if (!existing) return;
+        const prevRow = existing;
 
-            prevRow = existing;
-            return current.map((row) => (row.id === rowId ? patchPurchaseRow(row, patch) : row));
-        });
+        setPendingIds((prev) => new Set(prev).add(rowId));
 
-        if (!prevRow) {
-            return;
-        }
+        // Optimistic update
+        setRows((current) => current.map((row) => (row.id === rowId ? patchPurchaseRow(row, patch) : row)));
 
         try {
             const updated = await globalPurchasesActionRepo.patch(rowId, patch);
             setRows((current) => sortRowsByProjectId(current.map((row) => (row.id === rowId ? updated : row))));
         } catch (serviceError) {
-            setRows((current) => current.map((row) => (row.id === rowId && prevRow ? prevRow : row)));
+            // Rollback
+            setRows((current) => current.map((row) => (row.id === rowId ? prevRow : row)));
             throw serviceError;
+        } finally {
+            setPendingIds((prev) => {
+                const next = new Set(prev);
+                next.delete(rowId);
+                return next;
+            });
         }
-    }, []);
+    }, [pendingIds, rows]);
 
     const removeRow = useCallback(async (rowId: string) => {
-        let removedRow: PurchaseRow | null = null;
-        let removedIndex = -1;
+        if (pendingIds.has(rowId)) return;
 
-        setRows((current) => {
-            removedIndex = current.findIndex((row) => row.id === rowId);
-            if (removedIndex < 0) {
-                return current;
-            }
+        const existingIndex = rows.findIndex((r) => r.id === rowId);
+        if (existingIndex < 0) return;
+        const removedRow = rows[existingIndex];
 
-            removedRow = current[removedIndex] ?? null;
-            return current.filter((row) => row.id !== rowId);
-        });
+        setPendingIds((prev) => new Set(prev).add(rowId));
 
-        if (!removedRow || removedIndex < 0) {
-            return;
-        }
+        // Optimistic remove
+        setRows((current) => current.filter((row) => row.id !== rowId));
 
         try {
             await globalPurchasesActionRepo.remove(rowId);
         } catch (serviceError) {
+            // Rollback
             setRows((current) => {
-                if (current.some((row) => row.id === rowId)) {
-                    return current;
-                }
-
+                if (current.some((row) => row.id === rowId)) return current;
                 const nextRows = [...current];
-                const insertIndex = Math.min(removedIndex, nextRows.length);
-                nextRows.splice(insertIndex, 0, removedRow as PurchaseRow);
+                nextRows.splice(existingIndex, 0, removedRow);
                 return nextRows;
             });
             throw serviceError;
+        } finally {
+            setPendingIds((prev) => {
+                const next = new Set(prev);
+                next.delete(rowId);
+                return next;
+            });
         }
-    }, []);
+    }, [pendingIds, rows]);
+
+    const copyToNextDay = useCallback(async () => {
+        const createdRows = await globalPurchasesActionRepo.copyToNextDay(range.from);
+        return createdRows;
+    }, [range.from]);
 
     const totals = useMemo(() => rows.reduce((acc, row) => {
         acc.amount += row.amount;
@@ -123,7 +129,9 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         addCatalogRow,
         updateRow,
         removeRow,
+        copyToNextDay,
         totals,
         addedMaterialNames,
+        pendingIds,
     };
 }
