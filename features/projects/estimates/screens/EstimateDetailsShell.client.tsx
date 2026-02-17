@@ -108,7 +108,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                         <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
                     </Suspense>
                 </TabsContent>
-                <TabsContent value="procurement"><EstimateProcurement /></TabsContent>
+                <TabsContent value="procurement"><EstimateProcurement estimateId={estimateId} /></TabsContent>
                 <TabsContent value="execution"><EstimateExecution /></TabsContent>
                 <TabsContent value="docs"><EstimateDocuments /></TabsContent>
             </Tabs>
