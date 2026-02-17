@@ -135,8 +135,8 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
             actualQty: roundMoney(actualQty),
             actualAvgPrice,
             actualAmount,
-            qtyDelta: roundMoney(actualQty - plannedQty),
-            amountDelta: roundMoney(actualAmount - plannedAmount),
+            qtyDelta: roundMoney(plannedQty - actualQty),
+            amountDelta: roundMoney(plannedAmount - actualAmount),
             purchaseCount: fact?.purchaseCount ?? 0,
             lastPurchaseDate: fact?.lastPurchaseDate ?? null,
         });
@@ -159,8 +159,8 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
             actualQty: roundMoney(actualQty),
             actualAvgPrice,
             actualAmount,
-            qtyDelta: roundMoney(actualQty),
-            amountDelta: roundMoney(actualAmount),
+            qtyDelta: roundMoney(-actualQty),
+            amountDelta: roundMoney(-actualAmount),
             purchaseCount: fact.purchaseCount,
             lastPurchaseDate: fact.lastPurchaseDate,
         });

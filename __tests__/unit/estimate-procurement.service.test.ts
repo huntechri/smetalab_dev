@@ -32,7 +32,7 @@ describe('buildEstimateProcurementRows', () => {
             actualAvgPrice: 110,
             actualAmount: 11000,
             qtyDelta: 0,
-            amountDelta: -39000,
+            amountDelta: 39000,
             purchaseCount: 2,
             lastPurchaseDate: '2026-12-17',
         });
@@ -42,6 +42,8 @@ describe('buildEstimateProcurementRows', () => {
             plannedAmount: 0,
             actualQty: 3,
             actualAvgPrice: 700,
+            qtyDelta: -3,
+            amountDelta: -2100,
             source: 'fact_only',
         });
     });
