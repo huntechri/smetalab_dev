@@ -172,6 +172,9 @@ pnpm test:integration    # Интеграционные тесты (требую
 
 **Важно:** `pnpm test` должен проходить без `.env.test` и без `DATABASE_URL`. Для `pnpm test:integration` нужен валидный `DATABASE_URL` (обычно тестовая ветка Neon).
 
+- Локально используйте `pnpm test:integration`: это обёртка с preflight-проверкой TCP (IPv4 + retry), и она может сделать **skip** при временной недоступности БД, чтобы не блокировать разработку.
+- В CI используйте `pnpm test:integration:force`: без skip-обёртки, чтобы пайплайн был строгим и детерминированным при корректно настроенном окружении/секретах.
+
 ## 🚀 CI/CD и Preview Deploys
 
 - CI запускается на `pull_request` в `main`, на `push` в `main` и по расписанию.
