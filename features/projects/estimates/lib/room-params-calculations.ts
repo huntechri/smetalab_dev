@@ -38,6 +38,7 @@ export const calculateTotals = (rows: EstimateRoomParamDraft[]) => rows.reduce((
     acc.wallsArea += calcWallsArea(row);
     acc.slopes += calcSlopes(row);
     acc.ceilingArea += toSafeNumber(row.ceilingArea);
+    acc.ceilingSlopes += toSafeNumber(row.ceilingSlopes);
     acc.doors += toSafeNumber(row.doorsCount);
     return acc;
 }, {
@@ -45,5 +46,6 @@ export const calculateTotals = (rows: EstimateRoomParamDraft[]) => rows.reduce((
     wallsArea: 0,
     slopes: 0,
     ceilingArea: 0,
+    ceilingSlopes: 0,
     doors: 0,
 });

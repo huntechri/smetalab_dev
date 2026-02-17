@@ -23,7 +23,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 <SidebarInset>
                     <ImpersonationBanner />
                     <AppHeader />
-                    <main id="main" className="flex-1 p-4 md:p-6 lg:p-8">
+                    <main id="main" className="flex-1 p-4 md:p-6 lg:p-8 min-w-0">
                         {children}
                     </main>
                 </SidebarInset>
