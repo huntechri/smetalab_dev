@@ -66,6 +66,9 @@ describe('global purchases row helpers', () => {
             note: '',
             source: 'manual',
             purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
         });
 
         expect(result.success).toBe(false);

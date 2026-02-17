@@ -68,6 +68,12 @@ const guideNavItems = [
         icon: Users,
         requiredPermission: 'guide',
     },
+    {
+        title: 'Поставщики материалов',
+        url: '/app/guide/material-suppliers',
+        icon: Users,
+        requiredPermission: 'guide',
+    },
 ];
 
 export function AppSidebar() {
