@@ -9,3 +9,5 @@ export { getWorks, getWorksCount, getWorksCached } from './works-queries';
 export { getMaterials, getMaterialsCount } from './materials-queries';
 
 export { getCounterparties, getCounterpartiesCount } from './counterparties-queries';
+
+export { getMaterialSuppliers, getMaterialSuppliersCount } from './material-suppliers-queries';
