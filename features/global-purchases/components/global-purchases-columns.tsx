@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { ColumnDef } from '@tanstack/react-table';
 import { Trash2 } from 'lucide-react';
 import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
     Select,
     SelectContent,
@@ -12,6 +13,16 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch } from '../types/dto';
 import { parseIsoDateSafe } from '../lib/date';
 
@@ -21,27 +32,27 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 
 type GlobalPurchasesColumnActions = {
     projectOptions: ProjectOption[];
     pendingIds: Set<string>;
-    onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
-    onRemove: (rowId: string) => Promise<void>;
+    onPatchAction: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
+    onRemoveAction: (rowId: string) => Promise<void>;
 };
 
 const ProjectCell = React.memo(function ProjectCell({
     projectId,
     rowId,
-    onPatch,
+    onPatchAction,
     projectOptions,
     disabled,
 }: {
     projectId: string | null;
     rowId: string;
-    onPatch: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
+    onPatchAction: (rowId: string, patch: PurchaseRowPatch) => Promise<void>;
     projectOptions: ProjectOption[];
     disabled?: boolean;
 }) {
     return (
         <Select
             value={projectId ?? 'none'}
-            onValueChange={(value) => void onPatch(rowId, { projectId: value === 'none' ? null : value })}
+            onValueChange={(value) => void onPatchAction(rowId, { projectId: value === 'none' ? null : value })}
             disabled={disabled}
         >
             <SelectTrigger className="h-8" aria-label="Выберите объект">
@@ -57,11 +68,71 @@ const ProjectCell = React.memo(function ProjectCell({
     );
 });
 
+const DeleteRowAction = React.memo(function DeleteRowAction({
+    rowId,
+    onRemoveAction,
+    materialName,
+    disabled,
+}: {
+    rowId: string;
+    onRemoveAction: (rowId: string) => Promise<void>;
+    materialName: string;
+    disabled?: boolean;
+}) {
+    const [open, setOpen] = React.useState(false);
+
+    return (
+        <>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
+                        onClick={() => setOpen(true)}
+                        disabled={disabled}
+                        aria-label="Удалить строку"
+                    >
+                        <Trash2 className="size-4" />
+                    </Button>
+                </TooltipTrigger>
+                <TooltipContent>Удалить строку закупки</TooltipContent>
+            </Tooltip>
+
+            <AlertDialog open={open} onOpenChange={setOpen}>
+                <AlertDialogContent onClick={(e) => e.stopPropagation()}>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Закупка {materialName ? `"${materialName}"` : "этого материала"} будет удалена безвозвратно.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel disabled={disabled}>Отмена</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={async (event) => {
+                                event.preventDefault();
+                                await onRemoveAction(rowId);
+                                if (open) setOpen(false);
+                            }}
+                            className="bg-red-700 text-white hover:bg-red-800"
+                            disabled={disabled}
+                        >
+                            Удалить
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </>
+    );
+});
+
 export function getGlobalPurchasesColumns({
     projectOptions,
     pendingIds,
-    onPatch,
-    onRemove,
+    onPatchAction,
+    onRemoveAction,
 }: GlobalPurchasesColumnActions): ColumnDef<PurchaseRow>[] {
     return [
         {
@@ -73,7 +144,7 @@ export function getGlobalPurchasesColumns({
                 <ProjectCell
                     projectId={row.original.projectId}
                     rowId={row.original.id}
-                    onPatch={onPatch}
+                    onPatchAction={onPatchAction}
                     projectOptions={projectOptions}
                     disabled={pendingIds.has(row.original.id)}
                 />
@@ -101,7 +172,7 @@ export function getGlobalPurchasesColumns({
                         displayValue={displayValue}
                         disabled={isPending}
                         ariaLabel="Дата закупки"
-                        onCommit={(value) => onPatch(row.original.id, { purchaseDate: value })}
+                        onCommit={(value) => onPatchAction(row.original.id, { purchaseDate: value })}
                     />
                 );
             }
@@ -116,7 +187,7 @@ export function getGlobalPurchasesColumns({
                     value={row.original.materialName}
                     disabled={pendingIds.has(row.original.id)}
                     ariaLabel="Наименование материала"
-                    onCommit={(value) => onPatch(row.original.id, { materialName: value })}
+                    onCommit={(value) => onPatchAction(row.original.id, { materialName: value })}
                 />
             ),
         },
@@ -130,7 +201,7 @@ export function getGlobalPurchasesColumns({
                     value={row.original.unit}
                     disabled={pendingIds.has(row.original.id)}
                     ariaLabel="Единица измерения"
-                    onCommit={(value) => onPatch(row.original.id, { unit: value })}
+                    onCommit={(value) => onPatchAction(row.original.id, { unit: value })}
                 />
             ),
         },
@@ -149,7 +220,7 @@ export function getGlobalPurchasesColumns({
                         value={row.original.qty}
                         disabled={pendingIds.has(row.original.id)}
                         ariaLabel="Количество"
-                        onCommit={(value) => onPatch(row.original.id, { qty: Number(value) })}
+                        onCommit={(value) => onPatchAction(row.original.id, { qty: Number(value) })}
                     />
                 </div>
             ),
@@ -169,7 +240,7 @@ export function getGlobalPurchasesColumns({
                         value={row.original.price}
                         disabled={pendingIds.has(row.original.id)}
                         ariaLabel="Цена"
-                        onCommit={(value) => onPatch(row.original.id, { price: Number(value) })}
+                        onCommit={(value) => onPatchAction(row.original.id, { price: Number(value) })}
                     />
                 </div>
             ),
@@ -195,7 +266,7 @@ export function getGlobalPurchasesColumns({
                     value={row.original.note}
                     disabled={pendingIds.has(row.original.id)}
                     ariaLabel="Примечание"
-                    onCommit={(value) => onPatch(row.original.id, { note: value })}
+                    onCommit={(value) => onPatchAction(row.original.id, { note: value })}
                 />
             ),
         },
@@ -204,23 +275,16 @@ export function getGlobalPurchasesColumns({
             header: '',
             size: 60,
             maxSize: 60,
-            cell: ({ row }) => {
-                const isPending = pendingIds.has(row.original.id);
-                return (
-                    <div className="flex justify-center">
-                        <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon"
-                            onClick={() => void onRemove(row.original.id)}
-                            aria-label="Удалить строку"
-                            disabled={isPending}
-                        >
-                            <Trash2 className={`size-4 ${isPending ? 'text-muted-foreground/50' : 'text-muted-foreground'}`} />
-                        </Button>
-                    </div>
-                );
-            },
+            cell: ({ row }) => (
+                <div className="flex justify-center">
+                    <DeleteRowAction
+                        rowId={row.original.id}
+                        materialName={row.original.materialName}
+                        onRemoveAction={onRemoveAction}
+                        disabled={pendingIds.has(row.original.id)}
+                    />
+                </div>
+            ),
         },
     ];
 }
