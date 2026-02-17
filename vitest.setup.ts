@@ -35,6 +35,15 @@ if (process.env.TEST_DATABASE_URL) {
   process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
 }
 
+
+// Keep unit/UI/API/performance runs deterministic without requiring real DB/email env
+if (!isIntegrationRun && !process.env.DATABASE_URL) {
+  process.env.DATABASE_URL = 'postgres://postgres:postgres@127.0.0.1:5432/smetalab_test';
+}
+
+if (!process.env.RESEND_API_KEY) {
+  process.env.RESEND_API_KEY = 'test-resend-key';
+}
 if (isIntegrationRun) {
   // Integration tests must never run against production-like DB
   if (!process.env.DATABASE_URL) {
