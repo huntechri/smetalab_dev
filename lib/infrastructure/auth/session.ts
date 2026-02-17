@@ -3,7 +3,13 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { User } from '@/lib/data/db/schema';
 
-const key = new TextEncoder().encode(process.env.AUTH_SECRET);
+const AUTH_SECRET = process.env.AUTH_SECRET;
+
+if (!AUTH_SECRET || AUTH_SECRET.length < 32) {
+  throw new Error('AUTH_SECRET environment variable is not set or is too short (min 32 chars).');
+}
+
+const key = new TextEncoder().encode(AUTH_SECRET);
 const SALT_ROUNDS = 10;
 
 export async function hashPassword(password: string) {
