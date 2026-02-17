@@ -178,6 +178,7 @@ pnpm test:integration    # Интеграционные тесты (требую
 ## 🚀 CI/CD и Preview Deploys
 
 - CI запускается на `pull_request` в `main`, на `push` в `main` и по расписанию.
+- Integration Tests (optional) теперь запускается и на внутренних PR (не из форков), чтобы не было ложного статуса skipped в обычном review-потоке.
 - Production деплой в Vercel выполняется только после успешного CI на `push` в `main`.
 - Для каждого внутреннего PR (из этого же репозитория) создается Vercel Preview Deploy и ссылка автоматически публикуется комментарием в PR.
 - Для работы деплоев в GitHub Secrets должны быть заданы: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
