@@ -45,6 +45,9 @@ describe('globalPurchasesActionRepo', () => {
                 note: '',
                 source: 'manual',
                 purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
             },
         });
 
@@ -69,6 +72,9 @@ describe('globalPurchasesActionRepo', () => {
                 note: '',
                 source: 'catalog',
                 purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
             },
         });
 

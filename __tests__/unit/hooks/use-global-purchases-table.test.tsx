@@ -29,6 +29,9 @@ const baseRows: PurchaseRow[] = [
         note: '',
         source: 'manual',
         purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
     },
     {
         id: '2',
@@ -42,6 +45,9 @@ const baseRows: PurchaseRow[] = [
         note: '',
         source: 'manual',
         purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
     },
 ];
 
@@ -96,6 +102,9 @@ describe('useGlobalPurchasesTable', () => {
             note: '',
             source: 'manual',
             purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
         });
 
         const { result } = renderHook(() => useGlobalPurchasesTable(baseRows, { from: '2026-01-15', to: '2026-01-15' }));
@@ -121,6 +130,9 @@ describe('useGlobalPurchasesTable', () => {
                 note: '',
                 source: 'manual',
                 purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
             },
             {
                 id: '2',
@@ -134,6 +146,9 @@ describe('useGlobalPurchasesTable', () => {
                 note: '',
                 source: 'manual',
                 purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
             },
             {
                 id: '3',
@@ -147,6 +162,9 @@ describe('useGlobalPurchasesTable', () => {
                 note: '',
                 source: 'manual',
                 purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
             },
         ];
 

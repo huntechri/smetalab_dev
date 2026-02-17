@@ -27,6 +27,9 @@ const mockRow: PurchaseRow = {
     note: '',
     source: 'manual',
     purchaseDate: '2023-10-27',
+        supplierId: null,
+        supplierName: null,
+        supplierColor: null,
 };
 
 describe('useGlobalPurchasesTable Concurrency', () => {
