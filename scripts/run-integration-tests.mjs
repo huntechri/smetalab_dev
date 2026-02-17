@@ -9,6 +9,25 @@ if (!databaseUrl) {
   process.exit(0);
 }
 
+
+const runIntegrationVitest = () => {
+  const result = spawnSync('pnpm', ['vitest', 'run', '--config', 'vitest.integration.config.ts'], {
+    stdio: 'inherit',
+    env: process.env,
+  });
+
+  if (typeof result.status === 'number') {
+    process.exit(result.status);
+  }
+
+  process.exit(1);
+};
+
+if (process.env.CI === 'true') {
+  console.log('CI=true detected: running integration tests in strict mode (no preflight skip).');
+  runIntegrationVitest();
+}
+
 let parsedUrl;
 try {
   parsedUrl = new URL(databaseUrl);
@@ -70,14 +89,4 @@ if (!isReachable) {
   console.log('Skipping integration tests: DATABASE_URL is present but database host is unreachable (IPv4 retries exhausted).');
   process.exit(0);
 }
-
-const result = spawnSync('pnpm', ['vitest', 'run', '--config', 'vitest.integration.config.ts'], {
-  stdio: 'inherit',
-  env: process.env,
-});
-
-if (typeof result.status === 'number') {
-  process.exit(result.status);
-}
-
-process.exit(1);
+runIntegrationVitest();
