@@ -4,6 +4,7 @@ import { Suspense, use } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { EstimateRow } from '../types/dto';
+import { EstimateRoomParam } from '../types/room-params.dto';
 import { EstimateParams } from '../components/tabs/EstimateParams';
 import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
 import { EstimateExecution } from '../components/tabs/EstimateExecution';
@@ -27,9 +28,15 @@ function EstimateTableLoader({ estimateId, rowsPromise }: { estimateId: string; 
     return <EstimateTable estimateId={estimateId} initialRows={rows} />;
 }
 
+function EstimateParamsLoader({ estimateId, roomParamsPromise }: { estimateId: string; roomParamsPromise: Promise<EstimateRoomParam[]> }) {
+    const roomParams = use(roomParamsPromise);
+    return <EstimateParams estimateId={estimateId} initialRows={roomParams} />;
+}
+
 interface EstimateDetailsShellProps {
     estimateId: string;
     rowsPromise: Promise<EstimateRow[]>;
+    roomParamsPromise: Promise<EstimateRoomParam[]>;
     project: {
         name: string;
         slug: string;
@@ -40,7 +47,7 @@ interface EstimateDetailsShellProps {
     };
 }
 
-export function EstimateDetailsShell({ estimateId, rowsPromise, project, estimate }: EstimateDetailsShellProps) {
+export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -96,7 +103,11 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, project, estimat
                         <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} />
                     </Suspense>
                 </TabsContent>
-                <TabsContent value="params"><EstimateParams /></TabsContent>
+                <TabsContent value="params" className="mt-2 md:mt-3">
+                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                        <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
+                    </Suspense>
+                </TabsContent>
                 <TabsContent value="procurement"><EstimateProcurement /></TabsContent>
                 <TabsContent value="execution"><EstimateExecution /></TabsContent>
                 <TabsContent value="docs"><EstimateDocuments /></TabsContent>

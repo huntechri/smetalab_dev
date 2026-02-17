@@ -188,6 +188,33 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
 ]);
 
+export const estimateRoomParams = pgTable('estimate_room_params', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  estimateId: uuid('estimate_id')
+    .notNull()
+    .references(() => estimates.id),
+  order: integer('order').notNull().default(0),
+  name: text('name').notNull().default(''),
+  perimeter: doublePrecision('perimeter').notNull().default(0),
+  height: doublePrecision('height').notNull().default(0),
+  floorArea: doublePrecision('floor_area').notNull().default(0),
+  ceilingArea: doublePrecision('ceiling_area').notNull().default(0),
+  ceilingSlopes: doublePrecision('ceiling_slopes').notNull().default(0),
+  doorsCount: doublePrecision('doors_count').notNull().default(0),
+  wallSegments: doublePrecision('wall_segments').notNull().default(0),
+  windows: jsonb('windows').$type<[{ height: number; width: number }, { height: number; width: number }, { height: number; width: number }]>().notNull(),
+  portals: jsonb('portals').$type<[{ height: number; width: number }, { height: number; width: number }, { height: number; width: number }]>().notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('estimate_room_params_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_room_params_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
+]);
+
 export const globalPurchases = pgTable('global_purchases', {
   id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
   tenantId: integer('tenant_id')
@@ -747,6 +774,7 @@ export const estimatesRelations = relations(estimates, ({ one, many }) => ({
     references: [projects.id],
   }),
   rows: many(estimateRows),
+  roomParams: many(estimateRoomParams),
 }));
 
 export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
@@ -756,6 +784,17 @@ export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
   }),
   estimate: one(estimates, {
     fields: [estimateRows.estimateId],
+    references: [estimates.id],
+  }),
+}));
+
+export const estimateRoomParamsRelations = relations(estimateRoomParams, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [estimateRoomParams.tenantId],
+    references: [teams.id],
+  }),
+  estimate: one(estimates, {
+    fields: [estimateRoomParams.estimateId],
     references: [estimates.id],
   }),
 }));
@@ -782,6 +821,8 @@ export type Estimate = typeof estimates.$inferSelect;
 export type NewEstimate = typeof estimates.$inferInsert;
 export type EstimateRowEntity = typeof estimateRows.$inferSelect;
 export type NewEstimateRowEntity = typeof estimateRows.$inferInsert;
+export type EstimateRoomParamEntity = typeof estimateRoomParams.$inferSelect;
+export type NewEstimateRoomParamEntity = typeof estimateRoomParams.$inferInsert;
 export type EstimateShare = typeof estimateShares.$inferSelect;
 export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
