@@ -1,9 +1,21 @@
 import { describe, it, expect, vi } from 'vitest';
 import { GET } from '@/app/api/user/route';
 import * as queries from '@/lib/data/db/queries';
-import { User } from '@/lib/data/db/schema';
-
 import * as rbac from '@/lib/infrastructure/auth/rbac';
+
+const mocks = vi.hoisted(() => ({
+    findFirst: vi.fn(),
+}));
+
+vi.mock('@/lib/data/db/drizzle', () => ({
+    db: {
+        query: {
+            teamMembers: {
+                findFirst: mocks.findFirst,
+            },
+        },
+    },
+}));
 
 vi.mock('@/lib/data/db/queries', () => ({
     getUser: vi.fn(),
@@ -16,10 +28,12 @@ vi.mock('@/lib/infrastructure/auth/rbac', () => ({
 
 describe('User API Route', () => {
     it('should return user data when authenticated', async () => {
-        const mockUser = { id: 1, name: 'Test User', email: 'test@example.com', tenantId: 1, teamRole: 'admin' } as any;
+        const mockUser = { id: 1, name: 'Test User', email: 'test@example.com', tenantId: 1, teamRole: 'admin' };
         const mockPermissions = [{ code: 'projects', level: 'read' as const }];
+
         vi.mocked(queries.getUser).mockResolvedValue(mockUser);
         vi.mocked(rbac.getUserPermissions).mockResolvedValue(mockPermissions);
+        mocks.findFirst.mockResolvedValue({ teamId: 1 });
 
         const response = await GET();
         const data = await response.json();
