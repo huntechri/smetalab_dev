@@ -3,8 +3,21 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { User } from '@/lib/data/db/schema';
 
-const key = new TextEncoder().encode(process.env.AUTH_SECRET);
 const SALT_ROUNDS = 10;
+
+function getAuthSecretKey() {
+  const authSecret = process.env.AUTH_SECRET;
+
+  if (!authSecret) {
+    throw new Error('AUTH_SECRET is required for token signing and verification');
+  }
+
+  if (authSecret.length < 32) {
+    throw new Error('AUTH_SECRET must be at least 32 characters long');
+  }
+
+  return new TextEncoder().encode(authSecret);
+}
 
 export async function hashPassword(password: string) {
   return hash(password, SALT_ROUNDS);
@@ -30,6 +43,8 @@ export const SESSION_COOKIE_NAME = 'access_token';
 export const REFRESH_COOKIE_NAME = 'refresh_token';
 
 export async function signToken(payload: SessionData, expiry: string = '1d') {
+  const key = getAuthSecretKey();
+
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -38,6 +53,8 @@ export async function signToken(payload: SessionData, expiry: string = '1d') {
 }
 
 export async function verifyToken(input: string) {
+  const key = getAuthSecretKey();
+
   try {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ['HS256'],
@@ -95,4 +112,3 @@ export async function clearSession() {
   cookieStore.delete(SESSION_COOKIE_NAME);
   cookieStore.delete(REFRESH_COOKIE_NAME);
 }
-
