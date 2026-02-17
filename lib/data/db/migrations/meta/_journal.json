@@ -155,6 +155,13 @@
       "when": 1771500000000,
       "tag": "0021_global_purchases_supplier_badges",
       "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "7",
+      "when": 1771600000000,
+      "tag": "0022_estimate_room_params",
+      "breakpoints": true
     }
   ]
 }
