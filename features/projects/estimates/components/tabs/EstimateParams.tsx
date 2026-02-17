@@ -58,14 +58,14 @@ export function EstimateParams({ estimateId, initialRows }: { estimateId: string
 
     return (
         <div className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2">
-                <Button variant="outline" size="sm" className="h-8" onClick={addRoom}>
-                    <Plus className="mr-1 h-4 w-4" />
-                    Добавить помещение
+            <div className="flex flex-wrap items-center justify-end gap-1.5 md:gap-2">
+                <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3" onClick={addRoom}>
+                    <Plus className="h-4 w-4" />
+                    <span className="text-xs md:text-sm">Добавить помещение</span>
                 </Button>
-                <Button size="sm" className="h-8" onClick={onSave} disabled={isSaving || !hasRows}>
-                    <Save className="mr-1 h-4 w-4" />
-                    {isSaving ? 'Сохранение...' : 'Сохранить'}
+                <Button size="sm" className="h-8 gap-1.5 px-3" onClick={onSave} disabled={isSaving || !hasRows}>
+                    <Save className="h-4 w-4" />
+                    <span className="text-xs md:text-sm">{isSaving ? 'Сохранение...' : 'Сохранить'}</span>
                 </Button>
             </div>
 
@@ -76,7 +76,7 @@ export function EstimateParams({ estimateId, initialRows }: { estimateId: string
                 onRemove={removeRoom}
             />
 
-            <RoomsParamsTotals totals={totals} />
+            <RoomsParamsTotals rows={rows} grandTotals={totals} />
         </div>
     );
 }
