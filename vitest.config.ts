@@ -10,14 +10,20 @@ export default defineConfig({
             '@': path.resolve(__dirname, './'),
             'server-only': path.resolve(__dirname, './__tests__/__mocks__/server-only.ts'),
         },
-        include: ['**/*.{test,spec}.{ts,tsx}'],
+        include: [
+            '__tests__/unit/**/*.{test,spec}.{ts,tsx}',
+            '__tests__/ui/**/*.{test,spec}.{ts,tsx}',
+            '__tests__/api/**/*.{test,spec}.{ts,tsx}',
+            '__tests__/performance/**/*.{test,spec}.{ts,tsx}',
+            '__tests__/rbac_perf.test.ts',
+        ],
         exclude: [
             'node_modules/**/*',
+            '__tests__/integration/**/*',
             '__tests__/e2e/**/*',
         ],
         setupFiles: ['./vitest.setup.ts'],
         testTimeout: 30000,
-        // Базовая последовательность файлов
         fileParallelism: false,
         sequence: {
             concurrent: false,

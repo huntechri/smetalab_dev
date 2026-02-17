@@ -128,7 +128,8 @@
 - **Unit** (`__tests__/unit/`) — hooks, utils, маленькие UI-компоненты.
 - **Integration** (`__tests__/integration/`) — server actions, сервисы, БД/tenant-логика.
 - **UI** (`__tests__/ui/`) — тестирование визуальных компонентов и страниц.
-- Тесты завязаны на `TEST_DATABASE_URL`.
+- `pnpm test` запускает только unit/isolated набор и не требует БД/сети.
+- Интеграционные тесты (`pnpm test:integration`) запускаются отдельно и требуют валидный `DATABASE_URL`.
 
 ## 📂 Структура Проекта
 
@@ -165,10 +166,11 @@
 ```bash
 pnpm type-check    # Проверка типов (обязательно перед коммитом)
 pnpm lint          # Проверка стиля кода
-pnpm test          # Тесты (выполняются в отдельной ветке Neon `db_test`)
+pnpm test                # Только unit/isolated тесты (без БД/сети)
+pnpm test:integration    # Интеграционные тесты (требуют DATABASE_URL)
 ```
 
-**Важно:** Для локального запуска тестов необходимо иметь файл `.env.test` с корректной переменной `TEST_DATABASE_URL`, указывающей на тестовую ветку в Neon.
+**Важно:** `pnpm test` должен проходить без `.env.test` и без `DATABASE_URL`. Для `pnpm test:integration` нужен валидный `DATABASE_URL` (обычно тестовая ветка Neon).
 
 ## 🚀 CI/CD и Preview Deploys
 
