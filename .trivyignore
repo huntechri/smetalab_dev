@@ -1,0 +1,4 @@
+# xlsx@0.18.5 is the latest available npm release at the moment.
+# Trivy references fixed versions that are not published on npm.
+CVE-2023-30533
+CVE-2024-22363
