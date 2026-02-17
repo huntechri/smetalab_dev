@@ -72,7 +72,10 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
 
         // Capture previous state for potential rollback
         const existing = rows.find((r) => r.id === rowId);
-        if (!existing) return;
+        if (!existing) {
+            finishPending(rowId);
+            return;
+        }
         const prevRow = existing;
 
         // Optimistic update
@@ -94,7 +97,10 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         if (!startPending(rowId)) return;
 
         const existingIndex = rows.findIndex((r) => r.id === rowId);
-        if (existingIndex < 0) return;
+        if (existingIndex < 0) {
+            finishPending(rowId);
+            return;
+        }
         const removedRow = rows[existingIndex];
 
         // Optimistic remove

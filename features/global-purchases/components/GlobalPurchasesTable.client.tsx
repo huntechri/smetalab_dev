@@ -69,12 +69,13 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         onPatchAction: async (rowId, patch) => {
             try {
                 await updateRow(rowId, patch);
-            } catch {
+            } catch (serviceError) {
                 toast({
                     variant: 'destructive',
                     title: 'Ошибка сохранения',
                     description: 'Не удалось сохранить изменения в строке закупки.',
                 });
+                throw serviceError;
             }
         },
         onRemoveAction: async (rowId) => {

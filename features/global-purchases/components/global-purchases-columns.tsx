@@ -66,8 +66,12 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
   const color = current?.color ?? row.supplierColor;
 
   const handleSelect = async (supplierId: string | null) => {
-    await onPatchAction(row.id, { supplierId });
-    setOpen(false);
+    try {
+      await onPatchAction(row.id, { supplierId });
+      setOpen(false);
+    } catch {
+      // keep popover open so user can retry after toast in parent
+    }
   };
 
   return (
@@ -134,7 +138,9 @@ const ProjectCell = React.memo(function ProjectCell({
   return (
     <Select
       value={projectId ?? 'none'}
-      onValueChange={(value) => void onPatchAction(rowId, { projectId: value === 'none' ? null : value })}
+      onValueChange={(value) => {
+        void onPatchAction(rowId, { projectId: value === 'none' ? null : value }).catch(() => {});
+      }}
       disabled={disabled}
     >
       <SelectTrigger className="h-8" aria-label="Выберите объект">
@@ -240,7 +246,13 @@ export function getGlobalPurchasesColumns({
             displayValue={displayValue}
             disabled={isPending}
             ariaLabel="Дата закупки"
-            onCommit={(value) => onPatchAction(row.original.id, { purchaseDate: value })}
+            onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { purchaseDate: value });
+            } catch (_error) {
+              return;
+            }
+          }}
           />
         );
       },
@@ -262,7 +274,13 @@ export function getGlobalPurchasesColumns({
             value={row.original.materialName}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Наименование материала"
-            onCommit={(value) => onPatchAction(row.original.id, { materialName: value })}
+            onCommit={async (value) => {
+              try {
+                await onPatchAction(row.original.id, { materialName: value });
+              } catch (_error) {
+              return;
+            }
+            }}
           />
         </div>
       ),
@@ -277,7 +295,13 @@ export function getGlobalPurchasesColumns({
           value={row.original.unit}
           disabled={pendingIds.has(row.original.id)}
           ariaLabel="Единица измерения"
-          onCommit={(value) => onPatchAction(row.original.id, { unit: value })}
+          onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { unit: value });
+            } catch (_error) {
+              return;
+            }
+          }}
         />
       ),
     },
@@ -296,7 +320,13 @@ export function getGlobalPurchasesColumns({
             value={row.original.qty}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Количество"
-            onCommit={(value) => onPatchAction(row.original.id, { qty: Number(value) })}
+            onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { qty: Number(value) });
+            } catch (_error) {
+              return;
+            }
+          }}
           />
         </div>
       ),
@@ -316,7 +346,13 @@ export function getGlobalPurchasesColumns({
             value={row.original.price}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Цена"
-            onCommit={(value) => onPatchAction(row.original.id, { price: Number(value) })}
+            onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { price: Number(value) });
+            } catch (_error) {
+              return;
+            }
+          }}
           />
         </div>
       ),
@@ -338,7 +374,13 @@ export function getGlobalPurchasesColumns({
           value={row.original.note}
           disabled={pendingIds.has(row.original.id)}
           ariaLabel="Примечание"
-          onCommit={(value) => onPatchAction(row.original.id, { note: value })}
+          onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { note: value });
+            } catch (_error) {
+              return;
+            }
+          }}
         />
       ),
     },
