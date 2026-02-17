@@ -3,8 +3,10 @@ import { getEstimateBySlug } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { notFound, redirect } from 'next/navigation';
-import { EstimateRow, EstimateMeta } from '@/features/projects/estimates/types/dto';
+import { EstimateRow } from '@/features/projects/estimates/types/dto';
 import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
+import { EstimateRoomParamsService } from '@/lib/services/estimate-room-params.service';
+import { EstimateRoomParam } from '@/features/projects/estimates/types/room-params.dto';
 
 type PageProps = {
     params: Promise<{ projectId: string; estimateId: string }>;
@@ -29,12 +31,14 @@ export default async function Page({ params }: PageProps) {
     }
 
     const rowsPromise: Promise<EstimateRow[]> = EstimateRowsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
+    const roomParamsPromise: Promise<EstimateRoomParam[]> = EstimateRoomParamsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
 
     return (
         <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-4">
             <EstimateDetailsShell
                 estimateId={estimate.id}
                 rowsPromise={rowsPromise}
+                roomParamsPromise={roomParamsPromise}
                 project={{ name: project.name, slug: project.slug }}
                 estimate={{ name: estimate.name, slug: estimate.slug }}
             />
