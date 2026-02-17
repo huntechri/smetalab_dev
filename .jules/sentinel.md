@@ -17,8 +17,3 @@
 **Vulnerability:** The `isPrivateIp` check failed to detect IPv4-mapped IPv6 addresses (e.g., `::ffff:127.0.0.1`), allowing attackers to bypass SSRF protections and access internal services by using this alternative notation.
 **Learning:** Standard IP validation logic often overlooks mapped addresses unless explicitly handled. `dns.lookup` (and thus `http.request`) supports these addresses natively.
 **Prevention:** Strip the `::ffff:` prefix from IPv6 addresses and re-validate the remaining suffix against IPv4 private ranges. Ensure IP validation handles all possible representations.
-
-## 2025-02-23 - Weak JWT Secret Handling
-**Vulnerability:** The application initialized `jose` JWT signing key using `new TextEncoder().encode(process.env.AUTH_SECRET)`. If `AUTH_SECRET` was undefined, this resulted in an empty `Uint8Array`, potentially allowing tokens to be signed with an empty key if the library permitted it (or simply running with a known weak state).
-**Learning:** `TextEncoder.encode(undefined)` does not throw but returns an empty buffer (or encodes "undefined"). This can silently mask missing configuration in security-critical paths.
-**Prevention:** Always explicitly validate existence and length of security secrets before usage. Do not rely on implicit type coercion or default behaviors of browser-like APIs (TextEncoder) in Node.js environment.
