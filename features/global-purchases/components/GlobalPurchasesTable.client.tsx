@@ -17,6 +17,7 @@ import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
 import { formatLocalDateToIso, parseIsoDateSafe, addDaysToIsoDate } from '../lib/date';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -63,7 +64,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
     const columns = useMemo(() => getGlobalPurchasesColumns({
         projectOptions,
         pendingIds,
-        onPatch: async (rowId, patch) => {
+        onPatchAction: async (rowId, patch) => {
             try {
                 await updateRow(rowId, patch);
             } catch {
@@ -74,7 +75,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 });
             }
         },
-        onRemove: async (rowId) => {
+        onRemoveAction: async (rowId) => {
             try {
                 await removeRow(rowId);
             } catch {
@@ -182,16 +183,21 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 data={rows}
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
-                height="580px"
+                height="680px"
                 actions={(
                     <div className="flex flex-wrap items-center gap-2">
                         <Popover>
-                            <PopoverTrigger asChild>
-                                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums">
-                                    <CalendarDays className="size-4" />
-                                    {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
-                                </Button>
-                            </PopoverTrigger>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <PopoverTrigger asChild>
+                                        <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums text-xs md:text-sm">
+                                            <CalendarDays className="size-4" />
+                                            {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
+                                        </Button>
+                                    </PopoverTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>Выберете период отображения закупок</TooltipContent>
+                            </Tooltip>
                             <PopoverContent className="w-auto p-0" align="start">
                                 <Calendar
                                     mode="range"
@@ -203,42 +209,56 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                             </PopoverContent>
                         </Popover>
 
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1.5 w-full sm:w-auto"
-                            onClick={() => void handleAddManualRow()}
-                            disabled={isAddingManual}
-                        >
-                            <Plus className="size-4" />
-                            <span className="truncate">Строка вручную</span>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 w-[calc(50%-4px)] sm:w-auto text-xs md:text-sm"
+                                    onClick={() => void handleAddManualRow()}
+                                    disabled={isAddingManual}
+                                >
+                                    <Plus className="size-4" />
+                                    <span className="truncate">Строка вручную</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Добавить пустую строку закупки</TooltipContent>
+                        </Tooltip>
 
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1.5 w-full sm:w-auto"
-                            onClick={() => setIsCatalogOpen(true)}
-                            disabled={isAddingCatalog}
-                        >
-                            <BookOpen className="size-4" />
-                            <span className="truncate">Из справочника</span>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 w-[calc(50%-4px)] sm:w-auto text-xs md:text-sm"
+                                    onClick={() => setIsCatalogOpen(true)}
+                                    disabled={isAddingCatalog}
+                                >
+                                    <BookOpen className="size-4" />
+                                    <span className="truncate">Из справочника</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Выбрать материалы из каталога</TooltipContent>
+                        </Tooltip>
 
-                        <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="h-8 gap-1.5 w-full sm:w-auto text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                            onClick={() => void handleCopyToNextDay()}
-                            disabled={isCopying || rows.length === 0 || range.from !== range.to}
-                            title="Копировать все строки текущего дня на следующий"
-                        >
-                            <Copy className="size-4" />
-                            <span className="truncate">На след. день</span>
-                        </Button>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 w-full sm:w-auto text-xs md:text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                                    onClick={() => void handleCopyToNextDay()}
+                                    disabled={isCopying || rows.length === 0 || range.from !== range.to}
+                                >
+                                    <Copy className="size-4" />
+                                    <span className="truncate">На след. день</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Копировать все строки текущего дня на следующий</TooltipContent>
+                        </Tooltip>
                     </div>
                 )}
             />
@@ -254,7 +274,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 isOpen={isCatalogOpen}
                 onClose={() => setIsCatalogOpen(false)}
                 onSelect={handleCatalogSelect}
-                parentWorkName={projectOptions.find((project) => project.id === defaultProjectId)?.name || 'Глобальные закупки'}
+                parentWorkName={projectOptions.find((project) => project.id === defaultProjectId)?.name || 'Закупки'}
                 addedMaterialNames={addedMaterialNames}
                 closeOnSelect={false}
                 allowDuplicateSelection
