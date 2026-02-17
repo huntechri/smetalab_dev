@@ -12,6 +12,7 @@ describe('EstimateProcurementService integration', () => {
     beforeEach(async () => {
         await resetDatabase();
 
+        await db.insert(teams).values({ name: 'System Team' }).returning();
         const [a] = await db.insert(teams).values({ name: 'Team A' }).returning();
         const [b] = await db.insert(teams).values({ name: 'Team B' }).returning();
         teamA = a.id;
