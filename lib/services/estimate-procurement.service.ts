@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { estimateRows, estimates, globalPurchases } from '@/lib/data/db/schema';
@@ -40,6 +40,22 @@ type Aggregate = {
     unit: string;
     qty: number;
     amount: number;
+    purchaseCount: number;
+    lastPurchaseDate: string | null;
+};
+
+type PlanAggregateInput = {
+    materialName: string;
+    unit: string;
+    plannedQty: number;
+    plannedAmount: number;
+};
+
+type FactAggregateInput = {
+    materialName: string;
+    unit: string;
+    actualQty: number;
+    actualAmount: number;
     purchaseCount: number;
     lastPurchaseDate: string | null;
 };
@@ -108,21 +124,24 @@ const aggregateFact = (rows: FactRow[]) => {
     return map;
 };
 
-export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: FactRow[]): EstimateProcurementRow[] => {
-    const planMap = aggregatePlan(planRows);
-    const factMap = aggregateFact(factRows);
+const buildRowsFromAggregates = (
+    planAggregates: PlanAggregateInput[],
+    factAggregates: FactAggregateInput[],
+): EstimateProcurementRow[] => {
+    const planMap = new Map(planAggregates.map((row) => [normalizeMaterialKey(row.materialName), row]));
+    const factMap = new Map(factAggregates.map((row) => [normalizeMaterialKey(row.materialName), row]));
 
     const rows: EstimateProcurementRow[] = [];
 
     for (const [key, plan] of planMap.entries()) {
         const fact = factMap.get(key);
 
-        const plannedQty = plan.qty;
-        const plannedAmount = roundMoney(plan.amount);
+        const plannedQty = plan.plannedQty;
+        const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedPrice = plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0;
 
-        const actualQty = fact?.qty ?? 0;
-        const actualAmount = roundMoney(fact?.amount ?? 0);
+        const actualQty = fact?.actualQty ?? 0;
+        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
         const actualAvgPrice = actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0;
 
         rows.push({
@@ -145,8 +164,8 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
     }
 
     for (const fact of factMap.values()) {
-        const actualQty = fact.qty;
-        const actualAmount = roundMoney(fact.amount);
+        const actualQty = fact.actualQty;
+        const actualAmount = roundMoney(fact.actualAmount);
         const actualAvgPrice = actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0;
 
         rows.push({
@@ -175,6 +194,28 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
     });
 };
 
+export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: FactRow[]): EstimateProcurementRow[] => {
+    const planMap = aggregatePlan(planRows);
+    const factMap = aggregateFact(factRows);
+
+    return buildRowsFromAggregates(
+        [...planMap.values()].map((row) => ({
+            materialName: row.materialName,
+            unit: row.unit,
+            plannedQty: row.qty,
+            plannedAmount: row.amount,
+        })),
+        [...factMap.values()].map((row) => ({
+            materialName: row.materialName,
+            unit: row.unit,
+            actualQty: row.qty,
+            actualAmount: row.amount,
+            purchaseCount: row.purchaseCount,
+            lastPurchaseDate: row.lastPurchaseDate,
+        })),
+    );
+};
+
 export class EstimateProcurementService {
     static async list(teamId: number, estimateId: string): Promise<Result<EstimateProcurementRow[]>> {
         try {
@@ -187,25 +228,46 @@ export class EstimateProcurementService {
                 return error('Смета не найдена', 'NOT_FOUND');
             }
 
-            const [planRows, factRows] = await Promise.all([
-                db.query.estimateRows.findMany({
-                    where: and(
-                        eq(estimateRows.estimateId, estimateId),
-                        eq(estimateRows.kind, 'material'),
-                        withActiveTenant(estimateRows, teamId),
-                    ),
-                    columns: { name: true, unit: true, qty: true, price: true },
-                }),
-                db.query.globalPurchases.findMany({
-                    where: and(
-                        eq(globalPurchases.projectId, estimate.projectId),
-                        withActiveTenant(globalPurchases, teamId),
-                    ),
-                    columns: { materialName: true, unit: true, qty: true, price: true, purchaseDate: true },
-                }),
+            const planNameNormalized = sql<string>`lower(trim(${estimateRows.name}))`;
+            const purchaseNameNormalized = sql<string>`lower(trim(${globalPurchases.materialName}))`;
+
+            const [planAggregates, factAggregates] = await Promise.all([
+                db
+                    .select({
+                        materialName: sql<string>`MIN(trim(${estimateRows.name}))`,
+                        unit: sql<string>`MIN(${estimateRows.unit})`,
+                        plannedQty: sql<number>`COALESCE(SUM(${estimateRows.qty}), 0)`,
+                        plannedAmount: sql<number>`COALESCE(SUM(${estimateRows.qty} * ${estimateRows.price}), 0)`,
+                    })
+                    .from(estimateRows)
+                    .where(
+                        and(
+                            eq(estimateRows.estimateId, estimateId),
+                            eq(estimateRows.kind, 'material'),
+                            withActiveTenant(estimateRows, teamId),
+                        ),
+                    )
+                    .groupBy(planNameNormalized),
+                db
+                    .select({
+                        materialName: sql<string>`MIN(trim(${globalPurchases.materialName}))`,
+                        unit: sql<string>`MIN(${globalPurchases.unit})`,
+                        actualQty: sql<number>`COALESCE(SUM(${globalPurchases.qty}), 0)`,
+                        actualAmount: sql<number>`COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0)`,
+                        purchaseCount: sql<number>`COUNT(*)`,
+                        lastPurchaseDate: sql<string | null>`MAX(${globalPurchases.purchaseDate})`,
+                    })
+                    .from(globalPurchases)
+                    .where(
+                        and(
+                            eq(globalPurchases.projectId, estimate.projectId),
+                            withActiveTenant(globalPurchases, teamId),
+                        ),
+                    )
+                    .groupBy(purchaseNameNormalized),
             ]);
 
-            return success(buildEstimateProcurementRows(planRows, factRows));
+            return success(buildRowsFromAggregates(planAggregates, factAggregates));
         } catch (serviceError) {
             console.error('EstimateProcurementService.list error:', serviceError);
             return error('Ошибка загрузки закупок сметы');
