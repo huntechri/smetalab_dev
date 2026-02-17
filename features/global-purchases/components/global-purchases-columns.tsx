@@ -263,26 +263,18 @@ export function getGlobalPurchasesColumns({
       size: 460,
       minSize: 380,
       cell: ({ row }) => (
-        <div className="flex items-center gap-2">
-          <SupplierBadgePicker
-            row={row.original}
-            options={supplierOptions}
-            disabled={pendingIds.has(row.original.id)}
-            onPatchAction={onPatchAction}
-          />
-          <EditableCell
-            value={row.original.materialName}
-            disabled={pendingIds.has(row.original.id)}
-            ariaLabel="Наименование материала"
-            onCommit={async (value) => {
-              try {
-                await onPatchAction(row.original.id, { materialName: value });
-              } catch (_error) {
+        <EditableCell
+          value={row.original.materialName}
+          disabled={pendingIds.has(row.original.id)}
+          ariaLabel="Наименование материала"
+          onCommit={async (value) => {
+            try {
+              await onPatchAction(row.original.id, { materialName: value });
+            } catch (_error) {
               return;
             }
-            }}
-          />
-        </div>
+          }}
+        />
       ),
     },
     {
@@ -365,22 +357,16 @@ export function getGlobalPurchasesColumns({
       cell: ({ row }) => <div className="text-right text-sm font-medium pr-2 tabular-nums">{amountFormatter.format(row.original.amount)} ₽</div>,
     },
     {
-      accessorKey: 'note',
-      header: 'Примечание',
-      size: 180,
-      minSize: 150,
+      accessorKey: 'supplierName',
+      header: 'Поставщик',
+      size: 220,
+      minSize: 180,
       cell: ({ row }) => (
-        <EditableCell
-          value={row.original.note}
+        <SupplierBadgePicker
+          row={row.original}
+          options={supplierOptions}
           disabled={pendingIds.has(row.original.id)}
-          ariaLabel="Примечание"
-          onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { note: value });
-            } catch (_error) {
-              return;
-            }
-          }}
+          onPatchAction={onPatchAction}
         />
       ),
     },
