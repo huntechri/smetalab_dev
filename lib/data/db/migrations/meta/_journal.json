@@ -141,13 +141,6 @@
       "when": 1771300000001,
       "tag": "0019_global_purchases_schedule_project_id",
       "breakpoints": true
-    },
-    {
-      "idx": 20,
-      "version": "7",
-      "when": 1771333772001,
-      "tag": "0020_fluffy_pretty_boy",
-      "breakpoints": true
     }
   ]
 }
