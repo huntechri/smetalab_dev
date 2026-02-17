@@ -49,8 +49,6 @@ export const users = pgTable('users', {
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
   index('users_deleted_at_idx').on(table.deletedAt),
-  index('users_created_at_idx').on(table.createdAt.desc()),
-  index('users_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
