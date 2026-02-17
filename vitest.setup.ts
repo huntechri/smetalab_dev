@@ -1,51 +1,59 @@
 /// <reference types="@testing-library/jest-dom" />
 import { config } from 'dotenv';
 import path from 'path';
+import { expect, vi } from 'vitest';
+import * as matchers from '@testing-library/jest-dom/matchers';
 
 // Polyfills for browser APIs not available in jsdom (required by Radix UI)
 class ResizeObserverMock {
-  observe() { }
-  unobserve() { }
-  disconnect() { }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
 }
 
 class IntersectionObserverMock {
-  observe() { }
-  unobserve() { }
-  disconnect() { }
+  observe() {}
+  unobserve() {}
+  disconnect() {}
   root = null;
   rootMargin = '';
   thresholds = [0];
 }
 
-global.ResizeObserver = ResizeObserverMock as any;
-global.IntersectionObserver = IntersectionObserverMock as any;
+global.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
+global.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
-// Force load .env.test if not already loaded by Vitest
+// Force load .env.test if present, then .env as fallback
 config({ path: path.resolve(process.cwd(), '.env.test') });
-config(); // Load .env as fallback (though usually not needed if .env.test covers everything)
-import { expect } from 'vitest';
-import * as matchers from '@testing-library/jest-dom/matchers';
+config();
 
 expect.extend(matchers);
 
-import { vi } from 'vitest';
+const isIntegrationRun = process.env.VITEST_INTEGRATION === 'true';
 
 if (process.env.TEST_DATABASE_URL) {
   process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-  (process.env as Record<string, string | undefined>).NODE_ENV = 'test';
-} else if (process.env.VITEST) {
-  // 🛡️ CRITICAL: Fail if no dedicated test database is provided
-  if (!process.env.DATABASE_URL?.includes('localhost') &&
-    !process.env.DATABASE_URL?.includes('test') &&
-    !process.env.DATABASE_URL?.includes('neon.tech')) {
+}
+
+if (isIntegrationRun) {
+  // Integration tests must never run against production-like DB
+  if (!process.env.DATABASE_URL) {
+    throw new Error('❌ SAFETY ERROR: DATABASE_URL is required for integration tests.');
+  }
+
+  if (
+    !process.env.DATABASE_URL.includes('localhost') &&
+    !process.env.DATABASE_URL.includes('test') &&
+    !process.env.DATABASE_URL.includes('neon.tech')
+  ) {
     throw new Error(
       '❌ SAFETY ERROR: Running tests against a non-local/non-test database!\n' +
-      'Please set TEST_DATABASE_URL in .env.test or provide a local DATABASE_URL.'
+        'Please set TEST_DATABASE_URL in .env.test or provide a local DATABASE_URL.',
     );
   }
-  (process.env as Record<string, string | undefined>).NODE_ENV = 'test';
 }
+
+(process.env as Record<string, string | undefined>).NODE_ENV = 'test';
 
 // Глобальный мок для next/headers
 vi.mock('next/headers', () => ({
@@ -62,5 +70,3 @@ vi.mock('next/headers', () => ({
 vi.mock('next/server', () => ({
   after: vi.fn((cb) => cb()),
 }));
-
-

@@ -13,6 +13,9 @@ export default defineConfig({
         include: ['__tests__/integration/**/*.{test,spec}.{ts,tsx}'],
         exclude: ['node_modules/**/*', '__tests__/e2e/**/*'],
         setupFiles: ['./vitest.setup.ts'],
+        env: {
+            VITEST_INTEGRATION: 'true',
+        },
         testTimeout: 60000,
         maxWorkers: 1,
         fileParallelism: false,
