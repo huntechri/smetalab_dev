@@ -1,16 +1,10 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
+import { DataTable } from '@/components/ui/data-table';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
 
@@ -29,12 +23,84 @@ const renderDeltaBadge = (value: number) => {
         return <Badge variant="secondary">0</Badge>;
     }
 
-    if (value < 0) {
-        return <Badge variant="destructive">{numberFormatter.format(value)}</Badge>;
+    if (value > 0) {
+        return <Badge variant="destructive">+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge className="bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
+    return <Badge className="bg-emerald-600 hover:bg-emerald-600">{numberFormatter.format(value)}</Badge>;
 };
+
+const columns: ColumnDef<EstimateProcurementRow>[] = [
+    {
+        accessorKey: 'materialName',
+        header: 'Материал',
+        cell: ({ row }) => <div className="font-medium">{row.original.materialName}</div>,
+        size: 220,
+    },
+    {
+        accessorKey: 'unit',
+        header: 'Ед.',
+        size: 80,
+    },
+    {
+        accessorKey: 'plannedQty',
+        header: () => <div className="text-right">План кол-во</div>,
+        cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.plannedQty)}</div>,
+        size: 120,
+    },
+    {
+        accessorKey: 'plannedPrice',
+        header: () => <div className="text-right">План цена</div>,
+        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+        size: 140,
+    },
+    {
+        accessorKey: 'plannedAmount',
+        header: () => <div className="text-right">План сумма</div>,
+        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedAmount)}</div>,
+        size: 150,
+    },
+    {
+        accessorKey: 'actualQty',
+        header: () => <div className="text-right">Факт кол-во</div>,
+        cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.actualQty)}</div>,
+        size: 120,
+    },
+    {
+        accessorKey: 'actualAvgPrice',
+        header: () => <div className="text-right">Факт ср. цена</div>,
+        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
+        size: 150,
+    },
+    {
+        accessorKey: 'actualAmount',
+        header: () => <div className="text-right">Факт сумма</div>,
+        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAmount)}</div>,
+        size: 150,
+    },
+    {
+        accessorKey: 'qtyDelta',
+        header: () => <div className="text-right">Δ кол-во (план-факт)</div>,
+        cell: ({ row }) => <div className="flex justify-end">{renderDeltaBadge(row.original.qtyDelta)}</div>,
+        size: 170,
+    },
+    {
+        accessorKey: 'amountDelta',
+        header: () => <div className="text-right">Δ сумма (план-факт)</div>,
+        cell: ({ row }) => <div className="flex justify-end">{renderDeltaBadge(row.original.amountDelta)}</div>,
+        size: 180,
+    },
+    {
+        accessorKey: 'source',
+        header: 'Источник',
+        cell: ({ row }) => (
+            <Badge variant={row.original.source === 'fact_only' ? 'destructive' : 'secondary'}>
+                {row.original.source === 'fact_only' ? 'Только факт' : 'Смета'}
+            </Badge>
+        ),
+        size: 120,
+    },
+];
 
 export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     const [rows, setRows] = useState<EstimateProcurementRow[]>([]);
@@ -105,46 +171,13 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 <Badge variant="outline">Факт: {moneyFormatter.format(totals.actual)}</Badge>
             </div>
 
-            <div className="rounded-md border bg-background">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Материал</TableHead>
-                            <TableHead>Ед.</TableHead>
-                            <TableHead className="text-right">План кол-во</TableHead>
-                            <TableHead className="text-right">План цена</TableHead>
-                            <TableHead className="text-right">План сумма</TableHead>
-                            <TableHead className="text-right">Факт кол-во</TableHead>
-                            <TableHead className="text-right">Факт ср. цена</TableHead>
-                            <TableHead className="text-right">Факт сумма</TableHead>
-                            <TableHead className="text-right">Δ кол-во</TableHead>
-                            <TableHead className="text-right">Δ сумма</TableHead>
-                            <TableHead>Источник</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {rows.map((row) => (
-                            <TableRow key={`${row.source}-${row.materialName}-${row.unit}`}>
-                                <TableCell className="font-medium">{row.materialName}</TableCell>
-                                <TableCell>{row.unit}</TableCell>
-                                <TableCell className="text-right">{numberFormatter.format(row.plannedQty)}</TableCell>
-                                <TableCell className="text-right">{moneyFormatter.format(row.plannedPrice)}</TableCell>
-                                <TableCell className="text-right">{moneyFormatter.format(row.plannedAmount)}</TableCell>
-                                <TableCell className="text-right">{numberFormatter.format(row.actualQty)}</TableCell>
-                                <TableCell className="text-right">{moneyFormatter.format(row.actualAvgPrice)}</TableCell>
-                                <TableCell className="text-right">{moneyFormatter.format(row.actualAmount)}</TableCell>
-                                <TableCell className="text-right">{renderDeltaBadge(row.qtyDelta)}</TableCell>
-                                <TableCell className="text-right">{renderDeltaBadge(row.amountDelta)}</TableCell>
-                                <TableCell>
-                                    <Badge variant={row.source === 'fact_only' ? 'destructive' : 'secondary'}>
-                                        {row.source === 'fact_only' ? 'Только факт' : 'Смета'}
-                                    </Badge>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </div>
+            <DataTable
+                columns={columns}
+                data={rows}
+                filterColumn="materialName"
+                filterPlaceholder="Поиск по материалам..."
+                height="680px"
+            />
         </div>
     );
 }

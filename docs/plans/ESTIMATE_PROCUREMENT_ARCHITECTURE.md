@@ -85,8 +85,8 @@ export type EstimateProcurementRow = {
   actualAmount: number;
 
   // Производные
-  qtyDelta: number; // actualQty - plannedQty
-  amountDelta: number; // actualAmount - plannedAmount
+  qtyDelta: number; // plannedQty - actualQty
+  amountDelta: number; // plannedAmount - actualAmount
 
   // Диагностика
   purchaseCount: number;
