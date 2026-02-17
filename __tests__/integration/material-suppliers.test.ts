@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { db } from '@/lib/data/db/drizzle';
-import { materialSuppliers, users, teams, teamMembers, activityLogs } from '@/lib/data/db/schema';
+import { materialSuppliers, users, teams, teamMembers, activityLogs, globalPurchases } from '@/lib/data/db/schema';
 import { createMaterialSupplier, updateMaterialSupplier, deleteMaterialSupplier } from '@/app/actions/material-suppliers/crud';
 import { eq, and } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
@@ -52,5 +52,35 @@ describe('Material suppliers integration', () => {
     expect(result.success).toBe(true);
     const [deleted] = await db.select().from(materialSuppliers).where(eq(materialSuppliers.id, item.id));
     expect(deleted.deletedAt).not.toBeNull();
+  });
+
+  it('clears supplier links in global purchases when supplier is deleted', async () => {
+    const [supplier] = await db.insert(materialSuppliers).values({
+      tenantId: testTeamId,
+      name: 'Linked supplier',
+      color: '#3B82F6',
+      legalStatus: 'company',
+    }).returning();
+
+    const [purchase] = await db.insert(globalPurchases).values({
+      tenantId: testTeamId,
+      projectName: '',
+      materialName: 'Щебень',
+      unit: 'м3',
+      qty: 3,
+      price: 1500,
+      amount: 4500,
+      note: '',
+      source: 'manual',
+      order: 1,
+      purchaseDate: '2026-02-20',
+      supplierId: supplier.id,
+    }).returning();
+
+    const result = await deleteMaterialSupplier(supplier.id);
+    expect(result.success).toBe(true);
+
+    const [updatedPurchase] = await db.select().from(globalPurchases).where(eq(globalPurchases.id, purchase.id));
+    expect(updatedPurchase.supplierId).toBeNull();
   });
 });
