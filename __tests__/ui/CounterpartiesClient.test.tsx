@@ -142,7 +142,7 @@ describe('CounterpartiesClient', () => {
         expect(within(breadcrumbNav).getByText('Контрагенты')).toBeInTheDocument();
     });
 
-    it('displays record count in footer', () => {
+    it('renders counterparties table without footer counters', () => {
         render(
             <CounterpartiesClient
                 initialData={mockData}
@@ -151,9 +151,8 @@ describe('CounterpartiesClient', () => {
             />
         );
 
-        // Use getAllByText since there might be duplicates due to Sheet rendering
-        const recordCountElements = screen.getAllByText(/Всего записей:/);
-        expect(recordCountElements.length).toBeGreaterThan(0);
+        expect(screen.getByRole('table')).toBeInTheDocument();
+        expect(screen.queryByText(/Всего записей:/)).not.toBeInTheDocument();
     });
 
     /**

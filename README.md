@@ -128,7 +128,8 @@
 - **Unit** (`__tests__/unit/`) — hooks, utils, маленькие UI-компоненты.
 - **Integration** (`__tests__/integration/`) — server actions, сервисы, БД/tenant-логика.
 - **UI** (`__tests__/ui/`) — тестирование визуальных компонентов и страниц.
-- Тесты завязаны на `TEST_DATABASE_URL`.
+- `pnpm test` запускает только unit/isolated набор и не требует БД/сети.
+- Интеграционные тесты (`pnpm test:integration`) запускаются отдельно и требуют валидный `DATABASE_URL`.
 
 ## 📂 Структура Проекта
 
@@ -165,14 +166,19 @@
 ```bash
 pnpm type-check    # Проверка типов (обязательно перед коммитом)
 pnpm lint          # Проверка стиля кода
-pnpm test          # Тесты (выполняются в отдельной ветке Neon `db_test`)
+pnpm test                # Только unit/isolated тесты (без БД/сети)
+pnpm test:integration    # Интеграционные тесты (требуют DATABASE_URL)
 ```
 
-**Важно:** Для локального запуска тестов необходимо иметь файл `.env.test` с корректной переменной `TEST_DATABASE_URL`, указывающей на тестовую ветку в Neon.
+**Важно:** `pnpm test` должен проходить без `.env.test` и без `DATABASE_URL`. Для `pnpm test:integration` нужен валидный `DATABASE_URL` (обычно тестовая ветка Neon).
+
+- Локально используйте `pnpm test:integration`: это обёртка с preflight-проверкой TCP (IPv4 + retry), и она может сделать **skip** при временной недоступности БД, чтобы не блокировать разработку.
+- В CI `pnpm test:integration` автоматически переходит в strict-режим (без skip), но рекомендуемая команда для явности — `pnpm test:integration:force`.
 
 ## 🚀 CI/CD и Preview Deploys
 
 - CI запускается на `pull_request` в `main`, на `push` в `main` и по расписанию.
+- Integration Tests (optional) теперь запускается и на внутренних PR (не из форков), чтобы не было ложного статуса skipped в обычном review-потоке.
 - Production деплой в Vercel выполняется только после успешного CI на `push` в `main`.
 - Для каждого внутреннего PR (из этого же репозитория) создается Vercel Preview Deploy и ссылка автоматически публикуется комментарием в PR.
 - Для работы деплоев в GitHub Secrets должны быть заданы: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.

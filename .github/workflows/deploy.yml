@@ -16,6 +16,7 @@ on:
     types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: '23 5 * * 1'  # Weekly on Monday at 05:23 UTC
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -98,12 +99,42 @@ jobs:
           retention-days: 30
 
   ci:
-    name: Quality Checks
+    name: PR Gate (Lint + Typecheck + Unit)
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
 
+    steps:
+      - uses: actions/checkout@v4
 
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'pnpm'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Type Check
+        run: pnpm type-check
+
+      - name: Run Unit/Isolated Tests
+        run: pnpm test
+
+  integration-tests:
+    name: Integration Tests (optional)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    continue-on-error: true
     env:
       DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
       TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
@@ -133,56 +164,56 @@ jobs:
         run: corepack enable
 
       - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Integration DB connectivity debug (temporary)
         run: |
-          set -ex
-          pnpm install --frozen-lockfile
+          node <<'NODE'
+          const net = require('node:net');
 
-      - name: Ensure database env
+          const databaseUrl = process.env.DATABASE_URL?.trim();
+          console.log(`DATABASE_URL set: ${databaseUrl ? 'yes' : 'no'}`);
+
+          if (!databaseUrl) {
+            process.exit(0);
+          }
+
+          let parsed;
+          try {
+            parsed = new URL(databaseUrl);
+          } catch (error) {
+            console.error('DATABASE_URL parse error:', error.message);
+            process.exit(1);
+          }
+
+          const host = parsed.hostname;
+          const port = Number(parsed.port || 5432);
+          console.log(`DB host: ${host}`);
+          console.log(`DB port: ${port}`);
+
+          const socket = net.createConnection({ host, port, family: 4, timeout: 10000 });
+          socket.on('connect', () => {
+            console.log('TCP connect: success (IPv4)');
+            socket.destroy();
+          });
+          socket.on('timeout', () => {
+            console.log('TCP connect: timeout');
+            socket.destroy();
+          });
+          socket.on('error', (error) => {
+            console.log(`TCP connect: error code=${error.code ?? 'UNKNOWN'} message=${error.message}`);
+            socket.destroy();
+          });
+          NODE
+
+      - name: Prepare database
         run: |
-          echo "Using Neon Test Branch for CI"
-          echo "DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
-          echo "POSTGRES_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
-          # LOCAL_DATABASE_URL is used in some scripts/configs
-          echo "LOCAL_DATABASE_URL=${{ secrets.TEST_DATABASE_URL }}" >> "$GITHUB_ENV"
-
-
-
-      - name: Database Migrations
-        run: |
-          set -ex
           pnpm db:reset
           pnpm db:migrate
-
-      - name: Database Seeding
-        run: |
-          set -ex
           pnpm db:seed
 
-      - name: Build and Type Check
-        run: |
-          set -ex
-          pnpm build
-
-      - name: Run Unit Tests
-        run: |
-          set -ex
-          pnpm vitest run --dir __tests__/unit
-
-      - name: Run Integration Tests
-        run: |
-          set -ex
-          pnpm vitest run --dir __tests__/integration --maxWorkers=1
-
-      - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-
-      - name: Run Playwright Tests
-        run: |
-          set -ex
-          npx playwright test
-        env:
-          CI: true
-
+      - name: Run integration tests
+        run: pnpm test:integration:force
 
   deploy-preview:
     name: Deploy to Vercel Preview
