@@ -3,14 +3,15 @@ import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { User } from '@/lib/data/db/schema';
 
-const AUTH_SECRET = process.env.AUTH_SECRET;
-
-if (!AUTH_SECRET || AUTH_SECRET.length < 32) {
-  throw new Error('AUTH_SECRET environment variable is not set or is too short (min 32 chars).');
-}
-
-const key = new TextEncoder().encode(AUTH_SECRET);
 const SALT_ROUNDS = 10;
+
+function getKey() {
+  const AUTH_SECRET = process.env.AUTH_SECRET;
+  if (!AUTH_SECRET || AUTH_SECRET.length < 32) {
+    throw new Error('AUTH_SECRET environment variable is not set or is too short (min 32 chars).');
+  }
+  return new TextEncoder().encode(AUTH_SECRET);
+}
 
 export async function hashPassword(password: string) {
   return hash(password, SALT_ROUNDS);
@@ -40,12 +41,12 @@ export async function signToken(payload: SessionData, expiry: string = '1d') {
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(expiry)
-    .sign(key);
+    .sign(getKey());
 }
 
 export async function verifyToken(input: string) {
   try {
-    const { payload } = await jwtVerify(input, key, {
+    const { payload } = await jwtVerify(input, getKey(), {
       algorithms: ['HS256'],
     });
     return payload as SessionData;
