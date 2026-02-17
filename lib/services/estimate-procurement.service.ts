@@ -254,7 +254,7 @@ export class EstimateProcurementService {
                         unit: sql<string>`MIN(${globalPurchases.unit})`,
                         actualQty: sql<number>`COALESCE(SUM(${globalPurchases.qty}), 0)`,
                         actualAmount: sql<number>`COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0)`,
-                        purchaseCount: sql<number>`COUNT(*)`,
+                        purchaseCount: sql<number>`COUNT(*)::int`,
                         lastPurchaseDate: sql<string | null>`MAX(${globalPurchases.purchaseDate})`,
                     })
                     .from(globalPurchases)
