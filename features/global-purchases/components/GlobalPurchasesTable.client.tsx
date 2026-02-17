@@ -10,7 +10,7 @@ import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { useToast } from '@/components/ui/use-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
-import type { ProjectOption, PurchaseRow, PurchaseRowsRange } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Calendar } from '@/components/ui/calendar';
@@ -22,10 +22,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
     projectOptions: ProjectOption[];
+    supplierOptions: SupplierOption[];
     initialRange: PurchaseRowsRange;
 }
 
-export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange }: GlobalPurchasesTableProps) {
+export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOptions, initialRange }: GlobalPurchasesTableProps) {
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
@@ -63,16 +64,18 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
         projectOptions,
+        supplierOptions,
         pendingIds,
         onPatchAction: async (rowId, patch) => {
             try {
                 await updateRow(rowId, patch);
-            } catch {
+            } catch (serviceError) {
                 toast({
                     variant: 'destructive',
                     title: 'Ошибка сохранения',
                     description: 'Не удалось сохранить изменения в строке закупки.',
                 });
+                throw serviceError;
             }
         },
         onRemoveAction: async (rowId) => {
@@ -86,7 +89,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, initialRange
                 });
             }
         },
-    }), [projectOptions, pendingIds, removeRow, toast, updateRow]);
+    }), [projectOptions, supplierOptions, pendingIds, removeRow, toast, updateRow]);
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
         if (isAddingCatalog) return;

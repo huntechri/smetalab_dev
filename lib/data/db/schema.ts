@@ -194,6 +194,7 @@ export const globalPurchases = pgTable('global_purchases', {
     .notNull()
     .references(() => teams.id),
   projectId: uuid('project_id'),
+  supplierId: uuid('supplier_id'),
   projectName: varchar('project_name', { length: 160 }).notNull().default(''),
   materialName: text('material_name').notNull().default(''),
   unit: varchar('unit', { length: 20 }).notNull().default('шт'),
@@ -210,6 +211,7 @@ export const globalPurchases = pgTable('global_purchases', {
 }, (table) => [
   index('global_purchases_tenant_purchase_date_order_idx').on(table.tenantId, table.purchaseDate, table.order).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_project_date_idx').on(table.tenantId, table.projectId, table.purchaseDate).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_supplier_date_idx').on(table.tenantId, table.supplierId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 
@@ -503,6 +505,55 @@ export const counterparties = pgTable('counterparties', {
     .where(sql`deleted_at IS NULL AND legal_status = 'individual'`),
 ]);
 
+export const materialSuppliers = pgTable('material_suppliers', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+
+  name: text('name').notNull(),
+  color: varchar('color', { length: 7 }).notNull().default('#3B82F6'),
+  legalStatus: legalStatusEnum('legal_status').notNull(),
+
+  birthDate: varchar('birth_date', { length: 20 }),
+  passportSeriesNumber: varchar('passport_series_number', { length: 50 }),
+  passportIssuedBy: text('passport_issued_by'),
+  passportIssuedDate: varchar('passport_issued_date', { length: 20 }),
+  departmentCode: varchar('department_code', { length: 20 }),
+
+  ogrn: varchar('ogrn', { length: 50 }),
+  inn: varchar('inn', { length: 50 }),
+  kpp: varchar('kpp', { length: 50 }),
+
+  address: text('address'),
+  phone: varchar('phone', { length: 50 }),
+  email: varchar('email', { length: 255 }),
+
+  bankName: text('bank_name'),
+  bankAccount: varchar('bank_account', { length: 50 }),
+  corrAccount: varchar('corr_account', { length: 50 }),
+  bankInn: varchar('bank_inn', { length: 50 }),
+  bankKpp: varchar('bank_kpp', { length: 50 }),
+
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('material_suppliers_tenant_updated_idx').on(table.tenantId, table.updatedAt.desc()),
+  index('material_suppliers_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
+  index('material_suppliers_address_trgm_idx').using('gin', sql`${table.address} gin_trgm_ops`),
+  index('material_suppliers_inn_tenant_idx').on(table.tenantId, table.inn),
+  index('material_suppliers_ogrn_tenant_idx').on(table.tenantId, table.ogrn),
+  index('material_suppliers_phone_trgm_idx').using('gin', sql`${table.phone} gin_trgm_ops`),
+  index('material_suppliers_email_trgm_idx').using('gin', sql`${table.email} gin_trgm_ops`),
+  uniqueIndex('material_suppliers_company_inn_kpp_tenant_idx')
+    .on(table.tenantId, table.inn, table.kpp)
+    .where(sql`deleted_at IS NULL AND legal_status = 'company'`),
+  uniqueIndex('material_suppliers_individual_inn_tenant_idx')
+    .on(table.tenantId, table.inn)
+    .where(sql`deleted_at IS NULL AND legal_status = 'individual'`),
+]);
+
 // ═══════════════════════════════════════════════════════════════
 // PROJECTS
 // ═══════════════════════════════════════════════════════════════
@@ -667,6 +718,13 @@ export const counterpartiesRelations = relations(counterparties, ({ one }) => ({
   }),
 }));
 
+export const materialSuppliersRelations = relations(materialSuppliers, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [materialSuppliers.tenantId],
+    references: [teams.id],
+  }),
+}));
+
 export const projectsRelations = relations(projects, ({ one, many }) => ({
   tenant: one(teams, {
     fields: [projects.tenantId],
@@ -734,6 +792,8 @@ export type Material = typeof materials.$inferSelect;
 export type NewMaterial = typeof materials.$inferInsert;
 export type Counterparty = typeof counterparties.$inferSelect;
 export type NewCounterparty = typeof counterparties.$inferInsert;
+export type MaterialSupplier = typeof materialSuppliers.$inferSelect;
+export type NewMaterialSupplier = typeof materialSuppliers.$inferInsert;
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
 

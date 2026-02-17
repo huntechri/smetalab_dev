@@ -69,6 +69,7 @@ describe('GlobalPurchasesTable', () => {
                 initialRows={[]}
                 initialRange={{ from: '2026-01-15', to: '2026-01-15' }}
                 projectOptions={[{ id: 'project-1', name: 'ЖК Горизонт' }]}
+                supplierOptions={[]}
             />,
         );
 
