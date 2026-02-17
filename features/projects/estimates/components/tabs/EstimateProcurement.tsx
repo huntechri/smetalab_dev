@@ -24,10 +24,10 @@ const renderDeltaBadge = (value: number) => {
     }
 
     if (value > 0) {
-        return <Badge variant="destructive">+{numberFormatter.format(value)}</Badge>;
+        return <Badge className="bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge className="bg-emerald-600 hover:bg-emerald-600">{numberFormatter.format(value)}</Badge>;
+    return <Badge variant="destructive">{numberFormatter.format(value)}</Badge>;
 };
 
 const columns: ColumnDef<EstimateProcurementRow>[] = [
