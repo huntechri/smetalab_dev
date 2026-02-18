@@ -169,6 +169,13 @@
       "when": 1771401555016,
       "tag": "0023_procurement_material_id_link",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1771404135334,
+      "tag": "0024_cynical_namor",
+      "breakpoints": true
     }
   ]
 }
