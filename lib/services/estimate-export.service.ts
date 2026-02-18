@@ -47,12 +47,25 @@ type DownloadedImage = {
 
 const CURRENCY_FORMAT = '#,##0.00 [$₽-419]';
 
+const RU_TO_LATIN_MAP: Record<string, string> = {
+    а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
+    к: 'k', л: 'l', м: 'm', н: 'n', о: 'o', п: 'p', р: 'r', с: 's', т: 't', у: 'u', ф: 'f',
+    х: 'h', ц: 'ts', ч: 'ch', ш: 'sh', щ: 'sch', ъ: '', ы: 'y', ь: '', э: 'e', ю: 'yu', я: 'ya',
+};
+
+function transliterateRu(input: string): string {
+    return input
+        .split('')
+        .map((char) => RU_TO_LATIN_MAP[char] ?? char)
+        .join('');
+}
+
 function safeFileName(name: string): string {
-    return name
-        .trim()
-        .toLowerCase()
+    const transliterated = transliterateRu(name.trim().toLowerCase());
+
+    return transliterated
         .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9а-яё-]/gi, '')
+        .replace(/[^a-z0-9-]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '') || 'estimate';
 }
@@ -208,7 +221,7 @@ export class EstimateExportService {
 
         const headerRow = worksheet.getRow(4);
         headerRow.values = ['Код', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Расход'];
-        headerRow.eachCell((cell) => {
+        headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
             cell.fill = {
@@ -244,7 +257,7 @@ export class EstimateExportService {
             excelRow.getCell(8).value = row.kind === 'material' ? row.expense : null;
 
             if (row.kind === 'work') {
-                excelRow.eachCell((cell) => {
+                excelRow.eachCell((cell: ExcelJS.Cell) => {
                     cell.font = { bold: true };
                     cell.fill = {
                         type: 'pattern',
@@ -299,7 +312,7 @@ export class EstimateExportService {
             row.getCell(1).font = { bold: true };
             row.getCell(7).font = { bold: true };
             row.getCell(7).numFmt = CURRENCY_FORMAT;
-            row.eachCell((cell) => {
+            row.eachCell((cell: ExcelJS.Cell) => {
                 cell.border = {
                     top: { style: 'thin' },
                     left: { style: 'thin' },
