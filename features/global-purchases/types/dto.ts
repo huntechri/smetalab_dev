@@ -11,6 +11,7 @@ export type PurchaseRow = {
   projectId: string | null;
   projectName: string;
   materialName: string;
+  materialId?: string | null;
   unit: string;
   qty: number;
   price: number;
@@ -28,7 +29,7 @@ export type ProjectOption = {
   name: string;
 };
 
-export type PurchaseRowPatch = Partial<Pick<PurchaseRow, 'projectId' | 'materialName' | 'unit' | 'qty' | 'price' | 'note' | 'purchaseDate' | 'supplierId'>>;
+export type PurchaseRowPatch = Partial<Pick<PurchaseRow, 'projectId' | 'materialName' | 'materialId' | 'unit' | 'qty' | 'price' | 'note' | 'purchaseDate' | 'supplierId'>>;
 
 export type PurchaseRowsRange = {
   from: string;

@@ -17,6 +17,7 @@ const addWorkSchema = z.object({
 const addMaterialSchema = z.object({
     name: z.string().trim().min(1).optional().default('Новый материал'),
     unit: z.string().trim().min(1).default('шт'),
+    materialId: z.string().uuid().nullable().optional(),
     imageUrl: z.string().url().nullable().optional(),
     qty: z.number().nonnegative().default(1),
     price: z.number().nonnegative().default(0),
@@ -26,6 +27,7 @@ const addMaterialSchema = z.object({
 const patchRowSchema = z.object({
     name: z.string().trim().min(1).optional(),
     unit: z.string().trim().min(1).optional(),
+    materialId: z.string().uuid().nullable().optional(),
     imageUrl: z.string().url().nullable().optional(),
     qty: z.number().nonnegative().optional(),
     price: z.number().nonnegative().optional(),
@@ -69,6 +71,7 @@ export class EstimateRowsService {
                     parentWorkId: estimateRows.parentWorkId,
                     code: estimateRows.code,
                     name: estimateRows.name,
+                    materialId: estimateRows.materialId,
                     imageUrl: estimateRows.imageUrl,
                     unit: estimateRows.unit,
                     qty: estimateRows.qty,
@@ -204,6 +207,7 @@ export class EstimateRowsService {
                         parentWorkId,
                         code: `${parent.code}.${children.length + 1}`,
                         name: payload.name,
+                        materialId: payload.materialId ?? null,
                         imageUrl: payload.imageUrl ?? null,
                         unit: payload.unit,
                         qty: payload.qty,

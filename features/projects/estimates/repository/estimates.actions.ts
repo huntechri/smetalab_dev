@@ -31,7 +31,7 @@ export const estimatesActionRepo = {
         return result.data;
     },
 
-    async addMaterial(estimateId: string, parentWorkId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'unit' | 'imageUrl' | 'qty' | 'price' | 'expense'>>): Promise<EstimateRow> {
+    async addMaterial(estimateId: string, parentWorkId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'materialId' | 'unit' | 'imageUrl' | 'qty' | 'price' | 'expense'>>): Promise<EstimateRow> {
         const result = await addEstimateMaterialAction(estimateId, parentWorkId, payload);
 
         if (!result.success) {
