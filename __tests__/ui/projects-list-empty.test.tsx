@@ -1,6 +1,7 @@
 import { render, screen, cleanup } from '@testing-library/react';
 import { ProjectsList } from '@/features/projects/list/components/projects-list';
 import { describe, it, expect, vi, afterEach } from 'vitest';
+import { ProjectListItem } from '@/features/projects/shared/types';
 
 // Explicit cleanup for this environment
 afterEach(() => {
@@ -9,6 +10,7 @@ afterEach(() => {
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     FolderKanban: (props: any) => <div data-testid="folder-kanban-icon" {...props} />,
     LayoutGrid: () => <div />,
     List: () => <div />,
@@ -45,7 +47,7 @@ describe('ProjectsList', () => {
     });
 
     it('renders project list when projects are provided', () => {
-        const mockProjects = [
+        const mockProjects: ProjectListItem[] = [
             {
                 id: '1',
                 name: 'Test Project',
@@ -60,9 +62,7 @@ describe('ProjectsList', () => {
         ];
 
         render(
-            // @ts-ignore
             <ProjectsList
-                // @ts-ignore
                 projects={mockProjects}
                 viewMode="grid"
                 onDelete={() => {}}
