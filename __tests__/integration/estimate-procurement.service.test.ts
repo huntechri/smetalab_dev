@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
 import { db } from '@/lib/data/db/drizzle';
-import { estimateRows, estimates, globalPurchases, projects, teams } from '@/lib/data/db/schema';
+import { estimateRows, estimates, globalPurchases, materials, projects, teams } from '@/lib/data/db/schema';
 import { resetDatabase } from '@/lib/data/db/test-utils';
 import { EstimateProcurementService } from '@/lib/services/estimate-procurement.service';
 
@@ -46,13 +46,25 @@ describe('EstimateProcurementService integration', () => {
 
         estimateId = estimate.id;
 
+
+        const [catalogMaterial] = await db.insert(materials).values({
+            tenantId: teamA,
+            code: 'MAT-001',
+            name: 'Штукатурка гипсовая',
+            nameNorm: 'штукатурка гипсовая',
+            unit: 'меш',
+            price: 500,
+            status: 'active',
+        }).returning();
+
         await db.insert(estimateRows).values([
             {
                 tenantId: teamA,
                 estimateId: estimate.id,
                 kind: 'material',
                 code: '1.1',
-                name: 'Штукатурка',
+                name: 'Штукатурка (выравнивание)',
+                materialId: catalogMaterial.id,
                 unit: 'меш',
                 qty: 60,
                 price: 500,
@@ -66,6 +78,7 @@ describe('EstimateProcurementService integration', () => {
                 kind: 'material',
                 code: '2.1',
                 name: 'Штукатурка',
+                materialId: catalogMaterial.id,
                 unit: 'меш',
                 qty: 40,
                 price: 500,
@@ -80,7 +93,8 @@ describe('EstimateProcurementService integration', () => {
                 tenantId: teamA,
                 projectId: projectA.id,
                 projectName: 'Project A',
-                materialName: 'Штукатурка',
+                materialName: 'Гипсовая штукатурка Knauf',
+                materialId: catalogMaterial.id,
                 unit: 'меш',
                 qty: 20,
                 price: 100,
@@ -95,6 +109,7 @@ describe('EstimateProcurementService integration', () => {
                 projectId: projectA.id,
                 projectName: 'Project A',
                 materialName: 'Штукатурка',
+                materialId: catalogMaterial.id,
                 unit: 'меш',
                 qty: 80,
                 price: 120,

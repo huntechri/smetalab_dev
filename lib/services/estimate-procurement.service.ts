@@ -22,6 +22,7 @@ export type EstimateProcurementRow = {
 
 type PlanRow = {
     name: string;
+    materialId: string | null;
     unit: string;
     qty: number;
     price: number;
@@ -29,6 +30,7 @@ type PlanRow = {
 
 type FactRow = {
     materialName: string;
+    materialId: string | null;
     unit: string;
     qty: number;
     price: number;
@@ -37,6 +39,7 @@ type FactRow = {
 
 type Aggregate = {
     materialName: string;
+    materialId: string | null;
     unit: string;
     qty: number;
     amount: number;
@@ -45,6 +48,7 @@ type Aggregate = {
 };
 
 type PlanAggregateInput = {
+    matchKey: string;
     materialName: string;
     unit: string;
     plannedQty: number;
@@ -52,6 +56,7 @@ type PlanAggregateInput = {
 };
 
 type FactAggregateInput = {
+    matchKey: string;
     materialName: string;
     unit: string;
     actualQty: number;
@@ -61,6 +66,7 @@ type FactAggregateInput = {
 };
 
 const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
+const buildMatchKey = (materialId: string | null, name: string) => materialId ? `id:${materialId}` : `name:${normalizeMaterialKey(name)}`;
 
 const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -68,11 +74,12 @@ const aggregatePlan = (rows: PlanRow[]) => {
     const map = new Map<string, Aggregate>();
 
     for (const row of rows) {
-        const key = normalizeMaterialKey(row.name);
-        if (!key) continue;
+        const key = buildMatchKey(row.materialId, row.name);
+        if (!key || key === 'name:') continue;
 
         const current = map.get(key) ?? {
             materialName: row.name.trim(),
+            materialId: row.materialId,
             unit: row.unit,
             qty: 0,
             amount: 0,
@@ -82,9 +89,7 @@ const aggregatePlan = (rows: PlanRow[]) => {
 
         current.qty += row.qty;
         current.amount += row.qty * row.price;
-        if (!current.unit && row.unit) {
-            current.unit = row.unit;
-        }
+        if (!current.unit && row.unit) current.unit = row.unit;
 
         map.set(key, current);
     }
@@ -96,11 +101,12 @@ const aggregateFact = (rows: FactRow[]) => {
     const map = new Map<string, Aggregate>();
 
     for (const row of rows) {
-        const key = normalizeMaterialKey(row.materialName);
-        if (!key) continue;
+        const key = buildMatchKey(row.materialId, row.materialName);
+        if (!key || key === 'name:') continue;
 
         const current = map.get(key) ?? {
             materialName: row.materialName.trim(),
+            materialId: row.materialId,
             unit: row.unit,
             qty: 0,
             amount: 0,
@@ -114,9 +120,7 @@ const aggregateFact = (rows: FactRow[]) => {
         current.lastPurchaseDate = !current.lastPurchaseDate || row.purchaseDate > current.lastPurchaseDate
             ? row.purchaseDate
             : current.lastPurchaseDate;
-        if (!current.unit && row.unit) {
-            current.unit = row.unit;
-        }
+        if (!current.unit && row.unit) current.unit = row.unit;
 
         map.set(key, current);
     }
@@ -128,8 +132,8 @@ const buildRowsFromAggregates = (
     planAggregates: PlanAggregateInput[],
     factAggregates: FactAggregateInput[],
 ): EstimateProcurementRow[] => {
-    const planMap = new Map(planAggregates.map((row) => [normalizeMaterialKey(row.materialName), row]));
-    const factMap = new Map(factAggregates.map((row) => [normalizeMaterialKey(row.materialName), row]));
+    const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
+    const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
 
     const rows: EstimateProcurementRow[] = [];
 
@@ -186,10 +190,7 @@ const buildRowsFromAggregates = (
     }
 
     return rows.sort((a, b) => {
-        if (a.source !== b.source) {
-            return a.source === 'estimate' ? -1 : 1;
-        }
-
+        if (a.source !== b.source) return a.source === 'estimate' ? -1 : 1;
         return a.materialName.localeCompare(b.materialName, 'ru-RU');
     });
 };
@@ -199,13 +200,15 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
     const factMap = aggregateFact(factRows);
 
     return buildRowsFromAggregates(
-        [...planMap.values()].map((row) => ({
+        [...planMap.entries()].map(([matchKey, row]) => ({
+            matchKey,
             materialName: row.materialName,
             unit: row.unit,
             plannedQty: row.qty,
             plannedAmount: row.amount,
         })),
-        [...factMap.values()].map((row) => ({
+        [...factMap.entries()].map(([matchKey, row]) => ({
+            matchKey,
             materialName: row.materialName,
             unit: row.unit,
             actualQty: row.qty,
@@ -224,16 +227,17 @@ export class EstimateProcurementService {
                 columns: { id: true, projectId: true },
             });
 
-            if (!estimate) {
-                return error('Смета не найдена', 'NOT_FOUND');
-            }
+            if (!estimate) return error('Смета не найдена', 'NOT_FOUND');
 
             const planNameNormalized = sql<string>`lower(trim(${estimateRows.name}))`;
             const purchaseNameNormalized = sql<string>`lower(trim(${globalPurchases.materialName}))`;
+            const planMatchKey = sql<string>`COALESCE(${estimateRows.materialId}::text, ${planNameNormalized})`;
+            const factMatchKey = sql<string>`COALESCE(${globalPurchases.materialId}::text, ${purchaseNameNormalized})`;
 
             const [planAggregates, factAggregates] = await Promise.all([
                 db
                     .select({
+                        matchKey: planMatchKey,
                         materialName: sql<string>`MIN(trim(${estimateRows.name}))`,
                         unit: sql<string>`MIN(${estimateRows.unit})`,
                         plannedQty: sql<number>`COALESCE(SUM(${estimateRows.qty}), 0)`,
@@ -247,9 +251,10 @@ export class EstimateProcurementService {
                             withActiveTenant(estimateRows, teamId),
                         ),
                     )
-                    .groupBy(planNameNormalized),
+                    .groupBy(planMatchKey),
                 db
                     .select({
+                        matchKey: factMatchKey,
                         materialName: sql<string>`MIN(trim(${globalPurchases.materialName}))`,
                         unit: sql<string>`MIN(${globalPurchases.unit})`,
                         actualQty: sql<number>`COALESCE(SUM(${globalPurchases.qty}), 0)`,
@@ -264,7 +269,7 @@ export class EstimateProcurementService {
                             withActiveTenant(globalPurchases, teamId),
                         ),
                     )
-                    .groupBy(purchaseNameNormalized),
+                    .groupBy(factMatchKey),
             ]);
 
             return success(buildRowsFromAggregates(planAggregates, factAggregates));
