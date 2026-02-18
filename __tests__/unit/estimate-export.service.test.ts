@@ -63,4 +63,65 @@ describe('EstimateExportService', () => {
         expect(name.endsWith('.xlsx')).toBe(true);
         expect(name).toContain('zhk-ostrov-b35');
     });
+
+    it('exports xlsx without expense column', async () => {
+        const buffer = await EstimateExportService.exportXlsx({
+            estimateId: 'id',
+            estimateName: 'Смета',
+            projectName: 'Проект',
+            rows: [
+                {
+                    id: '1',
+                    kind: 'work',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Работа',
+                    imageUrl: null,
+                    unit: 'м2',
+                    qty: 2,
+                    price: 100,
+                    sum: 200,
+                    expense: 0,
+                    order: 100,
+                },
+            ],
+            totals: { works: 200, materials: 0, grand: 200 },
+        });
+
+        const ExcelJS = (await import('exceljs')).default;
+        const workbook = new ExcelJS.Workbook();
+        await workbook.xlsx.load(buffer);
+        const sheet = workbook.getWorksheet('Смета');
+        const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
+
+        expect(headers).not.toContain('Расход');
+    });
+
+    it('exports pdf for cyrillic names', async () => {
+        const buffer = await EstimateExportService.exportPdf({
+            estimateId: 'id',
+            estimateName: 'Смета Тест',
+            projectName: 'Проект Тест',
+            rows: [
+                {
+                    id: '1',
+                    kind: 'work',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Штукатурка',
+                    imageUrl: null,
+                    unit: 'м2',
+                    qty: 2,
+                    price: 100,
+                    sum: 200,
+                    expense: 0,
+                    order: 100,
+                },
+            ],
+            totals: { works: 200, materials: 0, grand: 200 },
+        });
+
+        expect(buffer.subarray(0, 4).toString('utf8')).toBe('%PDF');
+    });
+
 });
