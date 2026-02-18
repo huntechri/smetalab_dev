@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db } from '@/lib/data/db/drizzle';
-import { globalPurchases, materialSuppliers, teams } from '@/lib/data/db/schema';
+import { globalPurchases, materialSuppliers, materials, teams } from '@/lib/data/db/schema';
 import { GlobalPurchasesService } from '@/lib/services/global-purchases.service';
 import { eq } from 'drizzle-orm';
 import { resetDatabase } from '@/lib/data/db/test-utils';
@@ -72,6 +72,39 @@ describe('Global purchases supplier badges integration', () => {
     expect(patch.success).toBe(false);
     if (patch.success) return;
     expect(patch.error.code).toBe('NOT_FOUND');
+  });
+
+
+  it('stores materialId for catalog purchase rows', async () => {
+    const [material] = await db.insert(materials).values({
+      tenantId: teamA,
+      code: 'MAT-CEMENT',
+      name: 'Цемент М500',
+      nameNorm: 'цемент м500',
+      unit: 'меш',
+      price: 540,
+      status: 'active',
+    }).returning();
+
+    const created = await GlobalPurchasesService.create(teamA, {
+      materialName: material.name,
+      materialId: material.id,
+      unit: material.unit,
+      qty: 3,
+      price: 540,
+      source: 'catalog',
+      purchaseDate: '2026-02-01',
+    });
+
+    expect(created.success).toBe(true);
+    if (!created.success) return;
+
+    const list = await GlobalPurchasesService.list(teamA, { from: '2026-02-01', to: '2026-02-01' });
+    expect(list.success).toBe(true);
+    if (!list.success) return;
+
+    const createdRow = list.data.find((row) => row.id === created.data.id);
+    expect(createdRow?.materialId).toBe(material.id);
   });
 
   it('removes supplier from purchase when supplier is deleted', async () => {
