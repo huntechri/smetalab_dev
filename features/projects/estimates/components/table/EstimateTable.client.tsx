@@ -52,6 +52,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
     const [isCalculationModeOpen, setIsCalculationModeOpen] = useState(false);
     const [activeWorkForMaterial, setActiveWorkForMaterial] = useState<ActiveWorkForMaterial | null>(null);
     const [activeMaterialForReplace, setActiveMaterialForReplace] = useState<ActiveMaterialForReplace | null>(null);
+    const [isExporting, setIsExporting] = useState(false);
     const { toast } = useToast();
 
     const visibleRows = useMemo(() => getVisibleRows(rows, expandedWorkIds), [rows, expandedWorkIds]);
@@ -263,6 +264,41 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
         }
     };
 
+    const exportEstimate = async (format: 'xlsx' | 'pdf') => {
+        try {
+            setIsExporting(true);
+            const response = await fetch(`/api/estimates/${estimateId}/export?format=${format}`);
+
+            if (!response.ok) {
+                throw new Error('EXPORT_FAILED');
+            }
+
+            const blob = await response.blob();
+            const disposition = response.headers.get('content-disposition');
+            const fallbackName = `estimate.${format}`;
+            const fileNameMatch = disposition?.match(/filename="?([^"]+)"?/i);
+            const fileName = fileNameMatch?.[1] ?? fallbackName;
+
+            const objectUrl = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = objectUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(objectUrl);
+
+            toast({
+                title: 'Экспорт завершен',
+                description: format === 'xlsx' ? 'Excel-файл успешно сформирован.' : 'PDF-файл успешно сформирован.',
+            });
+        } catch {
+            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось выгрузить смету.' });
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     return (
         <div className="space-y-3">
             <DataTable
@@ -315,10 +351,24 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                                 <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
                                 <span className="text-xs md:text-sm">Импорт</span>
                             </Button>
-                            <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3">
-                                <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
-                                <span className="text-xs md:text-sm">Экспорт</span>
-                            </Button>
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3" disabled={isExporting}>
+                                        <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
+                                        <span className="text-xs md:text-sm">{isExporting ? 'Экспорт...' : 'Экспорт'}</span>
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56">
+                                    <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate('xlsx')}>
+                                        <FileDown className="h-4 w-4 text-muted-foreground" />
+                                        <span>Экспорт в Excel (.xlsx)</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate('pdf')}>
+                                        <FileDown className="h-4 w-4 text-muted-foreground" />
+                                        <span>Экспорт в PDF (.pdf)</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
 
                         <div className="lg:hidden">
@@ -342,9 +392,13 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                                         <FileUp className="h-4 w-4 text-muted-foreground" />
                                         <span>Импорт</span>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="gap-2">
+                                    <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate('xlsx')}>
                                         <FileDown className="h-4 w-4 text-muted-foreground" />
-                                        <span>Экспорт</span>
+                                        <span>Экспорт в Excel</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate('pdf')}>
+                                        <FileDown className="h-4 w-4 text-muted-foreground" />
+                                        <span>Экспорт в PDF</span>
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
