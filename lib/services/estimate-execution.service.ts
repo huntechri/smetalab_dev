@@ -272,8 +272,12 @@ export class EstimateExecutionService {
                         completedByUserId: shouldComplete && userId ? userId : null,
                         updatedAt: new Date(),
                     })
-                    .where(eq(estimateExecutionRows.id, executionRowId))
+                    .where(and(eq(estimateExecutionRows.id, executionRowId), withActiveTenant(estimateExecutionRows, teamId)))
                     .returning(estimateExecutionRowSelect);
+
+                if (!row) {
+                    throw new Error('FAILED_TO_UPDATE');
+                }
 
                 return row;
             });

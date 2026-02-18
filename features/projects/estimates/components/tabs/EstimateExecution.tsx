@@ -1,5 +1,6 @@
 'use client';
 
+import { cn } from '@/lib/utils';
 import { useEffect, useMemo, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
@@ -7,13 +8,19 @@ import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
-import { calculateExecutionMoneyMetrics } from '../../lib/execution-metrics';
+
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -25,16 +32,55 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
     maximumFractionDigits: 2,
 });
 
-function getStatusBadge(status: EstimateExecutionStatus) {
+function getStatusDisplay(status: EstimateExecutionStatus) {
+    const base = "cursor-pointer border-0 w-[110px] justify-center text-[10px] uppercase font-bold tracking-tight h-6 px-2";
     if (status === 'done') {
-        return <Badge className="bg-emerald-600 hover:bg-emerald-600">Выполнено</Badge>;
+        return <Badge className={cn("bg-emerald-600 hover:bg-emerald-600 text-white", base)}>Выполнено</Badge>;
     }
 
     if (status === 'in_progress') {
-        return <Badge variant="secondary">В процессе</Badge>;
+        return <Badge variant="secondary" className={base}>В процессе</Badge>;
     }
 
-    return <Badge variant="outline">Не начато</Badge>;
+    return <Badge className={cn("bg-blue-500 hover:bg-blue-600 text-white", base)}>Не начато</Badge>;
+}
+
+function ExecutionStatusCell({
+    currentStatus,
+    onStatusChange,
+}: {
+    currentStatus: EstimateExecutionStatus;
+    onStatusChange: (status: EstimateExecutionStatus) => void;
+}) {
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <div className="inline-flex outline-none">
+                    {getStatusDisplay(currentStatus)}
+                </div>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="p-1 min-w-[130px]">
+                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="focus:bg-blue-50 focus:text-blue-700 cursor-pointer rounded-md mb-0.5">
+                    <div className="flex items-center gap-2 w-full">
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
+                        <span className="text-xs font-medium">Не начато</span>
+                    </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="focus:bg-slate-100 cursor-pointer rounded-md mb-0.5">
+                    <div className="flex items-center gap-2 w-full">
+                        <div className="w-2 h-2 rounded-full bg-slate-400" />
+                        <span className="text-xs font-medium">В процессе</span>
+                    </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => onStatusChange('done')} className="focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer rounded-md">
+                    <div className="flex items-center gap-2 w-full">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className="text-xs font-medium">Выполнено</span>
+                    </div>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
 }
 
 function NumberEditCell({
@@ -57,7 +103,9 @@ function NumberEditCell({
             value={localValue}
             onChange={(event) => setLocalValue(event.target.value)}
             onBlur={() => {
-                const nextValue = Number(localValue);
+                const normalizedValue = localValue.replace(/,/g, '.');
+                const nextValue = Number(normalizedValue);
+
                 if (!Number.isFinite(nextValue) || nextValue < 0) {
                     setLocalValue(String(row[field]));
                     return;
@@ -69,7 +117,7 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="h-8 text-right"
+            className="h-8 text-right tabular-nums text-xs md:text-sm"
         />
     );
 }
@@ -99,8 +147,8 @@ function AddExtraWorkSheet({
     };
 
     const submit = async () => {
-        const parsedQty = Number(actualQty);
-        const parsedPrice = Number(actualPrice);
+        const parsedQty = Number(actualQty.replace(/,/g, '.'));
+        const parsedPrice = Number(actualPrice.replace(/,/g, '.'));
 
         if (!name.trim()) {
             toast({ variant: 'destructive', title: 'Ошибка', description: 'Укажите название работы.' });
@@ -256,17 +304,21 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'code',
             header: 'Код',
-            size: 110,
+            size: 60,
             cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.code}</span>,
         },
         {
             accessorKey: 'name',
             header: 'Работа',
-            size: 260,
+            size: 450,
             cell: ({ row }) => (
                 <div className="space-y-1">
-                    <div className="font-medium">{row.original.name}</div>
-                    {row.original.source === 'extra' ? <Badge variant="secondary">Доп. работа</Badge> : null}
+                    <div className="font-medium text-xs md:text-sm leading-tight">{row.original.name}</div>
+                    {row.original.source === 'extra' ? (
+                        <Badge variant="secondary" className="text-[9px] uppercase tracking-wider h-4 px-1">
+                            Доп. работа
+                        </Badge>
+                    ) : null}
                 </div>
             ),
         },
@@ -277,77 +329,48 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         },
         {
             accessorKey: 'plannedQty',
-            header: () => <div className="text-right">План кол-во</div>,
-            cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.plannedQty)}</div>,
+            header: () => <div className="text-right whitespace-nowrap">Кол-во</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums">{numberFormatter.format(row.original.plannedQty)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedPrice',
-            header: () => <div className="text-right">План цена</div>,
-            cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedPrice)}</div>,
-            size: 140,
+            header: () => <div className="text-right whitespace-nowrap">Цена</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+            size: 120,
         },
         {
             accessorKey: 'plannedSum',
-            header: () => <div className="text-right">План сумма</div>,
-            cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedSum)}</div>,
-            size: 150,
+            header: () => <div className="text-right whitespace-nowrap">План сумма</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.plannedSum)}</div>,
+            size: 130,
         },
         {
             accessorKey: 'actualQty',
-            header: () => <div className="text-right">Факт кол-во</div>,
+            header: () => <div className="text-right whitespace-nowrap">Факт кол-во</div>,
             cell: ({ row }) => <NumberEditCell row={row.original} field="actualQty" onSave={patchRow} />,
-            size: 150,
+            size: 120,
         },
         {
             accessorKey: 'actualPrice',
-            header: () => <div className="text-right">Факт цена</div>,
+            header: () => <div className="text-right whitespace-nowrap">Факт цена</div>,
             cell: ({ row }) => <NumberEditCell row={row.original} field="actualPrice" onSave={patchRow} />,
-            size: 150,
+            size: 120,
         },
         {
             accessorKey: 'actualSum',
-            header: () => <div className="text-right">Факт сумма</div>,
-            cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualSum)}</div>,
+            header: () => <div className="text-right whitespace-nowrap">Факт сумма</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.actualSum)}</div>,
             size: 150,
-        },
-        {
-            id: 'delta',
-            header: () => <div className="text-right">Маржинальность</div>,
-            cell: ({ row }) => {
-                const metrics = calculateExecutionMoneyMetrics(
-                    row.original.plannedQty,
-                    row.original.plannedPrice,
-                    row.original.actualQty,
-                    row.original.actualPrice,
-                );
-
-                if (metrics.marginPercent === null) {
-                    return <div className="text-right text-xs text-muted-foreground">—</div>;
-                }
-
-                const sign = metrics.marginPercent > 0 ? '+' : '';
-                return <div className="text-right">{sign}{numberFormatter.format(metrics.marginPercent)}%</div>;
-            },
-            size: 130,
         },
         {
             accessorKey: 'status',
             header: 'Статус',
             cell: ({ row }) => (
-                <div className="space-y-2">
-                    {getStatusBadge(row.original.status)}
-                    <Select value={row.original.status} onValueChange={(next) => void patchRow(row.original.id, { status: next as EstimateExecutionStatus })}>
-                        <SelectTrigger className="h-8 w-[150px]">
-                            <SelectValue placeholder="Статус" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="not_started">Не начато</SelectItem>
-                            <SelectItem value="in_progress">В процессе</SelectItem>
-                            <SelectItem value="done">Выполнено</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
+                <ExecutionStatusCell
+                    currentStatus={row.original.status}
+                    onStatusChange={(status) => void patchRow(row.original.id, { status })}
+                />
             ),
             size: 180,
         },
@@ -372,24 +395,41 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         return <div className="rounded-md border p-4 text-sm text-destructive">{errorMessage}</div>;
     }
 
+    const deltaTotal = totals.actual - totals.planned;
+
     return (
-        <div className="space-y-3">
-            <div className="flex items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <Badge variant="outline">План: {moneyFormatter.format(totals.planned)}</Badge>
-                    <Badge variant="outline">Факт: {moneyFormatter.format(totals.actual)}</Badge>
-                    <Badge variant="outline">Δ: {moneyFormatter.format(totals.actual - totals.planned)}</Badge>
-                </div>
-
-                <AddExtraWorkSheet estimateId={estimateId} onCreated={(row) => setRows((prev) => [...prev, row])} />
-            </div>
-
+        <div className="space-y-4">
             <DataTable
                 columns={columns}
                 data={rows}
                 filterColumn="name"
                 filterPlaceholder="Поиск по работам..."
                 height="680px"
+                actions={
+                    <div className="flex flex-wrap items-center gap-2">
+                        <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30">
+                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">План:</span>
+                            <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(totals.planned)}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30">
+                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Факт:</span>
+                            <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(totals.actual)}</span>
+                        </div>
+                        <div className={cn(
+                            "flex items-center gap-1.5 px-2 py-1.5 rounded-lg border",
+                            deltaTotal > 0 ? "bg-emerald-50/50 border-emerald-200/50 text-emerald-700" :
+                                deltaTotal < 0 ? "bg-orange-50/50 border-orange-200/50 text-orange-700" :
+                                    "bg-muted/30"
+                        )}>
+                            <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider opacity-80">Δ:</span>
+                            <span className="text-xs sm:text-sm font-bold tabular-nums">
+                                {deltaTotal > 0 ? '+' : ''}{moneyFormatter.format(deltaTotal)}
+                            </span>
+                        </div>
+                        <div className="w-px h-6 bg-border mx-1 hidden sm:block" />
+                        <AddExtraWorkSheet estimateId={estimateId} onCreated={(row) => setRows((prev) => [...prev, row])} />
+                    </div>
+                }
             />
         </div>
     );
