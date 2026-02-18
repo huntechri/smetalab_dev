@@ -185,6 +185,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
             const safePrice = Number(material.price);
             const created = await estimatesActionRepo.addMaterial(estimateId, activeWorkForMaterial.id, {
                 name: material.name,
+                materialId: material.id,
                 unit: material.unit || 'шт',
                 imageUrl: material.imageUrl ?? null,
                 price: Number.isFinite(safePrice) ? safePrice : 0,
@@ -217,6 +218,7 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
             const safePrice = Number(material.price);
             const updated = await estimatesActionRepo.patchRow(estimateId, targetMaterialId, {
                 name: material.name,
+                materialId: material.id,
                 unit: material.unit || 'шт',
                 imageUrl: material.imageUrl ?? null,
                 price: Number.isFinite(safePrice) ? safePrice : 0,

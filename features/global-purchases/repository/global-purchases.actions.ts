@@ -14,6 +14,7 @@ const toPayloadFromCatalog = (material: CatalogMaterial, projectId: string | nul
     return {
         projectId,
         materialName: material.name,
+        materialId: material.id,
         unit: material.unit || 'шт',
         qty: 1,
         price: Number.isFinite(safePrice) ? safePrice : 0,
@@ -37,6 +38,7 @@ export const globalPurchasesActionRepo = {
         const result = await addGlobalPurchaseAction({
             projectId,
             materialName: '',
+            materialId: null,
             unit: 'шт',
             qty: 1,
             price: 0,

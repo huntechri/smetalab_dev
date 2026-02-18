@@ -172,6 +172,7 @@ export const estimateRows = pgTable('estimate_rows', {
   parentWorkId: uuid('parent_work_id'),
   code: varchar('code', { length: 120 }).notNull(),
   name: text('name').notNull(),
+  materialId: uuid('material_id').references(() => materials.id),
   imageUrl: text('image_url'),
   unit: varchar('unit', { length: 50 }).notNull(),
   qty: doublePrecision('qty').notNull().default(1),
@@ -186,6 +187,7 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_material_id_idx').on(table.materialId),
 ]);
 
 export const estimateRoomParams = pgTable('estimate_room_params', {
@@ -224,6 +226,7 @@ export const globalPurchases = pgTable('global_purchases', {
   supplierId: uuid('supplier_id'),
   projectName: varchar('project_name', { length: 160 }).notNull().default(''),
   materialName: text('material_name').notNull().default(''),
+  materialId: uuid('material_id').references(() => materials.id),
   unit: varchar('unit', { length: 20 }).notNull().default('шт'),
   qty: doublePrecision('qty').notNull().default(1),
   price: doublePrecision('price').notNull().default(0),
@@ -239,6 +242,7 @@ export const globalPurchases = pgTable('global_purchases', {
   index('global_purchases_tenant_purchase_date_order_idx').on(table.tenantId, table.purchaseDate, table.order).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_project_date_idx').on(table.tenantId, table.projectId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_supplier_date_idx').on(table.tenantId, table.supplierId, table.purchaseDate).where(sql`deleted_at IS NULL`),
+  index('global_purchases_material_id_idx').on(table.materialId).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 
@@ -785,6 +789,10 @@ export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
   estimate: one(estimates, {
     fields: [estimateRows.estimateId],
     references: [estimates.id],
+  }),
+  material: one(materials, {
+    fields: [estimateRows.materialId],
+    references: [materials.id],
   }),
 }));
 

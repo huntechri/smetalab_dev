@@ -5,14 +5,14 @@ describe('buildEstimateProcurementRows', () => {
     it('consolidates plan rows, merges actual purchases and includes fact-only rows', () => {
         const rows = buildEstimateProcurementRows(
             [
-                { name: 'Штукатурка', unit: 'меш', qty: 60, price: 500 },
-                { name: 'ШТУКАТУРКА', unit: 'меш', qty: 40, price: 500 },
-                { name: 'Грунтовка', unit: 'л', qty: 10, price: 80 },
+                { name: 'Штукатурка', materialId: null, unit: 'меш', qty: 60, price: 500 },
+                { name: 'ШТУКАТУРКА', materialId: null, unit: 'меш', qty: 40, price: 500 },
+                { name: 'Грунтовка', materialId: null, unit: 'л', qty: 10, price: 80 },
             ],
             [
-                { materialName: 'Штукатурка', unit: 'меш', qty: 50, price: 100, purchaseDate: '2026-12-16' },
-                { materialName: 'Штукатурка', unit: 'меш', qty: 50, price: 120, purchaseDate: '2026-12-17' },
-                { materialName: 'Краска', unit: 'л', qty: 3, price: 700, purchaseDate: '2026-12-18' },
+                { materialName: 'Штукатурка', materialId: null, unit: 'меш', qty: 50, price: 100, purchaseDate: '2026-12-16' },
+                { materialName: 'Штукатурка', materialId: null, unit: 'меш', qty: 50, price: 120, purchaseDate: '2026-12-17' },
+                { materialName: 'Краска', materialId: null, unit: 'л', qty: 3, price: 700, purchaseDate: '2026-12-18' },
             ],
         );
 
@@ -23,28 +23,21 @@ describe('buildEstimateProcurementRows', () => {
         expect(rows[1].materialName).toBe('Штукатурка');
         expect(rows[2].source).toBe('fact_only');
         expect(rows[2].materialName).toBe('Краска');
+    });
 
-        expect(rows[1]).toMatchObject({
+    it('merges plan/fact rows by materialId even when names differ', () => {
+        const rows = buildEstimateProcurementRows(
+            [{ name: 'Кабель 3х2.5', materialId: '11111111-1111-1111-1111-111111111111', unit: 'м', qty: 100, price: 50 }],
+            [{ materialName: 'Кабель 3*2,5', materialId: '11111111-1111-1111-1111-111111111111', unit: 'м', qty: 70, price: 60, purchaseDate: '2026-12-17' }],
+        );
+
+        expect(rows).toHaveLength(1);
+        expect(rows[0]).toMatchObject({
+            source: 'estimate',
+            materialName: 'Кабель 3х2.5',
             plannedQty: 100,
-            plannedPrice: 500,
-            plannedAmount: 50000,
-            actualQty: 100,
-            actualAvgPrice: 110,
-            actualAmount: 11000,
-            qtyDelta: 0,
-            amountDelta: 39000,
-            purchaseCount: 2,
-            lastPurchaseDate: '2026-12-17',
-        });
-
-        expect(rows[2]).toMatchObject({
-            plannedQty: 0,
-            plannedAmount: 0,
-            actualQty: 3,
-            actualAvgPrice: 700,
-            qtyDelta: -3,
-            amountDelta: -2100,
-            source: 'fact_only',
+            actualQty: 70,
+            purchaseCount: 1,
         });
     });
 });

@@ -14,6 +14,7 @@ export const addGlobalPurchaseAction = safeAction(
     supplierId?: string | null;
     projectName?: string;
     materialName?: string;
+    materialId?: string | null;
     unit?: string;
     qty?: number;
     price?: number;
@@ -29,6 +30,7 @@ export const patchGlobalPurchaseAction = safeAction(
     projectId?: string | null;
     supplierId?: string | null;
     materialName?: string;
+    materialId?: string | null;
     unit?: string;
     qty?: number;
     price?: number;
