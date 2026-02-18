@@ -19,7 +19,6 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
     return estimate;
 };
 
-
 const isMissingRelationError = (value: unknown): value is { code: string } => {
     if (typeof value !== 'object' || value === null) {
         return false;
@@ -28,10 +27,114 @@ const isMissingRelationError = (value: unknown): value is { code: string } => {
     return 'code' in value && typeof (value as { code?: unknown }).code === 'string';
 };
 
-const ensureExecutionTableExists = async () => {
+const checkExecutionTableExists = async () => {
     const result = await db.execute(sql`SELECT to_regclass('public.estimate_execution_rows') AS table_name`);
     const rows = result as unknown as { table_name: string | null }[];
     return rows[0]?.table_name !== null;
+};
+
+const bootstrapExecutionStorage = async () => {
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+  CREATE TYPE "public"."estimate_execution_source" AS ENUM('from_estimate', 'extra');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+  CREATE TYPE "public"."estimate_execution_status" AS ENUM('not_started', 'in_progress', 'done');
+EXCEPTION
+  WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+CREATE TABLE IF NOT EXISTS "estimate_execution_rows" (
+  "id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
+  "tenant_id" integer NOT NULL,
+  "estimate_id" uuid NOT NULL,
+  "estimate_row_id" uuid,
+  "source" "estimate_execution_source" DEFAULT 'from_estimate' NOT NULL,
+  "status" "estimate_execution_status" DEFAULT 'not_started' NOT NULL,
+  "code" varchar(120) DEFAULT '' NOT NULL,
+  "name" text NOT NULL,
+  "unit" varchar(50) DEFAULT 'шт' NOT NULL,
+  "planned_qty" double precision DEFAULT 0 NOT NULL,
+  "planned_price" double precision DEFAULT 0 NOT NULL,
+  "planned_sum" double precision DEFAULT 0 NOT NULL,
+  "actual_qty" double precision DEFAULT 0 NOT NULL,
+  "actual_price" double precision DEFAULT 0 NOT NULL,
+  "actual_sum" double precision DEFAULT 0 NOT NULL,
+  "is_completed" boolean DEFAULT false NOT NULL,
+  "completed_at" timestamp,
+  "completed_by_user_id" integer,
+  "order" integer DEFAULT 0 NOT NULL,
+  "created_at" timestamp DEFAULT now() NOT NULL,
+  "updated_at" timestamp DEFAULT now() NOT NULL,
+  "deleted_at" timestamp
+);
+`));
+
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+ ALTER TABLE "estimate_execution_rows" ADD CONSTRAINT "estimate_execution_rows_tenant_id_teams_id_fk" FOREIGN KEY ("tenant_id") REFERENCES "public"."teams"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+ ALTER TABLE "estimate_execution_rows" ADD CONSTRAINT "estimate_execution_rows_estimate_id_estimates_id_fk" FOREIGN KEY ("estimate_id") REFERENCES "public"."estimates"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+ ALTER TABLE "estimate_execution_rows" ADD CONSTRAINT "estimate_execution_rows_estimate_row_id_estimate_rows_id_fk" FOREIGN KEY ("estimate_row_id") REFERENCES "public"."estimate_rows"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+DO $$ BEGIN
+ ALTER TABLE "estimate_execution_rows" ADD CONSTRAINT "estimate_execution_rows_completed_by_user_id_users_id_fk" FOREIGN KEY ("completed_by_user_id") REFERENCES "public"."users"("id") ON DELETE no action ON UPDATE no action;
+EXCEPTION WHEN duplicate_object THEN null;
+END $$;
+`));
+
+    await db.execute(sql.raw(`
+CREATE UNIQUE INDEX IF NOT EXISTS "estimate_execution_rows_estimate_row_unique" ON "estimate_execution_rows" USING btree ("estimate_id","estimate_row_id") WHERE estimate_row_id IS NOT NULL AND deleted_at IS NULL;
+`));
+
+    await db.execute(sql.raw(`
+CREATE INDEX IF NOT EXISTS "estimate_execution_rows_tenant_estimate_idx" ON "estimate_execution_rows" USING btree ("tenant_id","estimate_id") WHERE deleted_at IS NULL;
+`));
+
+    await db.execute(sql.raw(`
+CREATE INDEX IF NOT EXISTS "estimate_execution_rows_estimate_order_idx" ON "estimate_execution_rows" USING btree ("estimate_id","order") WHERE deleted_at IS NULL;
+`));
+
+    await db.execute(sql.raw(`
+CREATE INDEX IF NOT EXISTS "estimate_execution_rows_estimate_status_idx" ON "estimate_execution_rows" USING btree ("estimate_id","status") WHERE deleted_at IS NULL;
+`));
+};
+
+const ensureExecutionStorageReady = async () => {
+    const exists = await checkExecutionTableExists();
+    if (exists) {
+        return true;
+    }
+
+    try {
+        await bootstrapExecutionStorage();
+    } catch (bootstrapError) {
+        console.error('EstimateExecutionService.bootstrapExecutionStorage error:', bootstrapError);
+    }
+
+    return checkExecutionTableExists();
 };
 
 const estimateExecutionRowSelect = {
@@ -169,9 +272,9 @@ export class EstimateExecutionService {
                 return error('Смета не найдена', 'NOT_FOUND');
             }
 
-            const hasExecutionTable = await ensureExecutionTableExists();
+            const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             await this.syncFromEstimateWorks(teamId, estimateId);
@@ -185,7 +288,12 @@ export class EstimateExecutionService {
             return success(rows as EstimateExecutionRow[]);
         } catch (e) {
             if (isMissingRelationError(e) && e.code === '42P01') {
-                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+                const hasExecutionTable = await ensureExecutionStorageReady();
+                if (hasExecutionTable) {
+                    return this.list(teamId, estimateId);
+                }
+
+                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             console.error('EstimateExecutionService.list error:', e);
@@ -205,9 +313,9 @@ export class EstimateExecutionService {
                 return error('Смета не найдена', 'NOT_FOUND');
             }
 
-            const hasExecutionTable = await ensureExecutionTableExists();
+            const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             const updated = await db.transaction(async (tx) => {
@@ -268,9 +376,9 @@ export class EstimateExecutionService {
                 return error('Смета не найдена', 'NOT_FOUND');
             }
 
-            const hasExecutionTable = await ensureExecutionTableExists();
+            const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             const payload = parsed.data as AddExtraExecutionWorkInput;
