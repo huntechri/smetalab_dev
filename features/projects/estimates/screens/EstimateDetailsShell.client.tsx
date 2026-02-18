@@ -95,7 +95,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     <TabsTrigger value="estimate" className="px-4 py-2 text-sm">Смета</TabsTrigger>
                     <TabsTrigger value="params" className="px-4 py-2 text-sm">Параметры</TabsTrigger>
                     <TabsTrigger value="procurement" className="px-4 py-2 text-sm">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-4 py-2 text-sm">Исполнение</TabsTrigger>
+                    <TabsTrigger value="execution" className="px-4 py-2 text-sm">Выполнение</TabsTrigger>
                     <TabsTrigger value="docs" className="px-4 py-2 text-sm">Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" className="mt-2 md:mt-3">
@@ -109,7 +109,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="procurement"><EstimateProcurement estimateId={estimateId} /></TabsContent>
-                <TabsContent value="execution"><EstimateExecution /></TabsContent>
+                <TabsContent value="execution"><EstimateExecution estimateId={estimateId} /></TabsContent>
                 <TabsContent value="docs"><EstimateDocuments /></TabsContent>
             </Tabs>
         </div>
