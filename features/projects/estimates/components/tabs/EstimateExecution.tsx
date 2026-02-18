@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useToast } from '@/components/ui/use-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
+import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -95,16 +96,15 @@ function NumberEditCell({
     const [localValue, setLocalValue] = useState<string>(String(row[field]));
 
     useEffect(() => {
-        setLocalValue(String(row[field]));
-    }, [field, row]);
+        setLocalValue(toDecimalInput(row[field]));
+    }, [field, row[field]]);
 
     return (
         <Input
             value={localValue}
             onChange={(event) => setLocalValue(event.target.value)}
             onBlur={() => {
-                const normalizedValue = localValue.replace(/,/g, '.');
-                const nextValue = Number(normalizedValue);
+                const nextValue = parseDecimalInput(localValue);
 
                 if (!Number.isFinite(nextValue) || nextValue < 0) {
                     setLocalValue(String(row[field]));
@@ -147,8 +147,8 @@ function AddExtraWorkSheet({
     };
 
     const submit = async () => {
-        const parsedQty = Number(actualQty.replace(/,/g, '.'));
-        const parsedPrice = Number(actualPrice.replace(/,/g, '.'));
+        const parsedQty = parseDecimalInput(actualQty);
+        const parsedPrice = parseDecimalInput(actualPrice);
 
         if (!name.trim()) {
             toast({ variant: 'destructive', title: 'Ошибка', description: 'Укажите название работы.' });
@@ -233,6 +233,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const [rows, setRows] = useState<EstimateExecutionRow[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const requestVersionRef = useRef<Record<string, number>>({});
     const { toast } = useToast();
 
     useEffect(() => {
@@ -269,12 +270,17 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         };
     }, [estimateId]);
 
-    const patchRow = async (rowId: string, patch: { actualQty?: number; actualPrice?: number; status?: EstimateExecutionStatus }) => {
-        const previousRows = rows;
-        const optimisticRows = rows.map((row) => {
+    const patchRow = useCallback(async (rowId: string, patch: { actualQty?: number; actualPrice?: number; status?: EstimateExecutionStatus }) => {
+        requestVersionRef.current[rowId] = (requestVersionRef.current[rowId] ?? 0) + 1;
+        const requestVersion = requestVersionRef.current[rowId];
+        let previousRow: EstimateExecutionRow | null = null;
+
+        setRows((currentRows) => currentRows.map((row) => {
             if (row.id !== rowId) {
                 return row;
             }
+
+            previousRow = row;
 
             const nextQty = patch.actualQty ?? row.actualQty;
             const nextPrice = patch.actualPrice ?? row.actualPrice;
@@ -287,18 +293,25 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 actualPrice: nextPrice,
                 actualSum: nextQty * nextPrice,
             };
-        });
-
-        setRows(optimisticRows);
+        }));
 
         try {
             const updated = await estimateExecutionActionsRepo.patch(estimateId, rowId, patch);
-            setRows((current) => current.map((item) => item.id === rowId ? updated : item));
+            if (requestVersion !== requestVersionRef.current[rowId]) {
+                return;
+            }
+
+            setRows((current) => current.map((item) => item.id === rowId ? {
+                ...item,
+                ...updated,
+            } : item));
         } catch (error) {
-            setRows(previousRows);
+            if (requestVersion === requestVersionRef.current[rowId] && previousRow) {
+                setRows((current) => current.map((row) => row.id === rowId ? previousRow as EstimateExecutionRow : row));
+            }
             toast({ variant: 'destructive', title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось сохранить изменения.' });
         }
-    };
+    }, [estimateId, toast]);
 
     const columns = useMemo<ColumnDef<EstimateExecutionRow>[]>(() => [
         {
