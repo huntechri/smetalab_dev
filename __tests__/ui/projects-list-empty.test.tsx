@@ -2,6 +2,7 @@ import { render, screen, cleanup } from '@testing-library/react';
 import { ProjectsList } from '@/features/projects/list/components/projects-list';
 import { describe, it, expect, vi, afterEach } from 'vitest';
 import { ProjectListItem } from '@/features/projects/shared/types';
+import { ComponentProps } from 'react';
 
 // Explicit cleanup for this environment
 afterEach(() => {
@@ -10,8 +11,7 @@ afterEach(() => {
 
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    FolderKanban: (props: any) => <div data-testid="folder-kanban-icon" {...props} />,
+    FolderKanban: (props: ComponentProps<'div'>) => <div data-testid="folder-kanban-icon" {...props} />,
     LayoutGrid: () => <div />,
     List: () => <div />,
     Edit: () => <div />,
