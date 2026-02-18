@@ -7,7 +7,8 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/ui/data-table';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
+import { CatalogWork } from '@/features/catalog/types/dto';
 
 import {
     DropdownMenu,
@@ -21,6 +22,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
+import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
 
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -122,62 +124,23 @@ function NumberEditCell({
     );
 }
 
-function AddExtraWorkSheet({
-    estimateId,
-    onCreated,
-}: {
+function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
     estimateId: string;
     onCreated: (row: EstimateExecutionRow) => void;
+    addedWorkNames: Set<string>;
 }) {
     const [open, setOpen] = useState(false);
-    const [isSaving, setIsSaving] = useState(false);
-    const [name, setName] = useState('');
-    const [code, setCode] = useState('');
-    const [unit, setUnit] = useState('шт');
-    const [actualQty, setActualQty] = useState('1');
-    const [actualPrice, setActualPrice] = useState('0');
     const { toast } = useToast();
 
-    const resetForm = () => {
-        setName('');
-        setCode('');
-        setUnit('шт');
-        setActualQty('1');
-        setActualPrice('0');
-    };
-
-    const submit = async () => {
-        const parsedQty = parseDecimalInput(actualQty);
-        const parsedPrice = parseDecimalInput(actualPrice);
-
-        if (!name.trim()) {
-            toast({ variant: 'destructive', title: 'Ошибка', description: 'Укажите название работы.' });
-            return;
-        }
-
-        if (!Number.isFinite(parsedQty) || parsedQty < 0 || !Number.isFinite(parsedPrice) || parsedPrice < 0) {
-            toast({ variant: 'destructive', title: 'Ошибка', description: 'Проверьте фактическое количество и цену.' });
-            return;
-        }
-
+    const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
-            setIsSaving(true);
-            const created = await estimateExecutionActionsRepo.addExtraWork(estimateId, {
-                name: name.trim(),
-                code: code.trim() || undefined,
-                unit: unit.trim(),
-                actualQty: parsedQty,
-                actualPrice: parsedPrice,
-            });
+            const created = await estimateExecutionActionsRepo.addExtraWork(estimateId, buildExtraWorkFromCatalog(catalogWork));
 
             onCreated(created);
-            toast({ title: 'Дополнительная работа добавлена', description: created.name });
+            toast({ title: 'Работа добавлена во вкладку «Выполнение»', description: created.name });
             setOpen(false);
-            resetForm();
         } catch (error) {
-            toast({ variant: 'destructive', title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось добавить работу.' });
-        } finally {
-            setIsSaving(false);
+            toast({ variant: 'destructive', title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось добавить работу из справочника.' });
         }
     };
 
@@ -188,41 +151,17 @@ function AddExtraWorkSheet({
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md">
                 <SheetHeader>
-                    <SheetTitle>Новая дополнительная работа</SheetTitle>
+                    <SheetTitle>Справочник работ</SheetTitle>
                     <SheetDescription>
-                        Работа добавляется только во вкладку «Выполнение». Смета не изменяется.
+                        Выберите работу из справочника. Позиция будет добавлена только во вкладку «Выполнение».
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className="mt-6 space-y-4">
-                    <div className="space-y-2">
-                        <Label htmlFor="extra-work-name">Название</Label>
-                        <Input id="extra-work-name" value={name} onChange={(event) => setName(event.target.value)} />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="extra-work-code">Код (опционально)</Label>
-                        <Input id="extra-work-code" value={code} onChange={(event) => setCode(event.target.value)} />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="extra-work-unit">Ед. изм.</Label>
-                        <Input id="extra-work-unit" value={unit} onChange={(event) => setUnit(event.target.value)} />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="extra-work-qty">Фактическое количество</Label>
-                        <Input id="extra-work-qty" value={actualQty} onChange={(event) => setActualQty(event.target.value)} inputMode="decimal" />
-                    </div>
-
-                    <div className="space-y-2">
-                        <Label htmlFor="extra-work-price">Фактическая цена</Label>
-                        <Input id="extra-work-price" value={actualPrice} onChange={(event) => setActualPrice(event.target.value)} inputMode="decimal" />
-                    </div>
-
-                    <Button disabled={isSaving} onClick={() => void submit()} className="w-full">
-                        {isSaving ? 'Сохранение...' : 'Сохранить'}
-                    </Button>
+                <div className="mt-6 h-[calc(100vh-140px)] overflow-hidden">
+                    <WorkCatalogPicker
+                        onAddWork={(work) => void addWorkFromCatalog(work)}
+                        addedWorkNames={addedWorkNames}
+                    />
                 </div>
             </SheetContent>
         </Sheet>
@@ -395,6 +334,8 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         return acc;
     }, { planned: 0, actual: 0 }), [rows]);
 
+    const addedWorkNames = useMemo(() => new Set(rows.map((row) => row.name)), [rows]);
+
     if (isLoading) {
         return (
             <div className="space-y-2">
@@ -440,7 +381,11 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                             </span>
                         </div>
                         <div className="w-px h-6 bg-border mx-1 hidden sm:block" />
-                        <AddExtraWorkSheet estimateId={estimateId} onCreated={(row) => setRows((prev) => [...prev, row])} />
+                        <AddExtraWorkSheet
+                            estimateId={estimateId}
+                            onCreated={(row) => setRows((prev) => [...prev, row])}
+                            addedWorkNames={addedWorkNames}
+                        />
                     </div>
                 }
             />
