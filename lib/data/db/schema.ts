@@ -33,6 +33,8 @@ export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 
 export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
 export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['work', 'material']);
 export const globalPurchaseSourceEnum = pgEnum('global_purchase_source', ['manual', 'catalog']);
+export const estimateExecutionSourceEnum = pgEnum('estimate_execution_source', ['from_estimate', 'extra']);
+export const estimateExecutionStatusEnum = pgEnum('estimate_execution_status', ['not_started', 'in_progress', 'done']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -215,6 +217,40 @@ export const estimateRoomParams = pgTable('estimate_room_params', {
 }, (table) => [
   index('estimate_room_params_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
   index('estimate_room_params_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
+]);
+
+export const estimateExecutionRows = pgTable('estimate_execution_rows', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  estimateId: uuid('estimate_id')
+    .notNull()
+    .references(() => estimates.id),
+  estimateRowId: uuid('estimate_row_id').references(() => estimateRows.id),
+  source: estimateExecutionSourceEnum('source').notNull().default('from_estimate'),
+  status: estimateExecutionStatusEnum('status').notNull().default('not_started'),
+  code: varchar('code', { length: 120 }).notNull().default(''),
+  name: text('name').notNull(),
+  unit: varchar('unit', { length: 50 }).notNull().default('шт'),
+  plannedQty: doublePrecision('planned_qty').notNull().default(0),
+  plannedPrice: doublePrecision('planned_price').notNull().default(0),
+  plannedSum: doublePrecision('planned_sum').notNull().default(0),
+  actualQty: doublePrecision('actual_qty').notNull().default(0),
+  actualPrice: doublePrecision('actual_price').notNull().default(0),
+  actualSum: doublePrecision('actual_sum').notNull().default(0),
+  isCompleted: boolean('is_completed').notNull().default(false),
+  completedAt: timestamp('completed_at'),
+  completedByUserId: integer('completed_by_user_id').references(() => users.id),
+  order: integer('order').notNull().default(0),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  uniqueIndex('estimate_execution_rows_estimate_row_unique').on(table.estimateId, table.estimateRowId).where(sql`estimate_row_id IS NOT NULL AND deleted_at IS NULL`),
+  index('estimate_execution_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_execution_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
+  index('estimate_execution_rows_estimate_status_idx').on(table.estimateId, table.status).where(sql`deleted_at IS NULL`),
 ]);
 
 export const globalPurchases = pgTable('global_purchases', {
@@ -779,6 +815,7 @@ export const estimatesRelations = relations(estimates, ({ one, many }) => ({
   }),
   rows: many(estimateRows),
   roomParams: many(estimateRoomParams),
+  executionRows: many(estimateExecutionRows),
 }));
 
 export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
@@ -793,6 +830,25 @@ export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
   material: one(materials, {
     fields: [estimateRows.materialId],
     references: [materials.id],
+  }),
+}));
+
+export const estimateExecutionRowsRelations = relations(estimateExecutionRows, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [estimateExecutionRows.tenantId],
+    references: [teams.id],
+  }),
+  estimate: one(estimates, {
+    fields: [estimateExecutionRows.estimateId],
+    references: [estimates.id],
+  }),
+  estimateRow: one(estimateRows, {
+    fields: [estimateExecutionRows.estimateRowId],
+    references: [estimateRows.id],
+  }),
+  completedByUser: one(users, {
+    fields: [estimateExecutionRows.completedByUserId],
+    references: [users.id],
   }),
 }));
 
@@ -831,6 +887,8 @@ export type EstimateRowEntity = typeof estimateRows.$inferSelect;
 export type NewEstimateRowEntity = typeof estimateRows.$inferInsert;
 export type EstimateRoomParamEntity = typeof estimateRoomParams.$inferSelect;
 export type NewEstimateRoomParamEntity = typeof estimateRoomParams.$inferInsert;
+export type EstimateExecutionRowEntity = typeof estimateExecutionRows.$inferSelect;
+export type NewEstimateExecutionRowEntity = typeof estimateExecutionRows.$inferInsert;
 export type EstimateShare = typeof estimateShares.$inferSelect;
 export type ImpersonationSession = typeof impersonationSessions.$inferSelect;
 export type Notification = typeof notifications.$inferSelect;
