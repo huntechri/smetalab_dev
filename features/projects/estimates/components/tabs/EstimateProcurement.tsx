@@ -35,70 +35,60 @@ const columns: ColumnDef<EstimateProcurementRow>[] = [
         accessorKey: 'materialName',
         header: 'Материал',
         cell: ({ row }) => <div className="font-medium">{row.original.materialName}</div>,
-        size: 220,
+        size: 450,
     },
     {
         accessorKey: 'unit',
         header: 'Ед.',
-        size: 80,
+        size: 60,
     },
     {
         accessorKey: 'plannedQty',
-        header: () => <div className="text-right">План кол-во</div>,
+        header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.plannedQty)}</div>,
-        size: 120,
+        size: 100,
     },
     {
         accessorKey: 'plannedPrice',
-        header: () => <div className="text-right">План цена</div>,
+        header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedPrice)}</div>,
-        size: 140,
+        size: 110,
     },
     {
         accessorKey: 'plannedAmount',
-        header: () => <div className="text-right">План сумма</div>,
+        header: () => <div className="text-right">Сумма</div>,
         cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedAmount)}</div>,
-        size: 150,
+        size: 120,
     },
     {
         accessorKey: 'actualQty',
-        header: () => <div className="text-right">Факт кол-во</div>,
+        header: () => <div className="text-right">ф. Кол-во</div>,
         cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.actualQty)}</div>,
-        size: 120,
+        size: 100,
     },
     {
         accessorKey: 'actualAvgPrice',
-        header: () => <div className="text-right">Факт ср. цена</div>,
+        header: () => <div className="text-right">Ср. цена</div>,
         cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
-        size: 150,
+        size: 110,
     },
     {
         accessorKey: 'actualAmount',
-        header: () => <div className="text-right">Факт сумма</div>,
+        header: () => <div className="text-right">ф. Сумма</div>,
         cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAmount)}</div>,
-        size: 150,
+        size: 120,
     },
     {
         accessorKey: 'qtyDelta',
-        header: () => <div className="text-right">Δ кол-во (план-факт)</div>,
+        header: () => <div className="text-right">Δ Кол-во</div>,
         cell: ({ row }) => <div className="flex justify-end">{renderDeltaBadge(row.original.qtyDelta)}</div>,
-        size: 170,
+        size: 130,
     },
     {
         accessorKey: 'amountDelta',
-        header: () => <div className="text-right">Δ сумма (план-факт)</div>,
+        header: () => <div className="text-right">Δ Сумма</div>,
         cell: ({ row }) => <div className="flex justify-end">{renderDeltaBadge(row.original.amountDelta)}</div>,
-        size: 180,
-    },
-    {
-        accessorKey: 'source',
-        header: 'Источник',
-        cell: ({ row }) => (
-            <Badge variant={row.original.source === 'fact_only' ? 'destructive' : 'secondary'}>
-                {row.original.source === 'fact_only' ? 'Только факт' : 'Смета'}
-            </Badge>
-        ),
-        size: 120,
+        size: 140,
     },
 ];
 

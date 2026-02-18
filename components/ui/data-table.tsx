@@ -5,7 +5,7 @@ import {
     flexRender,
     Row,
 } from "@tanstack/react-table"
-import { ChevronDown, ChevronUp, ChevronsUpDown, Search, Sparkles, Loader2 } from "lucide-react"
+import { Search, Sparkles, Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { Skeleton } from "@/components/ui/skeleton"
 import { memo, useState, useCallback, forwardRef, HTMLAttributes } from "react"
@@ -300,7 +300,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground border-b transition-colors bg-muted/5 font-medium tracking-tight"
+                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
                                                     style={{ width: header.getSize() }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -322,15 +322,6 @@ export function DataTable<TData, TValue>({
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
-                                                                    )}
-                                                                </div>
-                                                                <div className="shrink-0 w-4" aria-hidden="true">
-                                                                    {sortDirection === "asc" ? (
-                                                                        <ChevronUp className="h-4 w-4" />
-                                                                    ) : sortDirection === "desc" ? (
-                                                                        <ChevronDown className="h-4 w-4" />
-                                                                    ) : (
-                                                                        <ChevronsUpDown className="h-4 w-4 opacity-30" />
                                                                     )}
                                                                 </div>
                                                             </button>
@@ -418,15 +409,6 @@ export function DataTable<TData, TValue>({
                                                                         {flexRender(
                                                                             header.column.columnDef.header,
                                                                             header.getContext()
-                                                                        )}
-                                                                    </div>
-                                                                    <div className="shrink-0 w-4" aria-hidden="true">
-                                                                        {sortDirection === "asc" ? (
-                                                                            <ChevronUp className="h-4 w-4" />
-                                                                        ) : sortDirection === "desc" ? (
-                                                                            <ChevronDown className="h-4 w-4" />
-                                                                        ) : (
-                                                                            <ChevronsUpDown className="h-4 w-4 opacity-30" />
                                                                         )}
                                                                     </div>
                                                                 </button>
