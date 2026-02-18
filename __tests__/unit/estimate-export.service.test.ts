@@ -61,6 +61,6 @@ describe('EstimateExportService', () => {
         }, 'xlsx');
 
         expect(name.endsWith('.xlsx')).toBe(true);
-        expect(name).toContain('жк-остров-b35');
+        expect(name).toContain('zhk-ostrov-b35');
     });
 });

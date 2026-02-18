@@ -270,7 +270,16 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
             const response = await fetch(`/api/estimates/${estimateId}/export?format=${format}`);
 
             if (!response.ok) {
-                throw new Error('EXPORT_FAILED');
+                let message = 'Не удалось выгрузить смету.';
+                try {
+                    const payload = await response.json() as { message?: string };
+                    if (payload?.message) {
+                        message = payload.message;
+                    }
+                } catch {
+                    // ignore json parsing issues
+                }
+                throw new Error(message);
             }
 
             const blob = await response.blob();
@@ -292,8 +301,12 @@ export function EstimateTable({ estimateId, initialRows }: { estimateId: string;
                 title: 'Экспорт завершен',
                 description: format === 'xlsx' ? 'Excel-файл успешно сформирован.' : 'PDF-файл успешно сформирован.',
             });
-        } catch {
-            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось выгрузить смету.' });
+        } catch (exportError) {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка экспорта',
+                description: exportError instanceof Error ? exportError.message : 'Не удалось выгрузить смету.',
+            });
         } finally {
             setIsExporting(false);
         }
