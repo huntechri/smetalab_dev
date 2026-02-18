@@ -56,7 +56,11 @@ const RU_TO_LATIN_MAP: Record<string, string> = {
 function transliterateRu(input: string): string {
     return input
         .split('')
-        .map((char) => RU_TO_LATIN_MAP[char] ?? char)
+        .map((char) => {
+            const lower = char.toLowerCase();
+            const mapped = RU_TO_LATIN_MAP[lower];
+            return mapped ?? lower;
+        })
         .join('');
 }
 
@@ -68,6 +72,11 @@ function safeFileName(name: string): string {
         .replace(/[^a-z0-9-]/g, '')
         .replace(/-+/g, '-')
         .replace(/^-|-$/g, '') || 'estimate';
+}
+
+
+function toPdfSafeText(value: string): string {
+    return transliterateRu(value);
 }
 
 function computeTotals(rows: EstimateExportRow[]) {
@@ -206,21 +215,20 @@ export class EstimateExportService {
             { header: 'Кол-во', key: 'qty', width: 12 },
             { header: 'Цена', key: 'price', width: 14 },
             { header: 'Сумма', key: 'sum', width: 16 },
-            { header: 'Расход', key: 'expense', width: 12 },
         ];
 
-        worksheet.mergeCells('A1:H1');
+        worksheet.mergeCells('A1:G1');
         worksheet.getCell('A1').value = `Проект: ${payload.projectName}`;
         worksheet.getCell('A1').font = { bold: true, size: 12 };
 
-        worksheet.mergeCells('A2:H2');
+        worksheet.mergeCells('A2:G2');
         worksheet.getCell('A2').value = `Смета: ${payload.estimateName}`;
 
-        worksheet.mergeCells('A3:H3');
+        worksheet.mergeCells('A3:G3');
         worksheet.getCell('A3').value = `Дата экспорта: ${new Date().toLocaleString('ru-RU')}`;
 
         const headerRow = worksheet.getRow(4);
-        headerRow.values = ['Код', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Расход'];
+        headerRow.values = ['Код', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
         headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -254,7 +262,6 @@ export class EstimateExportService {
             excelRow.getCell(5).value = row.qty;
             excelRow.getCell(6).value = row.price;
             excelRow.getCell(7).value = row.sum;
-            excelRow.getCell(8).value = row.kind === 'material' ? row.expense : null;
 
             if (row.kind === 'work') {
                 excelRow.eachCell((cell: ExcelJS.Cell) => {
@@ -281,7 +288,7 @@ export class EstimateExportService {
                 });
             }
 
-            for (let col = 1; col <= 8; col += 1) {
+            for (let col = 1; col <= 7; col += 1) {
                 const cell = excelRow.getCell(col);
                 cell.alignment = {
                     vertical: 'middle',
@@ -339,18 +346,18 @@ export class EstimateExportService {
         const bold = await document.embedFont(StandardFonts.HelveticaBold);
 
         let y = 560;
-        page.drawText(`Проект: ${payload.projectName}`, { x: 32, y, size: 12, font: bold });
+        page.drawText(`Proekt: ${toPdfSafeText(payload.projectName)}`, { x: 32, y, size: 12, font: bold });
         y -= 18;
-        page.drawText(`Смета: ${payload.estimateName}`, { x: 32, y, size: 11, font });
+        page.drawText(`Smeta: ${toPdfSafeText(payload.estimateName)}`, { x: 32, y, size: 11, font });
         y -= 16;
-        page.drawText(`Дата экспорта: ${new Date().toLocaleString('ru-RU')}`, { x: 32, y, size: 10, font, color: rgb(0.35, 0.35, 0.35) });
+        page.drawText(`Data exporta: ${new Date().toLocaleString('ru-RU')}`, { x: 32, y, size: 10, font, color: rgb(0.35, 0.35, 0.35) });
 
         y -= 24;
-        page.drawText('Код', { x: 32, y, size: 9, font: bold });
-        page.drawText('Наименование', { x: 90, y, size: 9, font: bold });
-        page.drawText('Ед.', { x: 490, y, size: 9, font: bold });
-        page.drawText('Кол-во', { x: 530, y, size: 9, font: bold });
-        page.drawText('Сумма', { x: 610, y, size: 9, font: bold });
+        page.drawText('Kod', { x: 32, y, size: 9, font: bold });
+        page.drawText('Naimenovanie', { x: 90, y, size: 9, font: bold });
+        page.drawText('Ed.', { x: 490, y, size: 9, font: bold });
+        page.drawText('Kol-vo', { x: 530, y, size: 9, font: bold });
+        page.drawText('Summa', { x: 610, y, size: 9, font: bold });
 
         y -= 14;
         for (const row of payload.rows) {
@@ -359,19 +366,19 @@ export class EstimateExportService {
             }
 
             page.drawText(row.code, { x: 32, y, size: 8, font });
-            page.drawText(`${row.kind === 'material' ? '· ' : ''}${row.name}`.slice(0, 68), { x: 90, y, size: 8, font: row.kind === 'work' ? bold : font });
-            page.drawText(row.unit.slice(0, 6), { x: 490, y, size: 8, font });
+            page.drawText(`${row.kind === 'material' ? '- ' : ''}${toPdfSafeText(row.name)}`.slice(0, 68), { x: 90, y, size: 8, font: row.kind === 'work' ? bold : font });
+            page.drawText(toPdfSafeText(row.unit).slice(0, 6), { x: 490, y, size: 8, font });
             page.drawText(row.qty.toLocaleString('ru-RU'), { x: 530, y, size: 8, font });
-            page.drawText(`${Math.round(row.sum).toLocaleString('ru-RU')} ₽`, { x: 610, y, size: 8, font: row.kind === 'work' ? bold : font });
+            page.drawText(`${Math.round(row.sum).toLocaleString('ru-RU')} RUB`, { x: 610, y, size: 8, font: row.kind === 'work' ? bold : font });
             y -= 12;
         }
 
         y -= 8;
-        page.drawText(`Итого работы: ${Math.round(payload.totals.works).toLocaleString('ru-RU')} ₽`, { x: 32, y, size: 10, font: bold });
+        page.drawText(`Itogo raboty: ${Math.round(payload.totals.works).toLocaleString('ru-RU')} RUB`, { x: 32, y, size: 10, font: bold });
         y -= 14;
-        page.drawText(`Итого материалы: ${Math.round(payload.totals.materials).toLocaleString('ru-RU')} ₽`, { x: 32, y, size: 10, font: bold });
+        page.drawText(`Itogo materialy: ${Math.round(payload.totals.materials).toLocaleString('ru-RU')} RUB`, { x: 32, y, size: 10, font: bold });
         y -= 14;
-        page.drawText(`Итого смета: ${Math.round(payload.totals.grand).toLocaleString('ru-RU')} ₽`, { x: 32, y, size: 11, font: bold });
+        page.drawText(`Itogo smeta: ${Math.round(payload.totals.grand).toLocaleString('ru-RU')} RUB`, { x: 32, y, size: 11, font: bold });
 
         const bytes = await document.save();
         return Buffer.from(bytes);
