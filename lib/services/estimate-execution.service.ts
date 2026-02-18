@@ -19,6 +19,21 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
     return estimate;
 };
 
+
+const isMissingRelationError = (value: unknown): value is { code: string } => {
+    if (typeof value !== 'object' || value === null) {
+        return false;
+    }
+
+    return 'code' in value && typeof (value as { code?: unknown }).code === 'string';
+};
+
+const ensureExecutionTableExists = async () => {
+    const result = await db.execute(sql`SELECT to_regclass('public.estimate_execution_rows') AS table_name`);
+    const rows = result as unknown as { table_name: string | null }[];
+    return rows[0]?.table_name !== null;
+};
+
 const estimateExecutionRowSelect = {
     id: estimateExecutionRows.id,
     estimateRowId: estimateExecutionRows.estimateRowId,
@@ -154,6 +169,11 @@ export class EstimateExecutionService {
                 return error('Смета не найдена', 'NOT_FOUND');
             }
 
+            const hasExecutionTable = await ensureExecutionTableExists();
+            if (!hasExecutionTable) {
+                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+            }
+
             await this.syncFromEstimateWorks(teamId, estimateId);
 
             const rows = await db
@@ -164,6 +184,10 @@ export class EstimateExecutionService {
 
             return success(rows as EstimateExecutionRow[]);
         } catch (e) {
+            if (isMissingRelationError(e) && e.code === '42P01') {
+                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
+            }
+
             console.error('EstimateExecutionService.list error:', e);
             return error('Ошибка при получении строк выполнения сметы');
         }
@@ -179,6 +203,11 @@ export class EstimateExecutionService {
             const estimate = await ensureEstimateAccess(teamId, estimateId);
             if (!estimate) {
                 return error('Смета не найдена', 'NOT_FOUND');
+            }
+
+            const hasExecutionTable = await ensureExecutionTableExists();
+            if (!hasExecutionTable) {
+                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
             }
 
             const updated = await db.transaction(async (tx) => {
@@ -237,6 +266,11 @@ export class EstimateExecutionService {
             const estimate = await ensureEstimateAccess(teamId, estimateId);
             if (!estimate) {
                 return error('Смета не найдена', 'NOT_FOUND');
+            }
+
+            const hasExecutionTable = await ensureExecutionTableExists();
+            if (!hasExecutionTable) {
+                return error('Для вкладки «Выполнение» требуется применить миграции базы данных', 'MIGRATION_REQUIRED');
             }
 
             const payload = parsed.data as AddExtraExecutionWorkInput;
