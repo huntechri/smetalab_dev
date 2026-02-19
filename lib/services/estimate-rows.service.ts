@@ -13,6 +13,7 @@ const addWorkSchema = z.object({
     qty: z.number().nonnegative().default(1),
     price: z.number().nonnegative().default(0),
     expense: z.number().nonnegative().default(0),
+    insertAfterWorkId: z.string().uuid().optional(),
 });
 
 const addMaterialSchema = z.object({
@@ -83,6 +84,63 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
 };
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase();
+
+const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: string) => {
+    const rows = await tx
+        .select({
+            id: estimateRows.id,
+            kind: estimateRows.kind,
+            parentWorkId: estimateRows.parentWorkId,
+            code: estimateRows.code,
+            order: estimateRows.order,
+        })
+        .from(estimateRows)
+        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)))
+        .orderBy(estimateRows.order);
+
+    let workIndex = 0;
+    const nextCodeById = new Map<string, string>();
+
+    for (const row of rows) {
+        if (row.kind !== 'work') {
+            continue;
+        }
+
+        workIndex += 1;
+        nextCodeById.set(row.id, String(workIndex));
+    }
+
+    const materialCounters = new Map<string, number>();
+
+    for (const row of rows) {
+        if (row.kind !== 'material' || !row.parentWorkId) {
+            continue;
+        }
+
+        const parentCode = nextCodeById.get(row.parentWorkId);
+        if (!parentCode) {
+            continue;
+        }
+
+        const nextCounter = (materialCounters.get(row.parentWorkId) ?? 0) + 1;
+        materialCounters.set(row.parentWorkId, nextCounter);
+        nextCodeById.set(row.id, `${parentCode}.${nextCounter}`);
+    }
+
+    const now = new Date();
+
+    for (const row of rows) {
+        const nextCode = nextCodeById.get(row.id);
+        if (!nextCode || nextCode === row.code) {
+            continue;
+        }
+
+        await tx
+            .update(estimateRows)
+            .set({ code: nextCode, updatedAt: now })
+            .where(and(eq(estimateRows.id, row.id), withActiveTenant(estimateRows, teamId)));
+    }
+};
 
 const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
     const [{ total }] = await tx
@@ -158,24 +216,61 @@ export class EstimateRowsService {
                     throw new Error('DUPLICATE_WORK_NAME');
                 }
 
-                const maxOrder = currentRows.reduce((max, row) => Math.max(max, row.order), 0);
-                const nextCode = String(currentRows.filter((row) => row.kind === 'work').length + 1);
-                const [row] = await tx
+                const rowsWithIds = await tx
+                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind })
+                    .from(estimateRows)
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+
+                const maxOrder = rowsWithIds.reduce((max, row) => Math.max(max, row.order), 0);
+                const workRows = rowsWithIds
+                    .filter((row) => row.kind === 'work')
+                    .sort((left, right) => left.order - right.order);
+
+                let nextOrder = maxOrder + 100;
+
+                if (payload.insertAfterWorkId) {
+                    const anchorWork = workRows.find((row) => row.id === payload.insertAfterWorkId);
+                    if (!anchorWork) {
+                        throw new Error('INSERT_ANCHOR_NOT_FOUND');
+                    }
+
+                    const nextWork = workRows.find((row) => row.order > anchorWork.order);
+                    if (nextWork) {
+                        nextOrder = nextWork.order;
+
+                        await tx
+                            .update(estimateRows)
+                            .set({ order: sql`${estimateRows.order} + 100` })
+                            .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
+                    }
+                }
+
+                const [created] = await tx
                     .insert(estimateRows)
                     .values({
                         tenantId: teamId,
                         estimateId,
                         kind: 'work',
-                        code: nextCode,
+                        code: '0',
                         name: payload.name,
                         unit: payload.unit,
                         qty: payload.qty,
                         price: payload.price,
                         sum: payload.qty * payload.price,
                         expense: payload.expense,
-                        order: maxOrder + 100,
+                        order: nextOrder,
                     })
                     .returning();
+
+                await renumberEstimateCodes(tx, teamId, estimateId);
+
+                const row = await tx.query.estimateRows.findFirst({
+                    where: and(eq(estimateRows.id, created.id), withActiveTenant(estimateRows, teamId)),
+                });
+
+                if (!row) {
+                    throw new Error('CREATED_ROW_NOT_FOUND');
+                }
 
                 await recalculateEstimateTotal(tx, estimateId);
                 return row;
@@ -185,6 +280,10 @@ export class EstimateRowsService {
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_WORK_NAME') {
                 return error('Работа с таким названием уже добавлена в смету', 'CONFLICT');
+            }
+
+            if (e instanceof Error && e.message === 'INSERT_ANCHOR_NOT_FOUND') {
+                return error('Работа для вставки не найдена', 'NOT_FOUND');
             }
 
             console.error('EstimateRowsService.addWork error:', e);
