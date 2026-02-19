@@ -23,9 +23,9 @@ import Link from 'next/link';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
 
-function EstimateTableLoader({ estimateId, rowsPromise }: { estimateId: string; rowsPromise: Promise<EstimateRow[]> }) {
+function EstimateTableLoader({ estimateId, rowsPromise, initialCoefPercent }: { estimateId: string; rowsPromise: Promise<EstimateRow[]>; initialCoefPercent: number }) {
     const rows = use(rowsPromise);
-    return <EstimateTable estimateId={estimateId} initialRows={rows} />;
+    return <EstimateTable estimateId={estimateId} initialRows={rows} initialCoefPercent={initialCoefPercent} />;
 }
 
 function EstimateParamsLoader({ estimateId, roomParamsPromise }: { estimateId: string; roomParamsPromise: Promise<EstimateRoomParam[]> }) {
@@ -34,6 +34,7 @@ function EstimateParamsLoader({ estimateId, roomParamsPromise }: { estimateId: s
 }
 
 interface EstimateDetailsShellProps {
+    initialCoefPercent: number;
     estimateId: string;
     rowsPromise: Promise<EstimateRow[]>;
     roomParamsPromise: Promise<EstimateRoomParam[]>;
@@ -47,7 +48,7 @@ interface EstimateDetailsShellProps {
     };
 }
 
-export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate }: EstimateDetailsShellProps) {
+export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
@@ -100,7 +101,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                 </TabsList>
                 <TabsContent value="estimate" className="mt-2 md:mt-3">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} />
+                        <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} />
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="params" className="mt-2 md:mt-3">

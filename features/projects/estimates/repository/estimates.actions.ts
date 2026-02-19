@@ -1,12 +1,23 @@
 import {
     addEstimateMaterialAction,
     addEstimateWorkAction,
+    getEstimateRowsAction,
     patchEstimateRowAction,
     removeEstimateRowAction,
 } from '@/app/actions/estimates/rows';
+import { resetEstimateCoefficientAction, updateEstimateCoefficientAction } from '@/app/actions/estimates/coefficient';
 import { EstimateRow, RowPatch } from '../types/dto';
 
 export const estimatesActionRepo = {
+    async list(estimateId: string): Promise<EstimateRow[]> {
+        const result = await getEstimateRowsAction(estimateId);
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
     async patchRow(estimateId: string, rowId: string, patch: RowPatch): Promise<EstimateRow> {
         const result = await patchEstimateRowAction(estimateId, rowId, patch);
         if (!result.success) {
@@ -44,6 +55,24 @@ export const estimatesActionRepo = {
     async removeRow(estimateId: string, rowId: string): Promise<{ removedIds: string[] }> {
         const result = await removeEstimateRowAction(estimateId, rowId);
 
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+    async updateCoefficient(estimateId: string, coefPercent: number): Promise<{ coefPercent: number }> {
+        const result = await updateEstimateCoefficientAction(estimateId, { coefPercent });
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+    async resetCoefficient(estimateId: string): Promise<{ coefPercent: number }> {
+        const result = await resetEstimateCoefficientAction(estimateId);
         if (!result.success) {
             throw new Error(result.error.message);
         }
