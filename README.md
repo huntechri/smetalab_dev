@@ -160,7 +160,7 @@
 3. **Настройка БД**: Укажите `DATABASE_URL` и `TEST_DATABASE_URL` (оба Neon).
 4. `pnpm db:migrate` — накат схемы на БД Neon.
 5. `pnpm db:seed` — заполнение базовыми данными.
-6. `pnpm dev` — запуск сервера.
+6. `pnpm dev` — запуск сервера (использует `TEST_DATABASE_URL` если он задан, затем автоматически выполняет `db:sync`).
 
 ## 🧪 Команды проверки
 
@@ -189,11 +189,24 @@ pnpm test:integration    # Интеграционные тесты (требую
 Проект работает **исключительно с Neon DB** для обеспечения консистентности данных между разработчиками.
 
 ```bash
-pnpm db:migrate    # Применить миграции к Neon
+pnpm db:sync       # Синхронизировать код и БД (generate + migrate) c защитой от запуска на production URL
+pnpm db:migrate    # Применить миграции к Neon (обычно в текущую DATABASE_URL)
 pnpm db:seed       # Заполнить Neon начальными данными
 pnpm db:studio     # Открыть графический интерфейс (Drizzle Studio) для Neon
 pnpm db:generate   # Генерация новых файлов миграций после изменения схемы
+pnpm db:migrate:prod # Явный алиас для наката миграций в production (через production DATABASE_URL)
 ```
+
+Если нужно накатить только уже существующие миграции без генерации, используйте `pnpm db:sync -- --skip-generate`. 
+
+Если нужно осознанно применить миграции к production URL, используйте `pnpm db:sync -- --allow-production`.
+
+
+### Как новые колонки попадают в production
+1. Меняете `schema.ts` и выполняете `pnpm db:generate` (получаете SQL-миграцию в репозитории).
+2. Коммитите миграцию вместе с кодом.
+3. На production используется `pnpm release` (или `pnpm db:migrate:prod`) с production `DATABASE_URL` — именно этот шаг накатывает новые колонки в прод.
+4. `pnpm db:sync` нужен для локальной/тестовой синхронизации и по умолчанию блокирует не-тестовые URL.
 
 ## 🌳 Стратегия веток и БД (Schema Drift)
 
