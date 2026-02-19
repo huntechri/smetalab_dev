@@ -1,3 +1,11 @@
+import { FolderKanban } from 'lucide-react';
+import {
+    Empty,
+    EmptyDescription,
+    EmptyHeader,
+    EmptyMedia,
+    EmptyTitle,
+} from '@/components/ui/empty';
 import { ProjectListItem, ProjectViewMode } from '../../shared/types';
 import { ProjectCard } from './project-card';
 import { ProjectRow } from './project-row';
@@ -12,9 +20,17 @@ type ProjectsListProps = {
 export function ProjectsList({ projects, viewMode, onDelete, onEdit }: ProjectsListProps) {
     if (projects.length === 0) {
         return (
-            <p className="rounded-md border p-6 text-sm text-muted-foreground">
-                Проекты не найдены.
-            </p>
+            <Empty className="py-12">
+                <EmptyHeader>
+                    <EmptyMedia variant="icon">
+                        <FolderKanban className="size-6 text-muted-foreground" />
+                    </EmptyMedia>
+                    <EmptyTitle>Проекты не найдены</EmptyTitle>
+                    <EmptyDescription>
+                        По вашему запросу ничего не найдено. Попробуйте изменить параметры поиска или фильтры.
+                    </EmptyDescription>
+                </EmptyHeader>
+            </Empty>
         );
     }
 
