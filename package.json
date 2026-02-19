@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "concurrently \"pnpm dev:next\" \"pnpm db:studio\"",
-    "dev:next": "next dev --turbopack",
+    "dev:next": "DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" pnpm db:sync && DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "db:setup": "npx tsx lib/data/db/setup.ts",
@@ -23,7 +23,9 @@
     "test:watch": "vitest",
     "e2e": "playwright test",
     "test:integration": "node scripts/run-integration-tests.mjs",
-    "test:integration:force": "vitest run --config vitest.integration.config.ts"
+    "test:integration:force": "vitest run --config vitest.integration.config.ts",
+    "db:sync": "npx tsx scripts/db-sync.ts",
+    "db:migrate:prod": "npx tsx scripts/migrate.ts"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
