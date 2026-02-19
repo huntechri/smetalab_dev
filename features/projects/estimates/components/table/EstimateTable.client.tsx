@@ -354,6 +354,29 @@ export function EstimateTable({
       });
     }
   };
+
+  const insertWorkAfter = async (workId: string) => {
+    try {
+      const created = await estimatesActionRepo.addWork(estimateId, {
+        name: "Новая работа",
+        unit: "шт",
+        qty: 1,
+        price: 0,
+        expense: 0,
+        insertAfterWorkId: workId,
+      });
+      setRows((prev) => [...prev, created]);
+      setExpandedWorkIds((prev) => new Set([...prev, created.id]));
+      toast({ title: "Работа добавлена" });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Не удалось добавить работу в выбранное место.",
+      });
+    }
+  };
+
   const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
     try {
       const safePrice = Number(catalogWork.price);
@@ -499,6 +522,7 @@ export function EstimateTable({
           onPatch: patch,
           onOpenMaterialCatalog: (workId, workName) =>
             setActiveWorkForMaterial({ id: workId, name: workName }),
+          onInsertWorkAfter: (workId) => void insertWorkAfter(workId),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
           onRemoveRow: removeRow,

@@ -9,7 +9,7 @@ export const getEstimateRowsAction = safeAction(
 );
 
 export const addEstimateWorkAction = safeAction(
-    async ({ team }, estimateId: string, payload: { name: string; unit?: string; qty?: number; price?: number; expense?: number }) =>
+    async ({ team }, estimateId: string, payload: { name: string; unit?: string; qty?: number; price?: number; expense?: number; insertAfterWorkId?: string }) =>
         EstimateRowsService.addWork(team.id, estimateId, payload),
     { name: 'addEstimateWorkAction' }
 );

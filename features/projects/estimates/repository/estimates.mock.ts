@@ -87,20 +87,69 @@ export const estimatesMockRepo: EstimatesRepository = {
         await delay(120, 320);
         const rows = getRowsOrCreate(estimateId);
         const maxOrder = Math.max(0, ...rows.map((row) => row.order));
-        const nextCode = `${rows.filter((row) => row.kind === 'work').length + 1}`;
+        const workRows = rows
+            .filter((row) => row.kind === 'work')
+            .slice()
+            .sort((left, right) => left.order - right.order);
+
+        let nextOrder = maxOrder + 100;
+        if (payload?.insertAfterWorkId) {
+            const anchorIndex = workRows.findIndex((row) => row.id === payload.insertAfterWorkId);
+            if (anchorIndex >= 0) {
+                const nextWork = workRows[anchorIndex + 1];
+                if (nextWork) {
+                    nextOrder = nextWork.order;
+                    rows.forEach((existing) => {
+                        if (existing.order >= nextOrder) {
+                            existing.order += 100;
+                        }
+                    });
+                }
+            }
+        }
+
         const row: EstimateRow = {
             id: `w-${crypto.randomUUID().slice(0, 8)}`,
             kind: 'work',
-            code: nextCode,
+            code: '0',
             name: payload?.name ?? 'Новая работа',
             unit: payload?.unit ?? 'шт',
             qty: payload?.qty ?? 1,
             price: payload?.price ?? 0,
             sum: (payload?.qty ?? 1) * (payload?.price ?? 0),
             expense: payload?.expense ?? 0,
-            order: maxOrder + 100,
+            order: nextOrder,
         };
         rows.push(row);
+
+        const sortedRows = rows.slice().sort((left, right) => left.order - right.order);
+        let workCode = 0;
+        const workCodes = new Map<string, string>();
+        const materialCounters = new Map<string, number>();
+
+        sortedRows.forEach((existing) => {
+            if (existing.kind === 'work') {
+                workCode += 1;
+                const nextCode = String(workCode);
+                existing.code = nextCode;
+                workCodes.set(existing.id, nextCode);
+                return;
+            }
+
+            if (!existing.parentWorkId) {
+                return;
+            }
+
+            const parentCode = workCodes.get(existing.parentWorkId);
+            if (!parentCode) {
+                return;
+            }
+
+            const nextCounter = (materialCounters.get(existing.parentWorkId) ?? 0) + 1;
+            materialCounters.set(existing.parentWorkId, nextCounter);
+            existing.code = `${parentCode}.${nextCounter}`;
+        });
+
         recalculateTotals(estimateId);
         return estimateRowSchema.parse(row);
     },
