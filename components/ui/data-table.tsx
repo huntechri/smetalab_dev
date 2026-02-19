@@ -300,7 +300,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
+                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
                                                     style={{ width: header.getSize() }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -385,7 +385,7 @@ export function DataTable<TData, TValue>({
                                                     <th
                                                         key={header.id}
                                                         className={cn(
-                                                            "h-12 px-3 md:px-4 text-left align-middle text-xs font-semibold text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
+                                                            "h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
                                                             isAiMode && "border-indigo-100/50 text-indigo-900/60 bg-indigo-50/10"
                                                         )}
                                                         style={{ width: header.getSize() }}
@@ -443,4 +443,3 @@ export function DataTable<TData, TValue>({
         </TooltipProvider>
     );
 }
-
