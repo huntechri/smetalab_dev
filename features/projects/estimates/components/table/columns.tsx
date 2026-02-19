@@ -36,6 +36,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             size="icon"
                             className="size-7 hover:bg-muted/80"
                             onClick={() => actions.onToggleExpand(item.id)}
+                            aria-label={expanded ? "Свернуть работу" : "Развернуть работу"}
                         >
                             {expanded ? (
                                 <ChevronDown className="size-4 text-muted-foreground transition-transform duration-200" />
@@ -158,13 +159,16 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             className="size-8"
                             onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                             title="Добавить материал"
+                            aria-label="Добавить материал"
                         >
                             <Plus className="size-4 text-muted-foreground" />
                         </Button>
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-8"><Settings className="size-4 text-muted-foreground" /></Button>
+                            <Button size="icon" variant="ghost" className="size-8" aria-label="Действия с строкой">
+                                <Settings className="size-4 text-muted-foreground" />
+                            </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             {item.kind === 'material' ? (

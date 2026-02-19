@@ -41,7 +41,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".next\\dev/types/**/*.ts"
+    ".next\\dev/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
@@ -52,6 +53,7 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "vitest.config.ts",
+    "vitest.integration.config.ts",
     "vitest.setup.ts",
     "playwright.config.ts",
     "drizzle.config.mts",

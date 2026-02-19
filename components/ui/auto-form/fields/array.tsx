@@ -88,6 +88,7 @@ export default function AutoFormArray({
                   type="button"
                   className="hover:bg-zinc-300 hover:text-black focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-white dark:text-black dark:hover:bg-zinc-300 dark:hover:text-black dark:hover:ring-0 dark:hover:ring-offset-0 dark:focus-visible:ring-0 dark:focus-visible:ring-offset-0"
                   onClick={() => remove(index)}
+                  aria-label="Удалить элемент"
                 >
                   <Trash className="size-4 " />
                 </Button>
