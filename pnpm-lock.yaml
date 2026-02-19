@@ -164,6 +164,9 @@ importers:
       globals:
         specifier: ^17.3.0
         version: 17.3.0
+      import-in-the-middle:
+        specifier: ^3.0.0
+        version: 3.0.0
       input-otp:
         specifier: ^1.4.2
         version: 1.4.2(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -215,6 +218,9 @@ importers:
       recharts:
         specifier: ^2.15.4
         version: 2.15.4(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      require-in-the-middle:
+        specifier: ^8.0.1
+        version: 8.0.1
       resend:
         specifier: ^6.9.2
         version: 6.9.2
@@ -291,15 +297,9 @@ importers:
       concurrently:
         specifier: ^9.2.1
         version: 9.2.1
-      import-in-the-middle:
-        specifier: ^3.0.0
-        version: 3.0.0
       jsdom:
         specifier: ^28.1.0
         version: 28.1.0(@noble/hashes@1.8.0)
-      require-in-the-middle:
-        specifier: ^8.0.1
-        version: 8.0.1
       shadcn:
         specifier: ^3.8.4
         version: 3.8.4(@types/node@25.2.3)(typescript@5.9.3)
