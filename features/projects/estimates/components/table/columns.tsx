@@ -14,7 +14,7 @@ export type EstimateColumnActions = {
     onToggleExpand: (workId: string) => void;
     onPatch: (rowId: string, field: 'name' | 'qty' | 'price' | 'expense', rawValue: string) => Promise<void>;
     onOpenMaterialCatalog: (workId: string, workName: string) => void;
-    onInsertWorkAfter: (workId: string) => void;
+    onInsertWorkAfter: (workId: string, workName: string) => void;
     onReplaceMaterial: (materialId: string, materialName: string) => void;
     onRemoveRow: (rowId: string) => Promise<void>;
 };
@@ -173,7 +173,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             {item.kind === 'work' ? (
-                                <DropdownMenuItem onClick={() => actions.onInsertWorkAfter(item.id)}>Добавить работу ниже</DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => actions.onInsertWorkAfter(item.id, item.name)}>Добавить работу ниже</DropdownMenuItem>
                             ) : null}
                             {item.kind === 'material' ? (
                                 <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>

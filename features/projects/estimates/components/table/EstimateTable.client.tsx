@@ -53,6 +53,26 @@ import {
 type ActiveWorkForMaterial = { id: string; name: string };
 type ActiveMaterialForReplace = { id: string; name: string };
 
+const buildUniqueDraftWorkName = (rows: EstimateRow[]) => {
+  const baseName = "Новая работа";
+  const existing = new Set(
+    rows
+      .filter((row) => row.kind === "work")
+      .map((row) => row.name.trim().toLocaleLowerCase()),
+  );
+
+  if (!existing.has(baseName.toLocaleLowerCase())) {
+    return baseName;
+  }
+
+  let suffix = 2;
+  while (existing.has(`${baseName} ${suffix}`.toLocaleLowerCase())) {
+    suffix += 1;
+  }
+
+  return `${baseName} ${suffix}`;
+};
+
 export function EstimateTable({
   estimateId,
   initialRows,
@@ -355,10 +375,11 @@ export function EstimateTable({
     }
   };
 
-  const insertWorkAfter = async (workId: string) => {
+  const insertWorkAfter = async (workId: string, workName: string) => {
     try {
+      const draftWorkName = buildUniqueDraftWorkName(rows);
       const created = await estimatesActionRepo.addWork(estimateId, {
-        name: "Новая работа",
+        name: draftWorkName,
         unit: "шт",
         qty: 1,
         price: 0,
@@ -367,12 +388,16 @@ export function EstimateTable({
       });
       await reloadRows();
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
-      toast({ title: "Работа добавлена" });
+      toast({
+        title: "Работа добавлена",
+        description: `Позиция добавлена ниже: ${workName}`,
+      });
     } catch {
       toast({
         variant: "destructive",
         title: "Ошибка",
-        description: "Не удалось добавить работу в выбранное место.",
+        description:
+          "Не удалось добавить работу в выбранное место. Проверьте, что у работы уникальное название.",
       });
     }
   };
@@ -522,7 +547,8 @@ export function EstimateTable({
           onPatch: patch,
           onOpenMaterialCatalog: (workId, workName) =>
             setActiveWorkForMaterial({ id: workId, name: workName }),
-          onInsertWorkAfter: (workId) => void insertWorkAfter(workId),
+          onInsertWorkAfter: (workId, workName) =>
+            void insertWorkAfter(workId, workName),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
           onRemoveRow: removeRow,
