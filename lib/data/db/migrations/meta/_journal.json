@@ -176,6 +176,13 @@
       "when": 1771700000000,
       "tag": "0024_estimate_execution_rows",
       "breakpoints": true
+    },
+    {
+      "idx": 25,
+      "version": "7",
+      "when": 1771498571741,
+      "tag": "0025_estimate_coef_percent",
+      "breakpoints": true
     }
   ]
 }
