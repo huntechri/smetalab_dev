@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "concurrently \"pnpm dev:next\" \"pnpm db:studio\"",
-    "dev:next": "DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" pnpm db:sync && DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" next dev --turbopack",
+    "dev:next": "set -a; [ -f .env ] && . ./.env; set +a; DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" pnpm db:sync && DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "db:setup": "npx tsx lib/data/db/setup.ts",
