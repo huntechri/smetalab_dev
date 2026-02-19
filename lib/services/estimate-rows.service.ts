@@ -4,6 +4,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimateRows, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
+import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import { EstimateRow } from '@/features/projects/estimates/types/dto';
 
 const addWorkSchema = z.object({
@@ -33,6 +34,45 @@ const patchRowSchema = z.object({
     price: z.number().nonnegative().optional(),
     expense: z.number().nonnegative().optional(),
 });
+
+type EstimateRowEntity = {
+    id: string;
+    kind: 'work' | 'material';
+    parentWorkId: string | null;
+    code: string;
+    name: string;
+    materialId: string | null;
+    imageUrl: string | null;
+    unit: string;
+    qty: number;
+    price: number;
+    sum: number;
+    expense: number;
+    order: number;
+};
+
+const toEstimateRowDto = (row: EstimateRowEntity, coefPercent: number): EstimateRow => {
+    if (row.kind !== 'work') {
+        return {
+            ...row,
+            parentWorkId: row.parentWorkId ?? undefined,
+            materialId: row.materialId ?? undefined,
+            imageUrl: row.imageUrl ?? undefined,
+            basePrice: row.price,
+        };
+    }
+
+    const effectivePrice = applyEstimateCoefficient(row.price, coefPercent);
+    return {
+        ...row,
+        parentWorkId: row.parentWorkId ?? undefined,
+        materialId: row.materialId ?? undefined,
+        imageUrl: row.imageUrl ?? undefined,
+        basePrice: row.price,
+        price: effectivePrice,
+        sum: effectivePrice * row.qty,
+    };
+};
 
 const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
     const estimate = await db.query.estimates.findFirst({
@@ -84,7 +124,8 @@ export class EstimateRowsService {
                 .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)))
                 .orderBy(estimateRows.order);
 
-            return success(rows as EstimateRow[]);
+            const coefPercent = estimate.coefPercent ?? 0;
+            return success(rows.map((row) => toEstimateRowDto(row as EstimateRowEntity, coefPercent)));
         } catch (e) {
             console.error('EstimateRowsService.list error:', e);
             return error('Ошибка при получении строк сметы');
@@ -140,7 +181,7 @@ export class EstimateRowsService {
                 return row;
             });
 
-            return success(created as EstimateRow);
+            return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_WORK_NAME') {
                 return error('Работа с таким названием уже добавлена в смету', 'CONFLICT');
@@ -222,7 +263,7 @@ export class EstimateRowsService {
                 return row;
             });
 
-            return success(created as EstimateRow);
+            return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_MATERIAL_NAME') {
                 return error('Материал с таким названием уже добавлен в выбранную работу', 'CONFLICT');
@@ -274,7 +315,7 @@ export class EstimateRowsService {
                 return row;
             });
 
-            return success(updated as EstimateRow);
+            return success(toEstimateRowDto(updated as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             console.error('EstimateRowsService.patch error:', e);
             return error('Ошибка при обновлении строки сметы');

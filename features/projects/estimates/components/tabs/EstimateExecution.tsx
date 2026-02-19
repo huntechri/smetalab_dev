@@ -175,39 +175,39 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const requestVersionRef = useRef<Record<string, number>>({});
     const { toast } = useToast();
 
-    useEffect(() => {
-        let active = true;
-
-        const load = async () => {
-            try {
+    const loadRows = useCallback(async (silent = false) => {
+        try {
+            if (!silent) {
                 setIsLoading(true);
-                setErrorMessage(null);
-                const data = await estimateExecutionActionsRepo.list(estimateId);
-
-                if (!active) {
-                    return;
-                }
-
-                setRows(data);
-            } catch (error) {
-                if (!active) {
-                    return;
-                }
-
-                setErrorMessage(error instanceof Error ? error.message : 'Не удалось загрузить выполнение сметы');
-            } finally {
-                if (active) {
-                    setIsLoading(false);
-                }
             }
-        };
-
-        void load();
-
-        return () => {
-            active = false;
-        };
+            setErrorMessage(null);
+            const data = await estimateExecutionActionsRepo.list(estimateId);
+            setRows(data);
+        } catch (error) {
+            setErrorMessage(error instanceof Error ? error.message : 'Не удалось загрузить выполнение сметы');
+        } finally {
+            if (!silent) {
+                setIsLoading(false);
+            }
+        }
     }, [estimateId]);
+
+    useEffect(() => {
+        void loadRows();
+    }, [loadRows]);
+
+    useEffect(() => {
+        const onCoefUpdated = (event: Event) => {
+            const customEvent = event as CustomEvent<{ estimateId?: string }>;
+            if (customEvent.detail?.estimateId !== estimateId) {
+                return;
+            }
+            void loadRows(true);
+        };
+
+        window.addEventListener('estimate:coefficient-updated', onCoefUpdated as (event: Event) => void);
+        return () => window.removeEventListener('estimate:coefficient-updated', onCoefUpdated as (event: Event) => void);
+    }, [estimateId, loadRows]);
 
     const patchRow = useCallback(async (rowId: string, patch: { actualQty?: number; actualPrice?: number; status?: EstimateExecutionStatus }) => {
         requestVersionRef.current[rowId] = (requestVersionRef.current[rowId] ?? 0) + 1;

@@ -41,6 +41,7 @@ export default async function Page({ params }: PageProps) {
                 roomParamsPromise={roomParamsPromise}
                 project={{ name: project.name, slug: project.slug }}
                 estimate={{ name: estimate.name, slug: estimate.slug }}
+                initialCoefPercent={estimate.coefPercent ?? 0}
             />
         </div>
     );

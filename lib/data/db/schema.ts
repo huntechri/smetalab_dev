@@ -150,6 +150,7 @@ export const estimates = pgTable('estimates', {
   slug: varchar('slug', { length: 120 }).notNull(),
   status: estimateStatusEnum('status').notNull().default('draft'),
   total: integer('total').notNull().default(0),
+  coefPercent: doublePrecision('coef_percent').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
