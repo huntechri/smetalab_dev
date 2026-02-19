@@ -365,7 +365,7 @@ export function EstimateTable({
         expense: 0,
         insertAfterWorkId: workId,
       });
-      setRows((prev) => [...prev, created]);
+      await reloadRows();
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
       toast({ title: "Работа добавлена" });
     } catch {
@@ -386,7 +386,7 @@ export function EstimateTable({
         price: Number.isFinite(safePrice) ? safePrice : 0,
         qty: 1,
       });
-      setRows((prev) => [...prev, created]);
+      await reloadRows();
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
       toast({ title: "Работа добавлена", description: catalogWork.name });
     } catch {
