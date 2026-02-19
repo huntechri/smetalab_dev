@@ -99,7 +99,7 @@ async function getUserTeamIdWithoutRls(userId: number): Promise<number | null> {
   return rows[0]?.team_id ?? null;
 }
 
-export const getTeamForUser = cache(async () => {
+export const getTeamForUser = cache(async (includeMembers: boolean = false) => {
   const cookieStore = await cookies();
   const impersonationToken = cookieStore.get('impersonation_id')?.value;
 
@@ -108,7 +108,7 @@ export const getTeamForUser = cache(async () => {
       where: eq(impersonationSessions.sessionToken, impersonationToken),
       with: {
         targetTeam: {
-          with: {
+          with: includeMembers ? {
             teamMembers: {
               with: {
                 user: {
@@ -120,7 +120,7 @@ export const getTeamForUser = cache(async () => {
                 },
               },
             },
-          },
+          } : undefined,
         },
       },
     });
@@ -136,13 +136,30 @@ export const getTeamForUser = cache(async () => {
   }
 
   const tenantId = await getTenantIdFromCookies();
-  return resolveTeamForUser(user, tenantId);
+  return resolveTeamForUser(user, tenantId, includeMembers);
 });
 
 export async function resolveTeamForUser(
   user: Pick<User, 'id' | 'platformRole'>,
-  tenantIdOverride?: number | null
+  tenantIdOverride?: number | null,
+  includeMembers: boolean = false
 ) {
+  const teamWithMembers = includeMembers
+    ? {
+        teamMembers: {
+          with: {
+            user: {
+              columns: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+        },
+      }
+    : undefined;
+
   const resolveMembershipTeam = async (tenantId: number) => {
     return db.transaction(async (tx) => {
       await tx.execute(sql`SELECT set_config('app.tenant_id', ${tenantId.toString()}, true)`);
@@ -151,19 +168,7 @@ export async function resolveTeamForUser(
         where: eq(teamMembers.userId, user.id),
         with: {
           team: {
-            with: {
-              teamMembers: {
-                with: {
-                  user: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      email: true,
-                    },
-                  },
-                },
-              },
-            },
+            with: teamWithMembers,
           },
         },
       });
@@ -180,19 +185,7 @@ export async function resolveTeamForUser(
         where: eq(teamMembers.userId, user.id),
         with: {
           team: {
-            with: {
-              teamMembers: {
-                with: {
-                  user: {
-                    columns: {
-                      id: true,
-                      name: true,
-                      email: true,
-                    },
-                  },
-                },
-              },
-            },
+            with: teamWithMembers,
           },
         },
       });
@@ -203,19 +196,7 @@ export async function resolveTeamForUser(
 
       const systemTeam = await tx.query.teams.findFirst({
         where: eq(teams.id, SYSTEM_TENANT_ID),
-        with: {
-          teamMembers: {
-            with: {
-              user: {
-                columns: {
-                  id: true,
-                  name: true,
-                  email: true,
-                },
-              },
-            },
-          },
-        },
+        with: teamWithMembers,
       });
 
       return systemTeam ?? null;

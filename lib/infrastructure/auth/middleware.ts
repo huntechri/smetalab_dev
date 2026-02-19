@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { TeamDataWithMembers, User } from '@/lib/data/db/schema';
+import { Team, User } from '@/lib/data/db/schema';
 import { getTeamForUser, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 import { requirePermission } from './access';
@@ -58,7 +58,7 @@ export function validatedActionWithUser<S extends z.ZodTypeAny, T>(
 
 type ActionWithTeamFunction<T> = (
   formData: FormData,
-  team: TeamDataWithMembers
+  team: Team
 ) => Promise<T>;
 
 export function withTeam<T>(action: ActionWithTeamFunction<T>) {
