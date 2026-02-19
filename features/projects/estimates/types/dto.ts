@@ -14,6 +14,7 @@ export const estimateMetaSchema = z.object({
     slug: z.string(),
     status: estimateStatusSchema,
     total: z.number(),
+    coefPercent: z.number().optional(),
     createdAt: z.string(),
     updatedAt: z.string(),
 });
@@ -30,6 +31,7 @@ export const estimateRowSchema = z.object({
     imageUrl: z.string().nullable().optional(),
     unit: z.string(),
     qty: z.number(),
+    basePrice: z.number().optional(),
     price: z.number(),
     sum: z.number(),
     expense: z.number(),

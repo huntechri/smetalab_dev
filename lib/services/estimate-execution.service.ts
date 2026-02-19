@@ -5,6 +5,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimateExecutionRows, estimateRows, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
+import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import {
     AddExtraExecutionWorkInput,
     EstimateExecutionRow,
@@ -77,7 +78,7 @@ const estimateExecutionRowSelect = {
 };
 
 export class EstimateExecutionService {
-    private static async syncFromEstimateWorks(teamId: number, estimateId: string): Promise<void> {
+    private static async syncFromEstimateWorks(teamId: number, estimateId: string, coefPercent: number): Promise<void> {
         await db.transaction(async (tx) => {
             const plannedWorks = await tx
                 .select({
@@ -144,6 +145,8 @@ export class EstimateExecutionService {
             for (const work of plannedWorks) {
                 const entity = existingMap.get(work.id);
                 const now = new Date();
+                const plannedPrice = applyEstimateCoefficient(work.price, coefPercent);
+                const plannedSum = plannedPrice * work.qty;
 
                 if (!entity) {
                     await tx.insert(estimateExecutionRows).values({
@@ -156,8 +159,8 @@ export class EstimateExecutionService {
                         name: work.name,
                         unit: work.unit,
                         plannedQty: work.qty,
-                        plannedPrice: work.price,
-                        plannedSum: work.sum,
+                        plannedPrice,
+                        plannedSum,
                         actualQty: work.qty,
                         actualPrice: work.price,
                         actualSum: work.qty * work.price,
@@ -175,8 +178,8 @@ export class EstimateExecutionService {
                         name: work.name,
                         unit: work.unit,
                         plannedQty: work.qty,
-                        plannedPrice: work.price,
-                        plannedSum: work.sum,
+                        plannedPrice,
+                        plannedSum,
                         actualSum: entity.actualQty * entity.actualPrice,
                         order: work.order,
                         updatedAt: now,
@@ -198,7 +201,7 @@ export class EstimateExecutionService {
                 return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
-            await this.syncFromEstimateWorks(teamId, estimateId);
+            await this.syncFromEstimateWorks(teamId, estimateId, estimate.coefPercent ?? 0);
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
