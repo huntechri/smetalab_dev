@@ -103,14 +103,14 @@ export class WorksService {
             }
 
             await db.update(works).set(updateData)
-                .where(and(eq(works.id, id), eq(works.tenantId, teamId)));
+                .where(and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
 
             // Background embedding update
             if (rawData.name || rawData.category || rawData.subcategory || rawData.unit || rawData.description || rawData.shortDescription || rawData.phase || rawData.code) {
                 after(async () => {
                     try {
                         const current = await db.query.works.findFirst({
-                            where: and(eq(works.id, id), eq(works.tenantId, teamId))
+                            where: and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId))
                         });
                         if (current) {
                             const embedding = await generateEmbedding(buildWorkContext(current as NewWork));
@@ -137,12 +137,12 @@ export class WorksService {
         try {
             const work = await db.query.works.findFirst({
                 columns: { phase: true },
-                where: and(eq(works.id, id), eq(works.tenantId, teamId))
+                where: and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId))
             });
 
             if (!work) return error('Запись не найдена');
 
-            await db.delete(works).where(and(eq(works.id, id), eq(works.tenantId, teamId)));
+            await db.delete(works).where(and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
 
 
 
@@ -155,7 +155,7 @@ export class WorksService {
 
     static async deleteAll(teamId: number): Promise<Result<void>> {
         try {
-            await db.delete(works).where(eq(works.tenantId, teamId));
+            await db.delete(works).where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
             return success(undefined, 'Справочник успешно очищен');
         } catch (e) {
             console.error('deleteAllWorks error:', e);
@@ -175,7 +175,7 @@ export class WorksService {
             if (afterId) {
                 // Вставка ПОСЛЕ существующей записи
                 const prevWork = await db.query.works.findFirst({
-                    where: and(eq(works.id, afterId), eq(works.tenantId, teamId))
+                    where: and(eq(works.id, afterId), eq(works.tenantId, teamId), withActiveTenant(works, teamId))
                 });
 
                 if (!prevWork) return error('Запись для вставки не найдена');
@@ -186,6 +186,7 @@ export class WorksService {
                 const nextWork = await db.query.works.findFirst({
                     where: and(
                         eq(works.tenantId, teamId),
+                        withActiveTenant(works, teamId),
                         gt(works.sortOrder, prevWork.sortOrder!)
                     ),
                     orderBy: works.sortOrder,
@@ -353,7 +354,6 @@ export class WorksService {
                 .from(works)
                 .where(and(
                     withActiveTenant(works, teamId),
-                    isNull(works.deletedAt),
                     sql`${works.category} IS NOT NULL`,
                     sql`length(trim(${works.category})) > 0`
                 ))
@@ -480,7 +480,7 @@ export class WorksService {
             const recordsWithoutEmbedding = await db
                 .select()
                 .from(works)
-                .where(and(eq(works.tenantId, teamId), isNull(works.embedding)))
+                .where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId), isNull(works.embedding)))
                 .limit(BATCH_SIZE);
 
             if (recordsWithoutEmbedding.length === 0) {
@@ -522,7 +522,7 @@ export class WorksService {
             const [{ count }] = await db
                 .select({ count: sql<number>`count(*)` })
                 .from(works)
-                .where(and(eq(works.tenantId, teamId), isNull(works.embedding)));
+                .where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId), isNull(works.embedding)));
 
             return success({ processed: recordsWithoutEmbedding.length, remaining: Number(count) });
         } catch (e) {
