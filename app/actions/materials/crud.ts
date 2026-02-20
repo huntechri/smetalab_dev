@@ -2,17 +2,12 @@
 
 import { revalidatePath } from 'next/cache';
 import { NewMaterial } from '@/lib/data/db/schema';
-import {
-    createMaterialUseCase,
-    deleteAllMaterialsUseCase,
-    deleteMaterialUseCase,
-    updateMaterialUseCase,
-} from '@/lib/domain/materials/use-cases';
 import { safeAction } from '@/lib/actions/safe-action';
+import { MaterialsCatalogService } from '@/lib/services/materials-catalog.service';
 
 export const deleteMaterial = safeAction(
     async ({ team }, id: string) => {
-        const result = await deleteMaterialUseCase(team.id, id);
+        const result = await MaterialsCatalogService.delete(team.id, id);
         if (result.success) {
             revalidatePath('/app/guide/materials');
         }
@@ -23,7 +18,7 @@ export const deleteMaterial = safeAction(
 
 export const deleteAllMaterials = safeAction(
     async ({ team }) => {
-        const result = await deleteAllMaterialsUseCase(team.id);
+        const result = await MaterialsCatalogService.deleteAll(team.id);
         if (result.success) {
             revalidatePath('/app/guide/materials');
         }
@@ -34,7 +29,7 @@ export const deleteAllMaterials = safeAction(
 
 export const updateMaterial = safeAction(
     async ({ team }, id: string, data: Partial<NewMaterial>) => {
-        const result = await updateMaterialUseCase(team.id, id, data);
+        const result = await MaterialsCatalogService.update(team.id, id, data);
         if (result.success) {
             revalidatePath('/app/guide/materials');
         }
@@ -45,7 +40,7 @@ export const updateMaterial = safeAction(
 
 export const createMaterial = safeAction(
     async ({ team }, data: NewMaterial) => {
-        const result = await createMaterialUseCase(team.id, data);
+        const result = await MaterialsCatalogService.create(team.id, data);
         if (result.success) {
             revalidatePath('/app/guide/materials');
         }
