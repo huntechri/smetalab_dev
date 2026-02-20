@@ -1,6 +1,7 @@
 import { db } from './drizzle';
 import { teams, teamMembers, works, materials, activityLogs } from './schema';
-import { desc, eq, sql } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
+import { withActiveTenant } from './tenant';
 
 export async function getAllTeams() {
     if (!process.env.DATABASE_URL) {
@@ -51,12 +52,12 @@ export async function getTeamDetails(teamId: number) {
     const [worksCount] = await db
         .select({ count: sql<number>`count(*)` })
         .from(works)
-        .where(eq(works.tenantId, teamId));
+        .where(and(withActiveTenant(works, teamId), eq(works.tenantId, teamId)));
 
     const [materialsCount] = await db
         .select({ count: sql<number>`count(*)` })
         .from(materials)
-        .where(eq(materials.tenantId, teamId));
+        .where(and(withActiveTenant(materials, teamId), eq(materials.tenantId, teamId)));
 
     const recentActivity = await db.query.activityLogs.findMany({
         where: eq(activityLogs.teamId, teamId),
