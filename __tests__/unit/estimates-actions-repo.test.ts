@@ -49,8 +49,39 @@ describe('estimatesActionRepo', () => {
             qty: undefined,
             price: undefined,
             expense: undefined,
+            insertAfterWorkId: undefined,
         });
         expect(row.id).toBe('w-1');
+    });
+
+
+    it('passes insertAfterWorkId when adding work below selected row', async () => {
+        actionsMocks.addEstimateWorkAction.mockResolvedValue({
+            success: true,
+            data: {
+                id: 'w-2',
+                kind: 'work',
+                code: '2',
+                name: 'Новая работа',
+                unit: 'шт',
+                qty: 1,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 200,
+            },
+        });
+
+        await estimatesActionRepo.addWork('est-1', { insertAfterWorkId: 'w-1' });
+
+        expect(actionsMocks.addEstimateWorkAction).toHaveBeenCalledWith('est-1', {
+            name: 'Новая работа',
+            unit: undefined,
+            qty: undefined,
+            price: undefined,
+            expense: undefined,
+            insertAfterWorkId: 'w-1',
+        });
     });
 
     it('passes imageUrl when adding a material', async () => {

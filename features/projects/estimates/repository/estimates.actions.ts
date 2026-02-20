@@ -26,13 +26,14 @@ export const estimatesActionRepo = {
         return result.data;
     },
 
-    async addWork(estimateId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'unit' | 'qty' | 'price' | 'expense'>>): Promise<EstimateRow> {
+    async addWork(estimateId: string, payload?: Partial<Pick<EstimateRow, 'name' | 'unit' | 'qty' | 'price' | 'expense'>> & { insertAfterWorkId?: string }): Promise<EstimateRow> {
         const result = await addEstimateWorkAction(estimateId, {
             name: payload?.name ?? 'Новая работа',
             unit: payload?.unit,
             qty: payload?.qty,
             price: payload?.price,
             expense: payload?.expense,
+            insertAfterWorkId: payload?.insertAfterWorkId,
         });
 
         if (!result.success) {
