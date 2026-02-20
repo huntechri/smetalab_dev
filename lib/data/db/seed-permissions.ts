@@ -22,11 +22,23 @@ const PERMISSIONS: PermissionDef[] = [
 ];
 
 const TENANT_ROLE_PERMISSIONS: Record<TenantRole, Record<string, 'read' | 'manage'>> = {
+    owner: {
+        'projects': 'manage',
+        'team': 'manage',
+        'guide': 'manage',
+        'settings': 'manage',
+    },
     admin: {
         'projects': 'manage',
         'team': 'manage',
         'guide': 'manage',
         'settings': 'manage',
+    },
+    member: {
+        'projects': 'read',
+        'team': 'read',
+        'guide': 'read',
+        'settings': 'read',
     },
     estimator: {
         'projects': 'manage',
@@ -38,6 +50,7 @@ const TENANT_ROLE_PERMISSIONS: Record<TenantRole, Record<string, 'read' | 'manag
         'projects': 'read',
         'team': 'read',
         'guide': 'read',
+        'settings': 'read',
     },
 };
 
