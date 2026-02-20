@@ -51,6 +51,10 @@ describe('Import/Export Integration Tests', () => {
     let testUserId: number;
     let testTeamId: number;
 
+    const asGetUserResult = <T,>(value: T): Awaited<ReturnType<typeof getUser>> => {
+        return value as unknown as Awaited<ReturnType<typeof getUser>>;
+    };
+
     const setupUserAndTeam = async () => {
         console.log('DEBUG: DATABASE_URL in test:', process.env.DATABASE_URL);
         await resetDatabase();
@@ -73,7 +77,7 @@ describe('Import/Export Integration Tests', () => {
             role: 'admin',
         });
 
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
+        vi.mocked(getUser).mockResolvedValue(asGetUserResult({ ...user, tenantId: testTeamId, teamRole: 'admin' }));
         vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
 
         return { user, team };
