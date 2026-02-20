@@ -52,26 +52,7 @@ import {
 
 type ActiveWorkForMaterial = { id: string; name: string };
 type ActiveMaterialForReplace = { id: string; name: string };
-
-const buildUniqueDraftWorkName = (rows: EstimateRow[]) => {
-  const baseName = "Новая работа";
-  const existing = new Set(
-    rows
-      .filter((row) => row.kind === "work")
-      .map((row) => row.name.trim().toLocaleLowerCase()),
-  );
-
-  if (!existing.has(baseName.toLocaleLowerCase())) {
-    return baseName;
-  }
-
-  let suffix = 2;
-  while (existing.has(`${baseName} ${suffix}`.toLocaleLowerCase())) {
-    suffix += 1;
-  }
-
-  return `${baseName} ${suffix}`;
-};
+type PendingInsertAfterWork = { id: string; name: string };
 
 export function EstimateTable({
   estimateId,
@@ -97,6 +78,8 @@ export function EstimateTable({
     useState<ActiveWorkForMaterial | null>(null);
   const [activeMaterialForReplace, setActiveMaterialForReplace] =
     useState<ActiveMaterialForReplace | null>(null);
+  const [pendingInsertAfterWork, setPendingInsertAfterWork] =
+    useState<PendingInsertAfterWork | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
   const { toast } = useToast();
@@ -375,31 +358,9 @@ export function EstimateTable({
     }
   };
 
-  const insertWorkAfter = async (workId: string, workName: string) => {
-    try {
-      const draftWorkName = buildUniqueDraftWorkName(rows);
-      const created = await estimatesActionRepo.addWork(estimateId, {
-        name: draftWorkName,
-        unit: "шт",
-        qty: 1,
-        price: 0,
-        expense: 0,
-        insertAfterWorkId: workId,
-      });
-      await reloadRows();
-      setExpandedWorkIds((prev) => new Set([...prev, created.id]));
-      toast({
-        title: "Работа добавлена",
-        description: `Позиция добавлена ниже: ${workName}`,
-      });
-    } catch {
-      toast({
-        variant: "destructive",
-        title: "Ошибка",
-        description:
-          "Не удалось добавить работу в выбранное место. Проверьте, что у работы уникальное название.",
-      });
-    }
+  const insertWorkAfter = (workId: string, workName: string) => {
+    setPendingInsertAfterWork({ id: workId, name: workName });
+    setIsCalculationModeOpen(true);
   };
 
   const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
@@ -410,10 +371,17 @@ export function EstimateTable({
         unit: catalogWork.unit || "шт",
         price: Number.isFinite(safePrice) ? safePrice : 0,
         qty: 1,
+        insertAfterWorkId: pendingInsertAfterWork?.id,
       });
       await reloadRows();
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
-      toast({ title: "Работа добавлена", description: catalogWork.name });
+      setPendingInsertAfterWork(null);
+      toast({
+        title: "Работа добавлена",
+        description: pendingInsertAfterWork
+          ? `Позиция добавлена ниже: ${pendingInsertAfterWork.name}`
+          : catalogWork.name,
+      });
     } catch {
       toast({
         variant: "destructive",
@@ -548,7 +516,7 @@ export function EstimateTable({
           onOpenMaterialCatalog: (workId, workName) =>
             setActiveWorkForMaterial({ id: workId, name: workName }),
           onInsertWorkAfter: (workId, workName) =>
-            void insertWorkAfter(workId, workName),
+            insertWorkAfter(workId, workName),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
           onRemoveRow: removeRow,
@@ -563,7 +531,10 @@ export function EstimateTable({
               variant="outline"
               size="sm"
               className="h-8 gap-1.5 px-2 md:px-3"
-              onClick={() => setIsCalculationModeOpen(true)}
+              onClick={() => {
+                setPendingInsertAfterWork(null);
+                setIsCalculationModeOpen(true);
+              }}
             >
               <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="hidden sm:inline text-xs md:text-sm">
@@ -718,7 +689,12 @@ export function EstimateTable({
       </div>
       <Sheet
         open={isCalculationModeOpen}
-        onOpenChange={setIsCalculationModeOpen}
+        onOpenChange={(nextOpen) => {
+          setIsCalculationModeOpen(nextOpen);
+          if (!nextOpen) {
+            setPendingInsertAfterWork(null);
+          }
+        }}
       >
         <SheetContent
           side="right"
@@ -728,9 +704,16 @@ export function EstimateTable({
             <SheetTitle className="text-xl md:text-2xl">
               Справочник работ
             </SheetTitle>
-            <SheetDescription className="text-sm">
-              Выберите необходимые позиции для автоматического добавления в
-              смету.
+            <SheetDescription className="text-sm space-y-1">
+              <span>
+                Выберите необходимые позиции для автоматического добавления в
+                смету.
+              </span>
+              {pendingInsertAfterWork ? (
+                <span className="block text-primary font-medium">
+                  Режим вставки: ниже работы «{pendingInsertAfterWork.name}»
+                </span>
+              ) : null}
             </SheetDescription>
           </div>
           <div className="flex-1 overflow-hidden flex flex-col">
