@@ -1,11 +1,11 @@
 'use server';
 
-import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { safeAction } from '@/lib/actions/safe-action';
+import { MaterialsCatalogService } from '@/lib/services/materials-catalog.service';
 
 export const generateMissingEmbeddings = safeAction(
     async ({ team }) => {
-        return await MaterialsService.generateMissingEmbeddings(team.id);
+        return await MaterialsCatalogService.generateMissingEmbeddings(team.id);
     },
     { name: 'generateMissingEmbeddings' }
 );
