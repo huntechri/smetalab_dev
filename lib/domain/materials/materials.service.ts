@@ -125,14 +125,14 @@ export class MaterialsService {
 
             await db.update(materials)
                 .set(updateData)
-                .where(and(eq(materials.id, id), eq(materials.tenantId, teamId)));
+                .where(and(eq(materials.id, id), eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
 
             // Background embedding update
             if (rawData.name || rawData.unit || rawData.vendor || rawData.categoryLv1 || rawData.description || rawData.code) {
                 after(async () => {
                     try {
                         const current = await db.query.materials.findFirst({
-                            where: and(eq(materials.id, id), eq(materials.tenantId, teamId))
+                            where: and(eq(materials.id, id), eq(materials.tenantId, teamId), withActiveTenant(materials, teamId))
                         });
                         if (current) {
                             const contextInput = { ...current } as MaterialContextInput;
@@ -158,7 +158,7 @@ export class MaterialsService {
 
     static async delete(teamId: number, id: string): Promise<Result<void>> {
         try {
-            await db.delete(materials).where(and(eq(materials.id, id), eq(materials.tenantId, teamId)));
+            await db.delete(materials).where(and(eq(materials.id, id), eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
             return success(undefined, 'Успешно удалено');
         } catch (e) {
             console.error('deleteMaterial error:', e);
@@ -168,7 +168,7 @@ export class MaterialsService {
 
     static async deleteAll(teamId: number): Promise<Result<void>> {
         try {
-            await db.delete(materials).where(eq(materials.tenantId, teamId));
+            await db.delete(materials).where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
             return success(undefined, 'Справочник очищен');
         } catch (e) {
             console.error('deleteAllMaterials error:', e);
@@ -180,7 +180,7 @@ export class MaterialsService {
         try {
             await db.update(materials)
                 .set({ imageLocalUrl: null })
-                .where(eq(materials.tenantId, teamId));
+                .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
             return success(undefined, 'Локальные ссылки очищены');
         } catch (e) {
             console.error('resetLocalImages error:', e);
@@ -446,7 +446,7 @@ export class MaterialsService {
             const materialsWithoutEmbedding = await db
                 .select()
                 .from(materials)
-                .where(and(eq(materials.tenantId, teamId), isNull(materials.embedding)))
+                .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId), isNull(materials.embedding)))
                 .limit(BATCH_SIZE);
 
             if (materialsWithoutEmbedding.length === 0) {
@@ -488,7 +488,7 @@ export class MaterialsService {
             const [{ count }] = await db
                 .select({ count: sql<number>`count(*)` })
                 .from(materials)
-                .where(and(eq(materials.tenantId, teamId), isNull(materials.embedding)));
+                .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId), isNull(materials.embedding)));
 
             return success({ processed: materialsWithoutEmbedding.length, remaining: Number(count) });
         } catch (e) {
@@ -503,7 +503,7 @@ export class MaterialsService {
             const materialsToReindex = await db
                 .select()
                 .from(materials)
-                .where(eq(materials.tenantId, teamId))
+                .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)))
                 .orderBy(materials.id)
                 .limit(BATCH_SIZE)
                 .offset(offset);

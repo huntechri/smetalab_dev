@@ -2,25 +2,24 @@
 
 import { revalidatePath } from 'next/cache';
 import { deleteProject } from '@/lib/data/projects/repo';
-import { getTeamForUser } from '@/lib/data/db/queries';
+import { safeAction } from '@/lib/actions/safe-action';
+import { error, success } from '@/lib/utils/result';
 
-export async function deleteProjectAction(projectId: string) {
-    const team = await getTeamForUser();
-    if (!team) {
-        return { error: 'Команда не найдена или вы не авторизованы' };
-    }
+export const deleteProjectAction = safeAction(
+    async ({ team }, projectId: string) => {
+        try {
+            const deleted = await deleteProject(projectId, team.id);
 
-    try {
-        const deleted = await deleteProject(projectId, team.id);
+            if (!deleted) {
+                return error('Проект не найден или у вас нет прав на его удаление', 'PROJECT_NOT_FOUND');
+            }
 
-        if (!deleted) {
-            return { error: 'Проект не найден или у вас нет прав на его удаление' };
+            revalidatePath('/app/projects');
+            return success(true);
+        } catch (err) {
+            console.error('Failed to delete project:', err);
+            return error('Не удалось удалить проект', 'PROJECT_DELETE_FAILED');
         }
-
-        revalidatePath('/app/projects');
-        return { success: true };
-    } catch (err) {
-        console.error('Failed to delete project:', err);
-        return { error: 'Не удалось удалить проект' };
-    }
-}
+    },
+    { name: 'deleteProjectAction' }
+);

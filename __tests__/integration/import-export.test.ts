@@ -4,6 +4,8 @@ import { db } from '@/lib/data/db/drizzle';
 import { materials, works, users, teams, teamMembers } from '@/lib/data/db/schema';
 import { importMaterials } from '@/app/actions/materials/import-export';
 import { importWorks } from '@/app/actions/works/import-export';
+import { exportMaterials } from '@/app/actions/materials/import-export';
+import { exportWorks } from '@/app/actions/works/import-export';
 import { and, eq } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { resetDatabase } from '@/lib/data/db/test-utils';
@@ -49,6 +51,10 @@ describe('Import/Export Integration Tests', () => {
     let testUserId: number;
     let testTeamId: number;
 
+    const asGetUserResult = <T,>(value: T): Awaited<ReturnType<typeof getUser>> => {
+        return value as unknown as Awaited<ReturnType<typeof getUser>>;
+    };
+
     const setupUserAndTeam = async () => {
         console.log('DEBUG: DATABASE_URL in test:', process.env.DATABASE_URL);
         await resetDatabase();
@@ -71,7 +77,7 @@ describe('Import/Export Integration Tests', () => {
             role: 'admin',
         });
 
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
+        vi.mocked(getUser).mockResolvedValue(asGetUserResult({ ...user, tenantId: testTeamId, teamRole: 'admin' }));
         vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
 
         return { user, team };
@@ -134,6 +140,51 @@ describe('Import/Export Integration Tests', () => {
         });
     });
 
+    describe('Works Export', () => {
+        it('exports only active rows in tenant scope via withActiveTenant', async () => {
+            const [otherTeam] = await db.insert(teams).values({ name: 'Other Team' }).returning();
+
+            await db.insert(works).values([
+                {
+                    tenantId: testTeamId,
+                    code: 'W-T1',
+                    name: 'Tenant Active',
+                    status: 'active',
+                },
+                {
+                    tenantId: 1,
+                    code: 'W-SYS',
+                    name: 'System Active',
+                    status: 'active',
+                },
+                {
+                    tenantId: testTeamId,
+                    code: 'W-DEL',
+                    name: 'Tenant Deleted',
+                    status: 'active',
+                    deletedAt: new Date(),
+                },
+                {
+                    tenantId: otherTeam.id,
+                    code: 'W-OTHER',
+                    name: 'Other Team Active',
+                    status: 'active',
+                },
+            ]);
+
+            const result = await exportWorks();
+
+            expect(result.success).toBe(true);
+            const rows = result.data ?? [];
+            const codes = rows.map((row) => row.code);
+
+            expect(codes).toContain('W-T1');
+            expect(codes).toContain('W-SYS');
+            expect(codes).not.toContain('W-DEL');
+            expect(codes).not.toContain('W-OTHER');
+        });
+    });
+
     describe('Materials Import', () => {
         it('should import materials and report summary correctly', async () => {
             const data = [
@@ -158,6 +209,51 @@ describe('Import/Export Integration Tests', () => {
             const dbMaterials = await db.select().from(materials).where(eq(materials.tenantId, testTeamId));
             expect(dbMaterials.length).toBe(1);
             expect(dbMaterials[0].name).toBe('Material 1');
+        });
+    });
+
+    describe('Materials Export', () => {
+        it('exports only active rows in tenant scope via withActiveTenant', async () => {
+            const [otherTeam] = await db.insert(teams).values({ name: 'Other Team 2' }).returning();
+
+            await db.insert(materials).values([
+                {
+                    tenantId: testTeamId,
+                    code: 'M-T1',
+                    name: 'Tenant Material',
+                    status: 'active',
+                },
+                {
+                    tenantId: 1,
+                    code: 'M-SYS',
+                    name: 'System Material',
+                    status: 'active',
+                },
+                {
+                    tenantId: testTeamId,
+                    code: 'M-DEL',
+                    name: 'Deleted Material',
+                    status: 'active',
+                    deletedAt: new Date(),
+                },
+                {
+                    tenantId: otherTeam.id,
+                    code: 'M-OTHER',
+                    name: 'Other Team Material',
+                    status: 'active',
+                },
+            ]);
+
+            const result = await exportMaterials();
+
+            expect(result.success).toBe(true);
+            const rows = result.data ?? [];
+            const codes = rows.map((row) => row['Код']);
+
+            expect(codes).toContain('M-T1');
+            expect(codes).toContain('M-SYS');
+            expect(codes).not.toContain('M-DEL');
+            expect(codes).not.toContain('M-OTHER');
         });
     });
 });

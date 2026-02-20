@@ -1,11 +1,10 @@
 'use server';
 
-import { WorksService } from '@/lib/domain/works/works.service';
 import { safeAction } from '@/lib/actions/safe-action';
+import { WorksCatalogService } from '@/lib/services/works-catalog.service';
 
 
 export const searchWorks = safeAction(async function searchWorksHandler({ team }, query: string) {
-    return await WorksService.search(team.id, query);
+    return await WorksCatalogService.search(team.id, query);
 }, { name: 'searchWorks' });
-
 

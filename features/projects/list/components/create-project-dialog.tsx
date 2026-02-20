@@ -110,7 +110,7 @@ export function CreateProjectDialog({
                 // but since we updated ProjectsScreen to use local state + router.refresh,
                 // we should ensure the parent actually updates.
             } else {
-                toast.error(result.error || 'Произошла ошибка');
+                toast.error(result.error?.message || 'Произошла ошибка');
             }
         } catch {
             toast.error('Произошла непредвиденная ошибка');

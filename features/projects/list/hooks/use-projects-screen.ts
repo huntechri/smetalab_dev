@@ -43,7 +43,7 @@ export function useProjectsScreen({ projects, onEditProjectSelect, onAddProject 
                 return true;
             }
 
-            toast.error(result.error || 'Не удалось удалить проект');
+            toast.error(result.error?.message || 'Не удалось удалить проект');
             return false;
         } catch {
             toast.error('Произошла непредвиденная ошибка');
