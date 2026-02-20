@@ -2,8 +2,17 @@ import { db } from './drizzle';
 import { teams, teamMembers, works, materials, activityLogs } from './schema';
 import { and, desc, eq, sql } from 'drizzle-orm';
 import { withActiveTenant } from './tenant';
+import { getUser } from './queries';
+import { assertPlatformAdminAccess } from '@/lib/infrastructure/auth/admin-guard';
+
+async function ensurePlatformAdminAccess() {
+    const user = await getUser();
+    assertPlatformAdminAccess(user);
+}
 
 export async function getAllTeams() {
+    await ensurePlatformAdminAccess();
+
     if (!process.env.DATABASE_URL) {
         console.warn('⚠️ getAllTeams: DATABASE_URL not set, returning empty array (build mode)');
         return [];
@@ -25,6 +34,8 @@ export async function getAllTeams() {
 }
 
 export async function getTeamDetails(teamId: number) {
+    await ensurePlatformAdminAccess();
+
     if (!process.env.DATABASE_URL) {
         console.warn('⚠️ getTeamDetails: DATABASE_URL not set, returning null (build mode)');
         return null;

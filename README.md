@@ -117,6 +117,7 @@
 ### 6) RBAC и безопасность
 - Роли (`owner`, `admin`, `member`, `estimator`, `manager`) проверяются в `safeAction`.
 - Админские функции размещаются под `/admin/**`.
+- Для admin dashboard действует server-side gate: доступ только для platform-ролей `superadmin`/`support`; дополнительная проверка выполняется также в `lib/data/db/admin-queries.ts`.
 - Любые мутации должны предваряться проверкой прав и валидацией данных (Zod).
 
 ### 7) Интеграции
