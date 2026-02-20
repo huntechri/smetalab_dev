@@ -193,6 +193,41 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_material_id_idx').on(table.materialId),
 ]);
 
+export const estimatePatterns = pgTable('estimate_patterns', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  name: varchar('name', { length: 160 }).notNull(),
+  description: text('description'),
+  rowsCount: integer('rows_count').notNull().default(0),
+  worksCount: integer('works_count').notNull().default(0),
+  materialsCount: integer('materials_count').notNull().default(0),
+  snapshot: jsonb('snapshot').$type<{
+    rows: Array<{
+      kind: 'work' | 'material';
+      parentWorkTempKey: string | null;
+      tempKey: string;
+      code: string;
+      name: string;
+      materialId: string | null;
+      imageUrl: string | null;
+      unit: string;
+      qty: number;
+      price: number;
+      sum: number;
+      expense: number;
+      order: number;
+    }>;
+  }>().notNull(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('estimate_patterns_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+  index('estimate_patterns_tenant_name_idx').on(table.tenantId, table.name).where(sql`deleted_at IS NULL`),
+]);
+
 export const estimateRoomParams = pgTable('estimate_room_params', {
   id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
   tenantId: integer('tenant_id')
@@ -664,6 +699,7 @@ export const teamsRelations = relations(teams, ({ many }) => ({
   activityLogs: many(activityLogs),
   invitations: many(invitations),
   estimates: many(estimates),
+  estimatePatterns: many(estimatePatterns),
   estimateShares: many(estimateShares),
   impersonationSessions: many(impersonationSessions),
   works: many(works),
@@ -819,6 +855,13 @@ export const estimatesRelations = relations(estimates, ({ one, many }) => ({
   executionRows: many(estimateExecutionRows),
 }));
 
+export const estimatePatternsRelations = relations(estimatePatterns, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [estimatePatterns.tenantId],
+    references: [teams.id],
+  }),
+}));
+
 export const estimateRowsRelations = relations(estimateRows, ({ one }) => ({
   tenant: one(teams, {
     fields: [estimateRows.tenantId],
@@ -886,6 +929,8 @@ export type Estimate = typeof estimates.$inferSelect;
 export type NewEstimate = typeof estimates.$inferInsert;
 export type EstimateRowEntity = typeof estimateRows.$inferSelect;
 export type NewEstimateRowEntity = typeof estimateRows.$inferInsert;
+export type EstimatePatternEntity = typeof estimatePatterns.$inferSelect;
+export type NewEstimatePatternEntity = typeof estimatePatterns.$inferInsert;
 export type EstimateRoomParamEntity = typeof estimateRoomParams.$inferSelect;
 export type NewEstimateRoomParamEntity = typeof estimateRoomParams.$inferInsert;
 export type EstimateExecutionRowEntity = typeof estimateExecutionRows.$inferSelect;

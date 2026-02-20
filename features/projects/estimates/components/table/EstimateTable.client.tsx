@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { useToast } from "@/components/ui/use-toast";
@@ -49,6 +49,11 @@ import {
   ESTIMATE_COEF_MIN,
   getEstimateCoefMultiplier,
 } from "@/lib/utils/estimate-coefficient";
+import {
+  estimatePatternsActionRepo,
+  EstimatePatternListItem,
+  EstimatePatternPreviewRow,
+} from "../../repository/patterns.actions";
 
 type ActiveWorkForMaterial = { id: string; name: string };
 type ActiveMaterialForReplace = { id: string; name: string };
@@ -82,7 +87,40 @@ export function EstimateTable({
     useState<PendingInsertAfterWork | null>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isSavePatternOpen, setIsSavePatternOpen] = useState(false);
+  const [isApplyPatternOpen, setIsApplyPatternOpen] = useState(false);
+  const [patternName, setPatternName] = useState("");
+  const [patternDescription, setPatternDescription] = useState("");
+  const [isPatternSaving, setIsPatternSaving] = useState(false);
+  const [isPatternApplying, setIsPatternApplying] = useState(false);
+  const [isPatternsLoading, setIsPatternsLoading] = useState(false);
+  const [patterns, setPatterns] = useState<EstimatePatternListItem[]>([]);
+  const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
+  const [selectedPatternId, setSelectedPatternId] = useState<string | null>(null);
   const { toast } = useToast();
+
+  const fetchPatterns = async () => {
+    try {
+      setIsPatternsLoading(true);
+      const nextPatterns = await estimatePatternsActionRepo.list();
+      setPatterns(nextPatterns);
+    } catch (patternsError) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description:
+          patternsError instanceof Error
+            ? patternsError.message
+            : "Не удалось загрузить шаблоны.",
+      });
+    } finally {
+      setIsPatternsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchPatterns();
+  }, []);
 
   const visibleRows = useMemo(
     () => getVisibleRows(rows, expandedWorkIds),
@@ -449,6 +487,94 @@ export function EstimateTable({
     fileInput.click();
   };
 
+  const savePattern = async () => {
+    if (!patternName.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Укажите название",
+        description: "Для сохранения шаблона нужно заполнить название.",
+      });
+      return;
+    }
+
+    try {
+      setIsPatternSaving(true);
+      await estimatePatternsActionRepo.create({
+        estimateId,
+        name: patternName,
+        description: patternDescription || undefined,
+      });
+      await fetchPatterns();
+      setIsSavePatternOpen(false);
+      setPatternName("");
+      setPatternDescription("");
+      toast({ title: "Шаблон сохранен" });
+    } catch (saveError) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description:
+          saveError instanceof Error
+            ? saveError.message
+            : "Не удалось сохранить шаблон.",
+      });
+    } finally {
+      setIsPatternSaving(false);
+    }
+  };
+
+  const previewPattern = async (patternId: string) => {
+    try {
+      setSelectedPatternId(patternId);
+      const preview = await estimatePatternsActionRepo.preview(patternId);
+      setPreviewRows(preview.rows);
+    } catch (previewError) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description:
+          previewError instanceof Error
+            ? previewError.message
+            : "Не удалось показать превью шаблона.",
+      });
+    }
+  };
+
+  const applyPattern = async () => {
+    if (!selectedPatternId) {
+      toast({
+        variant: "destructive",
+        title: "Выберите шаблон",
+        description: "Сначала выберите шаблон для применения.",
+      });
+      return;
+    }
+
+    try {
+      setIsPatternApplying(true);
+      await estimatePatternsActionRepo.apply({
+        estimateId,
+        patternId: selectedPatternId,
+      });
+      await reloadRows();
+      setIsApplyPatternOpen(false);
+      setSelectedPatternId(null);
+      setPreviewRows([]);
+      toast({ title: "Шаблон применен" });
+    } catch (applyError) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description:
+          applyError instanceof Error
+            ? applyError.message
+            : "Не удалось применить шаблон.",
+      });
+    } finally {
+      setIsPatternApplying(false);
+    }
+  };
+
   const exportEstimate = async (format: "xlsx" | "pdf") => {
     /* unchanged */
     try {
@@ -545,6 +671,7 @@ export function EstimateTable({
               variant="outline"
               size="sm"
               className="h-8 gap-1.5 px-2 md:px-3"
+              onClick={() => setIsSavePatternOpen(true)}
             >
               <Save className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="hidden sm:inline text-xs md:text-sm">
@@ -552,7 +679,7 @@ export function EstimateTable({
               </span>
             </Button>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3">
+              <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-xs md:text-sm">Шаблон</span>
               </Button>
@@ -618,7 +745,7 @@ export function EstimateTable({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  <DropdownMenuItem className="gap-2">
+                  <DropdownMenuItem className="gap-2" onClick={() => setIsApplyPatternOpen(true)}>
                     <FileStack className="h-4 w-4 text-muted-foreground" />
                     <span>Шаблон</span>
                   </DropdownMenuItem>
@@ -786,6 +913,101 @@ export function EstimateTable({
                 {isApplyingCoefficient ? "Сохранение..." : "Применить"}
               </Button>
             </div>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isSavePatternOpen} onOpenChange={setIsSavePatternOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Сохранить как шаблон</DialogTitle>
+            <DialogDescription>
+              Шаблон сохранится в разделе «Шаблоны» и будет доступен для быстрого
+              применения в других сметах.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="pattern-name">Название</Label>
+            <Input
+              id="pattern-name"
+              value={patternName}
+              onChange={(event) => setPatternName(event.target.value)}
+              placeholder="Например: Квартира 60м² — базовый ремонт"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="pattern-description">Описание (опционально)</Label>
+            <Input
+              id="pattern-description"
+              value={patternDescription}
+              onChange={(event) => setPatternDescription(event.target.value)}
+              placeholder="Краткое описание состава работ"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSavePatternOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={() => void savePattern()} disabled={isPatternSaving}>
+              {isPatternSaving ? "Сохранение..." : "Сохранить шаблон"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isApplyPatternOpen} onOpenChange={setIsApplyPatternOpen}>
+        <DialogContent className="sm:max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Применить шаблон</DialogTitle>
+            <DialogDescription>
+              Выберите сохраненный шаблон, просмотрите состав и примените его к
+              текущей смете.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 md:grid-cols-[280px_1fr]">
+            <div className="space-y-2 border rounded-md p-2 max-h-80 overflow-y-auto">
+              {isPatternsLoading ? (
+                <p className="text-sm text-muted-foreground">Загрузка шаблонов...</p>
+              ) : null}
+              {!isPatternsLoading && patterns.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Шаблоны еще не созданы.</p>
+              ) : null}
+              {patterns.map((pattern) => (
+                <Button
+                  key={pattern.id}
+                  variant={selectedPatternId === pattern.id ? "secondary" : "ghost"}
+                  className="w-full justify-start h-auto py-2"
+                  onClick={() => void previewPattern(pattern.id)}
+                >
+                  <div className="text-left">
+                    <div className="font-medium text-sm">{pattern.name}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {pattern.worksCount} работ / {pattern.materialsCount} материалов
+                    </div>
+                  </div>
+                </Button>
+              ))}
+            </div>
+            <div className="border rounded-md p-3 max-h-80 overflow-y-auto">
+              {previewRows.length === 0 ? (
+                <p className="text-sm text-muted-foreground">Выберите шаблон слева, чтобы посмотреть превью.</p>
+              ) : (
+                <div className="space-y-1 text-sm">
+                  {previewRows.map((row) => (
+                    <div key={row.tempKey} className="flex items-center justify-between gap-3 py-1 border-b last:border-b-0">
+                      <div className={row.kind === "material" ? "pl-4 text-muted-foreground" : "font-medium"}>{row.code} {row.name}</div>
+                      <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString("ru-RU")}</div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsApplyPatternOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
+              {isPatternApplying ? "Применение..." : "Применить шаблон"}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

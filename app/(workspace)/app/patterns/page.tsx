@@ -1,7 +1,5 @@
-export default function Page() {
-    return (
-        <div>
-            {/* TODO: Page: /app/patterns */}
-        </div>
-    );
+import { PatternsScreen } from '@/features/patterns';
+
+export default function PatternsPage() {
+  return <PatternsScreen />;
 }
