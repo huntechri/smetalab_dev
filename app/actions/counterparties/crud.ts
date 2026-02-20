@@ -41,6 +41,22 @@ const counterpartySchema = z.object({
     bankKpp: z.string().optional().nullable().or(z.literal('')),
 });
 
+type PgErrorLike = {
+    code?: string;
+    cause?: {
+        code?: string;
+    };
+};
+
+function extractPgCode(errorInput: unknown): string | undefined {
+    if (typeof errorInput !== 'object' || errorInput === null) {
+        return undefined;
+    }
+
+    const candidate = errorInput as PgErrorLike;
+    return candidate.code ?? candidate.cause?.code;
+}
+
 export const createCounterparty = safeAction<CounterpartyRow, [z.infer<typeof counterpartySchema>]>(
     async ({ team, user }, data) => {
         const validatedData = counterpartySchema.parse(data);
@@ -50,9 +66,9 @@ export const createCounterparty = safeAction<CounterpartyRow, [z.infer<typeof co
 
             revalidatePath('/app/guide/counterparties');
             return success(created as CounterpartyRow);
-        } catch (e: any) {
+        } catch (e: unknown) {
             // DrizzleQueryError wraps PostgresError in 'cause'
-            const pgCode = e.code || e.cause?.code;
+            const pgCode = extractPgCode(e);
             if (pgCode === '23505') {
                 return error('Контрагент с такими ИНН/КПП уже существует в вашей организации', 'DUPLICATE_RECORD');
             }
