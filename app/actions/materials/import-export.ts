@@ -3,13 +3,14 @@
 import { revalidatePath } from 'next/cache';
 import { db } from '@/lib/data/db/drizzle';
 import { materials, NewMaterial } from '@/lib/data/db/schema';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { safeAction } from '@/lib/actions/safe-action';
 import { ExcelService } from '@/lib/services/excel.service';
 import { success, error } from '@/lib/utils/result';
 import { materialsHeaderMap, materialsRequiredFields } from '@/lib/constants/import-configs';
 import { after } from 'next/server';
+import { withActiveTenant } from '@/lib/data/db/queries';
 
 
 export const importMaterials = safeAction(
@@ -86,7 +87,7 @@ export const exportMaterials = safeAction(
                 'Описание': materials.description,
             })
             .from(materials)
-            .where(and(eq(materials.tenantId, team.id), eq(materials.status, 'active'), isNull(materials.deletedAt)));
+            .where(and(withActiveTenant(materials, team.id), eq(materials.status, 'active')));
 
         return success(dbData);
     },
