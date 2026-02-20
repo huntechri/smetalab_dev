@@ -1,68 +1,44 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
-import { verifyToken, signToken } from '@/lib/infrastructure/auth/session';
-import { db } from '@/lib/data/db/drizzle';
-import { users } from '@/lib/data/db/schema';
-import { eq, isNull, and } from 'drizzle-orm';
+
+import {
+  REFRESH_COOKIE_NAME,
+  REFRESH_ENDPOINT_PATH,
+  SESSION_COOKIE_NAME,
+} from '@/lib/infrastructure/auth/session';
+import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
 
 export async function POST(_req: NextRequest) {
-    const cookieStore = await cookies();
-    const refreshToken = cookieStore.get('refresh_token')?.value;
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(REFRESH_COOKIE_NAME)?.value;
 
-    if (!refreshToken) {
-        return NextResponse.json({ error: 'Refresh token missing' }, { status: 401 });
-    }
+  if (!refreshToken) {
+    return NextResponse.json({ error: 'Refresh token missing' }, { status: 401 });
+  }
 
-    const payload = await verifyToken(refreshToken);
-    if (!payload) {
-        return NextResponse.json({ error: 'Invalid refresh token' }, { status: 401 });
-    }
+  const result = await refreshSessionTokens(refreshToken);
 
-    // Verify user still exists and is active
-    const [user] = await db
-        .select()
-        .from(users)
-        .where(and(eq(users.id, payload.user.id), isNull(users.deletedAt)))
-        .limit(1);
+  if (!result.success) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
+  }
 
-    if (!user) {
-        return NextResponse.json({ error: 'User not found' }, { status: 401 });
-    }
+  const response = NextResponse.json({ success: true });
 
-    // Generate new tokens (Rotation)
-    const now = Date.now();
-    const accessExpires = new Date(now + 15 * 60 * 1000); // 15m
-    const refreshExpires = new Date(now + 7 * 24 * 60 * 60 * 1000); // 7d
+  response.cookies.set(SESSION_COOKIE_NAME, result.accessToken, {
+    expires: result.accessExpires,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    path: '/',
+  });
 
-    const sessionData = {
-        user: { id: user.id },
-        platformRole: user.platformRole ?? null,
-        expires: accessExpires.toISOString(),
-    };
+  response.cookies.set(REFRESH_COOKIE_NAME, result.refreshToken, {
+    expires: result.refreshExpires,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'strict',
+    path: REFRESH_ENDPOINT_PATH,
+  });
 
-    const newAccessToken = await signToken(sessionData, '15m');
-    const newRefreshToken = await signToken(
-        { ...sessionData, expires: refreshExpires.toISOString() },
-        '7d'
-    );
-
-    const response = NextResponse.json({ success: true });
-
-    response.cookies.set('access_token', newAccessToken, {
-        expires: accessExpires,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
-        path: '/',
-    });
-
-    response.cookies.set('refresh_token', newRefreshToken, {
-        expires: refreshExpires,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-        path: '/api/refresh', // Keep it restricted
-    });
-
-    return response;
+  return response;
 }
