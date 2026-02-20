@@ -3,7 +3,7 @@
 import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, Plus, Settings } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileStack, Plus, Settings } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { EditableCell } from './cells/EditableCell';
 import { ImageCell } from './cells/ImageCell';
@@ -154,16 +154,28 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             return (
                 <div className="flex items-center justify-center gap-1">
                     {item.kind === 'work' ? (
-                        <Button
-                            size="icon"
-                            variant="ghost"
-                            className="size-8"
-                            onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
-                            title="Добавить материал"
-                            aria-label="Добавить материал"
-                        >
-                            <Plus className="size-4 text-muted-foreground" />
-                        </Button>
+                        <>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-8"
+                                onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
+                                title="Добавить материал"
+                                aria-label="Добавить материал"
+                            >
+                                <Plus className="size-4 text-muted-foreground" />
+                            </Button>
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="size-8"
+                                onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
+                                title="Добавить работу ниже"
+                                aria-label="Добавить работу ниже"
+                            >
+                                <FileStack className="size-4 text-primary/80" />
+                            </Button>
+                        </>
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -172,9 +184,6 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            {item.kind === 'work' ? (
-                                <DropdownMenuItem onClick={() => actions.onInsertWorkAfter(item.id, item.name)}>Добавить работу ниже</DropdownMenuItem>
-                            ) : null}
                             {item.kind === 'material' ? (
                                 <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
                             ) : null}
