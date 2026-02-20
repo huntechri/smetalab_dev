@@ -1,6 +1,12 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { verifyToken } from '@/lib/infrastructure/auth/session';
+import {
+  verifyToken,
+  REFRESH_COOKIE_NAME,
+  REFRESH_ENDPOINT_PATH,
+  SESSION_COOKIE_NAME,
+} from '@/lib/infrastructure/auth/session';
+import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
 
 const protectedRoutes = ['/dashboard', '/app', '/admin'];
 
@@ -30,10 +36,32 @@ async function handleProxy(request: NextRequest) {
       const parsed = await verifyToken(accessToken.value);
 
       if (!parsed && refreshToken) {
-        // Access token expired, but we have a refresh token
-        // We redirect to a refresh handler or handle it
-        // For now, let's just allow it to continue if it's not a protected route
-        // or redirect to sign-in if it is and we can't refresh.
+        const refreshResult = await refreshSessionTokens(refreshToken.value);
+
+        if (!refreshResult.success) {
+          if (isProtectedRoute) {
+            return NextResponse.redirect(new URL('/sign-in', request.url));
+          }
+          return res;
+        }
+
+        res.cookies.set(SESSION_COOKIE_NAME, refreshResult.accessToken, {
+          expires: refreshResult.accessExpires,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          path: '/',
+        });
+
+        res.cookies.set(REFRESH_COOKIE_NAME, refreshResult.refreshToken, {
+          expires: refreshResult.refreshExpires,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'strict',
+          path: REFRESH_ENDPOINT_PATH,
+        });
+
+        return res;
       }
 
       if (parsed) {

@@ -38,6 +38,8 @@ type SessionData = {
 
 const ACCESS_TOKEN_EXPIRY = '15m'; // 15 minutes
 const REFRESH_TOKEN_EXPIRY = '7d';  // 7 days
+export const REFRESH_ENDPOINT_PATH = '/api/refresh';
+export const LEGACY_REFRESH_ENDPOINT_PATH = '/api/auth/refresh';
 
 export const SESSION_COOKIE_NAME = 'access_token';
 export const REFRESH_COOKIE_NAME = 'refresh_token';
@@ -103,7 +105,7 @@ export async function setSession(user: User) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    path: '/api/auth/refresh', // Limited path for refresh token
+    path: REFRESH_ENDPOINT_PATH, // Limited path for refresh token
   });
 }
 
@@ -111,4 +113,6 @@ export async function clearSession() {
   const cookieStore = await cookies();
   cookieStore.delete(SESSION_COOKIE_NAME);
   cookieStore.delete(REFRESH_COOKIE_NAME);
+  cookieStore.delete({ name: REFRESH_COOKIE_NAME, path: REFRESH_ENDPOINT_PATH });
+  cookieStore.delete({ name: REFRESH_COOKIE_NAME, path: LEGACY_REFRESH_ENDPOINT_PATH });
 }

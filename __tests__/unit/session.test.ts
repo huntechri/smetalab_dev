@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { cookies } from 'next/headers';
 
-describe('getSession', () => {
+describe('session helpers', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
     vi.resetModules();
@@ -28,5 +28,12 @@ describe('getSession', () => {
 
     expect(getCookie).toHaveBeenCalledWith('access_token');
     expect(result).toBeNull();
+  });
+
+  it('uses /api/refresh as the refresh endpoint path', async () => {
+    const { REFRESH_ENDPOINT_PATH, LEGACY_REFRESH_ENDPOINT_PATH } = await import('@/lib/infrastructure/auth/session');
+
+    expect(REFRESH_ENDPOINT_PATH).toBe('/api/refresh');
+    expect(LEGACY_REFRESH_ENDPOINT_PATH).toBe('/api/auth/refresh');
   });
 });
