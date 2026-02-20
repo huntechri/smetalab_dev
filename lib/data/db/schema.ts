@@ -22,7 +22,7 @@ import { relations, sql } from 'drizzle-orm';
 // ═══════════════════════════════════════════════════════════════
 
 export const platformRoleEnum = pgEnum('platform_role', ['superadmin', 'support']);
-export const tenantRoleEnum = pgEnum('tenant_role', ['admin', 'estimator', 'manager']);
+export const tenantRoleEnum = pgEnum('tenant_role', ['owner', 'admin', 'member', 'estimator', 'manager']);
 export const permissionScopeEnum = pgEnum('permission_scope', ['platform', 'tenant']);
 export const accessLevelEnum = pgEnum('access_level', ['view', 'comment', 'download']);
 export const rbacLevelEnum = pgEnum('rbac_level', ['none', 'read', 'manage']);
@@ -87,7 +87,7 @@ export const teamMembers = pgTable('team_members', {
   joinedAt: timestamp('joined_at').notNull().defaultNow(),
   leftAt: timestamp('left_at'),
 }, (table) => [
-  uniqueIndex('team_members_active_unique').on(table.teamId, table.userId),
+  uniqueIndex('team_members_active_unique').on(table.teamId, table.userId).where(sql`left_at IS NULL`),
   index('team_members_user_idx').on(table.userId),
 ]);
 
@@ -928,6 +928,6 @@ export enum ActivityType {
 
 // Role types for TypeScript
 export type PlatformRole = 'superadmin' | 'support';
-export type TenantRole = 'admin' | 'estimator' | 'manager';
+export type TenantRole = 'owner' | 'admin' | 'member' | 'estimator' | 'manager';
 export type PermissionScope = 'platform' | 'tenant';
 export type AccessLevel = 'view' | 'comment' | 'download';
