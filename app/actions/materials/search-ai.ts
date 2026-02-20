@@ -1,11 +1,11 @@
 'use server';
 
-import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { safeAction } from '@/lib/actions/safe-action';
+import { MaterialsCatalogService } from '@/lib/services/materials-catalog.service';
 
 export const searchMaterials = safeAction(
     async ({ team }, query: string) => {
-        return await MaterialsService.search(team.id, query);
+        return await MaterialsCatalogService.search(team.id, query);
     },
     { name: 'searchMaterials' }
 );

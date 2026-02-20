@@ -1,11 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { WorksService } from '@/lib/domain/works/works.service';
 import { safeAction } from '@/lib/actions/safe-action';
+import { WorksCatalogService } from '@/lib/services/works-catalog.service';
 
 export const reorderWorks = safeAction(async function reorderWorksHandler({ team }) {
-    const result = await WorksService.reorder(team.id);
+    const result = await WorksCatalogService.reorder(team.id);
     if (result.success) {
         revalidatePath('/app/guide/works');
     }
@@ -13,7 +13,6 @@ export const reorderWorks = safeAction(async function reorderWorksHandler({ team
 }, { name: 'reorderWorks' });
 
 export const getUniqueUnits = safeAction(async function getUniqueUnitsHandler({ team }) {
-    return await WorksService.getUniqueUnits(team.id);
+    return await WorksCatalogService.getUniqueUnits(team.id);
 }, { name: 'getUniqueUnits' });
-
 
