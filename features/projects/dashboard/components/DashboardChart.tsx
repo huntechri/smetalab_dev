@@ -206,7 +206,7 @@ export function DashboardChart() {
             <CardContent className="px-0 pt-4 sm:pt-6">
                 <ChartContainer
                     config={chartConfig}
-                    className="aspect-auto h-[250px] sm:h-[350px] w-full"
+                    className="aspect-auto h-[200px] sm:h-[280px] w-full"
                 >
                     <AreaChart data={filteredData}>
                         <defs>

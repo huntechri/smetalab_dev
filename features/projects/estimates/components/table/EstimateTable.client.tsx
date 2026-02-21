@@ -311,8 +311,8 @@ export function EstimateTable({
     const optimisticRows =
       rowToRemove.kind === "work"
         ? previousRows.filter(
-            (row) => row.id !== rowId && row.parentWorkId !== rowId,
-          )
+          (row) => row.id !== rowId && row.parentWorkId !== rowId,
+        )
         : previousRows.filter((row) => row.id !== rowId);
     setRows(optimisticRows);
     try {
@@ -796,22 +796,24 @@ export function EstimateTable({
           </div>
         }
       />
-      <div className="flex flex-wrap items-center justify-end gap-2 px-1 py-1">
-        <Badge
-          variant="secondary"
-          className="bg-blue-500/5 text-blue-700/80 hover:bg-blue-500/10 border-none px-2 py-0.5 h-6 text-[9px] font-bold uppercase tracking-wider"
-        >
-          Итого работы: {new Intl.NumberFormat("ru-RU").format(totals.works)} ₽
+      <div className="flex flex-wrap items-center justify-end gap-2 px-1">
+        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
+          <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Работы:</span>
+          <span className="text-xs sm:text-sm font-semibold tabular-nums">
+            {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.works)}
+          </span>
         </Badge>
-        <div className="text-muted-foreground/20 font-light select-none text-[10px]">
-          |
-        </div>
-        <Badge
-          variant="secondary"
-          className="bg-amber-500/5 text-amber-700/80 hover:bg-amber-500/10 border-none px-2 py-0.5 h-6 text-[9px] font-bold uppercase tracking-wider"
-        >
-          Итого материалы:{" "}
-          {new Intl.NumberFormat("ru-RU").format(totals.materials)} ₽
+        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
+          <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Материалы:</span>
+          <span className="text-xs sm:text-sm font-semibold tabular-nums">
+            {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.materials)}
+          </span>
+        </Badge>
+        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
+          <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider">Итого:</span>
+          <span className="text-xs sm:text-sm font-bold tabular-nums">
+            {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.works + totals.materials)}
+          </span>
         </Badge>
       </div>
       <Sheet

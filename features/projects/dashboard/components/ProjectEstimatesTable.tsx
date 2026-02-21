@@ -49,13 +49,16 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
 
     return (
         <div className="space-y-4 px-4 lg:px-6">
-            <div className="flex justify-end">
-                <Button onClick={() => setIsDialogOpen(true)}>
-                    <Plus className="size-4" />
-                    Создать смету
-                </Button>
-            </div>
-            <EstimatesListTable estimates={mappedEstimates} projectSlug={projectSlug} />
+            <EstimatesListTable
+                estimates={mappedEstimates}
+                projectSlug={projectSlug}
+                actions={
+                    <Button onClick={() => setIsDialogOpen(true)}>
+                        <Plus className="size-4 mr-2" />
+                        Создать смету
+                    </Button>
+                }
+            />
 
             <CreateEstimateDialog
                 open={isDialogOpen}
