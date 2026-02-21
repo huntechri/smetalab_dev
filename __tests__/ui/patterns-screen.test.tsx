@@ -37,6 +37,7 @@ describe('PatternsScreen', () => {
       id: 'p-1',
       name: 'Шаблон отделки',
       rows: [
+        { tempKey: 'm-1', kind: 'material', code: '1.1', name: 'Сетка', unit: 'шт', qty: 10, price: 120, sum: 1200, expense: 0, imageUrl: null, materialId: null, parentWorkTempKey: 'w-1', order: 101 },
         { tempKey: 'w-1', kind: 'work', code: '1', name: 'Штукатурка', unit: 'м2', qty: 10, price: 250, sum: 2500, expense: 0, imageUrl: null, materialId: null, parentWorkTempKey: null, order: 100 },
       ],
     });
@@ -52,7 +53,11 @@ describe('PatternsScreen', () => {
     await waitFor(() => {
       expect(screen.getByText('Превью состава шаблона.')).toBeInTheDocument();
       expect(screen.getByText('1 Штукатурка')).toBeInTheDocument();
+      expect(screen.getByText('1.1 Сетка')).toBeInTheDocument();
     });
+
+    const workRow = screen.getByText('1 Штукатурка');
+    const materialRow = screen.getByText('1.1 Сетка');
+    expect(workRow.compareDocumentPosition(materialRow) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 });
-
