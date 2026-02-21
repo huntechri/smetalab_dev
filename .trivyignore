@@ -2,3 +2,6 @@
 # Trivy references fixed versions that are not published on npm.
 CVE-2023-30533
 CVE-2024-22363
+# ajv@6.14.0 is required by eslint-config-next and related eslint tools.
+# Upgrading to 8+ breaks eslint.
+CVE-2025-69873

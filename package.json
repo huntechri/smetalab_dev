@@ -1,6 +1,5 @@
 {
   "private": true,
-  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "concurrently \"pnpm dev:next\" \"pnpm db:studio\"",
     "dev:next": "set -a; [ -f .env ] && . ./.env; set +a; DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" pnpm db:sync && DATABASE_URL=\"${TEST_DATABASE_URL:-$DATABASE_URL}\" next dev --turbopack",
@@ -77,14 +76,14 @@
     "drizzle-orm": "^0.45.1",
     "embla-carousel-react": "^8.6.0",
     "eslint": "^9.39.2",
-    "eslint-config-next": "^16.1.6",
+    "eslint-config-next": "16.1.6",
     "exceljs": "^4.4.0",
     "globals": "^17.3.0",
     "import-in-the-middle": "^3.0.0",
     "input-otp": "^1.4.2",
     "jose": "^6.1.3",
     "lucide-react": "^0.564.0",
-    "next": "15.6.0-canary.61",
+    "next": "16.1.6",
     "next-swagger-doc": "^0.4.1",
     "openai": "^6.22.0",
     "pdf-lib": "^1.17.1",
@@ -141,6 +140,11 @@
       "tree-sitter",
       "tree-sitter-json",
       "unrs-resolver"
-    ]
-  }
+    ],
+    "overrides": {
+      "esbuild": "0.25.0",
+      "minimatch": "^10.2.2"
+    }
+  },
+  "packageManager": "pnpm@10.28.0"
 }
