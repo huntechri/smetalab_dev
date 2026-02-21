@@ -61,6 +61,8 @@ export function PatternsScreen() {
     }
   };
 
+  const sortedPreviewRows = previewRows.slice().sort((left, right) => left.order - right.order);
+
   return (
     <div className="space-y-4">
       <h1 className="text-2xl font-semibold">Шаблоны смет</h1>
@@ -94,7 +96,7 @@ export function PatternsScreen() {
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
           <div className="max-h-[420px] overflow-y-auto rounded-md border p-3">
-            {previewRows.map((row) => (
+            {sortedPreviewRows.map((row) => (
               <div key={row.tempKey} className="flex items-center justify-between border-b py-1 text-sm last:border-b-0">
                 <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
                 <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
@@ -109,4 +111,3 @@ export function PatternsScreen() {
     </div>
   );
 }
-
