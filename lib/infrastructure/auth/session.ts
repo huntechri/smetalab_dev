@@ -105,7 +105,7 @@ export async function setSession(user: User) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    path: REFRESH_ENDPOINT_PATH, // Limited path for refresh token
+    path: '/',
   });
 }
 
