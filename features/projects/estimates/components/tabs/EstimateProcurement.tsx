@@ -7,6 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DataTable } from '@/components/ui/data-table';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
+import { EstimateTotals } from '../EstimateTotals';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -155,19 +156,17 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     }
 
     return (
-        <div className="space-y-3">
-            <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                <Badge variant="outline">План: {moneyFormatter.format(totals.planned)}</Badge>
-                <Badge variant="outline">Факт: {moneyFormatter.format(totals.actual)}</Badge>
-            </div>
-
+        <div className="space-y-4">
             <DataTable
                 columns={columns}
                 data={rows}
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
-                height="680px"
+                height="580px"
             />
+            <div className="flex justify-end px-1">
+                <EstimateTotals planned={totals.planned} actual={totals.actual} />
+            </div>
         </div>
     );
 }

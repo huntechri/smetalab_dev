@@ -93,11 +93,11 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                 }}
             >
                 <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                    <TabsTrigger value="estimate" className="px-4 py-2 text-sm">Смета</TabsTrigger>
-                    <TabsTrigger value="params" className="px-4 py-2 text-sm">Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className="px-4 py-2 text-sm">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-4 py-2 text-sm">Выполнение</TabsTrigger>
-                    <TabsTrigger value="docs" className="px-4 py-2 text-sm">Документы</TabsTrigger>
+                    <TabsTrigger value="estimate" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Смета</TabsTrigger>
+                    <TabsTrigger value="params" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Параметры</TabsTrigger>
+                    <TabsTrigger value="procurement" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Закупки</TabsTrigger>
+                    <TabsTrigger value="execution" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Выполнение</TabsTrigger>
+                    <TabsTrigger value="docs" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" className="mt-2 md:mt-3">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
