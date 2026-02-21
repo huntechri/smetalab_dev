@@ -8,6 +8,7 @@ import Link from 'next/link';
 type EstimatesListTableProps = {
     estimates: EstimateMeta[];
     projectSlug?: string;
+    actions?: React.ReactNode;
 };
 
 const createColumns = (projectSlug?: string): ColumnDef<EstimateMeta>[] => [
@@ -36,7 +37,7 @@ const createColumns = (projectSlug?: string): ColumnDef<EstimateMeta>[] => [
     },
 ];
 
-export function EstimatesListTable({ estimates, projectSlug }: EstimatesListTableProps) {
+export function EstimatesListTable({ estimates, projectSlug, actions }: EstimatesListTableProps) {
     const columns = createColumns(projectSlug);
     return (
         <DataTable
@@ -45,6 +46,7 @@ export function EstimatesListTable({ estimates, projectSlug }: EstimatesListTabl
             filterColumn="name"
             filterPlaceholder="Поиск сметы..."
             height="450px"
+            actions={actions}
         />
     );
 }

@@ -23,7 +23,7 @@ import { estimateExecutionActionsRepo } from '../../repository/execution.actions
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
-
+import { EstimateTotals } from '../EstimateTotals';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -42,10 +42,10 @@ function getStatusDisplay(status: EstimateExecutionStatus) {
     }
 
     if (status === 'in_progress') {
-        return <Badge variant="secondary" className={base}>В процессе</Badge>;
+        return <Badge className={cn("bg-blue-500 hover:bg-blue-600 text-white", base)}>В процессе</Badge>;
     }
 
-    return <Badge className={cn("bg-blue-500 hover:bg-blue-600 text-white", base)}>Не начато</Badge>;
+    return <Badge className={cn("bg-orange-500 hover:bg-orange-600 text-white", base)}>Подготовка</Badge>;
 }
 
 function ExecutionStatusCell({
@@ -63,15 +63,15 @@ function ExecutionStatusCell({
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="p-1 min-w-[130px]">
-                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="focus:bg-blue-50 focus:text-blue-700 cursor-pointer rounded-md mb-0.5">
+                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer rounded-md mb-0.5">
                     <div className="flex items-center gap-2 w-full">
-                        <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        <span className="text-xs font-medium">Не начато</span>
+                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <span className="text-xs font-medium">Подготовка</span>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="focus:bg-slate-100 cursor-pointer rounded-md mb-0.5">
+                <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="focus:bg-blue-50 focus:text-blue-700 cursor-pointer rounded-md mb-0.5">
                     <div className="flex items-center gap-2 w-full">
-                        <div className="w-2 h-2 rounded-full bg-slate-400" />
+                        <div className="w-2 h-2 rounded-full bg-blue-500" />
                         <span className="text-xs font-medium">В процессе</span>
                     </div>
                 </DropdownMenuItem>
@@ -349,8 +349,6 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         return <div className="rounded-md border p-4 text-sm text-destructive">{errorMessage}</div>;
     }
 
-    const deltaTotal = totals.actual - totals.planned;
-
     return (
         <div className="space-y-4">
             <DataTable
@@ -358,37 +356,18 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 data={rows}
                 filterColumn="name"
                 filterPlaceholder="Поиск по работам..."
-                height="680px"
+                height="580px"
                 actions={
-                    <div className="flex flex-wrap items-center gap-2">
-                        <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30">
-                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">План:</span>
-                            <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(totals.planned)}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30">
-                            <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Факт:</span>
-                            <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(totals.actual)}</span>
-                        </div>
-                        <div className={cn(
-                            "flex items-center gap-1.5 px-2 py-1.5 rounded-lg border",
-                            deltaTotal > 0 ? "bg-emerald-50/50 border-emerald-200/50 text-emerald-700" :
-                                deltaTotal < 0 ? "bg-orange-50/50 border-orange-200/50 text-orange-700" :
-                                    "bg-muted/30"
-                        )}>
-                            <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider opacity-80">Δ:</span>
-                            <span className="text-xs sm:text-sm font-bold tabular-nums">
-                                {deltaTotal > 0 ? '+' : ''}{moneyFormatter.format(deltaTotal)}
-                            </span>
-                        </div>
-                        <div className="w-px h-6 bg-border mx-1 hidden sm:block" />
-                        <AddExtraWorkSheet
-                            estimateId={estimateId}
-                            onCreated={(row) => setRows((prev) => [...prev, row])}
-                            addedWorkNames={addedWorkNames}
-                        />
-                    </div>
+                    <AddExtraWorkSheet
+                        estimateId={estimateId}
+                        onCreated={(row) => setRows((prev) => [...prev, row])}
+                        addedWorkNames={addedWorkNames}
+                    />
                 }
             />
+            <div className="flex justify-end px-1">
+                <EstimateTotals planned={totals.planned} actual={totals.actual} />
+            </div>
         </div>
     );
 }
