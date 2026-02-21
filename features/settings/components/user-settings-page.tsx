@@ -1,7 +1,7 @@
 'use client';
 
-import { useActionState, useEffect, useMemo, useState } from 'react';
-import { Loader2, Lock, Save, Shield, UserCircle2 } from 'lucide-react';
+import { useActionState, useMemo, type ReactNode } from 'react';
+import { Bell, Building2, Loader2, Lock, MonitorCog, Save, Shield, UserCircle2 } from 'lucide-react';
 import { updateAccount, updatePassword } from '@/app/(login)/actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -11,14 +11,7 @@ import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  defaultNotificationsPreferences,
-  defaultUiPreferences,
-  parseNotificationPreferences,
-  parseUiPreferences,
-  type NotificationsPreferences,
-  type UiPreferences,
-} from '@/features/settings/lib/preferences';
+import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
 type PermissionEntry = { code: string; level: 'read' | 'manage' };
 
@@ -51,17 +44,16 @@ type SettingsProps = {
   permissions: PermissionEntry[];
 };
 
-const UI_STORAGE_KEY = 'smetalab.ui.preferences';
-const NOTIFICATIONS_STORAGE_KEY = 'smetalab.notifications.preferences';
-
 function roleLabel(role?: string | null) {
   if (!role) return '—';
   const map: Record<string, string> = {
-    owner: 'Owner',
+    owner: 'Владелец',
     admin: 'Администратор',
     member: 'Участник',
     estimator: 'Сметчик',
     manager: 'Менеджер',
+    superadmin: 'Суперадмин',
+    support: 'Поддержка',
   };
 
   return map[role] ?? role;
@@ -70,23 +62,7 @@ function roleLabel(role?: string | null) {
 export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   const [accountState, accountAction, isAccountPending] = useActionState<AccountState, FormData>(updateAccount, {});
   const [passwordState, passwordAction, isPasswordPending] = useActionState<PasswordState, FormData>(updatePassword, {});
-  const [uiPreferences, setUiPreferences] = useState<UiPreferences>(defaultUiPreferences);
-  const [notificationPreferences, setNotificationPreferences] = useState<NotificationsPreferences>(defaultNotificationsPreferences);
-
-  useEffect(() => {
-    setUiPreferences(parseUiPreferences(window.localStorage.getItem(UI_STORAGE_KEY)));
-    setNotificationPreferences(
-      parseNotificationPreferences(window.localStorage.getItem(NOTIFICATIONS_STORAGE_KEY)),
-    );
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(UI_STORAGE_KEY, JSON.stringify(uiPreferences));
-  }, [uiPreferences]);
-
-  useEffect(() => {
-    window.localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notificationPreferences));
-  }, [notificationPreferences]);
+  const { uiPreferences, setUiPreferences, notificationPreferences, setNotificationPreferences } = useUserPreferences();
 
   const sortedPermissions = useMemo(
     () => [...permissions].sort((a, b) => a.code.localeCompare(b.code, 'ru')),
@@ -96,14 +72,14 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   return (
     <div className="mx-auto w-full max-w-[1200px] space-y-6">
       <header className="space-y-2">
-        <h1 className="text-3xl font-semibold">Личный кабинет</h1>
+        <h1 className="text-3xl font-semibold tracking-tight">Личный кабинет</h1>
         <p className="text-sm text-muted-foreground">
-          Управляйте профилем, безопасностью и персональными настройками интерфейса.
+          Управляйте профилем, безопасностью и персональными настройками в рамках текущей организации.
         </p>
       </header>
 
       <Tabs defaultValue="profile" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-5">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-1 p-1 md:grid-cols-5">
           <TabsTrigger value="profile">Профиль</TabsTrigger>
           <TabsTrigger value="tenant">Организация</TabsTrigger>
           <TabsTrigger value="security">Безопасность</TabsTrigger>
@@ -112,27 +88,23 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
         </TabsList>
 
         <TabsContent value="profile">
-          <Card>
+          <Card className="border-border/70">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><UserCircle2 className="h-4 w-4" /> Профиль</CardTitle>
-              <CardDescription>Изменяйте только поддерживаемые поля профиля.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><UserCircle2 className="h-4 w-4" />Профиль пользователя</CardTitle>
+              <CardDescription>Редактируются только поля, которые поддерживаются backend.</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="grid gap-4 md:max-w-xl" action={accountAction}>
-                <div className="space-y-2">
-                  <Label htmlFor="name">Имя</Label>
+                <Field label="Имя" htmlFor="name">
                   <Input id="name" name="name" defaultValue={accountState.name ?? user.name ?? ''} required />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                </Field>
+                <Field label="Email" htmlFor="email">
                   <Input id="email" name="email" defaultValue={user.email} type="email" required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Телефон</Label>
+                </Field>
+                <Field label="Телефон (read-only)">
                   <Input value="Не задано" disabled readOnly />
-                </div>
-                {accountState.error && <p className="text-sm text-destructive">{accountState.error}</p>}
-                {accountState.success && <p className="text-sm text-emerald-700">{accountState.success}</p>}
+                </Field>
+                <StatusMessage error={accountState.error} success={accountState.success} />
                 <Button disabled={isAccountPending} type="submit" className="w-fit">
                   {isAccountPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
                   Сохранить профиль
@@ -143,29 +115,17 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
         </TabsContent>
 
         <TabsContent value="tenant">
-          <Card>
+          <Card className="border-border/70">
             <CardHeader>
-              <CardTitle>Организация и доступы</CardTitle>
-              <CardDescription>Контекст текущего тенанта и ваши роли (read-only).</CardDescription>
+              <CardTitle className="flex items-center gap-2"><Building2 className="h-4 w-4" />Организация и права</CardTitle>
+              <CardDescription>Информационный блок: контекст текущего тенанта и уровень доступа.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-2 md:grid-cols-2">
-                <div>
-                  <p className="text-sm text-muted-foreground">Текущая организация</p>
-                  <p className="font-medium">{team?.name ?? 'Не выбрана'}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Роль в организации</p>
-                  <p className="font-medium">{roleLabel(user.teamRole)}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">Платформенная роль</p>
-                  <p className="font-medium">{roleLabel(user.platformRole)}</p>
-                </div>
-                <div>
-                  <p className="text-sm text-muted-foreground">ID пользователя / организации</p>
-                  <p className="font-medium">{user.id} / {team?.id ?? '—'}</p>
-                </div>
+              <div className="grid gap-3 md:grid-cols-2">
+                <InfoRow label="Текущая организация" value={team?.name ?? 'Не выбрана'} />
+                <InfoRow label="Роль в организации" value={roleLabel(user.teamRole)} />
+                <InfoRow label="Платформенная роль" value={roleLabel(user.platformRole)} />
+                <InfoRow label="ID пользователя / организации" value={`${user.id} / ${team?.id ?? '—'}`} />
               </div>
               <Separator />
               <div className="space-y-2">
@@ -175,7 +135,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     <p className="text-sm text-muted-foreground">Нет данных о разрешениях.</p>
                   ) : (
                     sortedPermissions.map((permission) => (
-                      <Badge key={permission.code} variant="secondary">
+                      <Badge key={permission.code} variant={permission.level === 'manage' ? 'default' : 'secondary'}>
                         {permission.code}: {permission.level}
                       </Badge>
                     ))
@@ -187,27 +147,23 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
         </TabsContent>
 
         <TabsContent value="security">
-          <Card>
+          <Card className="border-border/70">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"><Shield className="h-4 w-4" /> Безопасность</CardTitle>
+              <CardTitle className="flex items-center gap-2"><Shield className="h-4 w-4" />Безопасность</CardTitle>
               <CardDescription>Смена пароля для текущего способа входа (email + пароль).</CardDescription>
             </CardHeader>
             <CardContent>
               <form className="grid gap-4 md:max-w-xl" action={passwordAction}>
-                <div className="space-y-2">
-                  <Label htmlFor="currentPassword">Текущий пароль</Label>
+                <Field label="Текущий пароль" htmlFor="currentPassword">
                   <Input id="currentPassword" name="currentPassword" type="password" required minLength={8} maxLength={100} defaultValue={passwordState.currentPassword} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword">Новый пароль</Label>
+                </Field>
+                <Field label="Новый пароль" htmlFor="newPassword">
                   <Input id="newPassword" name="newPassword" type="password" required minLength={8} maxLength={100} defaultValue={passwordState.newPassword} />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword">Подтверждение пароля</Label>
+                </Field>
+                <Field label="Подтверждение пароля" htmlFor="confirmPassword">
                   <Input id="confirmPassword" name="confirmPassword" type="password" required minLength={8} maxLength={100} defaultValue={passwordState.confirmPassword} />
-                </div>
-                {passwordState.error && <p className="text-sm text-destructive">{passwordState.error}</p>}
-                {passwordState.success && <p className="text-sm text-emerald-700">{passwordState.success}</p>}
+                </Field>
+                <StatusMessage error={passwordState.error} success={passwordState.success} />
                 <Button disabled={isPasswordPending} type="submit" className="w-fit">
                   {isPasswordPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Lock className="mr-2 h-4 w-4" />}
                   Обновить пароль
@@ -218,33 +174,33 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
         </TabsContent>
 
         <TabsContent value="notifications">
-          <Card>
+          <Card className="border-border/70">
             <CardHeader>
-              <CardTitle>Уведомления</CardTitle>
-              <CardDescription>Персональные каналы и типы событий (сохраняются в браузере).</CardDescription>
+              <CardTitle className="flex items-center gap-2"><Bell className="h-4 w-4" />Уведомления</CardTitle>
+              <CardDescription>Персональные каналы и типы событий. Сохраняются локально в браузере.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 md:max-w-xl">
-              <NotificationSwitch label="In-app уведомления" checked={notificationPreferences.inApp} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, inApp: checked }))} />
-              <NotificationSwitch label="Email уведомления" checked={notificationPreferences.email} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, email: checked }))} />
+              <PreferenceSwitch label="In-app уведомления" checked={notificationPreferences.inApp} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, inApp: checked }))} />
+              <PreferenceSwitch label="Email уведомления" checked={notificationPreferences.email} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, email: checked }))} />
               <Separator />
-              <NotificationSwitch label="Изменения в смете" checked={notificationPreferences.estimateChanges} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, estimateChanges: checked }))} />
-              <NotificationSwitch label="Назначения в проект" checked={notificationPreferences.projectAssignments} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, projectAssignments: checked }))} />
-              <NotificationSwitch label="Комментарии и упоминания" checked={notificationPreferences.commentsMentions} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, commentsMentions: checked }))} />
-              <NotificationSwitch label="Дедлайны и просрочки" checked={notificationPreferences.deadlines} onChange={(checked) => setNotificationPreferences((current) => ({ ...current, deadlines: checked }))} />
+              <PreferenceSwitch label="Изменения в смете" checked={notificationPreferences.estimateChanges} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, estimateChanges: checked }))} />
+              <PreferenceSwitch label="Назначения в проект" checked={notificationPreferences.projectAssignments} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, projectAssignments: checked }))} />
+              <PreferenceSwitch label="Комментарии и упоминания" checked={notificationPreferences.commentsMentions} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, commentsMentions: checked }))} />
+              <PreferenceSwitch label="Дедлайны и просрочки" checked={notificationPreferences.deadlines} onChange={(checked) => setNotificationPreferences((state) => ({ ...state, deadlines: checked }))} />
             </CardContent>
           </Card>
         </TabsContent>
 
         <TabsContent value="interface">
-          <Card>
+          <Card className="border-border/70">
             <CardHeader>
-              <CardTitle>Интерфейс и предпочтения</CardTitle>
-              <CardDescription>Локальные настройки удобства, не влияющие на других пользователей.</CardDescription>
+              <CardTitle className="flex items-center gap-2"><MonitorCog className="h-4 w-4" />Интерфейс и предпочтения</CardTitle>
+              <CardDescription>Локальные настройки удобства. На расчёты и других пользователей не влияют.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 md:max-w-xl">
-              <NotificationSwitch label="Тёмная тема" checked={uiPreferences.theme === 'dark'} onChange={(checked) => setUiPreferences((current) => ({ ...current, theme: checked ? 'dark' : 'light' }))} />
-              <NotificationSwitch label="Компактная плотность интерфейса" checked={uiPreferences.density === 'compact'} onChange={(checked) => setUiPreferences((current) => ({ ...current, density: checked ? 'compact' : 'comfortable' }))} />
-              <NotificationSwitch label="Подтверждать опасные действия" checked={uiPreferences.confirmDangerousActions} onChange={(checked) => setUiPreferences((current) => ({ ...current, confirmDangerousActions: checked }))} />
+              <PreferenceSwitch label="Тёмная тема" checked={uiPreferences.theme === 'dark'} onChange={(checked) => setUiPreferences((state) => ({ ...state, theme: checked ? 'dark' : 'light' }))} />
+              <PreferenceSwitch label="Компактная плотность интерфейса" checked={uiPreferences.density === 'compact'} onChange={(checked) => setUiPreferences((state) => ({ ...state, density: checked ? 'compact' : 'comfortable' }))} />
+              <PreferenceSwitch label="Подтверждать опасные действия" checked={uiPreferences.confirmDangerousActions} onChange={(checked) => setUiPreferences((state) => ({ ...state, confirmDangerousActions: checked }))} />
             </CardContent>
           </Card>
         </TabsContent>
@@ -253,19 +209,41 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   );
 }
 
-function NotificationSwitch({
-  label,
-  checked,
-  onChange,
-}: {
-  label: string;
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-}) {
+function Field({ label, htmlFor, children }: { label: string; htmlFor?: string; children: ReactNode }) {
   return (
-    <div className="flex items-center justify-between rounded-md border p-3">
+    <div className="space-y-2">
+      <Label htmlFor={htmlFor}>{label}</Label>
+      {children}
+    </div>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border bg-muted/30 p-3">
+      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="mt-1 text-sm font-medium">{value}</p>
+    </div>
+  );
+}
+
+function PreferenceSwitch({ label, checked, onChange }: { label: string; checked: boolean; onChange: (checked: boolean) => void }) {
+  return (
+    <div className="flex items-center justify-between rounded-md border bg-card p-3">
       <Label className="text-sm font-normal">{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
     </div>
   );
+}
+
+function StatusMessage({ error, success }: { error?: string; success?: string }) {
+  if (error) {
+    return <p className="text-sm text-destructive">{error}</p>;
+  }
+
+  if (success) {
+    return <p className="text-sm text-emerald-700">{success}</p>;
+  }
+
+  return null;
 }
