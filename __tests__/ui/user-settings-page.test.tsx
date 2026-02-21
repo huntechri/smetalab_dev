@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { UserSettingsPage } from '@/features/settings/components/user-settings-page';
 
@@ -8,7 +8,7 @@ vi.mock('@/app/(login)/actions', () => ({
 }));
 
 describe('UserSettingsPage', () => {
-  it('renders personal cabinet with key sections', () => {
+  it('renders personal cabinet with key sections and tenant fields', () => {
     render(
       <UserSettingsPage
         user={{
@@ -31,5 +31,11 @@ describe('UserSettingsPage', () => {
     expect(screen.getByRole('tab', { name: 'Организация' })).toBeInTheDocument();
     expect(screen.getByRole('tab', { name: 'Безопасность' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Сохранить профиль' })).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('tab', { name: 'Организация' }));
+
+    expect(screen.getByLabelText('Организация (тенант)')).toBeInTheDocument();
+    expect(screen.getByLabelText('ID организации')).toBeInTheDocument();
+    expect(screen.getByLabelText('Роль в организации')).toBeInTheDocument();
   });
 });
