@@ -3,7 +3,6 @@ import { cookies } from 'next/headers';
 
 import {
   REFRESH_COOKIE_NAME,
-  REFRESH_ENDPOINT_PATH,
   SESSION_COOKIE_NAME,
 } from '@/lib/infrastructure/auth/session';
 import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
@@ -37,7 +36,7 @@ export async function POST(_req: NextRequest) {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
-    path: REFRESH_ENDPOINT_PATH,
+    path: '/',
   });
 
   return response;
