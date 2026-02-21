@@ -7,7 +7,7 @@ import { getUser } from '@/lib/data/db/queries';
 export default async function InvitationPage({
     searchParams,
 }: {
-    searchParams: Promise<{ inviteId?: string }>;
+    searchParams: { inviteId?: string };
 }) {
     const { inviteId } = await searchParams;
     const user = await getUser();
