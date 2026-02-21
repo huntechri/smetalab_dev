@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 import {
   verifyToken,
   REFRESH_COOKIE_NAME,
-  REFRESH_ENDPOINT_PATH,
   SESSION_COOKIE_NAME,
 } from '@/lib/infrastructure/auth/session';
 import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
@@ -31,9 +30,9 @@ async function handleProxy(request: NextRequest) {
   // or we can attempt a server-side refresh here if needed.
   // However, most robust way is to check the token.
 
-  if (accessToken && request.method === 'GET') {
+  if (request.method === 'GET') {
     try {
-      const parsed = await verifyToken(accessToken.value);
+      const parsed = accessToken ? await verifyToken(accessToken.value) : null;
 
       if (!parsed && refreshToken) {
         const refreshResult = await refreshSessionTokens(refreshToken.value);
@@ -58,7 +57,7 @@ async function handleProxy(request: NextRequest) {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'strict',
-          path: REFRESH_ENDPOINT_PATH,
+          path: '/',
         });
 
         return res;
