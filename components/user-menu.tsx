@@ -27,6 +27,10 @@ export function UserMenu() {
     const router = useRouter();
     const pathname = usePathname();
     const { hasPermission } = usePermissions();
+    const canAccessPlatform =
+        user?.platformRole === 'superadmin' ||
+        user?.platformRole === 'support' ||
+        hasPermission('platform.tenants', 'read');
 
     React.useEffect(() => {
         setMounted(true);
@@ -106,7 +110,7 @@ export function UserMenu() {
                         <span>Настройки</span>
                     </DropdownMenuItem>
                 )}
-                {hasPermission('platform.tenants', 'read') && !pathname?.startsWith('/dashboard') && (
+                {canAccessPlatform && !pathname?.startsWith('/dashboard') && (
                     <>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem onClick={() => router.push('/dashboard')}>
