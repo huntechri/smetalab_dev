@@ -143,7 +143,12 @@ export class EstimateImportService {
             ),
           );
 
-        const parentByCode = new Map<string, string>();
+        const workRowsToInsert: (typeof estimateRows.$inferInsert)[] = [];
+        const materialRowsToInsert: {
+          workIdx: number;
+          data: typeof estimateRows.$inferInsert;
+        }[] = [];
+        const parentByCode = new Map<string, number>();
 
         for (let index = 0; index < importedRows.length; index += 1) {
           const item = importedRows[index];
@@ -151,36 +156,48 @@ export class EstimateImportService {
             ? item.code.split(".").slice(0, -1).join(".")
             : null;
           const kind: "work" | "material" = parentCode ? "material" : "work";
-          const parentWorkId = parentCode
-            ? (parentByCode.get(parentCode) ?? null)
-            : null;
-
-          if (kind === "material" && !parentWorkId) {
-            throw new Error(`INVALID_PARENT_${item.code}`);
-          }
-
           const sum = item.qty * item.price;
-          const [created] = await tx
-            .insert(estimateRows)
-            .values({
-              tenantId: teamId,
-              estimateId,
-              kind,
-              parentWorkId,
-              code: item.code,
-              name: item.name,
-              unit: item.unit,
-              qty: item.qty,
-              price: item.price,
-              sum,
-              expense: 0,
-              order: (index + 1) * 10,
-            })
-            .returning({ id: estimateRows.id });
+          const rowData: typeof estimateRows.$inferInsert = {
+            tenantId: teamId,
+            estimateId,
+            kind,
+            code: item.code,
+            name: item.name,
+            unit: item.unit,
+            qty: item.qty,
+            price: item.price,
+            sum,
+            expense: 0,
+            order: (index + 1) * 10,
+          };
 
           if (kind === "work") {
-            parentByCode.set(item.code, created.id);
+            workRowsToInsert.push(rowData);
+            parentByCode.set(item.code, workRowsToInsert.length - 1);
+          } else {
+            const workIdx = parentCode ? parentByCode.get(parentCode) : undefined;
+            if (typeof workIdx === "undefined") {
+              throw new Error(`INVALID_PARENT_${item.code}`);
+            }
+            materialRowsToInsert.push({ workIdx, data: rowData });
           }
+        }
+
+        const insertedWorks =
+          workRowsToInsert.length > 0
+            ? await tx
+                .insert(estimateRows)
+                .values(workRowsToInsert)
+                .returning({ id: estimateRows.id })
+            : [];
+
+        if (materialRowsToInsert.length > 0) {
+          const materialValues = materialRowsToInsert.map((material) => ({
+            ...material.data,
+            parentWorkId: insertedWorks[material.workIdx].id,
+          }));
+
+          await tx.insert(estimateRows).values(materialValues);
         }
 
         const [{ total }] = await tx
