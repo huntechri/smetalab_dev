@@ -2,18 +2,40 @@
 import { spawnSync } from 'node:child_process';
 import net from 'node:net';
 
-const databaseUrl = process.env.DATABASE_URL?.trim();
+const TEST_MARKER_REGEX = /(test|ci|integration)/i;
 
-if (!databaseUrl) {
-  console.log('Skipping integration tests: DATABASE_URL is not set.');
-  process.exit(0);
+const testDatabaseUrl = process.env.TEST_DATABASE_URL?.trim();
+
+if (!testDatabaseUrl) {
+  console.error('TEST_DATABASE_URL is required for integration tests. Refusing to use DATABASE_URL fallback.');
+  process.exit(1);
 }
 
+let parsedUrl;
+try {
+  parsedUrl = new URL(testDatabaseUrl);
+} catch (error) {
+  console.error('TEST_DATABASE_URL is malformed. Expected a valid URL string.');
+  console.error(error instanceof Error ? error.message : String(error));
+  process.exit(1);
+}
+
+const dbName = parsedUrl.pathname.replace(/^\//, '') || 'unknown';
+const markerSource = `${parsedUrl.hostname} ${dbName} ${parsedUrl.searchParams.get('options') ?? ''}`;
+if (!TEST_MARKER_REGEX.test(markerSource)) {
+  console.error(
+    `TEST_DATABASE_URL does not look like a test database (host="${parsedUrl.hostname}", db="${dbName}").`,
+  );
+  process.exit(1);
+}
 
 const runIntegrationVitest = () => {
   const result = spawnSync('pnpm', ['vitest', 'run', '--config', 'vitest.integration.config.ts'], {
     stdio: 'inherit',
-    env: process.env,
+    env: {
+      ...process.env,
+      DATABASE_URL: testDatabaseUrl,
+    },
   });
 
   if (typeof result.status === 'number') {
@@ -24,17 +46,8 @@ const runIntegrationVitest = () => {
 };
 
 if (process.env.CI === 'true') {
-  console.log('CI=true detected: running integration tests in strict mode (no preflight skip).');
+  console.log(`CI=true detected: running integration tests against host=${parsedUrl.hostname} db=${dbName}.`);
   runIntegrationVitest();
-}
-
-let parsedUrl;
-try {
-  parsedUrl = new URL(databaseUrl);
-} catch (error) {
-  console.error('Invalid DATABASE_URL. Expected a valid URL string.');
-  console.error(error instanceof Error ? error.message : String(error));
-  process.exit(1);
 }
 
 const host = parsedUrl.hostname;
@@ -86,7 +99,7 @@ const checkReachability = async () => {
 const isReachable = await checkReachability();
 
 if (!isReachable) {
-  console.log('Skipping integration tests: DATABASE_URL is present but database host is unreachable (IPv4 retries exhausted).');
+  console.log(`Skipping integration tests: host=${host} db=${dbName} is unreachable (IPv4 retries exhausted).`);
   process.exit(0);
 }
 runIntegrationVitest();
