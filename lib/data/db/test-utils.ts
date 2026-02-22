@@ -1,12 +1,26 @@
 import { db } from './drizzle.node';
 import { sql } from 'drizzle-orm';
-import { assertSafeTestCleanupConnection, getSanitizedDatabaseTarget } from '@/lib/testing/assert-test-db';
+import {
+    assertSafeTestCleanupConnection,
+    getCleanupHeuristicMatched,
+    getSanitizedDatabaseTarget,
+    isExplicitCleanupAllowed,
+} from '@/lib/testing/assert-test-db';
 
 export async function resetDatabase() {
     // Safety-critical: block TRUNCATE unless active connection is exactly TEST_DATABASE_URL.
     const connectionUrl = assertSafeTestCleanupConnection(process.env.DATABASE_URL);
     const target = getSanitizedDatabaseTarget(connectionUrl);
-    console.info(`resetDatabase() target: host=${target.host} db=${target.database}`);
+    const heuristicMatched = getCleanupHeuristicMatched(connectionUrl);
+    const cleanupAllowed = isExplicitCleanupAllowed();
+    console.info(
+        `resetDatabase() target: host=${target.host} db=${target.database} cleanupAllowed=${cleanupAllowed} heuristicMatched=${heuristicMatched}`,
+    );
+    if (!heuristicMatched && cleanupAllowed) {
+        console.warn(
+            `resetDatabase() heuristic is inconclusive for host=${target.host} db=${target.database}; proceeding because ALLOW_TEST_DB_CLEANUP=true.`,
+        );
+    }
 
     const tables = [
         'notifications',
