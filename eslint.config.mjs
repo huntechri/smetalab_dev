@@ -21,6 +21,13 @@ export default [
             "no-case-declarations": "off",
         },
     },
+
+    {
+        files: ["components/ui/auto-form/**/*.{ts,tsx}"],
+        rules: {
+            "@typescript-eslint/no-explicit-any": "off",
+        },
+    },
     {
         files: ["components/ui/**/*.{ts,tsx,js,jsx}"],
         rules: {

@@ -33,6 +33,10 @@ vi.mock('@/lib/data/db/queries', async (importOriginal) => {
 
 // ---------------------------------------------------------------------
 // Tests
+
+type MockedUser = NonNullable<Awaited<ReturnType<typeof getUser>>>;
+type MockedTeam = NonNullable<Awaited<ReturnType<typeof getTeamForUser>>>;
+
 // ---------------------------------------------------------------------
 
 describe('Materials Integration Tests', () => {
@@ -65,8 +69,8 @@ describe('Materials Integration Tests', () => {
         });
 
         // 4. Mock the session queries to return this user/team
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
-        vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as MockedUser);
+        vi.mocked(getTeamForUser).mockResolvedValue(team as MockedTeam);
 
         return { user, team };
     };
