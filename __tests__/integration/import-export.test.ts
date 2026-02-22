@@ -56,7 +56,6 @@ describe('Import/Export Integration Tests', () => {
     };
 
     const setupUserAndTeam = async () => {
-        console.log('DEBUG: DATABASE_URL in test:', process.env.DATABASE_URL);
         await resetDatabase();
 
         const [user] = await db.insert(users).values({

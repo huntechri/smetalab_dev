@@ -140,6 +140,7 @@ jobs:
       TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
       POSTGRES_URL: ${{ secrets.TEST_DATABASE_URL }}
       LOCAL_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
+      ALLOW_TEST_DB_CLEANUP: "true"
       AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
       BASE_URL: http://localhost:3000
       STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY || secrets.STRIPE_SECRET_KEY_TEST }}
