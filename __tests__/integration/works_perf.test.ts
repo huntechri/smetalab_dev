@@ -21,6 +21,9 @@ vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     };
 });
 
+type MockedUser = NonNullable<Awaited<ReturnType<typeof getUser>>>;
+type MockedTeam = NonNullable<Awaited<ReturnType<typeof getTeamForUser>>>;
+
 describe('Works Reordering Performance', () => {
     let testUserId: number;
     let testTeamId: number;
@@ -48,8 +51,8 @@ describe('Works Reordering Performance', () => {
         const [insertedTeam] = await db.select().from(teams).where(eq(teams.id, testTeamId));
 
         // Mock return values
-        vi.mocked(getUser).mockResolvedValue({ ...insertedUser, tenantId: testTeamId, teamRole: 'admin' } as any);
-        vi.mocked(getTeamForUser).mockResolvedValue(insertedTeam as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
+        vi.mocked(getUser).mockResolvedValue({ ...insertedUser, tenantId: testTeamId, teamRole: 'admin' } as MockedUser);
+        vi.mocked(getTeamForUser).mockResolvedValue(insertedTeam as MockedTeam);
     });
 
     afterEach(async () => {

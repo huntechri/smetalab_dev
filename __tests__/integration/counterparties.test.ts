@@ -1,9 +1,9 @@
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { db } from '@/lib/data/db/drizzle';
-import { counterparties, users, teams, teamMembers, type NewCounterparty, activityLogs } from '@/lib/data/db/schema';
+import { counterparties, users, teams, teamMembers, activityLogs } from '@/lib/data/db/schema';
 import { createCounterparty, updateCounterparty, deleteCounterparty } from '@/app/actions/counterparties/crud';
-import { eq, and, isNull } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { resetDatabase } from '@/lib/data/db/test-utils';
 
@@ -20,6 +20,9 @@ vi.mock('@/lib/data/db/queries', async (importOriginal) => {
         getTeamForUser: vi.fn(),
     };
 });
+
+type MockedUser = NonNullable<Awaited<ReturnType<typeof getUser>>>;
+type MockedTeam = NonNullable<Awaited<ReturnType<typeof getTeamForUser>>>;
 
 describe('Counterparties Integration Tests', () => {
     let testUserId: number;
@@ -42,8 +45,8 @@ describe('Counterparties Integration Tests', () => {
 
         await db.insert(teamMembers).values({ userId: testUserId, teamId: testTeamId, role: 'admin' });
 
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
-        vi.mocked(getTeamForUser).mockResolvedValue(team as any);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as MockedUser);
+        vi.mocked(getTeamForUser).mockResolvedValue(team as MockedTeam);
     });
 
     afterEach(async () => {
@@ -162,8 +165,8 @@ describe('Counterparties Integration Tests', () => {
         const [team2] = await db.insert(teams).values({ name: 'Team 2' }).returning();
         await db.insert(teamMembers).values({ userId: testUserId, teamId: team2.id, role: 'admin' });
         const user = await db.query.users.findFirst({ where: eq(users.id, testUserId) });
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: team2.id, teamRole: 'admin' } as any);
-        vi.mocked(getTeamForUser).mockResolvedValue(team2 as any);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: team2.id, teamRole: 'admin' } as MockedUser);
+        vi.mocked(getTeamForUser).mockResolvedValue(team2 as MockedTeam);
 
         // Should succeed in second tenant
         const result = await createCounterparty({ ...data, name: 'Global Co Branch' });
