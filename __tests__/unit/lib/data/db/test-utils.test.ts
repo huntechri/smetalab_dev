@@ -29,6 +29,15 @@ describe('resetDatabase safety guard', () => {
     expect(dbMock.execute).not.toHaveBeenCalled();
   });
 
+
+  it('allows reset when TEST_DATABASE_URL is explicitly provided', async () => {
+    process.env.TEST_DATABASE_URL = 'postgres://user:pass@ep-example-12345.eu-central-1.aws.neon.tech:5432/neondb';
+    process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
+
+    await expect(resetDatabase()).resolves.toBeUndefined();
+    expect(dbMock.execute).toHaveBeenCalled();
+  });
+
   it('allows reset for explicit test database URLs', async () => {
     process.env.DATABASE_URL = 'postgres://postgres:postgres@127.0.0.1:5432/smetalab_test';
 

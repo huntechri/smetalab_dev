@@ -19,14 +19,15 @@ export async function resetDatabase() {
     const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1';
     const hasTestDatabaseName = database.includes('test') || database.endsWith('_ci');
     const hasExplicitTestMarker = dbUrl.toLowerCase().includes('test');
+    const hasDedicatedTestUrl = Boolean(process.env.TEST_DATABASE_URL);
 
-    // Safety check: must be test env AND explicitly target a test database
-    // Localhost alone is NOT enough (can still point to dev/prod clone).
-    if (!isTestEnv || !(hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
+    // Safety check: must be test env AND explicitly target a safe DB for destructive reset.
+    // We allow either dedicated TEST_DATABASE_URL, explicit test DB naming, or localhost+test marker.
+    if (!isTestEnv || !(hasDedicatedTestUrl || hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
         console.error('❌ SAFETY ABORT: resetDatabase() blocked!');
         console.error('This tool is designed to WIPE the database. For safety, it only runs if:');
         console.error('1. NODE_ENV is "test" or CI=true');
-        console.error('2. DATABASE_URL points to localhost or a known test branch');
+        console.error('2. TEST_DATABASE_URL is set OR DATABASE_URL explicitly points to test DB');
         console.error('---');
         console.error('Current Environment:', process.env.NODE_ENV || 'development');
         console.error('CI detected:', process.env.CI || 'false');

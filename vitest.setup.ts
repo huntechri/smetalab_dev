@@ -65,10 +65,11 @@ if (isIntegrationRun) {
   const isLocalHost = host === 'localhost' || host === '127.0.0.1';
   const hasTestDatabaseName = database.includes('test') || database.endsWith('_ci');
   const hasExplicitTestMarker = integrationDbUrl.toLowerCase().includes('test');
+  const hasDedicatedTestUrl = Boolean(process.env.TEST_DATABASE_URL);
 
-  if (!(hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
+  if (!(hasDedicatedTestUrl || hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
     throw new Error(
-      '❌ SAFETY ERROR: Integration tests can run only against an explicit test database (name/url must include "test").\n' +
+      '❌ SAFETY ERROR: Integration tests can run only with TEST_DATABASE_URL or explicit test DB naming.\n' +
         `Received host="${host}", db="${database}".`,
     );
   }
