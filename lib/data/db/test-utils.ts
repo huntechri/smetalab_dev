@@ -1,40 +1,12 @@
 import { db } from './drizzle.node';
 import { sql } from 'drizzle-orm';
+import { assertSafeTestCleanupConnection, getSanitizedDatabaseTarget } from '@/lib/testing/assert-test-db';
 
 export async function resetDatabase() {
-    // 🛡️ CRITICAL SAFETY CHECK: Prevent accidental wipe of production/dev database
-    const dbUrl = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL || '';
-    const isTestEnv = process.env.NODE_ENV === 'test' || process.env.VITEST === 'true' || process.env.CI === 'true';
-    let hostname = '';
-    let database = '';
-
-    try {
-        const parsedUrl = new URL(dbUrl);
-        hostname = parsedUrl.hostname.toLowerCase();
-        database = parsedUrl.pathname.replace(/^\//, '').toLowerCase();
-    } catch {
-        // Keep defaults, safety check below will fail closed
-    }
-
-    const isLocalHost = hostname === 'localhost' || hostname === '127.0.0.1';
-    const hasTestDatabaseName = database.includes('test') || database.endsWith('_ci');
-    const hasExplicitTestMarker = dbUrl.toLowerCase().includes('test');
-    const hasDedicatedTestUrl = Boolean(process.env.TEST_DATABASE_URL);
-
-    // Safety check: must be test env AND explicitly target a safe DB for destructive reset.
-    // We allow either dedicated TEST_DATABASE_URL, explicit test DB naming, or localhost+test marker.
-    if (!isTestEnv || !(hasDedicatedTestUrl || hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
-        console.error('❌ SAFETY ABORT: resetDatabase() blocked!');
-        console.error('This tool is designed to WIPE the database. For safety, it only runs if:');
-        console.error('1. NODE_ENV is "test" or CI=true');
-        console.error('2. TEST_DATABASE_URL is set OR DATABASE_URL explicitly points to test DB');
-        console.error('---');
-        console.error('Current Environment:', process.env.NODE_ENV || 'development');
-        console.error('CI detected:', process.env.CI || 'false');
-        console.error('Database Host:', hostname || 'unknown');
-        console.error('Database Name:', database || 'unknown');
-        throw new Error('Safety abort: Database reset is only allowed on the TEST database in TEST environment. Please check your DATABASE_URL.');
-    }
+    // Safety-critical: block TRUNCATE unless active connection is exactly TEST_DATABASE_URL.
+    const connectionUrl = assertSafeTestCleanupConnection(process.env.DATABASE_URL);
+    const target = getSanitizedDatabaseTarget(connectionUrl);
+    console.info(`resetDatabase() target: host=${target.host} db=${target.database}`);
 
     const tables = [
         'notifications',
