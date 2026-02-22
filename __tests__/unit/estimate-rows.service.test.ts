@@ -38,6 +38,7 @@ describe('EstimateRowsService duplicate protection', () => {
             })),
             insert: vi.fn(),
             update: vi.fn(),
+            execute: vi.fn().mockResolvedValue([]),
         };
 
         dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
@@ -116,6 +117,7 @@ describe('EstimateRowsService duplicate protection', () => {
             update: vi.fn(() => ({
                 set: vi.fn(() => ({ where: vi.fn() })),
             })),
+            execute: vi.fn().mockResolvedValue([]),
             insert: vi.fn(() => ({
                 values: vi.fn(() => ({
                     returning: vi.fn().mockResolvedValue([
@@ -177,6 +179,7 @@ describe('EstimateRowsService duplicate protection', () => {
             update: vi.fn(() => ({
                 set: vi.fn(() => ({ where: vi.fn() })),
             })),
+            execute: vi.fn().mockResolvedValue([]),
         };
 
         dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));

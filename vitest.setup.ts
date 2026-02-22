@@ -46,21 +46,35 @@ if (!process.env.RESEND_API_KEY) {
 }
 if (isIntegrationRun) {
   // Integration tests must never run against production-like DB
-  if (!process.env.DATABASE_URL) {
+  const integrationDbUrl = process.env.DATABASE_URL;
+  if (!integrationDbUrl) {
     throw new Error('❌ SAFETY ERROR: DATABASE_URL is required for integration tests.');
   }
 
-  if (
-    !process.env.DATABASE_URL.includes('localhost') &&
-    !process.env.DATABASE_URL.includes('test') &&
-    !process.env.DATABASE_URL.includes('neon.tech')
-  ) {
+  let host = '';
+  let database = '';
+
+  try {
+    const parsed = new URL(integrationDbUrl);
+    host = parsed.hostname.toLowerCase();
+    database = parsed.pathname.replace(/^\//, '').toLowerCase();
+  } catch {
+    throw new Error('❌ SAFETY ERROR: DATABASE_URL is malformed for integration tests.');
+  }
+
+  const isLocalHost = host === 'localhost' || host === '127.0.0.1';
+  const hasTestDatabaseName = database.includes('test') || database.endsWith('_ci');
+  const hasExplicitTestMarker = integrationDbUrl.toLowerCase().includes('test');
+  const hasDedicatedTestUrl = Boolean(process.env.TEST_DATABASE_URL);
+
+  if (!(hasDedicatedTestUrl || hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
     throw new Error(
-      '❌ SAFETY ERROR: Running tests against a non-local/non-test database!\n' +
-        'Please set TEST_DATABASE_URL in .env.test or provide a local DATABASE_URL.',
+      '❌ SAFETY ERROR: Integration tests can run only with TEST_DATABASE_URL or explicit test DB naming.\n' +
+        `Received host="${host}", db="${database}".`,
     );
   }
 }
+
 
 (process.env as Record<string, string | undefined>).NODE_ENV = 'test';
 
