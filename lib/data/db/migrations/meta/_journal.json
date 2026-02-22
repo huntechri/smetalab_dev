@@ -197,6 +197,13 @@
       "when": 1771587886330,
       "tag": "0027_estimate_patterns",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1771746440065,
+      "tag": "0028_young_vulture",
+      "breakpoints": true
     }
   ]
 }

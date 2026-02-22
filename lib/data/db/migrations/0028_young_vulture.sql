@@ -1,0 +1,1 @@
+-- bogus empty migration just to align snapshot
