@@ -1,3 +1,6 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 // Removed unused sql import
 import { db } from './drizzle.node';
 import { permissions, rolePermissions, platformRolePermissions } from './schema';
