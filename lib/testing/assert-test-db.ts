@@ -31,14 +31,12 @@ export function getRequiredTestDatabaseUrl(): string {
     );
   }
 
-  const parsed = parseDatabaseUrl(rawUrl);
-  if (!hasSafeTestMarker(parsed)) {
-    throw new Error(
-      `TEST_DATABASE_URL does not look like a dedicated test database (host="${parsed.hostname}", db="${parsed.pathname.replace(/^\//, '') || 'unknown'}").`,
-    );
-  }
-
+  parseDatabaseUrl(rawUrl);
   return rawUrl;
+}
+
+export function isExplicitCleanupAllowed(): boolean {
+  return process.env.ALLOW_TEST_DB_CLEANUP === 'true';
 }
 
 export function getSanitizedDatabaseTarget(rawUrl: string): { host: string; database: string } {
@@ -49,22 +47,34 @@ export function getSanitizedDatabaseTarget(rawUrl: string): { host: string; data
   };
 }
 
+export function getCleanupHeuristicMatched(rawUrl: string): boolean {
+  return hasSafeTestMarker(parseDatabaseUrl(rawUrl));
+}
+
 export function assertSafeTestCleanupConnection(actualDbUrl: string | undefined): string {
   if (process.env.NODE_ENV !== 'test') {
-    throw new Error('Destructive test DB cleanup is only allowed when NODE_ENV is "test".');
+    throw new Error(
+      `Destructive cleanup blocked: NODE_ENV must be "test" (received "${process.env.NODE_ENV ?? 'undefined'}").`,
+    );
   }
 
   const testDbUrl = getRequiredTestDatabaseUrl();
 
+  if (!isExplicitCleanupAllowed()) {
+    throw new Error(
+      'Destructive cleanup blocked: ALLOW_TEST_DB_CLEANUP must be set to "true" for integration database cleanup.',
+    );
+  }
+
   if (!actualDbUrl?.trim()) {
-    throw new Error('Destructive test DB cleanup requires an active DATABASE_URL connection.');
+    throw new Error('Destructive cleanup blocked: DATABASE_URL is missing for active integration DB client connection.');
   }
 
   const normalizedActual = normalizeUrlForComparison(actualDbUrl);
   const normalizedExpected = normalizeUrlForComparison(testDbUrl);
 
   if (normalizedActual !== normalizedExpected) {
-    throw new Error('Destructive cleanup blocked: active DB connection does not match TEST_DATABASE_URL.');
+    throw new Error('Destructive cleanup blocked: integration DB client is not using TEST_DATABASE_URL.');
   }
 
   return testDbUrl;

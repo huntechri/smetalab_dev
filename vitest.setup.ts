@@ -3,7 +3,12 @@ import { config } from 'dotenv';
 import path from 'path';
 import { expect, vi } from 'vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
-import { getRequiredTestDatabaseUrl, getSanitizedDatabaseTarget } from '@/lib/testing/assert-test-db';
+import {
+  getCleanupHeuristicMatched,
+  getRequiredTestDatabaseUrl,
+  getSanitizedDatabaseTarget,
+  isExplicitCleanupAllowed,
+} from '@/lib/testing/assert-test-db';
 
 // Polyfills for browser APIs not available in jsdom (required by Radix UI)
 class ResizeObserverMock {
@@ -46,7 +51,23 @@ if (isIntegrationRun) {
   process.env.DATABASE_URL = integrationDbUrl;
 
   const target = getSanitizedDatabaseTarget(integrationDbUrl);
-  console.info(`Integration DB target: host=${target.host} db=${target.database}`);
+  const heuristicMatched = getCleanupHeuristicMatched(integrationDbUrl);
+  const cleanupAllowed = isExplicitCleanupAllowed();
+  console.info(
+    `Integration DB target: host=${target.host} db=${target.database} cleanupAllowed=${cleanupAllowed} heuristicMatched=${heuristicMatched}`,
+  );
+
+  if (!heuristicMatched && cleanupAllowed) {
+    console.warn(
+      `Integration DB heuristic is inconclusive for host=${target.host} db=${target.database}; allowing cleanup because ALLOW_TEST_DB_CLEANUP=true.`,
+    );
+  }
+
+  if (!cleanupAllowed) {
+    throw new Error(
+      'ALLOW_TEST_DB_CLEANUP="true" is required for integration tests that run destructive cleanup (TRUNCATE/RESET).',
+    );
+  }
 }
 
 

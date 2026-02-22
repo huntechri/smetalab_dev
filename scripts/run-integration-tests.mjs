@@ -11,6 +11,11 @@ if (!testDatabaseUrl) {
   process.exit(1);
 }
 
+if (process.env.ALLOW_TEST_DB_CLEANUP !== 'true') {
+  console.error('ALLOW_TEST_DB_CLEANUP must be set to "true" for integration tests that reset/truncate the database.');
+  process.exit(1);
+}
+
 let parsedUrl;
 try {
   parsedUrl = new URL(testDatabaseUrl);
@@ -23,10 +28,9 @@ try {
 const dbName = parsedUrl.pathname.replace(/^\//, '') || 'unknown';
 const markerSource = `${parsedUrl.hostname} ${dbName} ${parsedUrl.searchParams.get('options') ?? ''}`;
 if (!TEST_MARKER_REGEX.test(markerSource)) {
-  console.error(
-    `TEST_DATABASE_URL does not look like a test database (host="${parsedUrl.hostname}", db="${dbName}").`,
+  console.warn(
+    `Integration DB heuristic is inconclusive (host="${parsedUrl.hostname}", db="${dbName}"). Continuing because ALLOW_TEST_DB_CLEANUP=true.`,
   );
-  process.exit(1);
 }
 
 const runIntegrationVitest = () => {
