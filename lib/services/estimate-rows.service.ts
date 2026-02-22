@@ -129,16 +129,27 @@ const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: 
 
     const now = new Date();
 
-    for (const row of rows) {
-        const nextCode = nextCodeById.get(row.id);
-        if (!nextCode || nextCode === row.code) {
-            continue;
-        }
+    const updates = rows
+        .map((row) => {
+            const nextCode = nextCodeById.get(row.id);
+            if (!nextCode || nextCode === row.code) {
+                return null;
+            }
+            return { id: row.id, code: nextCode };
+        })
+        .filter((update): update is { id: string; code: string } => update !== null);
 
-        await tx
-            .update(estimateRows)
-            .set({ code: nextCode, updatedAt: now })
-            .where(and(eq(estimateRows.id, row.id), withActiveTenant(estimateRows, teamId)));
+    if (updates.length > 0) {
+        const values = updates.map((update) => sql`(${update.id}::uuid, ${update.code})`);
+
+        await tx.execute(sql`
+            UPDATE ${estimateRows}
+            SET
+                code = v.code,
+                updated_at = ${now.toISOString()}::timestamp
+            FROM (VALUES ${sql.join(values, sql`, `)}) AS v(id, code)
+            WHERE ${estimateRows.id} = v.id AND ${withActiveTenant(estimateRows, teamId)}
+        `);
     }
 };
 

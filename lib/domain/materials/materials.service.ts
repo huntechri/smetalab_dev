@@ -520,16 +520,31 @@ export class MaterialsService {
             const embeddings = await generateEmbeddingsBatch(contexts);
 
             if (embeddings && embeddings.length === materialsToReindex.length) {
-                await db.transaction(async (tx) => {
-                    for (let i = 0; i < materialsToReindex.length; i++) {
-                        const embedding = embeddings[i];
-                        if (embedding) {
-                            await tx.update(materials)
-                                .set({ embedding: embedding as number[] })
-                                .where(eq(materials.id, materialsToReindex[i].id));
-                        }
+                const updates: { id: string; embedding: number[] }[] = [];
+
+                for (let i = 0; i < materialsToReindex.length; i++) {
+                    const embedding = embeddings[i];
+                    if (embedding) {
+                        updates.push({
+                            id: materialsToReindex[i].id,
+                            embedding,
+                        });
                     }
-                });
+                }
+
+                if (updates.length > 0) {
+                    await db.transaction(async (tx) => {
+                        const updateChunks = [sql`(CASE`];
+                        for (const update of updates) {
+                            updateChunks.push(sql`WHEN ${materials.id} = ${update.id} THEN ${JSON.stringify(update.embedding)}::vector`);
+                        }
+                        updateChunks.push(sql`END)`);
+
+                        await tx.update(materials)
+                            .set({ embedding: sql.join(updateChunks, sql` `) })
+                            .where(inArray(materials.id, updates.map((update) => update.id)));
+                    });
+                }
             }
 
             return success({ processed: materialsToReindex.length, remaining: 0 }); // Note: remaining logic would need more queries

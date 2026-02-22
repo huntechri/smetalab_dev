@@ -1,4 +1,4 @@
-import { and, asc, eq, inArray, notInArray, sql } from 'drizzle-orm';
+import { and, asc, eq, notInArray, sql } from 'drizzle-orm';
 import path from 'path';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from '@/lib/data/db/drizzle';
@@ -121,71 +121,48 @@ export class EstimateExecutionService {
                 return;
             }
 
-            const existing = await tx
-                .select({
-                    id: estimateExecutionRows.id,
-                    estimateRowId: estimateExecutionRows.estimateRowId,
-                    actualQty: estimateExecutionRows.actualQty,
-                    actualPrice: estimateExecutionRows.actualPrice,
-                    status: estimateExecutionRows.status,
-                    isCompleted: estimateExecutionRows.isCompleted,
-                })
-                .from(estimateExecutionRows)
-                .where(
-                    and(
-                        eq(estimateExecutionRows.estimateId, estimateId),
-                        eq(estimateExecutionRows.source, 'from_estimate'),
-                        withActiveTenant(estimateExecutionRows, teamId),
-                        inArray(estimateExecutionRows.estimateRowId, plannedIds),
-                    ),
-                );
-
-            const existingMap = new Map(existing.map((row) => [row.estimateRowId, row]));
-
-            for (const work of plannedWorks) {
-                const entity = existingMap.get(work.id);
-                const now = new Date();
+            const now = new Date();
+            const values = plannedWorks.map((work) => {
                 const plannedPrice = applyEstimateCoefficient(work.price, coefPercent);
-                const plannedSum = plannedPrice * work.qty;
+                return {
+                    tenantId: teamId,
+                    estimateId,
+                    estimateRowId: work.id,
+                    source: 'from_estimate' as const,
+                    status: 'not_started' as const,
+                    code: work.code,
+                    name: work.name,
+                    unit: work.unit,
+                    plannedQty: work.qty,
+                    plannedPrice,
+                    plannedSum: plannedPrice * work.qty,
+                    actualQty: work.qty,
+                    actualPrice: work.price,
+                    actualSum: work.qty * work.price,
+                    order: work.order,
+                    updatedAt: now,
+                };
+            });
 
-                if (!entity) {
-                    await tx.insert(estimateExecutionRows).values({
-                        tenantId: teamId,
-                        estimateId,
-                        estimateRowId: work.id,
-                        source: 'from_estimate',
-                        status: 'not_started',
-                        code: work.code,
-                        name: work.name,
-                        unit: work.unit,
-                        plannedQty: work.qty,
-                        plannedPrice,
-                        plannedSum,
-                        actualQty: work.qty,
-                        actualPrice: work.price,
-                        actualSum: work.qty * work.price,
-                        order: work.order,
-                        updatedAt: now,
-                    });
-                    continue;
-                }
-
-                await tx
-                    .update(estimateExecutionRows)
-                    .set({
+            await tx
+                .insert(estimateExecutionRows)
+                .values(values)
+                .onConflictDoUpdate({
+                    target: [estimateExecutionRows.estimateId, estimateExecutionRows.estimateRowId],
+                    targetWhere: sql`estimate_row_id IS NOT NULL AND deleted_at IS NULL`,
+                    set: {
                         deletedAt: null,
-                        code: work.code,
-                        name: work.name,
-                        unit: work.unit,
-                        plannedQty: work.qty,
-                        plannedPrice,
-                        plannedSum,
-                        actualSum: entity.actualQty * entity.actualPrice,
-                        order: work.order,
-                        updatedAt: now,
-                    })
-                    .where(eq(estimateExecutionRows.id, entity.id));
-            }
+                        code: sql`excluded.code`,
+                        name: sql`excluded.name`,
+                        unit: sql`excluded.unit`,
+                        plannedQty: sql`excluded.planned_qty`,
+                        plannedPrice: sql`excluded.planned_price`,
+                        plannedSum: sql`excluded.planned_sum`,
+                        actualSum: sql`${estimateExecutionRows.actualQty} * ${estimateExecutionRows.actualPrice}`,
+                        order: sql`excluded."order"`,
+                        updatedAt: sql`now()`,
+                    },
+                });
         });
     }
 
