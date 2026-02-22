@@ -1,3 +1,5 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import Stripe from 'stripe';
 import { db } from './drizzle.node';
 import { users, teams, teamMembers, notifications } from './schema';
