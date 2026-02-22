@@ -29,7 +29,7 @@ try {
     // Use npx to ensure we use local binaries
     execSync('npx drizzle-kit migrate --config=drizzle.config.mts', { stdio: 'inherit', env: process.env });
     console.log('✅ Migrations complete.');
-} catch (e) {
-    console.error('❌ Migration failed.');
+} catch (_error) {
+    console.error('❌ Migration failed.', _error);
     process.exit(1);
 }

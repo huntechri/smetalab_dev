@@ -22,7 +22,7 @@ async function main() {
     // Neon specific role
     try {
         await sql`GRANT ALL ON SCHEMA public TO neondb_owner`;
-    } catch (e) { /* ignore if not exist */ }
+    } catch (_error) { /* ignore if not exist */ }
 
     console.log('Database schema dropped and recreated successfully!');
     await sql.end();

@@ -12,7 +12,7 @@ describe('project list formatters', () => {
 
     it('returns dash for empty or null date', () => {
         expect(formatProjectDate('')).toBe('—');
-        expect(formatProjectDate(null as any)).toBe('—');
+        expect(formatProjectDate(null as unknown as string)).toBe('—');
         expect(formatProjectDate(undefined)).toBe('—');
     });
 

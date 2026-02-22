@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Users, Activity } from "lucide-react"
+import { TrendingUp, Users, Activity } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import {

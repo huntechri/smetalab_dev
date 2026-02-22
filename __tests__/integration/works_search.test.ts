@@ -21,6 +21,9 @@ vi.mock('@/lib/data/db/queries', async (importOriginal) => {
     };
 });
 
+type MockedUser = NonNullable<Awaited<ReturnType<typeof getUser>>>;
+type MockedTeam = NonNullable<Awaited<ReturnType<typeof getTeamForUser>>>;
+
 describe('Works Search and Batch Operations', () => {
     let testUserId: number;
     let testTeamId: number;
@@ -41,8 +44,8 @@ describe('Works Search and Batch Operations', () => {
 
         await db.insert(teamMembers).values({ userId: testUserId, teamId: testTeamId, role: 'admin' });
 
-        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as any);
-        vi.mocked(getTeamForUser).mockResolvedValue(team as unknown as Awaited<ReturnType<typeof getTeamForUser>>);
+        vi.mocked(getUser).mockResolvedValue({ ...user, tenantId: testTeamId, teamRole: 'admin' } as MockedUser);
+        vi.mocked(getTeamForUser).mockResolvedValue(team as MockedTeam);
     });
 
     afterEach(async () => {
