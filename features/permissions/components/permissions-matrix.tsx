@@ -1,8 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -13,25 +11,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { Building2, Edit3, Eye, Settings2, Users, XCircle } from 'lucide-react';
-
-interface Permission {
-  id: number;
-  code: string;
-  name: string;
-  description: string | null;
-  scope: 'platform' | 'tenant';
-}
-
-interface PermissionsData {
-  tenantPermissions: Permission[];
-  platformPermissions: Permission[];
-  tenantRoleMap: Record<string, Record<number, string>>;
-  platformRoleMap: Record<string, Record<number, string>>;
-  tenantRoles: string[];
-  platformRoles: string[];
-}
+import { Building2, Settings2, Users } from 'lucide-react';
+import { PermissionLevelControl } from './PermissionLevelControl';
+import { Permission, usePermissionsMatrix } from '@/features/permissions/hooks/usePermissionsMatrix';
 
 const ROLE_LABELS: Record<string, string> = {
   admin: 'Админ',
@@ -42,53 +24,7 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export function PermissionsMatrix() {
-  const [data, setData] = useState<PermissionsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [updating, setUpdating] = useState<string | null>(null);
-
-  useEffect(() => {
-    void fetchPermissions();
-  }, []);
-
-  async function fetchPermissions() {
-    try {
-      const response = await fetch('/api/admin/permissions');
-      if (response.ok) {
-        const result = (await response.json()) as PermissionsData;
-        setData(result);
-      }
-    } catch (error) {
-      console.error('Failed to fetch permissions:', error);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  async function setLevel(
-    type: 'tenant' | 'platform',
-    role: string,
-    permissionId: number,
-    level: 'none' | 'read' | 'manage'
-  ) {
-    const key = `${type}-${role}-${permissionId}`;
-    setUpdating(key);
-
-    try {
-      const response = await fetch('/api/admin/permissions', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ type, role, permissionId, level }),
-      });
-
-      if (response.ok) {
-        await fetchPermissions();
-      }
-    } catch (error) {
-      console.error('Failed to update level:', error);
-    } finally {
-      setUpdating(null);
-    }
-  }
+  const { data, loading, updating, setLevel } = usePermissionsMatrix();
 
   if (loading) return <Skeleton className="h-[400px] w-full rounded-2xl" />;
   if (!data) return null;
@@ -133,72 +69,15 @@ export function PermissionsMatrix() {
               return (
                 <TableCell key={role} className="border-l border-gray-50 px-2 py-4">
                   <div className="flex items-center justify-center">
-                    <div className="flex gap-1 rounded-xl bg-zinc-100 p-1">
-                      <TooltipProvider delayDuration={200}>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon-xs"
-                              onClick={() => void setLevel(type, role, perm.id, 'none')}
-                              className={`rounded-lg p-1.5 ${
-                                currentLevel === 'none'
-                                  ? 'bg-white text-zinc-900 shadow-sm hover:bg-white'
-                                  : 'text-zinc-400 hover:text-zinc-600'
-                              }`}
-                              disabled={isUpdating}
-                              aria-label={`Отключить ${perm.name} для роли ${ROLE_LABELS[role]}`}
-                            >
-                              <XCircle className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent className="text-xs">Отключить (скрыть)</TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon-xs"
-                              onClick={() => void setLevel(type, role, perm.id, 'read')}
-                              className={`rounded-lg p-1.5 ${
-                                currentLevel === 'read'
-                                  ? 'bg-blue-500 text-white shadow-sm hover:bg-blue-500'
-                                  : 'text-zinc-400 hover:text-zinc-600'
-                              }`}
-                              disabled={isUpdating}
-                              aria-label={`Включить чтение ${perm.name} для роли ${ROLE_LABELS[role]}`}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent className="text-xs">Чтение (только просмотр)</TooltipContent>
-                        </Tooltip>
-
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="icon-xs"
-                              onClick={() => void setLevel(type, role, perm.id, 'manage')}
-                              className={`rounded-lg p-1.5 ${
-                                currentLevel === 'manage'
-                                  ? 'bg-orange-500 text-white shadow-sm hover:bg-orange-500'
-                                  : 'text-zinc-400 hover:text-zinc-600'
-                              }`}
-                              disabled={isUpdating}
-                              aria-label={`Включить полный доступ ${perm.name} для роли ${ROLE_LABELS[role]}`}
-                            >
-                              <Edit3 className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent className="text-xs">Полный доступ (ред.)</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
+                    <PermissionLevelControl
+                      currentLevel={currentLevel}
+                      isUpdating={isUpdating}
+                      permissionName={perm.name}
+                      roleLabel={ROLE_LABELS[role]}
+                      onSetLevel={(level) => {
+                        void setLevel(type, role, perm.id, level);
+                      }}
+                    />
                   </div>
                 </TableCell>
               );
