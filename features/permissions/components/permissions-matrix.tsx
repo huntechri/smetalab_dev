@@ -102,14 +102,14 @@ export function PermissionsMatrix() {
     <Table className="w-full border-collapse">
       <TableHeader className="sticky top-0 z-20 border-b bg-gray-50/80 backdrop-blur">
         <TableRow className="hover:bg-transparent">
-          <TableHead className="w-1/3 px-6 py-4 text-left text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <TableHead className="text-caption w-1/3 px-6 py-4 text-left font-semibold tracking-wide">
             Функциональная область
           </TableHead>
           {roles.map((role) => (
             <TableHead key={role} className="border-l border-gray-100 px-2 py-4 text-center">
               <Badge
                 variant="outline"
-                className="rounded-md border-gray-200 px-2 py-0.5 text-[10px] font-black uppercase"
+                className="rounded-md border-gray-200 px-2 py-0.5 text-xs font-semibold"
               >
                 {ROLE_LABELS[role]}
               </Badge>
@@ -122,8 +122,8 @@ export function PermissionsMatrix() {
           <TableRow key={perm.id} className="border-b transition-colors hover:bg-zinc-50/50">
             <TableCell className="px-6 py-4 align-top">
               <div className="flex flex-col">
-                <span className="text-sm font-black tracking-tight text-zinc-900">{perm.name}</span>
-                <p className="mt-1 max-w-xs text-[11px] leading-relaxed text-zinc-500">{perm.description}</p>
+                <span className="text-body font-semibold tracking-tight text-zinc-900">{perm.name}</span>
+                <p className="text-caption mt-1 max-w-xs text-zinc-500">{perm.description}</p>
               </div>
             </TableCell>
             {roles.map((role) => {
@@ -148,11 +148,12 @@ export function PermissionsMatrix() {
                                   : 'text-zinc-400 hover:text-zinc-600'
                               }`}
                               disabled={isUpdating}
+                              aria-label={`Отключить ${perm.name} для роли ${ROLE_LABELS[role]}`}
                             >
                               <XCircle className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent className="text-[10px]">Отключить (скрыть)</TooltipContent>
+                          <TooltipContent className="text-xs">Отключить (скрыть)</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -168,11 +169,12 @@ export function PermissionsMatrix() {
                                   : 'text-zinc-400 hover:text-zinc-600'
                               }`}
                               disabled={isUpdating}
+                              aria-label={`Включить чтение ${perm.name} для роли ${ROLE_LABELS[role]}`}
                             >
                               <Eye className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent className="text-[10px]">Чтение (только просмотр)</TooltipContent>
+                          <TooltipContent className="text-xs">Чтение (только просмотр)</TooltipContent>
                         </Tooltip>
 
                         <Tooltip>
@@ -188,11 +190,12 @@ export function PermissionsMatrix() {
                                   : 'text-zinc-400 hover:text-zinc-600'
                               }`}
                               disabled={isUpdating}
+                              aria-label={`Включить полный доступ ${perm.name} для роли ${ROLE_LABELS[role]}`}
                             >
                               <Edit3 className="h-4 w-4" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent className="text-[10px]">Полный доступ (ред.)</TooltipContent>
+                          <TooltipContent className="text-xs">Полный доступ (ред.)</TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </div>
@@ -210,10 +213,10 @@ export function PermissionsMatrix() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="flex items-center gap-2 bg-transparent text-xl font-black uppercase tracking-tight text-zinc-900 italic">
+          <h2 className="text-title flex items-center gap-2 bg-transparent text-zinc-900">
             <Settings2 className="h-5 w-5" /> Контроль доступа
           </h2>
-          <p className="text-xs font-medium text-zinc-500">
+          <p className="text-caption">
             Модель прав 3-го уровня: <span className="font-bold text-zinc-400">Выкл</span> /{' '}
             <span className="font-bold text-blue-500">Чтение</span> /{' '}
             <span className="font-bold text-orange-500">Полный</span>
@@ -225,13 +228,13 @@ export function PermissionsMatrix() {
         <TabsList className="mb-6 h-12 w-full rounded-2xl bg-zinc-100 p-1 sm:w-auto">
           <TabsTrigger
             value="tenant"
-            className="rounded-xl px-8 text-xs font-black uppercase transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+            className="rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
           >
             <Users className="mr-2 h-4 w-4" /> Роли команды
           </TabsTrigger>
           <TabsTrigger
             value="platform"
-            className="rounded-xl px-8 text-xs font-black uppercase transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+            className="rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
           >
             <Building2 className="mr-2 h-4 w-4" /> Платформа
           </TabsTrigger>
