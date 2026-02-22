@@ -147,7 +147,7 @@ async function extractSynonymsFromDatabase(): Promise<Map<string, SynonymEntry>>
     }
 
     // Добавляем группы с несколькими вариантами как синонимы
-    for (const [root, words] of rootGroups.entries()) {
+    for (const [_root, words] of rootGroups.entries()) {
         if (words.length >= 2 && !synonymsMap.has(words[0])) {
             const baseWord = words[0];
             synonymsMap.set(baseWord, {
@@ -162,7 +162,7 @@ async function extractSynonymsFromDatabase(): Promise<Map<string, SynonymEntry>>
     return synonymsMap;
 }
 
-function generateCategoryKeywords(categoryStats: { categoryLv1: string | null; count: number }[]): Record<string, string[]> {
+function _generateCategoryKeywords(categoryStats: { categoryLv1: string | null; count: number }[]): Record<string, string[]> {
     const keywords: Record<string, string[]> = {};
 
     // Предопределённые ключевые слова для категорий

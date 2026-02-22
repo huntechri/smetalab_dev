@@ -1,5 +1,4 @@
 import * as dotenv from 'dotenv';
-import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import path from 'path';
 
@@ -16,7 +15,6 @@ if (!dbUrl.includes('neondb')) {
 }
 
 const client = postgres(dbUrl, { max: 1 });
-const db = drizzle(client);
 
 async function reset() {
     console.log('Resetting database...');
@@ -35,15 +33,15 @@ async function reset() {
         await client`CREATE EXTENSION IF NOT EXISTS vector`;
         await client`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
         await client`CREATE EXTENSION IF NOT EXISTS pgcrypto`;
-    } catch (e) {
-        console.warn('Failed to restore extensions:', e);
+    } catch (_error) {
+        console.warn('Failed to restore extensions:', _error);
     }
 
     console.log('✅ Database schema wiped and reset. Ready for migration.');
     process.exit(0);
 }
 
-reset().catch(e => {
-    console.error('Failed to reset:', e);
+reset().catch((error) => {
+    console.error('Failed to reset:', error);
     process.exit(1);
 });

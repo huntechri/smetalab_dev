@@ -112,7 +112,7 @@ export function Virtuoso<T>({
 }
 
 // Mock TableComponents type matching react-virtuoso's signature
-export type TableComponents<T = unknown, C = unknown> = {
+export type TableComponents<C = unknown> = {
     Table?: React.ComponentType<{ style?: React.CSSProperties; context?: C; children?: React.ReactNode }>;
     TableHead?: React.ForwardRefExoticComponent<React.RefAttributes<HTMLTableSectionElement> & { context?: C; children?: React.ReactNode }>;
     TableRow?: React.ComponentType<{ context?: C; children?: React.ReactNode; 'data-index'?: number; 'data-item-index'?: number }>;
