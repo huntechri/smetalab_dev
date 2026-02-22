@@ -40,6 +40,23 @@ export default [
         },
     },
     {
+        files: ["app/**/*.{tsx,jsx}", "features/**/*.{tsx,jsx}", "components/**/*.{tsx,jsx}"],
+        ignores: ["components/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "JSXOpeningElement[name.name='button']",
+                    message: "Use shadcn Button from '@/components/ui/button' instead of raw <button> in app code.",
+                },
+                {
+                    selector: "JSXOpeningElement[name.name='table']",
+                    message: "Use shadcn Table primitives from '@/components/ui/table' instead of raw <table> in app code.",
+                },
+            ],
+        },
+    },
+    {
         files: [
             "lib/data/db/seed.ts",
             "lib/data/db/seed-permissions.ts",
