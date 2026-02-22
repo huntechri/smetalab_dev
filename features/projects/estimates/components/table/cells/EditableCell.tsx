@@ -1,6 +1,7 @@
 'use client';
 
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
 import { useRef, useState } from 'react';
 
 export function EditableCell({
@@ -47,7 +48,10 @@ export function EditableCell({
 
     if (!editing) {
         return (
-            <button
+            <Button
+                type="button"
+                variant="ghost"
+                size="xs"
                 className={`w-full hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 ${alignmentClass}`}
                 disabled={disabled}
                 onClick={() => {
@@ -57,7 +61,7 @@ export function EditableCell({
                 }}
             >
                 {displayValue ?? String(value)}
-            </button>
+            </Button>
         );
     }
 
