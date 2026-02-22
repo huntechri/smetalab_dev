@@ -3,6 +3,12 @@ import { config } from 'dotenv';
 import path from 'path';
 import { expect, vi } from 'vitest';
 import * as matchers from '@testing-library/jest-dom/matchers';
+import {
+  getCleanupHeuristicMatched,
+  getRequiredTestDatabaseUrl,
+  getSanitizedDatabaseTarget,
+  isExplicitCleanupAllowed,
+} from '@/lib/testing/assert-test-db';
 
 // Polyfills for browser APIs not available in jsdom (required by Radix UI)
 class ResizeObserverMock {
@@ -31,11 +37,6 @@ expect.extend(matchers);
 
 const isIntegrationRun = process.env.VITEST_INTEGRATION === 'true';
 
-if (process.env.TEST_DATABASE_URL) {
-  process.env.DATABASE_URL = process.env.TEST_DATABASE_URL;
-}
-
-
 // Keep unit/UI/API/performance runs deterministic without requiring real DB/email env
 if (!isIntegrationRun && !process.env.DATABASE_URL) {
   process.env.DATABASE_URL = 'postgres://postgres:postgres@127.0.0.1:5432/smetalab_test';
@@ -45,32 +46,26 @@ if (!process.env.RESEND_API_KEY) {
   process.env.RESEND_API_KEY = 'test-resend-key';
 }
 if (isIntegrationRun) {
-  // Integration tests must never run against production-like DB
-  const integrationDbUrl = process.env.DATABASE_URL;
-  if (!integrationDbUrl) {
-    throw new Error('❌ SAFETY ERROR: DATABASE_URL is required for integration tests.');
+  // Safety-critical: integration tests are pinned to TEST_DATABASE_URL only.
+  const integrationDbUrl = getRequiredTestDatabaseUrl();
+  process.env.DATABASE_URL = integrationDbUrl;
+
+  const target = getSanitizedDatabaseTarget(integrationDbUrl);
+  const heuristicMatched = getCleanupHeuristicMatched(integrationDbUrl);
+  const cleanupAllowed = isExplicitCleanupAllowed();
+  console.info(
+    `Integration DB target: host=${target.host} db=${target.database} cleanupAllowed=${cleanupAllowed} heuristicMatched=${heuristicMatched}`,
+  );
+
+  if (!heuristicMatched && cleanupAllowed) {
+    console.warn(
+      `Integration DB heuristic is inconclusive for host=${target.host} db=${target.database}; allowing cleanup because ALLOW_TEST_DB_CLEANUP=true.`,
+    );
   }
 
-  let host = '';
-  let database = '';
-
-  try {
-    const parsed = new URL(integrationDbUrl);
-    host = parsed.hostname.toLowerCase();
-    database = parsed.pathname.replace(/^\//, '').toLowerCase();
-  } catch {
-    throw new Error('❌ SAFETY ERROR: DATABASE_URL is malformed for integration tests.');
-  }
-
-  const isLocalHost = host === 'localhost' || host === '127.0.0.1';
-  const hasTestDatabaseName = database.includes('test') || database.endsWith('_ci');
-  const hasExplicitTestMarker = integrationDbUrl.toLowerCase().includes('test');
-  const hasDedicatedTestUrl = Boolean(process.env.TEST_DATABASE_URL);
-
-  if (!(hasDedicatedTestUrl || hasTestDatabaseName || (isLocalHost && hasExplicitTestMarker))) {
+  if (!cleanupAllowed) {
     throw new Error(
-      '❌ SAFETY ERROR: Integration tests can run only with TEST_DATABASE_URL or explicit test DB naming.\n' +
-        `Received host="${host}", db="${database}".`,
+      'ALLOW_TEST_DB_CLEANUP="true" is required for integration tests that run destructive cleanup (TRUNCATE/RESET).',
     );
   }
 }
