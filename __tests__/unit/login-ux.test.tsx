@@ -109,4 +109,11 @@ describe('Login Component UX', () => {
     // Checking standard role='alert' implies assertive/polite behavior usually
     expect(errorDiv).toHaveAttribute('role', 'alert');
   });
+
+  it('shows forgot password link in sign-in mode', () => {
+    useActionStateMock.mockReturnValue([{}, null, false]);
+    render(<Login mode='signin' />);
+    const forgotLinks = screen.getAllByRole('link', { name: 'Забыли пароль?' });
+    expect(forgotLinks[0]).toHaveAttribute('href', '/forgot-password');
+  });
 });

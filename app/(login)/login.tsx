@@ -23,6 +23,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const priceId = searchParams.get('priceId');
   const inviteId = searchParams.get('inviteId');
   const emailParam = searchParams.get('email');
+  const verifiedState = searchParams.get('verified');
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     mode === 'signin' ? signIn : signUp,
     { error: '' }
@@ -113,6 +114,11 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             </div>
           </CardHeader>
           <CardContent>
+            {verifiedState === 'required' && (
+              <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+                Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
+              </div>
+            )}
             <form className="space-y-6" action={formAction}>
             <input type="hidden" name="redirect" value={redirect || ''} />
             <input type="hidden" name="priceId" value={priceId || ''} />
@@ -211,6 +217,14 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 'Создать аккаунт'
               )}
             </Button>
+
+            {isSignIn && (
+              <div className="text-center text-sm">
+                <Link href="/forgot-password" className="text-[#FF6A3D] hover:text-[#FF865F]">
+                  Забыли пароль?
+                </Link>
+              </div>
+            )}
           </form>
           </CardContent>
         </Card>

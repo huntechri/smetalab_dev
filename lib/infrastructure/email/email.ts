@@ -1,5 +1,5 @@
 import { Resend } from 'resend';
-import { getInvitationBaseUrl } from '@/lib/utils/url';
+import { getBaseUrl, getInvitationBaseUrl } from '@/lib/utils/url';
 
 // Email from address - use your verified domain or Resend's test address
 const FROM_EMAIL = process.env.EMAIL_FROM || 'Smetalab <onboarding@resend.dev>';
@@ -10,6 +10,16 @@ interface SendInvitationEmailParams {
   role: string;
   inviteId: number;
   inviterEmail?: string;
+}
+
+interface SendEmailVerificationEmailParams {
+  to: string;
+  token: string;
+}
+
+interface SendPasswordResetEmailParams {
+  to: string;
+  token: string;
 }
 
 const ROLE_LABELS: Record<string, string> = {
@@ -25,25 +35,13 @@ export async function sendInvitationEmail({
   inviteId,
   inviterEmail,
 }: SendInvitationEmailParams): Promise<{ success: boolean; error?: string }> {
-  const apiKey = process.env.RESEND_API_KEY;
-
-  if (!apiKey) {
-    return {
-      success: false,
-      error: 'RESEND_API_KEY is not configured',
-    };
-  }
-
-  const resend = new Resend(apiKey);
   const inviteUrl = `${getInvitationBaseUrl()}/invitations?inviteId=${inviteId}`;
   const roleLabel = ROLE_LABELS[role] || role;
 
-  try {
-    const { error } = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [to],
-      subject: `Приглашение в команду "${teamName}" — Smetalab`,
-      html: `
+  return sendEmail({
+    to,
+    subject: `Приглашение в команду "${teamName}" — Smetalab`,
+    html: `
 <!DOCTYPE html>
 <html>
 <head>
@@ -58,26 +56,23 @@ export async function sendInvitationEmail({
         <table role="presentation" width="100%" style="max-width: 480px; background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
           <tr>
             <td style="padding: 40px;">
-              <!-- Logo -->
               <div style="text-align: center; margin-bottom: 32px;">
                 <h1 style="margin: 0; font-size: 24px; font-weight: 700; color: #18181b;">
                   📐 Smetalab
                 </h1>
               </div>
 
-              <!-- Content -->
               <h2 style="margin: 0 0 16px; font-size: 20px; font-weight: 600; color: #18181b; text-align: center;">
                 Вас пригласили в команду
               </h2>
-              
+
               <p style="margin: 0 0 24px; font-size: 16px; line-height: 1.6; color: #52525b; text-align: center;">
-                ${inviterEmail ? `<strong>${inviterEmail}</strong> приглашает вас` : 'Вас приглашают'} 
+                ${inviterEmail ? `<strong>${inviterEmail}</strong> приглашает вас` : 'Вас приглашают'}
                 присоединиться к команде <strong>"${teamName}"</strong> в качестве <strong>${roleLabel}</strong>.
               </p>
 
-              <!-- CTA Button -->
               <div style="text-align: center; margin-bottom: 24px;">
-                <a href="${inviteUrl}" 
+                <a href="${inviteUrl}"
                    style="display: inline-block; padding: 14px 32px; background-color: #18181b; color: white; text-decoration: none; font-weight: 600; font-size: 16px; border-radius: 8px;">
                   Принять приглашение
                 </a>
@@ -88,10 +83,8 @@ export async function sendInvitationEmail({
                 <a href="${inviteUrl}" style="color: #2563eb; word-break: break-all;">${inviteUrl}</a>
               </p>
 
-              <!-- Divider -->
               <hr style="border: none; border-top: 1px solid #e4e4e7; margin: 24px 0;">
 
-              <!-- Footer -->
               <p style="margin: 0; font-size: 12px; color: #a1a1aa; text-align: center;">
                 Если вы не ожидали это письмо, просто проигнорируйте его.
               </p>
@@ -108,7 +101,7 @@ export async function sendInvitationEmail({
 </body>
 </html>
       `,
-      text: `
+    text: `
 Приглашение в команду "${teamName}"
 
 ${inviterEmail ? `${inviterEmail} приглашает вас` : 'Вас приглашают'} присоединиться к команде "${teamName}" в качестве ${roleLabel}.
@@ -120,6 +113,48 @@ ${inviteUrl}
 
 © ${new Date().getFullYear()} Smetalab
       `.trim(),
+  });
+}
+
+export async function sendEmailVerificationEmail({ to, token }: SendEmailVerificationEmailParams) {
+  const verificationUrl = `${getBaseUrl()}/verify-email?token=${token}`;
+  return sendEmail({
+    to,
+    subject: 'Подтверждение email — Smetalab',
+    html: `<p>Подтвердите email, чтобы завершить регистрацию:</p><p><a href="${verificationUrl}">Подтвердить email</a></p><p>${verificationUrl}</p>`,
+    text: `Подтвердите email, чтобы завершить регистрацию: ${verificationUrl}`,
+  });
+}
+
+export async function sendPasswordResetEmail({ to, token }: SendPasswordResetEmailParams) {
+  const resetUrl = `${getBaseUrl()}/reset-password?token=${token}`;
+  return sendEmail({
+    to,
+    subject: 'Восстановление пароля — Smetalab',
+    html: `<p>Вы запросили восстановление пароля.</p><p><a href="${resetUrl}">Сбросить пароль</a></p><p>Ссылка действует 1 час.</p><p>${resetUrl}</p>`,
+    text: `Вы запросили восстановление пароля. Ссылка (действует 1 час): ${resetUrl}`,
+  });
+}
+
+async function sendEmail({ to, subject, html, text }: { to: string; subject: string; html: string; text: string }) {
+  const apiKey = process.env.RESEND_API_KEY;
+
+  if (!apiKey) {
+    return {
+      success: false,
+      error: 'RESEND_API_KEY is not configured',
+    };
+  }
+
+  const resend = new Resend(apiKey);
+
+  try {
+    const { error } = await resend.emails.send({
+      from: FROM_EMAIL,
+      to: [to],
+      subject,
+      html,
+      text,
     });
 
     if (error) {
