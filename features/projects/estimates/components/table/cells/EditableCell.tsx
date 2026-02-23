@@ -55,7 +55,7 @@ export function EditableCell({
                 type="button"
                 variant="ghost"
                 size="xs"
-                className={cn('w-full min-w-0 hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 font-normal', alignmentClass, className)}
+                className={cn('w-full min-w-0 hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 text-inherit font-inherit', alignmentClass, className)}
                 disabled={disabled}
                 onClick={() => {
                     wasClearedOnFocus.current = false;
