@@ -36,7 +36,7 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
 });
 
 function getStatusDisplay(status: EstimateExecutionStatus) {
-    const base = "cursor-pointer border-0 w-[110px] justify-center text-[10px] uppercase font-bold tracking-tight h-6 px-2";
+    const base = "cursor-pointer border-0 h-8 w-[132px] justify-center px-2 text-xs font-semibold uppercase tracking-tight md:text-sm";
     if (status === 'done') {
         return <Badge className={cn("bg-emerald-600 hover:bg-emerald-600 text-white", base)}>Выполнено</Badge>;
     }
@@ -62,23 +62,23 @@ function ExecutionStatusCell({
                     {getStatusDisplay(currentStatus)}
                 </div>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="p-1 min-w-[130px]">
-                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="focus:bg-orange-50 focus:text-orange-700 cursor-pointer rounded-md mb-0.5">
+            <DropdownMenuContent align="end" className="min-w-[150px] p-1">
+                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-orange-50 focus:text-orange-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-orange-500" />
-                        <span className="text-xs font-medium">Подготовка</span>
+                        <span className="text-xs font-medium md:text-sm">Подготовка</span>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="focus:bg-blue-50 focus:text-blue-700 cursor-pointer rounded-md mb-0.5">
+                <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-blue-50 focus:text-blue-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        <span className="text-xs font-medium">В процессе</span>
+                        <span className="text-xs font-medium md:text-sm">В процессе</span>
                     </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => onStatusChange('done')} className="focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer rounded-md">
+                <DropdownMenuItem onClick={() => onStatusChange('done')} className="h-8 cursor-pointer rounded-md focus:bg-emerald-50 focus:text-emerald-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                        <span className="text-xs font-medium">Выполнено</span>
+                        <span className="text-xs font-medium md:text-sm">Выполнено</span>
                     </div>
                 </DropdownMenuItem>
             </DropdownMenuContent>
@@ -119,7 +119,7 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="h-8 text-right tabular-nums text-xs md:text-sm"
+            className="h-8 text-right tabular-nums text-xs font-medium md:text-sm"
         />
     );
 }
@@ -257,7 +257,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
             accessorKey: 'code',
             header: 'Код',
             size: 60,
-            cell: ({ row }) => <span className="text-xs text-muted-foreground">{row.original.code}</span>,
+            cell: ({ row }) => <span className="text-xs font-medium text-muted-foreground md:text-sm">{row.original.code}</span>,
         },
         {
             accessorKey: 'name',
@@ -267,7 +267,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 <div className="space-y-1">
                     <div className="font-medium text-xs md:text-sm leading-tight">{row.original.name}</div>
                     {row.original.source === 'extra' ? (
-                        <Badge variant="secondary" className="text-[9px] uppercase tracking-wider h-4 px-1">
+                        <Badge variant="secondary" className="h-4 px-1 text-[10px] uppercase tracking-wider md:text-xs">
                             Доп. работа
                         </Badge>
                     ) : null}
@@ -277,24 +277,25 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'unit',
             header: 'Ед.',
+            cell: ({ row }) => <div className="text-xs font-medium md:text-sm">{row.original.unit}</div>,
             size: 80,
         },
         {
             accessorKey: 'plannedQty',
             header: () => <div className="text-right whitespace-nowrap">Кол-во</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums">{numberFormatter.format(row.original.plannedQty)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{numberFormatter.format(row.original.plannedQty)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedPrice',
             header: () => <div className="text-right whitespace-nowrap">Цена</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.plannedPrice)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedSum',
             header: () => <div className="text-right whitespace-nowrap">План сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.plannedSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.plannedSum)}</div>,
             size: 130,
         },
         {
@@ -312,7 +313,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'actualSum',
             header: () => <div className="text-right whitespace-nowrap">Факт сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums">{moneyFormatter.format(row.original.actualSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.actualSum)}</div>,
             size: 150,
         },
         {
