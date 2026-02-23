@@ -29,6 +29,12 @@ import {
 import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
 import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
+import {
+  consumeToken,
+  markEmailAsVerified,
+  sendEmailVerification,
+  sendPasswordReset,
+} from '@/lib/services/auth-email.service';
 import { getInvitationBaseUrl } from '@/lib/utils/url';
 
 async function logActivity(
@@ -83,6 +89,14 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
   }
 
   const { user: foundUser } = userResult[0];
+
+  if (!foundUser.emailVerifiedAt) {
+    await sendEmailVerification(foundUser);
+    return {
+      error: 'Подтвердите email. Мы отправили вам ссылку для подтверждения.',
+      email,
+    };
+  }
 
   const isPasswordValid = await comparePasswords(
     password,
@@ -203,92 +217,113 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
 
   const passwordHash = await hashPassword(password);
 
-  const newUser: NewUser = {
-    email,
-    passwordHash,
-  };
-
-  const [createdUser] = await db.insert(users).values(newUser).returning();
-
-  if (!createdUser) {
-    return {
-      error: 'Failed to create user. Please try again.',
+  const transactionResult = await db.transaction(async (tx) => {
+    const newUser: NewUser = {
       email,
-      password
+      passwordHash,
     };
-  }
 
-  let teamId: number;
-  let userRole: TenantRole;
-  let createdTeam: typeof teams.$inferSelect | null = null;
+    const [createdUser] = await tx.insert(users).values(newUser).returning();
 
-  if (inviteId) {
-    // Check if there's a valid invitation
-    const [invitation] = await db
-      .select()
-      .from(invitations)
-      .where(
-        and(
-          eq(invitations.id, parseInt(inviteId)),
-          eq(invitations.email, email),
-          eq(invitations.status, 'pending')
+    if (!createdUser) {
+      return { error: 'Failed to create user. Please try again.' };
+    }
+
+    let teamId: number;
+    let userRole: TenantRole;
+    let createdTeam: typeof teams.$inferSelect | null = null;
+
+    if (inviteId) {
+      const [invitation] = await tx
+        .select()
+        .from(invitations)
+        .where(
+          and(
+            eq(invitations.id, parseInt(inviteId)),
+            eq(invitations.email, email),
+            eq(invitations.status, 'pending')
+          )
         )
-      )
-      .limit(1);
+        .limit(1);
 
-    if (invitation) {
+      if (!invitation) {
+        return { error: 'Invalid or expired invitation.' };
+      }
+
       teamId = invitation.teamId;
       userRole = invitation.role;
 
-      await db
+      await tx
         .update(invitations)
         .set({ status: 'accepted' })
         .where(eq(invitations.id, invitation.id));
 
-      await logActivity(teamId, createdUser.id, ActivityType.ACCEPT_INVITATION);
+      await tx.insert(activityLogs).values({
+        teamId,
+        userId: createdUser.id,
+        action: ActivityType.ACCEPT_INVITATION,
+        ipAddress: ''
+      });
 
-      [createdTeam] = await db
+      [createdTeam] = await tx
         .select()
         .from(teams)
         .where(eq(teams.id, teamId))
         .limit(1);
     } else {
-      return { error: 'Invalid or expired invitation.', email, password };
+      const teamName = organizationName || `${email}'s Team`;
+      const newTeam: NewTeam = { name: teamName };
+      [createdTeam] = await tx.insert(teams).values(newTeam).returning();
+
+      if (!createdTeam) {
+        return { error: 'Failed to create team. Please try again.' };
+      }
+
+      teamId = createdTeam.id;
+      userRole = 'admin';
+
+      await tx.insert(activityLogs).values({
+        teamId,
+        userId: createdUser.id,
+        action: ActivityType.CREATE_TEAM,
+        ipAddress: ''
+      });
     }
-  } else {
-    // Create a new team if there's no invitation
-    const teamName = organizationName || `${email}'s Team`;
-    const newTeam: NewTeam = {
-      name: teamName
+
+    const newTeamMember: NewTeamMember = {
+      userId: createdUser.id,
+      teamId,
+      role: userRole
     };
 
-    [createdTeam] = await db.insert(teams).values(newTeam).returning();
+    await tx.insert(teamMembers).values(newTeamMember);
+    await tx.insert(activityLogs).values({
+      teamId,
+      userId: createdUser.id,
+      action: ActivityType.SIGN_UP,
+      ipAddress: ''
+    });
 
-    if (!createdTeam) {
-      return {
-        error: 'Failed to create team. Please try again.',
-        email,
-        password
-      };
-    }
+    return {
+      createdUser,
+      createdTeam,
+    };
+  });
 
-    teamId = createdTeam.id;
-    userRole = 'admin';
-
-    await logActivity(teamId, createdUser.id, ActivityType.CREATE_TEAM);
+  if ('error' in transactionResult) {
+    return { error: transactionResult.error, email, password };
   }
 
-  const newTeamMember: NewTeamMember = {
-    userId: createdUser.id,
-    teamId: teamId,
-    role: userRole
-  };
+  const { createdUser, createdTeam } = transactionResult;
 
-  await Promise.all([
-    db.insert(teamMembers).values(newTeamMember),
-    logActivity(teamId, createdUser.id, ActivityType.SIGN_UP),
-    setSession(createdUser)
-  ]);
+  const verificationResult = await sendEmailVerification(createdUser);
+  if (!verificationResult.success) {
+    return {
+      error: verificationResult.error || 'Не удалось отправить письмо подтверждения.',
+      email,
+      password,
+    };
+  }
 
   const redirectTo = formData.get('redirect') as string | null;
   if (redirectTo === 'checkout') {
@@ -296,7 +331,57 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
     return createCheckoutSession({ team: createdTeam, priceId });
   }
 
-  redirect('/app');
+  redirect('/sign-in?verified=required');
+});
+
+const requestPasswordResetSchema = z.object({
+  email: z.string().email('Введите корректный email'),
+});
+
+export const requestPasswordReset = validatedAction(requestPasswordResetSchema, async ({ email }) => {
+  const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+
+  if (user) {
+    await sendPasswordReset(user);
+  }
+
+  return {
+    success: 'Если аккаунт существует, мы отправили ссылку на восстановление пароля.',
+  };
+});
+
+const resetPasswordSchema = z.object({
+  token: z.string().min(1, 'Токен обязателен'),
+  password: z.string().min(8, 'Пароль должен быть не менее 8 символов').max(100),
+  confirmPassword: z.string().min(8).max(100),
+});
+
+export const resetPasswordWithToken = validatedAction(resetPasswordSchema, async ({ token, password, confirmPassword }) => {
+  if (password !== confirmPassword) {
+    return { error: 'Пароли не совпадают.' };
+  }
+
+  const authToken = await consumeToken(token, 'password_reset');
+  if (!authToken) {
+    return { error: 'Ссылка недействительна или истекла.' };
+  }
+
+  const passwordHash = await hashPassword(password);
+  await db.update(users).set({ passwordHash }).where(eq(users.id, authToken.userId));
+
+  return { success: 'Пароль обновлен. Теперь можно войти в систему.' };
+});
+
+const verifyEmailSchema = z.object({ token: z.string().min(1, 'Token is required') });
+
+export const verifyEmail = validatedAction(verifyEmailSchema, async ({ token }) => {
+  const authToken = await consumeToken(token, 'email_verification');
+  if (!authToken) {
+    return { error: 'Ссылка подтверждения недействительна или истекла.' };
+  }
+
+  await markEmailAsVerified(authToken.userId);
+  return { success: 'Email подтвержден. Войдите в систему.' };
 });
 
 export async function signOut() {
