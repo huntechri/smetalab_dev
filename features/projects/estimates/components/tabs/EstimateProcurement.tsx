@@ -19,64 +19,68 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
     maximumFractionDigits: 2,
 });
 
+const tableCellTextClassName = 'text-xs md:text-sm';
+const tableNumericCellTextClassName = 'text-right tabular-nums text-xs md:text-sm';
+
 const renderDeltaBadge = (value: number) => {
     if (value === 0) {
-        return <Badge variant="secondary">0</Badge>;
+        return <Badge variant="secondary" className="h-6 px-2 text-xs md:text-sm">0</Badge>;
     }
 
     if (value > 0) {
-        return <Badge className="bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
+        return <Badge className="h-6 px-2 text-xs md:text-sm bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge variant="destructive">{numberFormatter.format(value)}</Badge>;
+    return <Badge variant="destructive" className="h-6 px-2 text-xs md:text-sm">{numberFormatter.format(value)}</Badge>;
 };
 
 const columns: ColumnDef<EstimateProcurementRow>[] = [
     {
         accessorKey: 'materialName',
         header: 'Материал',
-        cell: ({ row }) => <div className="font-medium">{row.original.materialName}</div>,
+        cell: ({ row }) => <div className="font-medium text-xs md:text-sm">{row.original.materialName}</div>,
         size: 450,
     },
     {
         accessorKey: 'unit',
         header: 'Ед.',
+        cell: ({ row }) => <div className={tableCellTextClassName}>{row.original.unit}</div>,
         size: 60,
     },
     {
         accessorKey: 'plannedQty',
         header: () => <div className="text-right">Кол-во</div>,
-        cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.plannedQty)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{numberFormatter.format(row.original.plannedQty)}</div>,
         size: 100,
     },
     {
         accessorKey: 'plannedPrice',
         header: () => <div className="text-right">Цена</div>,
-        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.plannedPrice)}</div>,
         size: 110,
     },
     {
         accessorKey: 'plannedAmount',
         header: () => <div className="text-right">Сумма</div>,
-        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.plannedAmount)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.plannedAmount)}</div>,
         size: 120,
     },
     {
         accessorKey: 'actualQty',
         header: () => <div className="text-right">ф. Кол-во</div>,
-        cell: ({ row }) => <div className="text-right">{numberFormatter.format(row.original.actualQty)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{numberFormatter.format(row.original.actualQty)}</div>,
         size: 100,
     },
     {
         accessorKey: 'actualAvgPrice',
         header: () => <div className="text-right">Ср. цена</div>,
-        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
         size: 110,
     },
     {
         accessorKey: 'actualAmount',
         header: () => <div className="text-right">ф. Сумма</div>,
-        cell: ({ row }) => <div className="text-right">{moneyFormatter.format(row.original.actualAmount)}</div>,
+        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.actualAmount)}</div>,
         size: 120,
     },
     {
