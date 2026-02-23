@@ -41,6 +41,7 @@ const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const tableCellTextClassName = 'text-xs md:text-sm';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
+const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -242,20 +243,23 @@ export function getGlobalPurchasesColumns({
         }
 
         return (
-          <EditableCell
-            type="date"
-            value={dateString}
-            displayValue={displayValue}
-            disabled={isPending}
-            ariaLabel="Дата закупки"
-            onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { purchaseDate: value });
-            } catch (_error) {
-              return;
-            }
-          }}
-          />
+          <div className="min-w-0">
+            <EditableCell
+              type="date"
+              value={dateString}
+              displayValue={displayValue}
+              disabled={isPending}
+              ariaLabel="Дата закупки"
+              className={editableCellTextClassName}
+              onCommit={async (value) => {
+                try {
+                  await onPatchAction(row.original.id, { purchaseDate: value });
+                } catch (_error) {
+                  return;
+                }
+              }}
+            />
+          </div>
         );
       },
     },
@@ -265,18 +269,21 @@ export function getGlobalPurchasesColumns({
       size: 460,
       minSize: 380,
       cell: ({ row }) => (
-        <EditableCell
-          value={row.original.materialName}
-          disabled={pendingIds.has(row.original.id)}
-          ariaLabel="Наименование материала"
-          onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { materialName: value });
-            } catch (_error) {
-              return;
-            }
-          }}
-        />
+        <div className="min-w-0">
+          <EditableCell
+            value={row.original.materialName}
+            disabled={pendingIds.has(row.original.id)}
+            ariaLabel="Наименование материала"
+            className={editableCellTextClassName}
+            onCommit={async (value) => {
+              try {
+                await onPatchAction(row.original.id, { materialName: value });
+              } catch (_error) {
+                return;
+              }
+            }}
+          />
+        </div>
       ),
     },
     {
@@ -285,18 +292,21 @@ export function getGlobalPurchasesColumns({
       size: 100,
       minSize: 90,
       cell: ({ row }) => (
-        <EditableCell
-          value={row.original.unit}
-          disabled={pendingIds.has(row.original.id)}
-          ariaLabel="Единица измерения"
-          onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { unit: value });
-            } catch (_error) {
-              return;
-            }
-          }}
-        />
+        <div className="min-w-0">
+          <EditableCell
+            value={row.original.unit}
+            disabled={pendingIds.has(row.original.id)}
+            ariaLabel="Единица измерения"
+            className={editableCellTextClassName}
+            onCommit={async (value) => {
+              try {
+                await onPatchAction(row.original.id, { unit: value });
+              } catch (_error) {
+                return;
+              }
+            }}
+          />
+        </div>
       ),
     },
     {
@@ -314,6 +324,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.qty}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Количество"
+            className={tableCellTextClassName}
             onCommit={async (value) => {
             try {
               await onPatchAction(row.original.id, { qty: Number(value) });
@@ -340,6 +351,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.price}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Цена"
+            className={tableCellTextClassName}
             onCommit={async (value) => {
             try {
               await onPatchAction(row.original.id, { price: Number(value) });
