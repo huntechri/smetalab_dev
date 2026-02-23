@@ -31,6 +31,7 @@ import { hasPermission } from '@/lib/infrastructure/auth/rbac';
 import { rateLimit } from '@/lib/infrastructure/auth/rate-limit';
 import {
   consumeToken,
+  findUserByEmailForAuth,
   markEmailAsVerified,
   sendEmailVerification,
   sendPasswordReset,
@@ -72,15 +73,9 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
     };
   }
 
-  const userResult = await db
-    .select({
-      user: users,
-    })
-    .from(users)
-    .where(eq(users.email, email))
-    .limit(1);
+  const foundUser = await findUserByEmailForAuth(email);
 
-  if (userResult.length === 0) {
+  if (!foundUser) {
     return {
       error: 'Invalid email or password. Please try again.',
       email,
@@ -88,9 +83,7 @@ export const signIn = validatedAction(signInSchema, async (data, formData) => {
     };
   }
 
-  const { user: foundUser } = userResult[0];
-
-  if (!foundUser.emailVerifiedAt) {
+  if (foundUser.isEmailVerificationSupported && !foundUser.emailVerifiedAt) {
     await sendEmailVerification(foundUser);
     return {
       error: 'Подтвердите email. Мы отправили вам ссылку для подтверждения.',
@@ -200,7 +193,7 @@ export const signUp = validatedAction(signUpSchema, async (data, formData) => {
   }
 
   const existingUser = await db
-    .select()
+    .select({ id: users.id })
     .from(users)
     .where(eq(users.email, email))
     .limit(1);
@@ -339,7 +332,11 @@ const requestPasswordResetSchema = z.object({
 });
 
 export const requestPasswordReset = validatedAction(requestPasswordResetSchema, async ({ email }) => {
-  const [user] = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  const [user] = await db
+    .select({ id: users.id, email: users.email })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
 
   if (user) {
     await sendPasswordReset(user);

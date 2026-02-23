@@ -1,4 +1,4 @@
-import { and, eq, gt, isNull } from 'drizzle-orm';
+import { and, eq, gt, isNull, sql } from 'drizzle-orm';
 import { randomBytes, createHash } from 'node:crypto';
 import { db } from '@/lib/data/db/drizzle';
 import { authTokens, type User, users } from '@/lib/data/db/schema';
@@ -12,6 +12,15 @@ const EMAIL_VERIFICATION_TTL_MS = 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_TTL_MS = 60 * 60 * 1000;
 
 type AuthTokenType = 'email_verification' | 'password_reset';
+
+let hasEmailVerifiedAtColumnCache: boolean | null = null;
+
+type AuthUserRecord = Pick<
+  User,
+  'id' | 'name' | 'email' | 'passwordHash' | 'platformRole' | 'emailVerifiedAt' | 'createdAt' | 'updatedAt' | 'deletedAt'
+> & {
+  isEmailVerificationSupported: boolean;
+};
 
 function generateToken() {
   return randomBytes(TOKEN_LENGTH_BYTES).toString('hex');
@@ -56,6 +65,82 @@ export async function sendPasswordReset(user: Pick<User, 'id' | 'email'>) {
   });
 }
 
+async function hasEmailVerifiedAtColumn() {
+  if (hasEmailVerifiedAtColumnCache !== null) {
+    return hasEmailVerifiedAtColumnCache;
+  }
+
+  const result = await db.execute(sql`
+    select exists (
+      select 1
+      from information_schema.columns
+      where table_schema = 'public'
+        and table_name = 'users'
+        and column_name = 'email_verified_at'
+    ) as exists
+  `);
+
+  const rows = result as unknown as { exists: boolean }[];
+  hasEmailVerifiedAtColumnCache = Boolean(rows[0]?.exists);
+  return hasEmailVerifiedAtColumnCache;
+}
+
+export async function findUserByEmailForAuth(email: string): Promise<AuthUserRecord | null> {
+  const emailVerificationSupported = await hasEmailVerifiedAtColumn();
+
+  if (emailVerificationSupported) {
+    const [user] = await db
+      .select({
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        passwordHash: users.passwordHash,
+        platformRole: users.platformRole,
+        emailVerifiedAt: users.emailVerifiedAt,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+        deletedAt: users.deletedAt,
+      })
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      ...user,
+      isEmailVerificationSupported: true,
+    };
+  }
+
+  const [legacyUser] = await db
+    .select({
+      id: users.id,
+      name: users.name,
+      email: users.email,
+      passwordHash: users.passwordHash,
+      platformRole: users.platformRole,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+      deletedAt: users.deletedAt,
+    })
+    .from(users)
+    .where(eq(users.email, email))
+    .limit(1);
+
+  if (!legacyUser) {
+    return null;
+  }
+
+  return {
+    ...legacyUser,
+    emailVerifiedAt: null,
+    isEmailVerificationSupported: false,
+  };
+}
+
 export async function consumeToken(token: string, type: AuthTokenType) {
   const tokenHash = hashToken(token);
 
@@ -85,6 +170,10 @@ export async function consumeToken(token: string, type: AuthTokenType) {
 }
 
 export async function markEmailAsVerified(userId: number) {
+  if (!(await hasEmailVerifiedAtColumn())) {
+    return;
+  }
+
   await db
     .update(users)
     .set({ emailVerifiedAt: new Date() })
