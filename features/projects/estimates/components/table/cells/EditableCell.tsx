@@ -3,6 +3,7 @@
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRef, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 export function EditableCell({
     value,
@@ -14,10 +15,12 @@ export function EditableCell({
     cancelOnEmpty = false,
     displayValue,
     ariaLabel,
+    className,
 }: {
     value: string | number;
     displayValue?: string;
     ariaLabel?: string;
+    className?: string;
     onCommit: (value: string) => Promise<void>;
     type?: 'text' | 'number' | 'date';
     disabled?: boolean;
@@ -52,7 +55,7 @@ export function EditableCell({
                 type="button"
                 variant="ghost"
                 size="xs"
-                className={`w-full hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 ${alignmentClass}`}
+                className={cn('w-full min-w-0 hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 font-normal', alignmentClass, className)}
                 disabled={disabled}
                 onClick={() => {
                     wasClearedOnFocus.current = false;
