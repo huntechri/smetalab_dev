@@ -15,10 +15,11 @@ type AuthTokenType = 'email_verification' | 'password_reset';
 
 let hasEmailVerifiedAtColumnCache: boolean | null = null;
 
-type AuthUserRecord = Pick<
+export type AuthUserRecord = Pick<
   User,
-  'id' | 'name' | 'email' | 'passwordHash' | 'platformRole' | 'emailVerifiedAt' | 'createdAt' | 'updatedAt' | 'deletedAt'
+  'id' | 'name' | 'email' | 'passwordHash' | 'platformRole' | 'createdAt' | 'updatedAt' | 'deletedAt'
 > & {
+  emailVerifiedAt: Date | null;
   isEmailVerificationSupported: boolean;
 };
 
@@ -88,34 +89,7 @@ async function hasEmailVerifiedAtColumn() {
 export async function findUserByEmailForAuth(email: string): Promise<AuthUserRecord | null> {
   const emailVerificationSupported = await hasEmailVerifiedAtColumn();
 
-  if (emailVerificationSupported) {
-    const [user] = await db
-      .select({
-        id: users.id,
-        name: users.name,
-        email: users.email,
-        passwordHash: users.passwordHash,
-        platformRole: users.platformRole,
-        emailVerifiedAt: users.emailVerifiedAt,
-        createdAt: users.createdAt,
-        updatedAt: users.updatedAt,
-        deletedAt: users.deletedAt,
-      })
-      .from(users)
-      .where(eq(users.email, email))
-      .limit(1);
-
-    if (!user) {
-      return null;
-    }
-
-    return {
-      ...user,
-      isEmailVerificationSupported: true,
-    };
-  }
-
-  const [legacyUser] = await db
+  const [user] = await db
     .select({
       id: users.id,
       name: users.name,
@@ -130,14 +104,30 @@ export async function findUserByEmailForAuth(email: string): Promise<AuthUserRec
     .where(eq(users.email, email))
     .limit(1);
 
-  if (!legacyUser) {
+  if (!user) {
     return null;
   }
 
+  if (!emailVerificationSupported) {
+    return {
+      ...user,
+      emailVerifiedAt: null,
+      isEmailVerificationSupported: false,
+    };
+  }
+
+  const result = await db.execute(sql`
+    select email_verified_at
+    from users
+    where id = ${user.id}
+    limit 1
+  `);
+  const rows = result as unknown as { email_verified_at: Date | null }[];
+
   return {
-    ...legacyUser,
-    emailVerifiedAt: null,
-    isEmailVerificationSupported: false,
+    ...user,
+    emailVerifiedAt: rows[0]?.email_verified_at ?? null,
+    isEmailVerificationSupported: true,
   };
 }
 
@@ -174,8 +164,9 @@ export async function markEmailAsVerified(userId: number) {
     return;
   }
 
-  await db
-    .update(users)
-    .set({ emailVerifiedAt: new Date() })
-    .where(eq(users.id, userId));
+  await db.execute(sql`
+    update users
+    set email_verified_at = now()
+    where id = ${userId}
+  `);
 }

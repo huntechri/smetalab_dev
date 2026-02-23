@@ -17,7 +17,7 @@ describe('auth-email.service legacy schema compatibility', () => {
   });
 
   it('falls back to legacy user query when email_verified_at column is absent', async () => {
-    mockDb.execute.mockResolvedValueOnce({ rows: [{ exists: false }] });
+    mockDb.execute.mockResolvedValueOnce([{ exists: false }]);
 
     const limit = vi.fn().mockResolvedValueOnce([
       {
@@ -55,12 +55,41 @@ describe('auth-email.service legacy schema compatibility', () => {
   });
 
   it('skips update when trying to verify email in legacy schema', async () => {
-    mockDb.execute.mockResolvedValueOnce({ rows: [{ exists: false }] });
+    mockDb.execute.mockResolvedValueOnce([{ exists: false }]);
 
     const { markEmailAsVerified } = await import('@/lib/services/auth-email.service');
 
     await markEmailAsVerified(10);
 
     expect(mockDb.update).not.toHaveBeenCalled();
+  });
+
+  it('loads verification flag via raw SQL when column exists', async () => {
+    mockDb.execute
+      .mockResolvedValueOnce([{ exists: true }])
+      .mockResolvedValueOnce([{ email_verified_at: new Date('2025-02-02T00:00:00.000Z') }]);
+
+    const limit = vi.fn().mockResolvedValueOnce([
+      {
+        id: 77,
+        name: 'User',
+        email: 'verified@example.com',
+        passwordHash: 'hash-2',
+        platformRole: null,
+        createdAt: new Date('2025-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2025-01-01T00:00:00.000Z'),
+        deletedAt: null,
+      },
+    ]);
+    const where = vi.fn(() => ({ limit }));
+    const from = vi.fn(() => ({ where }));
+    mockDb.select.mockReturnValueOnce({ from });
+
+    const { findUserByEmailForAuth } = await import('@/lib/services/auth-email.service');
+
+    const user = await findUserByEmailForAuth('verified@example.com');
+
+    expect(user?.isEmailVerificationSupported).toBe(true);
+    expect(user?.emailVerifiedAt).toEqual(new Date('2025-02-02T00:00:00.000Z'));
   });
 });
