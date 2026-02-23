@@ -39,6 +39,8 @@ import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } fro
 
 const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
+const tableCellTextClassName = 'text-xs md:text-sm';
+const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -80,7 +82,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
         <Button
           variant="ghost"
           size="sm"
-          className={cn('h-7 px-2 gap-1 max-w-[220px] justify-start border border-transparent hover:border-border', !name && 'text-muted-foreground')}
+          className={cn('h-7 px-2 gap-1 max-w-[220px] justify-start border border-transparent hover:border-border text-xs md:text-sm', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
@@ -91,7 +93,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           ) : (
             <span className="size-2.5 rounded-full bg-muted-foreground/40 shrink-0" aria-hidden="true" />
           )}
-          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate">{name}</Badge> : <span className="text-xs">Поставщик</span>}
+          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-xs md:text-sm">{name}</Badge> : <span className="text-xs md:text-sm">Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
         </Button>
       </PopoverTrigger>
@@ -143,7 +145,7 @@ const ProjectCell = React.memo(function ProjectCell({
       }}
       disabled={disabled}
     >
-      <SelectTrigger className="h-8" aria-label="Выберите объект">
+      <SelectTrigger className="h-8 text-xs md:text-sm" aria-label="Выберите объект">
         <SelectValue placeholder="Выберите объект" />
       </SelectTrigger>
       <SelectContent>
@@ -303,7 +305,7 @@ export function getGlobalPurchasesColumns({
       size: 110,
       minSize: 90,
       cell: ({ row }) => (
-        <div className="text-right">
+        <div className={tableNumericCellTextClassName}>
           <EditableCell
             type="number"
             align="right"
@@ -329,7 +331,7 @@ export function getGlobalPurchasesColumns({
       size: 130,
       minSize: 110,
       cell: ({ row }) => (
-        <div className="text-right">
+        <div className={tableNumericCellTextClassName}>
           <EditableCell
             type="number"
             align="right"
@@ -354,7 +356,7 @@ export function getGlobalPurchasesColumns({
       header: () => <div className="text-right">Сумма</div>,
       size: 140,
       minSize: 120,
-      cell: ({ row }) => <div className="text-right text-sm font-medium pr-2 tabular-nums">{amountFormatter.format(row.original.amount)} ₽</div>,
+      cell: ({ row }) => <div className={cn(tableNumericCellTextClassName, 'font-medium pr-2')}>{amountFormatter.format(row.original.amount)} ₽</div>,
     },
     {
       accessorKey: 'supplierName',
