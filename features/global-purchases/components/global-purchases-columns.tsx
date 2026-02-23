@@ -42,6 +42,7 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 
 const tableCellTextClassName = 'text-xs md:text-sm';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
+const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left h-auto py-1 items-start`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -274,7 +275,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.materialName}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Наименование материала"
-            className={editableCellTextClassName}
+            className={materialEditableCellTextClassName}
             onCommit={async (value) => {
               try {
                 await onPatchAction(row.original.id, { materialName: value });
