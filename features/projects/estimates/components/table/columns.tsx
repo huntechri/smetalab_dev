@@ -45,11 +45,11 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 <ChevronRight className="size-4 text-muted-foreground transition-transform duration-200" />
                             )}
                         </Button>
-                        <span className="font-normal tabular-nums text-sm">{item.code}</span>
+                        <span className="tabular-nums text-xs md:text-sm font-medium">{item.code}</span>
                     </div>
                 );
             }
-            return <div className="pl-9 text-xs text-muted-foreground/80 font-normal tabular-nums">{item.code}</div>;
+            return <div className="pl-9 tabular-nums text-xs md:text-sm text-muted-foreground/80">{item.code}</div>;
         },
     },
     {
@@ -63,8 +63,8 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                 <div className={item.kind === 'material' ? 'pl-8' : ''}>
                     <div className={
                         item.kind === 'work'
-                            ? "text-sm font-normal"
-                            : "text-[13px] italic font-normal text-muted-foreground"
+                            ? "text-xs md:text-sm font-medium"
+                            : "text-xs md:text-sm italic text-muted-foreground"
                     }>
                         {item.name}
                     </div>
@@ -89,7 +89,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: 'Ед. изм.',
         size: 100,
         cell: ({ row }) => (
-            <div className={row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}>
+            <div className={row.original.kind === 'material' ? "text-xs md:text-sm italic text-muted-foreground" : "text-xs md:text-sm"}>
                 {row.original.unit}
             </div>
         )
@@ -99,7 +99,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 100,
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
-            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}`}>
+            <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? "italic text-muted-foreground" : ""}`}>
                 <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} />
             </div>
         )
@@ -109,7 +109,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 110,
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
-            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-normal"}`}>
+            <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? "italic text-muted-foreground" : ""}`}>
                 <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} />
             </div>
         )
@@ -119,7 +119,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 120,
         header: () => <div className="text-right">Сумма</div>,
         cell: ({ row }) => (
-            <div className={`text-right pr-6 ${row.original.kind === 'material' ? "text-[13px] italic font-normal text-muted-foreground" : "text-sm font-medium text-primary/90"}`}>
+            <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? "italic text-muted-foreground" : "font-medium text-primary/90"}`}>
                 <MoneyCell value={row.original.sum} />
             </div>
         )
@@ -130,10 +130,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Расход</div>,
         cell: ({ row }) => {
             if (row.original.kind === 'work') {
-                return <div className="text-right pr-6" />;
+                return <div className="text-right tabular-nums pr-6 text-xs md:text-sm" />;
             }
             return (
-                <div className="text-right pr-6">
+                <div className="text-right tabular-nums pr-6 text-xs md:text-sm">
                     <EditableCell
                         type="number"
                         align="right"
