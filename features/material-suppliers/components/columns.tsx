@@ -20,9 +20,9 @@ export const columns: ColumnDef<MaterialSupplierRow>[] = [
     accessorKey: 'name',
     header: 'Наименование',
     cell: ({ row }) => (
-      <div className="font-medium flex items-center gap-2">
-        <span className="size-2.5 rounded-full" style={{ backgroundColor: row.original.color }} aria-hidden="true" />
-        {row.getValue('name')}
+      <div className="font-medium flex items-center gap-2 text-xs md:text-sm min-w-0">
+        <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: row.original.color }} aria-hidden="true" />
+        <span className="truncate">{row.getValue('name')}</span>
       </div>
     ),
   },
@@ -35,23 +35,23 @@ export const columns: ColumnDef<MaterialSupplierRow>[] = [
         individual: 'Физ. лицо',
         company: 'Юр. лицо',
       };
-      return <span className="text-muted-foreground">{map[status] || status}</span>;
+      return <span className="text-muted-foreground text-xs md:text-sm">{map[status] || status}</span>;
     },
   },
   {
     accessorKey: 'inn',
     header: 'ИНН',
-    cell: ({ row }) => row.getValue('inn') || '—',
+    cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue('inn') || '—'}</span>,
   },
   {
     accessorKey: 'phone',
     header: 'Телефон',
-    cell: ({ row }) => row.getValue('phone') || '—',
+    cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue('phone') || '—'}</span>,
   },
   {
     accessorKey: 'email',
     header: 'Email',
-    cell: ({ row }) => row.getValue('email') || '—',
+    cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue('email') || '—'}</span>,
   },
   {
     id: 'actions',
@@ -63,19 +63,22 @@ export const columns: ColumnDef<MaterialSupplierRow>[] = [
         <div className="text-right pr-2">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Открыть меню действий">
+              <Button variant="ghost" className="h-7 w-7 p-0 md:h-8 md:w-8" aria-label="Открыть меню действий">
                 <span className="sr-only">Открыть меню действий</span>
                 <Settings className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Действия</DropdownMenuLabel>
-              <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)}>
+            <DropdownMenuContent align="end" className="min-w-40">
+              <DropdownMenuLabel className="text-xs md:text-sm">Действия</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)} className="text-xs md:text-sm py-1.5">
                 <Pencil className="mr-2 h-4 w-4" />
                 Редактировать
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => meta?.onDelete?.(row.original)} className="text-destructive">
+              <DropdownMenuItem
+                onClick={() => meta?.onDelete?.(row.original)}
+                className="text-destructive text-xs md:text-sm py-1.5"
+              >
                 <Trash className="mr-2 h-4 w-4" />
                 Удалить
               </DropdownMenuItem>
