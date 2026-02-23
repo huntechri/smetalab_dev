@@ -46,6 +46,7 @@ export const users = pgTable('users', {
   email: varchar('email', { length: 255 }).notNull().unique(),
   passwordHash: text('password_hash').notNull(),
   platformRole: platformRoleEnum('platform_role'),
+  emailVerifiedAt: timestamp('email_verified_at'),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
@@ -103,6 +104,23 @@ export const permissions = pgTable('permissions', {
   scope: permissionScopeEnum('scope').notNull(),
   createdAt: timestamp('created_at').notNull().defaultNow(),
 });
+
+export const authTokenTypeEnum = pgEnum('auth_token_type', ['email_verification', 'password_reset']);
+
+export const authTokens = pgTable('auth_tokens', {
+  id: serial('id').primaryKey(),
+  userId: integer('user_id')
+    .notNull()
+    .references(() => users.id),
+  tokenHash: varchar('token_hash', { length: 64 }).notNull().unique(),
+  type: authTokenTypeEnum('type').notNull(),
+  expiresAt: timestamp('expires_at').notNull(),
+  usedAt: timestamp('used_at'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => [
+  index('auth_tokens_user_type_idx').on(table.userId, table.type),
+  index('auth_tokens_expires_idx').on(table.expiresAt),
+]);
 
 // ═══════════════════════════════════════════════════════════════
 // ROLE PERMISSIONS (Tenant roles only)
@@ -711,9 +729,17 @@ export const teamsRelations = relations(teams, ({ many }) => ({
 export const usersRelations = relations(users, ({ many }) => ({
   teamMembers: many(teamMembers),
   invitationsSent: many(invitations),
+  authTokens: many(authTokens),
   estimateSharesCreated: many(estimateShares),
   impersonationSessions: many(impersonationSessions),
   notifications: many(notifications),
+}));
+
+export const authTokensRelations = relations(authTokens, ({ one }) => ({
+  user: one(users, {
+    fields: [authTokens.userId],
+    references: [users.id],
+  }),
 }));
 
 export const invitationsRelations = relations(invitations, ({ one }) => ({
@@ -913,6 +939,8 @@ export const estimateRoomParamsRelations = relations(estimateRoomParams, ({ one 
 
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+export type AuthToken = typeof authTokens.$inferSelect;
+export type NewAuthToken = typeof authTokens.$inferInsert;
 export type Team = typeof teams.$inferSelect;
 export type NewTeam = typeof teams.$inferInsert;
 export type TeamMember = typeof teamMembers.$inferSelect;
