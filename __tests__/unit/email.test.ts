@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, type Mock } from 'vitest';
-import { sendInvitationEmail } from '@/lib/infrastructure/email/email';
+import { sendEmailVerificationEmail, sendInvitationEmail, sendPasswordResetEmail } from '@/lib/infrastructure/email/email';
 import { Resend } from 'resend';
 
 // Mock the Resend client
@@ -120,5 +120,33 @@ describe('Email Sending Logic', () => {
 
         expect(result.success).toBe(false);
         expect(result.error).toBe('RESEND_API_KEY is not configured');
+    });
+
+    it('should send email verification link', async () => {
+        (resendInstance.emails.send as Mock).mockResolvedValue({ error: null });
+
+        await sendEmailVerificationEmail({
+            to: 'verify@example.com',
+            token: 'verify-token',
+        });
+
+        const callArgs = (resendInstance.emails.send as Mock).mock.calls.at(-1)?.[0];
+        expect(callArgs?.to).toEqual(['verify@example.com']);
+        expect(callArgs?.subject).toContain('Подтверждение email');
+        expect(callArgs?.html).toContain('/verify-email?token=verify-token');
+    });
+
+    it('should send password reset link', async () => {
+        (resendInstance.emails.send as Mock).mockResolvedValue({ error: null });
+
+        await sendPasswordResetEmail({
+            to: 'reset@example.com',
+            token: 'reset-token',
+        });
+
+        const callArgs = (resendInstance.emails.send as Mock).mock.calls.at(-1)?.[0];
+        expect(callArgs?.to).toEqual(['reset@example.com']);
+        expect(callArgs?.subject).toContain('Восстановление пароля');
+        expect(callArgs?.html).toContain('/reset-password?token=reset-token');
     });
 });
