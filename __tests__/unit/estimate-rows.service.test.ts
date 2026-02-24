@@ -62,6 +62,9 @@ describe('EstimateRowsService duplicate protection', () => {
     it('inserts a work after selected work and keeps execution ordering consistent via order', async () => {
         const tx = {
             query: {
+                estimates: {
+                    findFirst: vi.fn().mockResolvedValue({ coefPercent: 0 }),
+                },
                 estimateRows: {
                     findFirst: vi.fn().mockResolvedValue({
                         id: 'w-new',
