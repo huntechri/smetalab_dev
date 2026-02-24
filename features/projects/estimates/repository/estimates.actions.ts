@@ -7,6 +7,7 @@ import {
 } from '@/app/actions/estimates/rows';
 import { resetEstimateCoefficientAction, updateEstimateCoefficientAction } from '@/app/actions/estimates/coefficient';
 import { updateEstimateStatusAction } from '@/app/actions/estimates/status';
+import { deleteEstimateAction } from '@/app/actions/estimates/delete';
 import { EstimateRow, RowPatch } from '../types/dto';
 
 export const estimatesActionRepo = {
@@ -89,6 +90,14 @@ export const estimatesActionRepo = {
             throw new Error(result.error.message);
         }
 
+        return result.data;
+    },
+
+    async delete(estimateId: string): Promise<{ projectId: string }> {
+        const result = await deleteEstimateAction(estimateId);
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
         return result.data;
     },
 };

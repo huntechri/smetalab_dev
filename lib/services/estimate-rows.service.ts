@@ -154,8 +154,26 @@ const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: 
 };
 
 const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
+    const estimate = await tx.query.estimates.findFirst({
+        where: eq(estimates.id, estimateId),
+        columns: { coefPercent: true },
+    });
+
+    const coefPercent = estimate?.coefPercent ?? 0;
+
     const [{ total }] = await tx
-        .select({ total: sql<number>`COALESCE(SUM(${estimateRows.sum}), 0)` })
+        .select({
+            total: sql<number>`COALESCE(
+                SUM(
+                    CASE 
+                        WHEN ${estimateRows.kind} = 'work' 
+                        THEN ${estimateRows.sum} * (1 + ${coefPercent} / 100.0) 
+                        ELSE ${estimateRows.sum} 
+                    END
+                ), 
+                0
+            )`
+        })
         .from(estimateRows)
         .where(and(eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
 

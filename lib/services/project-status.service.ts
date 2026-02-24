@@ -25,15 +25,15 @@ export function resolveProjectStatusFromEstimateStatuses(statuses: DbEstimateSta
 }
 
 export class ProjectStatusService {
-  static async refreshForProject(teamId: number, projectId: string) {
-    const projectEstimates = await db
+  static async refreshForProject(teamId: number, projectId: string, dbOrTx: { select: any, update: any } = db) {
+    const projectEstimates = await dbOrTx
       .select({ status: estimates.status })
       .from(estimates)
       .where(and(eq(estimates.projectId, projectId), withActiveTenant(estimates, teamId)));
 
-    const nextStatus = resolveProjectStatusFromEstimateStatuses(projectEstimates.map((row) => row.status));
+    const nextStatus = resolveProjectStatusFromEstimateStatuses(projectEstimates.map((row: { status: DbEstimateStatus }) => row.status));
 
-    await db
+    await dbOrTx
       .update(projects)
       .set({ status: nextStatus, updatedAt: new Date() })
       .where(and(eq(projects.id, projectId), withActiveTenant(projects, teamId)));
