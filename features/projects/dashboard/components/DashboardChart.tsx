@@ -14,6 +14,8 @@ import {
 import {
     type ChartConfig,
     ChartContainer,
+    ChartLegend,
+    ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
@@ -29,7 +31,7 @@ import {
     ToggleGroupItem,
 } from "@/components/ui/toggle-group"
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service'
-import { DynamicsRange, filterDynamicsByRange } from '../lib/performance-dynamics'
+import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
 
 const chartConfig = {
     executionPlan: {
@@ -60,12 +62,27 @@ const periodLabels: Record<DynamicsRange, string> = {
     '12m': 'последние 12 месяцев',
 }
 
+const formatDateTick = (value: string, range: DynamicsRange) => {
+    const date = new Date(value)
+
+    if (range === '1m') {
+        return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short' })
+    }
+
+    return date.toLocaleDateString('ru-RU', { month: 'short', year: '2-digit' })
+}
+
 export function DashboardChart({ data }: DashboardChartProps) {
     const [timeRange, setTimeRange] = React.useState<DynamicsRange>('3m')
 
-    const filteredData = React.useMemo(
-        () => filterDynamicsByRange(data, timeRange),
+    const timeline = React.useMemo(
+        () => buildDynamicsTimeline(data, timeRange),
         [data, timeRange],
+    )
+
+    const hasActivity = React.useMemo(
+        () => hasActivityInTimeline(timeline),
+        [timeline],
     )
 
     return (
@@ -106,7 +123,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                 </CardAction>
             </CardHeader>
             <CardContent className="px-0 pt-4 sm:pt-6">
-                {filteredData.length === 0 ? (
+                {!hasActivity ? (
                     <div className="flex h-[200px] sm:h-[280px] items-center justify-center rounded-md border border-dashed text-sm text-muted-foreground">
                         Нет данных за выбранный период
                     </div>
@@ -115,15 +132,15 @@ export function DashboardChart({ data }: DashboardChartProps) {
                         config={chartConfig}
                         className="aspect-auto h-[200px] sm:h-[280px] w-full"
                     >
-                        <AreaChart data={filteredData}>
+                        <AreaChart data={timeline}>
                             <defs>
                                 <linearGradient id="fillExecutionPlan" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-executionPlan)" stopOpacity={0.3} />
-                                    <stop offset="95%" stopColor="var(--color-executionPlan)" stopOpacity={0.05} />
+                                    <stop offset="5%" stopColor="var(--color-executionPlan)" stopOpacity={0.2} />
+                                    <stop offset="95%" stopColor="var(--color-executionPlan)" stopOpacity={0.04} />
                                 </linearGradient>
                                 <linearGradient id="fillProcurementPlan" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-procurementPlan)" stopOpacity={0.25} />
-                                    <stop offset="95%" stopColor="var(--color-procurementPlan)" stopOpacity={0.05} />
+                                    <stop offset="5%" stopColor="var(--color-procurementPlan)" stopOpacity={0.16} />
+                                    <stop offset="95%" stopColor="var(--color-procurementPlan)" stopOpacity={0.04} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border" />
@@ -132,17 +149,16 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
-                                minTickGap={24}
-                                tickFormatter={(value) => new Date(value).toLocaleDateString("ru-RU", {
-                                    month: "short",
-                                    day: "numeric",
-                                })}
+                                minTickGap={timeRange === '1m' ? 24 : 48}
+                                tickFormatter={(value) => formatDateTick(value, timeRange)}
                             />
                             <YAxis
                                 tickLine={false}
                                 axisLine={false}
                                 tickMargin={8}
                                 width={80}
+                                tickCount={6}
+                                domain={[0, 'auto']}
                                 tickFormatter={(value) => new Intl.NumberFormat('ru-RU', {
                                     notation: 'compact',
                                     maximumFractionDigits: 1,
@@ -152,22 +168,30 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 cursor={false}
                                 content={
                                     <ChartTooltipContent
-                                        labelFormatter={(value) => new Date(value as string).toLocaleDateString("ru-RU", {
-                                            month: "long",
-                                            day: "numeric",
-                                            year: "numeric",
-                                        })}
-                                        formatter={(value) => new Intl.NumberFormat('ru-RU', {
-                                            style: 'currency',
-                                            currency: 'RUB',
-                                            maximumFractionDigits: 0,
-                                        }).format(Number(value))}
+                                        labelFormatter={(value) => {
+                                            const date = new Date(value as string)
+
+                                            if (timeRange === '1m') {
+                                                return date.toLocaleDateString('ru-RU', {
+                                                    month: 'long',
+                                                    day: 'numeric',
+                                                    year: 'numeric',
+                                                })
+                                            }
+
+                                            return date.toLocaleDateString('ru-RU', {
+                                                month: 'long',
+                                                year: 'numeric',
+                                            })
+                                        }}
                                         indicator="dot"
                                     />
                                 }
                             />
+                            <ChartLegend content={<ChartLegendContent />} />
                             <Area
                                 dataKey="executionPlan"
+                                name="executionPlan"
                                 type="monotone"
                                 fill="url(#fillExecutionPlan)"
                                 stroke="var(--color-executionPlan)"
@@ -175,6 +199,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                             />
                             <Area
                                 dataKey="procurementPlan"
+                                name="procurementPlan"
                                 type="monotone"
                                 fill="url(#fillProcurementPlan)"
                                 stroke="var(--color-procurementPlan)"
@@ -182,17 +207,21 @@ export function DashboardChart({ data }: DashboardChartProps) {
                             />
                             <Line
                                 dataKey="executionFact"
+                                name="executionFact"
                                 type="monotone"
                                 stroke="var(--color-executionFact)"
                                 strokeWidth={2}
-                                dot={false}
+                                dot={{ r: 2 }}
+                                activeDot={{ r: 4 }}
                             />
                             <Line
                                 dataKey="procurementFact"
+                                name="procurementFact"
                                 type="monotone"
                                 stroke="var(--color-procurementFact)"
                                 strokeWidth={2}
-                                dot={false}
+                                dot={{ r: 2 }}
+                                activeDot={{ r: 4 }}
                             />
                         </AreaChart>
                     </ChartContainer>
