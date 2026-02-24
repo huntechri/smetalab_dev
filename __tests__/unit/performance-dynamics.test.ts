@@ -63,10 +63,13 @@ describe('buildDynamicsTimeline', () => {
         });
     });
 
-    it('aggregates 3 months by month buckets', () => {
+    it('aggregates 3 months by month buckets and includes the full current month', () => {
         const now = new Date('2025-02-20T00:00:00.000Z');
 
-        const timeline = buildDynamicsTimeline(data, '3m', now);
+        const timeline = buildDynamicsTimeline([
+            ...data,
+            { date: '2025-02-28', executionPlan: 20, executionFact: 8, procurementPlan: 5, procurementFact: 2 },
+        ], '3m', now);
 
         expect(timeline.map((item) => item.date)).toEqual(['2024-12-01', '2025-01-01', '2025-02-01']);
         expect(timeline[1]).toMatchObject({
@@ -76,12 +79,13 @@ describe('buildDynamicsTimeline', () => {
             procurementFact: 1,
         });
         expect(timeline[2]).toMatchObject({
-            executionPlan: 25,
-            executionFact: 14,
-            procurementPlan: 8,
-            procurementFact: 6,
+            executionPlan: 45,
+            executionFact: 22,
+            procurementPlan: 13,
+            procurementFact: 8,
         });
     });
+
     it('applies opening balance from points before range start', () => {
         const now = new Date('2025-02-20T00:00:00.000Z');
 
@@ -98,7 +102,6 @@ describe('buildDynamicsTimeline', () => {
             procurementFact: 11,
         });
     });
-
 });
 
 describe('hasActivityInTimeline', () => {
