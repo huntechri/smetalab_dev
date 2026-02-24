@@ -36,7 +36,7 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
 });
 
 function getStatusDisplay(status: EstimateExecutionStatus) {
-    const base = "cursor-pointer border-0 h-8 w-[132px] justify-center px-2 text-xs font-semibold uppercase tracking-tight md:text-sm";
+    const base = "cursor-pointer border-0 h-5 w-[88px] md:h-6 md:w-[100px] justify-center px-1 text-[9px] md:text-[10px] font-medium uppercase tracking-wider";
     if (status === 'done') {
         return <Badge className={cn("bg-emerald-600 hover:bg-emerald-600 text-white", base)}>Выполнено</Badge>;
     }
@@ -119,7 +119,7 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="h-8 text-right tabular-nums text-xs font-medium md:text-sm"
+            className="h-8 text-right tabular-nums text-xs font-normal md:text-sm"
         />
     );
 }
@@ -257,7 +257,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
             accessorKey: 'code',
             header: 'Код',
             size: 60,
-            cell: ({ row }) => <span className="text-xs font-medium text-muted-foreground md:text-sm">{row.original.code}</span>,
+            cell: ({ row }) => <span className="text-xs font-normal text-muted-foreground md:text-sm">{row.original.code}</span>,
         },
         {
             accessorKey: 'name',
@@ -265,7 +265,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
             size: 450,
             cell: ({ row }) => (
                 <div className="space-y-1">
-                    <div className="font-medium text-xs md:text-sm leading-tight">{row.original.name}</div>
+                    <div className="text-xs md:text-sm font-normal truncate" title={row.original.name}>{row.original.name}</div>
                     {row.original.source === 'extra' ? (
                         <Badge variant="secondary" className="h-4 px-1 text-[10px] uppercase tracking-wider md:text-xs">
                             Доп. работа
@@ -277,25 +277,25 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'unit',
             header: 'Ед.',
-            cell: ({ row }) => <div className="text-xs font-medium md:text-sm">{row.original.unit}</div>,
+            cell: ({ row }) => <div className="text-xs text-muted-foreground font-medium md:text-sm">{row.original.unit}</div>,
             size: 80,
         },
         {
             accessorKey: 'plannedQty',
             header: () => <div className="text-right whitespace-nowrap">Кол-во</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{numberFormatter.format(row.original.plannedQty)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-normal text-muted-foreground md:text-sm">{numberFormatter.format(row.original.plannedQty)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedPrice',
             header: () => <div className="text-right whitespace-nowrap">Цена</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.plannedPrice)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedSum',
             header: () => <div className="text-right whitespace-nowrap">План сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.plannedSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.plannedSum)}</div>,
             size: 130,
         },
         {
@@ -313,7 +313,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'actualSum',
             header: () => <div className="text-right whitespace-nowrap">Факт сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-medium md:text-sm">{moneyFormatter.format(row.original.actualSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.actualSum)}</div>,
             size: 150,
         },
         {

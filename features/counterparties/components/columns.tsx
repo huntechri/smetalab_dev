@@ -20,7 +20,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
     {
         accessorKey: "name",
         header: "Наименование",
-        cell: ({ row }) => <div className="font-medium text-xs md:text-sm">{row.getValue("name")}</div>,
+        cell: ({ row }) => <div className="font-normal text-xs md:text-sm truncate" title={row.getValue("name") as string}>{row.getValue("name")}</div>,
     },
     {
         accessorKey: "type",
