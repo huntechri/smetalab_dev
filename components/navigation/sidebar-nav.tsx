@@ -7,6 +7,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 
 interface SidebarNavItem {
@@ -23,6 +24,8 @@ interface SidebarNavProps {
 }
 
 export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps) {
+    const { isMobile, setOpenMobile } = useSidebar();
+
     if (items.length === 0) {
         return null;
     }
@@ -40,7 +43,14 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
                         return (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild isActive={itemIsActive}>
-                                    <Link href={item.url}>
+                                    <Link
+                                        href={item.url}
+                                        onClick={() => {
+                                            if (isMobile) {
+                                                setOpenMobile(false);
+                                            }
+                                        }}
+                                    >
                                         <item.icon />
                                         <span>{item.title}</span>
                                     </Link>
