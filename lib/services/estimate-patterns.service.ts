@@ -135,10 +135,11 @@ export class EstimatePatternsService {
       }
 
       const snapshot = item.snapshot as PatternSnapshot;
+      const sortedRows = [...snapshot.rows].sort((a, b) => a.order - b.order);
       return success({
         id: item.id,
         name: item.name,
-        rows: snapshot.rows,
+        rows: sortedRows,
       });
     } catch (e) {
       console.error('EstimatePatternsService.preview error:', e);

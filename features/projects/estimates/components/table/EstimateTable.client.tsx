@@ -122,6 +122,13 @@ export function EstimateTable({
     void fetchPatterns();
   }, []);
 
+  // При открытии диалога «Применить шаблон» — авто-выбор первого шаблона
+  useEffect(() => {
+    if (isApplyPatternOpen && patterns.length > 0 && !selectedPatternId) {
+      void previewPattern(patterns[0].id);
+    }
+  }, [isApplyPatternOpen, patterns]);
+
   const visibleRows = useMemo(
     () => getVisibleRows(rows, expandedWorkIds),
     [rows, expandedWorkIds],
@@ -527,7 +534,8 @@ export function EstimateTable({
     try {
       setSelectedPatternId(patternId);
       const preview = await estimatePatternsActionRepo.preview(patternId);
-      setPreviewRows(preview.rows);
+      const sortedRows = [...preview.rows].sort((a, b) => a.order - b.order);
+      setPreviewRows(sortedRows);
     } catch (previewError) {
       toast({
         variant: "destructive",
