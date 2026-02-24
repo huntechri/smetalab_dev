@@ -105,11 +105,11 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
             </Button>
 
             <DropdownMenu modal={false}>
-            <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия" title="Действия">
-                    <Settings className="h-4 w-4" />
-                </Button>
-            </DropdownMenuTrigger>
+                <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия" title="Действия">
+                        <Settings className="h-4 w-4" />
+                    </Button>
+                </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-40">
                     <DropdownMenuItem onClick={() => meta.setEditingRow?.(row.original)}>
                         <Pencil className="mr-2 h-4 w-4" />
@@ -185,7 +185,7 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
 
     return (
         <div className="flex flex-col gap-1.5 py-1.5 min-w-0">
-            <div className="text-xs md:text-sm font-semibold tracking-tight text-foreground truncate">
+            <div className="text-xs md:text-sm font-normal truncate" title={name || undefined}>
                 {name}
             </div>
             {(phase || category || subcategory) && (
@@ -230,7 +230,7 @@ const UnitCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
             />
         )
     }
-    return <div className="text-center text-xs md:text-sm">{row.getValue("unit")}</div>
+    return <div className="text-center text-xs md:text-sm text-muted-foreground font-medium">{row.getValue("unit")}</div>
 });
 UnitCell.displayName = "UnitCell";
 

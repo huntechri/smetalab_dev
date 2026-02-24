@@ -61,11 +61,14 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             const item = row.original;
             return (
                 <div className={item.kind === 'material' ? 'pl-8' : ''}>
-                    <div className={
-                        item.kind === 'work'
-                            ? "text-xs md:text-sm font-medium"
-                            : "text-xs md:text-sm italic text-muted-foreground"
-                    }>
+                    <div
+                        className={
+                            item.kind === 'work'
+                                ? "text-xs md:text-sm font-normal truncate"
+                                : "text-xs md:text-sm italic text-muted-foreground"
+                        }
+                        title={item.name}
+                    >
                         {item.name}
                     </div>
                 </div>
@@ -86,10 +89,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     },
     {
         accessorKey: 'unit',
-        header: 'Ед. изм.',
+        header: () => <div className="text-center">Ед. изм.</div>,
         size: 100,
         cell: ({ row }) => (
-            <div className={row.original.kind === 'material' ? "text-xs md:text-sm italic text-muted-foreground" : "text-xs md:text-sm"}>
+            <div className={row.original.kind === 'material' ? "text-xs md:text-sm italic text-muted-foreground text-center" : "text-center text-xs md:text-sm text-muted-foreground font-medium"}>
                 {row.original.unit}
             </div>
         )

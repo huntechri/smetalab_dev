@@ -20,7 +20,7 @@ export const columns: ColumnDef<MaterialSupplierRow>[] = [
     accessorKey: 'name',
     header: 'Наименование',
     cell: ({ row }) => (
-      <div className="font-medium flex items-center gap-2 text-xs md:text-sm min-w-0">
+      <div className="font-normal flex items-center gap-2 text-xs md:text-sm min-w-0" title={row.getValue('name') as string}>
         <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: row.original.color }} aria-hidden="true" />
         <span className="truncate">{row.getValue('name')}</span>
       </div>
