@@ -9,8 +9,8 @@ if (existsSync(envPath)) {
     config({ path: envPath });
 }
 
-// 2. Логика подмены базы (TEST_DATABASE_URL приоритетнее DATABASE_URL)
-const finalDbUrl = process.env.TEST_DATABASE_URL || process.env.DATABASE_URL;
+// 2. Логика выбора базы (DATABASE_URL — основная, TEST_DATABASE_URL — только если первая не задана)
+const finalDbUrl = process.env.DATABASE_URL || process.env.TEST_DATABASE_URL;
 
 const env = {
     ...process.env,

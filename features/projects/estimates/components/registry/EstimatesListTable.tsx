@@ -5,17 +5,29 @@ import { ColumnDef } from '@tanstack/react-table';
 import { EstimateMeta, EstimateStatus } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Trash2 } from 'lucide-react';
 import { estimatesActionRepo } from '../../repository/estimates.actions';
 import { useToast } from '@/components/ui/use-toast';
 import { getEstimateStatusLabel } from '@/features/projects/shared/utils/status-view';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 const estimateStatusOrder: EstimateStatus[] = ['draft', 'in_progress', 'approved'];
 
@@ -120,6 +132,58 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
       accessorKey: 'createdAt',
       header: 'Дата создания',
       cell: ({ row }) => <span className="text-xs md:text-sm text-muted-foreground">{new Date(row.original.createdAt).toLocaleDateString('ru-RU')}</span>,
+    },
+    {
+      id: 'actions',
+      header: 'Действие',
+      cell: ({ row }) => {
+        return (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-red-50 transition-colors"
+                title="Удалить смету"
+              >
+                <Trash2 className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Вы уверены, что хотите удалить смету?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Смета "{row.original.name}" будет удалена. Это действие можно отменить только через администратора.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Отмена</AlertDialogCancel>
+                <AlertDialogAction
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  onClick={async () => {
+                    try {
+                      await estimatesActionRepo.delete(row.original.id);
+                      setRows((current) => current.filter((item) => item.id !== row.original.id));
+                      toast({
+                        title: 'Смета удалена',
+                        description: `Смета "${row.original.name}" была успешно удалена.`,
+                      });
+                    } catch (error) {
+                      toast({
+                        variant: 'destructive',
+                        title: 'Ошибка',
+                        description: error instanceof Error ? error.message : 'Не удалось удалить смету.',
+                      });
+                    }
+                  }}
+                >
+                  Удалить
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        );
+      },
     },
   ], [projectSlug, toast]);
 
