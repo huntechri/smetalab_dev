@@ -72,7 +72,11 @@ export function EditableCell({
         <Input
             aria-label={ariaLabel}
             autoFocus
-            className={`h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80 ${alignmentClass}`}
+            className={cn(
+                'h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80',
+                alignmentClass,
+                className,
+            )}
             value={draft}
             type={type}
             onChange={(event) => setDraft(event.target.value)}
