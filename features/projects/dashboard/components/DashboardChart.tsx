@@ -7,7 +7,6 @@ import {
     Card,
     CardAction,
     CardContent,
-    CardDescription,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
@@ -56,12 +55,6 @@ type DashboardChartProps = {
     data: PerformanceDynamicsPoint[];
 }
 
-const periodLabels: Record<DynamicsRange, string> = {
-    '1m': 'последний 1 месяц',
-    '3m': 'последние 3 месяца',
-    '12m': 'последние 12 месяцев',
-}
-
 const formatDateTick = (value: string, range: DynamicsRange) => {
     const date = new Date(value)
 
@@ -88,11 +81,8 @@ export function DashboardChart({ data }: DashboardChartProps) {
     return (
         <Card className="@container/card px-4 lg:px-6">
             <CardHeader className="px-0">
-                <CardTitle>Performance Dynamics</CardTitle>
-                <CardDescription>
-                    Данные за {periodLabels[timeRange]} от текущей даты
-                </CardDescription>
-                <CardAction>
+                <CardTitle>Динамика проекта</CardTitle>
+                <CardAction className="w-full sm:w-auto">
                     <ToggleGroup
                         type="single"
                         value={timeRange}
@@ -100,7 +90,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                             if (value) setTimeRange(value as DynamicsRange)
                         }}
                         variant="outline"
-                        className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
+                        className="hidden w-fit *:data-[slot=toggle-group-item]:!px-3 @[767px]/card:flex"
                     >
                         <ToggleGroupItem value="1m">1 месяц</ToggleGroupItem>
                         <ToggleGroupItem value="3m">3 месяца</ToggleGroupItem>
@@ -108,11 +98,11 @@ export function DashboardChart({ data }: DashboardChartProps) {
                     </ToggleGroup>
                     <Select value={timeRange} onValueChange={(value) => setTimeRange(value as DynamicsRange)}>
                         <SelectTrigger
-                            className="flex w-40 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
+                            className="ml-auto flex h-8 w-[6.5rem] text-xs **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
                             size="sm"
                             aria-label="Выбрать период"
                         >
-                            <SelectValue placeholder="3 месяца" />
+                            <SelectValue placeholder="Период" />
                         </SelectTrigger>
                         <SelectContent className="rounded-xl">
                             <SelectItem value="1m" className="rounded-lg">1 месяц</SelectItem>
