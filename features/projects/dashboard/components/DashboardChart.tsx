@@ -210,7 +210,8 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 name="executionFact"
                                 type="monotone"
                                 stroke="var(--color-executionFact)"
-                                strokeWidth={2}
+                                strokeWidth={2.5}
+                                strokeDasharray="6 4"
                                 dot={{ r: 2 }}
                                 activeDot={{ r: 4 }}
                             />
@@ -219,7 +220,8 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 name="procurementFact"
                                 type="monotone"
                                 stroke="var(--color-procurementFact)"
-                                strokeWidth={2}
+                                strokeWidth={2.5}
+                                strokeDasharray="6 4"
                                 dot={{ r: 2 }}
                                 activeDot={{ r: 4 }}
                             />
