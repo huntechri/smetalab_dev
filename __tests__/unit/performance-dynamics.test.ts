@@ -56,10 +56,10 @@ describe('buildDynamicsTimeline', () => {
         expect(timeline).toHaveLength(32);
         expect(timeline.find((item) => item.date === '2025-02-10')).toEqual({
             date: '2025-02-10',
-            executionPlan: 0,
-            executionFact: 0,
-            procurementPlan: 0,
-            procurementFact: 0,
+            executionPlan: 10,
+            executionFact: 10,
+            procurementPlan: 2,
+            procurementFact: 1,
         });
     });
 
@@ -76,12 +76,29 @@ describe('buildDynamicsTimeline', () => {
             procurementFact: 1,
         });
         expect(timeline[2]).toMatchObject({
-            executionPlan: 15,
-            executionFact: 11,
-            procurementPlan: 6,
-            procurementFact: 5,
+            executionPlan: 25,
+            executionFact: 14,
+            procurementPlan: 8,
+            procurementFact: 6,
         });
     });
+    it('applies opening balance from points before range start', () => {
+        const now = new Date('2025-02-20T00:00:00.000Z');
+
+        const timeline = buildDynamicsTimeline([
+            { date: '2024-12-10', executionPlan: 100, executionFact: 30, procurementPlan: 25, procurementFact: 10 },
+            { date: '2025-01-20', executionPlan: 10, executionFact: 3, procurementPlan: 2, procurementFact: 1 },
+        ], '1m', now);
+
+        expect(timeline.at(0)).toEqual({
+            date: '2025-01-20',
+            executionPlan: 110,
+            executionFact: 33,
+            procurementPlan: 27,
+            procurementFact: 11,
+        });
+    });
+
 });
 
 describe('hasActivityInTimeline', () => {
