@@ -230,12 +230,12 @@ function ChartTooltipContent({
                     >
                       <div className="grid gap-1.5">
                         {nestLabel ? tooltipLabel : null}
-                        <span className="text-muted-foreground">
+                        <span className="text-muted-foreground break-words">
                           {itemConfig?.label || item.name}
                         </span>
                       </div>
-                      {item.value && (
-                        <span className="text-foreground font-mono font-medium tabular-nums">
+                      {item.value !== undefined && item.value !== null && (
+                        <span className="text-foreground shrink-0 pl-2 text-right font-mono font-medium tabular-nums">
                           {item.value.toLocaleString()}
                         </span>
                       )}
@@ -285,7 +285,7 @@ function ChartLegendContent({
 
           return (
             <div
-              key={item.value}
+              key={`${item.dataKey ?? item.value ?? "value"}`}
               className={cn(
                 "[&>svg]:text-muted-foreground flex items-center gap-1.5 [&>svg]:h-3 [&>svg]:w-3"
               )}
