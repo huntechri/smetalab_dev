@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { filterDynamicsByRange } from '@/features/projects/dashboard/lib/performance-dynamics';
+import { buildDynamicsTimeline, hasActivityInTimeline } from '@/features/projects/dashboard/lib/performance-dynamics';
 import { buildPerformanceDynamics } from '@/lib/services/project-performance-dynamics.service';
 
 describe('buildPerformanceDynamics', () => {
@@ -38,35 +38,55 @@ describe('buildPerformanceDynamics', () => {
     });
 });
 
-describe('filterDynamicsByRange', () => {
+describe('buildDynamicsTimeline', () => {
     const data = [
-        { date: '2024-12-30', executionPlan: 0, executionFact: 0, procurementPlan: 0, procurementFact: 0 },
-        { date: '2025-02-15', executionPlan: 1, executionFact: 2, procurementPlan: 3, procurementFact: 4 },
-        { date: '2025-03-20', executionPlan: 1, executionFact: 2, procurementPlan: 3, procurementFact: 4 },
-        { date: '2025-05-01', executionPlan: 1, executionFact: 2, procurementPlan: 3, procurementFact: 4 },
+        { date: '2025-01-18', executionPlan: 10, executionFact: 0, procurementPlan: 0, procurementFact: 0 },
+        { date: '2025-01-20', executionPlan: 0, executionFact: 3, procurementPlan: 2, procurementFact: 1 },
+        { date: '2025-02-01', executionPlan: 0, executionFact: 7, procurementPlan: 0, procurementFact: 0 },
+        { date: '2025-02-15', executionPlan: 15, executionFact: 4, procurementPlan: 6, procurementFact: 5 },
     ];
 
-    it('filters by rolling 1 month from today backward', () => {
-        const now = new Date('2025-05-15T00:00:00.000Z');
+    it('builds 1 month timeline by calendar days and keeps zero days', () => {
+        const now = new Date('2025-02-20T00:00:00.000Z');
 
-        const result = filterDynamicsByRange(data, '1m', now);
+        const timeline = buildDynamicsTimeline(data, '1m', now);
 
-        expect(result.map((item) => item.date)).toEqual(['2025-05-01']);
+        expect(timeline.at(0)?.date).toBe('2025-01-20');
+        expect(timeline.at(-1)?.date).toBe('2025-02-20');
+        expect(timeline).toHaveLength(32);
+        expect(timeline.find((item) => item.date === '2025-02-10')).toEqual({
+            date: '2025-02-10',
+            executionPlan: 0,
+            executionFact: 0,
+            procurementPlan: 0,
+            procurementFact: 0,
+        });
     });
 
-    it('filters by rolling 3 months from today backward', () => {
-        const now = new Date('2025-05-15T00:00:00.000Z');
+    it('aggregates 3 months by month buckets', () => {
+        const now = new Date('2025-02-20T00:00:00.000Z');
 
-        const result = filterDynamicsByRange(data, '3m', now);
+        const timeline = buildDynamicsTimeline(data, '3m', now);
 
-        expect(result.map((item) => item.date)).toEqual(['2025-02-15', '2025-03-20', '2025-05-01']);
+        expect(timeline.map((item) => item.date)).toEqual(['2024-12-01', '2025-01-01', '2025-02-01']);
+        expect(timeline[1]).toMatchObject({
+            executionPlan: 10,
+            executionFact: 3,
+            procurementPlan: 2,
+            procurementFact: 1,
+        });
+        expect(timeline[2]).toMatchObject({
+            executionPlan: 15,
+            executionFact: 11,
+            procurementPlan: 6,
+            procurementFact: 5,
+        });
     });
+});
 
-    it('keeps full rolling year for 12m period', () => {
-        const now = new Date('2025-05-15T00:00:00.000Z');
-
-        const result = filterDynamicsByRange(data, '12m', now);
-
-        expect(result.map((item) => item.date)).toEqual(['2024-12-30', '2025-02-15', '2025-03-20', '2025-05-01']);
+describe('hasActivityInTimeline', () => {
+    it('returns false for all-zero timeline and true when any series has value', () => {
+        expect(hasActivityInTimeline([{ date: '2025-02-01', executionPlan: 0, executionFact: 0, procurementPlan: 0, procurementFact: 0 }])).toBe(false);
+        expect(hasActivityInTimeline([{ date: '2025-02-01', executionPlan: 0, executionFact: 1, procurementPlan: 0, procurementFact: 0 }])).toBe(true);
     });
 });
