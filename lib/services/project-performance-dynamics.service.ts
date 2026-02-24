@@ -1,4 +1,4 @@
-import { and, eq, gte, lte, sql } from 'drizzle-orm';
+import { and, eq, exists, gte, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -19,6 +19,7 @@ type AggregateRow = {
 
 const toIsoDate = (value: Date) => value.toISOString().slice(0, 10);
 const toIsoTimestamp = (value: Date) => value.toISOString();
+const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -95,6 +96,7 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
+                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         gte(estimateExecutionRows.createdAt, startDate),
@@ -102,10 +104,9 @@ export class ProjectPerformanceDynamicsService {
                     ),
                 )
                 .groupBy(sql`DATE(${estimateExecutionRows.createdAt})`),
-            // NOTE: use ISO timestamps for SQL-expression comparisons to avoid driver serialization issues with Date objects.
             db
                 .select({
-                    date: sql<string>`DATE(COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}))`,
+                    date: sql<string>`DATE(${estimateExecutionRows.completedAt})`,
                     total: sql<number>`COALESCE(SUM(${estimateExecutionRows.actualSum}), 0)`,
                 })
                 .from(estimateExecutionRows)
@@ -113,14 +114,16 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
+                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
-                        sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}) >= ${rangeStartTimestamp}::timestamp`,
-                        sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}) <= ${rangeEndTimestamp}::timestamp`,
-                        gte(estimateExecutionRows.actualSum, 0),
+                        sql`${estimateExecutionRows.completedAt} IS NOT NULL`,
+                        sql`${estimateExecutionRows.completedAt} >= ${rangeStartTimestamp}::timestamp`,
+                        sql`${estimateExecutionRows.completedAt} <= ${rangeEndTimestamp}::timestamp`,
+                        sql`${estimateExecutionRows.actualSum} > 0`,
                     ),
                 )
-                .groupBy(sql`DATE(COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}))`),
+                .groupBy(sql`DATE(${estimateExecutionRows.completedAt})`),
             db
                 .select({
                     date: sql<string>`DATE(${estimateRows.createdAt})`,
@@ -131,6 +134,7 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
+                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
                         eq(estimateRows.kind, 'material'),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateRows, teamId),
@@ -149,6 +153,18 @@ export class ProjectPerformanceDynamicsService {
                     and(
                         eq(globalPurchases.projectId, projectId),
                         withActiveTenant(globalPurchases, teamId),
+                        exists(
+                            db
+                                .select({ id: estimates.id })
+                                .from(estimates)
+                                .where(
+                                    and(
+                                        eq(estimates.projectId, projectId),
+                                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                                        withActiveTenant(estimates, teamId),
+                                    ),
+                                ),
+                        ),
                         gte(globalPurchases.purchaseDate, toIsoDate(startDate)),
                         lte(globalPurchases.purchaseDate, toIsoDate(today)),
                     ),
