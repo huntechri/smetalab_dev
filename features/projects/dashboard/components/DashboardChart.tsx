@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Area, AreaChart, CartesianGrid, Line, XAxis, YAxis } from "recharts"
+import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts"
 
 import {
     Card,
@@ -132,7 +132,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                         config={chartConfig}
                         className="aspect-auto h-[200px] sm:h-[280px] w-full"
                     >
-                        <AreaChart data={timeline}>
+                        <ComposedChart data={timeline}>
                             <defs>
                                 <linearGradient id="fillExecutionPlan" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="5%" stopColor="var(--color-executionPlan)" stopOpacity={0.2} />
@@ -225,7 +225,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 dot={{ r: 2 }}
                                 activeDot={{ r: 4 }}
                             />
-                        </AreaChart>
+                        </ComposedChart>
                     </ChartContainer>
                 )}
             </CardContent>
