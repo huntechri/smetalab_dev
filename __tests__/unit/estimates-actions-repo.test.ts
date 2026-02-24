@@ -5,6 +5,9 @@ const actionsMocks = vi.hoisted(() => ({
     addEstimateWorkAction: vi.fn(),
     addEstimateMaterialAction: vi.fn(),
     removeEstimateRowAction: vi.fn(),
+    updateEstimateStatusAction: vi.fn(),
+    updateEstimateCoefficientAction: vi.fn(),
+    resetEstimateCoefficientAction: vi.fn(),
 }));
 
 vi.mock('@/app/actions/estimates/rows', () => ({
@@ -12,6 +15,16 @@ vi.mock('@/app/actions/estimates/rows', () => ({
     addEstimateWorkAction: actionsMocks.addEstimateWorkAction,
     addEstimateMaterialAction: actionsMocks.addEstimateMaterialAction,
     removeEstimateRowAction: actionsMocks.removeEstimateRowAction,
+}));
+
+
+vi.mock('@/app/actions/estimates/status', () => ({
+    updateEstimateStatusAction: actionsMocks.updateEstimateStatusAction,
+}));
+
+vi.mock('@/app/actions/estimates/coefficient', () => ({
+    updateEstimateCoefficientAction: actionsMocks.updateEstimateCoefficientAction,
+    resetEstimateCoefficientAction: actionsMocks.resetEstimateCoefficientAction,
 }));
 
 import { estimatesActionRepo } from '@/features/projects/estimates/repository/estimates.actions';
@@ -22,6 +35,9 @@ describe('estimatesActionRepo', () => {
         actionsMocks.addEstimateWorkAction.mockReset();
         actionsMocks.addEstimateMaterialAction.mockReset();
         actionsMocks.removeEstimateRowAction.mockReset();
+        actionsMocks.updateEstimateStatusAction.mockReset();
+        actionsMocks.updateEstimateCoefficientAction.mockReset();
+        actionsMocks.resetEstimateCoefficientAction.mockReset();
     });
 
     it('calls addEstimateWorkAction and returns created row', async () => {
@@ -124,6 +140,19 @@ describe('estimatesActionRepo', () => {
 
         expect(actionsMocks.removeEstimateRowAction).toHaveBeenCalledWith('est-1', 'w-1');
         expect(result.removedIds).toEqual(['w-1', 'm-1']);
+    });
+
+
+    it('updates estimate status', async () => {
+        actionsMocks.updateEstimateStatusAction.mockResolvedValue({
+            success: true,
+            data: { status: 'approved' },
+        });
+
+        const result = await estimatesActionRepo.updateStatus('est-1', 'approved');
+
+        expect(actionsMocks.updateEstimateStatusAction).toHaveBeenCalledWith('est-1', { status: 'approved' });
+        expect(result.status).toBe('approved');
     });
 
     it('throws when action returns error', async () => {
