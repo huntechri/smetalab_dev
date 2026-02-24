@@ -6,6 +6,7 @@ import { estimateExecutionRows, estimateRows, estimates } from '@/lib/data/db/sc
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
+import { ProjectProgressService } from '@/lib/services/project-progress.service';
 import {
     AddExtraExecutionWorkInput,
     EstimateExecutionRow,
@@ -179,6 +180,7 @@ export class EstimateExecutionService {
             }
 
             await this.syncFromEstimateWorks(teamId, estimateId, estimate.coefPercent ?? 0);
+            await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
@@ -262,6 +264,8 @@ export class EstimateExecutionService {
                 return row;
             });
 
+            await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
+
             return success(updated as EstimateExecutionRow);
         } catch (e) {
             console.error('EstimateExecutionService.patch error:', e);
@@ -315,6 +319,8 @@ export class EstimateExecutionService {
                     })
                     .returning(estimateExecutionRowSelect);
             });
+
+            await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
 
             return success(created as EstimateExecutionRow);
         } catch (e) {
