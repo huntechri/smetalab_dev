@@ -27,15 +27,18 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         </p>
                     )}
                 </div>
-                <div
+                <div className="space-y-1">
+                    <p className="text-[11px] text-muted-foreground">Прогресс: {project.progress}%</p>
+                    <div
                     role="progressbar"
                     aria-valuenow={project.progress}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-label={`Progress for ${project.name}`}
                     className="h-2 w-full overflow-hidden rounded-full bg-muted"
-                >
-                    <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+>
+                        <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+                    </div>
                 </div>
                 <ProjectActions
                     projectId={project.id}
