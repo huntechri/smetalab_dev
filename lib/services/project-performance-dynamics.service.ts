@@ -18,6 +18,7 @@ type AggregateRow = {
 };
 
 const toIsoDate = (value: Date) => value.toISOString().slice(0, 10);
+const toIsoTimestamp = (value: Date) => value.toISOString();
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -80,6 +81,8 @@ export class ProjectPerformanceDynamicsService {
         const today = new Date();
         const startDate = new Date(today);
         startDate.setMonth(startDate.getMonth() - 12);
+        const rangeStartTimestamp = toIsoTimestamp(startDate);
+        const rangeEndTimestamp = toIsoTimestamp(today);
 
         const [executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
             db
@@ -99,6 +102,7 @@ export class ProjectPerformanceDynamicsService {
                     ),
                 )
                 .groupBy(sql`DATE(${estimateExecutionRows.createdAt})`),
+            // NOTE: use ISO timestamps for SQL-expression comparisons to avoid driver serialization issues with Date objects.
             db
                 .select({
                     date: sql<string>`DATE(COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}))`,
@@ -111,8 +115,8 @@ export class ProjectPerformanceDynamicsService {
                         eq(estimates.projectId, projectId),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
-                        gte(sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt})`, startDate),
-                        lte(sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt})`, today),
+                        sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}) >= ${rangeStartTimestamp}::timestamp`,
+                        sql`COALESCE(${estimateExecutionRows.completedAt}, ${estimateExecutionRows.updatedAt}, ${estimateExecutionRows.createdAt}) <= ${rangeEndTimestamp}::timestamp`,
                         gte(estimateExecutionRows.actualSum, 0),
                     ),
                 )
