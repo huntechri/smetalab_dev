@@ -24,6 +24,8 @@ import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execu
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
 import { EstimateTotals } from '../EstimateTotals';
+import { Progress } from '@/components/ui/progress';
+import { calculateEstimateExecutionProgress } from '../../lib/execution-progress';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -336,6 +338,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     }, { planned: 0, actual: 0 }), [rows]);
 
     const addedWorkNames = useMemo(() => new Set(rows.map((row) => row.name)), [rows]);
+    const executionProgress = useMemo(() => calculateEstimateExecutionProgress(rows), [rows]);
 
     if (isLoading) {
         return (
@@ -352,6 +355,16 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
     return (
         <div className="space-y-4">
+            <div className="rounded-lg border bg-card p-3 md:p-4">
+                <div className="mb-2 flex items-center justify-between gap-3">
+                    <p className="text-sm font-medium">Прогресс выполнения проекта</p>
+                    <p className="text-sm font-semibold tabular-nums">{executionProgress.percent}%</p>
+                </div>
+                <Progress value={executionProgress.percent} />
+                <p className="mt-2 text-xs text-muted-foreground">
+                    Выполнено работ: {executionProgress.completedWorks} из {executionProgress.totalWorks}
+                </p>
+            </div>
             <DataTable
                 columns={columns}
                 data={rows}

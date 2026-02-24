@@ -6,6 +6,7 @@ import {
     removeEstimateRowAction,
 } from '@/app/actions/estimates/rows';
 import { resetEstimateCoefficientAction, updateEstimateCoefficientAction } from '@/app/actions/estimates/coefficient';
+import { updateEstimateStatusAction } from '@/app/actions/estimates/status';
 import { EstimateRow, RowPatch } from '../types/dto';
 
 export const estimatesActionRepo = {
@@ -56,6 +57,16 @@ export const estimatesActionRepo = {
     async removeRow(estimateId: string, rowId: string): Promise<{ removedIds: string[] }> {
         const result = await removeEstimateRowAction(estimateId, rowId);
 
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+
+    async updateStatus(estimateId: string, status: 'draft' | 'in_progress' | 'approved'): Promise<{ status: 'draft' | 'in_progress' | 'approved' }> {
+        const result = await updateEstimateStatusAction(estimateId, { status });
         if (!result.success) {
             throw new Error(result.error.message);
         }
