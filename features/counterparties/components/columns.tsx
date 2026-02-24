@@ -20,7 +20,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
     {
         accessorKey: "name",
         header: "Наименование",
-        cell: ({ row }) => <div className="font-medium">{row.getValue("name")}</div>,
+        cell: ({ row }) => <div className="font-medium text-xs md:text-sm">{row.getValue("name")}</div>,
     },
     {
         accessorKey: "type",
@@ -32,7 +32,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 contractor: "Подрядчик",
                 supplier: "Поставщик"
             };
-            return <Badge variant="outline">{map[type] || type}</Badge>;
+            return <Badge variant="outline" className="h-6 px-2 text-xs md:text-sm">{map[type] || type}</Badge>;
         },
     },
     {
@@ -44,23 +44,23 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 individual: "Физ. лицо",
                 company: "Юр. лицо"
             };
-            return <span className="text-muted-foreground">{map[status] || status}</span>;
+            return <span className="text-muted-foreground text-xs md:text-sm">{map[status] || status}</span>;
         },
     },
     {
         accessorKey: "inn",
         header: "ИНН",
-        cell: ({ row }) => row.getValue("inn") || "—",
+        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("inn") || "—"}</span>,
     },
     {
         accessorKey: "phone",
         header: "Телефон",
-        cell: ({ row }) => row.getValue("phone") || "—",
+        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("phone") || "—"}</span>,
     },
     {
         accessorKey: "email",
         header: "Email",
-        cell: ({ row }) => row.getValue("email") || "—",
+        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("email") || "—"}</span>,
     },
     {
         id: "actions",
@@ -72,19 +72,19 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 <div className="text-right pr-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0" aria-label="Открыть меню действий">
+                            <Button variant="ghost" className="h-7 w-7 p-0 md:h-8 md:w-8" aria-label="Открыть меню действий">
                                 <span className="sr-only">Открыть меню действий</span>
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Действия</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)}>
+                        <DropdownMenuContent align="end" className="min-w-40">
+                            <DropdownMenuLabel className="text-xs md:text-sm">Действия</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)} className="text-xs md:text-sm py-1.5">
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Редактировать
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => meta?.onDelete?.(row.original)} className="text-destructive">
+                            <DropdownMenuItem onClick={() => meta?.onDelete?.(row.original)} className="text-destructive text-xs md:text-sm py-1.5">
                                 <Trash className="mr-2 h-4 w-4" />
                                 Удалить
                             </DropdownMenuItem>
