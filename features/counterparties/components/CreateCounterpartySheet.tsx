@@ -171,7 +171,7 @@ export function CreateCounterpartySheet({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="w-full sm:max-w-[540px] flex flex-col p-0">
+            <SheetContent className="w-full sm:max-w-[540px] max-h-dvh flex flex-col p-0">
                 <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
                     <SheetTitle className="text-base sm:text-lg">
                         {counterparty ? "Редактировать контрагента" : "Создать контрагента"}
@@ -182,8 +182,8 @@ export function CreateCounterpartySheet({
                 </SheetHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
-                        <ScrollArea className="flex-1">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+                        <ScrollArea className="flex-1 min-h-0">
                             <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6">
                                 <Tabs defaultValue="general" className="w-full">
                                     <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
@@ -192,7 +192,7 @@ export function CreateCounterpartySheet({
                                         <TabsTrigger value="bank" className="text-xs sm:text-sm">Банк</TabsTrigger>
                                     </TabsList>
 
-                                    <TabsContent value="general" className="space-y-4">
+                                    <TabsContent value="general" className="space-y-3 sm:space-y-4">
                                         <FormField
                                             control={form.control}
                                             name="name"
@@ -318,7 +318,7 @@ export function CreateCounterpartySheet({
                                         </div>
                                     </TabsContent>
 
-                                    <TabsContent value="details" className="space-y-4">
+                                    <TabsContent value="details" className="space-y-3 sm:space-y-4">
                                         {legalStatus === "individual" ? (
                                             <div className="space-y-4">
                                                 <div className="flex items-center gap-2 font-medium">
@@ -446,7 +446,7 @@ export function CreateCounterpartySheet({
                                         )}
                                     </TabsContent>
 
-                                    <TabsContent value="bank" className="space-y-4">
+                                    <TabsContent value="bank" className="space-y-3 sm:space-y-4">
                                         <div className="flex items-center gap-2 font-medium">
                                             <Landmark className="w-4 h-4 text-muted-foreground" />
                                             Банковские реквизиты
