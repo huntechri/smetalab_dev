@@ -37,7 +37,7 @@ function EstimateStatusCell({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button type="button" variant="ghost" className="inline-flex h-auto p-0 hover:bg-transparent">
-          <Badge className={`cursor-pointer border-0 h-8 w-[132px] justify-center px-2 text-xs font-semibold uppercase tracking-tight md:text-sm ${badgeClassName}`}>
+          <Badge className={`cursor-pointer border-0 h-5 w-[88px] md:h-6 md:w-[100px] justify-center px-1 text-[9px] md:text-[10px] font-medium uppercase tracking-wider ${badgeClassName}`}>
             {getEstimateStatusLabel(status)}
           </Badge>
         </Button>
@@ -77,7 +77,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
       cell: ({ row }) => {
         const slug = projectSlug || row.original.projectId;
         return (
-          <Link className="font-medium hover:underline" href={`/app/projects/${slug}/estimates/${row.original.slug}`}>
+          <Link className="font-normal text-xs md:text-sm hover:underline truncate" href={`/app/projects/${slug}/estimates/${row.original.slug}`} title={row.original.name}>
             {row.original.name}
           </Link>
         );
@@ -86,7 +86,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
     {
       accessorKey: 'total',
       header: 'Сумма',
-      cell: ({ row }) => new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(row.original.total),
+      cell: ({ row }) => <span className="font-bold tracking-tight text-xs md:text-sm tabular-nums">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
       accessorKey: 'status',
@@ -119,7 +119,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
     {
       accessorKey: 'createdAt',
       header: 'Дата создания',
-      cell: ({ row }) => new Date(row.original.createdAt).toLocaleDateString('ru-RU'),
+      cell: ({ row }) => <span className="text-xs md:text-sm text-muted-foreground">{new Date(row.original.createdAt).toLocaleDateString('ru-RU')}</span>,
     },
   ], [projectSlug, toast]);
 

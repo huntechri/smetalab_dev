@@ -171,12 +171,12 @@ export function CreateCounterpartySheet({
 
     return (
         <Sheet open={open} onOpenChange={onOpenChange}>
-            <SheetContent className="sm:max-w-[540px] flex flex-col p-0">
-                <SheetHeader className="p-6 pb-4">
-                    <SheetTitle>
+            <SheetContent className="w-full sm:max-w-[540px] flex flex-col p-0">
+                <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+                    <SheetTitle className="text-base sm:text-lg">
                         {counterparty ? "Редактировать контрагента" : "Создать контрагента"}
                     </SheetTitle>
-                    <SheetDescription>
+                    <SheetDescription className="text-xs sm:text-sm">
                         Заполните информацию о контрагенте для справочника.
                     </SheetDescription>
                 </SheetHeader>
@@ -184,12 +184,12 @@ export function CreateCounterpartySheet({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 overflow-hidden">
                         <ScrollArea className="flex-1">
-                            <div className="p-6 pt-0 space-y-6">
+                            <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6">
                                 <Tabs defaultValue="general" className="w-full">
-                                    <TabsList className="grid w-full grid-cols-3 mb-6">
-                                        <TabsTrigger value="general">Общее</TabsTrigger>
-                                        <TabsTrigger value="details">Детали</TabsTrigger>
-                                        <TabsTrigger value="bank">Банк</TabsTrigger>
+                                    <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
+                                        <TabsTrigger value="general" className="text-xs sm:text-sm">Общее</TabsTrigger>
+                                        <TabsTrigger value="details" className="text-xs sm:text-sm">Детали</TabsTrigger>
+                                        <TabsTrigger value="bank" className="text-xs sm:text-sm">Банк</TabsTrigger>
                                     </TabsList>
 
                                     <TabsContent value="general" className="space-y-4">
@@ -510,17 +510,17 @@ export function CreateCounterpartySheet({
                             </div>
                         </ScrollArea>
 
-                        <div className="p-6 border-t bg-muted/20">
+                        <div className="px-4 py-3 sm:p-6 border-t bg-muted/20">
                             <SheetFooter className="flex-row gap-2 sm:space-x-0">
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="flex-1"
+                                    className="flex-1 h-9 sm:h-10 text-sm"
                                     onClick={() => onOpenChange(false)}
                                 >
                                     Отмена
                                 </Button>
-                                <Button type="submit" className="flex-1" disabled={isPending}>
+                                <Button type="submit" className="flex-1 h-9 sm:h-10 text-sm" disabled={isPending}>
                                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     {counterparty ? "Сохранить" : "Создать"}
                                 </Button>

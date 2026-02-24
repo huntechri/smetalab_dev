@@ -143,7 +143,7 @@ const ProjectCell = React.memo(function ProjectCell({
     <Select
       value={projectId ?? 'none'}
       onValueChange={(value) => {
-        void onPatchAction(rowId, { projectId: value === 'none' ? null : value }).catch(() => {});
+        void onPatchAction(rowId, { projectId: value === 'none' ? null : value }).catch(() => { });
       }}
       disabled={disabled}
     >
@@ -327,12 +327,12 @@ export function getGlobalPurchasesColumns({
             ariaLabel="Количество"
             className={tableCellTextClassName}
             onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { qty: Number(value) });
-            } catch (_error) {
-              return;
-            }
-          }}
+              try {
+                await onPatchAction(row.original.id, { qty: Number(value) });
+              } catch (_error) {
+                return;
+              }
+            }}
           />
         </div>
       ),
@@ -352,14 +352,14 @@ export function getGlobalPurchasesColumns({
             value={row.original.price}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Цена"
-            className={tableCellTextClassName}
+            className={cn(tableCellTextClassName, 'font-bold tracking-tight')}
             onCommit={async (value) => {
-            try {
-              await onPatchAction(row.original.id, { price: Number(value) });
-            } catch (_error) {
-              return;
-            }
-          }}
+              try {
+                await onPatchAction(row.original.id, { price: Number(value) });
+              } catch (_error) {
+                return;
+              }
+            }}
           />
         </div>
       ),
@@ -369,7 +369,7 @@ export function getGlobalPurchasesColumns({
       header: () => <div className="text-right">Сумма</div>,
       size: 140,
       minSize: 120,
-      cell: ({ row }) => <div className={cn(tableNumericCellTextClassName, 'font-medium pr-2')}>{amountFormatter.format(row.original.amount)} ₽</div>,
+      cell: ({ row }) => <div className={cn(tableNumericCellTextClassName, 'font-bold tracking-tight pr-2')}>{amountFormatter.format(row.original.amount)} ₽</div>,
     },
     {
       accessorKey: 'supplierName',
