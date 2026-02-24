@@ -27,15 +27,18 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                             ? `${formatProjectDate(project.startDate)} — ${formatProjectDate(project.endDate)}`
                             : 'Сроки не указаны'}
                     </p>
-                    <div
+                    <div className="space-y-1">
+                        <p className="text-[11px] text-muted-foreground">{project.progress}%</p>
+                        <div
                         role="progressbar"
                         aria-valuenow={project.progress}
                         aria-valuemin={0}
                         aria-valuemax={100}
                         aria-label={`Progress for ${project.name}`}
                         className="h-1 w-24 overflow-hidden rounded-full bg-muted"
-                    >
-                        <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+>
+                            <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+                        </div>
                     </div>
                 </div>
                 <ProjectActions

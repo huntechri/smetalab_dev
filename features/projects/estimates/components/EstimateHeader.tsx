@@ -3,9 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { EstimateMeta } from '../types/dto';
 
 const statusMap: Record<EstimateMeta['status'], string> = {
-    draft: 'Черновик',
-    in_progress: 'В работе',
-    approved: 'Согласована',
+    draft: 'Подготовка',
+    in_progress: 'В процессе',
+    approved: 'Выполнено',
 };
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
