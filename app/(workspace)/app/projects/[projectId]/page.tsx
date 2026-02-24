@@ -2,6 +2,7 @@ import { ProjectDashboard } from '@/features/projects';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
+import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
 import { redirect, notFound } from 'next/navigation';
 import { ProjectListItem, ProjectStatus } from '@/features/projects';
 
@@ -24,6 +25,7 @@ export default async function Page({ params }: PageProps) {
     }
 
     const estimates = await getEstimatesByProjectId(projectData.id, team.id);
+    const performanceDynamics = await ProjectPerformanceDynamicsService.list(team.id, projectData.id);
 
     const project: ProjectListItem = {
         id: projectData.id,
@@ -38,5 +40,5 @@ export default async function Page({ params }: PageProps) {
         status: projectData.status as ProjectStatus,
     };
 
-    return <ProjectDashboard project={project} estimates={estimates} />;
+    return <ProjectDashboard project={project} estimates={estimates} performanceDynamics={performanceDynamics} />;
 }

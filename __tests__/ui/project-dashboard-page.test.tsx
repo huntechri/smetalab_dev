@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
+
 import Page from '@/app/(workspace)/app/projects/[projectId]/page';
 
 const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
@@ -41,6 +42,18 @@ vi.mock('@/lib/data/estimates/repo', () => ({
     ]),
 }));
 
+vi.mock('@/lib/services/project-performance-dynamics.service', () => ({
+    ProjectPerformanceDynamicsService: {
+        list: vi.fn(async () => [{
+            date: '2025-03-01',
+            executionPlan: 100,
+            executionFact: 70,
+            procurementPlan: 30,
+            procurementFact: 20,
+        }]),
+    },
+}));
+
 test('project dashboard page maps project data and renders feature screen', async () => {
     const PageComponent = await Page({
         params: Promise.resolve({ projectId: 'north-park' }),
@@ -60,5 +73,14 @@ test('project dashboard page maps project data and renders feature screen', asyn
     });
     expect(projectDashboardSpy.mock.calls[0]?.[0]?.estimates).toEqual([
         { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }
+    ]);
+    expect(projectDashboardSpy.mock.calls[0]?.[0]?.performanceDynamics).toEqual([
+        {
+            date: '2025-03-01',
+            executionPlan: 100,
+            executionFact: 70,
+            procurementPlan: 30,
+            procurementFact: 20,
+        },
     ]);
 });

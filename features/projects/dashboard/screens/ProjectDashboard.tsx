@@ -13,6 +13,7 @@ import {
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from 'next/link';
+import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
 
 type EstimateListItem = {
     id: string;
@@ -28,9 +29,10 @@ type EstimateListItem = {
 type ProjectDashboardProps = {
     project: ProjectListItem;
     estimates: EstimateListItem[];
+    performanceDynamics: PerformanceDynamicsPoint[];
 };
 
-export function ProjectDashboard({ project, estimates }: ProjectDashboardProps) {
+export function ProjectDashboard({ project, estimates, performanceDynamics }: ProjectDashboardProps) {
     return (
         <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
             <div className="px-4 lg:px-6">
@@ -62,7 +64,7 @@ export function ProjectDashboard({ project, estimates }: ProjectDashboardProps) 
             <div className="space-y-6 lg:space-y-10">
                 <div className="@container/main px-4 lg:px-6 space-y-6 lg:space-y-10">
                     <DashboardKpiCards project={project} />
-                    <DashboardChart />
+                    <DashboardChart data={performanceDynamics} />
                 </div>
 
                 <ProjectEstimatesTable
