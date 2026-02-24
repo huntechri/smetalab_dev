@@ -20,6 +20,7 @@ type AggregateRow = {
 const toIsoDate = (value: Date) => value.toISOString().slice(0, 10);
 const toIsoTimestamp = (value: Date) => value.toISOString();
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
+const endOfMonth = (value: Date) => new Date(value.getFullYear(), value.getMonth() + 1, 0, 23, 59, 59, 999);
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -80,10 +81,11 @@ export const buildPerformanceDynamics = (
 export class ProjectPerformanceDynamicsService {
     static async list(teamId: number, projectId: string): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
-        const startDate = new Date(today);
+        const periodEnd = endOfMonth(today);
+        const startDate = new Date(periodEnd);
         startDate.setMonth(startDate.getMonth() - 12);
         const rangeStartTimestamp = toIsoTimestamp(startDate);
-        const rangeEndTimestamp = toIsoTimestamp(today);
+        const rangeEndTimestamp = toIsoTimestamp(periodEnd);
 
         const [executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
             db
@@ -100,7 +102,7 @@ export class ProjectPerformanceDynamicsService {
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         gte(estimateExecutionRows.createdAt, startDate),
-                        lte(estimateExecutionRows.createdAt, today),
+                        lte(estimateExecutionRows.createdAt, periodEnd),
                     ),
                 )
                 .groupBy(sql`DATE(${estimateExecutionRows.createdAt})`),
@@ -139,7 +141,7 @@ export class ProjectPerformanceDynamicsService {
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateRows, teamId),
                         gte(estimateRows.createdAt, startDate),
-                        lte(estimateRows.createdAt, today),
+                        lte(estimateRows.createdAt, periodEnd),
                     ),
                 )
                 .groupBy(sql`DATE(${estimateRows.createdAt})`),
@@ -166,7 +168,7 @@ export class ProjectPerformanceDynamicsService {
                                 ),
                         ),
                         gte(globalPurchases.purchaseDate, toIsoDate(startDate)),
-                        lte(globalPurchases.purchaseDate, toIsoDate(today)),
+                        lte(globalPurchases.purchaseDate, toIsoDate(periodEnd)),
                     ),
                 )
                 .groupBy(globalPurchases.purchaseDate),
