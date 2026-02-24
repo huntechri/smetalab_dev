@@ -17,11 +17,34 @@ const normalizeDate = (date: Date) => {
     return normalized;
 };
 
-const addValues = (target: PerformanceDynamicsPoint, source: PerformanceDynamicsPoint) => {
+type DynamicsSeriesValues = Omit<PerformanceDynamicsPoint, 'date'>;
+
+const addValues = (target: DynamicsSeriesValues, source: DynamicsSeriesValues) => {
     target.executionPlan = normalizeMoney(target.executionPlan + source.executionPlan);
     target.executionFact = normalizeMoney(target.executionFact + source.executionFact);
     target.procurementPlan = normalizeMoney(target.procurementPlan + source.procurementPlan);
     target.procurementFact = normalizeMoney(target.procurementFact + source.procurementFact);
+};
+
+const applyCarryForward = (
+    timeline: PerformanceDynamicsPoint[],
+    openingBalance: DynamicsSeriesValues,
+): PerformanceDynamicsPoint[] => {
+    let running = { ...openingBalance };
+
+    return timeline.map((point) => {
+        running = {
+            executionPlan: normalizeMoney(running.executionPlan + point.executionPlan),
+            executionFact: normalizeMoney(running.executionFact + point.executionFact),
+            procurementPlan: normalizeMoney(running.procurementPlan + point.procurementPlan),
+            procurementFact: normalizeMoney(running.procurementFact + point.procurementFact),
+        };
+
+        return {
+            date: point.date,
+            ...running,
+        };
+    });
 };
 
 const createEmptyPoint = (date: string): PerformanceDynamicsPoint => ({
@@ -52,12 +75,24 @@ const aggregateByDay = (
     data: PerformanceDynamicsPoint[],
     start: Date,
     end: Date,
-): PerformanceDynamicsPoint[] => {
+): { timeline: PerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByDate = new Map<string, PerformanceDynamicsPoint>();
+    const openingBalance = {
+        executionPlan: 0,
+        executionFact: 0,
+        procurementPlan: 0,
+        procurementFact: 0,
+    };
 
     for (const point of data) {
         const pointDate = normalizeDate(new Date(point.date));
-        if (pointDate < start || pointDate > end) continue;
+
+        if (pointDate < start) {
+            addValues(openingBalance, point);
+            continue;
+        }
+
+        if (pointDate > end) continue;
 
         const key = toIsoDate(pointDate);
         const existing = valuesByDate.get(key) ?? createEmptyPoint(key);
@@ -74,19 +109,31 @@ const aggregateByDay = (
         cursor.setDate(cursor.getDate() + 1);
     }
 
-    return timeline;
+    return { timeline, openingBalance };
 };
 
 const aggregateByMonth = (
     data: PerformanceDynamicsPoint[],
     start: Date,
     end: Date,
-): PerformanceDynamicsPoint[] => {
+): { timeline: PerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByMonth = new Map<string, PerformanceDynamicsPoint>();
+    const openingBalance = {
+        executionPlan: 0,
+        executionFact: 0,
+        procurementPlan: 0,
+        procurementFact: 0,
+    };
 
     for (const point of data) {
         const pointDate = normalizeDate(new Date(point.date));
-        if (pointDate < start || pointDate > end) continue;
+
+        if (pointDate < start) {
+            addValues(openingBalance, point);
+            continue;
+        }
+
+        if (pointDate > end) continue;
 
         const monthDate = new Date(pointDate.getFullYear(), pointDate.getMonth(), 1);
         const key = toIsoDate(monthDate);
@@ -105,7 +152,7 @@ const aggregateByMonth = (
         cursor.setMonth(cursor.getMonth() + 1);
     }
 
-    return timeline;
+    return { timeline, openingBalance };
 };
 
 export const buildDynamicsTimeline = (
@@ -115,9 +162,11 @@ export const buildDynamicsTimeline = (
 ): PerformanceDynamicsPoint[] => {
     const { start, end } = getRangeBoundaries(range, now);
 
-    return range === '1m'
+    const aggregated = range === '1m'
         ? aggregateByDay(data, start, end)
         : aggregateByMonth(data, start, end);
+
+    return applyCarryForward(aggregated.timeline, aggregated.openingBalance);
 };
 
 export const hasActivityInTimeline = (timeline: PerformanceDynamicsPoint[]) => {

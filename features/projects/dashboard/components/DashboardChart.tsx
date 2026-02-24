@@ -35,19 +35,19 @@ import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline } from '../
 
 const chartConfig = {
     executionPlan: {
-        label: "План работ",
+        label: "План раб.",
         color: "var(--chart-1)",
     },
     executionFact: {
-        label: "Факт работ",
+        label: "Факт раб.",
         color: "var(--chart-2)",
     },
     procurementPlan: {
-        label: "План материалов",
+        label: "План мат.",
         color: "var(--chart-3)",
     },
     procurementFact: {
-        label: "Факт материалов",
+        label: "Факт мат.",
         color: "var(--chart-4)",
     },
 } satisfies ChartConfig
@@ -168,6 +168,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 cursor={false}
                                 content={
                                     <ChartTooltipContent
+                                        className="max-w-[min(18rem,calc(100vw-2rem))] text-[11px] sm:text-xs"
                                         labelFormatter={(value) => {
                                             const date = new Date(value as string)
 
@@ -188,7 +189,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                     />
                                 }
                             />
-                            <ChartLegend content={<ChartLegendContent />} />
+                            <ChartLegend content={<ChartLegendContent className="flex-wrap justify-start gap-x-3 gap-y-2 text-[11px] sm:text-xs" />} />
                             <Area
                                 dataKey="executionPlan"
                                 name="executionPlan"
