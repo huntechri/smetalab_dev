@@ -20,7 +20,8 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
 });
 
 const tableCellTextClassName = 'text-xs md:text-sm';
-const tableNumericCellTextClassName = 'text-right tabular-nums text-xs md:text-sm';
+const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal text-muted-foreground md:text-sm';
+const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs md:text-sm';
 
 const renderDeltaBadge = (value: number) => {
     if (value === 0) {
@@ -38,7 +39,7 @@ const columns: ColumnDef<EstimateProcurementRow>[] = [
     {
         accessorKey: 'materialName',
         header: 'Материал',
-        cell: ({ row }) => <div className="font-medium text-xs md:text-sm">{row.original.materialName}</div>,
+        cell: ({ row }) => <div className="text-xs md:text-sm font-normal truncate" title={row.original.materialName}>{row.original.materialName}</div>,
         size: 450,
     },
     {
@@ -50,37 +51,37 @@ const columns: ColumnDef<EstimateProcurementRow>[] = [
     {
         accessorKey: 'plannedQty',
         header: () => <div className="text-right">Кол-во</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{numberFormatter.format(row.original.plannedQty)}</div>,
+        cell: ({ row }) => <div className={tableQtyCellTextClassName}>{numberFormatter.format(row.original.plannedQty)}</div>,
         size: 100,
     },
     {
         accessorKey: 'plannedPrice',
         header: () => <div className="text-right">Цена</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.plannedPrice)}</div>,
+        cell: ({ row }) => <div className={tablePriceCellTextClassName}>{moneyFormatter.format(row.original.plannedPrice)}</div>,
         size: 110,
     },
     {
         accessorKey: 'plannedAmount',
         header: () => <div className="text-right">Сумма</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.plannedAmount)}</div>,
+        cell: ({ row }) => <div className={tablePriceCellTextClassName}>{moneyFormatter.format(row.original.plannedAmount)}</div>,
         size: 120,
     },
     {
         accessorKey: 'actualQty',
         header: () => <div className="text-right">ф. Кол-во</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{numberFormatter.format(row.original.actualQty)}</div>,
+        cell: ({ row }) => <div className={tableQtyCellTextClassName}>{numberFormatter.format(row.original.actualQty)}</div>,
         size: 100,
     },
     {
         accessorKey: 'actualAvgPrice',
         header: () => <div className="text-right">Ср. цена</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
+        cell: ({ row }) => <div className={tablePriceCellTextClassName}>{moneyFormatter.format(row.original.actualAvgPrice)}</div>,
         size: 110,
     },
     {
         accessorKey: 'actualAmount',
         header: () => <div className="text-right">ф. Сумма</div>,
-        cell: ({ row }) => <div className={tableNumericCellTextClassName}>{moneyFormatter.format(row.original.actualAmount)}</div>,
+        cell: ({ row }) => <div className={tablePriceCellTextClassName}>{moneyFormatter.format(row.original.actualAmount)}</div>,
         size: 120,
     },
     {
