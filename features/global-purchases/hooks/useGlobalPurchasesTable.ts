@@ -1,10 +1,12 @@
 'use client';
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { patchPurchaseRow } from '../lib/rows';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
+
+const PATCH_DEBOUNCE_MS = 180;
 
 const sortRowsByProjectId = (rows: PurchaseRow[]) => [...rows].sort((a, b) => {
     const aProject = a.projectId;
@@ -31,21 +33,31 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
     const pendingIdsRef = useRef<Set<string>>(new Set());
 
+    const queuedPatchesRef = useRef<Map<string, PurchaseRowPatch>>(new Map());
+    const previousRowsRef = useRef<Map<string, PurchaseRow>>(new Map());
+    const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const flushInFlightRef = useRef(false);
+    const updateWaitersRef = useRef<Map<string, Array<{ resolve: () => void; reject: (error: unknown) => void }>>>(new Map());
+
     const startPending = useCallback((rowId: string) => {
         if (pendingIdsRef.current.has(rowId)) {
-            return false;
+            return;
         }
 
         const next = new Set(pendingIdsRef.current);
         next.add(rowId);
         pendingIdsRef.current = next;
         setPendingIds(next);
-        return true;
     }, []);
 
-    const finishPending = useCallback((rowId: string) => {
+    const finishPendingMany = useCallback((rowIds: string[]) => {
+        if (rowIds.length === 0) return;
+
         const next = new Set(pendingIdsRef.current);
-        next.delete(rowId);
+        for (const rowId of rowIds) {
+            next.delete(rowId);
+        }
+
         pendingIdsRef.current = next;
         setPendingIds(next);
     }, []);
@@ -67,41 +79,105 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         return created;
     }, [range.from]);
 
-    const updateRow = useCallback(async (rowId: string, patch: PurchaseRowPatch) => {
-        if (!startPending(rowId)) return;
-
-        // Capture previous state for potential rollback
-        const existing = rows.find((r) => r.id === rowId);
-        if (!existing) {
-            finishPending(rowId);
+    const flushQueuedPatches = useCallback(async () => {
+        if (flushInFlightRef.current || queuedPatchesRef.current.size === 0) {
             return;
         }
-        const prevRow = existing;
 
-        // Optimistic update
-        setRows((current) => current.map((row) => (row.id === rowId ? patchPurchaseRow(row, patch) : row)));
+        flushInFlightRef.current = true;
+        const batchEntries = [...queuedPatchesRef.current.entries()].map(([rowId, patch]) => ({ rowId, patch }));
+        queuedPatchesRef.current.clear();
 
         try {
-            const updated = await globalPurchasesActionRepo.patch(rowId, patch);
-            setRows((current) => sortRowsByProjectId(current.map((row) => (row.id === rowId ? updated : row))));
+            const updatedRows = await globalPurchasesActionRepo.patchBatch({ updates: batchEntries });
+            const updatedMap = new Map(updatedRows.map((row) => [row.id, row]));
+
+            setRows((current) => sortRowsByProjectId(current.map((row) => updatedMap.get(row.id) ?? row)));
+            for (const { rowId } of batchEntries) {
+                previousRowsRef.current.delete(rowId);
+                const waiters = updateWaitersRef.current.get(rowId) ?? [];
+                waiters.forEach((waiter) => waiter.resolve());
+                updateWaitersRef.current.delete(rowId);
+            }
         } catch (serviceError) {
-            // Rollback
-            setRows((current) => current.map((row) => (row.id === rowId ? prevRow : row)));
-            throw serviceError;
+            const rollbackIds = batchEntries.map((entry) => entry.rowId);
+            setRows((current) => current.map((row) => {
+                const prevRow = previousRowsRef.current.get(row.id);
+                return prevRow ?? row;
+            }));
+
+            for (const rowId of rollbackIds) {
+                previousRowsRef.current.delete(rowId);
+                const waiters = updateWaitersRef.current.get(rowId) ?? [];
+                waiters.forEach((waiter) => waiter.reject(serviceError));
+                updateWaitersRef.current.delete(rowId);
+            }
         } finally {
-            finishPending(rowId);
+            finishPendingMany(batchEntries.map((entry) => entry.rowId));
+            flushInFlightRef.current = false;
+
+            if (queuedPatchesRef.current.size > 0) {
+                void flushQueuedPatches();
+            }
         }
-    }, [finishPending, rows, startPending]);
+    }, [finishPendingMany]);
+
+    const scheduleFlush = useCallback(() => {
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+            debounceTimerRef.current = null;
+            void flushQueuedPatches();
+        }, PATCH_DEBOUNCE_MS);
+    }, [flushQueuedPatches]);
+
+    const updateRow = useCallback((rowId: string, patch: PurchaseRowPatch) => {
+        const existing = rows.find((r) => r.id === rowId);
+        if (!existing) {
+            return Promise.resolve();
+        }
+
+        if (!previousRowsRef.current.has(rowId)) {
+            previousRowsRef.current.set(rowId, existing);
+        }
+
+        const mergedPatch = {
+            ...(queuedPatchesRef.current.get(rowId) ?? {}),
+            ...patch,
+        };
+
+        queuedPatchesRef.current.set(rowId, mergedPatch);
+        startPending(rowId);
+
+        const waiterPromise = new Promise<void>((resolve, reject) => {
+            const waiters = updateWaitersRef.current.get(rowId) ?? [];
+            waiters.push({ resolve, reject });
+            updateWaitersRef.current.set(rowId, waiters);
+        });
+
+        setRows((current) => current.map((row) => (row.id === rowId ? patchPurchaseRow(row, patch) : row)));
+        scheduleFlush();
+
+        return waiterPromise;
+    }, [rows, scheduleFlush, startPending]);
 
     const removeRow = useCallback(async (rowId: string) => {
-        if (!startPending(rowId)) return;
+        startPending(rowId);
 
         const existingIndex = rows.findIndex((r) => r.id === rowId);
         if (existingIndex < 0) {
-            finishPending(rowId);
+            finishPendingMany([rowId]);
             return;
         }
         const removedRow = rows[existingIndex];
+
+        queuedPatchesRef.current.delete(rowId);
+        previousRowsRef.current.delete(rowId);
+        const waiters = updateWaitersRef.current.get(rowId) ?? [];
+        waiters.forEach((waiter) => waiter.reject(new Error('ROW_REMOVED')));
+        updateWaitersRef.current.delete(rowId);
 
         // Optimistic remove
         setRows((current) => current.filter((row) => row.id !== rowId));
@@ -118,9 +194,9 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
             });
             throw serviceError;
         } finally {
-            finishPending(rowId);
+            finishPendingMany([rowId]);
         }
-    }, [finishPending, rows, startPending]);
+    }, [finishPendingMany, rows, startPending]);
 
     const copyToNextDay = useCallback(async () => {
         const createdRows = await globalPurchasesActionRepo.copyToNextDay(range.from);
@@ -133,6 +209,12 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     }, { amount: 0 }), [rows]);
 
     const addedMaterialNames = useMemo(() => new Set(rows.map((row) => row.materialName).filter(Boolean)), [rows]);
+
+    useEffect(() => () => {
+        if (debounceTimerRef.current) {
+            clearTimeout(debounceTimerRef.current);
+        }
+    }, []);
 
     return {
         rows,

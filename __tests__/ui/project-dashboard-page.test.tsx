@@ -3,6 +3,9 @@ import { render, screen } from '@testing-library/react';
 import { expect, test, vi } from 'vitest';
 
 import Page from '@/app/(workspace)/app/projects/[projectId]/page';
+import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
+import { ProjectDashboardKpiService } from '@/lib/services/project-dashboard-kpi.service';
+import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
 
 const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
     <div data-testid="project-dashboard">{project.name}</div>
@@ -106,4 +109,68 @@ test('project dashboard page maps project data and renders feature screen', asyn
         progress: 62,
         remainingDays: 12,
     });
+});
+
+test('project dashboard launches independent queries in parallel after project lookup', async () => {
+    type Deferred<T> = {
+        promise: Promise<T>;
+        resolve: (value: T) => void;
+    };
+
+    const createDeferred = <T,>(): Deferred<T> => {
+        let resolve!: (value: T) => void;
+        const promise = new Promise<T>((res) => {
+            resolve = res;
+        });
+
+        return { promise, resolve };
+    };
+
+    const estimatesDeferred = createDeferred<Array<{ id: string; name: string; slug: string }>>();
+    const dynamicsDeferred = createDeferred<Array<{
+        date: string;
+        executionPlan: number;
+        executionFact: number;
+        procurementPlan: number;
+        procurementFact: number;
+    }>>();
+    const kpiDeferred = createDeferred<{
+        plannedWorks: number;
+        plannedMaterials: number;
+        actualWorks: number;
+        actualMaterials: number;
+    }>();
+
+    vi.mocked(getEstimatesByProjectId).mockImplementation(() => estimatesDeferred.promise);
+    vi.mocked(ProjectPerformanceDynamicsService.list).mockImplementation(() => dynamicsDeferred.promise);
+    vi.mocked(ProjectDashboardKpiService.getByProjectId).mockImplementation(() => kpiDeferred.promise);
+
+    const pagePromise = Page({
+        params: Promise.resolve({ projectId: 'north-park' }),
+    });
+
+    await Promise.resolve();
+
+    expect(getEstimatesByProjectId).toHaveBeenCalledTimes(1);
+    expect(ProjectPerformanceDynamicsService.list).toHaveBeenCalledTimes(1);
+    expect(ProjectDashboardKpiService.getByProjectId).toHaveBeenCalledTimes(1);
+
+    estimatesDeferred.resolve([{ id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }]);
+    dynamicsDeferred.resolve([
+        {
+            date: '2025-03-01',
+            executionPlan: 100,
+            executionFact: 70,
+            procurementPlan: 30,
+            procurementFact: 20,
+        },
+    ]);
+    kpiDeferred.resolve({
+        plannedWorks: 100000,
+        plannedMaterials: 50000,
+        actualWorks: 80000,
+        actualMaterials: 30000,
+    });
+
+    await expect(pagePromise).resolves.toBeTruthy();
 });

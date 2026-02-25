@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useTransition } from "react";
 import { CounterpartyRow } from "@/types/counterparty-row";
 import { columns } from "../components/columns";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Loader2, Plus } from "lucide-react";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
 import {
@@ -16,6 +16,10 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { fetchCounterpartiesPage } from "@/app/actions/counterparties";
+import { useToast } from "@/components/ui/use-toast";
+
+const PAGE_SIZE = 50;
 
 interface CounterpartiesScreenProps {
     initialData: CounterpartyRow[];
@@ -23,9 +27,13 @@ interface CounterpartiesScreenProps {
     tenantId: number;
 }
 
-export function CounterpartiesScreen({ initialData, totalCount: _totalCount, tenantId }: CounterpartiesScreenProps) {
+export function CounterpartiesScreen({ initialData, totalCount, tenantId }: CounterpartiesScreenProps) {
     const [isSheetOpen, setIsSheetOpen] = useState(false);
     const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
+    const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
+    const [rowsCount, setRowsCount] = useState(totalCount);
+    const [isLoadingMore, startLoadMoreTransition] = useTransition();
+    const { toast } = useToast();
 
     const handleCreate = () => {
         setEditingCounterparty(null);
@@ -39,10 +47,58 @@ export function CounterpartiesScreen({ initialData, totalCount: _totalCount, ten
 
     const { handleDelete } = useCounterpartiesActions();
 
-    const onSaved = () => {
+    const onSaved = (saved: CounterpartyRow, mode: "create" | "update") => {
         setIsSheetOpen(false);
         setEditingCounterparty(null);
-    }
+
+        if (mode === "create") {
+            setRows((prev) => [saved, ...prev]);
+            setRowsCount((prev) => prev + 1);
+            return;
+        }
+
+        setRows((prev) => prev.map((item) => (item.id === saved.id ? saved : item)));
+    };
+
+    const onDelete = async (counterparty: CounterpartyRow) => {
+        const previousRows = rows;
+
+        await handleDelete(counterparty, {
+            onOptimisticDelete: () => {
+                setRows((prev) => prev.filter((item) => item.id !== counterparty.id));
+                setRowsCount((prev) => Math.max(0, prev - 1));
+            },
+            onRollback: () => {
+                setRows(previousRows);
+                setRowsCount((prev) => prev + 1);
+            },
+        });
+    };
+
+    const canLoadMore = useMemo(() => rows.length < rowsCount, [rows.length, rowsCount]);
+
+    const handleLoadMore = () => {
+        if (!canLoadMore || isLoadingMore) {
+            return;
+        }
+
+        startLoadMoreTransition(async () => {
+            const result = await fetchCounterpartiesPage({ offset: rows.length, limit: PAGE_SIZE });
+
+            if (!result.success) {
+                toast({ variant: "destructive", title: result.message || "Не удалось загрузить данные" });
+                return;
+            }
+
+            setRows((prev) => {
+                const existingIds = new Set(prev.map((item) => item.id));
+                const incoming = result.data.data.filter((item) => !existingIds.has(item.id));
+                return [...prev, ...incoming];
+            });
+
+            setRowsCount(result.data.count);
+        });
+    };
 
     return (
         <div className="space-y-6 p-1 md:p-0">
@@ -67,10 +123,19 @@ export function CounterpartiesScreen({ initialData, totalCount: _totalCount, ten
 
             <DataTable
                 columns={columns}
-                data={initialData}
+                data={rows}
+                onEndReached={handleLoadMore}
+                actions={
+                    canLoadMore ? (
+                        <Button variant="outline" size="sm" onClick={handleLoadMore} disabled={isLoadingMore}>
+                            {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                            {isLoadingMore ? "Загрузка..." : "Загрузить ещё"}
+                        </Button>
+                    ) : undefined
+                }
                 meta={{
                     onEdit: handleEdit,
-                    onDelete: handleDelete
+                    onDelete: onDelete,
                 }}
             />
 
@@ -84,4 +149,5 @@ export function CounterpartiesScreen({ initialData, totalCount: _totalCount, ten
         </div>
     );
 }
+
 export const CounterpartiesClient = CounterpartiesScreen;

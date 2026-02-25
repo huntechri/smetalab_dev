@@ -50,11 +50,23 @@ describe('MaterialsCatalogService', () => {
     vi.mocked(MaterialsService.search).mockResolvedValue({ success: true, data: [] });
     vi.mocked(MaterialsService.generateMissingEmbeddings).mockResolvedValue({ success: true, data: { processed: 0, remaining: 0 } });
 
-    await MaterialsCatalogService.fetchMore(1, { query: 'q', lastCode: '001' });
+    await MaterialsCatalogService.fetchMore(1, {
+      query: 'q',
+      offset: 10,
+      limit: 20,
+      cursor: { lastCode: '001', lastId: '00000000-0000-0000-0000-000000000001' },
+    });
     await MaterialsCatalogService.search(1, 'q');
     await MaterialsCatalogService.generateMissingEmbeddings(1);
 
-    expect(MaterialsService.getMany).toHaveBeenCalledWith(1, undefined, 'q', undefined, '001');
+    expect(MaterialsService.getMany).toHaveBeenCalledWith(
+      1,
+      20,
+      'q',
+      10,
+      '001',
+      '00000000-0000-0000-0000-000000000001'
+    );
     expect(MaterialsService.search).toHaveBeenCalledWith(1, 'q');
     expect(MaterialsService.generateMissingEmbeddings).toHaveBeenCalledWith(1);
   });
