@@ -223,4 +223,59 @@ describe('Materials search integration', () => {
             expect(result.data[0]?.id).toBe(vendorMatch.id);
         }
     });
+
+    it('uses offset in getMany pagination', async () => {
+        await db.insert(materials).values([
+            { tenantId: testTeamId, code: 'P-001', name: 'Page 1', status: 'active' },
+            { tenantId: testTeamId, code: 'P-002', name: 'Page 2', status: 'active' },
+            { tenantId: testTeamId, code: 'P-003', name: 'Page 3', status: 'active' },
+        ]);
+
+        const firstPage = await MaterialsService.getMany(testTeamId, 2, undefined, 0);
+        const secondPage = await MaterialsService.getMany(testTeamId, 2, undefined, 1);
+
+        expect(firstPage.success).toBe(true);
+        expect(secondPage.success).toBe(true);
+        if (firstPage.success && secondPage.success) {
+            expect(secondPage.data[0]?.id).toBe(firstPage.data[1]?.id);
+        }
+    });
+
+    it('keeps cursor pagination stable when codes are equal by using id tie-breaker', async () => {
+        await db.execute(sql`DROP INDEX IF EXISTS idx_materials_code_tenant_unique`);
+
+        try {
+            await db.insert(materials).values([
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 1', status: 'active' },
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 2', status: 'active' },
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 3', status: 'active' },
+            ]);
+
+            const page1 = await MaterialsService.getMany(testTeamId, 2);
+            expect(page1.success).toBe(true);
+            if (!page1.success) {
+                return;
+            }
+
+            const last = page1.data[1];
+            expect(last).toBeDefined();
+            if (!last) {
+                return;
+            }
+
+            const page2 = await MaterialsService.getMany(testTeamId, 2, undefined, 0, last.code, last.id);
+            expect(page2.success).toBe(true);
+
+            if (page2.success) {
+                const page1Ids = new Set(page1.data.map((item) => item.id));
+                expect(page2.data.every((item) => !page1Ids.has(item.id))).toBe(true);
+            }
+        } finally {
+            await db.execute(sql`DELETE FROM materials WHERE tenant_id = ${testTeamId} AND code = 'DUP-001'`);
+            await db.execute(sql`
+                CREATE UNIQUE INDEX IF NOT EXISTS idx_materials_code_tenant_unique
+                ON materials (tenant_id, code)
+            `);
+        }
+    });
 });
