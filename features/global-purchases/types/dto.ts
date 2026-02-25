@@ -35,3 +35,11 @@ export type PurchaseRowsRange = {
   from: string;
   to: string;
 };
+
+
+export type PurchaseRowBatchPatchPayload = {
+  updates: Array<{
+    rowId: string;
+    patch: PurchaseRowPatch;
+  }>;
+};

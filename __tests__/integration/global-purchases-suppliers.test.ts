@@ -120,4 +120,44 @@ describe('Global purchases supplier badges integration', () => {
     expect(list.data[0].supplierName).toBeNull();
     expect(list.data[0].supplierColor).toBeNull();
   });
+
+  it('updates 100 rows in a single batch patch call', async () => {
+    const rows = await db.insert(globalPurchases).values(
+      Array.from({ length: 100 }, (_, index) => ({
+        tenantId: teamA,
+        projectName: '',
+        materialName: `Материал ${index + 1}`,
+        unit: 'шт',
+        qty: 1,
+        price: 10,
+        amount: 10,
+        note: '',
+        source: 'manual' as const,
+        purchaseDate: '2026-02-01',
+        order: index + 2,
+      }))
+    ).returning();
+
+    const payload = {
+      updates: rows.map((row, index) => ({
+        rowId: row.id,
+        patch: {
+          qty: index + 1,
+          price: 25,
+          supplierId: supplierAId,
+        },
+      })),
+    };
+
+    const patchResult = await GlobalPurchasesService.patchBatch(teamA, payload);
+    expect(patchResult.success).toBe(true);
+    if (!patchResult.success) return;
+
+    expect(patchResult.data).toHaveLength(100);
+    expect(patchResult.data.every((row) => row.supplierId === supplierAId)).toBe(true);
+
+    const totalAmount = patchResult.data.reduce((acc, row) => acc + row.amount, 0);
+    expect(totalAmount).toBeGreaterThan(0);
+  });
+
 });
