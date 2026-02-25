@@ -82,8 +82,7 @@ export class ProjectPerformanceDynamicsService {
     static async list(teamId: number, projectId: string): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
         const periodEnd = endOfMonth(today);
-        const startDate = new Date(periodEnd);
-        startDate.setMonth(startDate.getMonth() - 12);
+        const startDate = new Date(periodEnd.getFullYear(), periodEnd.getMonth() - 11, 1);
         const rangeStartTimestamp = toIsoTimestamp(startDate);
         const rangeEndTimestamp = toIsoTimestamp(periodEnd);
 
