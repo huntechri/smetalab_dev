@@ -200,7 +200,7 @@ export function DataTable<TData, TValue>({
                                         }
                                     }}
                                     className={cn(
-                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm",
+                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-8 text-xs placeholder:text-xs",
                                         isAiMode ? (
                                             "border-indigo-400/50 ring-indigo-400/20 focus-visible:ring-indigo-500/30 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
@@ -250,7 +250,7 @@ export function DataTable<TData, TValue>({
                             )}
                         </div>
                         {actions && (
-                            <div className="flex flex-wrap gap-2 w-full sm:w-auto" role="group" aria-label="Действия таблицы">
+                            <div className="flex flex-wrap items-center justify-end gap-2 w-full sm:w-auto sm:justify-start" role="group" aria-label="Действия таблицы">
                                 {actions}
                             </div>
                         )}

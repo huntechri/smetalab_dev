@@ -29,11 +29,20 @@ export function ProjectsToolbar({
     return (
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-                <ProjectsSearchInput value={searchQuery} onChange={onSearchQueryChange} />
-                <ProjectsSortSelect value={sortOption} onValueChange={onSortOptionChange} />
-                <ProjectsViewToggle value={viewMode} onValueChange={onViewModeChange} />
+                <div className="w-full sm:flex-1">
+                    <ProjectsSearchInput value={searchQuery} onChange={onSearchQueryChange} />
+                </div>
+                <div className="flex items-center gap-2">
+                    <div className="flex-1 sm:flex-initial">
+                        <ProjectsSortSelect value={sortOption} onValueChange={onSortOptionChange} />
+                    </div>
+                    <ProjectsViewToggle value={viewMode} onValueChange={onViewModeChange} />
+                </div>
             </div>
-            <Button onClick={onAddClick}>
+            <Button
+                onClick={onAddClick}
+                className="h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+            >
                 Создать проект
             </Button>
         </div>

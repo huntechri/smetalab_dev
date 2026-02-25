@@ -2,7 +2,6 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus } from 'lucide-react';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
@@ -53,8 +52,10 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}
                 actions={
-                    <Button onClick={() => setIsDialogOpen(true)}>
-                        <Plus className="size-4 mr-2" />
+                    <Button
+                        onClick={() => setIsDialogOpen(true)}
+                        className="w-full sm:w-auto h-8 px-4 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+                    >
                         Создать смету
                     </Button>
                 }
