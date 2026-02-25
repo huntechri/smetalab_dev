@@ -17,6 +17,7 @@ export function useWorksTable(initialData: WorkRow[], tenantId: number) {
             id: 'placeholder-' + Date.now(),
             tenantId: tenantId,
             code: '',
+            codeSortKey: '~',
             name: '',
             nameNorm: null,
             unit: '',

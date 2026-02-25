@@ -99,6 +99,44 @@ describe('Works Integration Tests', () => {
         expect(updated.name).toBe('New Name');
     });
 
+
+    it('should_store_code_sort_key_on_create_and_update', async () => {
+        const createResult = await createWork({
+            tenantId: testTeamId,
+            code: '10.2',
+            name: 'Natural code row',
+            status: 'active',
+        });
+
+        expect(createResult.success).toBe(true);
+
+        const [created] = await db.select().from(works)
+            .where(and(eq(works.tenantId, testTeamId), eq(works.code, '10.2')));
+        expect(created.codeSortKey).toBe('0000000010.0000000002');
+
+        const updateResult = await updateWork(created.id, { code: 'X-100' });
+        expect(updateResult.success).toBe(true);
+
+        const [updated] = await db.select().from(works).where(eq(works.id, created.id));
+        expect(updated.codeSortKey).toBe('~');
+    });
+
+    it('should_keep_ui_order_with_numeric_codes_first_then_sort_order', async () => {
+        await db.insert(works).values([
+            { tenantId: testTeamId, code: '2.10', name: '2.10', sortOrder: 200, status: 'active' },
+            { tenantId: testTeamId, code: '2.2', name: '2.2', sortOrder: 150, status: 'active' },
+            { tenantId: testTeamId, code: 'ABC', name: 'ABC', sortOrder: 10, status: 'active' },
+            { tenantId: testTeamId, code: 'ZZZ', name: 'ZZZ', sortOrder: 5, status: 'active' },
+        ]);
+
+        const result = await WorksService.getMany(testTeamId, 20);
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        const orderedCodes = result.data.map((item) => item.code);
+        expect(orderedCodes).toEqual(['2.2', '2.10', 'ZZZ', 'ABC']);
+    });
+
     it('should_handle_insert_after_correctly', async () => {
         // 1. Setup two existing works
         const [w1] = await db.insert(works).values({
