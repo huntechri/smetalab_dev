@@ -9,8 +9,17 @@ const dbMock = vi.hoisted(() => ({
     transaction: vi.fn(),
 }));
 
+const executionServiceMocks = vi.hoisted(() => ({
+    bumpSyncVersion: vi.fn(),
+    syncEstimateIfStale: vi.fn(),
+}));
+
 vi.mock('@/lib/data/db/drizzle', () => ({
     db: dbMock,
+}));
+
+vi.mock('@/lib/services/estimate-execution.service', () => ({
+    EstimateExecutionService: executionServiceMocks,
 }));
 
 import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
@@ -19,6 +28,8 @@ describe('EstimateRowsService duplicate protection', () => {
     beforeEach(() => {
         dbMock.query.estimates.findFirst.mockReset();
         dbMock.transaction.mockReset();
+        executionServiceMocks.bumpSyncVersion.mockReset();
+        executionServiceMocks.syncEstimateIfStale.mockReset();
         dbMock.query.estimates.findFirst.mockResolvedValue({ id: 'est-1' });
     });
 
