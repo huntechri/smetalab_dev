@@ -8,6 +8,7 @@ import { Result, success, error } from '@/lib/utils/result';
 import { workSchema } from '@/lib/validations/schemas';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { after } from 'next/server';
+import { buildWorkCodeSortKey } from './code-sort';
 
 export class WorksService {
     static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
@@ -33,6 +34,7 @@ export class WorksService {
                     id: works.id,
                     tenantId: works.tenantId,
                     code: works.code,
+                    codeSortKey: works.codeSortKey,
                     name: works.name,
                     unit: works.unit,
                     price: works.price,
@@ -47,7 +49,7 @@ export class WorksService {
                 .from(works)
                 .where(and(...filters))
                 .orderBy(
-                    sql`CASE WHEN ${works.code} ~ '^[0-9]+(\.[0-9]+)*$' THEN string_to_array(${works.code}, '.')::int[] ELSE ARRAY[2147483647] END`,
+                    works.codeSortKey,
                     works.sortOrder,
                     works.code
                 )
@@ -66,12 +68,15 @@ export class WorksService {
         const data = validation.data;
 
         try {
+            const finalCode = data.code || `W-${Date.now()}`;
+
             const [inserted] = await db.insert(works).values({
                 ...data,
                 tenantId: teamId,
                 nameNorm: data.name.toLowerCase(),
                 status: 'active',
-                code: data.code || `W-${Date.now()}`,
+                code: finalCode,
+                codeSortKey: buildWorkCodeSortKey(finalCode),
                 sortOrder: data.sortOrder || 0,
             }).returning({ id: works.id });
 
@@ -100,6 +105,9 @@ export class WorksService {
             const updateData = { ...rawData, updatedAt: new Date() };
             if (updateData.name) {
                 updateData.nameNorm = updateData.name.toLowerCase();
+            }
+            if (updateData.code) {
+                updateData.codeSortKey = buildWorkCodeSortKey(updateData.code);
             }
 
             await db.update(works).set(updateData)
@@ -216,13 +224,15 @@ export class WorksService {
 
             const embedding = await generateEmbedding(buildWorkContext(data as NewWork));
 
+            const finalCode = data.code || `W-${Date.now()}`;
+
             await db.insert(works).values({
                 ...data,
                 tenantId: teamId,
                 nameNorm: data.name.toLowerCase(),
                 phase: targetPhase,
-                // Код теперь генерируем один раз, он не влияет на порядок
-                code: data.code || `W-${Date.now()}`,
+                code: finalCode,
+                codeSortKey: buildWorkCodeSortKey(finalCode),
                 status: 'active',
                 embedding,
                 sortOrder: newSortOrder
@@ -320,6 +330,7 @@ export class WorksService {
                 id: works.id,
                 tenantId: works.tenantId,
                 code: works.code,
+                codeSortKey: works.codeSortKey,
                 name: works.name,
                 unit: works.unit,
                 price: works.price,
@@ -392,6 +403,7 @@ export class WorksService {
                         ...item,
                         tenantId: teamId, // Принудительно ставим tenantId
                         nameNorm: item.name.toLowerCase(),
+                        codeSortKey: buildWorkCodeSortKey(item.code),
                         // Если sortOrder не передан, добавляем в конец
                         sortOrder: item.sortOrder || (currentMaxSortOrder + (idx + 1) * 100)
                     }));
@@ -410,6 +422,7 @@ export class WorksService {
                             set: {
                                 name: sql`excluded.name`,
                                 nameNorm: sql`excluded.name_norm`,
+                                codeSortKey: sql`excluded.code_sort_key`,
                                 unit: sql`excluded.unit`,
                                 price: sql`excluded.price`,
                                 phase: sql`excluded.phase`,

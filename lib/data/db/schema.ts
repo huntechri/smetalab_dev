@@ -479,6 +479,7 @@ export const works = pgTable('works', {
   tenantId: integer('tenant_id').notNull().references(() => teams.id),
 
   code: varchar('code', { length: 64 }).notNull(),
+  codeSortKey: text('code_sort_key').notNull().default('~'),
   name: text('name').notNull(),
   nameNorm: text('name_norm'),
   unit: varchar('unit', { length: 100 }),
@@ -507,6 +508,7 @@ export const works = pgTable('works', {
   index('works_sort_order_idx').on(table.sortOrder),
   // Optimize fetching sorted works for a tenant (e.g. getWorks query)
   index('works_tenant_sort_order_idx').on(table.tenantId, table.sortOrder).where(sql`deleted_at IS NULL`), // Optimizes getWorks
+  index('works_tenant_deleted_code_sort_order_idx').on(table.tenantId, table.deletedAt, table.codeSortKey, table.sortOrder),
   uniqueIndex('idx_works_code_tenant_unique').on(table.tenantId, table.code),
   index('works_embedding_hnsw_idx').using('hnsw', table.embedding.op('vector_cosine_ops')),
   index('works_tenant_unit_idx').on(table.tenantId, table.unit).where(sql`deleted_at IS NULL`),
