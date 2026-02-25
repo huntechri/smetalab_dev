@@ -5,6 +5,7 @@ import {
     deleteCounterpartyUseCase,
     updateCounterpartyUseCase,
 } from '@/lib/domain/counterparties/use-cases';
+import { getCounterparties } from '@/lib/data/db/queries';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { safeAction } from '@/lib/actions/safe-action';
@@ -39,6 +40,11 @@ const counterpartySchema = z.object({
     corrAccount: z.string().optional().nullable().or(z.literal('')),
     bankInn: z.string().optional().nullable().or(z.literal('')),
     bankKpp: z.string().optional().nullable().or(z.literal('')),
+});
+
+const counterpartiesPageSchema = z.object({
+    limit: z.number().int().min(1).max(100).optional(),
+    offset: z.number().int().min(0).optional(),
 });
 
 type PgErrorLike = {
@@ -88,12 +94,24 @@ export const updateCounterparty = safeAction<CounterpartyRow, [{ id: string; dat
     { name: 'updateCounterparty' }
 );
 
-export const deleteCounterparty = safeAction<boolean, [string]>(
+export const deleteCounterparty = safeAction<CounterpartyRow, [string]>(
     async ({ team, user }, id) => {
-        await deleteCounterpartyUseCase(team.id, user.id, id);
+        const deleted = await deleteCounterpartyUseCase(team.id, user.id, id);
 
         revalidatePath('/app/guide/counterparties');
-        return success(true);
+        return success(deleted as CounterpartyRow);
     },
     { name: 'deleteCounterparty' }
+);
+
+export const fetchCounterpartiesPage = safeAction<
+    { data: CounterpartyRow[]; count: number },
+    [z.infer<typeof counterpartiesPageSchema>?]
+>(
+    async ({ team }, payload = {}) => {
+        const { limit = 50, offset = 0 } = counterpartiesPageSchema.parse(payload ?? {});
+        const page = await getCounterparties(team.id, { limit, offset });
+        return success({ data: page.data, count: page.count });
+    },
+    { name: 'fetchCounterpartiesPage' }
 );
