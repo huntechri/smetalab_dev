@@ -1,4 +1,4 @@
-import { and, eq, isNull, sql } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { estimateProcurementCache, estimateRows, estimates, globalPurchases } from '@/lib/data/db/schema';
@@ -63,6 +63,10 @@ type FactAggregateInput = {
     actualAmount: number;
     purchaseCount: number;
     lastPurchaseDate: string | null;
+};
+
+type CacheAggregateRow = EstimateProcurementRow & {
+    matchKey: string;
 };
 
 const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
@@ -195,6 +199,67 @@ const buildRowsFromAggregates = (
     });
 };
 
+const buildCacheRowsFromAggregates = (
+    planAggregates: PlanAggregateInput[],
+    factAggregates: FactAggregateInput[],
+): CacheAggregateRow[] => {
+    const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
+    const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
+
+    const rows: CacheAggregateRow[] = [];
+
+    for (const [matchKey, plan] of planMap.entries()) {
+        const fact = factMap.get(matchKey);
+        const plannedAmount = roundMoney(plan.plannedAmount);
+        const plannedQty = roundMoney(plan.plannedQty);
+        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
+        const actualQty = roundMoney(fact?.actualQty ?? 0);
+
+        rows.push({
+            matchKey,
+            materialName: plan.materialName,
+            unit: plan.unit || fact?.unit || 'шт',
+            source: 'estimate',
+            plannedQty,
+            plannedPrice: plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0,
+            plannedAmount,
+            actualQty,
+            actualAvgPrice: actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0,
+            actualAmount,
+            qtyDelta: roundMoney(plannedQty - actualQty),
+            amountDelta: roundMoney(plannedAmount - actualAmount),
+            purchaseCount: fact?.purchaseCount ?? 0,
+            lastPurchaseDate: fact?.lastPurchaseDate ?? null,
+        });
+
+        factMap.delete(matchKey);
+    }
+
+    for (const [matchKey, fact] of factMap.entries()) {
+        const actualAmount = roundMoney(fact.actualAmount);
+        const actualQty = roundMoney(fact.actualQty);
+
+        rows.push({
+            matchKey,
+            materialName: fact.materialName,
+            unit: fact.unit || 'шт',
+            source: 'fact_only',
+            plannedQty: 0,
+            plannedPrice: 0,
+            plannedAmount: 0,
+            actualQty,
+            actualAvgPrice: actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0,
+            actualAmount,
+            qtyDelta: roundMoney(-actualQty),
+            amountDelta: roundMoney(-actualAmount),
+            purchaseCount: fact.purchaseCount,
+            lastPurchaseDate: fact.lastPurchaseDate,
+        });
+    }
+
+    return rows;
+};
+
 export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: FactRow[]): EstimateProcurementRow[] => {
     const planMap = aggregatePlan(planRows);
     const factMap = aggregateFact(factRows);
@@ -226,37 +291,41 @@ export class EstimateProcurementService {
             .from(estimateProcurementCache)
             .where(
                 and(
-                    eq(estimateProcurementCache.tenantId, teamId),
                     eq(estimateProcurementCache.estimateId, estimateId),
-                    isNull(estimateProcurementCache.deletedAt),
+                    withActiveTenant(estimateProcurementCache, teamId),
                 ),
             );
 
         if (!cacheState?.maxRefreshedAt) return true;
 
-        const [sourceState] = await db
-            .select({
-                latestSourceAt: sql<Date | null>`GREATEST(
-                    COALESCE(MAX(${estimateRows.updatedAt}), to_timestamp(0)),
-                    COALESCE((SELECT MAX(${globalPurchases.updatedAt})
-                              FROM ${globalPurchases}
-                              WHERE ${globalPurchases.tenantId} = ${teamId}
-                                AND ${globalPurchases.projectId} = ${projectId}
-                                AND ${globalPurchases.deletedAt} IS NULL), to_timestamp(0))
-                )`,
-            })
-            .from(estimateRows)
-            .where(
-                and(
-                    eq(estimateRows.tenantId, teamId),
-                    eq(estimateRows.estimateId, estimateId),
-                    eq(estimateRows.kind, 'material'),
-                    isNull(estimateRows.deletedAt),
+        const [planState, factState] = await Promise.all([
+            db
+                .select({ maxUpdatedAt: sql<Date | null>`MAX(${estimateRows.updatedAt})` })
+                .from(estimateRows)
+                .where(
+                    and(
+                        eq(estimateRows.estimateId, estimateId),
+                        eq(estimateRows.kind, 'material'),
+                        withActiveTenant(estimateRows, teamId),
+                    ),
                 ),
-            );
+            db
+                .select({ maxUpdatedAt: sql<Date | null>`MAX(${globalPurchases.updatedAt})` })
+                .from(globalPurchases)
+                .where(
+                    and(
+                        eq(globalPurchases.projectId, projectId),
+                        withActiveTenant(globalPurchases, teamId),
+                    ),
+                ),
+        ]);
 
-        if (!sourceState?.latestSourceAt) return false;
-        return sourceState.latestSourceAt > cacheState.maxRefreshedAt;
+        const latestSourceAt = [planState[0]?.maxUpdatedAt, factState[0]?.maxUpdatedAt]
+            .filter((value): value is Date => value instanceof Date)
+            .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
+
+        if (!latestSourceAt) return false;
+        return latestSourceAt > cacheState.maxRefreshedAt;
     }
 
     private static async refreshCache(teamId: number, estimateId: string, projectId: string) {
@@ -298,7 +367,7 @@ export class EstimateProcurementService {
                 .groupBy(globalPurchases.matchKey),
         ]);
 
-        const rows = buildRowsFromAggregates(planAggregates, factAggregates);
+        const rows = buildCacheRowsFromAggregates(planAggregates, factAggregates);
 
         await db.transaction(async (tx) => {
             await tx
@@ -306,9 +375,8 @@ export class EstimateProcurementService {
                 .set({ deletedAt: sql`NOW()` })
                 .where(
                     and(
-                        eq(estimateProcurementCache.tenantId, teamId),
                         eq(estimateProcurementCache.estimateId, estimateId),
-                        isNull(estimateProcurementCache.deletedAt),
+                        withActiveTenant(estimateProcurementCache, teamId),
                     ),
                 );
 
@@ -318,7 +386,7 @@ export class EstimateProcurementService {
                 tenantId: teamId,
                 estimateId,
                 projectId,
-                matchKey: `${row.source}:${normalizeMaterialKey(row.materialName)}`,
+                matchKey: row.matchKey,
                 materialName: row.materialName,
                 unit: row.unit,
                 source: row.source,
@@ -368,9 +436,8 @@ export class EstimateProcurementService {
                 .from(estimateProcurementCache)
                 .where(
                     and(
-                        eq(estimateProcurementCache.tenantId, teamId),
                         eq(estimateProcurementCache.estimateId, estimateId),
-                        isNull(estimateProcurementCache.deletedAt),
+                        withActiveTenant(estimateProcurementCache, teamId),
                     ),
                 );
 
