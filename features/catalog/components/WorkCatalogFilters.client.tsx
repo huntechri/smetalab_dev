@@ -49,7 +49,7 @@ export function WorkCatalogFilters({
                         <Input
                             placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
                             className={cn(
-                                'pl-9 h-10 bg-muted/30 focus-visible:ring-primary/20 transition-all border-none',
+                                'pl-9 h-8 text-xs placeholder:text-xs bg-muted/30 focus-visible:ring-primary/20 transition-all border-none',
                                 isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]'
                             )}
                             value={searchQuery}
@@ -61,7 +61,7 @@ export function WorkCatalogFilters({
                         <Button
                             type="button"
                             variant="outline"
-                            className="h-10"
+                            className="h-8 text-xs px-3"
                             onClick={onSearchSubmit}
                             disabled={isSearching}
                         >
