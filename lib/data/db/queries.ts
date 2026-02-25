@@ -10,4 +10,4 @@ export { getMaterials, getMaterialsCount } from './materials-queries';
 
 export { getCounterparties, getCounterpartiesCount } from './counterparties-queries';
 
-export { getMaterialSuppliers, getMaterialSuppliersCount } from './material-suppliers-queries';
+export { getMaterialSuppliers, getMaterialSuppliersCount, getMaterialSuppliersPage } from './material-suppliers-queries';
