@@ -7,12 +7,15 @@ import { WorkRow } from '@/types/work-row';
 import { Result, success, error } from '@/lib/utils/result';
 import { workSchema } from '@/lib/validations/schemas';
 import { withActiveTenant } from '@/lib/data/db/queries';
+import { ensureWorksCodeSortKeyColumn } from '@/lib/data/db/schema-compat';
 import { after } from 'next/server';
 import { buildWorkCodeSortKey } from './code-sort';
 
 export class WorksService {
     static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
         try {
+            await ensureWorksCodeSortKeyColumn();
+
             const computedCodeSortKey = sql<string>`
                 CASE
                     WHEN trim(${works.code}) ~ '^[0-9]+(\.[0-9]+)*$' THEN (
@@ -85,6 +88,8 @@ export class WorksService {
         const data = validation.data;
 
         try {
+            await ensureWorksCodeSortKeyColumn();
+
             const finalCode = data.code || `W-${Date.now()}`;
 
             const [inserted] = await db.insert(works).values({
@@ -119,6 +124,8 @@ export class WorksService {
 
     static async update(teamId: number, id: string, rawData: Partial<NewWork>): Promise<Result<void>> {
         try {
+            await ensureWorksCodeSortKeyColumn();
+
             const updateData = { ...rawData, updatedAt: new Date() };
             if (updateData.name) {
                 updateData.nameNorm = updateData.name.toLowerCase();
@@ -194,6 +201,8 @@ export class WorksService {
         const data = validation.data;
 
         try {
+            await ensureWorksCodeSortKeyColumn();
+
             let newSortOrder = 0;
             let targetPhase = data.phase || "Этап 1";
 
