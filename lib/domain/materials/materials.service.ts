@@ -1,4 +1,4 @@
-import { and, eq, isNull, ilike, sql, inArray } from 'drizzle-orm';
+import { and, eq, isNull, sql, inArray } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { materials, NewMaterial } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
@@ -27,17 +27,29 @@ export class MaterialsService {
         search?: string,
         offset?: number,
         lastCode?: string,
+        lastId?: string,
         categoryLv1?: string
     ): Promise<Result<MaterialRow[]>> {
         try {
             const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
+            const normalizedSearch = search?.trim().toLowerCase();
+            const finalOffset = offset && offset > 0 ? offset : 0;
 
-            if (search) {
-                filters.push(ilike(materials.name, `%${search}%`));
+            if (normalizedSearch) {
+                const tsQuery = sql`websearch_to_tsquery('simple', ${normalizedSearch})`;
+                filters.push(sql`(
+                    ${materials.searchVector} @@ ${tsQuery}
+                    OR ${materials.nameNorm} % ${normalizedSearch}
+                    OR ${materials.name} % ${normalizedSearch}
+                )`);
             }
 
             if (lastCode) {
-                filters.push(sql`${materials.code} > ${lastCode}`);
+                if (lastId) {
+                    filters.push(sql`(${materials.code}, ${materials.id}) > (${lastCode}, ${lastId})`);
+                } else {
+                    filters.push(sql`${materials.code} > ${lastCode}`);
+                }
             }
 
             if (categoryLv1 && categoryLv1 !== 'all') {
@@ -66,8 +78,9 @@ export class MaterialsService {
                 })
                 .from(materials)
                 .where(and(...filters))
-                .orderBy(materials.code)
-                .limit(finalLimit) as MaterialRow[];
+                .orderBy(materials.code, materials.id)
+                .limit(finalLimit)
+                .offset(finalOffset) as MaterialRow[];
 
             return success(data);
         } catch (e) {
