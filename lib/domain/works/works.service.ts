@@ -13,6 +13,23 @@ import { buildWorkCodeSortKey } from './code-sort';
 export class WorksService {
     static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
         try {
+            const computedCodeSortKey = sql<string>`
+                CASE
+                    WHEN trim(${works.code}) ~ '^[0-9]+(\.[0-9]+)*$' THEN (
+                        SELECT string_agg(lpad(part, 10, '0'), '.' ORDER BY ord)
+                        FROM unnest(string_to_array(trim(${works.code}), '.')) WITH ORDINALITY AS parts(part, ord)
+                    )
+                    ELSE '~'
+                END
+            `;
+
+            const effectiveCodeSortKey = sql<string>`
+                CASE
+                    WHEN ${works.codeSortKey} = '~' THEN ${computedCodeSortKey}
+                    ELSE ${works.codeSortKey}
+                END
+            `;
+
             const filters = [withActiveTenant(works, teamId)];
 
             if (search) {
@@ -49,7 +66,7 @@ export class WorksService {
                 .from(works)
                 .where(and(...filters))
                 .orderBy(
-                    works.codeSortKey,
+                    effectiveCodeSortKey,
                     works.sortOrder,
                     works.code
                 )
