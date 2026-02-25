@@ -1,4 +1,4 @@
-import { and, eq, sql } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
@@ -16,6 +16,11 @@ export type ProjectDashboardKpiViewModel = {
     profit: number;
     progress: number;
     remainingDays: number | null;
+};
+
+export type ProjectDashboardKpiExplainResult = {
+    totalRows: number;
+    plan: string[];
 };
 
 const msInDay = 1000 * 60 * 60 * 24;
@@ -51,66 +56,116 @@ export function buildProjectDashboardKpiViewModel(input: {
 }
 
 export class ProjectDashboardKpiService {
+    private static buildTotalsQuery(teamId: number, projectId: string) {
+        return sql<ProjectDashboardKpiData>`
+            WITH execution_totals AS (
+                SELECT
+                    COALESCE(SUM(${estimateExecutionRows.plannedSum}), 0) AS planned_works,
+                    COALESCE(SUM(${estimateExecutionRows.actualSum}), 0) AS actual_works
+                FROM ${estimateExecutionRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateExecutionRows.estimateId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${withActiveTenant(estimateExecutionRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+            ),
+            material_totals AS (
+                SELECT
+                    COALESCE(SUM(${estimateRows.qty} * ${estimateRows.price}), 0) AS planned_materials
+                FROM ${estimateRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateRows.estimateId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${estimateRows.kind} = 'material'
+                    AND ${withActiveTenant(estimateRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+            ),
+            purchase_totals AS (
+                SELECT
+                    COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0) AS actual_materials
+                FROM ${globalPurchases}
+                WHERE
+                    ${globalPurchases.projectId} = ${projectId}
+                    AND ${withActiveTenant(globalPurchases, teamId)}
+            )
+            SELECT
+                execution_totals.planned_works AS "plannedWorks",
+                material_totals.planned_materials AS "plannedMaterials",
+                execution_totals.actual_works AS "actualWorks",
+                purchase_totals.actual_materials AS "actualMaterials"
+            FROM execution_totals
+            CROSS JOIN material_totals
+            CROSS JOIN purchase_totals
+        `;
+    }
+
+    private static buildProjectFootprintQuery(teamId: number, projectId: string) {
+        return sql<{ totalRows: number }>`
+            SELECT (
+                SELECT COUNT(*)
+                FROM ${estimateExecutionRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateExecutionRows.estimateId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${withActiveTenant(estimateExecutionRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+            )
+            + (
+                SELECT COUNT(*)
+                FROM ${estimateRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateRows.estimateId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${estimateRows.kind} = 'material'
+                    AND ${withActiveTenant(estimateRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+            )
+            + (
+                SELECT COUNT(*)
+                FROM ${globalPurchases}
+                WHERE
+                    ${globalPurchases.projectId} = ${projectId}
+                    AND ${withActiveTenant(globalPurchases, teamId)}
+            ) AS "totalRows"
+        `;
+    }
+
     static async getByProjectId(teamId: number, projectId: string): Promise<ProjectDashboardKpiData> {
-        const [plannedWorksRow, actualWorksRow, plannedMaterialsRow, actualMaterialsRow] = await Promise.all([
-            db
-                .select({
-                    total: sql<number>`COALESCE(SUM(${estimateExecutionRows.plannedSum}), 0)`,
-                })
-                .from(estimateExecutionRows)
-                .innerJoin(estimates, eq(estimates.id, estimateExecutionRows.estimateId))
-                .where(
-                    and(
-                        eq(estimates.projectId, projectId),
-                        withActiveTenant(estimateExecutionRows, teamId),
-                        withActiveTenant(estimates, teamId),
-                    ),
-                ),
-            db
-                .select({
-                    total: sql<number>`COALESCE(SUM(${estimateExecutionRows.actualSum}), 0)`,
-                })
-                .from(estimateExecutionRows)
-                .innerJoin(estimates, eq(estimates.id, estimateExecutionRows.estimateId))
-                .where(
-                    and(
-                        eq(estimates.projectId, projectId),
-                        withActiveTenant(estimateExecutionRows, teamId),
-                        withActiveTenant(estimates, teamId),
-                    ),
-                ),
-            db
-                .select({
-                    total: sql<number>`COALESCE(SUM(${estimateRows.qty} * ${estimateRows.price}), 0)`,
-                })
-                .from(estimateRows)
-                .innerJoin(estimates, eq(estimates.id, estimateRows.estimateId))
-                .where(
-                    and(
-                        eq(estimates.projectId, projectId),
-                        eq(estimateRows.kind, 'material'),
-                        withActiveTenant(estimateRows, teamId),
-                        withActiveTenant(estimates, teamId),
-                    ),
-                ),
-            db
-                .select({
-                    total: sql<number>`COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0)`,
-                })
-                .from(globalPurchases)
-                .where(
-                    and(
-                        eq(globalPurchases.projectId, projectId),
-                        withActiveTenant(globalPurchases, teamId),
-                    ),
-                ),
-        ]);
+        const rows = await db.execute(this.buildTotalsQuery(teamId, projectId));
+        const totals = rows[0];
 
         return {
-            plannedWorks: Number(plannedWorksRow[0]?.total ?? 0),
-            plannedMaterials: Number(plannedMaterialsRow[0]?.total ?? 0),
-            actualWorks: Number(actualWorksRow[0]?.total ?? 0),
-            actualMaterials: Number(actualMaterialsRow[0]?.total ?? 0),
+            plannedWorks: Number(totals?.plannedWorks ?? 0),
+            plannedMaterials: Number(totals?.plannedMaterials ?? 0),
+            actualWorks: Number(totals?.actualWorks ?? 0),
+            actualMaterials: Number(totals?.actualMaterials ?? 0),
+        };
+    }
+
+    static async runExplainChecksForLargeProject(
+        teamId: number,
+        projectId: string,
+        options?: { rowThreshold?: number },
+    ): Promise<ProjectDashboardKpiExplainResult | null> {
+        const rowThreshold = options?.rowThreshold ?? 50_000;
+        const footprintRows = await db.execute(this.buildProjectFootprintQuery(teamId, projectId));
+        const totalRows = Number(footprintRows[0]?.totalRows ?? 0);
+
+        if (totalRows < rowThreshold) {
+            return null;
+        }
+
+        const explainRows = await db.execute<{ 'QUERY PLAN': string }>(
+            sql`EXPLAIN ${this.buildTotalsQuery(teamId, projectId)}`,
+        );
+
+        return {
+            totalRows,
+            plan: explainRows.map((row) => row['QUERY PLAN']),
         };
     }
 }
