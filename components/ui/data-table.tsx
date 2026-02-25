@@ -8,7 +8,7 @@ import {
 import { Search, Sparkles, Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { Skeleton } from "@/components/ui/skeleton"
-import { memo, useState, useCallback, forwardRef, HTMLAttributes } from "react"
+import { memo, useState, useCallback, forwardRef, HTMLAttributes, useMemo } from "react"
 
 import {
     Tooltip,
@@ -166,6 +166,20 @@ export function DataTable<TData, TValue>({
             onSearch?.(searchValue)
         }
     }, [searchValue, onSearch]);
+
+
+    const virtuosoOverscan = useMemo(() => {
+        const parsedHeight = Number.parseInt(height, 10);
+        if (Number.isFinite(parsedHeight) && parsedHeight > 0) {
+            return Math.min(400, Math.max(200, Math.round(parsedHeight * 0.5)));
+        }
+
+        if (typeof window !== 'undefined') {
+            return Math.min(400, Math.max(200, Math.round(window.innerHeight * 0.35)));
+        }
+
+        return 300;
+    }, [height]);
 
     return (
         <TooltipProvider>
@@ -364,7 +378,7 @@ export function DataTable<TData, TValue>({
                             data={rows}
                             context={{ flatHeaders }}
                             components={VirtuosoTableComponents}
-                            overscan={2000}
+                            overscan={virtuosoOverscan}
                             endReached={onEndReached}
                             fixedHeaderContent={() => (
                                 <>
