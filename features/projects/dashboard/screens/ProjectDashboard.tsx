@@ -30,9 +30,15 @@ type ProjectDashboardProps = {
     project: ProjectListItem;
     estimates: EstimateListItem[];
     performanceDynamics: PerformanceDynamicsPoint[];
+    kpi: {
+        revenue: number;
+        profit: number;
+        progress: number;
+        remainingDays: number | null;
+    };
 };
 
-export function ProjectDashboard({ project, estimates, performanceDynamics }: ProjectDashboardProps) {
+export function ProjectDashboard({ project, estimates, performanceDynamics, kpi }: ProjectDashboardProps) {
     return (
         <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
             <div className="px-4 lg:px-6">
@@ -63,7 +69,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics }: Pr
 
             <div className="space-y-6 lg:space-y-10">
                 <div className="@container/main px-4 lg:px-6 space-y-6 lg:space-y-10">
-                    <DashboardKpiCards project={project} />
+                    <DashboardKpiCards kpi={kpi} />
                     <DashboardChart data={performanceDynamics} />
                 </div>
 

@@ -54,6 +54,23 @@ vi.mock('@/lib/services/project-performance-dynamics.service', () => ({
     },
 }));
 
+vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
+    ProjectDashboardKpiService: {
+        getByProjectId: vi.fn(async () => ({
+            plannedWorks: 100000,
+            plannedMaterials: 50000,
+            actualWorks: 80000,
+            actualMaterials: 30000,
+        })),
+    },
+    buildProjectDashboardKpiViewModel: vi.fn(() => ({
+        revenue: 150000,
+        profit: 40000,
+        progress: 62,
+        remainingDays: 12,
+    })),
+}));
+
 test('project dashboard page maps project data and renders feature screen', async () => {
     const PageComponent = await Page({
         params: Promise.resolve({ projectId: 'north-park' }),
@@ -83,4 +100,10 @@ test('project dashboard page maps project data and renders feature screen', asyn
             procurementFact: 20,
         },
     ]);
+    expect(projectDashboardSpy.mock.calls[0]?.[0]?.kpi).toEqual({
+        revenue: 150000,
+        profit: 40000,
+        progress: 62,
+        remainingDays: 12,
+    });
 });
