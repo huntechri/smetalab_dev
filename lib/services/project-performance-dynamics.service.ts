@@ -17,7 +17,13 @@ type AggregateRow = {
     total: number;
 };
 
-const toIsoDate = (value: Date) => value.toISOString().slice(0, 10);
+const toIsoDate = (value: Date) => {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
 const toIsoTimestamp = (value: Date) => value.toISOString();
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
 const endOfMonth = (value: Date) => new Date(value.getFullYear(), value.getMonth() + 1, 0, 23, 59, 59, 999);
