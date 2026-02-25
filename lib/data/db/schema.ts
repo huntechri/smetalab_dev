@@ -205,6 +205,7 @@ export const estimateRows = pgTable('estimate_rows', {
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
   index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_estimate_tenant_deleted_order_idx').on(table.estimateId, table.tenantId, table.deletedAt, table.order),
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_material_id_idx').on(table.materialId),
