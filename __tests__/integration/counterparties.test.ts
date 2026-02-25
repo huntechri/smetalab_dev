@@ -125,6 +125,11 @@ describe('Counterparties Integration Tests', () => {
         const result = await deleteCounterparty(cp.id);
 
         expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.id).toBe(cp.id);
+            expect(result.data.deletedAt).not.toBeNull();
+        }
+
         const [inDb] = await db.select().from(counterparties).where(eq(counterparties.id, cp.id));
         expect(inDb.deletedAt).not.toBeNull();
     });
