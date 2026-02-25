@@ -5,9 +5,12 @@ import { db } from './drizzle';
 import { works } from './schema';
 import { getTeamForUser } from './user-team-queries';
 import { withActiveTenant } from './tenant';
+import { ensureWorksCodeSortKeyColumn } from './schema-compat';
 import { WorkRow } from '@/types/work-row';
 
 export async function getWorks(limit?: number, lastSortOrder?: number) {
+  await ensureWorksCodeSortKeyColumn();
+
   const team = await getTeamForUser();
   const teamId = team?.id;
 
@@ -57,6 +60,8 @@ export async function getWorksCount() {
 }
 
 export async function getWorksCached() {
+  await ensureWorksCodeSortKeyColumn();
+
   const team = await getTeamForUser();
   const teamId = team?.id;
 
