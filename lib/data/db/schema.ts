@@ -193,6 +193,7 @@ export const estimateRows = pgTable('estimate_rows', {
   code: varchar('code', { length: 120 }).notNull(),
   name: text('name').notNull(),
   materialId: uuid('material_id').references(() => materials.id),
+  matchKey: text('match_key').notNull().default(''),
   imageUrl: text('image_url'),
   unit: varchar('unit', { length: 50 }).notNull(),
   qty: doublePrecision('qty').notNull().default(1),
@@ -206,6 +207,7 @@ export const estimateRows = pgTable('estimate_rows', {
 }, (table) => [
   index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_tenant_estimate_kind_match_key_idx').on(table.tenantId, table.estimateId, table.kind, table.matchKey).where(sql`deleted_at IS NULL AND kind = 'material'`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_material_id_idx').on(table.materialId),
 ]);
@@ -316,6 +318,7 @@ export const globalPurchases = pgTable('global_purchases', {
   projectName: varchar('project_name', { length: 160 }).notNull().default(''),
   materialName: text('material_name').notNull().default(''),
   materialId: uuid('material_id').references(() => materials.id),
+  matchKey: text('match_key').notNull().default(''),
   unit: varchar('unit', { length: 20 }).notNull().default('шт'),
   qty: doublePrecision('qty').notNull().default(1),
   price: doublePrecision('price').notNull().default(0),
@@ -329,10 +332,45 @@ export const globalPurchases = pgTable('global_purchases', {
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
   index('global_purchases_tenant_purchase_date_order_idx').on(table.tenantId, table.purchaseDate, table.order).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_project_match_key_purchase_date_idx').on(table.tenantId, table.projectId, table.matchKey, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_project_date_idx').on(table.tenantId, table.projectId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_supplier_date_idx').on(table.tenantId, table.supplierId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_material_id_idx').on(table.materialId).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+]);
+
+export const estimateProcurementCache = pgTable('estimate_procurement_cache', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  estimateId: uuid('estimate_id')
+    .notNull()
+    .references(() => estimates.id),
+  projectId: uuid('project_id')
+    .notNull()
+    .references(() => projects.id),
+  matchKey: text('match_key').notNull(),
+  materialName: text('material_name').notNull(),
+  unit: varchar('unit', { length: 50 }).notNull().default('шт'),
+  source: varchar('source', { length: 20 }).notNull(),
+  plannedQty: doublePrecision('planned_qty').notNull().default(0),
+  plannedPrice: doublePrecision('planned_price').notNull().default(0),
+  plannedAmount: doublePrecision('planned_amount').notNull().default(0),
+  actualQty: doublePrecision('actual_qty').notNull().default(0),
+  actualAvgPrice: doublePrecision('actual_avg_price').notNull().default(0),
+  actualAmount: doublePrecision('actual_amount').notNull().default(0),
+  qtyDelta: doublePrecision('qty_delta').notNull().default(0),
+  amountDelta: doublePrecision('amount_delta').notNull().default(0),
+  purchaseCount: integer('purchase_count').notNull().default(0),
+  lastPurchaseDate: date('last_purchase_date', { mode: 'string' }),
+  refreshedAt: timestamp('refreshed_at').notNull().defaultNow(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  uniqueIndex('estimate_procurement_cache_tenant_estimate_match_key_unique').on(table.tenantId, table.estimateId, table.matchKey),
+  index('estimate_procurement_cache_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
 ]);
 
 // ═══════════════════════════════════════════════════════════════
