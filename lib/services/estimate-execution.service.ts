@@ -1,4 +1,4 @@
-import { and, asc, eq, notInArray, sql } from 'drizzle-orm';
+import { and, asc, eq, isNull, notInArray, sql } from 'drizzle-orm';
 import path from 'path';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from '@/lib/data/db/drizzle';
@@ -79,92 +79,173 @@ const estimateExecutionRowSelect = {
 };
 
 export class EstimateExecutionService {
-    private static async syncFromEstimateWorks(teamId: number, estimateId: string, coefPercent: number): Promise<void> {
-        await db.transaction(async (tx) => {
-            const plannedWorks = await tx
-                .select({
-                    id: estimateRows.id,
-                    code: estimateRows.code,
-                    name: estimateRows.name,
-                    unit: estimateRows.unit,
-                    qty: estimateRows.qty,
-                    price: estimateRows.price,
-                    sum: estimateRows.sum,
-                    order: estimateRows.order,
-                })
-                .from(estimateRows)
+    private static async syncFromEstimateWorks(tx: typeof db, teamId: number, estimateId: string, coefPercent: number): Promise<void> {
+        const plannedWorks = await tx
+            .select({
+                id: estimateRows.id,
+                code: estimateRows.code,
+                name: estimateRows.name,
+                unit: estimateRows.unit,
+                qty: estimateRows.qty,
+                price: estimateRows.price,
+                sum: estimateRows.sum,
+                order: estimateRows.order,
+            })
+            .from(estimateRows)
+            .where(
+                and(
+                    eq(estimateRows.estimateId, estimateId),
+                    eq(estimateRows.kind, 'work'),
+                    withActiveTenant(estimateRows, teamId),
+                ),
+            )
+            .orderBy(asc(estimateRows.order));
+
+        const plannedIds = plannedWorks.map((work) => work.id);
+
+        if (plannedIds.length > 0) {
+            await tx
+                .update(estimateExecutionRows)
+                .set({ deletedAt: new Date(), updatedAt: new Date() })
                 .where(
                     and(
-                        eq(estimateRows.estimateId, estimateId),
-                        eq(estimateRows.kind, 'work'),
-                        withActiveTenant(estimateRows, teamId),
+                        eq(estimateExecutionRows.estimateId, estimateId),
+                        eq(estimateExecutionRows.source, 'from_estimate'),
+                        withActiveTenant(estimateExecutionRows, teamId),
+                        notInArray(estimateExecutionRows.estimateRowId, plannedIds),
                     ),
-                )
-                .orderBy(asc(estimateRows.order));
+                );
+        }
 
-            const plannedIds = plannedWorks.map((work) => work.id);
+        if (plannedIds.length === 0) {
+            return;
+        }
 
-            if (plannedIds.length > 0) {
-                await tx
-                    .update(estimateExecutionRows)
-                    .set({ deletedAt: new Date(), updatedAt: new Date() })
-                    .where(
-                        and(
-                            eq(estimateExecutionRows.estimateId, estimateId),
-                            eq(estimateExecutionRows.source, 'from_estimate'),
-                            withActiveTenant(estimateExecutionRows, teamId),
-                            notInArray(estimateExecutionRows.estimateRowId, plannedIds),
-                        ),
-                    );
-            }
+        const now = new Date();
+        const values = plannedWorks.map((work) => {
+            const plannedPrice = applyEstimateCoefficient(work.price, coefPercent);
+            return {
+                tenantId: teamId,
+                estimateId,
+                estimateRowId: work.id,
+                source: 'from_estimate' as const,
+                status: 'not_started' as const,
+                code: work.code,
+                name: work.name,
+                unit: work.unit,
+                plannedQty: work.qty,
+                plannedPrice,
+                plannedSum: plannedPrice * work.qty,
+                actualQty: work.qty,
+                actualPrice: work.price,
+                actualSum: work.qty * work.price,
+                order: work.order,
+                updatedAt: now,
+            };
+        });
 
-            if (plannedIds.length === 0) {
-                return;
-            }
-
-            const now = new Date();
-            const values = plannedWorks.map((work) => {
-                const plannedPrice = applyEstimateCoefficient(work.price, coefPercent);
-                return {
-                    tenantId: teamId,
-                    estimateId,
-                    estimateRowId: work.id,
-                    source: 'from_estimate' as const,
-                    status: 'not_started' as const,
-                    code: work.code,
-                    name: work.name,
-                    unit: work.unit,
-                    plannedQty: work.qty,
-                    plannedPrice,
-                    plannedSum: plannedPrice * work.qty,
-                    actualQty: work.qty,
-                    actualPrice: work.price,
-                    actualSum: work.qty * work.price,
-                    order: work.order,
-                    updatedAt: now,
-                };
+        await tx
+            .insert(estimateExecutionRows)
+            .values(values)
+            .onConflictDoUpdate({
+                target: [estimateExecutionRows.estimateId, estimateExecutionRows.estimateRowId],
+                targetWhere: sql`estimate_row_id IS NOT NULL AND deleted_at IS NULL`,
+                set: {
+                    deletedAt: null,
+                    code: sql`excluded.code`,
+                    name: sql`excluded.name`,
+                    unit: sql`excluded.unit`,
+                    plannedQty: sql`excluded.planned_qty`,
+                    plannedPrice: sql`excluded.planned_price`,
+                    plannedSum: sql`excluded.planned_sum`,
+                    actualSum: sql`${estimateExecutionRows.actualQty} * ${estimateExecutionRows.actualPrice}`,
+                    order: sql`excluded."order"`,
+                    updatedAt: sql`now()`,
+                },
             });
+    }
+
+    static async bumpSyncVersion(teamId: number, estimateId: string): Promise<void> {
+        await db
+            .update(estimates)
+            .set({
+                executionSyncVersion: sql`${estimates.executionSyncVersion} + 1`,
+                updatedAt: new Date(),
+            })
+            .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)));
+    }
+
+    static async syncEstimateIfStale(teamId: number, estimateId: string, options?: { refreshProjectProgress?: boolean }): Promise<void> {
+        const hasExecutionTable = await ensureExecutionStorageReady();
+        if (!hasExecutionTable) {
+            return;
+        }
+
+        const shouldRefreshProgress = options?.refreshProjectProgress ?? false;
+
+        const syncResult = await db.transaction(async (tx) => {
+            const lockedEstimateRows = await tx.execute(sql<{
+                id: string;
+                project_id: string;
+                coef_percent: number;
+                execution_sync_version: number;
+                execution_synced_version: number;
+            }>`
+                SELECT id, project_id, coef_percent, execution_sync_version, execution_synced_version
+                FROM estimates
+                WHERE id = ${estimateId}
+                  AND tenant_id = ${teamId}
+                  AND deleted_at IS NULL
+                FOR UPDATE
+            `);
+            const [lockedEstimate] = lockedEstimateRows as unknown as Array<{
+                id: string;
+                project_id: string;
+                coef_percent: number;
+                execution_sync_version: number;
+                execution_synced_version: number;
+            }>;
+
+            if (!lockedEstimate) {
+                return null;
+            }
+
+            const nextVersion = lockedEstimate.execution_sync_version ?? 0;
+            const syncedVersion = lockedEstimate.execution_synced_version ?? 0;
+            if (syncedVersion >= nextVersion) {
+                return { projectId: lockedEstimate.project_id, synced: false };
+            }
+
+            await this.syncFromEstimateWorks(tx, teamId, estimateId, lockedEstimate.coef_percent ?? 0);
 
             await tx
-                .insert(estimateExecutionRows)
-                .values(values)
-                .onConflictDoUpdate({
-                    target: [estimateExecutionRows.estimateId, estimateExecutionRows.estimateRowId],
-                    targetWhere: sql`estimate_row_id IS NOT NULL AND deleted_at IS NULL`,
-                    set: {
-                        deletedAt: null,
-                        code: sql`excluded.code`,
-                        name: sql`excluded.name`,
-                        unit: sql`excluded.unit`,
-                        plannedQty: sql`excluded.planned_qty`,
-                        plannedPrice: sql`excluded.planned_price`,
-                        plannedSum: sql`excluded.planned_sum`,
-                        actualSum: sql`${estimateExecutionRows.actualQty} * ${estimateExecutionRows.actualPrice}`,
-                        order: sql`excluded."order"`,
-                        updatedAt: sql`now()`,
-                    },
-                });
+                .update(estimates)
+                .set({ executionSyncedVersion: nextVersion, updatedAt: new Date() })
+                .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)));
+
+            return { projectId: lockedEstimate.project_id, synced: true };
         });
+
+        if (shouldRefreshProgress && syncResult?.synced) {
+            await ProjectProgressService.refreshForProject(teamId, syncResult.projectId);
+        }
+    }
+
+    static async runStaleSyncSafetyJob(limit = 50): Promise<number> {
+        const staleEstimates = await db
+            .select({
+                id: estimates.id,
+                tenantId: estimates.tenantId,
+            })
+            .from(estimates)
+            .where(and(isNull(estimates.deletedAt), sql`${estimates.executionSyncedVersion} < ${estimates.executionSyncVersion}`))
+            .limit(limit);
+
+        for (const estimate of staleEstimates) {
+            await this.syncEstimateIfStale(estimate.tenantId, estimate.id);
+        }
+
+        return staleEstimates.length;
     }
 
     static async list(teamId: number, estimateId: string): Promise<Result<EstimateExecutionRow[]>> {
@@ -178,9 +259,6 @@ export class EstimateExecutionService {
             if (!hasExecutionTable) {
                 return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
-
-            await this.syncFromEstimateWorks(teamId, estimateId, estimate.coefPercent ?? 0);
-            await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
