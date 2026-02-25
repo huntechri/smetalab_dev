@@ -6,6 +6,7 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
 
 const addWorkSchema = z.object({
     name: z.string().trim().min(1),
@@ -412,6 +413,9 @@ export class EstimateRowsService {
                 return row;
             });
 
+            await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+            await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
+
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_WORK_NAME') {
@@ -549,12 +553,16 @@ export class EstimateRowsService {
                     .where(eq(estimateRows.id, rowId))
                     .returning();
 
-                const nextContribution = estimateRowContribution(row as EstimateRowEntity, estimate.coefPercent ?? 0);
-                await applyEstimateTotalDelta(tx, estimateId, roundContribution(nextContribution - previousContribution));
-                return row;
+                await recalculateEstimateTotal(tx, estimateId);
+                return { row, touchedWork: existing.kind === 'work' };
             });
 
-            return success(toEstimateRowDto(updated as EstimateRowEntity, estimate.coefPercent ?? 0));
+            if (updated.touchedWork) {
+                await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
+            }
+
+            return success(toEstimateRowDto(updated.row as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             console.error('EstimateRowsService.patch error:', e);
             return error('Ошибка при обновлении строки сметы');
@@ -569,7 +577,7 @@ export class EstimateRowsService {
             }
 
             const deletedAt = new Date();
-            const removedIds = await db.transaction(async (tx) => {
+            const removedResult = await db.transaction(async (tx) => {
                 const row = await tx.query.estimateRows.findFirst({
                     where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)),
                 });
@@ -607,10 +615,15 @@ export class EstimateRowsService {
                 await renumberEstimateCodes(tx, teamId, estimateId, { startOrder: row.order });
                 await applyEstimateTotalDelta(tx, estimateId, roundContribution(delta));
 
-                return idsToDelete;
+                return { idsToDelete, removedWork: row.kind === 'work' };
             });
 
-            return success({ removedIds });
+            if (removedResult.removedWork) {
+                await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
+            }
+
+            return success({ removedIds: removedResult.idsToDelete });
         } catch (e) {
             console.error('EstimateRowsService.remove error:', e);
             return error('Ошибка при удалении строки сметы');

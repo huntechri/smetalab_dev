@@ -168,6 +168,8 @@ export const estimates = pgTable('estimates', {
   status: estimateStatusEnum('status').notNull().default('draft'),
   total: integer('total').notNull().default(0),
   coefPercent: doublePrecision('coef_percent').notNull().default(0),
+  executionSyncVersion: integer('execution_sync_version').notNull().default(0),
+  executionSyncedVersion: integer('execution_synced_version').notNull().default(0),
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
   deletedAt: timestamp('deleted_at'),
