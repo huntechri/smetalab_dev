@@ -33,6 +33,21 @@ export async function getMaterialSuppliers(
   };
 }
 
+export async function getMaterialSuppliersPage(
+  teamId: number,
+  options: { limit?: number; offset?: number; search?: string } = {}
+) {
+  const { data, count } = await getMaterialSuppliers(teamId, options);
+  const currentOffset = options.offset ?? 0;
+
+  return {
+    data,
+    count,
+    hasMore: currentOffset + data.length < count,
+    nextOffset: currentOffset + data.length,
+  };
+}
+
 export async function getMaterialSuppliersCount(teamId: number) {
   const result = await db
     .select({ count: sql<number>`count(*)` })

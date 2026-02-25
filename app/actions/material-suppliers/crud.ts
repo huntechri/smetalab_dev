@@ -5,7 +5,6 @@ import {
   deleteMaterialSupplierUseCase,
   updateMaterialSupplierUseCase,
 } from '@/lib/domain/material-suppliers/use-cases';
-import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { safeAction } from '@/lib/actions/safe-action';
 import { success, error } from '@/lib/utils/result';
@@ -43,7 +42,6 @@ export const createMaterialSupplier = safeAction<MaterialSupplierRow, [z.infer<t
 
     try {
       const created = await createMaterialSupplierUseCase(team.id, user.id, validatedData);
-      revalidatePath('/app/guide/material-suppliers');
       return success(created as MaterialSupplierRow);
     } catch (e: unknown) {
       const pgCode = (e as { code?: string; cause?: { code?: string } }).code
@@ -61,7 +59,6 @@ export const updateMaterialSupplier = safeAction<MaterialSupplierRow, [{ id: str
   async ({ team, user }, { id, data }) => {
     const validatedData = materialSupplierSchema.parse(data);
     const updated = await updateMaterialSupplierUseCase(team.id, user.id, id, validatedData);
-    revalidatePath('/app/guide/material-suppliers');
     return success(updated as MaterialSupplierRow);
   },
   { name: 'updateMaterialSupplier' }
@@ -70,7 +67,6 @@ export const updateMaterialSupplier = safeAction<MaterialSupplierRow, [{ id: str
 export const deleteMaterialSupplier = safeAction<boolean, [string]>(
   async ({ team, user }, id) => {
     await deleteMaterialSupplierUseCase(team.id, user.id, id);
-    revalidatePath('/app/guide/material-suppliers');
     return success(true);
   },
   { name: 'deleteMaterialSupplier' }
