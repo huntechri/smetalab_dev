@@ -86,6 +86,19 @@ describe('EstimateProcurementService integration', () => {
                 expense: 0,
                 order: 2,
             },
+            {
+                tenantId: teamA,
+                estimateId: estimate.id,
+                kind: 'material',
+                code: '3.1',
+                name: '  Краска фасадная  ',
+                unit: 'л',
+                qty: 20,
+                price: 250,
+                sum: 5000,
+                expense: 0,
+                order: 3,
+            },
         ]);
 
         await db.insert(globalPurchases).values([
@@ -123,6 +136,20 @@ describe('EstimateProcurementService integration', () => {
                 tenantId: teamA,
                 projectId: projectA.id,
                 projectName: 'Project A',
+                materialName: 'краска фасадная',
+                unit: 'л',
+                qty: 12,
+                price: 260,
+                amount: 3120,
+                note: '',
+                source: 'manual',
+                order: 3,
+                purchaseDate: '2026-01-11',
+            },
+            {
+                tenantId: teamA,
+                projectId: projectA.id,
+                projectName: 'Project A',
                 materialName: 'Краска',
                 unit: 'л',
                 qty: 10,
@@ -130,7 +157,7 @@ describe('EstimateProcurementService integration', () => {
                 amount: 3000,
                 note: '',
                 source: 'manual',
-                order: 3,
+                order: 4,
                 purchaseDate: '2026-01-11',
             },
             {
@@ -170,10 +197,11 @@ describe('EstimateProcurementService integration', () => {
         expect(result.success).toBe(true);
         if (!result.success) return;
 
-        expect(result.data).toHaveLength(2);
+        expect(result.data).toHaveLength(3);
 
         const plaster = result.data.find((row) => row.materialName === 'Штукатурка');
         const paint = result.data.find((row) => row.materialName === 'Краска');
+        const facadePaint = result.data.find((row) => row.materialName === 'Краска фасадная');
 
         expect(plaster).toMatchObject({
             source: 'estimate',
@@ -194,6 +222,16 @@ describe('EstimateProcurementService integration', () => {
             actualQty: 10,
             qtyDelta: -10,
             amountDelta: -3000,
+        });
+
+        expect(facadePaint).toMatchObject({
+            source: 'estimate',
+            plannedQty: 20,
+            plannedAmount: 5000,
+            actualQty: 12,
+            actualAmount: 3120,
+            qtyDelta: 8,
+            amountDelta: 1880,
         });
     });
 
