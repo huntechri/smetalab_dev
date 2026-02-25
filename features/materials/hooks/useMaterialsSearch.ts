@@ -7,7 +7,7 @@ export function useMaterialsSearch(
     data: MaterialRow[],
     setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>
 ) {
-    return useGuideTableSearch<MaterialRow, { lastCode?: string }>({
+    return useGuideTableSearch<MaterialRow, { lastCode?: string; lastId?: string }>({
         initialData,
         data,
         setData,
@@ -20,7 +20,8 @@ export function useMaterialsSearch(
             };
         },
         searchPage: ({ query }) => fetchMoreMaterials({ query }),
-        loadMorePage: ({ query, lastCode }) => fetchMoreMaterials({ query, lastCode }),
-        getCursorFromLast: (lastItem) => ({ lastCode: lastItem?.code }),
+        loadMorePage: ({ query, lastCode, lastId }) =>
+            fetchMoreMaterials({ query, cursor: lastCode && lastId ? { lastCode, lastId } : undefined }),
+        getCursorFromLast: (lastItem) => ({ lastCode: lastItem?.code, lastId: lastItem?.id }),
     });
 }
