@@ -7,7 +7,13 @@ type RangeBoundaries = {
     end: Date;
 };
 
-const toIsoDate = (value: Date) => value.toISOString().slice(0, 10);
+const toIsoDate = (value: Date) => {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+};
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -16,6 +22,8 @@ const normalizeDate = (date: Date) => {
     normalized.setHours(0, 0, 0, 0);
     return normalized;
 };
+
+const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
 type DynamicsSeriesValues = Omit<PerformanceDynamicsPoint, 'date'>;
 
@@ -56,17 +64,18 @@ const createEmptyPoint = (date: string): PerformanceDynamicsPoint => ({
 });
 
 const getRangeBoundaries = (range: DynamicsRange, now: Date): RangeBoundaries => {
-    const end = normalizeDate(now);
+    const today = normalizeDate(now);
 
     if (range === '1m') {
         const start = normalizeDate(now);
         start.setMonth(start.getMonth() - 1);
 
-        return { start, end };
+        return { start, end: today };
     }
 
     const monthsCount = range === '3m' ? 3 : 12;
     const start = new Date(now.getFullYear(), now.getMonth() - (monthsCount - 1), 1);
+    const end = normalizeDate(endOfMonth(now));
 
     return { start, end };
 };
