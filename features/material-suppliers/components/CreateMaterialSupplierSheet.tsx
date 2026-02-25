@@ -18,7 +18,6 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/components/ui/use-toast';
-import { useRouter } from 'next/navigation';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
 import { materialSupplierFormSchema, type MaterialSupplierFormValues } from '../schemas/material-supplier-form.schema';
 import { Loader2 } from 'lucide-react';
@@ -29,7 +28,7 @@ interface CreateMaterialSupplierSheetProps {
   onOpenChange: (open: boolean) => void;
   materialSupplier?: MaterialSupplierRow | null;
   tenantId: number;
-  onSaved?: () => void;
+  onSaved?: (supplier: MaterialSupplierRow) => void;
 }
 
 export function CreateMaterialSupplierSheet({
@@ -41,7 +40,6 @@ export function CreateMaterialSupplierSheet({
 }: CreateMaterialSupplierSheetProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
-  const router = useRouter();
 
   const form = useForm<MaterialSupplierFormValues>({
     resolver: zodResolver(materialSupplierFormSchema),
@@ -108,8 +106,7 @@ export function CreateMaterialSupplierSheet({
 
         if (result.success) {
           toast({ title: materialSupplier ? 'Поставщик обновлен' : 'Поставщик создан' });
-          onSaved?.();
-          router.refresh();
+          onSaved?.(result.data);
           return;
         }
 

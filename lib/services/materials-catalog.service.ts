@@ -1,4 +1,5 @@
 import { NewMaterial } from '@/lib/data/db/schema';
+import { FetchMoreMaterialsInput } from '@/lib/domain/materials/materials.contract';
 import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import {
   createMaterialUseCase,
@@ -24,8 +25,15 @@ export class MaterialsCatalogService {
     return deleteAllMaterialsUseCase(teamId);
   }
 
-  static fetchMore(teamId: number, options: { query?: string; lastCode?: string } = {}) {
-    return MaterialsService.getMany(teamId, undefined, options.query, undefined, options.lastCode);
+  static fetchMore(teamId: number, options: FetchMoreMaterialsInput = {}) {
+    return MaterialsService.getMany(
+      teamId,
+      options.limit,
+      options.query,
+      options.offset,
+      options.cursor?.lastCode,
+      options.cursor?.lastId
+    );
   }
 
   static search(teamId: number, query: string) {
