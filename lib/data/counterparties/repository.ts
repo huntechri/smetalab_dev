@@ -1,6 +1,7 @@
 import { db } from '@/lib/data/db/drizzle';
 import { activityLogs, counterparties } from '@/lib/data/db/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
+import { withActiveTenant } from '@/lib/data/db/tenant';
 
 interface CounterpartyPayload {
   [key: string]: string | null | undefined;
@@ -19,8 +20,14 @@ export async function createCounterpartyRecord(teamId: number, userId: number, d
 
 export async function updateCounterpartyRecord(teamId: number, userId: number, id: string, data: CounterpartyPayload) {
   return db.transaction(async (tx) => {
-    const [updatedRow] = await tx.update(counterparties).set({ ...data, updatedAt: new Date() }).where(eq(counterparties.id, id)).returning();
+    const [updatedRow] = await tx
+      .update(counterparties)
+      .set({ ...data, updatedAt: new Date() })
+      .where(and(eq(counterparties.id, id), withActiveTenant(counterparties, teamId)))
+      .returning();
+
     if (!updatedRow) throw new Error(`Counterparty not found or update denied: ${id}`);
+
     await tx.insert(activityLogs).values({ teamId, userId, action: `Updated counterparty: ${updatedRow.name} (ID: ${id})` });
     return updatedRow;
   });
@@ -28,7 +35,18 @@ export async function updateCounterpartyRecord(teamId: number, userId: number, i
 
 export async function deleteCounterpartyRecord(teamId: number, userId: number, id: string) {
   return db.transaction(async (tx) => {
-    await tx.update(counterparties).set({ deletedAt: new Date() }).where(eq(counterparties.id, id));
-    await tx.insert(activityLogs).values({ teamId, userId, action: `Deleted counterparty (soft-delete) with ID: ${id}` });
+    const [deletedRow] = await tx
+      .update(counterparties)
+      .set({ deletedAt: new Date(), updatedAt: new Date() })
+      .where(and(eq(counterparties.id, id), withActiveTenant(counterparties, teamId)))
+      .returning();
+
+    if (!deletedRow) throw new Error(`Counterparty not found or delete denied: ${id}`);
+
+    await tx
+      .insert(activityLogs)
+      .values({ teamId, userId, action: `Deleted counterparty (soft-delete): ${deletedRow.name} (ID: ${id})` });
+
+    return deletedRow;
   });
 }
