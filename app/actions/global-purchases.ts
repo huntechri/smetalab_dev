@@ -40,6 +40,26 @@ export const patchGlobalPurchaseAction = safeAction(
   { name: 'patchGlobalPurchaseAction' }
 );
 
+export const patchGlobalPurchasesBatchAction = safeAction(
+  async ({ team }, payload: {
+    updates: Array<{
+      rowId: string;
+      patch: {
+        projectId?: string | null;
+        supplierId?: string | null;
+        materialName?: string;
+        materialId?: string | null;
+        unit?: string;
+        qty?: number;
+        price?: number;
+        note?: string;
+        purchaseDate?: string;
+      };
+    }>;
+  }) => GlobalPurchasesService.patchBatch(team.id, payload),
+  { name: 'patchGlobalPurchasesBatchAction' }
+);
+
 export const removeGlobalPurchaseAction = safeAction(
   async ({ team }, rowId: string) => GlobalPurchasesService.remove(team.id, rowId),
   { name: 'removeGlobalPurchaseAction' }
