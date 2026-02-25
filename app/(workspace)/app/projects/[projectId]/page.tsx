@@ -25,9 +25,11 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
-    const estimates = await getEstimatesByProjectId(projectData.id, team.id);
-    const performanceDynamics = await ProjectPerformanceDynamicsService.list(team.id, projectData.id);
-    const kpiData = await ProjectDashboardKpiService.getByProjectId(team.id, projectData.id);
+    const [estimates, performanceDynamics, kpiData] = await Promise.all([
+        getEstimatesByProjectId(projectData.id, team.id),
+        ProjectPerformanceDynamicsService.list(team.id, projectData.id),
+        ProjectDashboardKpiService.getByProjectId(team.id, projectData.id),
+    ]);
 
     const project: ProjectListItem = {
         id: projectData.id,
