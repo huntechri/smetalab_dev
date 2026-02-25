@@ -9,110 +9,118 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { ProjectListItem } from "../../shared/types"
-
 type DashboardKpiCardsProps = {
-    project: ProjectListItem;
+    kpi: {
+        revenue: number;
+        profit: number;
+        progress: number;
+        remainingDays: number | null;
+    };
 };
 
-export function DashboardKpiCards({ project }: DashboardKpiCardsProps) {
-    // Форматирование суммы контракта
-    const formattedAmount = new Intl.NumberFormat('en-US', {
+export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
+    const currencyFormatter = new Intl.NumberFormat('ru-RU', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'RUB',
         maximumFractionDigits: 0,
-    }).format(project.contractAmount / 100); // Placeholder conversion for demo look
+    });
+
+    const formattedRevenue = currencyFormatter.format(kpi.revenue);
+    const formattedProfit = currencyFormatter.format(kpi.profit);
+    const remainingDaysLabel = kpi.remainingDays === null
+        ? 'Без срока'
+        : `${kpi.remainingDays} дн.`;
 
     return (
         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Total Revenue</CardDescription>
+                    <CardDescription>Доход</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {formattedAmount}
+                        {formattedRevenue}
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
                             <TrendingUp />
-                            +12.5%
+                            План
                         </Badge>
                     </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Trending up this month <TrendingUp className="size-4" />
+                        План раб. + план мат. <TrendingUp className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
-                        Project budget utilization
+                        Суммарный план проекта
                     </div>
                 </CardFooter>
             </Card>
 
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Overall Progress</CardDescription>
+                    <CardDescription>Прибыль</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {project.progress}%
+                        {formattedProfit}
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
                             <Activity />
-                            +4.5%
+                            Δ План/Факт
                         </Badge>
                     </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Ahead of schedule <Activity className="size-4" />
+                        (План раб. + план мат.) − (Факт раб. + факт мат.) <Activity className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
-                        Current completion rate
+                        Финансовая дельта проекта
                     </div>
                 </CardFooter>
             </Card>
 
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Active Tasks</CardDescription>
+                    <CardDescription>Прогресс</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {Math.round(project.progress * 1.2)}
+                        {kpi.progress}%
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
                             <Users />
-                            On track
+                            По работам
                         </Badge>
                     </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Team performance high <Users className="size-4" />
+                        Выполнение работ <Users className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
-                        Assigned items for this week
+                        Текущий процент завершения
                     </div>
                 </CardFooter>
             </Card>
 
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Growth Rate</CardDescription>
+                    <CardDescription>Срок</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {(project.progress / 20).toFixed(1)}%
+                        {remainingDaysLabel}
                     </CardTitle>
                     <CardAction>
                         <Badge variant="outline">
                             <TrendingUp />
-                            Target
+                            До конца
                         </Badge>
                     </CardAction>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex gap-2 font-medium">
-                        Steady growth increase <TrendingUp className="size-4" />
+                        Оставшееся время до завершения <TrendingUp className="size-4" />
                     </div>
                     <div className="text-muted-foreground">
-                        Meets efficiency projections
+                        Расчёт от даты окончания проекта
                     </div>
                 </CardFooter>
             </Card>
