@@ -34,7 +34,34 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
     const formattedProfit = currencyFormatter.format(kpi.profit);
     const remainingDaysLabel = kpi.remainingDays === null
         ? 'Без срока'
-        : `${kpi.remainingDays} дн.`;
+        : kpi.remainingDays < 0
+            ? `Просрочено ${Math.abs(kpi.remainingDays)} дн.`
+            : `${kpi.remainingDays} дн.`;
+
+    const valueBaseClassName = "text-xl sm:text-2xl lg:text-3xl font-semibold tabular-nums break-words leading-tight";
+
+    const getProfitValueClassName = (profit: number, revenue: number) => {
+        if (profit < 0) return "text-red-600 dark:text-red-400";
+
+        const profitPercent = revenue > 0 ? (profit / revenue) * 100 : 0;
+        if (profitPercent <= 15) return "text-orange-500 dark:text-orange-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
+
+    const getProgressValueClassName = (progress: number) => {
+        if (progress < 30) return "text-red-600 dark:text-red-400";
+        if (progress < 60) return "text-orange-500 dark:text-orange-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
+
+    const getRemainingDaysValueClassName = (remainingDays: number | null) => {
+        if (remainingDays === null) return "text-muted-foreground";
+        if (remainingDays < 0) return "text-red-600 dark:text-red-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
 
     return (
         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -43,7 +70,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                     <Card className="@container/card">
                         <CardHeader>
                             <CardDescription>Доход</CardDescription>
-                            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                            <CardTitle className={`${valueBaseClassName} text-green-600 dark:text-green-400`}>
                                 {formattedRevenue}
                             </CardTitle>
                             <CardAction>
@@ -65,7 +92,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                     <Card className="@container/card">
                         <CardHeader>
                             <CardDescription>Прибыль</CardDescription>
-                            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                            <CardTitle className={`${valueBaseClassName} ${getProfitValueClassName(kpi.profit, kpi.revenue)}`}>
                                 {formattedProfit}
                             </CardTitle>
                             <CardAction>
@@ -87,7 +114,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                     <Card className="@container/card">
                         <CardHeader>
                             <CardDescription>Прогресс</CardDescription>
-                            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                            <CardTitle className={`${valueBaseClassName} ${getProgressValueClassName(kpi.progress)}`}>
                                 {kpi.progress}%
                             </CardTitle>
                             <CardAction>
@@ -109,7 +136,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                     <Card className="@container/card">
                         <CardHeader>
                             <CardDescription>Срок</CardDescription>
-                            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                            <CardTitle className={`${valueBaseClassName} ${getRemainingDaysValueClassName(kpi.remainingDays)}`}>
                                 {remainingDaysLabel}
                             </CardTitle>
                             <CardAction>

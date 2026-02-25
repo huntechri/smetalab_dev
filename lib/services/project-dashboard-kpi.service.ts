@@ -26,11 +26,11 @@ export function calculateDaysRemaining(endDate: Date | null, now: Date = new Dat
     }
 
     const diffMs = endDate.getTime() - now.getTime();
-    if (diffMs <= 0) {
-        return 0;
+    if (diffMs >= 0) {
+        return Math.ceil(diffMs / msInDay);
     }
 
-    return Math.ceil(diffMs / msInDay);
+    return Math.floor(diffMs / msInDay);
 }
 
 export function buildProjectDashboardKpiViewModel(input: {
