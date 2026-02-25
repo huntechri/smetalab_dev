@@ -86,6 +86,18 @@ describe('buildDynamicsTimeline', () => {
         });
     });
 
+
+
+    it('builds 12 months timeline from current month back to 11 months', () => {
+        const now = new Date('2025-02-20T00:00:00.000Z');
+
+        const timeline = buildDynamicsTimeline(data, '12m', now);
+
+        expect(timeline).toHaveLength(12);
+        expect(timeline.at(0)?.date).toBe('2024-03-01');
+        expect(timeline.at(-1)?.date).toBe('2025-02-01');
+    });
+
     it('applies opening balance from points before range start', () => {
         const now = new Date('2025-02-20T00:00:00.000Z');
 
