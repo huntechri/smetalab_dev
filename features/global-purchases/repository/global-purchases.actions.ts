@@ -2,11 +2,12 @@ import {
     addGlobalPurchaseAction,
     getGlobalPurchasesAction,
     patchGlobalPurchaseAction,
+    patchGlobalPurchasesBatchAction,
     removeGlobalPurchaseAction,
     copyGlobalPurchasesToNextDayAction,
 } from '@/app/actions/global-purchases';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
-import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
+import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, PurchaseRowBatchPatchPayload } from '../types/dto';
 
 const toPayloadFromCatalog = (material: CatalogMaterial, projectId: string | null, purchaseDate: string) => {
     const safePrice = Number(material.price);
@@ -66,6 +67,17 @@ export const globalPurchasesActionRepo = {
 
     async patch(rowId: string, patch: PurchaseRowPatch): Promise<PurchaseRow> {
         const result = await patchGlobalPurchaseAction(rowId, patch);
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+
+    async patchBatch(payload: PurchaseRowBatchPatchPayload): Promise<PurchaseRow[]> {
+        const result = await patchGlobalPurchasesBatchAction(payload);
 
         if (!result.success) {
             throw new Error(result.error.message);
