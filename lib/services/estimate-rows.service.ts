@@ -85,8 +85,17 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase();
 
-const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: string) => {
-    const rows = await tx
+const renumberEstimateCodes = async (
+    tx: typeof db,
+    teamId: number,
+    estimateId: string,
+    options?: { startOrder?: number; full?: boolean },
+) => {
+    const full = options?.full ?? false;
+    const startOrder = options?.startOrder;
+    const hasStartOrder = typeof startOrder === 'number';
+
+    const rowsQuery = tx
         .select({
             id: estimateRows.id,
             kind: estimateRows.kind,
@@ -95,11 +104,49 @@ const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: 
             order: estimateRows.order,
         })
         .from(estimateRows)
-        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)))
+        .where(
+            and(
+                eq(estimateRows.estimateId, estimateId),
+                withActiveTenant(estimateRows, teamId),
+                !full && hasStartOrder ? sql`${estimateRows.order} >= ${startOrder}` : undefined,
+            ),
+        )
         .orderBy(estimateRows.order);
+
+    const rows = await rowsQuery;
+    if (rows.length === 0) {
+        return;
+    }
 
     let workIndex = 0;
     const nextCodeById = new Map<string, string>();
+
+    if (!full && hasStartOrder) {
+        const [{ count }] = await tx
+            .select({ count: sql<number>`COUNT(*)::int` })
+            .from(estimateRows)
+            .where(
+                and(
+                    eq(estimateRows.estimateId, estimateId),
+                    eq(estimateRows.kind, 'work'),
+                    withActiveTenant(estimateRows, teamId),
+                    sql`${estimateRows.order} < ${startOrder}`,
+                ),
+            );
+        workIndex = count;
+
+        const parentIds = Array.from(new Set(rows.map((row) => row.parentWorkId).filter((id): id is string => Boolean(id))));
+        if (parentIds.length > 0) {
+            const parentRows = await tx
+                .select({ id: estimateRows.id, code: estimateRows.code })
+                .from(estimateRows)
+                .where(and(inArray(estimateRows.id, parentIds), withActiveTenant(estimateRows, teamId)));
+
+            for (const parent of parentRows) {
+                nextCodeById.set(parent.id, parent.code);
+            }
+        }
+    }
 
     for (const row of rows) {
         if (row.kind !== 'work') {
@@ -111,6 +158,42 @@ const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: 
     }
 
     const materialCounters = new Map<string, number>();
+
+    if (!full && hasStartOrder) {
+        const updatedWorkIds = new Set(rows.filter((row) => row.kind === 'work').map((row) => row.id));
+
+        const externalParentIds = Array.from(
+            new Set(
+                rows
+                    .filter((row) => row.kind === 'material' && row.parentWorkId && !updatedWorkIds.has(row.parentWorkId))
+                    .map((row) => row.parentWorkId as string),
+            ),
+        );
+
+        if (externalParentIds.length > 0) {
+            const counters = await tx
+                .select({
+                    parentWorkId: estimateRows.parentWorkId,
+                    count: sql<number>`COUNT(*)::int`,
+                })
+                .from(estimateRows)
+                .where(
+                    and(
+                        eq(estimateRows.estimateId, estimateId),
+                        withActiveTenant(estimateRows, teamId),
+                        inArray(estimateRows.parentWorkId, externalParentIds),
+                        sql`${estimateRows.order} < ${startOrder}`,
+                    ),
+                )
+                .groupBy(estimateRows.parentWorkId);
+
+            for (const counter of counters) {
+                if (counter.parentWorkId) {
+                    materialCounters.set(counter.parentWorkId, counter.count);
+                }
+            }
+        }
+    }
 
     for (const row of rows) {
         if (row.kind !== 'material' || !row.parentWorkId) {
@@ -153,6 +236,15 @@ const renumberEstimateCodes = async (tx: typeof db, teamId: number, estimateId: 
     }
 };
 
+const roundContribution = (value: number) => Math.round(value);
+
+const estimateRowContribution = (row: Pick<EstimateRowEntity, 'kind' | 'sum'>, coefPercent: number) => {
+    if (row.kind === 'work') {
+        return row.sum * (1 + coefPercent / 100);
+    }
+    return row.sum;
+};
+
 const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
     const estimate = await tx.query.estimates.findFirst({
         where: eq(estimates.id, estimateId),
@@ -180,6 +272,20 @@ const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
     await tx
         .update(estimates)
         .set({ total: Math.round(total), updatedAt: new Date() })
+        .where(eq(estimates.id, estimateId));
+};
+
+const applyEstimateTotalDelta = async (tx: typeof db, estimateId: string, delta: number) => {
+    if (delta === 0) {
+        return;
+    }
+
+    await tx
+        .update(estimates)
+        .set({
+            total: sql`GREATEST(0, ROUND(${estimates.total} + ${delta}))::int`,
+            updatedAt: new Date(),
+        })
         .where(eq(estimates.id, estimateId));
 };
 
@@ -291,7 +397,7 @@ export class EstimateRowsService {
                     })
                     .returning();
 
-                await renumberEstimateCodes(tx, teamId, estimateId);
+                await renumberEstimateCodes(tx, teamId, estimateId, { startOrder: nextOrder });
 
                 const row = await tx.query.estimateRows.findFirst({
                     where: and(eq(estimateRows.id, created.id), withActiveTenant(estimateRows, teamId)),
@@ -301,7 +407,8 @@ export class EstimateRowsService {
                     throw new Error('CREATED_ROW_NOT_FOUND');
                 }
 
-                await recalculateEstimateTotal(tx, estimateId);
+                const delta = roundContribution(estimateRowContribution(created as EstimateRowEntity, estimate.coefPercent ?? 0));
+                await applyEstimateTotalDelta(tx, estimateId, delta);
                 return row;
             });
 
@@ -387,7 +494,8 @@ export class EstimateRowsService {
                     })
                     .returning();
 
-                await recalculateEstimateTotal(tx, estimateId);
+                const delta = roundContribution(estimateRowContribution(row as EstimateRowEntity, estimate.coefPercent ?? 0));
+                await applyEstimateTotalDelta(tx, estimateId, delta);
                 return row;
             });
 
@@ -416,7 +524,7 @@ export class EstimateRowsService {
 
             const updated = await db.transaction(async (tx) => {
                 const existing = await tx.query.estimateRows.findFirst({
-                    where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)),
+                    where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)),
                 });
 
                 if (!existing) {
@@ -426,6 +534,8 @@ export class EstimateRowsService {
                 const patch = parsed.data;
                 const nextQty = patch.qty ?? existing.qty;
                 const nextPrice = patch.price ?? existing.price;
+
+                const previousContribution = estimateRowContribution(existing as EstimateRowEntity, estimate.coefPercent ?? 0);
 
                 const [row] = await tx
                     .update(estimateRows)
@@ -439,7 +549,8 @@ export class EstimateRowsService {
                     .where(eq(estimateRows.id, rowId))
                     .returning();
 
-                await recalculateEstimateTotal(tx, estimateId);
+                const nextContribution = estimateRowContribution(row as EstimateRowEntity, estimate.coefPercent ?? 0);
+                await applyEstimateTotalDelta(tx, estimateId, roundContribution(nextContribution - previousContribution));
                 return row;
             });
 
@@ -460,7 +571,7 @@ export class EstimateRowsService {
             const deletedAt = new Date();
             const removedIds = await db.transaction(async (tx) => {
                 const row = await tx.query.estimateRows.findFirst({
-                    where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)),
+                    where: and(eq(estimateRows.id, rowId), eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)),
                 });
 
                 if (!row) {
@@ -478,12 +589,23 @@ export class EstimateRowsService {
                     ]
                     : [row.id];
 
+                const rowsToDelete = await tx
+                    .select({ kind: estimateRows.kind, sum: estimateRows.sum })
+                    .from(estimateRows)
+                    .where(and(eq(estimateRows.estimateId, estimateId), inArray(estimateRows.id, idsToDelete), withActiveTenant(estimateRows, teamId)));
+
                 await tx
                     .update(estimateRows)
                     .set({ deletedAt, updatedAt: deletedAt })
-                    .where(and(eq(estimateRows.estimateId, estimateId), inArray(estimateRows.id, idsToDelete)));
+                    .where(and(eq(estimateRows.estimateId, estimateId), inArray(estimateRows.id, idsToDelete), withActiveTenant(estimateRows, teamId)));
 
-                await recalculateEstimateTotal(tx, estimateId);
+                const delta = rowsToDelete.reduce(
+                    (acc, item) => acc - estimateRowContribution(item as Pick<EstimateRowEntity, 'kind' | 'sum'>, estimate.coefPercent ?? 0),
+                    0,
+                );
+
+                await renumberEstimateCodes(tx, teamId, estimateId, { startOrder: row.order });
+                await applyEstimateTotalDelta(tx, estimateId, roundContribution(delta));
 
                 return idsToDelete;
             });
@@ -495,3 +617,8 @@ export class EstimateRowsService {
         }
     }
 }
+
+export const EstimateRowsMaintenance = {
+    recalculateEstimateTotal,
+    renumberEstimateCodes,
+};

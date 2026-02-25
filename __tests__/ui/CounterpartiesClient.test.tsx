@@ -29,6 +29,10 @@ vi.mock('@/app/actions/counterparties', () => ({
     deleteCounterparty: vi.fn(),
     createCounterparty: vi.fn(),
     updateCounterparty: vi.fn(),
+    fetchCounterpartiesPage: vi.fn().mockResolvedValue({
+        success: true,
+        data: { data: [], count: 0 },
+    }),
 }));
 
 const mockData: Counterparty[] = [

@@ -41,6 +41,13 @@ const patchSchema = z.object({
   purchaseDate: isoDateSchema.optional(),
 });
 
+const batchPatchSchema = z.object({
+  updates: z.array(z.object({
+    rowId: z.string().uuid(),
+    patch: patchSchema,
+  })).min(1).max(500),
+});
+
 const calculateAmount = (qty: number, price: number) => Math.round((qty * price + Number.EPSILON) * 100) / 100;
 
 const toRow = (
@@ -76,6 +83,39 @@ const resolveSupplier = async (client: DbLike, teamId: number, supplierId: strin
   where: and(eq(materialSuppliers.id, supplierId), withActiveTenant(materialSuppliers, teamId)),
   columns: { id: true, name: true, color: true },
 });
+
+type ProjectSnapshot = { id: string; name: string };
+type SupplierSnapshot = { id: string; name: string; color: string };
+
+const getCachedProject = async (
+  client: DbLike,
+  teamId: number,
+  projectId: string,
+  cache: Map<string, ProjectSnapshot | null>
+) => {
+  if (cache.has(projectId)) {
+    return cache.get(projectId) ?? null;
+  }
+
+  const project = await resolveProject(client, teamId, projectId);
+  cache.set(projectId, project ?? null);
+  return project ?? null;
+};
+
+const getCachedSupplier = async (
+  client: DbLike,
+  teamId: number,
+  supplierId: string,
+  cache: Map<string, SupplierSnapshot | null>
+) => {
+  if (cache.has(supplierId)) {
+    return cache.get(supplierId) ?? null;
+  }
+
+  const supplier = await resolveSupplier(client, teamId, supplierId);
+  cache.set(supplierId, supplier ?? null);
+  return supplier ?? null;
+};
 
 export class GlobalPurchasesService {
   static async list(teamId: number, rawFilters: unknown): Promise<Result<PurchaseRow[]>> {
@@ -221,6 +261,111 @@ export class GlobalPurchasesService {
       }
       console.error('GlobalPurchasesService.patch error', serviceError);
       return error('Не удалось обновить строку закупки');
+    }
+  }
+
+  static async patchBatch(teamId: number, rawPayload: unknown): Promise<Result<PurchaseRow[]>> {
+    const parsed = batchPatchSchema.safeParse(rawPayload);
+    if (!parsed.success) return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+
+    try {
+      const rows = await db.transaction(async (tx) => {
+        const uniqueRowIds = [...new Set(parsed.data.updates.map((update) => update.rowId))];
+        const existingRows = await tx.query.globalPurchases.findMany({
+          where: and(inArray(globalPurchases.id, uniqueRowIds), withActiveTenant(globalPurchases, teamId)),
+        });
+
+        if (existingRows.length !== uniqueRowIds.length) {
+          throw new Error('NOT_FOUND');
+        }
+
+        const existingMap = new Map(existingRows.map((row) => [row.id, row]));
+        const projectCache = new Map<string, ProjectSnapshot | null>();
+        const supplierCache = new Map<string, SupplierSnapshot | null>();
+        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
+
+        for (const update of parsed.data.updates) {
+          const existing = existingMap.get(update.rowId);
+          if (!existing) {
+            throw new Error('NOT_FOUND');
+          }
+
+          const patch = update.patch;
+          const nextQty = patch.qty ?? existing.qty;
+          const nextPrice = patch.price ?? existing.price;
+
+          const project = patch.projectId !== undefined && patch.projectId !== null
+            ? await getCachedProject(tx, teamId, patch.projectId, projectCache)
+            : null;
+
+          if (patch.projectId && !project) {
+            throw new Error('PROJECT_NOT_FOUND');
+          }
+
+          if (patch.supplierId) {
+            const supplier = await getCachedSupplier(tx, teamId, patch.supplierId, supplierCache);
+            if (!supplier) {
+              throw new Error('SUPPLIER_NOT_FOUND');
+            }
+          }
+
+          const [updated] = await tx.update(globalPurchases)
+            .set({
+              materialName: patch.materialName ?? existing.materialName,
+              materialId: patch.materialId !== undefined ? patch.materialId : existing.materialId,
+              unit: patch.unit ?? existing.unit,
+              note: patch.note ?? existing.note,
+              purchaseDate: patch.purchaseDate ?? existing.purchaseDate,
+              projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
+              projectName: project?.name ?? existing.projectName,
+              supplierId: patch.supplierId !== undefined ? patch.supplierId : existing.supplierId,
+              qty: nextQty,
+              price: nextPrice,
+              amount: calculateAmount(nextQty, nextPrice),
+              updatedAt: new Date(),
+            })
+            .where(and(eq(globalPurchases.id, update.rowId), withActiveTenant(globalPurchases, teamId)))
+            .returning();
+
+          updatedRows.push(updated);
+        }
+
+        const projectIds = [...new Set(updatedRows.map((row) => row.projectId).filter((id): id is string => !!id))];
+        const supplierIds = [...new Set(updatedRows.map((row) => row.supplierId).filter((id): id is string => !!id))];
+
+        const projectsList = projectIds.length > 0
+          ? await tx.query.projects.findMany({
+            where: and(inArray(projects.id, projectIds), withActiveTenant(projects, teamId)),
+            columns: { id: true, name: true },
+          })
+          : [];
+
+        const suppliersList = supplierIds.length > 0
+          ? await tx.query.materialSuppliers.findMany({
+            where: and(inArray(materialSuppliers.id, supplierIds), withActiveTenant(materialSuppliers, teamId)),
+            columns: { id: true, name: true, color: true },
+          })
+          : [];
+
+        const projectMap = new Map(projectsList.map((project) => [project.id, project.name]));
+        const supplierMap = new Map(suppliersList.map((supplier) => [supplier.id, { name: supplier.name, color: supplier.color }]));
+
+        return updatedRows.map((row) => toRow(
+          row,
+          row.projectId ? projectMap.get(row.projectId) ?? null : null,
+          row.supplierId ? supplierMap.get(row.supplierId) ?? null : null
+        ));
+      });
+
+      return success(rows);
+    } catch (serviceError) {
+      if (serviceError instanceof Error) {
+        if (serviceError.message === 'NOT_FOUND') return error('Строка закупки не найдена', 'NOT_FOUND');
+        if (serviceError.message === 'PROJECT_NOT_FOUND') return error('Проект не найден', 'NOT_FOUND');
+        if (serviceError.message === 'SUPPLIER_NOT_FOUND') return error('Поставщик не найден', 'NOT_FOUND');
+      }
+      console.error('GlobalPurchasesService.patchBatch error', serviceError);
+      return error('Не удалось массово обновить строки закупки');
     }
   }
 

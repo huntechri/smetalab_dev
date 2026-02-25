@@ -5,6 +5,7 @@ const actionMocks = vi.hoisted(() => ({
     addGlobalPurchaseAction: vi.fn(),
     patchGlobalPurchaseAction: vi.fn(),
     removeGlobalPurchaseAction: vi.fn(),
+    patchGlobalPurchasesBatchAction: vi.fn(),
 }));
 
 vi.mock('@/app/actions/global-purchases', () => actionMocks);
@@ -17,6 +18,7 @@ describe('globalPurchasesActionRepo', () => {
         actionMocks.getGlobalPurchasesAction.mockReset();
         actionMocks.patchGlobalPurchaseAction.mockReset();
         actionMocks.removeGlobalPurchaseAction.mockReset();
+        actionMocks.patchGlobalPurchasesBatchAction.mockReset();
     });
 
     it('loads rows by date range', async () => {
@@ -82,6 +84,35 @@ describe('globalPurchasesActionRepo', () => {
 
         expect(actionMocks.patchGlobalPurchaseAction).toHaveBeenCalledWith('1', { qty: 2 });
         expect(row.amount).toBe(1000);
+    });
+
+
+
+    it('patches multiple rows via batch server action', async () => {
+        actionMocks.patchGlobalPurchasesBatchAction.mockResolvedValue({
+            success: true,
+            data: [{
+                id: '1',
+                projectId: null,
+                projectName: 'A',
+                materialName: 'Цемент',
+                unit: 'мешок',
+                qty: 2,
+                price: 500,
+                amount: 1000,
+                note: '',
+                source: 'catalog',
+                purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
+            }],
+        });
+
+        const rows = await globalPurchasesActionRepo.patchBatch({ updates: [{ rowId: '1', patch: { qty: 2 } }] });
+
+        expect(actionMocks.patchGlobalPurchasesBatchAction).toHaveBeenCalledWith({ updates: [{ rowId: '1', patch: { qty: 2 } }] });
+        expect(rows).toHaveLength(1);
     });
 
     it('throws when remove action fails', async () => {
