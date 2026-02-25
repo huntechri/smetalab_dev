@@ -34,7 +34,6 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import { counterpartyFormSchema, type CounterpartyFormValues } from "../schemas/counterparty-form.schema";
 import {
@@ -50,7 +49,7 @@ interface CreateCounterpartySheetProps {
     onOpenChange: (open: boolean) => void;
     counterparty?: CounterpartyRow | null;
     tenantId: number;
-    onSaved?: () => void;
+    onSaved?: (saved: CounterpartyRow, mode: "create" | "update") => void;
 }
 
 export function CreateCounterpartySheet({
@@ -60,7 +59,6 @@ export function CreateCounterpartySheet({
     tenantId: _tenantId,
     onSaved,
 }: CreateCounterpartySheetProps) {
-    const router = useRouter();
     const [isPending, startTransition] = useTransition();
     const { toast } = useToast();
 
@@ -147,8 +145,7 @@ export function CreateCounterpartySheet({
                     if (result.success) {
                         toast({ title: "Контрагент обновлен" });
                         onOpenChange(false);
-                        onSaved?.();
-                        router.refresh();
+                        onSaved?.(result.data, "update");
                     } else {
                         toast({ variant: "destructive", title: result.message || "Произошла ошибка при сохранении" });
                     }
@@ -157,8 +154,7 @@ export function CreateCounterpartySheet({
                     if (result.success) {
                         toast({ title: "Контрагент создан" });
                         onOpenChange(false);
-                        onSaved?.();
-                        router.refresh();
+                        onSaved?.(result.data, "create");
                     } else {
                         toast({ variant: "destructive", title: result.message || "Произошла ошибка при сохранении" });
                     }
