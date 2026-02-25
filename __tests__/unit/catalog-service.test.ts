@@ -120,7 +120,7 @@ describe('CatalogService', () => {
 
         const result = await CatalogService.searchMaterials(7, { query: 'бетон', category: 'all', isAiMode: false, limit: 100 });
 
-        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон', undefined, undefined, 'all');
+        expect(materialsServiceMocks.getMany).toHaveBeenCalledWith(7, 100, 'бетон', undefined, undefined, undefined, 'all');
         expect(result.success).toBe(true);
         if (result.success) {
             expect(result.data[0]).toEqual({

@@ -100,7 +100,7 @@ export class CatalogService {
 
         const result = isAiMode && query.length >= 2
             ? await MaterialsService.search(teamId, query, category)
-            : await MaterialsService.getMany(teamId, limit, query || undefined, undefined, undefined, category);
+            : await MaterialsService.getMany(teamId, limit, query || undefined, undefined, undefined, undefined, category);
 
         if (!result.success) {
             return error(result.error.message, result.error.code, result.error.details);
