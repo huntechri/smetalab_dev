@@ -5,117 +5,153 @@ import {
     Card,
     CardAction,
     CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
-import { ProjectListItem } from "../../shared/types"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 type DashboardKpiCardsProps = {
-    project: ProjectListItem;
+    kpi: {
+        revenue: number;
+        profit: number;
+        progress: number;
+        remainingDays: number | null;
+    };
 };
 
-export function DashboardKpiCards({ project }: DashboardKpiCardsProps) {
-    // Форматирование суммы контракта
-    const formattedAmount = new Intl.NumberFormat('en-US', {
+export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
+    const currencyFormatter = new Intl.NumberFormat('ru-RU', {
         style: 'currency',
-        currency: 'USD',
+        currency: 'RUB',
         maximumFractionDigits: 0,
-    }).format(project.contractAmount / 100); // Placeholder conversion for demo look
+    });
+
+    const formattedRevenue = currencyFormatter.format(kpi.revenue);
+    const formattedProfit = currencyFormatter.format(kpi.profit);
+    const remainingDaysLabel = kpi.remainingDays === null
+        ? 'Без срока'
+        : kpi.remainingDays < 0
+            ? `Просрочено ${Math.abs(kpi.remainingDays)} дн.`
+            : `${kpi.remainingDays} дн.`;
+
+    const valueBaseClassName = "text-xl sm:text-2xl lg:text-3xl font-semibold tabular-nums break-words leading-tight";
+
+    const getProfitValueClassName = (profit: number, revenue: number) => {
+        if (profit < 0) return "text-red-600 dark:text-red-400";
+
+        const profitPercent = revenue > 0 ? (profit / revenue) * 100 : 0;
+        if (profitPercent <= 15) return "text-orange-500 dark:text-orange-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
+
+    const getProgressValueClassName = (progress: number) => {
+        if (progress < 30) return "text-red-600 dark:text-red-400";
+        if (progress < 60) return "text-orange-500 dark:text-orange-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
+
+    const getRemainingDaysValueClassName = (remainingDays: number | null) => {
+        if (remainingDays === null) return "text-muted-foreground";
+        if (remainingDays < 0) return "text-red-600 dark:text-red-400";
+
+        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
+    };
 
     return (
         <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>Total Revenue</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {formattedAmount}
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                            <TrendingUp />
-                            +12.5%
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Trending up this month <TrendingUp className="size-4" />
-                    </div>
-                    <div className="text-muted-foreground">
-                        Project budget utilization
-                    </div>
-                </CardFooter>
-            </Card>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Card className="@container/card">
+                        <CardHeader>
+                            <CardDescription>Доход</CardDescription>
+                            <CardTitle className={`${valueBaseClassName} text-green-600 dark:text-green-400`}>
+                                {formattedRevenue}
+                            </CardTitle>
+                            <CardAction>
+                                <Badge variant="outline">
+                                    <TrendingUp />
+                                    План
+                                </Badge>
+                            </CardAction>
+                        </CardHeader>
+                    </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                    План раб. + план мат.
+                </TooltipContent>
+            </Tooltip>
 
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>Overall Progress</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {project.progress}%
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                            <Activity />
-                            +4.5%
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Ahead of schedule <Activity className="size-4" />
-                    </div>
-                    <div className="text-muted-foreground">
-                        Current completion rate
-                    </div>
-                </CardFooter>
-            </Card>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Card className="@container/card">
+                        <CardHeader>
+                            <CardDescription>Прибыль</CardDescription>
+                            <CardTitle className={`${valueBaseClassName} ${getProfitValueClassName(kpi.profit, kpi.revenue)}`}>
+                                {formattedProfit}
+                            </CardTitle>
+                            <CardAction>
+                                <Badge variant="outline">
+                                    <Activity />
+                                    Δ План/Факт
+                                </Badge>
+                            </CardAction>
+                        </CardHeader>
+                    </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                    (План раб. + план мат.) − (Факт раб. + факт мат.)
+                </TooltipContent>
+            </Tooltip>
 
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>Active Tasks</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {Math.round(project.progress * 1.2)}
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                            <Users />
-                            On track
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Team performance high <Users className="size-4" />
-                    </div>
-                    <div className="text-muted-foreground">
-                        Assigned items for this week
-                    </div>
-                </CardFooter>
-            </Card>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Card className="@container/card">
+                        <CardHeader>
+                            <CardDescription>Прогресс</CardDescription>
+                            <CardTitle className={`${valueBaseClassName} ${getProgressValueClassName(kpi.progress)}`}>
+                                {kpi.progress}%
+                            </CardTitle>
+                            <CardAction>
+                                <Badge variant="outline">
+                                    <Users />
+                                    По работам
+                                </Badge>
+                            </CardAction>
+                        </CardHeader>
+                    </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                    Выполнение работ
+                </TooltipContent>
+            </Tooltip>
 
-            <Card className="@container/card">
-                <CardHeader>
-                    <CardDescription>Growth Rate</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {(project.progress / 20).toFixed(1)}%
-                    </CardTitle>
-                    <CardAction>
-                        <Badge variant="outline">
-                            <TrendingUp />
-                            Target
-                        </Badge>
-                    </CardAction>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 flex gap-2 font-medium">
-                        Steady growth increase <TrendingUp className="size-4" />
-                    </div>
-                    <div className="text-muted-foreground">
-                        Meets efficiency projections
-                    </div>
-                </CardFooter>
-            </Card>
+            <Tooltip>
+                <TooltipTrigger asChild>
+                    <Card className="@container/card">
+                        <CardHeader>
+                            <CardDescription>Срок</CardDescription>
+                            <CardTitle className={`${valueBaseClassName} ${getRemainingDaysValueClassName(kpi.remainingDays)}`}>
+                                {remainingDaysLabel}
+                            </CardTitle>
+                            <CardAction>
+                                <Badge variant="outline">
+                                    <TrendingUp />
+                                    До конца
+                                </Badge>
+                            </CardAction>
+                        </CardHeader>
+                    </Card>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8}>
+                    Оставшееся время до завершения
+                </TooltipContent>
+            </Tooltip>
         </div>
     )
 }
