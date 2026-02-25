@@ -12,13 +12,13 @@ describe('project-dashboard-kpi.service', () => {
         expect(result).toBe(2);
     });
 
-    it('returns zero remaining days for past end date', () => {
+    it('returns negative remaining days for past end date', () => {
         const now = new Date('2026-01-10T00:00:00.000Z');
         const endDate = new Date('2026-01-09T23:59:59.000Z');
 
         const result = calculateDaysRemaining(endDate, now);
 
-        expect(result).toBe(0);
+        expect(result).toBe(-1);
     });
 
     it('builds dashboard kpi model from planned and actual totals', () => {
