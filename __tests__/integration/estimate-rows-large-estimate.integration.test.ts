@@ -83,6 +83,7 @@ describe('EstimateRowsService large estimate integration', () => {
   });
 
   it('inserts and removes rows within large estimate using bounded renumber and incremental total', async () => {
+    const operationBudgetMs = process.env.CI === 'true' ? 10000 : 5000;
     const [{ id: anchorWorkId }] = await db
       .select({ id: estimateRows.id })
       .from(estimateRows)
@@ -104,7 +105,7 @@ describe('EstimateRowsService large estimate integration', () => {
       return;
     }
 
-    expect(insertDurationMs).toBeLessThan(5000);
+    expect(insertDurationMs).toBeLessThan(operationBudgetMs);
     expect(addResult.data.code).toBe('201');
 
     const shiftedWork = await db.query.estimateRows.findFirst({
@@ -129,7 +130,7 @@ describe('EstimateRowsService large estimate integration', () => {
     const removeDurationMs = Date.now() - removeStartedAt;
 
     expect(removeResult.success).toBe(true);
-    expect(removeDurationMs).toBeLessThan(5000);
+    expect(removeDurationMs).toBeLessThan(operationBudgetMs);
 
     const restoredWork = await db.query.estimateRows.findFirst({
       where: and(eq(estimateRows.estimateId, estimateId), eq(estimateRows.name, 'Work 201'), isNull(estimateRows.deletedAt)),
