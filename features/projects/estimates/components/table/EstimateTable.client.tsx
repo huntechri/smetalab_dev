@@ -250,7 +250,9 @@ export function EstimateTable({
   ) => {
     const previousRows = rows;
     let parsedValue = field === "name" ? rawValue : Number(rawValue);
-    if (field === "qty") parsedValue = Math.ceil(Number(rawValue));
+    // Для количества разрешаем дробные значения (например, 10.5 м2), 
+    // но округляем до 3 знаков для чистоты
+    if (field === "qty") parsedValue = Math.round(Number(rawValue) * 1000) / 1000;
 
     const targetRow = rows.find((r) => r.id === rowId);
     if (!targetRow) return;
@@ -297,9 +299,12 @@ export function EstimateTable({
       // Каскадное обновление количества материалов в UI при изменении объема работы (оптимистично)
       if (field === "qty" && targetRow.kind === "work" && row.parentWorkId === rowId) {
         const newWorkQty = Number(parsedValue);
-        const newChildQty = Math.ceil(newWorkQty * row.expense);
+        // Если расход у материала 0, но есть количество, пытаемся восстановить расход на лету
+        const effectiveExpense = row.expense > 0 ? row.expense : (targetRow.qty > 0 ? row.qty / targetRow.qty : 0);
+        const newChildQty = Math.round(newWorkQty * effectiveExpense * 1000) / 1000;
         return {
           ...row,
+          expense: effectiveExpense,
           qty: newChildQty,
           sum: newChildQty * row.price
         };
