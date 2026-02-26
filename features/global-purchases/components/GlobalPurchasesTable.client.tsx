@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, BookOpen, CalendarDays, Copy } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter } from 'lucide-react';
 import { DataTable } from '@/components/ui/data-table';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,8 +16,10 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Calendar } from '@/components/ui/calendar';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
-import { formatLocalDateToIso, parseIsoDateSafe, addDaysToIsoDate } from '../lib/date';
+import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { cn } from '@/lib/utils';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -31,7 +33,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
-    const [isCopying, setIsCopying] = useState(false);
+    const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
+    const [openProjectFilter, setOpenProjectFilter] = useState(false);
     const { toast } = useToast();
     const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -44,8 +47,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         addCatalogRow,
         updateRow,
         removeRow,
-        copyToNextDay,
-        totals,
         addedMaterialNames,
         pendingIds,
     } = useGlobalPurchasesTable(initialRows, initialRange);
@@ -55,6 +56,16 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
             clearTimeout(reloadTimeoutRef.current);
         }
     }, []);
+
+    const displayedRows = useMemo(() => {
+        if (!filterProjectId) return rows;
+        if (filterProjectId === 'none') return rows.filter((r) => !r.projectId);
+        return rows.filter((r) => r.projectId === filterProjectId);
+    }, [rows, filterProjectId]);
+
+    const displayedTotalsAmount = useMemo(() =>
+        displayedRows.reduce((acc, row) => acc + row.amount, 0),
+        [displayedRows]);
 
     const currencyFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', {
         style: 'currency',
@@ -127,34 +138,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         }
     };
 
-    const handleCopyToNextDay = async () => {
-        if (isCopying || rows.length === 0) return;
-
-        try {
-            setIsCopying(true);
-            const created = await copyToNextDay();
-            const nextDay = addDaysToIsoDate(range.from, 1);
-
-            toast({
-                title: 'Копирование завершено',
-                description: `Скопировано строк: ${created.length} на ${nextDay}`
-            });
-
-            // Автоматически переключаемся на следующий день
-            const nextRange = { from: nextDay, to: nextDay };
-            setRange(nextRange);
-            await reloadRows(nextRange);
-        } catch (err) {
-            toast({
-                variant: 'destructive',
-                title: 'Ошибка копирования',
-                description: err instanceof Error ? err.message : 'Не удалось скопировать данные.',
-            });
-        } finally {
-            setIsCopying(false);
-        }
-    };
-
     const handleRangeChange = (nextRange: DateRange | undefined) => {
         if (!nextRange?.from) return;
 
@@ -183,10 +166,10 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         <div className="space-y-3">
             <DataTable
                 columns={columns}
-                data={rows}
+                data={displayedRows}
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
-                height="680px"
+                height="625px"
                 actions={(
                     <div className="flex flex-wrap items-center gap-2">
                         <Popover>
@@ -209,6 +192,67 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     locale={ru}
                                     initialFocus
                                 />
+                            </PopoverContent>
+                        </Popover>
+
+                        <Popover open={openProjectFilter} onOpenChange={setOpenProjectFilter}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className={cn(
+                                                "h-8 px-2 gap-1.5 min-w-[160px] max-w-[200px] justify-between border border-transparent hover:border-border text-xs md:text-sm",
+                                                !filterProjectId && "text-muted-foreground"
+                                            )}
+                                        >
+                                            <div className="flex items-center gap-1.5 truncate">
+                                                <Filter className="size-3.5 shrink-0 opacity-60" />
+                                                <span className="truncate">
+                                                    {filterProjectId === 'none'
+                                                        ? 'Без привязки'
+                                                        : (projectOptions.find(p => p.id === filterProjectId)?.name ?? 'Все объекты')}
+                                                </span>
+                                            </div>
+                                            <ChevronsUpDown className="size-3 opacity-50 shrink-0 ml-1" />
+                                        </Button>
+                                    </PopoverTrigger>
+                                </TooltipTrigger>
+                                <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
+                            </Tooltip>
+                            <PopoverContent className="w-72 p-0" align="end">
+                                <Command>
+                                    <CommandInput placeholder="Поиск объекта..." />
+                                    <CommandList>
+                                        <CommandEmpty>Объект не найден.</CommandEmpty>
+                                        <CommandGroup>
+                                            <CommandItem onSelect={() => {
+                                                setFilterProjectId(null);
+                                                setOpenProjectFilter(false);
+                                            }}>
+                                                <Check className={cn("mr-2 h-4 w-4", !filterProjectId ? "opacity-100" : "opacity-0")} />
+                                                Все объекты
+                                            </CommandItem>
+                                            <CommandItem onSelect={() => {
+                                                setFilterProjectId('none');
+                                                setOpenProjectFilter(false);
+                                            }}>
+                                                <Check className={cn("mr-2 h-4 w-4", filterProjectId === 'none' ? "opacity-100" : "opacity-0")} />
+                                                Без привязки
+                                            </CommandItem>
+                                            {projectOptions.map((project) => (
+                                                <CommandItem key={project.id} value={project.name} onSelect={() => {
+                                                    setFilterProjectId(project.id);
+                                                    setOpenProjectFilter(false);
+                                                }}>
+                                                    <Check className={cn("mr-2 h-4 w-4", project.id === filterProjectId ? "opacity-100" : "opacity-0")} />
+                                                    <span className="truncate">{project.name}</span>
+                                                </CommandItem>
+                                            ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
                             </PopoverContent>
                         </Popover>
 
@@ -246,30 +290,13 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                             <TooltipContent>Выбрать материалы из каталога</TooltipContent>
                         </Tooltip>
 
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 gap-1.5 w-full sm:w-auto text-xs md:text-sm text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                                    onClick={() => void handleCopyToNextDay()}
-                                    disabled={isCopying || rows.length === 0 || range.from !== range.to}
-                                >
-                                    <Copy className="size-4" />
-                                    <span className="truncate">На след. день</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Копировать все строки текущего дня на следующий</TooltipContent>
-                        </Tooltip>
                     </div>
                 )}
             />
 
-            <div className="flex flex-wrap justify-between gap-2 px-1">
-                <p className="text-xs text-muted-foreground">Списки ведутся по датам. Доступны фильтрация за день/период и копирование.</p>
+            <div className="flex flex-wrap justify-end gap-2 px-1 -mb-[14px]">
                 <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider tabular-nums">
-                    Итого закупки: {currencyFormatter.format(totals.amount)}
+                    Итого закупки: {currencyFormatter.format(displayedTotalsAmount)}
                 </Badge>
             </div>
 
