@@ -8,13 +8,6 @@ import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
 import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -42,7 +35,7 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 
 const tableCellTextClassName = 'text-xs md:text-sm';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
-const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left h-auto py-1 items-start`;
+const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left h-auto py-1 items-start justify-start`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -139,24 +132,58 @@ const ProjectCell = React.memo(function ProjectCell({
   projectOptions: ProjectOption[];
   disabled?: boolean;
 }) {
+  const [open, setOpen] = React.useState(false);
+
+  const current = projectId ? projectOptions.find((p) => p.id === projectId) : null;
+  const name = current?.name;
+
+  const handleSelect = async (val: string | null) => {
+    try {
+      await onPatchAction(rowId, { projectId: val });
+      setOpen(false);
+    } catch {
+      // toast is handled in parent
+    }
+  };
+
   return (
-    <Select
-      value={projectId ?? 'none'}
-      onValueChange={(value) => {
-        void onPatchAction(rowId, { projectId: value === 'none' ? null : value }).catch(() => { });
-      }}
-      disabled={disabled}
-    >
-      <SelectTrigger className="h-8 text-xs md:text-sm" aria-label="Выберите объект">
-        <SelectValue placeholder="Выберите объект" />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="none">Без привязки</SelectItem>
-        {projectOptions.map((project) => (
-          <SelectItem key={project.id} value={project.id}>{project.name}</SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn('h-7 px-2 gap-1 w-full max-w-[220px] justify-start border border-transparent hover:border-border text-xs md:text-sm', !name && 'text-muted-foreground')}
+          disabled={disabled}
+          aria-label="Выбрать объект"
+        >
+          {disabled && (
+            <Loader2 className="size-3 animate-spin mr-1" />
+          )}
+          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-xs md:text-sm">{name}</Badge> : <span className="text-xs md:text-sm">Без привязки</span>}
+          <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent className="w-72 p-0" align="start">
+        <Command>
+          <CommandInput placeholder="Поиск объекта..." />
+          <CommandList>
+            <CommandEmpty>Объект не найден.</CommandEmpty>
+            <CommandGroup>
+              <CommandItem onSelect={() => void handleSelect(null)}>
+                <Check className={cn('size-4', !projectId ? 'opacity-100' : 'opacity-0')} />
+                Без привязки
+              </CommandItem>
+              {projectOptions.map((project) => (
+                <CommandItem key={project.id} value={project.name} onSelect={() => void handleSelect(project.id)}>
+                  <Check className={cn('size-4', project.id === projectId ? 'opacity-100' : 'opacity-0')} />
+                  <span className="truncate">{project.name}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
   );
 });
 
@@ -216,8 +243,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'projectName',
       header: 'Объект',
-      size: 260,
-      minSize: 240,
+      size: 140,
+      minSize: 130,
       cell: ({ row }) => (
         <ProjectCell
           projectId={row.original.projectId}
@@ -231,8 +258,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'purchaseDate',
       header: 'Дата',
-      size: 125,
-      minSize: 115,
+      size: 90,
+      minSize: 85,
       cell: ({ row }) => {
         const dateString = row.original.purchaseDate;
         const isPending = pendingIds.has(row.original.id);
@@ -267,8 +294,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'materialName',
       header: 'Наименование материала',
-      size: 460,
-      minSize: 380,
+      size: 500,
+      minSize: 300,
       cell: ({ row }) => (
         <div className="min-w-0">
           <EditableCell
@@ -290,8 +317,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'unit',
       header: 'Ед. изм.',
-      size: 100,
-      minSize: 90,
+      size: 70,
+      minSize: 65,
       cell: ({ row }) => (
         <div className="min-w-0">
           <EditableCell
@@ -313,8 +340,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'qty',
       header: () => <div className="text-right">Кол-во</div>,
-      size: 110,
-      minSize: 90,
+      size: 80,
+      minSize: 75,
       cell: ({ row }) => (
         <div className={tableNumericCellTextClassName}>
           <EditableCell
@@ -340,8 +367,8 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'price',
       header: () => <div className="text-right">Цена</div>,
-      size: 130,
-      minSize: 110,
+      size: 90,
+      minSize: 85,
       cell: ({ row }) => (
         <div className={tableNumericCellTextClassName}>
           <EditableCell
@@ -367,15 +394,15 @@ export function getGlobalPurchasesColumns({
     {
       accessorKey: 'amount',
       header: () => <div className="text-right">Сумма</div>,
-      size: 140,
-      minSize: 120,
+      size: 100,
+      minSize: 95,
       cell: ({ row }) => <div className={cn(tableNumericCellTextClassName, 'font-bold tracking-tight pr-2')}>{amountFormatter.format(row.original.amount)} ₽</div>,
     },
     {
       accessorKey: 'supplierName',
       header: 'Поставщик',
-      size: 220,
-      minSize: 180,
+      size: 160,
+      minSize: 140,
       cell: ({ row }) => (
         <SupplierBadgePicker
           row={row.original}
@@ -387,9 +414,9 @@ export function getGlobalPurchasesColumns({
     },
     {
       id: 'actions',
-      header: '',
-      size: 60,
-      maxSize: 60,
+      header: 'Действия',
+      size: 80,
+      minSize: 75,
       cell: ({ row }) => (
         <div className="flex justify-center">
           <DeleteRowAction
