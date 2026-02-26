@@ -256,35 +256,56 @@ export function EstimateTable({
     if (!targetRow) return;
 
     const patchData: RowPatch = { [field]: parsedValue };
+
+    // 1. Расчет базовой цены при изменении цены работы (с учетом коэффициента)
     if (field === "price" && targetRow.kind === "work") {
       patchData.price =
         Number(parsedValue) / getEstimateCoefMultiplier(coefPercent);
     }
 
-    if (
-      field === "expense" &&
-      targetRow.kind === "material" &&
-      targetRow.parentWorkId
-    ) {
-      const expense = Number(parsedValue);
-      if (expense > 0) {
-        const parentWork = rows.find((r) => r.id === targetRow.parentWorkId);
-        if (parentWork) patchData.qty = Math.ceil(parentWork.qty * expense);
-      } else {
-        patchData.qty = 1;
+    // 2. Двусторонняя связь Qty <-> Expense для материалов
+    if (targetRow.kind === "material" && targetRow.parentWorkId) {
+      const parentWork = rows.find((r) => r.id === targetRow.parentWorkId);
+      if (parentWork) {
+        if (field === "expense") {
+          // Расход -> Количество
+          const expense = Number(parsedValue);
+          patchData.qty = expense > 0 ? Math.ceil(parentWork.qty * expense) : 1;
+        } else if (field === "qty") {
+          // Количество -> Расход
+          const qty = Number(parsedValue);
+          const calculatedExpense = parentWork.qty > 0 ? qty / parentWork.qty : 0;
+          patchData.expense = Math.round(calculatedExpense * 10000) / 10000;
+        }
       }
     }
 
+    // 3. Оптимистичное обновление
     const optimistic = rows.map((row) => {
-      if (row.id !== rowId) return row;
-      const updated = { ...row, ...patchData };
-      if (field === "price" && row.kind === "work") {
-        updated.price = Number(parsedValue);
-        updated.basePrice = patchData.price;
+      if (row.id === rowId) {
+        const updated = { ...row, ...patchData };
+        if (field === "price" && row.kind === "work") {
+          updated.price = Number(parsedValue);
+          updated.basePrice = patchData.price;
+        }
+        if (field === "qty" || field === "price" || field === "expense") {
+          updated.sum = updated.qty * updated.price;
+        }
+        return updated;
       }
-      if (field === "qty" || field === "price" || field === "expense")
-        updated.sum = updated.qty * updated.price;
-      return updated;
+
+      // Каскадное обновление количества материалов в UI при изменении объема работы (оптимистично)
+      if (field === "qty" && targetRow.kind === "work" && row.parentWorkId === rowId) {
+        const newWorkQty = Number(parsedValue);
+        const newChildQty = Math.ceil(newWorkQty * row.expense);
+        return {
+          ...row,
+          qty: newChildQty,
+          sum: newChildQty * row.price
+        };
+      }
+
+      return row;
     });
 
     setRows(optimistic);
@@ -295,9 +316,16 @@ export function EstimateTable({
         rowId,
         patchData,
       );
-      setRows((currentRows) =>
-        currentRows.map((row) => (row.id === rowId ? updated : row)),
-      );
+
+      if (targetRow.kind === 'work' && field === 'qty') {
+        // Если изменили объем работы, лучше перегрузить все строки, 
+        // так как на сервере пересчитались все вложенные материалы
+        await reloadRows();
+      } else {
+        setRows((currentRows) =>
+          currentRows.map((row) => (row.id === rowId ? updated : row)),
+        );
+      }
     } catch {
       setRows(previousRows);
       toast({
@@ -305,10 +333,9 @@ export function EstimateTable({
         title: "Ошибка сохранения",
         description: "Не удалось сохранить изменение.",
       });
-    } finally {
-      // no-op
     }
   };
+
 
   const removeRow = async (rowId: string) => {
     /* unchanged logic */
