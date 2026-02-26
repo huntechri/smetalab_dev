@@ -478,6 +478,9 @@ export class EstimateRowsService {
                     .set({ order: sql`${estimateRows.order} + 1` })
                     .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${order}`));
 
+                const expenseValue = payload.expense || (parent.qty > 0 ? payload.qty / parent.qty : 0);
+                const roundedExpense = Math.round(expenseValue * 1000000) / 1000000;
+
                 const [row] = await tx
                     .insert(estimateRows)
                     .values({
@@ -493,7 +496,7 @@ export class EstimateRowsService {
                         qty: payload.qty,
                         price: payload.price,
                         sum: payload.qty * payload.price,
-                        expense: payload.expense,
+                        expense: roundedExpense,
                         order,
                     })
                     .returning();
@@ -579,11 +582,15 @@ export class EstimateRowsService {
                         .where(and(eq(estimateRows.parentWorkId, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
 
                     for (const child of children) {
-                        const newChildQty = Math.ceil(nextQty * child.expense);
+                        // Если у материала расход 0, пытаемся его восстановить из текущего количества и старого объема работы
+                        const effectiveExpense = child.expense > 0 ? child.expense : (existing.qty > 0 ? child.qty / existing.qty : 0);
+                        const newChildQty = Math.round(nextQty * effectiveExpense * 1000) / 1000;
+
                         await tx
                             .update(estimateRows)
                             .set({
                                 qty: newChildQty,
+                                expense: effectiveExpense,
                                 sum: newChildQty * child.price,
                                 updatedAt: new Date(),
                             })
