@@ -536,10 +536,27 @@ export class EstimateRowsService {
                 }
 
                 const patch = parsed.data;
-                const nextQty = patch.qty ?? existing.qty;
+                let nextQty = patch.qty ?? existing.qty;
                 const nextPrice = patch.price ?? existing.price;
+                let nextExpense = patch.expense ?? existing.expense;
 
-                const previousContribution = estimateRowContribution(existing as EstimateRowEntity, estimate.coefPercent ?? 0);
+                // 1. Двусторонняя связь Qty <-> Expense для материалов
+                if (existing.kind === 'material' && existing.parentWorkId) {
+                    const parentWork = await tx.query.estimateRows.findFirst({
+                        where: and(eq(estimateRows.id, existing.parentWorkId), withActiveTenant(estimateRows, teamId)),
+                    });
+
+                    if (parentWork) {
+                        if (patch.qty !== undefined && patch.expense === undefined) {
+                            // Если поменяли Qty -> считаем Expense
+                            const calculatedExpense = parentWork.qty > 0 ? patch.qty / parentWork.qty : 0;
+                            nextExpense = Math.round(calculatedExpense * 10000) / 10000;
+                        } else if (patch.expense !== undefined && patch.qty === undefined) {
+                            // Если поменяли Expense -> считаем Qty
+                            nextQty = Math.ceil(parentWork.qty * patch.expense);
+                        }
+                    }
+                }
 
                 const [row] = await tx
                     .update(estimateRows)
@@ -547,11 +564,32 @@ export class EstimateRowsService {
                         ...patch,
                         qty: nextQty,
                         price: nextPrice,
+                        expense: nextExpense,
                         sum: nextQty * nextPrice,
                         updatedAt: new Date(),
                     })
                     .where(eq(estimateRows.id, rowId))
                     .returning();
+
+                // 2. Каскадное обновление материалов при изменении объема работы
+                if (existing.kind === 'work' && patch.qty !== undefined && patch.qty !== existing.qty) {
+                    const children = await tx
+                        .select()
+                        .from(estimateRows)
+                        .where(and(eq(estimateRows.parentWorkId, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
+
+                    for (const child of children) {
+                        const newChildQty = Math.ceil(nextQty * child.expense);
+                        await tx
+                            .update(estimateRows)
+                            .set({
+                                qty: newChildQty,
+                                sum: newChildQty * child.price,
+                                updatedAt: new Date(),
+                            })
+                            .where(eq(estimateRows.id, child.id));
+                    }
+                }
 
                 await recalculateEstimateTotal(tx, estimateId);
                 return { row, touchedWork: existing.kind === 'work' };
@@ -568,6 +606,7 @@ export class EstimateRowsService {
             return error('Ошибка при обновлении строки сметы');
         }
     }
+
 
     static async remove(teamId: number, estimateId: string, rowId: string): Promise<Result<{ removedIds: string[] }>> {
         try {
