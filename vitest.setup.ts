@@ -29,6 +29,10 @@ class IntersectionObserverMock {
 global.ResizeObserver = ResizeObserverMock as unknown as typeof ResizeObserver;
 global.IntersectionObserver = IntersectionObserverMock as unknown as typeof IntersectionObserver;
 
+if (typeof window !== 'undefined' && typeof window.HTMLElement !== 'undefined' && !window.HTMLElement.prototype.scrollIntoView) {
+  window.HTMLElement.prototype.scrollIntoView = vi.fn();
+}
+
 // Force load .env.test if present, then .env as fallback
 config({ path: path.resolve(process.cwd(), '.env.test') });
 config();
