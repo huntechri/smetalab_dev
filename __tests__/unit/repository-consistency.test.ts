@@ -12,14 +12,14 @@ function readRepoFile(relativePath: string): string {
 }
 
 function extractDbCommandsFromReadme(readme: string): string[] {
-  const sectionMatch = readme.match(/##\s+💾\s+Команды работы с БД([\s\S]*?)(?:\n##\s|$)/u);
+  const sectionMatch = readme.match(/##\s+💾\s+Команды работы с БД([\s\S]*?)(?:\r?\n##\s|$)/u);
 
   if (!sectionMatch) {
     throw new Error('README database commands section is missing.');
   }
 
   const sectionBody = sectionMatch[1];
-  const codeFenceMatch = sectionBody.match(/```bash\n([\s\S]*?)```/u);
+  const codeFenceMatch = sectionBody.match(/```bash\r?\n([\s\S]*?)```/u);
 
   if (!codeFenceMatch) {
     throw new Error('README database commands code block is missing.');
