@@ -35,17 +35,45 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+
+    - name: Check code scanning availability
+      id: code_scanning
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        status=$(curl -s -o /dev/null -w "%{http_code}" \
+          -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+          -H "Accept: application/vnd.github+json" \
+          "https://api.github.com/repos/${{ github.repository }}/code-scanning/codeql/databases")
+
+        if [ "$status" = "200" ]; then
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+          echo "Code scanning API is available."
+        else
+          echo "enabled=false" >> "$GITHUB_OUTPUT"
+          echo "Code scanning is unavailable (HTTP $status). Skipping CodeQL analysis upload."
+        fi
+
     - name: Initialize CodeQL
+      if: steps.code_scanning.outputs.enabled == 'true'
       uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
         queries: security-extended,security-and-quality
+
     - name: Autobuild
+      if: steps.code_scanning.outputs.enabled == 'true'
       uses: github/codeql-action/autobuild@v4
+
     - name: Perform CodeQL Analysis
+      if: steps.code_scanning.outputs.enabled == 'true'
       uses: github/codeql-action/analyze@v4
       with:
         category: "/language:${{ matrix.language }}"
+
+    - name: Skip CodeQL summary
+      if: steps.code_scanning.outputs.enabled != 'true'
+      run: echo "Skipping CodeQL because code scanning is not enabled or API access is unavailable."
 
   trivy-scan:
     name: Vulnerability Scan
@@ -55,6 +83,25 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - name: Check code scanning availability
+        id: code_scanning
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          status=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/code-scanning/codeql/databases")
+
+          if [ "$status" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "Code scanning API is available."
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Code scanning is unavailable (HTTP $status). SARIF upload will be skipped."
+          fi
+
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@0.34.0
         with:
@@ -63,11 +110,20 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
+
       - name: Upload Trivy scan results to GitHub Security tab
+        if: always() && steps.code_scanning.outputs.enabled == 'true'
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
+
+      - name: Upload Trivy SARIF as artifact when code scanning is unavailable
+        if: always() && steps.code_scanning.outputs.enabled != 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-results-sarif
+          path: trivy-results.sarif
+          retention-days: 30
 
   dependency-check:
     name: Dependency Analysis
