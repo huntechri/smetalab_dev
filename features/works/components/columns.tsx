@@ -21,7 +21,7 @@ import {
 import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/types/work-row"
-import { UnitSelect } from "@/components/unit-select"
+import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { TableMeta } from "@/components/ui/data-table"
 
 interface RowActionsProps {

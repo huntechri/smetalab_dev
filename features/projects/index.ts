@@ -4,3 +4,5 @@ export { ProjectEstimatesSection } from './dashboard/components/ProjectEstimates
 export * from './estimates';
 export { CreateProjectDialog } from './list/components/create-project-dialog';
 export type { ProjectListItem, ProjectSortOption, ProjectStatus, ProjectViewMode } from './shared/types';
+
+export { ProjectWorkspaceLayout } from './layouts/ProjectWorkspaceLayout';

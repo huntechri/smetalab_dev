@@ -4,8 +4,8 @@ import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Separator } from '@/components/ui/separator';
 import { usePageTitle } from '@/hooks/use-page-title';
 import { NotificationBell } from '@/features/notifications/components/notification-bell';
-import { UserMenu } from '@/components/user-menu';
-import { ActiveTeamIndicator } from '@/components/active-team-indicator';
+import { UserMenu } from '@/components/layout/user-menu';
+import { ActiveTeamIndicator } from '@/components/layout/active-team-indicator';
 
 export function AppHeader() {
     const pageTitle = usePageTitle();

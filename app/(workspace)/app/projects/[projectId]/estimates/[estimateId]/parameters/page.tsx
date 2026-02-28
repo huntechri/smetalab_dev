@@ -1,7 +1,5 @@
-export default function Page() {
-    return (
-        <div>
-            {/* TODO: Page: /app/projects/[projectId]/estimates/[estimateId]/parameters */}
-        </div>
-    );
+import { EstimateParametersScreen } from '@/features/projects';
+
+export default function EstimateParametersPage() {
+    return <EstimateParametersScreen />;
 }

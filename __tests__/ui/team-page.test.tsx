@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import TeamPageClient from '@/app/(workspace)/app/team/client-page';
+import { TeamScreen } from '@/features/team';
 
 const { teamData } = vi.hoisted(() => {
   return {
@@ -47,13 +47,13 @@ vi.mock('@/app/(login)/actions', () => ({
   removeTeamMember: vi.fn(),
 }));
 
-describe('TeamPageClient', () => {
+describe('TeamScreen', () => {
   afterEach(() => {
     cleanup();
   });
 
   it('renders team summary and members', () => {
-    render(<TeamPageClient />);
+    render(<TeamScreen />);
 
     expect(screen.getByRole('heading', { name: 'Команда' })).toBeInTheDocument();
     expect(screen.getByText('СметаLab · 2 участников')).toBeInTheDocument();
@@ -62,7 +62,7 @@ describe('TeamPageClient', () => {
   });
 
   it('filters members by role and search query', () => {
-    render(<TeamPageClient />);
+    render(<TeamScreen />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Фильтр: Администратор' }));
     expect(screen.getByText('Анна Смирнова')).toBeInTheDocument();

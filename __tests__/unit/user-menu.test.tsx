@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, cleanup } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { UserMenu } from '@/components/user-menu';
+import { UserMenu } from '@/components/layout/user-menu';
 import type { User } from '@/lib/data/db/schema';
 import type { ReactNode } from 'react';
 
