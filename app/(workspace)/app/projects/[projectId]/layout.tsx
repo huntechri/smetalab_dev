@@ -1,10 +1,5 @@
-import React from 'react';
+import { ProjectWorkspaceLayout } from '@/features/projects';
 
 export default function ProjectLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div>
-            {/* TODO: Layout: /app/projects/[projectId] */}
-            {children}
-        </div>
-    );
+    return <ProjectWorkspaceLayout>{children}</ProjectWorkspaceLayout>;
 }
