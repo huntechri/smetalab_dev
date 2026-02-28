@@ -80,7 +80,7 @@
   - Содержат только переиспользуемые shadcn/Radix примитивы и общие паттерны состояний (`components/ui/states/**`).
   - Не должны тянуть бизнес-логику домена или запросы к БД.
 
-Текущая практическая схема для справочников (`works/materials/counterparties/projects`):
+Текущая практическая схема для экранов workspace (`dashboard/works/materials/counterparties/projects`):
 1. `app/(workspace)/app/guide/**/page.tsx` загружает initial data на сервере.
 2. Передаёт данные в `features/**/screens/*Screen.tsx`.
 3. Экран использует `features/**/hooks/*` и `hooks/*` для поведения.
