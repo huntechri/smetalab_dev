@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/app-sidebar';
-import { AppHeader } from '@/components/app-header';
+import { AppSidebar } from '@/components/layout/app-sidebar';
+import { AppHeader } from '@/components/layout/app-header';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
 import { UserProvider } from '@/components/providers/permissions-provider';

@@ -4,7 +4,7 @@ import { WorkRow } from "@/types/work-row"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { UnitSelect } from "@/components/unit-select"
+import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { Loader2 } from "lucide-react"
 import {
     Dialog,
