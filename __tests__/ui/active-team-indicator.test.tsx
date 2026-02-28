@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { ActiveTeamIndicator } from '@/components/active-team-indicator';
+import { ActiveTeamIndicator } from '@/components/layout/active-team-indicator';
 import { UserProvider } from '@/components/providers/permissions-provider';
 import { Team, User } from '@/lib/data/db/schema';
 

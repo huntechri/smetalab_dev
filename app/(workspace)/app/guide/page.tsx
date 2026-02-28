@@ -1,7 +1,5 @@
-export default function Page() {
-    return (
-        <div>
-            {/* TODO: Page: /app/guide */}
-        </div>
-    );
+import { GuideScreen } from '@/features/guide';
+
+export default function GuidePage() {
+    return <GuideScreen />;
 }

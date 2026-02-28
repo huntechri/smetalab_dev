@@ -1,7 +1,5 @@
-export default function Page() {
-    return (
-        <div>
-            {/* TODO: Page: /app/projects/[projectId]/estimates/[estimateId]/purchases */}
-        </div>
-    );
+import { EstimatePurchasesScreen } from '@/features/projects';
+
+export default function EstimatePurchasesPage() {
+    return <EstimatePurchasesScreen />;
 }

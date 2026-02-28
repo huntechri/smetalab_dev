@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight, CreditCard, Database, Orbit } from 'lucide-react';
-import { Terminal } from './terminal';
+import { AdminTerminal } from '@/features/admin/components/AdminTerminal';
 import Link from 'next/link';
 
 export default function HomePage() {
@@ -32,7 +32,7 @@ export default function HomePage() {
               </div>
             </div>
             <div className="mt-12 relative max-w-lg mx-auto lg:mt-0 lg:max-w-none lg:mx-0 lg:col-span-6 lg:flex lg:items-center">
-              <Terminal />
+              <AdminTerminal />
             </div>
           </div>
         </div>

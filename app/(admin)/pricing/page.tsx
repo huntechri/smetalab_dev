@@ -1,7 +1,7 @@
 import { checkoutAction } from '@/lib/infrastructure/payments/actions';
 import { Check } from 'lucide-react';
 import { getStripePrices, getStripeProducts } from '@/lib/infrastructure/payments/stripe';
-import { SubmitButton } from './submit-button';
+import { PricingSubmitButton } from '@/features/admin/components/PricingSubmitButton';
 
 // Prices are fresh for one hour max
 export const revalidate = 3600;
@@ -87,7 +87,7 @@ function PricingCard({
       </ul>
       <form action={checkoutAction}>
         <input type="hidden" name="priceId" value={priceId} />
-        <SubmitButton />
+        <PricingSubmitButton />
       </form>
     </div>
   );
