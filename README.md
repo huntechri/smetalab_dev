@@ -85,6 +85,7 @@
 2. Передаёт данные в `features/**/screens/*Screen.tsx`.
 3. Экран использует `features/**/hooks/*` и `hooks/*` для поведения.
 4. Таблицы и диалоги рендерятся через `features/**/components/*` + `components/ui/*`.
+5. Формы аутентификации (`sign-in`/`sign-up`/`forgot-password`/`reset-password`) хранятся в `features/auth/components/*`, а страницы в `app/(login)` выступают thin wrappers.
 
 **Пример реализации (Projects):**
 - `app/(workspace)/app/projects/page.tsx` — серверная загрузка списка проектов.
