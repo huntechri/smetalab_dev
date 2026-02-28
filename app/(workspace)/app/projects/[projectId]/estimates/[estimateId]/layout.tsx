@@ -1,10 +1,5 @@
-import React from 'react';
+import { EstimateDetailsLayout } from '@/features/projects';
 
 export default function EstimateLayout({ children }: { children: React.ReactNode }) {
-    return (
-        <div>
-            {/* TODO: Layout: /app/projects/[projectId]/estimates/[estimateId] */}
-            {children}
-        </div>
-    );
+    return <EstimateDetailsLayout>{children}</EstimateDetailsLayout>;
 }
