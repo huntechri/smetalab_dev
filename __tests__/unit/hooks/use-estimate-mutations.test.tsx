@@ -15,8 +15,8 @@ vi.mock('@/features/projects/estimates/repository/estimates.actions', () => ({
   estimatesActionRepo: repoMocks,
 }));
 
-vi.mock('@/shared/ui/use-toast', () => ({
-  useToast: () => ({ toast: toastMock }),
+vi.mock('@/components/providers/use-app-toast', () => ({
+  useAppToast: () => ({ toast: toastMock }),
 }));
 
 const makeRows = (): EstimateMeta[] => [

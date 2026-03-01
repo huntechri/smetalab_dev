@@ -1,5 +1,5 @@
 import { useState, useEffect, useTransition } from 'react';
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 
 interface SearchResult<TData> {
     success: boolean;
@@ -34,7 +34,7 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
     loadMorePage,
     getCursorFromLast,
 }: UseGuideTableSearchOptions<TData, TCursor>) {
-    const { toast } = useToast();
+    const { toast } = useAppToast();
     const [searchTerm, setSearchTerm] = useState('');
     const [isAiMode, setIsAiMode] = useState(false);
     const [isAiSearching, startAiSearchTransition] = useTransition();

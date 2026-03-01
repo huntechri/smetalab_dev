@@ -72,3 +72,16 @@
 1. В следующем PR вынести `use-toast` adapter из `shared/ui` в feature/provider слой.  
 2. Нормализовать правило про `cn` (`@/lib/utils`) — либо перенос утилиты, либо явное правило в `ARCHITECTURE.md`.  
 3. После п.1–2 запустить повторный audit-скрипт и зафиксировать статус как «compliant with documented exceptions».
+
+
+## Remediation status update
+
+Выполнено после первичного аудита:
+
+1. `use-toast` adapter вынесен из `shared/ui` в provider-слой: `components/providers/use-app-toast.tsx`.
+2. В `ARCHITECTURE.md` зафиксировано документированное исключение для `cn` из `@/lib/utils`.
+3. Повторный audit-скрипт (с учётом документированного исключения) дал результат: **0 violations**.
+
+### Итоговый статус
+
+**Compliant with documented exceptions.**

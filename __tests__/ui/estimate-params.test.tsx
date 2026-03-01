@@ -10,8 +10,8 @@ vi.mock('@/features/projects/estimates/repository/room-params.actions', () => ({
     },
 }));
 
-vi.mock('@/shared/ui/use-toast', () => ({
-    useToast: () => ({ toast: vi.fn() }),
+vi.mock('@/components/providers/use-app-toast', () => ({
+    useAppToast: () => ({ toast: vi.fn() }),
 }));
 
 describe('EstimateParams', () => {
