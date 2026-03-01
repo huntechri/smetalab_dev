@@ -9,7 +9,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from "@/shared/ui/alert-dialog"
 
 interface MaterialsDeleteDialogProps {
     open: boolean
@@ -39,7 +39,7 @@ export function MaterialsDeleteDialog({
                     <AlertDialogCancel disabled={isDeleting}>Отмена</AlertDialogCancel>
                     <AlertDialogAction
                         onClick={onConfirm}
-                        className="bg-red-700 text-white hover:bg-red-800"
+                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         disabled={isDeleting}
                     >
                         {isDeleting ? "Удаление..." : "Удалить"}

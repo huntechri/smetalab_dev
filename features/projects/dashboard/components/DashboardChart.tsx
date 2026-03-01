@@ -9,7 +9,7 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/shared/ui/card"
 import {
     type ChartConfig,
     ChartContainer,
@@ -17,18 +17,18 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from "@/components/ui/chart"
+} from "@/shared/ui/chart"
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/shared/ui/select"
 import {
     ToggleGroup,
     ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+} from "@/shared/ui/toggle-group"
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service'
 import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 import { generateMissingEmbeddings } from '@/app/actions/materials';
 
 export function useAiIndexing() {

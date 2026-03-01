@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/shared/ui/button';
+import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
 import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,9 +16,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from '@/shared/ui/alert-dialog';
 import { parseIsoDateSafe } from '../lib/date';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -26,7 +26,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '../types/dto';
 
@@ -199,7 +199,15 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
     <>
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button type="button" variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors" onClick={() => setOpen(true)} disabled={disabled} aria-label="Удалить строку">
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon-sm"
+            className="text-muted-foreground hover:text-destructive transition-colors"
+            onClick={() => setOpen(true)}
+            disabled={disabled}
+            aria-label="Удалить строку"
+          >
             <Trash2 className="size-4" />
           </Button>
         </TooltipTrigger>
@@ -220,7 +228,7 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
                 await onRemoveAction(rowId);
                 if (open) setOpen(false);
               }}
-              className="bg-red-700 text-white hover:bg-red-800"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={disabled}
             >
               Удалить

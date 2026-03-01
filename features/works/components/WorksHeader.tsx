@@ -1,5 +1,5 @@
 import { Loader2 } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from '@/shared/ui/badge';
 
 interface WorksHeaderProps {
     isLoading: boolean;

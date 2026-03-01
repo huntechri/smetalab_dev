@@ -24,7 +24,7 @@ vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     }),
 }));
 
-vi.mock('@/components/ui/use-toast', () => ({
+vi.mock('@/shared/ui/use-toast', () => ({
     useToast: () => ({ toast: vi.fn() }),
 }));
 
@@ -32,17 +32,17 @@ vi.mock('@/features/global-purchases/components/global-purchases-columns', () =>
     getGlobalPurchasesColumns: () => [],
 }));
 
-vi.mock('@/components/ui/data-table', () => ({
+vi.mock('@/shared/ui/data-table', () => ({
     DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
 }));
 
-vi.mock('@/components/ui/popover', () => ({
+vi.mock('@/shared/ui/popover', () => ({
     Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     PopoverTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }));
 
-vi.mock('@/components/ui/calendar', () => ({
+vi.mock('@/shared/ui/calendar', () => ({
     Calendar: () => <div>calendar</div>,
 }));
 

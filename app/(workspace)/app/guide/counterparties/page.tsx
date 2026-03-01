@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { CounterpartiesScreen } from '@/features/counterparties';
-import { ForbiddenState } from '@/components/ui/states';
+import { ForbiddenState } from '@/shared/ui/states';
 import { getCounterparties, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 

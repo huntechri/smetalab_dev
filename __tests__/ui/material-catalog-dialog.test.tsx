@@ -7,7 +7,7 @@ afterEach(() => {
     cleanup();
 });
 
-vi.mock('@/components/ui/dialog', () => ({
+vi.mock('@/shared/ui/dialog', () => ({
     Dialog: ({ children, onOpenChange }: { children: React.ReactNode; onOpenChange: (open: boolean) => void }) => (
         <div>
             <button type="button" onClick={() => onOpenChange(false)}>close</button>

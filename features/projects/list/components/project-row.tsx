@@ -1,7 +1,7 @@
 import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
 import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
-import { ProjectStatusDot } from '../../shared/components/project-status-dot';
+import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 
 type ProjectRowProps = {
     project: ProjectListItem;

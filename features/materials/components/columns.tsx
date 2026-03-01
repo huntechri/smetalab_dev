@@ -4,24 +4,24 @@ import * as React from "react"
 import { ColumnDef, Table } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Check, X, Plus } from "lucide-react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/shared/ui/dropdown-menu"
+import { Input } from "@/shared/ui/input"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/shared/ui/tooltip"
 import { MaterialRow } from "@/types/material-row"
-import { TableMeta } from "@/components/ui/data-table"
+import { TableMeta } from "@/shared/ui/data-table"
 import { cva } from "class-variance-authority"
 
-const actionButtonStyles = cva("h-8 w-8", {
+const actionButtonStyles = cva("", {
     variants: {
         tone: {
             primary: "text-primary opacity-40 hover:opacity-100 transition-opacity",
@@ -33,7 +33,7 @@ const actionButtonStyles = cva("h-8 w-8", {
     },
 })
 
-const insertButtonStyles = cva("h-6 w-6", {
+const insertButtonStyles = cva("", {
     variants: {
         tone: {
             success: "text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm border border-transparent hover:border-green-100",
@@ -51,7 +51,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
-                            size="icon"
+                            size="icon-xs"
                             variant="ghost"
                             className={insertButtonStyles({ tone: "success" })}
                             onClick={(e) => {
@@ -70,7 +70,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <Button
-                            size="icon"
+                            size="icon-xs"
                             variant="ghost"
                             className={insertButtonStyles({ tone: "danger" })}
                             onClick={(e) => {
@@ -96,7 +96,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <TooltipTrigger asChild>
                     <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon-sm"
                         className={actionButtonStyles({ tone: "primary" })}
                         onClick={(e) => {
                             e.stopPropagation();
@@ -117,7 +117,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия">
+                            <Button variant="ghost" size="icon-sm" className={actionButtonStyles()} aria-label="Действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -268,8 +268,8 @@ export const columns: ColumnDef<MaterialRow>[] = [
                         <TooltipTrigger asChild>
                             <Button
                                 variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-primary opacity-50 hover:opacity-100"
+                                size="icon-sm"
+                                className="text-primary opacity-50 hover:opacity-100"
                                 onClick={() => meta.onInsertRequest?.()}
                                 aria-label="Добавить строку"
                                 title="Добавить строку"
@@ -283,7 +283,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                     </Tooltip>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
+                            <Button variant="ghost" size="icon-sm" className="opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
