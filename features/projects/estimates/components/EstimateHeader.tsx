@@ -1,8 +1,8 @@
 'use client';
 
-import { Badge } from '@/shared/ui/badge';
 import { Card, CardContent } from '@/shared/ui/card';
 import { EstimateMeta } from '../types/dto';
+import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
 import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { estimatesActionRepo } from '../repository/estimates.actions';
@@ -19,12 +19,6 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/shared/ui/alert-dialog";
-
-const statusMap: Record<EstimateMeta['status'], string> = {
-    draft: 'Подготовка',
-    in_progress: 'В процессе',
-    approved: 'Выполнено',
-};
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     const { toast } = useToast();
@@ -87,7 +81,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     </p>
                 </div>
                 <div className="flex items-center gap-3 sm:justify-end">
-                    <Badge variant="secondary" className="font-medium">{statusMap[meta.status]}</Badge>
+                    <EstimateStatusBadge status={meta.status} />
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
                         <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1">Итого</span>
