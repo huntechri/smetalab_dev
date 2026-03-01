@@ -5,9 +5,8 @@ import { EstimateMeta } from '../types/dto';
 import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
 import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
-import { estimatesActionRepo } from '../repository/estimates.actions';
-import { useToast } from '@/shared/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { useEstimateMutations } from '../hooks/use-estimate-mutations';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,23 +20,17 @@ import {
 } from "@/shared/ui/alert-dialog";
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
-    const { toast } = useToast();
     const router = useRouter();
+    const { deleteEstimate } = useEstimateMutations();
 
     const onDelete = async () => {
-        try {
-            await estimatesActionRepo.delete(meta.id);
-            toast({
-                title: 'Смета удалена',
-                description: `Смета "${meta.name}" успешно удалена.`,
-            });
+        const isDeleted = await deleteEstimate({
+            estimateId: meta.id,
+            estimateName: meta.name,
+        });
+
+        if (isDeleted) {
             router.push(`/app/projects/${meta.projectId}`);
-        } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: 'Ошибка',
-                description: error instanceof Error ? error.message : 'Не удалось удалить смету.',
-            });
         }
     };
 
