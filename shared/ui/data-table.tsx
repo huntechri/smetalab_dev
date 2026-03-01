@@ -5,7 +5,7 @@ import {
     flexRender,
     Row,
 } from "@tanstack/react-table"
-import { Search, Sparkles, Loader2, ArrowUp, ArrowDown, ChevronsUpDown } from "lucide-react"
+import { Search, Sparkles, Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { Skeleton } from "@/shared/ui/skeleton"
 import { memo, useState, useCallback, forwardRef, HTMLAttributes, useMemo } from "react"
