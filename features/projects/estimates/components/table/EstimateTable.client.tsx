@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table";
-import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/shared/ui/button";
+import { DataTable } from "@/shared/ui/data-table";
+import { useToast } from "@/shared/ui/use-toast";
 import {
   Calculator,
   Save,
@@ -14,19 +14,19 @@ import {
   Trash2,
   MoreHorizontal,
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/shared/ui/badge";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "@/shared/ui/sheet";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/shared/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -34,9 +34,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from "@/shared/ui/dialog";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import { estimatesActionRepo } from "../../repository/estimates.actions";
 import { getVisibleRows } from "../../lib/rows-visible";
 import { EstimateRow, RowPatch } from "../../types/dto";

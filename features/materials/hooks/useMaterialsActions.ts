@@ -1,5 +1,5 @@
 import { useTransition, useRef } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 import { exportMaterials, deleteAllMaterials, createMaterial } from '@/app/actions/materials';
 import * as XLSX from 'xlsx';
 import { MaterialRow } from '@/types/material-row';

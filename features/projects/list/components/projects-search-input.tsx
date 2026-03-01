@@ -1,4 +1,4 @@
-import { Input } from '@/components/ui/input';
+import { Input } from '@/shared/ui/input';
 
 type ProjectsSearchInputProps = {
     value: string;

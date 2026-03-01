@@ -7,8 +7,8 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
-import { TooltipProvider } from '@/components/ui/tooltip';
+} from '@/shared/ui/breadcrumb';
+import { TooltipProvider } from '@/shared/ui/tooltip';
 import { GlobalPurchasesTable } from '../components/GlobalPurchasesTable.client';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
 

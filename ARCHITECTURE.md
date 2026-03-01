@@ -3,7 +3,7 @@
 ## Folder map
 
 - `app/**`: Next.js App Router routes, layouts, route handlers, and server actions.
-- `components/ui/**`: design-system and primitive UI only.
+- `shared/ui/**`: design-system and primitive UI only.
 - `components/providers/**`: app-wide React providers.
 - `components/layout/**` and `components/navigation/**`: cross-feature shell/navigation composition.
 - `features/<feature>/**`: feature-specific UI modules and orchestration.
@@ -14,8 +14,8 @@
 ## Dependency rules
 
 - `app/**` can import from `features/**`, `components/**`, and `lib/**`.
-- `features/**` can import from `components/ui/**`, `components/*` (non-ui shell), `lib/domain/**`, `lib/data/**`, and shared utils.
-- `components/ui/**` must stay presentation-only and cannot import from app/features/lib layers.
+- `features/**` can import from `shared/ui/**`, `components/*` (non-ui shell), `lib/domain/**`, `lib/data/**`, and shared utils.
+- `shared/ui/**` must stay presentation-only and cannot import from app/features/lib layers.
 - `lib/domain/**` must be framework-agnostic (no `react`, `next/*`, client state libs).
 - `lib/data/**` must not import from UI layers (`components/**`, `features/**`).
 - `lib/infrastructure/**` contains environment-bound adapters (cookies, stripe, email, auth middleware).

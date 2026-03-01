@@ -2,7 +2,7 @@
 
 import { ProjectStatus } from '../types';
 import { cn } from '@/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { getProjectStatusLabel } from '../utils/status-view';
 
 type ProjectStatusDotProps = {

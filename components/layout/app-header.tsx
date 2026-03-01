@@ -1,7 +1,7 @@
 'use client';
 
-import { SidebarTrigger } from '@/components/ui/sidebar';
-import { Separator } from '@/components/ui/separator';
+import { SidebarTrigger } from '@/shared/ui/sidebar';
+import { Separator } from '@/shared/ui/separator';
 import { usePageTitle } from '@/hooks/use-page-title';
 import { NotificationBell } from '@/features/notifications/components/notification-bell';
 import { UserMenu } from '@/components/layout/user-menu';

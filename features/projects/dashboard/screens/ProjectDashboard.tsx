@@ -11,7 +11,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/shared/ui/breadcrumb";
 import Link from 'next/link';
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
 

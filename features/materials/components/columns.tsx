@@ -4,21 +4,21 @@ import * as React from "react"
 import { ColumnDef, Table } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Check, X, Plus } from "lucide-react"
 import Image from "next/image"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/shared/ui/dropdown-menu"
+import { Input } from "@/shared/ui/input"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/shared/ui/tooltip"
 import { MaterialRow } from "@/types/material-row"
-import { TableMeta } from "@/components/ui/data-table"
+import { TableMeta } from "@/shared/ui/data-table"
 import { cva } from "class-variance-authority"
 
 const actionButtonStyles = cva("h-8 w-8", {

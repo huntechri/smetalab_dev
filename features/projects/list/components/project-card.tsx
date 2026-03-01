@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/shared/ui/card';
 import { ProjectListItem } from '../../shared/types';
 import { ProjectStatusDot } from '../../shared/components/project-status-dot';
 import { ProjectActions } from './project-actions';

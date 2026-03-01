@@ -5,7 +5,7 @@ import {
     EmptyHeader,
     EmptyMedia,
     EmptyTitle,
-} from '@/components/ui/empty';
+} from '@/shared/ui/empty';
 import { ProjectListItem, ProjectViewMode } from '../../shared/types';
 import { ProjectCard } from './project-card';
 import { ProjectRow } from './project-row';

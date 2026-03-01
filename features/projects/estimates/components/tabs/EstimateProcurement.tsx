@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
-import { DataTable } from '@/components/ui/data-table';
+import { Badge } from '@/shared/ui/badge';
+import { Skeleton } from '@/shared/ui/skeleton';
+import { DataTable } from '@/shared/ui/data-table';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
 import { EstimateTotals } from '../EstimateTotals';

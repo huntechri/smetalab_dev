@@ -1,12 +1,12 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/shared/ui/badge';
+import { Card, CardContent } from '@/shared/ui/card';
 import { EstimateMeta } from '../types/dto';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { estimatesActionRepo } from '../repository/estimates.actions';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/shared/ui/use-toast';
 import { useRouter } from 'next/navigation';
 import {
     AlertDialog,
@@ -18,7 +18,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/shared/ui/alert-dialog";
 
 const statusMap: Record<EstimateMeta['status'], string> = {
     draft: 'Подготовка',

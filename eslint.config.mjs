@@ -23,13 +23,13 @@ export default [
     },
 
     {
-        files: ["components/ui/auto-form/**/*.{ts,tsx}"],
+        files: ["shared/ui/auto-form/**/*.{ts,tsx}"],
         rules: {
             "@typescript-eslint/no-explicit-any": "off",
         },
     },
     {
-        files: ["components/ui/**/*.{ts,tsx,js,jsx}"],
+        files: ["shared/ui/**/*.{ts,tsx,js,jsx}"],
         rules: {
             "no-restricted-imports": ["error", { patterns: ["@/app/*", "@/features/*", "@/lib/domain/*", "@/lib/data/*"] }],
         },
@@ -48,17 +48,17 @@ export default [
     },
     {
         files: ["app/**/*.{tsx,jsx}", "features/**/*.{tsx,jsx}", "components/**/*.{tsx,jsx}"],
-        ignores: ["components/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx"],
+        ignores: ["shared/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx"],
         rules: {
             "no-restricted-syntax": [
                 "error",
                 {
                     selector: "JSXOpeningElement[name.name='button']",
-                    message: "Use shadcn Button from '@/components/ui/button' instead of raw <button> in app code.",
+                    message: "Use shadcn Button from '@/shared/ui/button' instead of raw <button> in app code.",
                 },
                 {
                     selector: "JSXOpeningElement[name.name='table']",
-                    message: "Use shadcn Table primitives from '@/components/ui/table' instead of raw <table> in app code.",
+                    message: "Use shadcn Table primitives from '@/shared/ui/table' instead of raw <table> in app code.",
                 },
             ],
         },
