@@ -17,7 +17,7 @@ import { Input } from '@/shared/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
 import { Separator } from '@/shared/ui/separator';
 import { ScrollArea } from '@/shared/ui/scroll-area';
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
 import { materialSupplierFormSchema, type MaterialSupplierFormValues } from '../schemas/material-supplier-form.schema';
 import { Loader2 } from 'lucide-react';
@@ -39,7 +39,7 @@ export function CreateMaterialSupplierSheet({
   onSaved,
 }: CreateMaterialSupplierSheetProps) {
   const [isPending, startTransition] = useTransition();
-  const { toast } = useToast();
+  const { toast } = useAppToast();
 
   const form = useForm<MaterialSupplierFormValues>({
     resolver: zodResolver(materialSupplierFormSchema),

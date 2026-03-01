@@ -33,7 +33,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { Separator } from "@/shared/ui/separator";
 import { ScrollArea } from "@/shared/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import { counterpartyFormSchema, type CounterpartyFormValues } from "../schemas/counterparty-form.schema";
 import {
@@ -60,7 +60,7 @@ export function CreateCounterpartySheet({
     onSaved,
 }: CreateCounterpartySheetProps) {
     const [isPending, startTransition] = useTransition();
-    const { toast } = useToast();
+    const { toast } = useAppToast();
 
     const form = useForm<CounterpartyFormValues>({
         resolver: zodResolver(counterpartyFormSchema),

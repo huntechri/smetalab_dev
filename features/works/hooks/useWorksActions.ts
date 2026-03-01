@@ -2,7 +2,7 @@
 
 import { useRef, useTransition } from "react"
 import * as XLSX from "xlsx"
-import { useToast } from "@/shared/ui/use-toast"
+import { useAppToast } from "@/components/providers/use-app-toast"
 import { WorkRow } from "@/types/work-row"
 import {
     importWorks,
@@ -18,7 +18,7 @@ interface UseWorksActionsOptions {
 }
 
 export function useWorksActions({ setData }: UseWorksActionsOptions) {
-    const { toast } = useToast()
+    const { toast } = useAppToast()
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [isExporting, startExportTransition] = useTransition()
     const [isImporting, startImportTransition] = useTransition()

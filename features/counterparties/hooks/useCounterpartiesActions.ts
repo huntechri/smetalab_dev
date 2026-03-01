@@ -1,6 +1,6 @@
 "use client";
 
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 import { deleteCounterparty } from "@/app/actions/counterparties";
 import { CounterpartyRow } from "@/types/counterparty-row";
 
@@ -11,7 +11,7 @@ interface DeleteOptions {
 }
 
 export function useCounterpartiesActions() {
-  const { toast } = useToast();
+  const { toast } = useAppToast();
 
   const handleDelete = async (counterparty: CounterpartyRow, options?: DeleteOptions) => {
     if (!confirm("Вы уверены, что хотите удалить этого контрагента?")) {

@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 import { generateMissingEmbeddings } from '@/app/actions/materials';
 
 export function useAiIndexing() {
-    const { toast } = useToast();
+    const { toast } = useAppToast();
     const [isGenerating, setIsGenerating] = useState(false);
 
     const handleGenerateEmbeddings = async () => {
