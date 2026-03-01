@@ -29,3 +29,12 @@
 
 - Признак незавершённого рефакторинга устранён.
 - Добавлен регрессионный тест, чтобы ошибка не вернулась в следующих merge.
+
+
+## Follow-up cleanup
+
+- Удалены неиспользуемые thin-wrapper модули в `features/projects/shared/**`:
+  - `components/project-status-dot.tsx`
+  - `utils/status-view.ts`
+- Удалён связанный unit-тест wrapper-контракта: `__tests__/unit/features/projects/shared/status-view.test.ts`.
+- В `shared/ui/data-table.tsx` убраны неиспользуемые импорты и закрыты lint-warning по иконкам сортировки.
