@@ -14,9 +14,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Trash2 } from 'lucide-react';
-import { estimatesActionRepo } from '../../repository/estimates.actions';
-import { useToast } from '@/components/ui/use-toast';
 import { getEstimateStatusLabel } from '@/features/projects/shared/utils/status-view';
+import { useEstimateMutations } from '../../hooks/useEstimateMutations';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -76,7 +75,7 @@ type EstimatesListTableProps = {
 
 export function EstimatesListTable({ estimates, projectSlug, actions }: EstimatesListTableProps) {
   const [rows, setRows] = useState<EstimateMeta[]>(estimates);
-  const { toast } = useToast();
+  const { updateEstimateStatus, deleteEstimate } = useEstimateMutations();
 
   useEffect(() => {
     setRows(estimates);
@@ -107,23 +106,12 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
         <EstimateStatusCell
           status={row.original.status}
           onChange={async (nextStatus) => {
-            if (nextStatus === row.original.status) {
-              return;
-            }
-
-            const previousStatus = row.original.status;
-            setRows((current) => current.map((item) => (item.id === row.original.id ? { ...item, status: nextStatus } : item)));
-
-            try {
-              await estimatesActionRepo.updateStatus(row.original.id, nextStatus);
-            } catch (error) {
-              setRows((current) => current.map((item) => (item.id === row.original.id ? { ...item, status: previousStatus } : item)));
-              toast({
-                variant: 'destructive',
-                title: 'Ошибка',
-                description: error instanceof Error ? error.message : 'Не удалось обновить статус сметы.',
-              });
-            }
+            await updateEstimateStatus({
+              estimateId: row.original.id,
+              currentStatus: row.original.status,
+              nextStatus,
+              setRows,
+            });
           }}
         />
       ),
@@ -140,12 +128,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
         return (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-red-50 transition-colors"
-                title="Удалить смету"
-              >
+              <Button variant="destructive" size="icon-sm" title="Удалить смету">
                 <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
@@ -161,20 +144,11 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
                 <AlertDialogAction
                   className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                   onClick={async () => {
-                    try {
-                      await estimatesActionRepo.delete(row.original.id);
-                      setRows((current) => current.filter((item) => item.id !== row.original.id));
-                      toast({
-                        title: 'Смета удалена',
-                        description: `Смета "${row.original.name}" была успешно удалена.`,
-                      });
-                    } catch (error) {
-                      toast({
-                        variant: 'destructive',
-                        title: 'Ошибка',
-                        description: error instanceof Error ? error.message : 'Не удалось удалить смету.',
-                      });
-                    }
+                    await deleteEstimate({
+                      estimateId: row.original.id,
+                      estimateName: row.original.name,
+                      setRows,
+                    });
                   }}
                 >
                   Удалить
@@ -185,7 +159,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
         );
       },
     },
-  ], [projectSlug, toast]);
+  ], [deleteEstimate, projectSlug, updateEstimateStatus]);
 
   return (
     <DataTable
