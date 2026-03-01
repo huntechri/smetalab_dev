@@ -89,7 +89,7 @@ export function WorksToolbar({
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                         <AlertDialogCancel>Отмена</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleDeleteAll} className="bg-red-700 text-white hover:bg-red-800">Удалить всё</AlertDialogAction>
+                        <AlertDialogAction onClick={handleDeleteAll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">Удалить всё</AlertDialogAction>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

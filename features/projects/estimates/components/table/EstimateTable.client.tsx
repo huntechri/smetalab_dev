@@ -779,7 +779,7 @@ export function EstimateTable({
             <div className="lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="h-8 w-8 p-0">
+                  <Button variant="outline" size="icon-sm">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">More actions</span>
                   </Button>

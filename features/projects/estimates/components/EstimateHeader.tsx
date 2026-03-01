@@ -56,9 +56,8 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-red-50 transition-colors"
+                                    variant="destructive"
+                                    size="icon-sm"
                                     title="Удалить смету"
                                 >
                                     <Trash2 className="h-4 w-4" />
