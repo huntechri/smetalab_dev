@@ -1,7 +1,7 @@
 import type React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
-import { useEstimateMutations } from '@/features/projects/estimates/hooks/useEstimateMutations';
+import { useEstimateMutations } from '@/features/projects/estimates/hooks/use-estimate-mutations';
 import type { EstimateMeta } from '@/features/projects/estimates/types/dto';
 
 const toastMock = vi.fn();
@@ -59,6 +59,28 @@ describe('useEstimateMutations', () => {
 
     expect(repoMocks.updateStatus).toHaveBeenCalledWith('est-1', 'approved');
     expect(rowsRef.current[0].status).toBe('approved');
+  });
+
+
+  it('skips update when next status equals current status', async () => {
+    const rowsRef = { current: makeRows() };
+    const setRows: React.Dispatch<React.SetStateAction<EstimateMeta[]>> = (value) => {
+      rowsRef.current = typeof value === 'function' ? value(rowsRef.current) : value;
+    };
+
+    const { result } = renderHook(() => useEstimateMutations());
+
+    await act(async () => {
+      await result.current.updateEstimateStatus({
+        estimateId: 'est-1',
+        currentStatus: 'draft',
+        nextStatus: 'draft',
+        setRows,
+      });
+    });
+
+    expect(repoMocks.updateStatus).not.toHaveBeenCalled();
+    expect(rowsRef.current[0].status).toBe('draft');
   });
 
   it('rolls back estimate status on failure and shows destructive toast', async () => {
