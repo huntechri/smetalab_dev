@@ -31,7 +31,7 @@
 ## Where to put new code
 
 - New route composition: `app/...`.
-- New reusable domain UI (status badges/cells/cards used in multiple features): `entities/<entity>/ui` + `entities/<entity>/model`.
+- New reusable domain UI (status badges/cells/cards used in multiple features): `entities/<entity>/ui` + `entities/<entity>/model` (e.g. `entities/project`, `entities/estimate`).
 - New feature UI: `features/<feature>/components` + `features/<feature>/hooks` + `features/<feature>/schemas`.
 - New business workflow/use-case: `lib/domain/<bounded-context>/use-cases.ts`.
 - New DB query/repository: `lib/data/**`.
