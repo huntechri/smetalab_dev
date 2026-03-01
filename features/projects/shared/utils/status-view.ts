@@ -1,4 +1,3 @@
-import { ProjectStatus } from '../types';
 import { EstimateStatus } from '../../estimates/types/dto';
 
 export function getEstimateStatusLabel(status: EstimateStatus): string {
@@ -13,18 +12,3 @@ export function getEstimateStatusLabel(status: EstimateStatus): string {
   return 'Подготовка';
 }
 
-export function getProjectStatusLabel(status: ProjectStatus): string {
-  if (status === 'completed') {
-    return 'Выполнено';
-  }
-
-  if (status === 'active') {
-    return 'В процессе';
-  }
-
-  if (status === 'paused') {
-    return 'Пауза';
-  }
-
-  return 'Подготовка';
-}
