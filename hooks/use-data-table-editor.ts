@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
-import { useToast } from "@/shared/ui/use-toast"
+import { useAppToast } from "@/components/providers/use-app-toast"
 
 type ActionResult = {
     success: boolean
@@ -17,7 +17,7 @@ export function useDataTableEditor<TData extends { id: string }>({
     onRowUpdate,
     onRowDelete,
 }: UseDataTableEditorOptions<TData>) {
-    const { toast } = useToast()
+    const { toast } = useAppToast()
     const [editingRow, setEditingRow] = useState<TData | null>(null)
     const [deletingRow, setDeletingRow] = useState<TData | null>(null)
     const [editFormData, setEditFormData] = useState<TData | null>(null)

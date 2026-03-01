@@ -17,7 +17,7 @@
 - `app/**` can import from `features/**`, `entities/**`, `components/**`, and `lib/**`.
 - `features/**` can import from `shared/ui/**`, `entities/**`, `components/*` (non-ui shell), `lib/domain/**`, `lib/data/**`, and shared utils.
 - `entities/**` can import from `shared/ui/**` and shared utils, but must not depend on `features/**`.
-- `shared/ui/**` must stay presentation-only and cannot import from app/features/entities/lib layers.
+- `shared/ui/**` must stay presentation-only and cannot import from app/features/entities/lib layers; documented exception: utility class-name helper `cn` from `@/lib/utils` (to be migrated to shared utils later).
 - `lib/domain/**` must be framework-agnostic (no `react`, `next/*`, client state libs).
 - `lib/data/**` must not import from UI layers (`components/**`, `features/**`).
 - `lib/infrastructure/**` contains environment-bound adapters (cookies, stripe, email, auth middleware).

@@ -24,8 +24,8 @@ vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     }),
 }));
 
-vi.mock('@/shared/ui/use-toast', () => ({
-    useToast: () => ({ toast: vi.fn() }),
+vi.mock('@/components/providers/use-app-toast', () => ({
+    useAppToast: () => ({ toast: vi.fn() }),
 }));
 
 vi.mock('@/features/global-purchases/components/global-purchases-columns', () => ({

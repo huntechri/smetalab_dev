@@ -18,7 +18,7 @@ import {
 } from '@/shared/ui/dropdown-menu';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
 import { Skeleton } from '@/shared/ui/skeleton';
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
@@ -130,7 +130,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
     addedWorkNames: Set<string>;
 }) {
     const [open, setOpen] = useState(false);
-    const { toast } = useToast();
+    const { toast } = useAppToast();
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
@@ -173,7 +173,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const requestVersionRef = useRef<Record<string, number>>({});
-    const { toast } = useToast();
+    const { toast } = useAppToast();
 
     const loadRows = useCallback(async (silent = false) => {
         try {

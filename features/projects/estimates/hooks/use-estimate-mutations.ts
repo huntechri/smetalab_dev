@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { estimatesActionRepo } from '../repository/estimates.actions';
 import type { EstimateMeta, EstimateStatus } from '../types/dto';
 
@@ -17,7 +17,7 @@ interface DeleteEstimatePayload {
 }
 
 export function useEstimateMutations() {
-  const { toast } = useToast();
+  const { toast } = useAppToast();
 
   async function updateEstimateStatus({ estimateId, currentStatus, nextStatus, setRows }: UpdateStatusPayload): Promise<void> {
     if (nextStatus === currentStatus) {

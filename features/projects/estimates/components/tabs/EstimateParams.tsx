@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { Button } from '@/shared/ui/button';
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { Plus, Save } from 'lucide-react';
 import { RoomsParamsTable } from '../params/RoomsParamsTable';
 import { RoomsParamsTotals } from '../params/RoomsParamsTotals';
@@ -37,7 +37,7 @@ const toPayload = (rows: ReturnType<typeof useRoomsParamsTable>['rows']): RoomPa
 
 export function EstimateParams({ estimateId, initialRows }: { estimateId: string; initialRows: EstimateRoomParam[] }) {
     const [isSaving, setIsSaving] = useState(false);
-    const { toast } = useToast();
+    const { toast } = useAppToast();
     const { rows, totals, addRoom, removeRoom, updateCell, updateOpening } = useRoomsParamsTable(initialRows);
 
     const hasRows = useMemo(() => rows.length > 0, [rows.length]);

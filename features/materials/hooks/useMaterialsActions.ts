@@ -1,5 +1,5 @@
 import { useTransition, useRef } from 'react';
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 import { exportMaterials, deleteAllMaterials, createMaterial } from '@/app/actions/materials';
 import * as XLSX from 'xlsx';
 import { MaterialRow } from '@/types/material-row';
@@ -55,7 +55,7 @@ const mapExcelRows = (rows: RawExcelRow[]) => {
 };
 
 export function useMaterialsActions(data: MaterialRow[], setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>, tenantId: number) {
-    const { toast } = useToast();
+    const { toast } = useAppToast();
     const [isExporting, startExportTransition] = useTransition();
     const [isImporting, startImportTransition] = useTransition();
     const [isDeletingAll, startDeleteAllTransition] = useTransition();

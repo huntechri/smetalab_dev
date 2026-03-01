@@ -1,6 +1,6 @@
 'use client';
 
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { deleteMaterialSupplier } from '@/app/actions/material-suppliers';
 import { MaterialSupplierRow } from '@/types/material-supplier-row';
 
@@ -12,7 +12,7 @@ type DeleteCallbacks = {
 };
 
 export function useMaterialSuppliersActions() {
-  const { toast } = useToast();
+  const { toast } = useAppToast();
 
   const handleDelete = async (materialSupplier: MaterialSupplierRow, callbacks?: DeleteCallbacks) => {
     if (!confirm('Вы уверены, что хотите удалить этого поставщика материалов?')) {
