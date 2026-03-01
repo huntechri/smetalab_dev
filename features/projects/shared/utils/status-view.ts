@@ -1,1 +1,1 @@
-export { getEstimateStatusLabel } from '@/entities/estimate/model/status'
+export { getProjectStatusLabel } from '@/entities/project/model/status'
