@@ -1,8 +1,8 @@
 import { BellOff } from 'lucide-react';
 import { NotificationItem } from '@/features/notifications/components/notification-item';
 import { NotificationPayload } from '@/features/notifications/components/types';
-import { LoadingIndicator } from '@/components/ui/loading-indicator';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { LoadingIndicator } from '@/shared/ui/loading-indicator';
+import { ScrollArea } from '@/shared/ui/scroll-area';
 import { cn } from '@/lib/utils';
 
 interface NotificationsListProps {

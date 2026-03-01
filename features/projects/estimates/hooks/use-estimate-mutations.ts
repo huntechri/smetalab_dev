@@ -1,5 +1,5 @@
 import type React from 'react';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/shared/ui/use-toast';
 import { estimatesActionRepo } from '../repository/estimates.actions';
 import type { EstimateMeta, EstimateStatus } from '../types/dto';
 

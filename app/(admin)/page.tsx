@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { ArrowRight, CreditCard, Database, Orbit } from 'lucide-react';
 import { AdminTerminal } from '@/features/admin/components/AdminTerminal';
 import Link from 'next/link';

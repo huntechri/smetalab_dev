@@ -8,7 +8,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@/components/ui/sidebar';
+} from '@/shared/ui/sidebar';
 
 interface SidebarNavItem {
     title: string;

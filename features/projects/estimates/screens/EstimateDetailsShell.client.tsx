@@ -2,7 +2,7 @@
 
 import { Suspense, use } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
 import { EstimateParams } from '../components/tabs/EstimateParams';
@@ -10,7 +10,7 @@ import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
 import { EstimateExecution } from '../components/tabs/EstimateExecution';
 import { EstimateDocuments } from '../components/tabs/EstimateDocuments';
 import { EstimateTable } from '../components/table/EstimateTable.client';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Skeleton } from '@/shared/ui/skeleton';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -18,7 +18,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@/shared/ui/breadcrumb';
 import Link from 'next/link';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);

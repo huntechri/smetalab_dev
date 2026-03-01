@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
-import { Toaster } from '@/components/ui/sonner';
+import { Toaster } from '@/shared/ui/sonner';
 import { Manrope } from 'next/font/google';
 
 const manrope = Manrope({

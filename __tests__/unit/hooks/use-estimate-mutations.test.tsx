@@ -15,7 +15,7 @@ vi.mock('@/features/projects/estimates/repository/estimates.actions', () => ({
   estimatesActionRepo: repoMocks,
 }));
 
-vi.mock('@/components/ui/use-toast', () => ({
+vi.mock('@/shared/ui/use-toast', () => ({
   useToast: () => ({ toast: toastMock }),
 }));
 

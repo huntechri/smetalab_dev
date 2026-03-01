@@ -3,8 +3,8 @@
 import { useMemo, useState, useTransition } from "react";
 import { CounterpartyRow } from "@/types/counterparty-row";
 import { columns } from "../components/columns";
-import { DataTable } from "@/components/ui/data-table";
-import { Button } from "@/components/ui/button";
+import { DataTable } from "@/shared/ui/data-table";
+import { Button } from "@/shared/ui/button";
 import { Loader2, Plus } from "lucide-react";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
@@ -15,9 +15,9 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/shared/ui/breadcrumb";
 import { fetchCounterpartiesPage } from "@/app/actions/counterparties";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 
 const PAGE_SIZE = 50;
 

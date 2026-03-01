@@ -3,8 +3,8 @@
 import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { CounterpartyRow } from "@/types/counterparty-row"
-import { TableMeta } from "@/components/ui/data-table"
-import { Button } from "@/components/ui/button"
+import { TableMeta } from "@/shared/ui/data-table"
+import { Button } from "@/shared/ui/button"
 import { Pencil, Trash, Settings } from "lucide-react"
 import {
     DropdownMenu,
@@ -13,8 +13,8 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Badge } from "@/components/ui/badge"
+} from "@/shared/ui/dropdown-menu"
+import { Badge } from "@/shared/ui/badge"
 
 export const columns: ColumnDef<CounterpartyRow>[] = [
     {

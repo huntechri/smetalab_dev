@@ -3,26 +3,26 @@
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/shared/ui/button"
+import { Badge } from "@/shared/ui/badge"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/shared/ui/dropdown-menu"
+import { Input } from "@/shared/ui/input"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/shared/ui/tooltip"
 import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/types/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
-import { TableMeta } from "@/components/ui/data-table"
+import { TableMeta } from "@/shared/ui/data-table"
 
 interface RowActionsProps {
     row: { original: WorkRow };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 import { deleteCounterparty } from "@/app/actions/counterparties";
 import { CounterpartyRow } from "@/types/counterparty-row";
 

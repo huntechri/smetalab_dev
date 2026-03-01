@@ -1,9 +1,9 @@
 "use client"
 
 import { MaterialRow } from "@/types/material-row"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/shared/ui/button"
+import { Input } from "@/shared/ui/input"
+import { Label } from "@/shared/ui/label"
 import {
     Dialog,
     DialogContent,
@@ -11,7 +11,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/shared/ui/dialog"
 
 interface MaterialsEditDialogProps {
     open: boolean

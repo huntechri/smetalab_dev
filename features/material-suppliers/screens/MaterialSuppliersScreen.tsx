@@ -3,8 +3,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { MaterialSupplierRow } from '@/types/material-supplier-row';
 import { columns } from '../components/columns';
-import { DataTable } from '@/components/ui/data-table';
-import { Button } from '@/components/ui/button';
+import { DataTable } from '@/shared/ui/data-table';
+import { Button } from '@/shared/ui/button';
 import { Loader2, Plus } from 'lucide-react';
 import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplierSheet';
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';
@@ -16,7 +16,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb';
+} from '@/shared/ui/breadcrumb';
 
 const PAGE_SIZE = 100;
 

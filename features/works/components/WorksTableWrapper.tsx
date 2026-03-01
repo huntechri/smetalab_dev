@@ -1,4 +1,4 @@
-import { DataTable } from "@/components/ui/data-table";
+import { DataTable } from "@/shared/ui/data-table";
 import { columns } from "./columns";
 import { WorkRow } from '@/types/work-row';
 

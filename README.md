@@ -76,15 +76,15 @@
   - Экраны (`*Screen`) собирают страницу из атомарных компонент и специализированных хуков.
   - Хуки управляют состояниями таблиц (поиск, вставка, редактирование, удаление, пагинация, AI-поиск).
   - Общие сценарии выносятся в shared-хуки (например, `hooks/use-guide-table-search.ts`).
-- **UI-примитивы** (`components/ui/**`)
-  - Содержат только переиспользуемые shadcn/Radix примитивы и общие паттерны состояний (`components/ui/states/**`).
+- **UI-примитивы** (`shared/ui/**`)
+  - Содержат только переиспользуемые shadcn/Radix примитивы и общие паттерны состояний (`shared/ui/states/**`).
   - Не должны тянуть бизнес-логику домена или запросы к БД.
 
 Текущая практическая схема для экранов workspace (`dashboard/works/materials/counterparties/projects`):
 1. `app/(workspace)/app/guide/**/page.tsx` загружает initial data на сервере.
 2. Передаёт данные в `features/**/screens/*Screen.tsx`.
 3. Экран использует `features/**/hooks/*` и `hooks/*` для поведения.
-4. Таблицы и диалоги рендерятся через `features/**/components/*` + `components/ui/*`.
+4. Таблицы и диалоги рендерятся через `features/**/components/*` + `shared/ui/*`.
 5. Формы аутентификации (`sign-in`/`sign-up`/`forgot-password`/`reset-password`) хранятся в `features/auth/components/*`, а страницы в `app/(login)` выступают thin wrappers.
 
 **Пример реализации (Projects):**
@@ -144,7 +144,7 @@
 - `lib/data/db/`: Схема Drizzle и миграции.
 - `lib/domain/`: **Ядро бизнес-логики**. Use-cases и сервисы предметной области.
 - `lib/infrastructure/auth/`: Логика RBAC и контроля доступа.
-- `components/ui/`: Библиотека Shadcn/UI (базовые блоки).
+- `shared/ui/`: Библиотека Shadcn/UI (базовые блоки).
 - `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials.
 - В деталях сметы вкладка **«Выполнение»** хранит факт работ в отдельной таблице `estimate_execution_rows`, не изменяя плановые строки сметы; при отсутствии таблицы сервис один раз запускает `drizzle`-миграции программно и повторно проверяет структуру.
 

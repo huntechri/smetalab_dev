@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar';
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/shared/ui/sidebar';
 import { AdminSidebar } from '@/features/admin/components/admin-sidebar';
 import { getUser } from '@/lib/data/db/queries';
 import { UserProvider } from '@/components/providers/permissions-provider';

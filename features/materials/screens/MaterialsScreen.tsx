@@ -9,7 +9,7 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+} from "@/shared/ui/breadcrumb";
 import { Loader2 } from 'lucide-react';
 import { MaterialRow } from '@/types/material-row';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';

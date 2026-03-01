@@ -2,10 +2,10 @@
 import { useActionState } from 'react';
 import Link from 'next/link';
 import { requestPasswordReset } from '@/app/(login)/actions';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Label } from '@/shared/ui/label';
+import { Input } from '@/shared/ui/input';
+import { Button } from '@/shared/ui/button';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
 
 export function ForgotPasswordForm() {

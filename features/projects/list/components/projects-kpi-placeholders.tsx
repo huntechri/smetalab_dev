@@ -1,8 +1,8 @@
 'use client';
 
 import { Building2, Activity, Wallet, BarChart3 } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardAction } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Card, CardHeader, CardTitle, CardDescription, CardAction } from '@/shared/ui/card';
+import { Badge } from '@/shared/ui/badge';
 import { ProjectListItem } from '../../shared/types';
 
 interface ProjectsStatsCardsProps {

@@ -10,7 +10,7 @@ vi.mock('@/features/projects/estimates/repository/room-params.actions', () => ({
     },
 }));
 
-vi.mock('@/components/ui/use-toast', () => ({
+vi.mock('@/shared/ui/use-toast', () => ({
     useToast: () => ({ toast: vi.fn() }),
 }));
 

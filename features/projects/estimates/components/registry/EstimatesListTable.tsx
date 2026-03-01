@@ -1,18 +1,18 @@
 'use client';
 
-import { DataTable } from '@/components/ui/data-table';
+import { DataTable } from '@/shared/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { EstimateMeta, EstimateStatus } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from '@/shared/ui/dropdown-menu';
 import { Trash2 } from 'lucide-react';
 import { getEstimateStatusLabel } from '@/features/projects/shared/utils/status-view';
 import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+} from '@/shared/ui/alert-dialog';
 
 const estimateStatusOrder: EstimateStatus[] = ['draft', 'in_progress', 'approved'];
 

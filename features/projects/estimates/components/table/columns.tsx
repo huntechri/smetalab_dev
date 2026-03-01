@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { Button } from '@/shared/ui/button';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, FileStack, Plus, Settings } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';

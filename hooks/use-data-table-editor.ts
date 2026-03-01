@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/shared/ui/use-toast"
 
 type ActionResult = {
     success: boolean
