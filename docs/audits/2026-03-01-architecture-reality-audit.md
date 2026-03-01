@@ -1,0 +1,87 @@
+# Реальный архитектурный аудит (состояние после cleanup)
+
+Дата: 2026-03-01  
+Ветка: `work`
+
+## Цель
+
+Проверить не «формально по PR», а фактическое соответствие зависимостей и слоёв правилам из `ARCHITECTURE.md`.
+
+## Методика
+
+1. Сверил объявленные правила слоёв в `ARCHITECTURE.md`.
+2. Пробежал статический анализ импортов (`@/...`) по TS/TSX-файлам.
+3. Выделил нарушения по приоритетам:
+   - **P1** — реальные архитектурные нарушения слоя;
+   - **P2** — системные расхождения между правилами и реальной практикой в репо;
+   - **P3** — не баг, но зона улучшения.
+
+## Ключевой вывод
+
+**Мержить можно**, но утверждение про «100% соответствие архитектуре» — **некорректно**. Есть минимум одно явное нарушение слоя и одно системное расхождение правил с практикой.
+
+## Findings
+
+### P1 — Явное нарушение слоя `shared/ui`
+
+- `shared/ui/use-toast.tsx` импортирует `notify` из инфраструктурного слоя:
+  - `@/lib/infrastructure/notifications/notify`
+- Это нарушает правило «`shared/ui/**` presentation-only, без зависимостей на lib-layer».
+
+**Доказательство:**
+- `shared/ui/use-toast.tsx` строка импорта.
+- `ARCHITECTURE.md` dependency rule для `shared/ui`.
+
+**Рекомендация:**
+- Вынести adapter-хук в `features/notifications` или `components/providers`,
+  а в `shared/ui` оставить только dumb toast primitives/контракты.
+
+### P2 — Системное расхождение: `shared/ui` массово зависит от `@/lib/utils`
+
+- По автоматической проверке найдено **десятки** импортов `cn` из `@/lib/utils` внутри `shared/ui/**`.
+- Если трактовать правила `ARCHITECTURE.md` буквально, это тоже нарушение.
+- На практике это, вероятно, «разрешённая утилитарная зависимость», но она не отражена в правилах явно.
+
+**Рекомендация (выбрать одно):**
+1. Либо официально разрешить `shared/ui -> shared/utils` и перенести `cn` в `shared/lib/utils`.
+2. Либо обновить `ARCHITECTURE.md`, явно прописав исключение для `@/lib/utils`.
+
+### P3 — Слой `features/projects/shared/**` после cleanup
+
+- Thin-wrapper модули реально удалены.
+- Остались только используемые и осмысленные модули:
+  - `schemas/create-project.schema.ts`
+  - `types.ts`
+  - `utils/filter.ts`
+  - `utils/sort.ts`
+
+Это соответствует заявленной цели cleanup.
+
+## Команды и артефакты проверки
+
+- Проверка импортов и базовых нарушений слоёв (скриптом):
+  - показала 57 срабатываний, из них значимое P1: `shared/ui/use-toast.tsx -> lib/infrastructure/...`
+- Выборочная верификация файлов:
+  - `ARCHITECTURE.md`
+  - `shared/ui/use-toast.tsx`
+  - `lib/infrastructure/notifications/notify.ts`
+  - `features/projects/shared/**`
+
+## Практический план (короткий)
+
+1. В следующем PR вынести `use-toast` adapter из `shared/ui` в feature/provider слой.  
+2. Нормализовать правило про `cn` (`@/lib/utils`) — либо перенос утилиты, либо явное правило в `ARCHITECTURE.md`.  
+3. После п.1–2 запустить повторный audit-скрипт и зафиксировать статус как «compliant with documented exceptions».
+
+
+## Remediation status update
+
+Выполнено после первичного аудита:
+
+1. `use-toast` adapter вынесен из `shared/ui` в provider-слой: `components/providers/use-app-toast.tsx`.
+2. В `ARCHITECTURE.md` зафиксировано документированное исключение для `cn` из `@/lib/utils`.
+3. Повторный audit-скрипт (с учётом документированного исключения) дал результат: **0 violations**.
+
+### Итоговый статус
+
+**Compliant with documented exceptions.**

@@ -15,8 +15,8 @@ const worksMocks = vi.hoisted(() => ({
   deleteWork: vi.fn(),
 }))
 
-vi.mock("@/shared/ui/use-toast", () => ({
-  useToast: () => ({
+vi.mock("@/components/providers/use-app-toast", () => ({
+  useAppToast: () => ({
     toast: toastSpy,
   }),
 }))

@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
-import { useToast } from '@/shared/ui/use-toast';
+import { useAppToast } from '@/components/providers/use-app-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
@@ -35,7 +35,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
     const [openProjectFilter, setOpenProjectFilter] = useState(false);
-    const { toast } = useToast();
+    const { toast } = useAppToast();
     const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const {

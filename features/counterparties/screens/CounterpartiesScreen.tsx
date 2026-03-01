@@ -17,7 +17,7 @@ import {
     BreadcrumbSeparator,
 } from "@/shared/ui/breadcrumb";
 import { fetchCounterpartiesPage } from "@/app/actions/counterparties";
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 
 const PAGE_SIZE = 50;
 
@@ -33,7 +33,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
     const [rowsCount, setRowsCount] = useState(totalCount);
     const [isLoadingMore, startLoadMoreTransition] = useTransition();
-    const { toast } = useToast();
+    const { toast } = useAppToast();
 
     const handleCreate = () => {
         setEditingCounterparty(null);

@@ -25,7 +25,11 @@ export function resolveProjectStatusFromEstimateStatuses(statuses: DbEstimateSta
 }
 
 export class ProjectStatusService {
-  static async refreshForProject(teamId: number, projectId: string, dbOrTx: { select: any, update: any } = db) {
+  static async refreshForProject(
+    teamId: number,
+    projectId: string,
+    dbOrTx: Pick<typeof db, 'select' | 'update'> = db,
+  ) {
     const projectEstimates = await dbOrTx
       .select({ status: estimates.status })
       .from(estimates)
@@ -41,4 +45,3 @@ export class ProjectStatusService {
     return nextStatus;
   }
 }
-

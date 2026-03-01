@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/shared/ui/button";
 import { DataTable } from "@/shared/ui/data-table";
-import { useToast } from "@/shared/ui/use-toast";
+import { useAppToast } from "@/components/providers/use-app-toast";
 import {
   Calculator,
   Save,
@@ -97,7 +97,7 @@ export function EstimateTable({
   const [patterns, setPatterns] = useState<EstimatePatternListItem[]>([]);
   const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
   const [selectedPatternId, setSelectedPatternId] = useState<string | null>(null);
-  const { toast } = useToast();
+  const { toast } = useAppToast();
 
   const fetchPatterns = async () => {
     try {
