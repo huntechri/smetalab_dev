@@ -13,7 +13,7 @@ interface UpdateStatusPayload {
 interface DeleteEstimatePayload {
   estimateId: string;
   estimateName: string;
-  setRows: React.Dispatch<React.SetStateAction<EstimateMeta[]>>;
+  setRows?: React.Dispatch<React.SetStateAction<EstimateMeta[]>>;
 }
 
 export function useEstimateMutations() {
@@ -38,20 +38,22 @@ export function useEstimateMutations() {
     }
   }
 
-  async function deleteEstimate({ estimateId, estimateName, setRows }: DeleteEstimatePayload): Promise<void> {
+  async function deleteEstimate({ estimateId, estimateName, setRows }: DeleteEstimatePayload): Promise<boolean> {
     try {
       await estimatesActionRepo.delete(estimateId);
-      setRows((current) => current.filter((item) => item.id !== estimateId));
+      setRows?.((current) => current.filter((item) => item.id !== estimateId));
       toast({
         title: 'Смета удалена',
         description: `Смета "${estimateName}" была успешно удалена.`,
       });
+      return true;
     } catch (error) {
       toast({
         variant: 'destructive',
         title: 'Ошибка',
         description: error instanceof Error ? error.message : 'Не удалось удалить смету.',
       });
+      return false;
     }
   }
 
