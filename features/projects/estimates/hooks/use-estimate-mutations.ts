@@ -1,7 +1,7 @@
 import type React from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { estimatesActionRepo } from '../repository/estimates.actions';
-import { EstimateMeta, EstimateStatus } from '../types/dto';
+import type { EstimateMeta, EstimateStatus } from '../types/dto';
 
 interface UpdateStatusPayload {
   estimateId: string;

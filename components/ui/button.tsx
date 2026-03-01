@@ -11,8 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-red-700 text-white hover:bg-red-800 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         outline:
           "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-transparent dark:border-input dark:hover:bg-accent",
         secondary:
@@ -82,7 +81,7 @@ function Button({
       disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : null}
+      {isLoading ? <Loader2 className="size-4 animate-spin" aria-hidden="true" /> : null}
       {isLoading && loadingText ? loadingText : children}
     </Comp>
   )

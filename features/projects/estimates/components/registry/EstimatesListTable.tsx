@@ -15,7 +15,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Trash2 } from 'lucide-react';
 import { getEstimateStatusLabel } from '@/features/projects/shared/utils/status-view';
-import { useEstimateMutations } from '../../hooks/useEstimateMutations';
+import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,7 +26,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog';
 
 const estimateStatusOrder: EstimateStatus[] = ['draft', 'in_progress', 'approved'];
 
