@@ -1,4 +1,6 @@
-export type ProjectStatus = 'active' | 'completed' | 'planned' | 'paused';
+import type { ProjectStatus } from '@/entities/project/model/status';
+
+export type { ProjectStatus };
 
 export type ProjectViewMode = 'grid' | 'list';
 
