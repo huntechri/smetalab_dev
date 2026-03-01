@@ -1,4 +1,4 @@
-import { EmptyState } from '@/components/ui/states';
+import { EmptyState } from '@/shared/ui/states';
 
 export function EstimateAccomplishmentScreen() {
     return (

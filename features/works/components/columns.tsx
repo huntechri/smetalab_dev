@@ -3,33 +3,33 @@
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { Button } from "@/shared/ui/button"
+import { Badge } from "@/shared/ui/badge"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
+} from "@/shared/ui/dropdown-menu"
+import { Input } from "@/shared/ui/input"
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/shared/ui/tooltip"
 import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/types/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
-import { TableMeta } from "@/components/ui/data-table"
+import { TableMeta } from "@/shared/ui/data-table"
 
 interface RowActionsProps {
     row: { original: WorkRow };
     table: Table<WorkRow>;
 }
 
-const actionButtonStyles = cva("h-8 w-8", {
+const actionButtonStyles = cva("", {
     variants: {
         tone: {
             primary: "text-primary",
@@ -41,7 +41,7 @@ const actionButtonStyles = cva("h-8 w-8", {
     },
 })
 
-const insertButtonStyles = cva("h-6 w-6", {
+const insertButtonStyles = cva("", {
     variants: {
         tone: {
             success: "text-green-600 hover:text-green-700",
@@ -68,7 +68,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         return (
             <div className="flex gap-1 justify-end pr-2">
                 <Button
-                    size="icon"
+                    size="icon-xs"
                     variant="ghost"
                     className={insertButtonStyles({ tone: "success" })}
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
@@ -78,7 +78,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                     <Check className="h-3 w-3" />
                 </Button>
                 <Button
-                    size="icon"
+                    size="icon-xs"
                     variant="ghost"
                     className={insertButtonStyles({ tone: "danger" })}
                     onClick={() => meta.onCancelInsert?.()}
@@ -95,7 +95,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         <div className="flex items-center justify-end md:pr-4 gap-1">
             <Button
                 variant="ghost"
-                size="icon"
+                size="icon-sm"
                 className={actionButtonStyles({ tone: "primary" })}
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
@@ -106,7 +106,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
 
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className={actionButtonStyles()} aria-label="Действия" title="Действия">
+                    <Button variant="ghost" size="icon-sm" className={actionButtonStyles()} aria-label="Действия" title="Действия">
                         <Settings className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -302,8 +302,8 @@ export const columns: ColumnDef<WorkRow>[] = [
                 <div className="flex justify-end pr-6 items-center gap-1">
                     <Button
                         variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-primary opacity-50 hover:opacity-100"
+                        size="icon-sm"
+                        className="text-primary opacity-50 hover:opacity-100"
                         onClick={() => meta.onInsertRequest?.()}
                         title="Добавить строку"
                         aria-label="Добавить строку"
@@ -312,7 +312,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-8 w-8 opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
+                            <Button variant="ghost" size="icon-sm" className="opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>

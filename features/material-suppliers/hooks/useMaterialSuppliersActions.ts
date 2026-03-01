@@ -1,6 +1,6 @@
 'use client';
 
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/shared/ui/use-toast';
 import { deleteMaterialSupplier } from '@/app/actions/material-suppliers';
 import { MaterialSupplierRow } from '@/types/material-supplier-row';
 

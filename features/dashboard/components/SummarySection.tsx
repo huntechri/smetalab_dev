@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
-import { Card, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/shared/ui/badge';
+import { Card, CardTitle } from '@/shared/ui/card';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, Building2, Clock, TrendingUp, Truck } from 'lucide-react';
 import { CSSProperties } from 'react';

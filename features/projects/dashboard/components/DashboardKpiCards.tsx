@@ -1,18 +1,18 @@
 import { TrendingUp, Users, Activity } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
+import { Badge } from "@/shared/ui/badge"
 import {
     Card,
     CardAction,
     CardDescription,
     CardHeader,
     CardTitle,
-} from "@/components/ui/card"
+} from "@/shared/ui/card"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/shared/ui/tooltip"
 
 type DashboardKpiCardsProps = {
     kpi: {

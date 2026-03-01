@@ -10,14 +10,14 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Separator } from '@/components/ui/separator';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { useToast } from '@/components/ui/use-toast';
+} from '@/shared/ui/sheet';
+import { Button } from '@/shared/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
+import { Separator } from '@/shared/ui/separator';
+import { ScrollArea } from '@/shared/ui/scroll-area';
+import { useToast } from '@/shared/ui/use-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
 import { materialSupplierFormSchema, type MaterialSupplierFormValues } from '../schemas/material-supplier-form.schema';
 import { Loader2 } from 'lucide-react';

@@ -5,7 +5,7 @@ import {
     SidebarContent,
     SidebarFooter,
     SidebarHeader,
-} from '@/components/ui/sidebar';
+} from '@/shared/ui/sidebar';
 import {
     FolderKanban,
     Home,

@@ -10,8 +10,8 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { TooltipProvider } from "@/components/ui/tooltip";
+} from "@/shared/ui/breadcrumb";
+import { TooltipProvider } from "@/shared/ui/tooltip";
 
 import { WorkRow } from '@/types/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';

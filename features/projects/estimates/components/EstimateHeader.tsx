@@ -1,13 +1,12 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card, CardContent } from '@/shared/ui/card';
 import { EstimateMeta } from '../types/dto';
-import { Button } from '@/components/ui/button';
+import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
+import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
-import { estimatesActionRepo } from '../repository/estimates.actions';
-import { useToast } from '@/components/ui/use-toast';
 import { useRouter } from 'next/navigation';
+import { useEstimateMutations } from '../hooks/use-estimate-mutations';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -18,32 +17,20 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-
-const statusMap: Record<EstimateMeta['status'], string> = {
-    draft: 'Подготовка',
-    in_progress: 'В процессе',
-    approved: 'Выполнено',
-};
+} from "@/shared/ui/alert-dialog";
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
-    const { toast } = useToast();
     const router = useRouter();
+    const { deleteEstimate } = useEstimateMutations();
 
     const onDelete = async () => {
-        try {
-            await estimatesActionRepo.delete(meta.id);
-            toast({
-                title: 'Смета удалена',
-                description: `Смета "${meta.name}" успешно удалена.`,
-            });
+        const isDeleted = await deleteEstimate({
+            estimateId: meta.id,
+            estimateName: meta.name,
+        });
+
+        if (isDeleted) {
             router.push(`/app/projects/${meta.projectId}`);
-        } catch (error) {
-            toast({
-                variant: 'destructive',
-                title: 'Ошибка',
-                description: error instanceof Error ? error.message : 'Не удалось удалить смету.',
-            });
         }
     };
 
@@ -56,9 +43,8 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 text-destructive hover:text-red-600 hover:bg-red-50 transition-colors"
+                                    variant="destructive"
+                                    size="icon-sm"
                                     title="Удалить смету"
                                 >
                                     <Trash2 className="h-4 w-4" />
@@ -88,7 +74,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     </p>
                 </div>
                 <div className="flex items-center gap-3 sm:justify-end">
-                    <Badge variant="secondary" className="font-medium">{statusMap[meta.status]}</Badge>
+                    <EstimateStatusBadge status={meta.status} />
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
                         <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1">Итого</span>

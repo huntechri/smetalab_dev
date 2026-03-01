@@ -10,8 +10,8 @@ import {
     SheetHeader,
     SheetTitle,
     SheetFooter,
-} from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
+} from "@/shared/ui/sheet";
+import { Button } from "@/shared/ui/button";
 import {
     Form,
     FormControl,
@@ -19,21 +19,21 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/shared/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Separator } from "@/shared/ui/separator";
+import { ScrollArea } from "@/shared/ui/scroll-area";
 import { CounterpartyRow } from "@/types/counterparty-row";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import { counterpartyFormSchema, type CounterpartyFormValues } from "../schemas/counterparty-form.schema";
 import {

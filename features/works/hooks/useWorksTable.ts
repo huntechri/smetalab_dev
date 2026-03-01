@@ -3,7 +3,7 @@
 import { useState, useTransition } from 'react';
 import { WorkRow } from '@/types/work-row';
 import { insertWorkAfter } from '@/app/actions/works';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/shared/ui/use-toast';
 
 export function useWorksTable(initialData: WorkRow[], tenantId: number) {
     const { toast } = useToast();

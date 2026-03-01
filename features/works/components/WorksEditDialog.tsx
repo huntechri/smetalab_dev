@@ -1,9 +1,9 @@
 "use client"
 
 import { WorkRow } from "@/types/work-row"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Button } from "@/shared/ui/button"
+import { Input } from "@/shared/ui/input"
+import { Label } from "@/shared/ui/label"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { Loader2 } from "lucide-react"
 import {
@@ -13,7 +13,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/shared/ui/dialog"
 
 interface WorksEditDialogProps {
     open: boolean

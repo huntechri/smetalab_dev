@@ -5,7 +5,7 @@ import type { FormEvent } from "react"
 
 const toastSpy = vi.fn()
 
-vi.mock("@/components/ui/use-toast", () => ({
+vi.mock("@/shared/ui/use-toast", () => ({
   useToast: () => ({
     toast: toastSpy,
   }),

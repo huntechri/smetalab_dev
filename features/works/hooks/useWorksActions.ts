@@ -2,7 +2,7 @@
 
 import { useRef, useTransition } from "react"
 import * as XLSX from "xlsx"
-import { useToast } from "@/components/ui/use-toast"
+import { useToast } from "@/shared/ui/use-toast"
 import { WorkRow } from "@/types/work-row"
 import {
     importWorks,

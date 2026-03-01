@@ -1,8 +1,8 @@
 'use client';
 
 import { useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/components/ui/use-toast';
+import { Button } from '@/shared/ui/button';
+import { useToast } from '@/shared/ui/use-toast';
 import { Plus, Save } from 'lucide-react';
 import { RoomsParamsTable } from '../params/RoomsParamsTable';
 import { RoomsParamsTotals } from '../params/RoomsParamsTotals';

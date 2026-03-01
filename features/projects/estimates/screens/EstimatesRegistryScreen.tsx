@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { EstimatesListTable } from '../components/registry/EstimatesListTable';
 import { EstimateMeta } from '../types/dto';
 

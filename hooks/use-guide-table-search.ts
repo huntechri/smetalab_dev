@@ -1,5 +1,5 @@
 import { useState, useEffect, useTransition } from 'react';
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/shared/ui/use-toast";
 
 interface SearchResult<TData> {
     success: boolean;
