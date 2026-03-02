@@ -61,6 +61,29 @@ describe('catalogRepository', () => {
         expect(catalogActionMocks.searchCatalogWorks).toHaveBeenCalledTimes(1);
     });
 
+    it('deduplicates in-flight works search requests with the same key', async () => {
+        let resolveAction: ((value: { success: true; data: Array<{ id: string; code: string; name: string; unit: string; price: number }> }) => void) | null = null;
+        catalogActionMocks.searchCatalogWorks.mockImplementation(
+            () =>
+                new Promise((resolve) => {
+                    resolveAction = resolve;
+                }),
+        );
+
+        const firstPromise = catalogRepository.searchWorks('демонтаж', 'Подготовка', false, 50);
+        const secondPromise = catalogRepository.searchWorks('демонтаж', 'Подготовка', false, 50);
+
+        expect(catalogActionMocks.searchCatalogWorks).toHaveBeenCalledTimes(1);
+
+        resolveAction?.({
+            success: true,
+            data: [{ id: 'w1', code: '1', name: 'Демонтаж', unit: 'м2', price: 10 }],
+        });
+
+        await expect(firstPromise).resolves.toEqual([{ id: 'w1', code: '1', name: 'Демонтаж', unit: 'м2', price: 10 }]);
+        await expect(secondPromise).resolves.toEqual([{ id: 'w1', code: '1', name: 'Демонтаж', unit: 'м2', price: 10 }]);
+    });
+
     it('returns empty array when search action fails', async () => {
         catalogActionMocks.searchCatalogWorks.mockResolvedValue({
             success: false,
@@ -109,6 +132,29 @@ describe('catalogRepository', () => {
         expect(catalogActionMocks.searchCatalogMaterials).toHaveBeenCalledTimes(1);
     });
 
+    it('deduplicates in-flight materials search requests with the same key', async () => {
+        let resolveAction: ((value: { success: true; data: Array<{ id: string; code: string; name: string; unit: string; price: number }> }) => void) | null = null;
+        catalogActionMocks.searchCatalogMaterials.mockImplementation(
+            () =>
+                new Promise((resolve) => {
+                    resolveAction = resolve;
+                }),
+        );
+
+        const firstPromise = catalogRepository.searchMaterials('цемент', 'Смеси', false, 80);
+        const secondPromise = catalogRepository.searchMaterials('цемент', 'Смеси', false, 80);
+
+        expect(catalogActionMocks.searchCatalogMaterials).toHaveBeenCalledTimes(1);
+
+        resolveAction?.({
+            success: true,
+            data: [{ id: 'm1', code: '1', name: 'Цемент', unit: 'кг', price: 10 }],
+        });
+
+        await expect(firstPromise).resolves.toEqual([{ id: 'm1', code: '1', name: 'Цемент', unit: 'кг', price: 10 }]);
+        await expect(secondPromise).resolves.toEqual([{ id: 'm1', code: '1', name: 'Цемент', unit: 'кг', price: 10 }]);
+    });
+
     it('returns material categories when action succeeds', async () => {
         catalogActionMocks.fetchCatalogMaterialCategories.mockResolvedValue({
             success: true,
@@ -129,5 +175,25 @@ describe('catalogRepository', () => {
 
         expect(first).toEqual(second);
         expect(catalogActionMocks.fetchCatalogMaterialCategories).toHaveBeenCalledTimes(1);
+    });
+
+    it('deduplicates in-flight material categories requests', async () => {
+        let resolveAction: ((value: { success: true; data: string[] }) => void) | null = null;
+        catalogActionMocks.fetchCatalogMaterialCategories.mockImplementation(
+            () =>
+                new Promise((resolve) => {
+                    resolveAction = resolve;
+                }),
+        );
+
+        const firstPromise = catalogRepository.getMaterialCategories();
+        const secondPromise = catalogRepository.getMaterialCategories();
+
+        expect(catalogActionMocks.fetchCatalogMaterialCategories).toHaveBeenCalledTimes(1);
+
+        resolveAction?.({ success: true, data: ['Сухие смеси'] });
+
+        await expect(firstPromise).resolves.toEqual(['Сухие смеси']);
+        await expect(secondPromise).resolves.toEqual(['Сухие смеси']);
     });
 });
