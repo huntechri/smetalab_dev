@@ -414,7 +414,6 @@ export class EstimateRowsService {
             });
 
             await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-            await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
 
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -604,7 +603,6 @@ export class EstimateRowsService {
 
             if (updated.touchedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
             }
 
             return success(toEstimateRowDto(updated.row as EstimateRowEntity, estimate.coefPercent ?? 0));
@@ -666,7 +664,6 @@ export class EstimateRowsService {
 
             if (removedResult.removedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
             }
 
             return success({ removedIds: removedResult.idsToDelete });
