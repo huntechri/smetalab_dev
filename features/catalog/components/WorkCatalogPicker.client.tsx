@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
@@ -21,6 +21,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
     const [works, setWorks] = useState<CatalogWork[]>([]);
     const [loading, setLoading] = useState(true);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
+    const priceFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }), []);
 
     useEffect(() => {
         let isCancelled = false;
@@ -103,7 +104,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
                                                 <span className="text-[12px] font-medium text-foreground">
-                                                    {new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }).format(work.price)} ₽
+                                                    {priceFormatter.format(work.price)} ₽
                                                 </span>
                                                 <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>
                                             </div>

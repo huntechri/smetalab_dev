@@ -42,9 +42,9 @@ describe('EstimateRowsService duplicate protection', () => {
             },
             select: vi.fn(() => ({
                 from: vi.fn(() => ({
-                    where: vi.fn().mockResolvedValue([
-                        { order: 100, kind: 'work', name: 'Штукатурка стен' },
-                    ]),
+                    where: vi.fn(() => ({
+                        limit: vi.fn().mockResolvedValue([{ id: 'dup-work-id' }]),
+                    })),
                 })),
             })),
             insert: vi.fn(),
@@ -69,6 +69,67 @@ describe('EstimateRowsService duplicate protection', () => {
         expect(tx.insert).not.toHaveBeenCalled();
     });
 
+
+
+    it('adds work at the end without renumbering existing rows', async () => {
+        const tx = {
+            query: {
+                estimateRows: {
+                    findFirst: vi.fn(),
+                },
+            },
+            select: vi
+                .fn()
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({
+                            limit: vi.fn().mockResolvedValue([]),
+                        })),
+                    })),
+                }))
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn().mockResolvedValue([{ maxOrder: 300, worksCount: 3 }]),
+                    })),
+                })),
+            insert: vi.fn(() => ({
+                values: vi.fn(() => ({
+                    returning: vi.fn().mockResolvedValue([
+                        {
+                            id: 'w-new',
+                            kind: 'work',
+                            parentWorkId: null,
+                            code: '4',
+                            name: 'Новая работа',
+                            materialId: null,
+                            imageUrl: null,
+                            unit: 'шт',
+                            qty: 1,
+                            price: 0,
+                            sum: 0,
+                            expense: 0,
+                            order: 400,
+                        },
+                    ]),
+                })),
+            })),
+            update: vi.fn(() => ({
+                set: vi.fn(() => ({ where: vi.fn() })),
+            })),
+            execute: vi.fn(),
+        };
+
+        dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
+
+        const result = await EstimateRowsService.addWork(7, 'est-1', {
+            name: 'Новая работа',
+        });
+
+        expect(result.success).toBe(true);
+        expect(tx.insert).toHaveBeenCalledTimes(1);
+        expect(tx.query.estimateRows.findFirst).not.toHaveBeenCalled();
+        expect(tx.execute).not.toHaveBeenCalled();
+    });
 
     it('inserts a work after selected work and keeps execution ordering consistent via order', async () => {
         const tx = {
@@ -99,16 +160,8 @@ describe('EstimateRowsService duplicate protection', () => {
                 .mockImplementationOnce(() => ({
                     from: vi.fn(() => ({
                         where: vi.fn().mockResolvedValue([
-                            { order: 100, kind: 'work', name: 'Работа 1' },
-                            { order: 200, kind: 'work', name: 'Работа 2' },
-                        ]),
-                    })),
-                }))
-                .mockImplementationOnce(() => ({
-                    from: vi.fn(() => ({
-                        where: vi.fn().mockResolvedValue([
-                            { id: '11111111-1111-4111-8111-111111111111', order: 100, kind: 'work' },
-                            { id: '22222222-2222-4222-8222-222222222222', order: 200, kind: 'work' },
+                            { id: '11111111-1111-4111-8111-111111111111', order: 100, kind: 'work', name: 'Работа 1' },
+                            { id: '22222222-2222-4222-8222-222222222222', order: 200, kind: 'work', name: 'Работа 2' },
                         ]),
                     })),
                 }))

@@ -51,7 +51,7 @@ describe('EstimateExecutionService sync behavior', () => {
         }
     });
 
-    it('does not perform writes or project refresh in list()', async () => {
+    it('does not perform writes or project refresh in list() when execution sync is up to date', async () => {
         dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
         const orderByMock = vi.fn().mockResolvedValue([]);
         dbMock.select.mockReturnValue({
@@ -59,11 +59,31 @@ describe('EstimateExecutionService sync behavior', () => {
                 where: vi.fn(() => ({ orderBy: orderByMock })),
             })),
         });
+        dbMock.transaction.mockImplementation(async (callback: (tx: { execute: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; select: ReturnType<typeof vi.fn>; insert: ReturnType<typeof vi.fn> }) => Promise<unknown>) => {
+            const tx = {
+                execute: vi.fn().mockResolvedValue([
+                    {
+                        id: 'est-1',
+                        project_id: 'pr-1',
+                        coef_percent: 0,
+                        execution_sync_version: 1,
+                        execution_synced_version: 1,
+                    },
+                ]),
+                update: vi.fn(() => ({
+                    set: vi.fn(() => ({ where: vi.fn() })),
+                })),
+                select: vi.fn(),
+                insert: vi.fn(),
+            };
+
+            return callback(tx);
+        });
 
         const result = await EstimateExecutionService.list(1, 'est-1');
 
         expect(result.success).toBe(true);
-        expect(dbMock.transaction).not.toHaveBeenCalled();
+        expect(dbMock.transaction).toHaveBeenCalledTimes(1);
         expect(dbMock.update).not.toHaveBeenCalled();
         expect(progressRefreshMock).not.toHaveBeenCalled();
     });
