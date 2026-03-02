@@ -153,6 +153,34 @@ describe('Counterparties Integration Tests', () => {
         }
     });
 
+    it('should_allow_multiple_counterparties_without_inn', async () => {
+        const first = await createCounterparty({
+            name: 'Без ИНН 1',
+            type: 'customer',
+            legalStatus: 'individual',
+            inn: '',
+        });
+
+        const second = await createCounterparty({
+            name: 'Без ИНН 2',
+            type: 'customer',
+            legalStatus: 'individual',
+            inn: '',
+        });
+
+        expect(first.success).toBe(true);
+        expect(second.success).toBe(true);
+
+        const rows = await db
+            .select()
+            .from(counterparties)
+            .where(and(eq(counterparties.tenantId, testTeamId), eq(counterparties.legalStatus, 'individual')));
+
+        expect(rows.filter((row) => row.name.startsWith('Без ИНН')).length).toBe(2);
+        expect(rows.find((row) => row.name === 'Без ИНН 1')?.inn).toBeNull();
+        expect(rows.find((row) => row.name === 'Без ИНН 2')?.inn).toBeNull();
+    });
+
     // SKIPPED: safeAction uses db.query.teamMembers.findFirst which bypasses mocks.
     // Full multi-tenancy isolation should be tested in e2e tests with real context switching.
     it.skip('should_allow_same_inn_in_different_tenants', async () => {
