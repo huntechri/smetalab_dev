@@ -300,7 +300,34 @@ jobs:
           set -ex
           vercel pull --yes --environment preview --token=${{ secrets.VERCEL_TOKEN }}
           vercel build --token=${{ secrets.VERCEL_TOKEN }}
-          PREVIEW_URL=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+
+          deploy_output=""
+          for attempt in 1 2 3; do
+            set +e
+            deploy_output=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            deploy_exit_code=$?
+            set -e
+
+            echo "$deploy_output"
+
+            if [ "$deploy_exit_code" -eq 0 ]; then
+              break
+            fi
+
+            if echo "$deploy_output" | grep -q "We encountered an internal error" && [ "$attempt" -lt 3 ]; then
+              echo "Vercel internal error on attempt $attempt. Retrying in 15 seconds..."
+              sleep 15
+              continue
+            fi
+
+            exit "$deploy_exit_code"
+          done
+
+          PREVIEW_URL=$(echo "$deploy_output" | sed -n 's/^Preview: \(https:\/\/[^[:space:]]*\).*/\1/p' | tail -n 1)
+          if [ -z "$PREVIEW_URL" ]; then
+            echo "Failed to parse preview URL from Vercel deploy output"
+            exit 1
+          fi
           echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -343,7 +370,25 @@ jobs:
           set -ex
           vercel pull --yes --environment production --token=${{ secrets.VERCEL_TOKEN }}
           vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
-          vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+          for attempt in 1 2 3; do
+            set +e
+            vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+            deploy_exit_code=$?
+            set -e
+
+            if [ "$deploy_exit_code" -eq 0 ]; then
+              break
+            fi
+
+            if [ "$attempt" -lt 3 ]; then
+              echo "Vercel deploy failed on attempt $attempt. Retrying in 15 seconds..."
+              sleep 15
+              continue
+            fi
+
+            exit "$deploy_exit_code"
+          done
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
