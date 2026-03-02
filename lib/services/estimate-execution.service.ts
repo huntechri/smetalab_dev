@@ -260,6 +260,8 @@ export class EstimateExecutionService {
                 return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
+            await this.syncEstimateIfStale(teamId, estimateId);
+
             const rows = await db
                 .select(estimateExecutionRowSelect)
                 .from(estimateExecutionRows)
