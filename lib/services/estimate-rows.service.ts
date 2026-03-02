@@ -339,26 +339,21 @@ export class EstimateRowsService {
             }
 
             const created = await db.transaction(async (tx) => {
-                const currentRows = await tx
-                    .select({ order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
+                const existingRows = await tx
+                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
                     .from(estimateRows)
                     .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
 
                 const payload = parsed.data;
                 const normalizedWorkName = normalizeName(payload.name);
-                const duplicateWorkExists = currentRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
+                const duplicateWorkExists = existingRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
 
                 if (duplicateWorkExists) {
                     throw new Error('DUPLICATE_WORK_NAME');
                 }
 
-                const rowsWithIds = await tx
-                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind })
-                    .from(estimateRows)
-                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
-
-                const maxOrder = rowsWithIds.reduce((max, row) => Math.max(max, row.order), 0);
-                const workRows = rowsWithIds
+                const maxOrder = existingRows.reduce((max, row) => Math.max(max, row.order), 0);
+                const workRows = existingRows
                     .filter((row) => row.kind === 'work')
                     .sort((left, right) => left.order - right.order);
 
