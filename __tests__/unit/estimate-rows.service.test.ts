@@ -99,16 +99,8 @@ describe('EstimateRowsService duplicate protection', () => {
                 .mockImplementationOnce(() => ({
                     from: vi.fn(() => ({
                         where: vi.fn().mockResolvedValue([
-                            { order: 100, kind: 'work', name: 'Работа 1' },
-                            { order: 200, kind: 'work', name: 'Работа 2' },
-                        ]),
-                    })),
-                }))
-                .mockImplementationOnce(() => ({
-                    from: vi.fn(() => ({
-                        where: vi.fn().mockResolvedValue([
-                            { id: '11111111-1111-4111-8111-111111111111', order: 100, kind: 'work' },
-                            { id: '22222222-2222-4222-8222-222222222222', order: 200, kind: 'work' },
+                            { id: '11111111-1111-4111-8111-111111111111', order: 100, kind: 'work', name: 'Работа 1' },
+                            { id: '22222222-2222-4222-8222-222222222222', order: 200, kind: 'work', name: 'Работа 2' },
                         ]),
                     })),
                 }))
