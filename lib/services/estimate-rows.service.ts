@@ -339,49 +339,96 @@ export class EstimateRowsService {
             }
 
             const created = await db.transaction(async (tx) => {
-                const currentRows = await tx
-                    .select({ order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
+                const payload = parsed.data;
+
+                if (!payload.insertAfterWorkId) {
+                    const normalizedWorkName = normalizeName(payload.name);
+
+                    const duplicateWork = await tx
+                        .select({ id: estimateRows.id })
+                        .from(estimateRows)
+                        .where(
+                            and(
+                                eq(estimateRows.estimateId, estimateId),
+                                eq(estimateRows.kind, 'work'),
+                                withActiveTenant(estimateRows, teamId),
+                                sql`lower(trim(${estimateRows.name})) = ${normalizedWorkName}`,
+                            ),
+                        )
+                        .limit(1);
+
+                    if (duplicateWork.length > 0) {
+                        throw new Error('DUPLICATE_WORK_NAME');
+                    }
+
+                    const [{ maxOrder, worksCount }] = await tx
+                        .select({
+                            maxOrder: sql<number>`COALESCE(MAX(${estimateRows.order}), 0)`,
+                            worksCount: sql<number>`COALESCE(COUNT(*) FILTER (WHERE ${estimateRows.kind} = 'work'), 0)::int`,
+                        })
+                        .from(estimateRows)
+                        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+
+                    const nextOrder = maxOrder + 100;
+
+                    const [createdRow] = await tx
+                        .insert(estimateRows)
+                        .values({
+                            tenantId: teamId,
+                            estimateId,
+                            kind: 'work',
+                            code: String(worksCount + 1),
+                            name: payload.name,
+                            unit: payload.unit,
+                            qty: payload.qty,
+                            price: payload.price,
+                            sum: payload.qty * payload.price,
+                            expense: payload.expense,
+                            order: nextOrder,
+                        })
+                        .returning();
+
+                    const delta = roundContribution(estimateRowContribution(createdRow as EstimateRowEntity, estimate.coefPercent ?? 0));
+                    await applyEstimateTotalDelta(tx, estimateId, delta);
+
+                    return createdRow;
+                }
+
+                const existingRows = await tx
+                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
                     .from(estimateRows)
                     .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
 
-                const payload = parsed.data;
                 const normalizedWorkName = normalizeName(payload.name);
-                const duplicateWorkExists = currentRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
+                const duplicateWorkExists = existingRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
 
                 if (duplicateWorkExists) {
                     throw new Error('DUPLICATE_WORK_NAME');
                 }
 
-                const rowsWithIds = await tx
-                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind })
-                    .from(estimateRows)
-                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
-
-                const maxOrder = rowsWithIds.reduce((max, row) => Math.max(max, row.order), 0);
-                const workRows = rowsWithIds
+                const maxOrder = existingRows.reduce((max, row) => Math.max(max, row.order), 0);
+                const workRows = existingRows
                     .filter((row) => row.kind === 'work')
                     .sort((left, right) => left.order - right.order);
 
                 let nextOrder = maxOrder + 100;
 
-                if (payload.insertAfterWorkId) {
-                    const anchorWork = workRows.find((row) => row.id === payload.insertAfterWorkId);
-                    if (!anchorWork) {
-                        throw new Error('INSERT_ANCHOR_NOT_FOUND');
-                    }
-
-                    const nextWork = workRows.find((row) => row.order > anchorWork.order);
-                    if (nextWork) {
-                        nextOrder = nextWork.order;
-
-                        await tx
-                            .update(estimateRows)
-                            .set({ order: sql`${estimateRows.order} + 100` })
-                            .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
-                    }
+                const anchorWork = workRows.find((row) => row.id === payload.insertAfterWorkId);
+                if (!anchorWork) {
+                    throw new Error('INSERT_ANCHOR_NOT_FOUND');
                 }
 
-                const [created] = await tx
+                const nextWork = workRows.find((row) => row.order > anchorWork.order);
+                if (nextWork) {
+                    nextOrder = nextWork.order;
+
+                    await tx
+                        .update(estimateRows)
+                        .set({ order: sql`${estimateRows.order} + 100` })
+                        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
+                }
+
+                const [inserted] = await tx
                     .insert(estimateRows)
                     .values({
                         tenantId: teamId,
@@ -401,20 +448,19 @@ export class EstimateRowsService {
                 await renumberEstimateCodes(tx, teamId, estimateId, { startOrder: nextOrder });
 
                 const row = await tx.query.estimateRows.findFirst({
-                    where: and(eq(estimateRows.id, created.id), withActiveTenant(estimateRows, teamId)),
+                    where: and(eq(estimateRows.id, inserted.id), withActiveTenant(estimateRows, teamId)),
                 });
 
                 if (!row) {
                     throw new Error('CREATED_ROW_NOT_FOUND');
                 }
 
-                const delta = roundContribution(estimateRowContribution(created as EstimateRowEntity, estimate.coefPercent ?? 0));
+                const delta = roundContribution(estimateRowContribution(inserted as EstimateRowEntity, estimate.coefPercent ?? 0));
                 await applyEstimateTotalDelta(tx, estimateId, delta);
                 return row;
             });
 
             await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-            await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
 
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -604,7 +650,6 @@ export class EstimateRowsService {
 
             if (updated.touchedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
             }
 
             return success(toEstimateRowDto(updated.row as EstimateRowEntity, estimate.coefPercent ?? 0));
@@ -666,7 +711,6 @@ export class EstimateRowsService {
 
             if (removedResult.removedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
-                await EstimateExecutionService.syncEstimateIfStale(teamId, estimateId);
             }
 
             return success({ removedIds: removedResult.idsToDelete });

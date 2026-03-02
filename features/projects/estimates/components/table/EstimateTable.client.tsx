@@ -450,9 +450,19 @@ export function EstimateTable({
         qty: 1,
         insertAfterWorkId: pendingInsertAfterWork?.id,
       });
-      await reloadRows();
+
+      setRows((prev) => {
+        if (prev.some((row) => row.id === created.id)) {
+          return prev;
+        }
+
+        return [...prev, created].sort((left, right) => left.order - right.order);
+      });
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
       setPendingInsertAfterWork(null);
+
+      void reloadRows();
+
       toast({
         title: "Работа добавлена",
         description: pendingInsertAfterWork

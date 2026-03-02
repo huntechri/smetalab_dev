@@ -13,6 +13,9 @@ type CacheEntry<T> = {
 
 const materialsSearchCache = new Map<string, CacheEntry<CatalogMaterial[]>>();
 const worksSearchCache = new Map<string, CacheEntry<CatalogWork[]>>();
+const materialSearchInFlight = new Map<string, Promise<CatalogMaterial[]>>();
+const worksSearchInFlight = new Map<string, Promise<CatalogWork[]>>();
+let materialCategoriesInFlight: Promise<string[]> | null = null;
 let materialCategoriesCache: CacheEntry<string[]> | null = null;
 
 function getCached<T>(entry: CacheEntry<T> | undefined | null, ttlMs: number): T | null {
@@ -43,11 +46,24 @@ export const catalogRepository = {
             return cached;
         }
 
-        const result = await searchCatalogWorks({ query, category, isAiMode, limit });
-        const value = result.success ? result.data : [];
-        worksSearchCache.set(cacheKey, { createdAt: Date.now(), value });
+        const pending = worksSearchInFlight.get(cacheKey);
+        if (pending) {
+            return pending;
+        }
 
-        return value;
+        const request = searchCatalogWorks({ query, category, isAiMode, limit })
+            .then((result) => {
+                const value = result.success ? result.data : [];
+                worksSearchCache.set(cacheKey, { createdAt: Date.now(), value });
+                return value;
+            })
+            .finally(() => {
+                worksSearchInFlight.delete(cacheKey);
+            });
+
+        worksSearchInFlight.set(cacheKey, request);
+
+        return request;
     },
 
     async getCategories(): Promise<string[]> {
@@ -62,11 +78,24 @@ export const catalogRepository = {
             return cached;
         }
 
-        const result = await searchCatalogMaterials({ query, category, isAiMode, limit });
-        const value = result.success ? result.data : [];
-        materialsSearchCache.set(cacheKey, { createdAt: Date.now(), value });
+        const pending = materialSearchInFlight.get(cacheKey);
+        if (pending) {
+            return pending;
+        }
 
-        return value;
+        const request = searchCatalogMaterials({ query, category, isAiMode, limit })
+            .then((result) => {
+                const value = result.success ? result.data : [];
+                materialsSearchCache.set(cacheKey, { createdAt: Date.now(), value });
+                return value;
+            })
+            .finally(() => {
+                materialSearchInFlight.delete(cacheKey);
+            });
+
+        materialSearchInFlight.set(cacheKey, request);
+
+        return request;
     },
 
     async getMaterialCategories(): Promise<string[]> {
@@ -75,11 +104,21 @@ export const catalogRepository = {
             return cached;
         }
 
-        const result = await fetchCatalogMaterialCategories();
-        const value = result.success ? result.data : [];
-        materialCategoriesCache = { createdAt: Date.now(), value };
+        if (materialCategoriesInFlight) {
+            return materialCategoriesInFlight;
+        }
 
-        return value;
+        materialCategoriesInFlight = fetchCatalogMaterialCategories()
+            .then((result) => {
+                const value = result.success ? result.data : [];
+                materialCategoriesCache = { createdAt: Date.now(), value };
+                return value;
+            })
+            .finally(() => {
+                materialCategoriesInFlight = null;
+            });
+
+        return materialCategoriesInFlight;
     }
 };
 
@@ -87,6 +126,9 @@ export const __catalogRepositoryInternal = {
     clearCaches: () => {
         materialsSearchCache.clear();
         worksSearchCache.clear();
+        materialSearchInFlight.clear();
+        worksSearchInFlight.clear();
+        materialCategoriesInFlight = null;
         materialCategoriesCache = null;
     }
 };
