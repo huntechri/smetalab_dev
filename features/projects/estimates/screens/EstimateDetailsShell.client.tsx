@@ -1,7 +1,7 @@
 'use client';
 
-import { Suspense, use } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, use, useEffect, useState } from 'react';
+import { usePathname, useSearchParams } from 'next/navigation';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
@@ -22,6 +22,15 @@ import {
 import Link from 'next/link';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
+
+
+const buildTabHref = (pathname: string, search: string, nextTab: string) => {
+    const params = new URLSearchParams(search);
+    params.set('tab', nextTab);
+    const query = params.toString();
+    return query.length > 0 ? `${pathname}?${query}` : pathname;
+};
+
 
 function EstimateTableLoader({ estimateId, rowsPromise, initialCoefPercent }: { estimateId: string; rowsPromise: Promise<EstimateRow[]>; initialCoefPercent: number }) {
     const rows = use(rowsPromise);
@@ -50,11 +59,16 @@ interface EstimateDetailsShellProps {
 
 export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
-    const router = useRouter();
     const pathname = usePathname();
 
     const tabParam = searchParams.get('tab') ?? 'estimate';
-    const tab = availableTabs.has(tabParam) ? tabParam : 'estimate';
+    const initialTab = availableTabs.has(tabParam) ? tabParam : 'estimate';
+    const [tab, setTab] = useState(initialTab);
+
+    useEffect(() => {
+        const nextTab = availableTabs.has(tabParam) ? tabParam : 'estimate';
+        setTab(nextTab);
+    }, [tabParam]);
 
     return (
         <div className="space-y-2">
@@ -87,9 +101,9 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
             <Tabs
                 value={tab}
                 onValueChange={(nextValue) => {
-                    const params = new URLSearchParams(searchParams);
-                    params.set('tab', nextValue);
-                    router.replace(`${pathname}?${params.toString()}`);
+                    setTab(nextValue);
+                    const nextHref = buildTabHref(pathname, searchParams.toString(), nextValue);
+                    window.history.replaceState(window.history.state, '', nextHref);
                 }}
             >
                 <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
@@ -116,3 +130,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
         </div>
     );
 }
+
+export const __estimateDetailsShellInternal = {
+    buildTabHref,
+};
