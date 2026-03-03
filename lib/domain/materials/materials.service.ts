@@ -37,10 +37,22 @@ export class MaterialsService {
 
             if (normalizedSearch) {
                 const tsQuery = sql`websearch_to_tsquery('simple', ${normalizedSearch})`;
+                const tokenPatterns = normalizedSearch
+                    .split(/\s+/)
+                    .filter((token) => token.length > 0)
+                    .map((token) => sql`${materials.nameNorm} ILIKE ${`%${token}%`}`);
+
+                const tokenMatchFilter = tokenPatterns.length > 0
+                    ? sql.join(tokenPatterns, sql` AND `)
+                    : sql`TRUE`;
+
                 filters.push(sql`(
                     ${materials.searchVector} @@ ${tsQuery}
                     OR ${materials.nameNorm} % ${normalizedSearch}
                     OR ${materials.name} % ${normalizedSearch}
+                    OR ${materials.nameNorm} ILIKE ${`%${normalizedSearch}%`}
+                    OR ${materials.name} ILIKE ${`%${normalizedSearch}%`}
+                    OR (${tokenMatchFilter})
                 )`);
             }
 
