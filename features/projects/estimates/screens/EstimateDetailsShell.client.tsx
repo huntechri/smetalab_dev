@@ -24,6 +24,15 @@ import Link from 'next/link';
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
 
 
+const tabOptions = [
+    { value: 'estimate', label: 'Смета', mobileLabel: 'Смета' },
+    { value: 'params', label: 'Параметры', mobileLabel: 'Парам.' },
+    { value: 'procurement', label: 'Закупки', mobileLabel: 'Закуп.' },
+    { value: 'execution', label: 'Выполнение', mobileLabel: 'Выполн.' },
+    { value: 'docs', label: 'Документы', mobileLabel: 'Док.' },
+] as const;
+
+
 const buildTabHref = (pathname: string, search: string, nextTab: string) => {
     const params = new URLSearchParams(search);
     params.set('tab', nextTab);
@@ -106,12 +115,17 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     window.history.replaceState(window.history.state, '', nextHref);
                 }}
             >
-                <TabsList className="w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                    <TabsTrigger value="estimate" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Смета</TabsTrigger>
-                    <TabsTrigger value="params" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Выполнение</TabsTrigger>
-                    <TabsTrigger value="docs" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Документы</TabsTrigger>
+                <TabsList className="w-full justify-start overflow-x-auto h-auto gap-1 p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
+                    {tabOptions.map((tabItem) => (
+                        <TabsTrigger
+                            key={tabItem.value}
+                            value={tabItem.value}
+                            className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                        >
+                            <span className="sm:hidden">{tabItem.mobileLabel}</span>
+                            <span className="hidden sm:inline">{tabItem.label}</span>
+                        </TabsTrigger>
+                    ))}
                 </TabsList>
                 <TabsContent value="estimate" className="mt-2 md:mt-3">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
@@ -133,4 +147,5 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
 
 export const __estimateDetailsShellInternal = {
     buildTabHref,
+    tabOptions,
 };
