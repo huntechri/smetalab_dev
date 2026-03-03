@@ -115,7 +115,8 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         <Button
           onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
           size="sm"
-          className="shrink-0"
+          className="shrink-0 size-8 p-0 sm:size-auto sm:px-3"
+          aria-label="Добавить поставщика"
         >
           <Plus className="h-4 w-4" />
           <span className="hidden sm:inline">Добавить</span>

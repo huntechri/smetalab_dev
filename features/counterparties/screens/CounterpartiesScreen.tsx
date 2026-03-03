@@ -115,7 +115,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                     <h1 className="text-2xl font-bold tracking-tight">Контрагенты</h1>
                     <p className="text-muted-foreground text-sm">Управление заказчиками, подрядчиками и поставщиками.</p>
                 </div>
-                <Button onClick={handleCreate} size="sm" className="shrink-0">
+                <Button onClick={handleCreate} size="sm" className="shrink-0 size-8 p-0 sm:size-auto sm:px-3" aria-label="Добавить контрагента">
                     <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">Добавить</span>
                 </Button>
