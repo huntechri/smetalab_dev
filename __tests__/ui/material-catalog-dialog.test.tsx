@@ -21,7 +21,14 @@ vi.mock('@/shared/ui/dialog', () => ({
 }));
 
 vi.mock('@/features/catalog/components/MaterialCatalogPicker.client', () => ({
-    MaterialCatalogPicker: () => <div>picker</div>,
+    MaterialCatalogPicker: ({ onAddMaterial }: { onAddMaterial: (material: { id: string; name: string; unit: string; price: string }) => Promise<void> }) => (
+        <button
+            type="button"
+            onClick={() => void onAddMaterial({ id: '1', name: 'Песок', unit: 'м3', price: '1000' })}
+        >
+            add material
+        </button>
+    ),
 }));
 
 describe('MaterialCatalogDialog', () => {
@@ -58,5 +65,25 @@ describe('MaterialCatalogDialog', () => {
         fireEvent.click(screen.getByRole('button', { name: 'close' }));
 
         expect(onClose).toHaveBeenCalled();
+    });
+
+    it('keeps dialog open on select when closeOnSelect is false', async () => {
+        const onClose = vi.fn();
+        const onSelect = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <MaterialCatalogDialog
+                isOpen
+                onClose={onClose}
+                onSelect={onSelect}
+                parentWorkName="Глобальные закупки"
+                closeOnSelect={false}
+            />,
+        );
+
+        fireEvent.click(screen.getByRole('button', { name: 'add material' }));
+
+        expect(onSelect).toHaveBeenCalled();
+        expect(onClose).not.toHaveBeenCalled();
     });
 });
