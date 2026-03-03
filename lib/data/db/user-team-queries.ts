@@ -53,8 +53,10 @@ async function tryRefreshSessionFromCookie(): Promise<SessionData> {
 
 async function getSessionWithRefresh(): Promise<SessionData> {
   const sessionData = await getSession();
+
+  // If access token is missing/invalid/expired at JWT level, fall back to refresh token.
   if (!sessionData || !sessionData.user || typeof sessionData.user.id !== 'number') {
-    return null;
+    return tryRefreshSessionFromCookie();
   }
 
   if (new Date(sessionData.expires) >= new Date()) {
