@@ -12,7 +12,7 @@ import {
 
 export default function LandingPage() {
     return (
-        <div className="min-h-screen bg-[#0B0A0F] text-white font-sans">
+        <div className="min-h-screen overflow-x-clip bg-[#0B0A0F] text-white font-sans">
             <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
                 Пропустить к содержимому
             </a>
@@ -26,17 +26,17 @@ export default function LandingPage() {
                             <span className="block text-sm font-semibold">BuildOS</span>
                         </div>
                     </div>
-                    <nav className="hidden md:flex items-center gap-8 text-sm text-white/80" aria-label="Основная навигация">
-                        <Link href="#capabilities" className="transition hover:text-white">Возможности</Link>
-                        <Link href="#workflow" className="transition hover:text-white">Процесс</Link>
-                        <Link href="#pricing" className="transition hover:text-white">Тарифы</Link>
+                    <nav className="hidden md:flex items-center gap-4 text-sm text-white/90" aria-label="Основная навигация">
+                        <Link href="#capabilities" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
+                        <Link href="#workflow" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
+                        <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
                         <Link href="/sign-in">
-                            <Button variant="ghost" className="text-white/80 hover:text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60">Войти</Button>
+                            <Button variant="ghost" className="border border-transparent text-white/90 hover:border-white/30 hover:bg-white/12 hover:text-white focus-visible:ring-2 focus-visible:ring-white/60">Войти</Button>
                         </Link>
                         <Link href="/sign-up">
-                            <Button className="bg-white text-black hover:bg-white/90">Запросить демо</Button>
+                            <Button className="bg-white text-black transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
                         </Link>
                     </div>
                     <details className="group md:hidden">
@@ -45,19 +45,19 @@ export default function LandingPage() {
                         </summary>
                         <div className="absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl">
                             <div className="container mx-auto flex flex-col gap-4 px-4 py-6">
-                                <nav className="flex flex-col gap-3 text-sm text-white/80" aria-label="Основная навигация (мобильная)">
-                                    <Link href="#capabilities" className="transition hover:text-white">Возможности</Link>
-                                    <Link href="#workflow" className="transition hover:text-white">Процесс</Link>
-                                    <Link href="#pricing" className="transition hover:text-white">Тарифы</Link>
+                                <nav className="flex flex-col gap-3 text-sm text-white/90" aria-label="Основная навигация (мобильная)">
+                                    <Link href="#capabilities" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
+                                    <Link href="#workflow" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
+                                    <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
                                 </nav>
                                 <div className="flex flex-col gap-3">
                                     <Link href="/sign-in">
-                                        <Button variant="outline" className="w-full border-white/30 text-white hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60">
+                                        <Button variant="outline" className="w-full border-white/40 text-white hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white/60">
                                             Войти
                                         </Button>
                                     </Link>
                                     <Link href="/sign-up">
-                                        <Button className="w-full bg-white text-black hover:bg-white/90">Запросить демо</Button>
+                                        <Button className="w-full bg-white text-black hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
                                     </Link>
                                 </div>
                             </div>
@@ -84,7 +84,7 @@ export default function LandingPage() {
                                 <h1 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] font-semibold">
                                     Система управления строительством для подрядчиков, которые не терпят хаос.
                                 </h1>
-                                <p className="max-w-xl text-lg text-white/80">
+                                <p className="max-w-xl text-lg text-white/90">
                                     Планируйте работы, контролируйте закупки, синхронизируйте бригады и держите бюджет под контролем.
                                     Все проекты — в одной операционной панели.
                                 </p>
@@ -93,7 +93,7 @@ export default function LandingPage() {
                                         Запустить пилот
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
-                                    <Button variant="outline" className="h-12 border-white/40 bg-transparent px-6 text-base text-white hover:bg-white/15 hover:text-white active:bg-white/20 focus-visible:ring-2 focus-visible:ring-white/60">
+                                    <Button variant="outline" className="h-12 border-white/50 bg-transparent px-6 text-base text-white hover:border-white/70 hover:bg-white/20 hover:text-white active:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/60">
                                         Сценарий внедрения
                                     </Button>
                                 </div>
@@ -260,9 +260,9 @@ export default function LandingPage() {
                         <p className="text-sm text-white/80">© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-6 text-sm text-white/80">
-                        <Link href="#capabilities" className="hover:text-white">Возможности</Link>
-                        <Link href="#workflow" className="hover:text-white">Процесс</Link>
-                        <Link href="#pricing" className="hover:text-white">Тарифы</Link>
+                        <Link href="#capabilities" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
+                        <Link href="#workflow" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
+                        <Link href="#pricing" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
                     </div>
                 </div>
             </footer>
