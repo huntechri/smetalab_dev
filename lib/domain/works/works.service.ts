@@ -36,7 +36,21 @@ export class WorksService {
             const filters = [withActiveTenant(works, teamId)];
 
             if (search) {
-                filters.push(sql`(${works.name} ILIKE ${'%' + search + '%'} OR ${works.code} ILIKE ${'%' + search + '%'})`);
+                const normalizedSearch = search.trim().toLowerCase();
+                const tokenPatterns = normalizedSearch
+                    .split(/\s+/)
+                    .filter((token) => token.length > 0)
+                    .map((token) => sql`${works.name} ILIKE ${`%${token}%`}`);
+
+                const tokenMatchFilter = tokenPatterns.length > 0
+                    ? sql.join(tokenPatterns, sql` AND `)
+                    : sql`TRUE`;
+
+                filters.push(sql`(
+                    ${works.name} ILIKE ${`%${normalizedSearch}%`}
+                    OR ${works.code} ILIKE ${`%${normalizedSearch}%`}
+                    OR (${tokenMatchFilter})
+                )`);
             }
 
             if (category && category !== 'all') {

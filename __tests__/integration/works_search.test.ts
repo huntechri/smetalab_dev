@@ -114,4 +114,21 @@ describe('Works Search and Batch Operations', () => {
         const updated = afterUpdate.find(w => w.code === 'B-1');
         expect(updated?.name).toBe('Batch 1 Updated');
     });
+
+    it('matches multi-word prefix queries in regular catalog search', async () => {
+        await db.insert(works).values({
+            tenantId: testTeamId,
+            code: 'W-PR-001',
+            name: 'Подвес прямой монтаж',
+            status: 'active',
+            sortOrder: 100,
+        });
+
+        const result = await WorksService.getMany(testTeamId, 200, 'подвес пр');
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.some((row) => row.name === 'Подвес прямой монтаж')).toBe(true);
+        }
+    });
 });

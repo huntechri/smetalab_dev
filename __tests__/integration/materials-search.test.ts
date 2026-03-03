@@ -190,6 +190,22 @@ describe('Materials search integration', () => {
         }
     });
 
+    it('matches multi-word prefix queries in regular catalog search', async () => {
+        await db.insert(materials).values({
+            tenantId: testTeamId,
+            code: 'P-001',
+            name: 'Подвес прямой 60х27',
+            status: 'active',
+        });
+
+        const result = await MaterialsService.getMany(testTeamId, 50, 'подвес пр');
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.some((row) => row.name === 'Подвес прямой 60х27')).toBe(true);
+        }
+    });
+
     it('prioritizes vendor matches over name-only matches', async () => {
         const [vendorMatch] = await db.insert(materials).values({
             tenantId: testTeamId,
