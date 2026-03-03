@@ -706,25 +706,27 @@ export function EstimateTable({
             <Button
               variant="outline"
               size="sm"
-              className="h-8 gap-1.5 px-2 md:px-3"
+              className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+              aria-label="Режим расчета"
               onClick={() => {
                 setPendingInsertAfterWork(null);
                 setIsCalculationModeOpen(true);
               }}
             >
               <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden sm:inline text-xs md:text-sm">
+              <span className="hidden sm:inline">
                 Режим расчета
               </span>
             </Button>
             <Button
               variant="outline"
               size="sm"
-              className="h-8 gap-1.5 px-2 md:px-3"
+              className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+              aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
             >
               <Save className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden sm:inline text-xs md:text-sm">
+              <span className="hidden sm:inline">
                 Сохранить
               </span>
             </Button>
@@ -789,9 +791,9 @@ export function EstimateTable({
             <div className="lg:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon-sm">
+                  <Button variant="outline" size="icon-sm" aria-label="Дополнительные действия">
                     <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">More actions</span>
+                    <span className="sr-only">Дополнительные действия</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
@@ -836,10 +838,11 @@ export function EstimateTable({
             <Button
               variant="destructive"
               size="sm"
-              className="h-8 gap-1.5 px-2 md:px-3"
+              className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+              aria-label="Удалить"
             >
               <Trash2 className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline text-xs md:text-sm">
+              <span className="hidden sm:inline">
                 Удалить
               </span>
             </Button>
