@@ -6,6 +6,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { estimateRows, estimates, projects } from '@/lib/data/db/schema';
 import { Result, error, success } from '@/lib/utils/result';
+import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 
 const exportFormatSchema = z.enum(['xlsx', 'pdf']);
 
@@ -151,6 +152,7 @@ export class EstimateExportService {
                     id: estimates.id,
                     name: estimates.name,
                     projectName: projects.name,
+                    coefPercent: estimates.coefPercent,
                 })
                 .from(estimates)
                 .innerJoin(projects, eq(projects.id, estimates.projectId))
@@ -186,13 +188,27 @@ export class EstimateExportService {
                 return error('Ошибка формирования данных для экспорта', 'VALIDATION_ERROR');
             }
 
-            const totals = computeTotals(parsedRows.data);
+            const coefPercent = estimateRecord.coefPercent ?? 0;
+            const rowsWithCoef = parsedRows.data.map((row) => {
+                if (row.kind !== 'work') {
+                    return row;
+                }
+
+                const effectivePrice = applyEstimateCoefficient(row.price, coefPercent);
+                return {
+                    ...row,
+                    price: effectivePrice,
+                    sum: effectivePrice * row.qty,
+                };
+            });
+
+            const totals = computeTotals(rowsWithCoef);
 
             return success({
                 estimateId: estimateRecord.id,
                 estimateName: estimateRecord.name,
                 projectName: estimateRecord.projectName,
-                rows: parsedRows.data,
+                rows: rowsWithCoef,
                 totals,
             });
         } catch (serviceError) {
