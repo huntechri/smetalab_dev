@@ -909,6 +909,7 @@ export function EstimateTable({
         onSelect={addMaterialFromCatalog}
         parentWorkName={activeWorkForMaterial?.name ?? ""}
         addedMaterialNames={addedMaterialNamesForActiveWork}
+        closeOnSelect={false}
       />
       <MaterialCatalogDialog
         isOpen={Boolean(activeMaterialForReplace)}
