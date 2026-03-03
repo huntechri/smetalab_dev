@@ -4,16 +4,69 @@ import { cookies } from 'next/headers';
 
 import { db } from './drizzle';
 import { activityLogs, impersonationSessions, teamMembers, teams, users, type User } from './schema';
-import { getSession } from '@/lib/infrastructure/auth/session';
+import {
+  getSession,
+  REFRESH_COOKIE_NAME,
+  SESSION_COOKIE_NAME,
+  verifyToken,
+} from '@/lib/infrastructure/auth/session';
+import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
 import { SYSTEM_TENANT_ID } from './tenant';
 
-export const getUser = cache(async () => {
+type SessionData = Awaited<ReturnType<typeof getSession>>;
+
+async function tryRefreshSessionFromCookie(): Promise<SessionData> {
+  const cookieStore = await cookies();
+  const refreshToken = cookieStore.get(REFRESH_COOKIE_NAME)?.value;
+
+  if (!refreshToken) {
+    return null;
+  }
+
+  const refreshResult = await refreshSessionTokens(refreshToken);
+  if (!refreshResult.success) {
+    return null;
+  }
+
+  try {
+    cookieStore.set(SESSION_COOKIE_NAME, refreshResult.accessToken, {
+      expires: refreshResult.accessExpires,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      path: '/',
+    });
+
+    cookieStore.set(REFRESH_COOKIE_NAME, refreshResult.refreshToken, {
+      expires: refreshResult.refreshExpires,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
+    });
+  } catch {
+    // Some contexts (e.g. RSC) expose read-only cookies; token refresh still works for current request.
+  }
+
+  return verifyToken(refreshResult.accessToken);
+}
+
+async function getSessionWithRefresh(): Promise<SessionData> {
   const sessionData = await getSession();
   if (!sessionData || !sessionData.user || typeof sessionData.user.id !== 'number') {
     return null;
   }
 
-  if (new Date(sessionData.expires) < new Date()) {
+  if (new Date(sessionData.expires) >= new Date()) {
+    return sessionData;
+  }
+
+  return tryRefreshSessionFromCookie();
+}
+
+export const getUser = cache(async () => {
+  const sessionData = await getSessionWithRefresh();
+  if (!sessionData) {
     return null;
   }
 
