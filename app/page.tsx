@@ -52,7 +52,10 @@ export default function LandingPage() {
                                 </nav>
                                 <div className="flex flex-col gap-3">
                                     <Link href="/sign-in">
-                                        <Button variant="outline" className="w-full border-white/40 text-white hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-white/60">
+                                        <Button
+                                            variant="outline"
+                                            className="w-full border-white/40 bg-[#0B0A0F] !text-white hover:bg-white/15 hover:!text-white focus-visible:ring-2 focus-visible:ring-white/60"
+                                        >
                                             Войти
                                         </Button>
                                     </Link>
