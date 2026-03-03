@@ -14,6 +14,10 @@ describe('LandingPage', () => {
         expect(signInButtons[0]).toHaveClass('hover:border-white/30');
         expect(signInButtons[0]).toHaveClass('hover:bg-white/12');
 
+        const mobileSignInButton = signInButtons[1];
+        expect(mobileSignInButton).toHaveClass('bg-[#0B0A0F]');
+        expect(mobileSignInButton).toHaveClass('!text-white');
+
         const scenarioButton = screen.getByRole('button', { name: 'Сценарий внедрения' });
         expect(scenarioButton).toHaveClass('hover:border-white/70');
         expect(scenarioButton).toHaveClass('hover:bg-white/20');
