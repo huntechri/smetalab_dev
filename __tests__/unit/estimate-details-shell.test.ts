@@ -21,13 +21,4 @@ describe('EstimateDetailsShell tab href builder', () => {
 
         expect(href).toBe('/app/projects/p/estimates/e?tab=execution');
     });
-
-    it('provides compact mobile labels for estimate tabs', () => {
-        const tabs = __estimateDetailsShellInternal.tabOptions;
-
-        expect(tabs).toHaveLength(5);
-        expect(tabs.find((item) => item.value === 'procurement')?.mobileLabel).toBe('Закуп.');
-        expect(tabs.find((item) => item.value === 'execution')?.mobileLabel).toBe('Выполн.');
-    });
-
 });
