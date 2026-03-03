@@ -119,6 +119,59 @@ describe('getUser session refresh', () => {
     expect(result).toMatchObject({ id: 7, tenantId: 17, teamRole: 'owner' });
   });
 
+
+  it('refreshes session when getSession returns null due to expired JWT', async () => {
+    const cookieGet = vi.fn((name: string) => {
+      if (name === 'refresh_token') {
+        return { value: 'refresh-token' };
+      }
+      return undefined;
+    });
+    const cookieSet = vi.fn();
+
+    cookiesSpy.mockResolvedValue({ get: cookieGet, set: cookieSet });
+    getSessionSpy.mockResolvedValue(null);
+
+    refreshSessionTokensSpy.mockResolvedValue({
+      success: true,
+      accessToken: 'rotated-access',
+      refreshToken: 'rotated-refresh',
+      accessExpires: new Date('2030-02-01T00:15:00.000Z'),
+      refreshExpires: new Date('2030-02-08T00:00:00.000Z'),
+    });
+
+    verifyTokenSpy.mockResolvedValue({
+      user: { id: 9 },
+      platformRole: null,
+      expires: '2030-02-01T00:15:00.000Z',
+    });
+
+    const limitSpy = vi.fn().mockResolvedValue([
+      {
+        user: { id: 9, name: 'JWT Expired', email: 'jwt@example.com' },
+        teamId: 99,
+        role: 'admin',
+      },
+    ]);
+
+    selectSpy.mockReturnValue({
+      from: vi.fn().mockReturnValue({
+        leftJoin: vi.fn().mockReturnValue({
+          where: vi.fn().mockReturnValue({
+            limit: limitSpy,
+          }),
+        }),
+      }),
+    });
+
+    const { getUser } = await import('@/lib/data/db/user-team-queries');
+    const result = await getUser();
+
+    expect(refreshSessionTokensSpy).toHaveBeenCalledWith('refresh-token');
+    expect(verifyTokenSpy).toHaveBeenCalledWith('rotated-access');
+    expect(result).toMatchObject({ id: 9, tenantId: 99, teamRole: 'admin' });
+  });
+
   it('returns null when access token is expired and refresh cookie is missing', async () => {
     cookiesSpy.mockResolvedValue({ get: vi.fn(), set: vi.fn() });
 
