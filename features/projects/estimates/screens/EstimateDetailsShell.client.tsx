@@ -24,6 +24,9 @@ import Link from 'next/link';
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
 
 
+
+
+
 const buildTabHref = (pathname: string, search: string, nextTab: string) => {
     const params = new URLSearchParams(search);
     params.set('tab', nextTab);

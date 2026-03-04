@@ -75,8 +75,8 @@ describe('GlobalPurchasesTable', () => {
 
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
-        fireEvent.click(screen.getByRole('button', { name: /Строка вручную/i }));
-        fireEvent.click(screen.getByRole('button', { name: /Из справочника/i })); // Click "Из справочника" to open dialog
+        fireEvent.click(screen.getByRole('button', { name: /Добавить строку вручную|Строка вручную/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника|Из справочника/i })); // Click "Из справочника" to open dialog
         fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i })); // Click mock dialog select
 
         await waitFor(() => {

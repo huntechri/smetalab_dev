@@ -42,9 +42,9 @@ export function WorksToolbar({
         <>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" className="flex-1 sm:flex-none h-9 text-xs md:text-sm" onClick={handleImportClick} disabled={isImporting}>
+                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs md:text-sm" onClick={handleImportClick} disabled={isImporting}>
                         {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                        <span className="hidden sm:inline ml-2">Импорт</span>
+                        <span className="hidden sm:inline">Импорт</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent><p>Загрузить данные из файла</p></TooltipContent>
@@ -52,9 +52,9 @@ export function WorksToolbar({
 
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" className="flex-1 sm:flex-none h-9 text-xs md:text-sm" onClick={handleExport} disabled={isExporting}>
+                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs md:text-sm" onClick={handleExport} disabled={isExporting}>
                         {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                        <span className="hidden sm:inline ml-2">Экспорт</span>
+                        <span className="hidden sm:inline">Экспорт</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent><p>Выгрузить данные в файл</p></TooltipContent>
@@ -67,11 +67,12 @@ export function WorksToolbar({
                             <AlertDialogTrigger asChild>
                                 <Button
                                     variant="destructive"
-                                    className={`flex-1 sm:flex-none h-9 text-xs md:text-sm ${isActionDisabled ? 'pointer-events-none' : ''}`}
+                                    size="sm"
+                                    className={`flex-1 sm:flex-none text-xs md:text-sm ${isActionDisabled ? 'pointer-events-none' : ''}`}
                                     disabled={isActionDisabled}
                                 >
                                     {isDeletingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
-                                    <span className="hidden sm:inline ml-2">Удалить всё</span>
+                                    <span className="hidden sm:inline">Удалить всё</span>
                                 </Button>
                             </AlertDialogTrigger>
                         </span>
