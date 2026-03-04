@@ -262,12 +262,13 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    className="h-8 gap-1.5 w-[calc(50%-4px)] sm:w-auto text-xs md:text-sm"
+                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
                                     onClick={() => void handleAddManualRow()}
                                     disabled={isAddingManual}
+                                    aria-label="Добавить строку вручную"
                                 >
                                     <Plus className="size-4" />
-                                    <span className="truncate">Строка вручную</span>
+                                    <span className="hidden sm:inline">Строка вручную</span>
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>Добавить пустую строку закупки</TooltipContent>
@@ -279,12 +280,13 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     type="button"
                                     variant="outline"
                                     size="sm"
-                                    className="h-8 gap-1.5 w-[calc(50%-4px)] sm:w-auto text-xs md:text-sm"
+                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
                                     onClick={() => setIsCatalogOpen(true)}
                                     disabled={isAddingCatalog}
+                                    aria-label="Добавить из справочника"
                                 >
                                     <BookOpen className="size-4" />
-                                    <span className="truncate">Из справочника</span>
+                                    <span className="hidden sm:inline">Из справочника</span>
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>Выбрать материалы из каталога</TooltipContent>

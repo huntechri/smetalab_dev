@@ -107,13 +107,19 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-start justify-between gap-3 sm:items-center">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Поставщики материалов</h1>
           <p className="text-muted-foreground text-sm">Всего: {totalLabel}</p>
         </div>
-        <Button onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}>
-          <Plus className="mr-2 h-4 w-4" />Добавить
+        <Button
+          onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
+          size="sm"
+          className="shrink-0 size-8 p-0 sm:size-auto sm:px-3"
+          aria-label="Добавить поставщика"
+        >
+          <Plus className="h-4 w-4" />
+          <span className="hidden sm:inline">Добавить</span>
         </Button>
       </div>
 
@@ -155,7 +161,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
       {canLoadMore && (
         <div className="flex justify-center">
-          <Button variant="outline" onClick={() => { void loadPage(); }} disabled={isLoadingMore}>
+          <Button variant="outline" size="sm" className="text-xs sm:text-sm" onClick={() => { void loadPage(); }} disabled={isLoadingMore}>
             {isLoadingMore ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             Загрузить еще
           </Button>

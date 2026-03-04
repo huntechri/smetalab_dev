@@ -110,14 +110,14 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                 </BreadcrumbList>
             </Breadcrumb>
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-start justify-between gap-3 sm:items-center">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight">Контрагенты</h1>
                     <p className="text-muted-foreground text-sm">Управление заказчиками, подрядчиками и поставщиками.</p>
                 </div>
-                <Button onClick={handleCreate}>
-                    <Plus className="mr-2 h-4 w-4" />
-                    Добавить
+                <Button onClick={handleCreate} size="sm" className="shrink-0 size-8 p-0 sm:size-auto sm:px-3" aria-label="Добавить контрагента">
+                    <Plus className="h-4 w-4" />
+                    <span className="hidden sm:inline">Добавить</span>
                 </Button>
             </div>
 
@@ -127,7 +127,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                 onEndReached={handleLoadMore}
                 actions={
                     canLoadMore ? (
-                        <Button variant="outline" size="sm" onClick={handleLoadMore} disabled={isLoadingMore}>
+                        <Button variant="outline" size="sm" className="text-xs sm:text-sm" onClick={handleLoadMore} disabled={isLoadingMore}>
                             {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
                             {isLoadingMore ? "Загрузка..." : "Загрузить ещё"}
                         </Button>
