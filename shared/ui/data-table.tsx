@@ -309,19 +309,19 @@ export function DataTable<TData, TValue>({
                                         {headerGroup.headers.map((header) => {
                                             const isSortable = header.column.getCanSort()
                                             const sortDirection = header.column.getIsSorted()
-                                            const ariaSort = isSortable
+                                            const ariaSort = (isSortable
                                                 ? sortDirection === "asc"
                                                     ? "ascending"
                                                     : sortDirection === "desc"
                                                         ? "descending"
                                                         : "none"
-                                                : undefined
+                                                : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
 
                                             return (
                                                 <th
                                                     key={header.id}
                                                     className="h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
-                                                    style={{ width: header.getSize() }}
+                                                    style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
                                                     {header.isPlaceholder ? null : (
@@ -393,13 +393,13 @@ export function DataTable<TData, TValue>({
                                             {headerGroup.headers.map((header) => {
                                                 const isSortable = header.column.getCanSort()
                                                 const sortDirection = header.column.getIsSorted()
-                                                const ariaSort = isSortable
+                                                const ariaSort = (isSortable
                                                     ? sortDirection === "asc"
                                                         ? "ascending"
                                                         : sortDirection === "desc"
                                                             ? "descending"
                                                             : "none"
-                                                    : undefined
+                                                    : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
 
                                                 return (
                                                     <th
@@ -408,7 +408,7 @@ export function DataTable<TData, TValue>({
                                                             "h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
                                                             isAiMode && "border-indigo-100/50 text-indigo-900/60 bg-indigo-50/10"
                                                         )}
-                                                        style={{ width: header.getSize() }}
+                                                        style={{ width: `${header.getSize()}px` }}
                                                         aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (
