@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, useTransition } from "react";
+import { useMemo, useState, useTransition, useEffect } from "react";
+import { useDebounce } from "@/hooks/use-debounce";
 import { CounterpartyRow } from "@/types/counterparty-row";
 import { columns } from "../components/columns";
 import { DataTable } from "@/shared/ui/data-table";
 import { Button } from "@/shared/ui/button";
-import { Loader2, Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
 import {
@@ -32,8 +33,52 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
     const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
     const [rowsCount, setRowsCount] = useState(totalCount);
+
+    // Search state
+    const [searchTerm, setSearchTerm] = useState("");
+    const debouncedSearchTerm = useDebounce(searchTerm, 500);
+    const [isSearching, startSearchTransition] = useTransition();
+
+    // Table height for mobile
+    const [tableHeight, setTableHeight] = useState("600px");
+
+    useEffect(() => {
+        const updateHeight = () => {
+            // 400px is roughly 6 rows + header
+            setTableHeight(window.innerWidth < 768 ? "400px" : "600px");
+        };
+
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+
     const [isLoadingMore, startLoadMoreTransition] = useTransition();
     const { toast } = useAppToast();
+
+    // Handle search changes
+    useEffect(() => {
+        // Skip initial render if empty
+        if (debouncedSearchTerm === "" && rows.length === initialData.length) {
+            return;
+        }
+
+        startSearchTransition(async () => {
+            const result = await fetchCounterpartiesPage({
+                offset: 0,
+                limit: PAGE_SIZE,
+                search: debouncedSearchTerm || undefined,
+            });
+
+            if (!result.success) {
+                toast({ variant: "destructive", title: result.message || "Не удалось выполнить поиск" });
+                return;
+            }
+
+            setRows(result.data.data);
+            setRowsCount(result.data.count);
+        });
+    }, [debouncedSearchTerm, initialData.length, toast]);
 
     const handleCreate = () => {
         setEditingCounterparty(null);
@@ -83,7 +128,11 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
         }
 
         startLoadMoreTransition(async () => {
-            const result = await fetchCounterpartiesPage({ offset: rows.length, limit: PAGE_SIZE });
+            const result = await fetchCounterpartiesPage({
+                offset: rows.length,
+                limit: PAGE_SIZE,
+                search: debouncedSearchTerm || undefined
+            });
 
             if (!result.success) {
                 toast({ variant: "destructive", title: result.message || "Не удалось загрузить данные" });
@@ -101,8 +150,8 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     };
 
     return (
-        <div className="space-y-6 p-1 md:p-0">
-            <Breadcrumb>
+        <div className="space-y-6">
+            <Breadcrumb className="px-1 md:px-0">
                 <BreadcrumbList>
                     <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
                     <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
@@ -110,28 +159,51 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                 </BreadcrumbList>
             </Breadcrumb>
 
-            <div className="flex items-start justify-between gap-3 sm:items-center">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-1 md:px-0 mb-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight">Контрагенты</h1>
-                    <p className="text-muted-foreground text-sm">Управление заказчиками, подрядчиками и поставщиками.</p>
+                    <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Контрагенты</h1>
+                    <p className="text-sm text-muted-foreground md:text-base">Управление заказчиками и подрядчиками.</p>
                 </div>
-                <Button onClick={handleCreate} size="sm" className="shrink-0 size-8 p-0 sm:size-auto sm:px-3" aria-label="Добавить контрагента">
-                    <Plus className="h-4 w-4" />
-                    <span className="hidden sm:inline">Добавить</span>
-                </Button>
+                <div className="hidden" aria-hidden="true" />
             </div>
 
             <DataTable
                 columns={columns}
                 data={rows}
+                height={tableHeight}
+                filterColumn="name"
+                filterPlaceholder="Поиск по названию..."
+                externalSearchValue={searchTerm}
+                onSearchValueChange={setSearchTerm}
+                isSearching={isSearching}
                 onEndReached={handleLoadMore}
                 actions={
-                    canLoadMore ? (
-                        <Button variant="outline" size="sm" className="text-xs sm:text-sm" onClick={handleLoadMore} disabled={isLoadingMore}>
-                            {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
-                            {isLoadingMore ? "Загрузка..." : "Загрузить ещё"}
+                    <div className="flex items-center gap-2 w-full sm:w-auto">
+                        {canLoadMore && (
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                className="h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+                                onClick={handleLoadMore}
+                                disabled={isLoadingMore}
+                            >
+                                {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                                <span className="hidden sm:inline">Загрузить ещё</span>
+                                <span className="sm:hidden">Ещё</span>
+                            </Button>
+                        )}
+                        <Button
+                            onClick={handleCreate}
+                            variant="outline"
+                            size="sm"
+                            className="shrink-0 h-8 px-0 sm:px-3 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto size-8 sm:size-auto"
+                            aria-label="Добавить контрагента"
+                        >
+                            <Plus className="h-4 w-4 sm:mr-1" />
+                            <span className="hidden sm:inline">Добавить</span>
+                            <span className="sm:hidden">Добавить</span>
                         </Button>
-                    ) : undefined
+                    </div>
                 }
                 meta={{
                     onEdit: handleEdit,

@@ -9,7 +9,7 @@ export function ActiveTeamIndicator() {
 
   if (loading) {
     return (
-      <Badge variant="outline" className="text-xs">
+      <Badge variant="secondary" className="text-xs animate-pulse">
         Команда загружается
       </Badge>
     );
@@ -19,7 +19,7 @@ export function ActiveTeamIndicator() {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge variant="destructive" className="text-xs">
+          <Badge variant="destructive" className="text-xs font-semibold">
             Команда не выбрана
           </Badge>
         </TooltipTrigger>
@@ -33,7 +33,7 @@ export function ActiveTeamIndicator() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge variant="outline" className="text-xs">
+        <Badge variant="secondary" className="text-xs font-semibold bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100/50 transition-colors">
           {team.name}
         </Badge>
       </TooltipTrigger>

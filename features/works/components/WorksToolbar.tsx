@@ -42,7 +42,7 @@ export function WorksToolbar({
         <>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs md:text-sm" onClick={handleImportClick} disabled={isImporting}>
+                    <Button variant="outline" className="flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs" onClick={handleImportClick} disabled={isImporting}>
                         {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
                         <span className="hidden sm:inline">Импорт</span>
                     </Button>
@@ -52,7 +52,7 @@ export function WorksToolbar({
 
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex-1 sm:flex-none text-xs md:text-sm" onClick={handleExport} disabled={isExporting}>
+                    <Button variant="outline" className="flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs" onClick={handleExport} disabled={isExporting}>
                         {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
                         <span className="hidden sm:inline">Экспорт</span>
                     </Button>
@@ -67,8 +67,7 @@ export function WorksToolbar({
                             <AlertDialogTrigger asChild>
                                 <Button
                                     variant="destructive"
-                                    size="sm"
-                                    className={`flex-1 sm:flex-none text-xs md:text-sm ${isActionDisabled ? 'pointer-events-none' : ''}`}
+                                    className={`flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ${isActionDisabled ? 'pointer-events-none' : ''}`}
                                     disabled={isActionDisabled}
                                 >
                                     {isDeletingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
