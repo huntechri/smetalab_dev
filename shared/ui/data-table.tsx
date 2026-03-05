@@ -186,11 +186,11 @@ export function DataTable<TData, TValue>({
             <div className="space-y-4">
                 {/* Search Filter */}
                 {filterColumn && (
-                    <div className="flex flex-col gap-2 px-1 md:px-0 sm:flex-row sm:items-center sm:justify-between">
-                        {/* Search Input (Full width on mobile, flex-1 on desktop) */}
-                        <div className="w-full sm:flex-1">
+                    <div className="flex items-center justify-between gap-2 px-1 md:px-0">
+                        {/* Search Input (Flex-1 on all screen sizes) */}
+                        <div className="flex-1 min-w-0 max-w-sm">
                             <div className={cn(
-                                "relative w-full sm:max-w-sm group/search transition-all duration-300",
+                                "relative w-full group/search transition-all duration-300",
                                 isAiMode && "sm:max-w-md"
                             )}>
                                 {isSearching ? (
@@ -240,13 +240,13 @@ export function DataTable<TData, TValue>({
                             </div>
                         </div>
 
-                        {/* AI Toggle and Actions (Scrollable row on mobile, auto-width on desktop) */}
-                        <div className="flex w-full sm:w-auto items-center justify-between sm:justify-start gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:pb-0">
+                        {/* AI Toggle and Actions */}
+                        <div className="flex items-center gap-2 shrink-0">
                             {showAiSearch && onSearch && (
-                                <div className="flex shrink-0 w-24 sm:w-auto items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
+                                <div className="flex shrink-0 items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <div className="flex items-center gap-2 cursor-help">
+                                            <div className="flex items-center gap-3 cursor-help">
                                                 <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
                                                 <span className="text-xs font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                             </div>
@@ -264,12 +264,12 @@ export function DataTable<TData, TValue>({
                                             }
                                         }}
                                         aria-label="Переключатель ИИ поиска"
-                                        className="mx-auto select-none"
+                                        className="select-none"
                                     />
                                 </div>
                             )}
                             {actions && (
-                                <div className="flex flex-1 sm:flex-none w-full sm:w-auto items-center justify-between sm:justify-start gap-2" role="group" aria-label="Действия таблицы">
+                                <div className="flex items-center gap-2" role="group" aria-label="Действия таблицы">
                                     {actions}
                                 </div>
                             )}
