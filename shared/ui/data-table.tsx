@@ -187,9 +187,10 @@ export function DataTable<TData, TValue>({
                 {/* Search Filter */}
                 {filterColumn && (
                     <div className="flex flex-col gap-2 px-1 md:px-0 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+                        {/* Search Input (Full width on mobile, flex-1 on desktop) */}
+                        <div className="w-full sm:flex-1">
                             <div className={cn(
-                                "relative flex-1 sm:max-w-sm group/search transition-all duration-300",
+                                "relative w-full sm:max-w-sm group/search transition-all duration-300",
                                 isAiMode && "sm:max-w-md"
                             )}>
                                 {isSearching ? (
@@ -237,8 +238,12 @@ export function DataTable<TData, TValue>({
                                     </div>
                                 )}
                             </div>
+                        </div>
+
+                        {/* AI Toggle and Actions (Scrollable row on mobile, auto-width on desktop) */}
+                        <div className="flex w-full sm:w-auto items-center justify-between sm:justify-start gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden sm:overflow-visible sm:pb-0">
                             {showAiSearch && onSearch && (
-                                <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-indigo-100 bg-indigo-50/30 w-full sm:w-auto justify-between sm:justify-start">
+                                <div className="flex shrink-0 w-24 sm:w-auto items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <div className="flex items-center gap-2 cursor-help">
@@ -259,15 +264,16 @@ export function DataTable<TData, TValue>({
                                             }
                                         }}
                                         aria-label="Переключатель ИИ поиска"
+                                        className="mx-auto select-none"
                                     />
                                 </div>
                             )}
+                            {actions && (
+                                <div className="flex flex-1 sm:flex-none w-full sm:w-auto items-center justify-between sm:justify-start gap-2" role="group" aria-label="Действия таблицы">
+                                    {actions}
+                                </div>
+                            )}
                         </div>
-                        {actions && (
-                            <div className="flex flex-wrap items-center justify-end gap-2 w-full sm:w-auto sm:justify-start" role="group" aria-label="Действия таблицы">
-                                {actions}
-                            </div>
-                        )}
                     </div>
                 )}
 
