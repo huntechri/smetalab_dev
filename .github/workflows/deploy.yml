@@ -10,9 +10,9 @@ permissions:
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "master"]
   pull_request:
-    branches: ["main"]
+    branches: ["main", "master"]
     types: [opened, synchronize, reopened, ready_for_review]
   schedule:
     - cron: '23 5 * * 1'  # Weekly on Monday at 05:23 UTC
@@ -275,7 +275,7 @@ jobs:
   deploy-preview:
     name: Deploy to Vercel Preview
     needs: [ci]
-    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     environment:
       name: "preview"
@@ -366,7 +366,9 @@ jobs:
   deploy-production:
     name: Deploy to Vercel Production
     needs: [codeql-analysis, trivy-scan, dependency-check, ci]
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: >-
+      (github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
     runs-on: ubuntu-latest
     environment:
       name: "production"
@@ -374,6 +376,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
