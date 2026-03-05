@@ -312,8 +312,8 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" className="opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
-                                <Settings className="h-4 w-4" />
+                            <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100 px-1 text-xs font-normal" aria-label="Действия" title="Действия">
+                                Действия
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
