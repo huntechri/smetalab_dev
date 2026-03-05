@@ -186,10 +186,11 @@ export function DataTable<TData, TValue>({
             <div className="space-y-4">
                 {/* Search Filter */}
                 {filterColumn && (
-                    <div className="flex flex-col gap-2 px-1 md:px-0 sm:flex-row sm:items-center sm:justify-between">
-                        <div className="flex flex-1 flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className="flex items-center justify-between gap-2 px-1 md:px-0">
+                        {/* Search Input (Flex-1 on all screen sizes) */}
+                        <div className="flex-1 min-w-0 max-w-sm">
                             <div className={cn(
-                                "relative flex-1 sm:max-w-sm group/search transition-all duration-300",
+                                "relative w-full group/search transition-all duration-300",
                                 isAiMode && "sm:max-w-md"
                             )}>
                                 {isSearching ? (
@@ -237,11 +238,15 @@ export function DataTable<TData, TValue>({
                                     </div>
                                 )}
                             </div>
+                        </div>
+
+                        {/* AI Toggle and Actions */}
+                        <div className="flex items-center gap-2 shrink-0">
                             {showAiSearch && onSearch && (
-                                <div className="flex items-center gap-2 px-2 py-1.5 rounded-lg border border-indigo-100 bg-indigo-50/30 w-full sm:w-auto justify-between sm:justify-start">
+                                <div className="flex shrink-0 items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
                                     <Tooltip>
                                         <TooltipTrigger asChild>
-                                            <div className="flex items-center gap-2 cursor-help">
+                                            <div className="flex items-center gap-3 cursor-help">
                                                 <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
                                                 <span className="text-xs font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                             </div>
@@ -259,15 +264,16 @@ export function DataTable<TData, TValue>({
                                             }
                                         }}
                                         aria-label="Переключатель ИИ поиска"
+                                        className="select-none"
                                     />
                                 </div>
                             )}
+                            {actions && (
+                                <div className="flex items-center gap-2" role="group" aria-label="Действия таблицы">
+                                    {actions}
+                                </div>
+                            )}
                         </div>
-                        {actions && (
-                            <div className="flex flex-wrap items-center justify-end gap-2 w-full sm:w-auto sm:justify-start" role="group" aria-label="Действия таблицы">
-                                {actions}
-                            </div>
-                        )}
                     </div>
                 )}
 
@@ -303,19 +309,19 @@ export function DataTable<TData, TValue>({
                                         {headerGroup.headers.map((header) => {
                                             const isSortable = header.column.getCanSort()
                                             const sortDirection = header.column.getIsSorted()
-                                            const ariaSort = isSortable
+                                            const ariaSort = (isSortable
                                                 ? sortDirection === "asc"
                                                     ? "ascending"
                                                     : sortDirection === "desc"
                                                         ? "descending"
                                                         : "none"
-                                                : undefined
+                                                : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
 
                                             return (
                                                 <th
                                                     key={header.id}
                                                     className="h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
-                                                    style={{ width: header.getSize() }}
+                                                    style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
                                                     {header.isPlaceholder ? null : (
@@ -387,13 +393,13 @@ export function DataTable<TData, TValue>({
                                             {headerGroup.headers.map((header) => {
                                                 const isSortable = header.column.getCanSort()
                                                 const sortDirection = header.column.getIsSorted()
-                                                const ariaSort = isSortable
+                                                const ariaSort = (isSortable
                                                     ? sortDirection === "asc"
                                                         ? "ascending"
                                                         : sortDirection === "desc"
                                                             ? "descending"
                                                             : "none"
-                                                    : undefined
+                                                    : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
 
                                                 return (
                                                     <th
@@ -402,7 +408,7 @@ export function DataTable<TData, TValue>({
                                                             "h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
                                                             isAiMode && "border-indigo-100/50 text-indigo-900/60 bg-indigo-50/10"
                                                         )}
-                                                        style={{ width: header.getSize() }}
+                                                        style={{ width: `${header.getSize()}px` }}
                                                         aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (

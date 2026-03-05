@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { DataTable } from "@/shared/ui/data-table";
 import { columns } from "./columns";
 import { MaterialRow } from '@/types/material-row';
@@ -34,11 +35,24 @@ export function MaterialsTableWrapper({
     actions,
     tableActions
 }: MaterialsTableWrapperProps) {
+    const [tableHeight, setTableHeight] = React.useState("600px");
+
+    React.useEffect(() => {
+        const updateHeight = () => {
+            // 400px is roughly 6 rows + header
+            setTableHeight(window.innerWidth < 768 ? "400px" : "600px");
+        };
+
+        updateHeight();
+        window.addEventListener('resize', updateHeight);
+        return () => window.removeEventListener('resize', updateHeight);
+    }, []);
+
     return (
         <DataTable
             columns={columns}
             data={data}
-            height="600px"
+            height={tableHeight}
             filterColumn="name"
             filterPlaceholder="Поиск по наименованию..."
             showAiSearch={true}

@@ -45,6 +45,7 @@ const counterpartySchema = z.object({
 const counterpartiesPageSchema = z.object({
     limit: z.number().int().min(1).max(100).optional(),
     offset: z.number().int().min(0).optional(),
+    search: z.string().optional(),
 });
 
 type PgErrorLike = {
@@ -109,8 +110,8 @@ export const fetchCounterpartiesPage = safeAction<
     [z.infer<typeof counterpartiesPageSchema>?]
 >(
     async ({ team }, payload = {}) => {
-        const { limit = 50, offset = 0 } = counterpartiesPageSchema.parse(payload ?? {});
-        const page = await getCounterparties(team.id, { limit, offset });
+        const { limit = 50, offset = 0, search } = counterpartiesPageSchema.parse(payload ?? {});
+        const page = await getCounterparties(team.id, { limit, offset, search });
         return success({ data: page.data, count: page.count });
     },
     { name: 'fetchCounterpartiesPage' }
