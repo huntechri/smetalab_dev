@@ -162,7 +162,6 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-1 md:px-0 mb-4">
                 <div>
                     <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Контрагенты</h1>
-                    <p className="text-sm text-muted-foreground md:text-base">Управление заказчиками и подрядчиками.</p>
                 </div>
                 <div className="hidden" aria-hidden="true" />
             </div>
@@ -196,12 +195,11 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                             onClick={handleCreate}
                             variant="outline"
                             size="sm"
-                            className="shrink-0 h-8 px-0 sm:px-3 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto size-8 sm:size-auto"
+                            className="shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto"
                             aria-label="Добавить контрагента"
                         >
-                            <Plus className="h-4 w-4 sm:mr-1" />
-                            <span className="hidden sm:inline">Добавить</span>
-                            <span className="sm:hidden">Добавить</span>
+                            <Plus className="h-4 w-4 mr-1" />
+                            <span>Добавить</span>
                         </Button>
                     </div>
                 }

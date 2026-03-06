@@ -6,7 +6,7 @@ const guideLinks = [
     { href: '/app/guide/works', title: 'Работы', description: 'Справочник работ и базовые нормы.' },
     { href: '/app/guide/materials', title: 'Материалы', description: 'Материалы, единицы и цены.' },
     { href: '/app/guide/counterparties', title: 'Контрагенты', description: 'Заказчики и подрядчики.' },
-    { href: '/app/guide/material-suppliers', title: 'Поставщики материалов', description: 'Поставщики и контактные данные.' },
+    { href: '/app/guide/material-suppliers', title: 'Поставщики', description: 'Поставщики и контактные данные.' },
 ] as const;
 
 export function GuideScreen() {
