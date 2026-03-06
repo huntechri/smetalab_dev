@@ -69,3 +69,20 @@ export const copyGlobalPurchasesToNextDayAction = safeAction(
   async ({ team }, sourceDate: string) => GlobalPurchasesService.copyRowsToNextDay(team.id, sourceDate),
   { name: 'copyGlobalPurchasesToNextDayAction' }
 );
+
+
+export const importGlobalPurchasesAction = safeAction(
+  async ({ team }, payload: {
+    rows: Array<{
+      purchaseDate: string;
+      projectName: string;
+      materialName: string;
+      unit: string;
+      qty: number;
+      price: number;
+      note: string;
+      supplierName: string;
+    }>;
+  }) => GlobalPurchasesService.importRows(team.id, payload),
+  { name: 'importGlobalPurchasesAction' }
+);

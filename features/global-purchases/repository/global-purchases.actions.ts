@@ -5,9 +5,11 @@ import {
     patchGlobalPurchasesBatchAction,
     removeGlobalPurchaseAction,
     copyGlobalPurchasesToNextDayAction,
+    importGlobalPurchasesAction,
 } from '@/app/actions/global-purchases';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, PurchaseRowBatchPatchPayload } from '../types/dto';
+import type { ImportablePurchaseRow } from '../lib/import-export';
 
 const toPayloadFromCatalog = (material: CatalogMaterial, projectId: string | null, purchaseDate: string) => {
     const safePrice = Number(material.price);
@@ -88,6 +90,17 @@ export const globalPurchasesActionRepo = {
 
     async remove(rowId: string): Promise<{ removedId: string }> {
         const result = await removeGlobalPurchaseAction(rowId);
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
+        return result.data;
+    },
+
+
+    async importRows(rows: ImportablePurchaseRow[]): Promise<PurchaseRow[]> {
+        const result = await importGlobalPurchasesAction({ rows });
 
         if (!result.success) {
             throw new Error(result.error.message);

@@ -5,6 +5,7 @@ import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { patchPurchaseRow } from '../lib/rows';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
+import type { ImportablePurchaseRow } from '../lib/import-export';
 
 const PATCH_DEBOUNCE_MS = 180;
 
@@ -198,6 +199,12 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         }
     }, [finishPendingMany, rows, startPending]);
 
+    const importRows = useCallback(async (payloadRows: ImportablePurchaseRow[]) => {
+        const createdRows = await globalPurchasesActionRepo.importRows(payloadRows);
+        setRows((prev) => sortRowsByProjectId([...prev, ...createdRows]));
+        return createdRows;
+    }, []);
+
     const copyToNextDay = useCallback(async () => {
         const createdRows = await globalPurchasesActionRepo.copyToNextDay(range.from);
         return createdRows;
@@ -225,6 +232,7 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         addCatalogRow,
         updateRow,
         removeRow,
+        importRows,
         copyToNextDay,
         totals,
         addedMaterialNames,
