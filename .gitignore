@@ -65,3 +65,7 @@ debug.ts
 
 # Donor / reference code
 DONOR/
+
+# Generated codemod reports
+/reports/button-audit.json
+/reports/button-canonical-spec.md
