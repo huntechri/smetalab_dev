@@ -183,9 +183,9 @@ export function CreateCounterpartySheet({
                             <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6">
                                 <Tabs defaultValue="general" className="w-full">
                                     <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
-                                        <TabsTrigger value="general" className="text-xs sm:text-sm">Общее</TabsTrigger>
-                                        <TabsTrigger value="details" className="text-xs sm:text-sm">Детали</TabsTrigger>
-                                        <TabsTrigger value="bank" className="text-xs sm:text-sm">Банк</TabsTrigger>
+                                        <TabsTrigger value="general" className="text-xs">Общее</TabsTrigger>
+                                        <TabsTrigger value="details" className="text-xs">Детали</TabsTrigger>
+                                        <TabsTrigger value="bank" className="text-xs">Банк</TabsTrigger>
                                     </TabsList>
 
                                     <TabsContent value="general" className="space-y-3 sm:space-y-4">
@@ -194,72 +194,76 @@ export function CreateCounterpartySheet({
                                             name="name"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Наименование / ФИО</FormLabel>
+                                                    <FormLabel className="text-xs">Наименование / ФИО</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Введите название..." {...field} />
+                                                        <Input placeholder="Введите название..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
                                         />
 
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                            <FormField
-                                                control={form.control}
-                                                name="type"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Тип</FormLabel>
-                                                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <div className="flex flex-row gap-3 sm:gap-6 items-start">
+                                            <div className="flex-1 min-w-0">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="legalStatus"
+                                                    render={({ field }) => (
+                                                        <FormItem className="space-y-1.5">
+                                                            <FormLabel className="text-xs">Правовой статус</FormLabel>
                                                             <FormControl>
-                                                                <SelectTrigger>
-                                                                    <SelectValue placeholder="Тип" />
-                                                                </SelectTrigger>
+                                                                <RadioGroup
+                                                                    onValueChange={field.onChange}
+                                                                    defaultValue={field.value}
+                                                                    className="flex flex-row items-center gap-2 sm:gap-4 h-8"
+                                                                >
+                                                                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                                                                        <FormControl>
+                                                                            <RadioGroupItem value="individual" className="h-3.5 w-3.5" />
+                                                                        </FormControl>
+                                                                        <FormLabel className="font-normal text-[10px] sm:text-xs whitespace-nowrap">
+                                                                            Физ. лицо
+                                                                        </FormLabel>
+                                                                    </FormItem>
+                                                                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                                                                        <FormControl>
+                                                                            <RadioGroupItem value="company" className="h-3.5 w-3.5" />
+                                                                        </FormControl>
+                                                                        <FormLabel className="font-normal text-[10px] sm:text-xs whitespace-nowrap">
+                                                                            Юр. лицо
+                                                                        </FormLabel>
+                                                                    </FormItem>
+                                                                </RadioGroup>
                                                             </FormControl>
-                                                            <SelectContent>
-                                                                <SelectItem value="customer">Заказчик</SelectItem>
-                                                                <SelectItem value="contractor">Подрядчик</SelectItem>
-                                                                <SelectItem value="supplier">Поставщик</SelectItem>
-                                                            </SelectContent>
-                                                        </Select>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
-                                            <FormField
-                                                control={form.control}
-                                                name="legalStatus"
-                                                render={({ field }) => (
-                                                    <FormItem className="space-y-3">
-                                                        <FormLabel>Правовой статус</FormLabel>
-                                                        <FormControl>
-                                                            <RadioGroup
-                                                                onValueChange={field.onChange}
-                                                                defaultValue={field.value}
-                                                                className="flex flex-col space-y-1"
-                                                            >
-                                                                <FormItem className="flex items-center space-x-3 space-y-0">
-                                                                    <FormControl>
-                                                                        <RadioGroupItem value="individual" />
-                                                                    </FormControl>
-                                                                    <FormLabel className="font-normal">
-                                                                        Физ. лицо
-                                                                    </FormLabel>
-                                                                </FormItem>
-                                                                <FormItem className="flex items-center space-x-3 space-y-0">
-                                                                    <FormControl>
-                                                                        <RadioGroupItem value="company" />
-                                                                    </FormControl>
-                                                                    <FormLabel className="font-normal">
-                                                                        Юр. лицо
-                                                                    </FormLabel>
-                                                                </FormItem>
-                                                            </RadioGroup>
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
+                                            <div className="w-[120px] sm:w-48 shrink-0">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="type"
+                                                    render={({ field }) => (
+                                                        <FormItem className="space-y-1.5">
+                                                            <FormLabel className="text-xs">Тип</FormLabel>
+                                                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                                                <FormControl>
+                                                                    <SelectTrigger className="h-8 text-xs px-2">
+                                                                        <SelectValue placeholder="Тип" />
+                                                                    </SelectTrigger>
+                                                                </FormControl>
+                                                                <SelectContent>
+                                                                    <SelectItem value="customer" className="text-xs">Заказчик</SelectItem>
+                                                                    <SelectItem value="contractor" className="text-xs">Подрядчик</SelectItem>
+                                                                    <SelectItem value="supplier" className="text-xs">Поставщик</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
 
                                         <Separator />
@@ -270,42 +274,44 @@ export function CreateCounterpartySheet({
                                                 Контактная информация
                                             </div>
 
-                                            <FormField
-                                                control={form.control}
-                                                name="phone"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Телефон</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="+7..." {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                            <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                                                <FormField
+                                                    control={form.control}
+                                                    name="phone"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-xs">Телефон</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="+7..." className="h-8 text-xs placeholder:text-xs px-2" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
 
-                                            <FormField
-                                                control={form.control}
-                                                name="email"
-                                                render={({ field }) => (
-                                                    <FormItem>
-                                                        <FormLabel>Email</FormLabel>
-                                                        <FormControl>
-                                                            <Input placeholder="example@mail.ru" {...field} />
-                                                        </FormControl>
-                                                        <FormMessage />
-                                                    </FormItem>
-                                                )}
-                                            />
+                                                <FormField
+                                                    control={form.control}
+                                                    name="email"
+                                                    render={({ field }) => (
+                                                        <FormItem>
+                                                            <FormLabel className="text-xs">Email</FormLabel>
+                                                            <FormControl>
+                                                                <Input placeholder="example@mail.ru" className="h-8 text-xs placeholder:text-xs px-2" {...field} />
+                                                            </FormControl>
+                                                            <FormMessage />
+                                                        </FormItem>
+                                                    )}
+                                                />
+                                            </div>
 
                                             <FormField
                                                 control={form.control}
                                                 name="address"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Адрес</FormLabel>
+                                                        <FormLabel className="text-xs">Адрес</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Город, улица, дом..." {...field} />
+                                                            <Input placeholder="Город, улица, дом..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -327,9 +333,9 @@ export function CreateCounterpartySheet({
                                                         name="birthDate"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Дата рождения</FormLabel>
+                                                                <FormLabel className="text-xs">Дата рождения</FormLabel>
                                                                 <FormControl>
-                                                                    <Input type="date" {...field} />
+                                                                    <Input type="date" className="h-8 text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -340,9 +346,9 @@ export function CreateCounterpartySheet({
                                                         name="passportSeriesNumber"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Серия и номер</FormLabel>
+                                                                <FormLabel className="text-xs">Серия и номер</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="0000 000000" {...field} />
+                                                                    <Input placeholder="0000 000000" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -354,9 +360,9 @@ export function CreateCounterpartySheet({
                                                     name="passportIssuedBy"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>Кем выдан</FormLabel>
+                                                            <FormLabel className="text-xs">Кем выдан</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="УФМС..." {...field} />
+                                                                <Input placeholder="УФМС..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -368,9 +374,9 @@ export function CreateCounterpartySheet({
                                                         name="passportIssuedDate"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Дата выдачи</FormLabel>
+                                                                <FormLabel className="text-xs">Дата выдачи</FormLabel>
                                                                 <FormControl>
-                                                                    <Input type="date" {...field} />
+                                                                    <Input type="date" className="h-8 text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -381,9 +387,9 @@ export function CreateCounterpartySheet({
                                                         name="departmentCode"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>Код подразделения</FormLabel>
+                                                                <FormLabel className="text-xs">Код подразделения</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="000-000" {...field} />
+                                                                    <Input placeholder="000-000" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -402,9 +408,9 @@ export function CreateCounterpartySheet({
                                                     name="inn"
                                                     render={({ field }) => (
                                                         <FormItem>
-                                                            <FormLabel>ИНН</FormLabel>
+                                                            <FormLabel className="text-xs">ИНН</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="ИНН" {...field} />
+                                                                <Input placeholder="ИНН" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
@@ -416,9 +422,9 @@ export function CreateCounterpartySheet({
                                                         name="kpp"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>КПП</FormLabel>
+                                                                <FormLabel className="text-xs">КПП</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="КПП" {...field} />
+                                                                    <Input placeholder="КПП" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -429,9 +435,9 @@ export function CreateCounterpartySheet({
                                                         name="ogrn"
                                                         render={({ field }) => (
                                                             <FormItem>
-                                                                <FormLabel>ОГРН</FormLabel>
+                                                                <FormLabel className="text-xs">ОГРН</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="ОГРН" {...field} />
+                                                                    <Input placeholder="ОГРН" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
@@ -452,9 +458,9 @@ export function CreateCounterpartySheet({
                                             name="bankName"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Название банка</FormLabel>
+                                                    <FormLabel className="text-xs">Название банка</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="ПАО Сбербанк..." {...field} />
+                                                        <Input placeholder="ПАО Сбербанк..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -465,9 +471,9 @@ export function CreateCounterpartySheet({
                                             name="bankAccount"
                                             render={({ field }) => (
                                                 <FormItem>
-                                                    <FormLabel>Расчетный счет</FormLabel>
+                                                    <FormLabel className="text-xs">Расчетный счет</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="407..." {...field} />
+                                                        <Input placeholder="407..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
@@ -479,9 +485,9 @@ export function CreateCounterpartySheet({
                                                 name="corrAccount"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>Корр. счет</FormLabel>
+                                                        <FormLabel className="text-xs">Корр. счет</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="301..." {...field} />
+                                                            <Input placeholder="301..." className="h-8 text-xs placeholder:text-xs" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -492,9 +498,9 @@ export function CreateCounterpartySheet({
                                                 name="bankInn"
                                                 render={({ field }) => (
                                                     <FormItem>
-                                                        <FormLabel>ИНН Банка</FormLabel>
+                                                        <FormLabel className="text-xs">ИНН Банка</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="ИНН банка" {...field} />
+                                                            <Input placeholder="ИНН банка" className="h-8 text-xs placeholder:text-xs" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
@@ -511,12 +517,12 @@ export function CreateCounterpartySheet({
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="flex-1 h-9 sm:h-10 text-sm"
+                                    className="flex-1 h-8 text-xs"
                                     onClick={() => onOpenChange(false)}
                                 >
                                     Отмена
                                 </Button>
-                                <Button type="submit" className="flex-1 h-9 sm:h-10 text-sm" disabled={isPending}>
+                                <Button type="submit" className="flex-1 h-8 text-xs" disabled={isPending}>
                                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     {counterparty ? "Сохранить" : "Создать"}
                                 </Button>
