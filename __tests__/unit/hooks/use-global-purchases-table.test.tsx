@@ -8,6 +8,7 @@ const repoMocks = vi.hoisted(() => ({
     patch: vi.fn(),
     patchBatch: vi.fn(),
     remove: vi.fn(),
+    importRows: vi.fn(),
     copyToNextDay: vi.fn(),
 }));
 
@@ -32,6 +33,7 @@ describe('useGlobalPurchasesTable', () => {
         repoMocks.patch.mockReset();
         repoMocks.patchBatch.mockReset();
         repoMocks.remove.mockReset();
+        repoMocks.importRows.mockReset();
         repoMocks.copyToNextDay.mockReset();
     });
 
@@ -73,5 +75,22 @@ describe('useGlobalPurchasesTable', () => {
         });
 
         expect(result.current.rows.map((row) => row.id)).toEqual(['1', '2', '3']);
+    });
+
+    it('adds imported rows into table state', async () => {
+        repoMocks.importRows.mockResolvedValueOnce([
+            { id: '4', projectId: null, projectName: 'Объект', materialName: 'Кирпич', unit: 'шт', qty: 2, price: 25, amount: 50, note: '', source: 'manual', purchaseDate: '2026-01-15', supplierId: null, supplierName: null, supplierColor: null },
+        ]);
+
+        const { result } = renderHook(() => useGlobalPurchasesTable(baseRows, { from: '2026-01-15', to: '2026-01-15' }));
+
+        await act(async () => {
+            await result.current.importRows([
+                { purchaseDate: '2026-01-15', projectName: 'Объект', materialName: 'Кирпич', unit: 'шт', qty: 2, price: 25, note: '', supplierName: '' },
+            ]);
+        });
+
+        expect(repoMocks.importRows).toHaveBeenCalledTimes(1);
+        expect(result.current.rows.map((row) => row.id)).toEqual(['1', '2', '4']);
     });
 });

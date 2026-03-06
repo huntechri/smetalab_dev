@@ -6,6 +6,7 @@ import { describe, expect, it, vi } from 'vitest';
 const addManualRowMock = vi.fn();
 const addCatalogRowMock = vi.fn();
 const copyToNextDayMock = vi.fn();
+const importRowsMock = vi.fn();
 
 vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     useGlobalPurchasesTable: () => ({
@@ -17,6 +18,7 @@ vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
         addCatalogRow: addCatalogRowMock,
         updateRow: vi.fn().mockResolvedValue(undefined),
         removeRow: vi.fn().mockResolvedValue(undefined),
+        importRows: importRowsMock,
         copyToNextDay: copyToNextDayMock,
         totals: { amount: 0 },
         addedMaterialNames: new Set<string>(),

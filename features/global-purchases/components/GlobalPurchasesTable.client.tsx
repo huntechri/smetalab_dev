@@ -20,6 +20,8 @@ import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
+import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
+import { GlobalPurchasesImportExportActions } from './GlobalPurchasesImportExportActions';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -47,6 +49,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         addCatalogRow,
         updateRow,
         removeRow,
+        importRows,
         addedMaterialNames,
         pendingIds,
     } = useGlobalPurchasesTable(initialRows, initialRange);
@@ -138,6 +141,20 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         }
     };
 
+
+
+    const {
+        importInputRef,
+        handleExport,
+        handleImportClick,
+        handleImportFileChange,
+    } = useGlobalPurchasesImportExport({
+        displayedRows,
+        range,
+        importRows,
+        toast,
+    });
+
     const handleRangeChange = (nextRange: DateRange | undefined) => {
         if (!nextRange?.from) return;
 
@@ -172,6 +189,13 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 height="625px"
                 actions={(
                     <div className="flex flex-wrap items-center gap-2">
+                        <GlobalPurchasesImportExportActions
+                            importInputRef={importInputRef}
+                            onExport={handleExport}
+                            onImportClick={handleImportClick}
+                            onFileChange={handleImportFileChange}
+                        />
+
                         <Popover>
                             <Tooltip>
                                 <TooltipTrigger asChild>
