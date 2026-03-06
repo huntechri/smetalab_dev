@@ -62,7 +62,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                     </BreadcrumbList>
                 </Breadcrumb>
                 <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
+                    <h1 className="sr-only">{project.name}</h1>
                     <p className="text-muted-foreground">Управление проектом и мониторинг основных показателей</p>
                 </div>
             </div>
