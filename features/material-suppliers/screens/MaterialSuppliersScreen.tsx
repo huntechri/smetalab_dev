@@ -102,7 +102,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
       <div className="flex items-start justify-between gap-3 sm:items-center px-1 md:px-0">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Поставщики</h1>
+          <h1 className="text-title">Поставщики</h1>
         </div>
       </div>
 

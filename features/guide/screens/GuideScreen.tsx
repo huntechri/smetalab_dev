@@ -13,8 +13,8 @@ export function GuideScreen() {
     return (
         <div className="space-y-4">
             <header className="space-y-1">
-                <h1 className="text-2xl font-semibold">Справочники</h1>
-                <p className="text-sm text-muted-foreground">Выберите раздел для управления данными.</p>
+                <h1 className="text-title">Справочники</h1>
+                <p className="text-subtitle">Выберите раздел для управления данными.</p>
             </header>
 
             <div className="grid gap-3 md:grid-cols-2">
