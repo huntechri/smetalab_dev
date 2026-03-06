@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { MaterialSupplierRow } from '@/types/material-supplier-row';
 import { columns } from '../components/columns';
 import { DataTable } from '@/shared/ui/data-table';
@@ -32,13 +32,11 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
   const [suppliers, setSuppliers] = useState<MaterialSupplierRow[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
-  const [currentTotal, setCurrentTotal] = useState(totalCount);
   const [hasMore, setHasMore] = useState(initialData.length < totalCount);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const { handleDelete } = useMaterialSuppliersActions();
 
-  const isSearchMode = activeSearch.trim().length > 0;
   const canLoadMore = hasMore && !isLoadingMore;
 
   const applySupplierToList = useCallback((supplier: MaterialSupplierRow) => {
@@ -78,7 +76,6 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         return;
       }
 
-      setCurrentTotal(result.data.count);
       setHasMore(result.data.hasMore);
       setSuppliers((prev) => (reset ? result.data.data : [...prev, ...result.data.data]));
     } finally {
@@ -92,10 +89,6 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
     await loadPage({ reset: true, query: normalized });
   }, [loadPage]);
 
-  const totalLabel = useMemo(() => {
-    if (!isSearchMode) return currentTotal;
-    return `${suppliers.length} из ${currentTotal}`;
-  }, [currentTotal, isSearchMode, suppliers.length]);
 
   return (
     <div className="space-y-6 p-1 md:p-0">
@@ -103,24 +96,14 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         <BreadcrumbList>
           <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
           <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики материалов</BreadcrumbPage></BreadcrumbItem>
+          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики</BreadcrumbPage></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
-      <div className="flex items-start justify-between gap-3 sm:items-center">
+      <div className="flex items-start justify-between gap-3 sm:items-center px-1 md:px-0">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Поставщики материалов</h1>
-          <p className="text-muted-foreground text-sm">Всего: {totalLabel}</p>
+          <h1 className="text-2xl font-bold tracking-tight">Поставщики</h1>
         </div>
-        <Button
-          onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
-          size="sm"
-          className="shrink-0 size-8 p-0 sm:size-auto sm:px-3"
-          aria-label="Добавить поставщика"
-        >
-          <Plus className="h-4 w-4" />
-          <span className="hidden sm:inline">Добавить</span>
-        </Button>
       </div>
 
       <DataTable
@@ -132,6 +115,32 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         externalSearchValue={searchTerm}
         onSearchValueChange={setSearchTerm}
         onEndReached={() => { void loadPage(); }}
+        actions={
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            {canLoadMore && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+                onClick={() => { void loadPage(); }}
+                disabled={isLoadingMore}
+              >
+                {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+                <span>Ещё</span>
+              </Button>
+            )}
+            <Button
+              onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
+              variant="outline"
+              size="sm"
+              className="shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto"
+              aria-label="Добавить поставщика"
+            >
+              <Plus className="h-4 w-4 mr-1" />
+              <span>Добавить</span>
+            </Button>
+          </div>
+        }
         meta={{
           onEdit: (supplier) => {
             setEditingSupplier(supplier);
@@ -152,21 +161,11 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
                 setSuppliers((prev) => [row, ...prev]);
               },
               onDeleteSuccess: () => {
-                setCurrentTotal((prev) => Math.max(0, prev - 1));
               },
             });
           },
         }}
       />
-
-      {canLoadMore && (
-        <div className="flex justify-center">
-          <Button variant="outline" size="sm" className="text-xs sm:text-sm" onClick={() => { void loadPage(); }} disabled={isLoadingMore}>
-            {isLoadingMore ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Загрузить еще
-          </Button>
-        </div>
-      )}
 
       <CreateMaterialSupplierSheet
         open={isSheetOpen}
@@ -174,11 +173,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         materialSupplier={editingSupplier}
         tenantId={tenantId}
         onSaved={(supplier) => {
-          const isCreating = !editingSupplier;
           applySupplierToList(supplier);
-          if (isCreating && !isSearchMode) {
-            setCurrentTotal((prev) => prev + 1);
-          }
           setIsSheetOpen(false);
           setEditingSupplier(null);
         }}

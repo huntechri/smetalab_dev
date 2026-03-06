@@ -35,12 +35,13 @@ const createThrowingProxy = (name: string) => new Proxy({}, {
 
 export const client = connectionString
   ? (globalForDb.client ?? postgres(connectionString, {
-      prepare: false,
-      ssl: sslRequired ? 'require' : false,
-      max: process.env.NODE_ENV === 'production' ? 5 : 10,
-      idle_timeout: 20,
-      connect_timeout: 10,
-    }))
+    prepare: false,
+    ssl: sslRequired ? 'require' : false,
+    max: process.env.NODE_ENV === 'production' ? 10 : 20,
+    idle_timeout: 10, // Reduce idle timeout to close inactive connections faster than the server
+    connect_timeout: 15, // Increase connect timeout for cold starts
+    on_notice: () => { }, // Quiet notice logs
+  }))
   : (createThrowingProxy('Database client') as ReturnType<typeof postgres>);
 
 export const db = connectionString

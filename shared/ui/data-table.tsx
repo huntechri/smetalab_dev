@@ -186,12 +186,12 @@ export function DataTable<TData, TValue>({
             <div className="space-y-4">
                 {/* Search Filter */}
                 {filterColumn && (
-                    <div className="flex items-center justify-between gap-2 px-1 md:px-0">
-                        {/* Search Input (Flex-1 on all screen sizes) */}
-                        <div className="flex-1 min-w-0 max-w-sm">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between px-1 md:px-0">
+                        {/* Search Input & AI Toggle Group (Limited width on desktop) */}
+                        <div className="flex items-center gap-2 w-full sm:max-w-xl">
                             <div className={cn(
-                                "relative w-full group/search transition-all duration-300",
-                                isAiMode && "sm:max-w-md"
+                                "relative flex-1 min-w-0 transition-all duration-300",
+                                isAiMode ? "sm:max-w-md" : "sm:max-w-xs"
                             )}>
                                 {isSearching ? (
                                     <Loader2 aria-hidden="true" className="absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 text-indigo-500 animate-spin" />
@@ -234,14 +234,11 @@ export function DataTable<TData, TValue>({
                                         aria-live="polite"
                                         className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
                                     >
-                                        AI MAGIC
+                                        AI
                                     </div>
                                 )}
                             </div>
-                        </div>
 
-                        {/* AI Toggle and Actions */}
-                        <div className="flex items-center gap-2 shrink-0">
                             {showAiSearch && onSearch && (
                                 <div className="flex shrink-0 items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
                                     <Tooltip>
@@ -268,12 +265,14 @@ export function DataTable<TData, TValue>({
                                     />
                                 </div>
                             )}
-                            {actions && (
-                                <div className="flex items-center gap-2" role="group" aria-label="Действия таблицы">
-                                    {actions}
-                                </div>
-                            )}
                         </div>
+
+                        {/* Actions Group */}
+                        {actions && (
+                            <div className="flex items-center gap-2 justify-end sm:justify-start" role="group" aria-label="Действия таблицы">
+                                {actions}
+                            </div>
+                        )}
                     </div>
                 )}
 
