@@ -40,7 +40,7 @@ export const client = connectionString
     max: process.env.NODE_ENV === 'production' ? 10 : 20,
     idle_timeout: 10, // Reduce idle timeout to close inactive connections faster than the server
     connect_timeout: 15, // Increase connect timeout for cold starts
-    on_notice: () => { }, // Quiet notice logs
+    onnotice: () => { }, // Quiet notice logs
   }))
   : (createThrowingProxy('Database client') as ReturnType<typeof postgres>);
 
