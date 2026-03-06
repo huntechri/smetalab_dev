@@ -41,6 +41,21 @@ const patchSchema = z.object({
   purchaseDate: isoDateSchema.optional(),
 });
 
+const importRowSchema = z.object({
+  purchaseDate: isoDateSchema,
+  projectName: z.string().trim().max(160),
+  materialName: z.string().trim().min(1).max(240),
+  unit: z.string().trim().min(1).max(20),
+  qty: nonNegative,
+  price: nonNegative,
+  note: z.string().trim().max(500),
+  supplierName: z.string().trim().max(160),
+});
+
+const importSchema = z.object({
+  rows: z.array(importRowSchema).min(1).max(1000),
+});
+
 const batchPatchSchema = z.object({
   updates: z.array(z.object({
     rowId: z.string().uuid(),
@@ -366,6 +381,86 @@ export class GlobalPurchasesService {
       }
       console.error('GlobalPurchasesService.patchBatch error', serviceError);
       return error('Не удалось массово обновить строки закупки');
+    }
+  }
+
+
+  static async importRows(teamId: number, rawPayload: unknown): Promise<Result<PurchaseRow[]>> {
+    const parsed = importSchema.safeParse(rawPayload);
+    if (!parsed.success) return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+
+    try {
+      const importedRows = await db.transaction(async (tx) => {
+        const projectList = await tx.query.projects.findMany({
+          where: withActiveTenant(projects, teamId),
+          columns: { id: true, name: true },
+        });
+
+        const supplierList = await tx.query.materialSuppliers.findMany({
+          where: withActiveTenant(materialSuppliers, teamId),
+          columns: { id: true, name: true, color: true },
+        });
+
+        const projectMapByName = new Map(projectList.map((project) => [project.name.trim().toLowerCase(), project]));
+        const supplierMapByName = new Map(supplierList.map((supplier) => [supplier.name.trim().toLowerCase(), supplier]));
+
+        const groupedByDate = new Map<string, typeof parsed.data.rows>();
+        for (const row of parsed.data.rows) {
+          const group = groupedByDate.get(row.purchaseDate) ?? [];
+          group.push(row);
+          groupedByDate.set(row.purchaseDate, group);
+        }
+
+        const insertedRows: typeof globalPurchases.$inferSelect[] = [];
+
+        for (const [purchaseDate, rows] of groupedByDate.entries()) {
+          const [{ maxOrder }] = await tx
+            .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
+            .from(globalPurchases)
+            .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, purchaseDate)));
+
+          const values = rows.map((row, index) => {
+            const project = projectMapByName.get(row.projectName.trim().toLowerCase());
+            const supplier = row.supplierName
+              ? supplierMapByName.get(row.supplierName.trim().toLowerCase())
+              : null;
+
+            return {
+              tenantId: teamId,
+              projectId: project?.id ?? null,
+              supplierId: supplier?.id ?? null,
+              projectName: project?.name ?? row.projectName,
+              materialName: row.materialName,
+              materialId: null,
+              unit: row.unit,
+              qty: row.qty,
+              price: row.price,
+              amount: calculateAmount(row.qty, row.price),
+              note: row.note,
+              source: 'manual' as const,
+              purchaseDate: row.purchaseDate,
+              order: maxOrder + index + 1,
+            };
+          });
+
+          const inserted = await tx.insert(globalPurchases).values(values).returning();
+          insertedRows.push(...inserted);
+        }
+
+        const projectMap = new Map(projectList.map((project) => [project.id, project.name]));
+        const supplierMap = new Map(supplierList.map((supplier) => [supplier.id, { name: supplier.name, color: supplier.color }]));
+
+        return insertedRows.map((row) => toRow(
+          row,
+          row.projectId ? projectMap.get(row.projectId) ?? null : null,
+          row.supplierId ? supplierMap.get(row.supplierId) ?? null : null
+        ));
+      });
+
+      return success(importedRows);
+    } catch (serviceError) {
+      console.error('GlobalPurchasesService.importRows error', serviceError);
+      return error('Не удалось импортировать строки закупки');
     }
   }
 

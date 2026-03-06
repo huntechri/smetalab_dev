@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, Download, Upload } from 'lucide-react';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
@@ -17,6 +17,7 @@ import { Calendar } from '@/shared/ui/calendar';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
 import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
+import { exportGlobalPurchasesCsv, parseGlobalPurchasesCsv } from '../lib/import-export';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
@@ -37,6 +38,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [openProjectFilter, setOpenProjectFilter] = useState(false);
     const { toast } = useAppToast();
     const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const importInputRef = useRef<HTMLInputElement | null>(null);
 
     const {
         rows,
@@ -47,6 +49,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         addCatalogRow,
         updateRow,
         removeRow,
+        importRows,
         addedMaterialNames,
         pendingIds,
     } = useGlobalPurchasesTable(initialRows, initialRange);
@@ -138,6 +141,57 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         }
     };
 
+    const handleExport = () => {
+        try {
+            const csv = exportGlobalPurchasesCsv(displayedRows.map((row) => ({
+                purchaseDate: row.purchaseDate,
+                projectName: row.projectName,
+                materialName: row.materialName,
+                unit: row.unit,
+                qty: row.qty,
+                price: row.price,
+                note: row.note,
+                supplierName: row.supplierName ?? '',
+            })));
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `global-purchases-${range.from}_${range.to}.csv`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            toast({ title: 'Экспорт завершен', description: `Экспортировано строк: ${displayedRows.length}.` });
+        } catch {
+            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось подготовить CSV файл.' });
+        }
+    };
+
+    const handleImportFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const parsedRows = parseGlobalPurchasesCsv(text);
+            if (parsedRows.length === 0) {
+                toast({ variant: 'destructive', title: 'Ошибка импорта', description: 'Файл не содержит строк для импорта.' });
+                return;
+            }
+
+            await importRows(parsedRows);
+            toast({ title: 'Импорт завершен', description: `Импортировано строк: ${parsedRows.length}.` });
+        } catch (importError) {
+            const description = importError instanceof Error ? importError.message : 'Не удалось импортировать файл.';
+            toast({ variant: 'destructive', title: 'Ошибка импорта', description });
+        } finally {
+            if (importInputRef.current) {
+                importInputRef.current.value = '';
+            }
+        }
+    };
+
     const handleRangeChange = (nextRange: DateRange | undefined) => {
         if (!nextRange?.from) return;
 
@@ -172,6 +226,48 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 height="625px"
                 actions={(
                     <div className="flex flex-wrap items-center gap-2">
+                        <input
+                            ref={importInputRef}
+                            type="file"
+                            accept=".csv"
+                            className="hidden"
+                            onChange={(event) => void handleImportFileChange(event)}
+                        />
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+                                    onClick={handleExport}
+                                    aria-label="Экспорт закупок"
+                                >
+                                    <Download className="size-4" />
+                                    <span className="hidden sm:inline">Экспорт CSV</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Экспортировать отображаемые строки в CSV</TooltipContent>
+                        </Tooltip>
+
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+                                    onClick={() => importInputRef.current?.click()}
+                                    aria-label="Импорт закупок"
+                                >
+                                    <Upload className="size-4" />
+                                    <span className="hidden sm:inline">Импорт CSV</span>
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>Импортировать строки закупок из CSV</TooltipContent>
+                        </Tooltip>
+
                         <Popover>
                             <Tooltip>
                                 <TooltipTrigger asChild>

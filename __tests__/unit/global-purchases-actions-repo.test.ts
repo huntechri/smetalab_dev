@@ -6,6 +6,7 @@ const actionMocks = vi.hoisted(() => ({
     patchGlobalPurchaseAction: vi.fn(),
     removeGlobalPurchaseAction: vi.fn(),
     patchGlobalPurchasesBatchAction: vi.fn(),
+    importGlobalPurchasesAction: vi.fn(),
 }));
 
 vi.mock('@/app/actions/global-purchases', () => actionMocks);
@@ -19,6 +20,7 @@ describe('globalPurchasesActionRepo', () => {
         actionMocks.patchGlobalPurchaseAction.mockReset();
         actionMocks.removeGlobalPurchaseAction.mockReset();
         actionMocks.patchGlobalPurchasesBatchAction.mockReset();
+        actionMocks.importGlobalPurchasesAction.mockReset();
     });
 
     it('loads rows by date range', async () => {
@@ -122,5 +124,41 @@ describe('globalPurchasesActionRepo', () => {
         });
 
         await expect(globalPurchasesActionRepo.remove('1')).rejects.toThrow('Ошибка удаления');
+    });
+
+    it('imports rows via server action', async () => {
+        actionMocks.importGlobalPurchasesAction.mockResolvedValue({
+            success: true,
+            data: [{
+                id: 'new-row',
+                projectId: null,
+                projectName: 'Объект A',
+                materialName: 'Арматура',
+                unit: 'шт',
+                qty: 1,
+                price: 100,
+                amount: 100,
+                note: '',
+                source: 'manual',
+                purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
+            }],
+        });
+
+        const rows = await globalPurchasesActionRepo.importRows([{
+            purchaseDate: '2026-01-15',
+            projectName: 'Объект A',
+            materialName: 'Арматура',
+            unit: 'шт',
+            qty: 1,
+            price: 100,
+            note: '',
+            supplierName: '',
+        }]);
+
+        expect(actionMocks.importGlobalPurchasesAction).toHaveBeenCalled();
+        expect(rows).toHaveLength(1);
     });
 });
