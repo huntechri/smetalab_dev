@@ -44,7 +44,7 @@ export function WorksToolbar({
                 <TooltipTrigger asChild>
                     <Button variant="outline" className="flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs" onClick={handleImportClick} disabled={isImporting}>
                         {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
-                        <span className="hidden sm:inline">Импорт</span>
+                        <span className="inline">Импорт</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent><p>Загрузить данные из файла</p></TooltipContent>
@@ -54,7 +54,7 @@ export function WorksToolbar({
                 <TooltipTrigger asChild>
                     <Button variant="outline" className="flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs" onClick={handleExport} disabled={isExporting}>
                         {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
-                        <span className="hidden sm:inline">Экспорт</span>
+                        <span className="inline">Экспорт</span>
                     </Button>
                 </TooltipTrigger>
                 <TooltipContent><p>Выгрузить данные в файл</p></TooltipContent>
