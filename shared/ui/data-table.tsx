@@ -22,7 +22,6 @@ import { Input } from "@/shared/ui/input"
 import { Switch } from "@/shared/ui/switch"
 import { useDataTableState } from "@/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
-import { Button } from "@/components/ui/button"
 
 /* -------------------------------------------------------------------------- */
 /*                               DataTable                                    */
@@ -326,7 +325,7 @@ export function DataTable<TData, TValue>({
                                                 >
                                                     {header.isPlaceholder ? null : (
                                                         isSortable ? (
-                                                            <Button
+                                                            <button
                                                                 type="button"
                                                                 className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                 onClick={header.column.getToggleSortingHandler()}
@@ -344,7 +343,7 @@ export function DataTable<TData, TValue>({
                                                                         header.getContext()
                                                                     )}
                                                                 </div>
-                                                            </Button>
+                                                            </button>
                                                         ) : (
                                                             <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
                                                                 <div className="truncate flex-1 text-xs md:text-sm">
@@ -413,7 +412,7 @@ export function DataTable<TData, TValue>({
                                                     >
                                                         {header.isPlaceholder ? null : (
                                                             isSortable ? (
-                                                                <Button
+                                                                <button
                                                                     type="button"
                                                                     className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                     onClick={header.column.getToggleSortingHandler()}
@@ -431,7 +430,7 @@ export function DataTable<TData, TValue>({
                                                                             header.getContext()
                                                                         )}
                                                                     </div>
-                                                                </Button>
+                                                                </button>
                                                             ) : (
                                                                 <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
                                                                     <div className="truncate flex-1 text-xs md:text-sm">
