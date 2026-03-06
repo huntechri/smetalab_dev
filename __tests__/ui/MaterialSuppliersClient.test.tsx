@@ -52,7 +52,7 @@ describe('MaterialSuppliersClient', () => {
 
   it('renders page title and add button', () => {
     render(<MaterialSuppliersClient initialData={[]} totalCount={0} tenantId={1} />);
-    expect(screen.getByRole('heading', { name: 'Поставщики материалов' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Поставщики' })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /Добавить/i }).length).toBeGreaterThan(0);
   });
 
@@ -65,7 +65,7 @@ describe('MaterialSuppliersClient', () => {
   it('opens create sheet when add button is clicked', async () => {
     render(<MaterialSuppliersClient initialData={[]} totalCount={0} tenantId={1} />);
     fireEvent.click(screen.getAllByRole('button', { name: /Добавить/i })[0]);
-    await waitFor(() => expect(screen.getByText('Создать поставщика материалов')).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText('Создать поставщика')).toBeInTheDocument());
   });
 
   it('renders breadcrumb navigation', () => {
@@ -73,6 +73,6 @@ describe('MaterialSuppliersClient', () => {
     const breadcrumb = screen.getAllByRole('navigation', { name: 'breadcrumb' })[0];
     expect(within(breadcrumb).getByText('Главная')).toBeInTheDocument();
     expect(within(breadcrumb).getByText('Справочники')).toBeInTheDocument();
-    expect(within(breadcrumb).getByText('Поставщики материалов')).toBeInTheDocument();
+    expect(within(breadcrumb).getByText('Поставщики')).toBeInTheDocument();
   });
 });
