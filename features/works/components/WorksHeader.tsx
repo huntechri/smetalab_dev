@@ -10,11 +10,11 @@ export function WorksHeader({ isLoading, totalCount }: WorksHeaderProps) {
     return (
         <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-3">
-                <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Работы</h1>
+                <h1 className="text-title">Работы</h1>
                 <Badge variant="secondary" className="font-medium">{totalCount.toLocaleString('ru-RU')} записей</Badge>
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
             </div>
-            <p className="text-sm text-muted-foreground md:text-base">
+            <p className="text-subtitle">
                 Базовая стоимость работ.
             </p>
         </div>

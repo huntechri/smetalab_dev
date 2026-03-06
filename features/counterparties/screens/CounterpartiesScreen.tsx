@@ -161,7 +161,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
 
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-1 md:px-0 mb-4">
                 <div>
-                    <h1 className="text-2xl font-bold tracking-tight md:text-3xl">Контрагенты</h1>
+                    <h1 className="text-title">Контрагенты</h1>
                 </div>
                 <div className="hidden" aria-hidden="true" />
             </div>
