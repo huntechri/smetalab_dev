@@ -14,9 +14,6 @@ export function WorksHeader({ isLoading, totalCount }: WorksHeaderProps) {
                 <Badge variant="secondary" className="font-medium">{totalCount.toLocaleString('ru-RU')} записей</Badge>
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
             </div>
-            <p className="text-subtitle">
-                Базовая стоимость работ.
-            </p>
         </div>
     );
 }

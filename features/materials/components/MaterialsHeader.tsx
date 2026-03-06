@@ -14,9 +14,6 @@ export function MaterialsHeader({ isLoading, totalCount }: MaterialsHeaderProps)
                 <Badge variant="secondary" className="font-medium">{totalCount.toLocaleString('ru-RU')} записей</Badge>
                 {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
             </div>
-            <p className="text-subtitle">
-                Справочник материалов и оборудования.
-            </p>
         </div>
     );
 }

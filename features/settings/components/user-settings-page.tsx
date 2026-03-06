@@ -99,15 +99,9 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
 
   return (
     <div className="mx-auto w-full max-w-[1200px] space-y-6">
-      <header className="space-y-2">
-        <h1 className="sr-only">
-          Личный кабинет
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          Управляйте профилем, безопасностью и персональными настройками в
-          рамках текущей организации.
-        </p>
-      </header>
+      <h1 className="sr-only">
+        Личный кабинет
+      </h1>
 
       <Tabs defaultValue="profile" className="space-y-4">
         <div className="overflow-x-auto pb-1">
