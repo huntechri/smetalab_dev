@@ -125,8 +125,8 @@ export function CreateMaterialSupplierSheet({
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col">
             <SheetHeader className="p-6 pb-4">
-              <SheetTitle>{materialSupplier ? 'Редактировать поставщика материалов' : 'Создать поставщика материалов'}</SheetTitle>
-              <SheetDescription>Справочник поставщиков материалов не связан с другими компонентами.</SheetDescription>
+              <SheetTitle>{materialSupplier ? 'Редактировать поставщика' : 'Создать поставщика'}</SheetTitle>
+              <SheetDescription>Справочник поставщиков не связан с другими компонентами.</SheetDescription>
             </SheetHeader>
 
             <Separator />

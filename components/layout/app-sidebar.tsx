@@ -69,7 +69,7 @@ const guideNavItems = [
         requiredPermission: 'guide',
     },
     {
-        title: 'Поставщики материалов',
+        title: 'Поставщики',
         url: '/app/guide/material-suppliers',
         icon: Users,
         requiredPermission: 'guide',
