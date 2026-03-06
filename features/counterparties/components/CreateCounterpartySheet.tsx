@@ -6,7 +6,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
     Sheet,
     SheetContent,
-    SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetFooter,
@@ -172,9 +171,6 @@ export function CreateCounterpartySheet({
                     <SheetTitle className="text-base sm:text-lg">
                         {counterparty ? "Редактировать контрагента" : "Создать контрагента"}
                     </SheetTitle>
-                    <SheetDescription className="text-xs sm:text-sm">
-                        Заполните информацию о контрагенте для справочника.
-                    </SheetDescription>
                 </SheetHeader>
 
                 <Form {...form}>

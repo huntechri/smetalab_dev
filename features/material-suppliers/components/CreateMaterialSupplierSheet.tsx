@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -15,7 +14,6 @@ import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
-import { Separator } from '@/shared/ui/separator';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
@@ -121,95 +119,99 @@ export function CreateMaterialSupplierSheet({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-2xl p-0">
+      <SheetContent className="w-full sm:max-w-[540px] max-h-dvh flex flex-col p-0">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="flex h-full flex-col">
-            <SheetHeader className="p-6 pb-4">
-              <SheetTitle>{materialSupplier ? 'Редактировать поставщика' : 'Создать поставщика'}</SheetTitle>
-              <SheetDescription>Справочник поставщиков не связан с другими компонентами.</SheetDescription>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
+            <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
+              <SheetTitle className="text-base sm:text-lg">{materialSupplier ? 'Редактировать поставщика' : 'Создать поставщика'}</SheetTitle>
             </SheetHeader>
 
-            <Separator />
-
-            <ScrollArea className="flex-1 px-6">
-              <div className="space-y-4 py-4">
+            <ScrollArea className="flex-1 min-h-0">
+              <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6 pt-4">
                 <FormField
                   control={form.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Наименование</FormLabel>
-                      <FormControl><Input {...field} /></FormControl>
+                      <FormLabel className="text-xs">Наименование</FormLabel>
+                      <FormControl><Input placeholder="Наименование..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="color"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Цвет метки</FormLabel>
+                        <FormControl>
+                          <Input type="color" value={field.value} onChange={field.onChange} className="h-8 w-14 p-1 rounded-md cursor-pointer" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
-                <FormField
-                  control={form.control}
-                  name="color"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Цвет метки</FormLabel>
-                      <FormControl>
-                        <div className="flex items-center gap-2">
-                          <Input type="color" value={field.value} onChange={field.onChange} className="h-10 w-14 p-1" />
-                          <Input value={field.value} onChange={field.onChange} className="font-mono" />
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="legalStatus"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Правовой статус</FormLabel>
-                      <FormControl>
-                        <RadioGroup onValueChange={field.onChange} value={field.value} className="flex gap-6">
-                          <FormItem className="flex items-center gap-2 space-y-0">
-                            <FormControl><RadioGroupItem value="company" /></FormControl>
-                            <FormLabel className="font-normal">Юр. лицо</FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center gap-2 space-y-0">
-                            <FormControl><RadioGroupItem value="individual" /></FormControl>
-                            <FormLabel className="font-normal">Физ. лицо</FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                  <FormField
+                    control={form.control}
+                    name="legalStatus"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Правовой статус</FormLabel>
+                        <FormControl>
+                          <RadioGroup onValueChange={field.onChange} value={field.value} className="flex flex-row items-center gap-2 sm:gap-4 h-8">
+                            <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                              <FormControl><RadioGroupItem value="company" className="h-3.5 w-3.5" /></FormControl>
+                              <FormLabel className="font-normal text-[10px] sm:text-xs whitespace-nowrap">Юр. лицо</FormLabel>
+                            </FormItem>
+                            <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                              <FormControl><RadioGroupItem value="individual" className="h-3.5 w-3.5" /></FormControl>
+                              <FormLabel className="font-normal text-[10px] sm:text-xs whitespace-nowrap">Физ. лицо</FormLabel>
+                            </FormItem>
+                          </RadioGroup>
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 {legalStatus === 'company' ? (
                   <>
-                    <FormField control={form.control} name="inn" render={({ field }) => <FormItem><FormLabel>ИНН</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                    <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><FormLabel>КПП</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                    <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><FormLabel>ОГРН</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField control={form.control} name="inn" render={({ field }) => <FormItem><FormLabel className="text-xs">ИНН</FormLabel><FormControl><Input placeholder="ИНН..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><FormLabel className="text-xs">КПП</FormLabel><FormControl><Input placeholder="КПП..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><FormLabel className="text-xs">ОГРН</FormLabel><FormControl><Input placeholder="ОГРН..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                    </div>
                   </>
                 ) : (
-                  <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><FormLabel>Паспорт</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><FormLabel className="text-xs">Паспорт</FormLabel><FormControl><Input placeholder="0000 000000" {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                    <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                  </div>
                 )}
 
-                <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel>Телефон</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
-                <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel>Адрес</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>} />
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel className="text-xs">Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel className="text-xs">Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                </div>
               </div>
             </ScrollArea>
-
-            <Separator />
-            <SheetFooter className="p-6 pt-4">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>Отмена</Button>
-              <Button type="submit" disabled={isPending}>
-                {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {materialSupplier ? 'Сохранить' : 'Создать'}
-              </Button>
-            </SheetFooter>
+            <div className="px-4 py-3 sm:p-6 border-t bg-muted/20">
+              <SheetFooter className="flex-row gap-2 sm:space-x-0 w-full">
+                <Button type="button" variant="outline" className="flex-1 h-8 text-xs" onClick={() => onOpenChange(false)}>Отмена</Button>
+                <Button type="submit" className="flex-1 h-8 text-xs" disabled={isPending}>
+                  {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {materialSupplier ? 'Сохранить' : 'Создать'}
+                </Button>
+              </SheetFooter>
+            </div>
           </form>
         </Form>
       </SheetContent>
