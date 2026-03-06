@@ -100,7 +100,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   return (
     <div className="mx-auto w-full max-w-[1200px] space-y-6">
       <header className="space-y-2">
-        <h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+        <h1 className="sr-only">
           Личный кабинет
         </h1>
         <p className="text-sm text-muted-foreground">

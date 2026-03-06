@@ -65,7 +65,7 @@ export function PatternsScreen() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-title">Шаблоны смет</h1>
+      <h1 className="sr-only">Шаблоны смет</h1>
       <p className="text-subtitle">Здесь хранятся сохраненные шаблоны для повторного использования в новых сметах.</p>
 
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">

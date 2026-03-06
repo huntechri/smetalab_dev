@@ -13,7 +13,7 @@ export function GuideScreen() {
     return (
         <div className="space-y-4">
             <header className="space-y-1">
-                <h1 className="text-title">Справочники</h1>
+                <h1 className="sr-only">Справочники</h1>
                 <p className="text-subtitle">Выберите раздел для управления данными.</p>
             </header>
 
