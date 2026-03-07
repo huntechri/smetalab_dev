@@ -65,9 +65,7 @@ export function PatternsScreen() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-2xl font-semibold">Шаблоны смет</h1>
-      <p className="text-sm text-muted-foreground">Здесь хранятся сохраненные шаблоны для повторного использования в новых сметах.</p>
-
+      <h1 className="sr-only">Шаблоны смет</h1>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
           <Card key={item.id}>
@@ -79,7 +77,7 @@ export function PatternsScreen() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
+              {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
                 <Button variant="outline" size="sm" onClick={() => void openPreview(item.id)}>Превью</Button>
                 <Button variant="destructive" size="sm" onClick={() => void removePattern(item.id)}>Удалить</Button>

@@ -10,7 +10,7 @@ export function TeamHeaderCard({ teamName, membersCount }: TeamHeaderCardProps) 
         <Card className="border-border/70">
             <CardHeader className="space-y-1">
                 <CardTitle>
-                    <h1 className="text-lg">Команда</h1>
+                    <h1 className="sr-only">Команда</h1>
                 </CardTitle>
                 <CardDescription>
                     {teamName || 'Команда'} · {membersCount} участников

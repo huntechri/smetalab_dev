@@ -17,7 +17,7 @@ export function AppHomeScreen() {
                         </div>
                         <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Operational Hub</p>
                     </div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Операционный центр</h1>
+                    <h1 className="sr-only">Операционный центр</h1>
                     <p className="max-w-xl text-sm leading-relaxed text-muted-foreground">
                         Мониторинг ресурсов, рисков и снабжения в реальном времени.
                     </p>
