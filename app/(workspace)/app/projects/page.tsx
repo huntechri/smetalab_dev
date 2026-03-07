@@ -57,10 +57,7 @@ export default async function Page() {
                     </BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-            <header className="space-y-2">
-                <h1 className="text-3xl font-semibold">Проекты</h1>
-                <p className="text-sm text-muted-foreground">Компактный список проектов с быстрым поиском и сортировкой.</p>
-            </header>
+            <h1 className="sr-only">Проекты</h1>
             <ProjectsScreen
                 initialProjects={projects}
                 counterparties={counterparties}

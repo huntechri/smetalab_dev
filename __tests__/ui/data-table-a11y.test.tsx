@@ -37,6 +37,9 @@ describe('DataTable a11y interactions', () => {
         const sortButton = screen.getByRole('button', { name: 'Сортировать столбец' });
         expect(sortButton).toBeInTheDocument();
 
+        expect(sortButton).not.toHaveAttribute('data-slot', 'button');
+        expect(sortButton).not.toHaveClass('bg-primary');
+
         const headerCell = sortButton.closest('th');
         expect(headerCell).toHaveAttribute('aria-sort', 'none');
 

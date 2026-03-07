@@ -36,7 +36,7 @@ export default async function Page({ params }: PageProps) {
 
     return (
         <div className="mx-auto w-full max-w-[1600px] space-y-6 py-4">
-            <h1 className="text-2xl font-semibold">Реестр смет</h1>
+            <h1 className="sr-only">Реестр смет</h1>
             <EstimatesRegistryScreen
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}

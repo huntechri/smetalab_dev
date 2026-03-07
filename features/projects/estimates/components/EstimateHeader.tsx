@@ -39,7 +39,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
             <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
-                        <h1 className="text-xl md:text-2xl font-bold tracking-tight">{meta.name}</h1>
+                        <h1 className="sr-only">{meta.name}</h1>
                         <AlertDialog>
                             <AlertDialogTrigger asChild>
                                 <Button
