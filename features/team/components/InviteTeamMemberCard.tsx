@@ -1,6 +1,6 @@
 import { TeamMessage, TeamRole } from '../types';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
@@ -29,29 +29,30 @@ export function InviteTeamMemberCard({
     const parsedMessage = message ? parseDevLinkMessage(message.text) : null;
 
     return (
-        <Card className="border-border/70">
-            <CardHeader className="space-y-1">
-                <CardTitle className="text-base">Пригласить участника</CardTitle>
-                <CardDescription>Введите email и выберите роль.</CardDescription>
-            </CardHeader>
-            <CardContent>
+        <div className="p-6">
+            <div className="space-y-1 mb-6">
+                <h2 className="text-base font-medium">Пригласить участника</h2>
+                <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
+            </div>
+            <div>
                 <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
-                    <div className="flex-1 space-y-2">
-                        <Label htmlFor="email">Email</Label>
+                    <div className="flex-1 space-y-1.5">
+                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
                         <Input
                             id="email"
                             type="email"
                             placeholder="colleague@company.com"
                             value={email}
                             onChange={(event) => onEmailChange(event.target.value)}
+                            className="h-9 text-sm transition-colors"
                             required
                         />
                     </div>
-                    <div className="space-y-2">
-                        <Label>Роль</Label>
+                    <div className="space-y-1.5 shrink-0">
+                        <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="w-full justify-between sm:w-40">
+                                <Button variant="outline" className="w-full justify-between sm:w-44 h-9 text-sm shadow-sm">
                                     {getRoleLabel(role)}
                                     <Shield className="h-4 w-4 text-muted-foreground" />
                                 </Button>
@@ -63,7 +64,7 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" disabled={isInviting} className="w-full sm:w-auto">
+                    <Button type="submit" disabled={isInviting} className="w-full sm:w-auto h-9 text-sm shadow-sm shrink-0">
                         <Mail className="mr-2 h-4 w-4" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
@@ -94,7 +95,7 @@ export function InviteTeamMemberCard({
                         )}
                     </p>
                 )}
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }

@@ -5,6 +5,8 @@ import { InviteTeamMemberCard } from '../components/InviteTeamMemberCard';
 import { TeamHeaderCard } from '../components/TeamHeaderCard';
 import { TeamMembersCard } from '../components/TeamMembersCard';
 import { useTeamPage } from '../hooks/useTeamPage';
+import { Card } from '@/shared/ui/card';
+import { Separator } from '@/shared/ui/separator';
 
 export function TeamScreen() {
     const { hasPermission } = usePermissions();
@@ -38,21 +40,25 @@ export function TeamScreen() {
     const canManageMembers = hasPermission('team', 'manage');
 
     return (
-        <div className="space-y-6">
+        <Card className="overflow-hidden border-border/70 shadow-sm bg-background">
             <TeamHeaderCard teamName={team?.name} membersCount={members.length} />
 
             {canManageMembers && (
-                <InviteTeamMemberCard
-                    email={email}
-                    role={role}
-                    isInviting={isInviting}
-                    message={message}
-                    onEmailChange={setEmail}
-                    onRoleChange={setRole}
-                    onSubmit={handleInvite}
-                />
+                <>
+                    <Separator className="bg-border/50" />
+                    <InviteTeamMemberCard
+                        email={email}
+                        role={role}
+                        isInviting={isInviting}
+                        message={message}
+                        onEmailChange={setEmail}
+                        onRoleChange={setRole}
+                        onSubmit={handleInvite}
+                    />
+                </>
             )}
 
+            <Separator className="bg-border/50" />
             <TeamMembersCard
                 members={members}
                 filteredMembers={filteredMembers}
@@ -63,6 +69,6 @@ export function TeamScreen() {
                 onSearchQueryChange={setSearchQuery}
                 onRemoveMember={handleRemove}
             />
-        </div>
+        </Card>
     );
 }
