@@ -8,12 +8,11 @@ interface MaterialsHeaderProps {
 
 export function MaterialsHeader({ isLoading, totalCount }: MaterialsHeaderProps) {
     return (
-        <div className="space-y-2">
-            <div className="flex flex-wrap items-center gap-3">
-                <h1 className="sr-only">Материалы</h1>
-                <Badge variant="secondary" className="font-medium">{totalCount.toLocaleString('ru-RU')} записей</Badge>
-                {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
-            </div>
+        <div className="flex items-center gap-3">
+            <Badge variant="secondary" className="h-7 px-3 text-xs font-semibold shadow-sm">
+                {totalCount.toLocaleString('ru-RU')} записей
+            </Badge>
+            {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
         </div>
     );
 }

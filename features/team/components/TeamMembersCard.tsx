@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -49,35 +49,36 @@ export function TeamMembersCard({
     onRemoveMember,
 }: TeamMembersCardProps) {
     return (
-        <Card className="border-border/70">
-            <CardHeader className="space-y-3">
-                <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="flex flex-col p-6 space-y-4">
+            <div>
+                <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                     <div className="space-y-1">
-                        <CardTitle className="text-base">Участники</CardTitle>
-                        <CardDescription>
+                        <h2 className="text-base font-medium">Участники</h2>
+                        <p className="text-sm text-muted-foreground">
                             {filteredMembers.length} из {members.length}
-                        </CardDescription>
+                        </p>
                     </div>
-                    <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-end">
-                        <div className="space-y-2">
-                            <Label htmlFor="search">Поиск</Label>
+                    <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
                             <Input
                                 id="search"
                                 type="search"
                                 placeholder="Имя или email"
                                 value={searchQuery}
                                 onChange={(event) => onSearchQueryChange(event.target.value)}
+                                className="h-9 w-full xl:w-64 text-sm transition-colors"
                             />
                         </div>
-                        <div className="space-y-2">
-                            <Label>Роль</Label>
+                        <div className="space-y-1.5">
+                            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
                                     <Button
                                         key={item.value}
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}
-                                        size="sm"
+                                        className="h-9 px-3 text-sm shadow-sm transition-all"
                                         onClick={() => onRoleFilterChange(item.value)}
                                         aria-pressed={roleFilter === item.value}
                                         aria-label={`Фильтр: ${item.label}`}
@@ -89,13 +90,13 @@ export function TeamMembersCard({
                         </div>
                     </div>
                 </div>
-            </CardHeader>
-            <CardContent>
+            </div>
+            <div>
                 <div className="space-y-2">
                     {filteredMembers.map((member) => (
                         <div
                             key={member.id}
-                            className="flex flex-col gap-3 rounded-lg border border-border/70 px-3 py-3 sm:flex-row sm:items-center sm:justify-between"
+                            className="group flex flex-col gap-3 rounded-xl border border-border/40 bg-background hover:bg-muted/30 hover:shadow-sm hover:border-border/60 transition-all px-4 py-3 sm:flex-row sm:items-center sm:justify-between overflow-hidden"
                         >
                             <div className="flex items-center gap-3">
                                 <Avatar className="size-9">
@@ -115,6 +116,7 @@ export function TeamMembersCard({
                                                 <Button
                                                     variant="ghost"
                                                     size="icon"
+                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
                                                     <MoreHorizontal className="h-4 w-4" />
@@ -153,7 +155,7 @@ export function TeamMembersCard({
                         <p className="py-6 text-center text-sm text-muted-foreground">Нет участников, соответствующих фильтрам.</p>
                     )}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 }
