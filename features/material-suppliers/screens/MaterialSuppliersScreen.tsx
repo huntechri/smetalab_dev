@@ -5,7 +5,6 @@ import { MaterialSupplierRow } from '@/types/material-supplier-row';
 import { columns } from '../components/columns';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
-import { Badge } from '@/shared/ui/badge';
 import { Loader2, Plus } from 'lucide-react';
 import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplierSheet';
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';
@@ -93,18 +92,13 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-            <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-            <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики</BreadcrumbPage></BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-        <Badge variant="secondary" className="h-7 px-3 text-xs font-semibold shadow-sm w-fit">
-          {suppliers.length.toLocaleString('ru-RU')} записей
-        </Badge>
-      </div>
+      <Breadcrumb className="px-1 md:px-0">
+        <BreadcrumbList>
+          <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
+          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики</BreadcrumbPage></BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <h1 className="sr-only">Поставщики</h1>
 
       <DataTable

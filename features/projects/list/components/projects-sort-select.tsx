@@ -15,7 +15,7 @@ type ProjectsSortSelectProps = {
 export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectProps) {
     return (
         <Select value={value} onValueChange={(nextValue) => onValueChange(nextValue as ProjectSortOption)}>
-            <SelectTrigger className="w-full sm:w-[180px] lg:w-[220px]">
+            <SelectTrigger className="h-9 w-full sm:w-[180px] lg:w-[220px] transition-colors focus:ring-1">
                 <SelectValue placeholder="Сортировка" />
             </SelectTrigger>
             <SelectContent>

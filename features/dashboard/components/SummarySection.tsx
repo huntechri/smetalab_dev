@@ -25,22 +25,24 @@ export function SummarySection() {
                 </Badge>
             </div>
 
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                 {summaryItems.map((item, idx) => (
                     <Card
                         key={item.title}
-                        className={cn('glass-card hover:border-primary/20', 'flex flex-col justify-between p-4')}
+                        className={cn('glass-card border-border/40 bg-background/50 backdrop-blur-md shadow-sm hover:shadow hover:border-border/80 transition-all duration-300', 'flex flex-col justify-between p-5')}
                         style={{ '--idx': idx } as CSSProperties}
                     >
-                        <div className="mb-2 flex items-center justify-between">
-                            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{item.title}</p>
-                            <div className={cn('rounded-md p-1.5', item.bg, item.color)}>
-                                <item.icon className="h-3.5 w-3.5" />
+                        <div className="mb-4 flex items-center justify-between">
+                            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{item.title}</p>
+                            <div className={cn('rounded-lg p-2 transition-colors', item.bg, item.color)}>
+                                <item.icon className="h-4 w-4" />
                             </div>
                         </div>
-                        <div className="flex items-baseline gap-2">
-                            <CardTitle className="text-2xl font-bold tracking-tight">{item.value}</CardTitle>
-                            <p className="text-[11px] font-medium text-muted-foreground">{item.note}</p>
+                        <div className="flex flex-col gap-1">
+                            <div className="flex items-baseline gap-2">
+                                <CardTitle className="text-3xl font-bold tracking-tight">{item.value}</CardTitle>
+                            </div>
+                            <p className="text-xs font-medium text-muted-foreground/80">{item.note}</p>
                         </div>
                     </Card>
                 ))}

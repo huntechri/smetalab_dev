@@ -143,7 +143,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
     return (
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden relative">
-            <div className="p-3 sm:px-4 border-b bg-background shadow-xs z-10">
+            <div className="p-3 sm:px-4 border-b bg-background shadow-sm z-10">
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />

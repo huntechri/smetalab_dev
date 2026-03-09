@@ -9,11 +9,11 @@ type ProjectsViewToggleProps = {
 
 export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleProps) {
     return (
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1.5">
             <Button
                 type="button"
-                variant={value === 'grid' ? 'default' : 'outline'}
-                size="icon-sm"
+                variant={value === 'grid' ? 'secondary' : 'ghost'}
+                className="h-9 w-9 px-0 transition-colors"
                 onClick={() => onValueChange('grid')}
                 aria-label="Grid view"
             >
@@ -21,8 +21,8 @@ export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleP
             </Button>
             <Button
                 type="button"
-                variant={value === 'list' ? 'default' : 'outline'}
-                size="icon-sm"
+                variant={value === 'list' ? 'secondary' : 'ghost'}
+                className="h-9 w-9 px-0 transition-colors"
                 onClick={() => onValueChange('list')}
                 aria-label="List view"
             >

@@ -22,7 +22,7 @@ export function GuideScreen() {
                             <CardDescription>{item.description}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Button asChild variant="outline" size="sm">
+                            <Button asChild variant="outline" className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95">
                                 <Link href={item.href}>Открыть</Link>
                             </Button>
                         </CardContent>

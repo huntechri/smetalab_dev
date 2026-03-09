@@ -15,16 +15,16 @@ export function SignalsSection() {
                 <Activity className="h-4 w-4 text-primary" />
                 Отклонения
             </h2>
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {signals.map((signal) => (
-                    <Card key={signal.title} className="glass-card border-border/20 p-3">
-                        <div className="flex items-start gap-3">
-                            <div className={cn('shrink-0 rounded-md p-1.5', signal.color)}>
-                                <signal.icon className="h-3.5 w-3.5" />
+                    <Card key={signal.title} className="glass-card group cursor-pointer border-border/40 bg-background/50 p-4 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-border/80 hover:shadow">
+                        <div className="flex items-start gap-4">
+                            <div className={cn('shrink-0 rounded-lg p-2 transition-colors', signal.color)}>
+                                <signal.icon className="h-4 w-4" />
                             </div>
-                            <div className="space-y-0.5">
-                                <p className="text-sm font-bold leading-tight">{signal.title}</p>
-                                <p className="text-[11px] leading-tight text-muted-foreground">{signal.note}</p>
+                            <div className="space-y-1">
+                                <p className="text-sm font-semibold leading-none">{signal.title}</p>
+                                <p className="text-xs text-muted-foreground">{signal.note}</p>
                             </div>
                         </div>
                     </Card>

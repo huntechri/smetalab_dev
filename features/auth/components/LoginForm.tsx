@@ -119,115 +119,115 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </div>
             )}
-            <form className="space-y-6" action={formAction}>
-            <input type="hidden" name="redirect" value={redirect || ''} />
-            <input type="hidden" name="priceId" value={priceId || ''} />
-            <input type="hidden" name="inviteId" value={inviteId || ''} />
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                defaultValue={state?.email || emailParam || ''}
-                readOnly={!!inviteId && mode === 'signup'}
-                aria-readonly={!!inviteId && mode === 'signup'}
-                aria-invalid={!!state?.error}
-                required
-                maxLength={50}
-                placeholder="name@company.ru"
-                className={`${!!inviteId && mode === 'signup'
-                  ? 'bg-gray-100 cursor-not-allowed'
-                  : ''
-                  }`}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="password">Пароль</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete={
-                    isSignIn ? 'current-password' : 'new-password'
-                  }
-                  defaultValue={state?.password}
-                  required
-                  minLength={8}
-                  maxLength={100}
-                  placeholder="Минимум 8 символов"
-                  aria-describedby="password-hint"
-                  aria-invalid={!!state?.error}
-                  className="pr-10"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-sm text-white/70 hover:bg-transparent hover:text-white focus-visible:ring-white/60 focus-visible:ring-offset-[#14121A]"
-                  aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-4 w-4" />
-                  ) : (
-                    <Eye className="h-4 w-4" />
-                  )}
-                </Button>
-              </div>
-              <p id="password-hint" className="text-xs text-white/60">
-                Не менее 8 символов.
-              </p>
-            </div>
-
-            {mode === 'signup' && !inviteId && (
+            <form className="space-y-4" action={formAction}>
+              <input type="hidden" name="redirect" value={redirect || ''} />
+              <input type="hidden" name="priceId" value={priceId || ''} />
+              <input type="hidden" name="inviteId" value={inviteId || ''} />
               <div className="space-y-2">
-                <Label htmlFor="organizationName">Название организации</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input
-                  id="organizationName"
-                  name="organizationName"
-                  type="text"
-                  required={!inviteId}
-                  maxLength={100}
-                  placeholder="ООО «Северный бетон»"
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  defaultValue={state?.email || emailParam || ''}
+                  readOnly={!!inviteId && mode === 'signup'}
+                  aria-readonly={!!inviteId && mode === 'signup'}
+                  aria-invalid={!!state?.error}
+                  required
+                  maxLength={50}
+                  placeholder="name@company.ru"
+                  className={`${!!inviteId && mode === 'signup'
+                    ? 'bg-gray-100 cursor-not-allowed'
+                    : ''
+                    }`}
                 />
               </div>
-            )}
 
-            {state?.error && (
-              <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200" role="alert" aria-live="polite">
-                {state?.error}
+              <div className="space-y-2">
+                <Label htmlFor="password">Пароль</Label>
+                <div className="relative">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete={
+                      isSignIn ? 'current-password' : 'new-password'
+                    }
+                    defaultValue={state?.password}
+                    required
+                    minLength={8}
+                    maxLength={100}
+                    placeholder="Минимум 8 символов"
+                    aria-describedby="password-hint"
+                    aria-invalid={!!state?.error}
+                    className="pr-10"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-sm text-white/70 hover:bg-transparent hover:text-white focus-visible:ring-white/60 focus-visible:ring-offset-[#14121A]"
+                    aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </Button>
+                </div>
+                <p id="password-hint" className="text-xs text-white/60">
+                  Не менее 8 символов.
+                </p>
               </div>
-            )}
 
-            <Button
-              type="submit"
-              className="w-full bg-[#FF6A3D] text-black hover:bg-[#FF865F]"
-              disabled={pending}
-            >
-              {pending ? (
-                <>
-                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                  Проверяем...
-                </>
-              ) : isSignIn ? (
-                'Войти'
-              ) : (
-                'Создать аккаунт'
+              {mode === 'signup' && !inviteId && (
+                <div className="space-y-2">
+                  <Label htmlFor="organizationName">Название организации</Label>
+                  <Input
+                    id="organizationName"
+                    name="organizationName"
+                    type="text"
+                    required={!inviteId}
+                    maxLength={100}
+                    placeholder="ООО «Северный бетон»"
+                  />
+                </div>
               )}
-            </Button>
 
-            {isSignIn && (
-              <div className="text-center text-sm">
-                <Link href="/forgot-password" className="text-[#FF6A3D] hover:text-[#FF865F]">
-                  Забыли пароль?
-                </Link>
-              </div>
-            )}
-          </form>
+              {state?.error && (
+                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200" role="alert" aria-live="polite">
+                  {state?.error}
+                </div>
+              )}
+
+              <Button
+                type="submit"
+                className="w-full bg-[#FF6A3D] text-black hover:bg-[#FF865F]"
+                disabled={pending}
+              >
+                {pending ? (
+                  <>
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    Проверяем...
+                  </>
+                ) : isSignIn ? (
+                  'Войти'
+                ) : (
+                  'Создать аккаунт'
+                )}
+              </Button>
+
+              {isSignIn && (
+                <div className="text-center text-sm">
+                  <Link href="/forgot-password" className="text-[#FF6A3D] hover:text-[#FF865F]">
+                    Забыли пароль?
+                  </Link>
+                </div>
+              )}
+            </form>
           </CardContent>
         </Card>
       </main>

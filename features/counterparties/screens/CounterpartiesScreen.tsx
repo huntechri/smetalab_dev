@@ -6,7 +6,6 @@ import { CounterpartyRow } from "@/types/counterparty-row";
 import { columns } from "../components/columns";
 import { DataTable } from "@/shared/ui/data-table";
 import { Button } from "@/shared/ui/button";
-import { Badge } from "@/shared/ui/badge";
 import { Plus, Loader2 } from "lucide-react";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
@@ -152,18 +151,13 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
 
     return (
         <div className="space-y-4">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Контрагенты</BreadcrumbPage></BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
-                <Badge variant="secondary" className="h-7 px-3 text-xs font-semibold shadow-sm w-fit">
-                    {rowsCount.toLocaleString('ru-RU')} записей
-                </Badge>
-            </div>
+            <Breadcrumb className="px-1 md:px-0">
+                <BreadcrumbList>
+                    <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
+                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Контрагенты</BreadcrumbPage></BreadcrumbItem>
+                </BreadcrumbList>
+            </Breadcrumb>
             <h1 className="sr-only">Контрагенты</h1>
 
             <DataTable
