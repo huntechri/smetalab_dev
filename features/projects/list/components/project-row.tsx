@@ -11,7 +11,7 @@ type ProjectRowProps = {
 
 export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
     return (
-        <div className="rounded-md border px-3 py-2">
+        <div className="rounded-md border border-primary/10 bg-card text-card-foreground px-3 py-2 hover:border-primary/30 transition-colors duration-200 group">
             <div className="flex min-w-0 flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
                 <div className="grid min-w-0 flex-1 gap-1 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)_minmax(0,auto)_minmax(0,auto)] lg:items-center lg:gap-3">
                     <div className="min-w-0 space-y-0.5">
@@ -30,13 +30,13 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                     <div className="space-y-1">
                         <p className="text-[11px] text-muted-foreground">{project.progress}%</p>
                         <div
-                        role="progressbar"
-                        aria-valuenow={project.progress}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                        aria-label={`Progress for ${project.name}`}
-                        className="h-1 w-24 overflow-hidden rounded-full bg-muted"
->
+                            role="progressbar"
+                            aria-valuenow={project.progress}
+                            aria-valuemin={0}
+                            aria-valuemax={100}
+                            aria-label={`Progress for ${project.name}`}
+                            className="h-1 w-24 overflow-hidden rounded-full bg-muted"
+                        >
                             <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
                         </div>
                     </div>

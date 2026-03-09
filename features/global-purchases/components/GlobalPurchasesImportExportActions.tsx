@@ -33,8 +33,7 @@ export function GlobalPurchasesImportExportActions({
           <Button
             type="button"
             variant="outline"
-            size="sm"
-            className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+            className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
             onClick={onExport}
             aria-label="Экспорт закупок"
           >
@@ -50,8 +49,7 @@ export function GlobalPurchasesImportExportActions({
           <Button
             type="button"
             variant="outline"
-            size="sm"
-            className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+            className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
             onClick={onImportClick}
             aria-label="Импорт закупок"
           >

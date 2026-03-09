@@ -148,7 +148,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button size="sm" variant="outline" className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm" aria-label="Добавить дополнительную работу">
+                <Button variant="outline" className="h-9 gap-1.5 px-0 size-9 sm:size-auto sm:px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95" aria-label="Добавить дополнительную работу">
                     <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">Добавить доп. работу</span>
                 </Button>
