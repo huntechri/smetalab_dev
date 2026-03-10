@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 import {
@@ -26,6 +27,7 @@ interface SidebarNavProps {
 
 export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps) {
     const { isMobile, setOpenMobile } = useSidebar();
+    const router = useRouter();
 
     if (items.length === 0) {
         return null;
@@ -46,6 +48,9 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
                                 <SidebarMenuButton asChild isActive={itemIsActive} className={cn('h-10 rounded-xl px-4 transition-all duration-300 hover:bg-muted/60 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold', itemIsActive && 'shadow-sm ring-1 ring-primary/20')}>
                                     <Link
                                         href={item.url}
+                                        prefetch={true}
+                                        onMouseEnter={() => router.prefetch(item.url)}
+                                        onFocus={() => router.prefetch(item.url)}
                                         onClick={() => {
                                             if (isMobile) {
                                                 setOpenMobile(false);

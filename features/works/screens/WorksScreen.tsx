@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
+import { Skeleton } from '@/shared/ui/skeleton';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -69,7 +70,15 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
         });
     }, [editor.setEditFormData]);
 
-    if (!mounted) return null;
+    if (!mounted) {
+        return (
+            <div className="space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-[420px] w-full" />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-4">
