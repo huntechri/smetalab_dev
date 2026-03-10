@@ -64,8 +64,8 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                 <h1 className="sr-only">{project.name}</h1>
             </div>
 
-            <div className="space-y-6 lg:space-y-10">
-                <div className="@container/main px-4 lg:px-6 space-y-6 lg:space-y-10">
+            <div className="space-y-4 lg:space-y-10">
+                <div className="@container/main px-4 lg:px-6 space-y-4 lg:space-y-10">
                     <DashboardKpiCards kpi={kpi} />
                     <DashboardChart data={performanceDynamics} />
                 </div>

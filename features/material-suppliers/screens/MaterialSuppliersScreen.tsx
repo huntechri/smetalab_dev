@@ -91,20 +91,15 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
 
   return (
-    <div className="space-y-6 p-1 md:p-0">
-      <Breadcrumb>
+    <div className="space-y-4">
+      <Breadcrumb className="px-1 md:px-0">
         <BreadcrumbList>
           <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
           <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
           <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики</BreadcrumbPage></BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-
-      <div className="flex items-start justify-between gap-3 sm:items-center px-1 md:px-0">
-        <div>
-          <h1 className="sr-only">Поставщики</h1>
-        </div>
-      </div>
+      <h1 className="sr-only">Поставщики</h1>
 
       <DataTable
         columns={columns}
@@ -120,8 +115,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
             {canLoadMore && (
               <Button
                 variant="outline"
-                size="sm"
-                className="h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+                className="h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
                 onClick={() => { void loadPage(); }}
                 disabled={isLoadingMore}
               >
@@ -132,8 +126,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
             <Button
               onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
               variant="outline"
-              size="sm"
-              className="shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto"
+              className="shrink-0 h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
               aria-label="Добавить поставщика"
             >
               <Plus className="h-4 w-4 mr-1" />

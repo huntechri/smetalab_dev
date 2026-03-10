@@ -41,9 +41,9 @@ export function MaterialCatalogDialog({
                 onClose();
             }
         }}>
-            <DialogContent className="h-[100dvh] w-screen max-w-[1260px] rounded-none p-0 flex flex-col gap-0 sm:h-[86vh] sm:w-[96vw] sm:max-w-[1260px] sm:rounded-lg">
-                <DialogHeader className="border-b p-4 sm:p-6">
-                    <DialogTitle className="pr-8 text-base leading-tight sm:text-xl">
+            <DialogContent className="h-[100dvh] w-screen max-w-[1024px] rounded-none p-0 flex flex-col gap-0 sm:h-[80vh] sm:w-[96vw] sm:max-w-[1024px] sm:rounded-xl shadow-2xl overflow-hidden">
+                <DialogHeader className="border-b p-4">
+                    <DialogTitle className="pr-8 text-base leading-tight sm:text-lg font-semibold">
                         {isReplaceMode ? `Заменить материал: ${parentWorkName}` : `Добавить материал в: ${parentWorkName}`}
                     </DialogTitle>
                     <DialogDescription className="text-xs sm:text-sm">

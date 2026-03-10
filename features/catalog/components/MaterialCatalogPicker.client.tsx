@@ -142,15 +142,15 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
 
     return (
-        <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden">
-            <div className="p-4 border-b">
+        <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden relative">
+            <div className="p-3 sm:px-4 border-b bg-background shadow-sm z-10">
                 <div className="flex items-center gap-3">
                     <div className="relative flex-1">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                         <Input
                             placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
                             className={cn(
-                                'pl-9 h-10 bg-muted/30 focus-visible:ring-primary/20 transition-all border-none',
+                                'pl-9 h-9 text-sm bg-muted/30 focus-visible:ring-primary/20 transition-all border-none placeholder:text-sm',
                                 isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]',
                             )}
                             value={searchQuery}
@@ -163,7 +163,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                             }}
                         />
                     </div>
-                    <Button type="button" variant="outline" className="h-10" onClick={submitSearch} disabled={loading}>
+                    <Button type="button" variant="outline" className="h-9 text-sm shadow-sm" onClick={submitSearch} disabled={loading}>
                         Поиск
                     </Button>
                     <div className="flex items-center gap-2 px-1">
@@ -195,13 +195,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                 </Button>
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[320px_minmax(0,1fr)] overflow-hidden">
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] overflow-hidden">
                 <div data-testid="material-categories-panel" className={cn(
-                    'border-b bg-muted/20 min-h-0 max-h-64 lg:max-h-none lg:border-b-0 lg:border-r',
+                    'border-b bg-muted/10 min-h-0 max-h-64 lg:max-h-none lg:border-b-0 lg:border-r',
                     isCategoryPanelOpen ? 'block' : 'hidden',
                     'lg:block',
                 )}>
-                    <div className="px-3 py-2 border-b text-xs font-medium text-muted-foreground">Категории материалов L1–L4</div>
+                    <div className="px-4 py-3 border-b text-xs font-semibold text-muted-foreground uppercase tracking-wider">Категории L1–L4</div>
                     <ScrollArea className="h-full">
                         <div className="p-2 space-y-1">
                             <Button
@@ -295,35 +295,35 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                 const isAlreadyAdded = !allowDuplicateSelection && addedMaterialNames.has(material.name);
 
                                 return (
-                                    <div className="px-2 py-0.5">
-                                        <div className="group relative flex items-center justify-between gap-3 p-2.5 sm:p-3.5 rounded-lg hover:bg-muted/50 transition-all border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden">
-                                            <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                                <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-border/50 bg-muted">
+                                    <div className="px-2 sm:px-4 py-1">
+                                        <div className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-xl hover:bg-muted/40 transition-colors border border-border/30 sm:border-transparent hover:shadow-sm hover:border-border/60 w-full overflow-hidden bg-background sm:bg-transparent">
+                                            <div className="flex-1 min-w-0 flex items-center gap-3 sm:gap-4">
+                                                <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-muted">
                                                     {material.imageUrl ? (
                                                         <Image
                                                             src={material.imageUrl}
                                                             alt={material.name}
                                                             fill
                                                             unoptimized
-                                                            sizes="56px"
-                                                            className="object-cover"
+                                                            sizes="(max-width: 640px) 36px, 40px"
+                                                            className="object-cover transition-transform duration-300 group-hover:scale-105"
                                                         />
                                                     ) : (
-                                                        <ImageOff className="h-5 w-5 text-muted-foreground/70" />
+                                                        <ImageOff className="h-4 w-4 text-muted-foreground/50" />
                                                     )}
                                                 </div>
-                                                <div className="space-y-0.5 min-w-0 flex-1">
-                                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                                        <span className="text-[9px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/80 px-1 py-0.5 rounded leading-none">
+                                                <div className="space-y-1 min-w-0 flex-1">
+                                                    <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                                                        <span className="text-[10px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/60 px-1.5 py-0.5 rounded leading-none border border-border/40">
                                                             {material.code}
                                                         </span>
                                                         {material.categoryLv1 && (
-                                                            <span className="text-[9px] text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[120px] leading-none">
+                                                            <span className="text-[10px] text-muted-foreground font-medium bg-muted/30 px-1.5 py-0.5 rounded truncate max-w-[120px] leading-none border border-border/20">
                                                                 {material.categoryLv1}
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <h4 className="text-[13px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                                    <h4 className="text-[13px] sm:text-[14px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
@@ -334,20 +334,20 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div className="flex items-center shrink-0 ml-1">
+                                            <div className="flex items-center shrink-0 ml-2">
                                                 <Button
                                                     size="icon"
                                                     variant="outline"
                                                     disabled={isAdding || isAlreadyAdded}
                                                     className={cn(
-                                                        'h-7 w-7 rounded-full border-border/50 transition-all shrink-0 active:scale-90',
+                                                        'h-8 w-8 sm:h-9 sm:w-9 rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
                                                         isAlreadyAdded
-                                                            ? 'bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default'
-                                                            : 'hover:bg-primary hover:text-primary-foreground hover:border-primary',
+                                                            ? 'bg-primary/5 text-primary border-primary/20 opacity-100 cursor-default shadow-none'
+                                                            : 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md',
                                                     )}
                                                     onClick={() => void addMaterial(material)}
                                                 >
-                                                    {isAdding || isAlreadyAdded ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
+                                                    {isAdding || isAlreadyAdded ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4 sm:h-5 sm:w-5" />}
                                                 </Button>
                                             </div>
                                         </div>

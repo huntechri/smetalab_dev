@@ -176,7 +176,7 @@ export function CreateCounterpartySheet({
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
                         <ScrollArea className="flex-1 min-h-0">
-                            <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-6">
+                            <div className="px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-4">
                                 <Tabs defaultValue="general" className="w-full">
                                     <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
                                         <TabsTrigger value="general" className="text-xs">Общее</TabsTrigger>

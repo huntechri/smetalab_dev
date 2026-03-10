@@ -31,7 +31,7 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
             description: 'Общее количество',
             icon: Building2,
             trend: 'Total',
-            color: 'text-blue-600 bg-blue-500/10'
+            color: 'text-primary bg-primary/10'
         },
         {
             title: 'В работе',
@@ -39,7 +39,7 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
             description: 'Активные стадии',
             icon: Activity,
             trend: 'Live',
-            color: 'text-emerald-600 bg-emerald-500/10'
+            color: 'text-emerald-500 bg-emerald-500/10'
         },
         {
             title: 'Общий бюджет',
@@ -47,7 +47,7 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
             description: 'Сумма контрактов',
             icon: Wallet,
             trend: 'Budget',
-            color: 'text-amber-600 bg-amber-500/10'
+            color: 'text-amber-500 bg-amber-500/10'
         },
         {
             title: 'Ср. прогресс',
@@ -55,19 +55,19 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
             description: 'Выполнение работ',
             icon: BarChart3,
             trend: 'Avg',
-            color: 'text-purple-600 bg-purple-500/10'
+            color: 'text-primary bg-primary/10'
         }
     ];
 
     return (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((stat, index) => (
-                <Card key={index} className="py-0 overflow-hidden relative border-primary/5 hover:border-primary/20 transition-all duration-300">
-                    <CardHeader className="p-4 pb-2 space-y-1">
+                <Card key={index} className="py-0 overflow-hidden relative border-primary/10 hover:border-primary/30 transition-colors duration-200 cursor-pointer">
+                    <CardHeader className="p-3 pb-2 space-y-1">
                         <CardDescription className="text-[10px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                             {stat.title}
                         </CardDescription>
-                        <CardTitle className="text-2xl font-bold tracking-tight">
+                        <CardTitle className="text-lg md:text-xl font-bold tracking-tight">
                             {stat.value}
                         </CardTitle>
                         <CardAction>

@@ -26,9 +26,8 @@ export function ImpersonateButton({ teamId }: ImpersonateButtonProps) {
             <input type="hidden" name="targetTeamId" value={teamId} />
             <Button
                 type="submit"
-                size="sm"
                 variant="outline"
-                className="rounded-xl h-8 text-xs gap-1.5"
+                className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs gap-1.5"
                 disabled={isPending}
             >
                 {isPending ? (

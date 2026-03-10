@@ -186,12 +186,12 @@ export function DataTable<TData, TValue>({
             <div className="space-y-4">
                 {/* Search Filter */}
                 {filterColumn && (
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center justify-between px-1 md:px-0">
-                        {/* Search Input & AI Toggle Group (Limited width on desktop) */}
-                        <div className="flex items-center gap-2 w-full sm:max-w-xl">
+                    <div className="flex flex-col gap-3 xl:flex-row xl:items-center justify-between px-1 md:px-0">
+                        {/* Search Input & AI Toggle Group */}
+                        <div className="flex items-center gap-2 w-full xl:w-auto shrink-0">
                             <div className={cn(
-                                "relative flex-1 min-w-0 transition-all duration-300",
-                                isAiMode ? "sm:max-w-md" : "sm:max-w-xs"
+                                "relative flex-1 min-w-[200px] transition-all duration-300",
+                                isAiMode ? "xl:w-[350px]" : "xl:w-[280px]"
                             )}>
                                 {isSearching ? (
                                     <Loader2 aria-hidden="true" className="absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 text-indigo-500 animate-spin" />
@@ -215,7 +215,7 @@ export function DataTable<TData, TValue>({
                                         }
                                     }}
                                     className={cn(
-                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-8 text-xs placeholder:text-xs",
+                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-xs md:text-sm placeholder:text-xs md:placeholder:text-sm shadow-sm md:shadow-none",
                                         isAiMode ? (
                                             "border-indigo-400/50 ring-indigo-400/20 focus-visible:ring-indigo-500/30 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
@@ -240,7 +240,7 @@ export function DataTable<TData, TValue>({
                             </div>
 
                             {showAiSearch && onSearch && (
-                                <div className="flex shrink-0 items-center gap-2 px-2 h-8 rounded-lg border border-indigo-100 bg-indigo-50/30">
+                                <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-indigo-100 bg-indigo-50/30">
                                     <Tooltip>
                                         <TooltipTrigger asChild>
                                             <div className="flex items-center gap-3 cursor-help">
@@ -269,7 +269,7 @@ export function DataTable<TData, TValue>({
 
                         {/* Actions Group */}
                         {actions && (
-                            <div className="flex items-center gap-2 justify-end sm:justify-start" role="group" aria-label="Действия таблицы">
+                            <div className="flex items-center gap-2 w-full xl:w-auto justify-start xl:justify-end overflow-x-auto pb-1 xl:pb-0 scrollbar-hide" role="group" aria-label="Действия таблицы">
                                 {actions}
                             </div>
                         )}

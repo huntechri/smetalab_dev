@@ -11,7 +11,7 @@ export function ProjectsSearchInput({ value, onChange }: ProjectsSearchInputProp
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder="Поиск по проекту или заказчику"
-            className="w-full sm:w-72 h-8 text-xs placeholder:text-xs"
+            className="w-full sm:w-[280px] lg:w-[320px] h-9 text-sm transition-colors focus-visible:ring-1"
             aria-label="Поиск проектов"
         />
     );

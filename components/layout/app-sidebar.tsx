@@ -124,16 +124,16 @@ export function AppSidebar() {
     const filteredGuideNavItems = filterItems(guideNavItems);
 
     return (
-        <Sidebar>
+        <Sidebar className="border-r-border/40 bg-sidebar/80 backdrop-blur-xl">
             <SidebarHeader>
-                <div className="flex items-center gap-2 px-2 py-4">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-orange-500 text-white font-bold" aria-hidden="true">
+                <div className="flex items-center gap-3 px-3 py-5">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold shadow-sm ring-1 ring-orange-500/20" aria-hidden="true">
                         S
                     </div>
-                    <span className="text-lg font-semibold">Smetalab</span>
+                    <span className="text-xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Smetalab</span>
                 </div>
             </SidebarHeader>
-            <SidebarContent>
+            <SidebarContent className="px-2 space-y-4">
                 <SidebarNav
                     label="Навигация"
                     items={filteredMainNavItems}

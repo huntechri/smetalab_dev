@@ -11,13 +11,13 @@ export function AppHeader() {
     const pageTitle = usePageTitle();
 
     return (
-        <header className="sticky top-0 z-40 flex h-14 shrink-0 items-center gap-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-md md:px-6">
-            <SidebarTrigger className="-ml-2 hover:bg-muted/50 transition-colors" />
+        <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-4 border-b border-border/40 bg-background/60 px-4 backdrop-blur-xl md:px-6 transition-all duration-300">
+            <SidebarTrigger className="-ml-2 hover:bg-muted/80 rounded-lg transition-colors" />
             <Separator orientation="vertical" className="h-6 bg-border/40" />
             <div className="flex-1">
-                <h1 className="text-sm font-bold uppercase tracking-[0.15em] text-foreground/80">{pageTitle}</h1>
+                <h1 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/70">{pageTitle}</h1>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
                 <ActiveTeamIndicator />
                 <NotificationBell />
                 <div className="h-6 w-px bg-border/40 invisible sm:visible" />
