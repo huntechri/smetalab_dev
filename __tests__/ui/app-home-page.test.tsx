@@ -3,13 +3,36 @@ import { describe, expect, it } from 'vitest';
 import { AppHomeScreen } from '@/features/dashboard';
 
 describe('AppHomeScreen', () => {
-    it('renders main dashboard sections', () => {
-        render(<AppHomeScreen />);
+    it('renders project-style summary cards and project dynamics chart', () => {
+        render(
+            <AppHomeScreen
+                kpi={{
+                    revenue: 150_000,
+                    profit: 40_000,
+                    progress: 62,
+                    remainingDays: 12,
+                }}
+                dynamics={[
+                    {
+                        date: '2026-01-10',
+                        executionPlan: 1_200_000,
+                        executionFact: 980_000,
+                        procurementPlan: 650_000,
+                        procurementFact: 520_000,
+                    },
+                ]}
+            />
+        );
 
-        expect(screen.getByRole('heading', { level: 1, name: 'Операционный центр' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 2, name: 'Сводка' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 2, name: 'Фокус на сегодня' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 2, name: 'Команда' })).toBeInTheDocument();
-        expect(screen.getByRole('heading', { level: 2, name: 'Отклонения' })).toBeInTheDocument();
+        expect(screen.getByRole('heading', { level: 1, name: 'Сводка проекта' })).toBeInTheDocument();
+        expect(screen.getByText('Доход')).toBeInTheDocument();
+        expect(screen.getByText('Прибыль')).toBeInTheDocument();
+        expect(screen.getByText('Прогресс')).toBeInTheDocument();
+        expect(screen.getByText('Срок')).toBeInTheDocument();
+        expect(screen.getByText('Динамика проекта')).toBeInTheDocument();
+
+        expect(screen.queryByText('Фокус на сегодня')).not.toBeInTheDocument();
+        expect(screen.queryByText('Команда')).not.toBeInTheDocument();
+        expect(screen.queryByText('Отклонения')).not.toBeInTheDocument();
     });
 });
