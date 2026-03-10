@@ -23,6 +23,10 @@ async function handleProxy(request: NextRequest) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
   }
 
+  if (!isProtectedRoute) {
+    return NextResponse.next();
+  }
+
   let res = NextResponse.next();
 
   // If access token is missing but refresh token exists, we could try to refresh

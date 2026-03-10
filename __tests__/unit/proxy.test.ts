@@ -70,4 +70,61 @@ describe('proxy auth refresh flow', () => {
     );
     expect(redirectSpy).not.toHaveBeenCalled();
   });
+
+  it('skips auth token verification on public GET routes', async () => {
+    const nextResponse = { cookies: { set: vi.fn() } };
+    nextSpy.mockReturnValue(nextResponse);
+
+    const request = {
+      method: 'GET',
+      url: 'https://example.com/sign-in',
+      nextUrl: { pathname: '/sign-in' },
+      cookies: {
+        get: (name: string) => {
+          if (name === 'access_token') return { value: 'access' };
+          if (name === 'refresh_token') return { value: 'refresh' };
+          return undefined;
+        },
+      },
+    };
+
+    const { default: proxy } = await import('@/proxy');
+    const response = await proxy(request as never);
+
+    expect(response).toBe(nextResponse);
+    expect(verifyTokenSpy).not.toHaveBeenCalled();
+    expect(refreshSessionTokensSpy).not.toHaveBeenCalled();
+    expect(redirectSpy).not.toHaveBeenCalled();
+  });
+
+  it('verifies access token on protected GET routes', async () => {
+    const nextResponse = { cookies: { set: vi.fn() } };
+    nextSpy.mockReturnValue(nextResponse);
+    verifyTokenSpy.mockResolvedValue({
+      user: { id: 'u1' },
+      platformRole: null,
+      expires: '2030-01-01T00:00:00.000Z',
+    });
+
+    const request = {
+      method: 'GET',
+      url: 'https://example.com/app',
+      nextUrl: { pathname: '/app' },
+      cookies: {
+        get: (name: string) => {
+          if (name === 'access_token') return { value: 'access' };
+          if (name === 'refresh_token') return undefined;
+          return undefined;
+        },
+      },
+    };
+
+    const { default: proxy } = await import('@/proxy');
+    const response = await proxy(request as never);
+
+    expect(response).toBe(nextResponse);
+    expect(verifyTokenSpy).toHaveBeenCalledWith('access');
+    expect(refreshSessionTokensSpy).not.toHaveBeenCalled();
+    expect(redirectSpy).not.toHaveBeenCalled();
+  });
 });
