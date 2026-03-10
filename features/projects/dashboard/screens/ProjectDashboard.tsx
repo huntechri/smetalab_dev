@@ -41,7 +41,7 @@ type ProjectDashboardProps = {
 export function ProjectDashboard({ project, estimates, performanceDynamics, kpi }: ProjectDashboardProps) {
     return (
         <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
-            <div className="px-4 lg:px-6">
+            <div className="px-1 md:px-0">
                 <Breadcrumb className="mb-2">
                     <BreadcrumbList>
                         <BreadcrumbItem>
@@ -65,7 +65,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
             </div>
 
             <div className="space-y-4 lg:space-y-10">
-                <div className="@container/main px-4 lg:px-6 space-y-4 lg:space-y-10">
+                <div className="@container/main space-y-4 lg:space-y-10">
                     <DashboardKpiCards kpi={kpi} />
                     <DashboardChart data={performanceDynamics} />
                 </div>
@@ -76,7 +76,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                     initialEstimates={estimates}
                 />
 
-                <div className="px-4 lg:px-6">
+                <div>
                     <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">
                         Additional widgets (Team, Activity) will be implemented here
                     </div>
