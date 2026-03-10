@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { TeamDataWithMembers, User } from '@/lib/data/db/schema';
-import { getTeamForUser, getUser } from '@/lib/data/db/queries';
+import { getTeamForUserWithMembers, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 import { requirePermission } from './access';
 
@@ -68,7 +68,7 @@ export function withTeam<T>(action: ActionWithTeamFunction<T>) {
       redirect('/sign-in');
     }
 
-    const team = await getTeamForUser();
+    const team = await getTeamForUserWithMembers();
     if (!team) {
       throw new Error('Team not found');
     }

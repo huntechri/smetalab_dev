@@ -1,6 +1,6 @@
 export { SYSTEM_TENANT_ID, withActiveTenant } from './tenant';
 
-export { getUser, getUserWithTeam, getActivityLogs, getTeamForUser, resolveTeamForUser } from './user-team-queries';
+export { getUser, getUserWithTeam, getActivityLogs, getTeamForUser, getTeamForUserWithMembers, resolveTeamForUser } from './user-team-queries';
 
 export { getTeamByStripeCustomerId, updateTeamSubscription } from './billing-queries';
 
