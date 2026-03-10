@@ -47,7 +47,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
     }, [router]);
 
     return (
-        <div className="space-y-4 px-4 lg:px-6">
+        <div className="space-y-4">
             <EstimatesListTable
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}
