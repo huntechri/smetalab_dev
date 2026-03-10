@@ -55,8 +55,8 @@ describe('TeamScreen', () => {
   it('renders team summary and members', () => {
     render(<TeamScreen />);
 
-    expect(screen.getByRole('heading', { name: 'Команда' })).toBeInTheDocument();
-    expect(screen.getByText('СметаLab · 2 участников')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'СметаLab' })).toBeInTheDocument();
+    expect(screen.getByText(/2 участника/)).toBeInTheDocument();
     expect(screen.getByText('Анна Смирнова')).toBeInTheDocument();
     expect(screen.getByText('Илья Петров')).toBeInTheDocument();
   });

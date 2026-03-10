@@ -1,4 +1,4 @@
-import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Users } from 'lucide-react';
 
 interface TeamHeaderCardProps {
     teamName?: string;
@@ -7,15 +7,14 @@ interface TeamHeaderCardProps {
 
 export function TeamHeaderCard({ teamName, membersCount }: TeamHeaderCardProps) {
     return (
-        <Card className="border-border/70">
-            <CardHeader className="space-y-1">
-                <CardTitle>
-                    <h1 className="sr-only">Команда</h1>
-                </CardTitle>
-                <CardDescription>
-                    {teamName || 'Команда'} · {membersCount} участников
-                </CardDescription>
-            </CardHeader>
-        </Card>
+        <div className="flex flex-col space-y-1.5 p-6 bg-muted/20">
+            <h1 className="text-xl font-semibold leading-none tracking-tight text-foreground">
+                {teamName || 'Команда'}
+            </h1>
+            <p className="text-sm text-muted-foreground flex items-center gap-1.5">
+                <Users className="w-4 h-4" />
+                {membersCount} {membersCount === 1 ? 'участник' : membersCount > 1 && membersCount < 5 ? 'участника' : 'участников'}
+            </p>
+        </div>
     );
 }

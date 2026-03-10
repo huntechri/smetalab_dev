@@ -17,22 +17,22 @@ export function TodayFocusSection() {
                 <Badge className="h-5 border-primary/20 bg-primary/5 text-[10px] text-primary">Смена #42</Badge>
             </div>
 
-            <Card className="glass-card overflow-hidden">
+            <Card className="glass-card overflow-hidden border-border/40 bg-background/50 shadow-sm backdrop-blur-md">
                 <CardContent className="p-0">
-                    <div className="h-[180px] divide-y divide-border/10 overflow-y-auto">
+                    <div className="h-[200px] divide-y divide-border/20 overflow-y-auto">
                         {focusItems.map((item) => (
-                            <div key={item.label} className="group flex items-center justify-between gap-4 p-3.5 transition-all hover:bg-muted/10">
+                            <div key={item.label} className="group flex cursor-pointer items-center justify-between gap-4 p-4 transition-all hover:bg-muted/20">
                                 <div className="flex items-start gap-3">
-                                    <div className="mt-1.5 h-1.5 w-1.5 rounded-full bg-primary/20 transition-colors group-hover:bg-primary" />
+                                    <div className="mt-1.5 h-2 w-2 rounded-full bg-primary/20 transition-all duration-300 group-hover:scale-125 group-hover:bg-primary" />
                                     <div>
-                                        <p className="text-sm font-semibold leading-none text-foreground">{item.label}</p>
-                                        <div className="mt-1.5 flex items-center gap-2">
-                                            <Clock className="h-3 w-3 text-muted-foreground/60" />
-                                            <span className="text-[11px] text-muted-foreground">{item.meta}</span>
+                                        <p className="text-sm font-semibold leading-none text-foreground transition-colors group-hover:text-primary">{item.label}</p>
+                                        <div className="mt-2 flex items-center gap-1.5">
+                                            <Clock className="h-3.5 w-3.5 text-muted-foreground/60" />
+                                            <span className="text-xs text-muted-foreground">{item.meta}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <Badge variant="outline" className={cn('rounded-sm border-0 px-1.5 py-0.5 text-[9px] font-bold uppercase', item.color)}>
+                                <Badge variant="outline" className={cn('rounded border-0 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider', item.color)}>
                                     {item.status}
                                 </Badge>
                             </div>

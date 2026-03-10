@@ -50,13 +50,7 @@ const insertButtonStyles = cva("", {
     },
 })
 
-const indexInsertButtonStyles = cva("hidden md:flex absolute -left-10 h-7 w-7 rounded-full shadow-md border-2 border-background opacity-0 group-hover/row:opacity-100 transition-opacity z-50", {
-    variants: {
-        tone: {
-            success: "bg-lime-500 text-white hover:bg-lime-600",
-        },
-    },
-})
+
 
 const RowActions = React.memo(({ row, table }: RowActionsProps) => {
     const meta = table.options.meta as TableMeta<WorkRow> & {
@@ -136,27 +130,7 @@ const IndexCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
 
     return (
         <div className="relative group/cell flex items-center justify-center h-full min-h-[40px]">
-            {!isPlaceholder && (
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                size="icon"
-                                variant="ghost"
-                                className={indexInsertButtonStyles({ tone: "success" })}
-                                onClick={() => meta.onInsertRequest?.(row.original.id)}
-                                aria-label="Вставить строку ниже"
-                                title="Вставить строку ниже"
-                            >
-                                <Plus className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">
-                            <p>Вставить строку ниже</p>
-                        </TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
-            )}
+
             <div className="font-medium text-xs md:text-sm text-muted-foreground">
                 {isPlaceholder ? "..." : index}
             </div>

@@ -150,7 +150,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     };
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             <Breadcrumb className="px-1 md:px-0">
                 <BreadcrumbList>
                     <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
@@ -158,13 +158,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                     <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Контрагенты</BreadcrumbPage></BreadcrumbItem>
                 </BreadcrumbList>
             </Breadcrumb>
-
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-1 md:px-0 mb-4">
-                <div>
-                    <h1 className="sr-only">Контрагенты</h1>
-                </div>
-                <div className="hidden" aria-hidden="true" />
-            </div>
+            <h1 className="sr-only">Контрагенты</h1>
 
             <DataTable
                 columns={columns}
@@ -181,8 +175,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                         {canLoadMore && (
                             <Button
                                 variant="outline"
-                                size="sm"
-                                className="h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs"
+                                className="h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
                                 onClick={handleLoadMore}
                                 disabled={isLoadingMore}
                             >
@@ -194,8 +187,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                         <Button
                             onClick={handleCreate}
                             variant="outline"
-                            size="sm"
-                            className="shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto"
+                            className="shrink-0 h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
                             aria-label="Добавить контрагента"
                         >
                             <Plus className="h-4 w-4 mr-1" />

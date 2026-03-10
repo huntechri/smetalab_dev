@@ -21,7 +21,7 @@ interface GlobalPurchasesScreenProps {
 
 export function GlobalPurchasesScreen({ initialRows, projectOptions, supplierOptions, initialRange }: GlobalPurchasesScreenProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <Breadcrumb className="px-1 md:px-0 text-xs md:text-sm">
         <BreadcrumbList>
           <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>

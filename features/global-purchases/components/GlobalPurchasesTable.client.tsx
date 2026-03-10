@@ -188,134 +188,142 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterPlaceholder="Поиск по материалам..."
                 height="625px"
                 actions={(
-                    <div className="flex flex-wrap items-center gap-2">
-                        <GlobalPurchasesImportExportActions
-                            importInputRef={importInputRef}
-                            onExport={handleExport}
-                            onImportClick={handleImportClick}
-                            onFileChange={handleImportFileChange}
-                        />
-
-                        <Popover>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <PopoverTrigger asChild>
-                                        <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums text-xs md:text-sm">
-                                            <CalendarDays className="size-4" />
-                                            {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
-                                        </Button>
-                                    </PopoverTrigger>
-                                </TooltipTrigger>
-                                <TooltipContent>Выберете период отображения закупок</TooltipContent>
-                            </Tooltip>
-                            <PopoverContent className="w-auto p-0" align="start">
-                                <Calendar
-                                    mode="range"
-                                    selected={{ from: parseIsoDateSafe(range.from), to: parseIsoDateSafe(range.to) }}
-                                    onSelect={handleRangeChange}
-                                    locale={ru}
-                                    initialFocus
-                                />
-                            </PopoverContent>
-                        </Popover>
-
-                        <Popover open={openProjectFilter} onOpenChange={setOpenProjectFilter}>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className={cn(
-                                                "h-8 px-2 gap-1.5 min-w-[160px] max-w-[200px] justify-between border border-transparent hover:border-border text-xs md:text-sm",
-                                                !filterProjectId && "text-muted-foreground"
-                                            )}
-                                        >
-                                            <div className="flex items-center gap-1.5 truncate">
-                                                <Filter className="size-3.5 shrink-0 opacity-60" />
-                                                <span className="truncate">
-                                                    {filterProjectId === 'none'
-                                                        ? 'Без привязки'
-                                                        : (projectOptions.find(p => p.id === filterProjectId)?.name ?? 'Все объекты')}
-                                                </span>
-                                            </div>
-                                            <ChevronsUpDown className="size-3 opacity-50 shrink-0 ml-1" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                </TooltipTrigger>
-                                <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
-                            </Tooltip>
-                            <PopoverContent className="w-72 p-0" align="end">
-                                <Command>
-                                    <CommandInput placeholder="Поиск объекта..." />
-                                    <CommandList>
-                                        <CommandEmpty>Объект не найден.</CommandEmpty>
-                                        <CommandGroup>
-                                            <CommandItem onSelect={() => {
-                                                setFilterProjectId(null);
-                                                setOpenProjectFilter(false);
-                                            }}>
-                                                <Check className={cn("mr-2 h-4 w-4", !filterProjectId ? "opacity-100" : "opacity-0")} />
-                                                Все объекты
-                                            </CommandItem>
-                                            <CommandItem onSelect={() => {
-                                                setFilterProjectId('none');
-                                                setOpenProjectFilter(false);
-                                            }}>
-                                                <Check className={cn("mr-2 h-4 w-4", filterProjectId === 'none' ? "opacity-100" : "opacity-0")} />
-                                                Без привязки
-                                            </CommandItem>
-                                            {projectOptions.map((project) => (
-                                                <CommandItem key={project.id} value={project.name} onSelect={() => {
-                                                    setFilterProjectId(project.id);
+                    <div className="flex flex-col xl:flex-row w-full xl:w-auto items-stretch xl:items-center gap-3 xl:gap-2">
+                        {/* Filters Group */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                            <Popover open={openProjectFilter} onOpenChange={setOpenProjectFilter}>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                className={cn(
+                                                    "h-9 px-3 gap-2 w-full sm:w-[200px] justify-between text-xs md:text-sm shadow-sm md:shadow-none bg-background",
+                                                    !filterProjectId && "text-muted-foreground"
+                                                )}
+                                            >
+                                                <div className="flex items-center gap-2 truncate">
+                                                    <Filter className="size-4 shrink-0 opacity-60" />
+                                                    <span className="truncate">
+                                                        {filterProjectId === 'none'
+                                                            ? 'Без привязки'
+                                                            : (projectOptions.find(p => p.id === filterProjectId)?.name ?? 'Все объекты')}
+                                                    </span>
+                                                </div>
+                                                <ChevronsUpDown className="size-3.5 opacity-50 shrink-0 ml-1" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
+                                </Tooltip>
+                                <PopoverContent className="w-72 p-0" align="start">
+                                    <Command>
+                                        <CommandInput placeholder="Поиск объекта..." />
+                                        <CommandList>
+                                            <CommandEmpty>Объект не найден.</CommandEmpty>
+                                            <CommandGroup>
+                                                <CommandItem onSelect={() => {
+                                                    setFilterProjectId(null);
                                                     setOpenProjectFilter(false);
                                                 }}>
-                                                    <Check className={cn("mr-2 h-4 w-4", project.id === filterProjectId ? "opacity-100" : "opacity-0")} />
-                                                    <span className="truncate">{project.name}</span>
+                                                    <Check className={cn("mr-2 h-4 w-4", !filterProjectId ? "opacity-100" : "opacity-0")} />
+                                                    Все объекты
                                                 </CommandItem>
-                                            ))}
-                                        </CommandGroup>
-                                    </CommandList>
-                                </Command>
-                            </PopoverContent>
-                        </Popover>
+                                                <CommandItem onSelect={() => {
+                                                    setFilterProjectId('none');
+                                                    setOpenProjectFilter(false);
+                                                }}>
+                                                    <Check className={cn("mr-2 h-4 w-4", filterProjectId === 'none' ? "opacity-100" : "opacity-0")} />
+                                                    Без привязки
+                                                </CommandItem>
+                                                {projectOptions.map((project) => (
+                                                    <CommandItem key={project.id} value={project.name} onSelect={() => {
+                                                        setFilterProjectId(project.id);
+                                                        setOpenProjectFilter(false);
+                                                    }}>
+                                                        <Check className={cn("mr-2 h-4 w-4", project.id === filterProjectId ? "opacity-100" : "opacity-0")} />
+                                                        <span className="truncate">{project.name}</span>
+                                                    </CommandItem>
+                                                ))}
+                                            </CommandGroup>
+                                        </CommandList>
+                                    </Command>
+                                </PopoverContent>
+                            </Popover>
 
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
-                                    onClick={() => void handleAddManualRow()}
-                                    disabled={isAddingManual}
-                                    aria-label="Добавить строку вручную"
-                                >
-                                    <Plus className="size-4" />
-                                    <span className="hidden sm:inline">Строка вручную</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Добавить пустую строку закупки</TooltipContent>
-                        </Tooltip>
+                            <Popover>
+                                <Tooltip>
+                                    <TooltipTrigger asChild>
+                                        <PopoverTrigger asChild>
+                                            <Button type="button" variant="outline" size="sm" className="h-9 gap-2 w-full sm:w-[255px] justify-between font-mono tabular-nums text-xs md:text-sm shadow-sm md:shadow-none bg-background">
+                                                <CalendarDays className="size-4 opacity-70" />
+                                                <span className="flex-1 text-left sm:text-center">
+                                                    {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
+                                                </span>
+                                            </Button>
+                                        </PopoverTrigger>
+                                    </TooltipTrigger>
+                                    <TooltipContent>Выберете период отображения закупок</TooltipContent>
+                                </Tooltip>
+                                <PopoverContent className="w-auto p-0" align="start">
+                                    <Calendar
+                                        mode="range"
+                                        selected={{ from: parseIsoDateSafe(range.from), to: parseIsoDateSafe(range.to) }}
+                                        onSelect={handleRangeChange}
+                                        locale={ru}
+                                        initialFocus
+                                    />
+                                </PopoverContent>
+                            </Popover>
+                        </div>
 
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button
-                                    type="button"
-                                    variant="outline"
-                                    size="sm"
-                                    className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
-                                    onClick={() => setIsCatalogOpen(true)}
-                                    disabled={isAddingCatalog}
-                                    aria-label="Добавить из справочника"
-                                >
-                                    <BookOpen className="size-4" />
-                                    <span className="hidden sm:inline">Из справочника</span>
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>Выбрать материалы из каталога</TooltipContent>
-                        </Tooltip>
+                        {/* Divider */}
+                        <div className="hidden xl:block w-px h-6 bg-border mx-1" />
 
+                        {/* Actions Group */}
+                        <div className="flex flex-row items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-hide">
+                            <GlobalPurchasesImportExportActions
+                                importInputRef={importInputRef}
+                                onExport={handleExport}
+                                onImportClick={handleImportClick}
+                                onFileChange={handleImportFileChange}
+                            />
+
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        type="button"
+                                        variant="outline"
+                                        className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
+                                        onClick={() => void handleAddManualRow()}
+                                        disabled={isAddingManual}
+                                        aria-label="Добавить строку вручную"
+                                    >
+                                        <Plus className="size-4" />
+                                        <span className="hidden sm:inline">Вручную</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Добавить пустую строку закупки</TooltipContent>
+                            </Tooltip>
+
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        type="button"
+                                        variant="default"
+                                        className="h-9 gap-2 px-4 shadow-sm text-xs md:text-sm shrink-0 font-semibold tracking-tight transition-all active:scale-95"
+                                        onClick={() => setIsCatalogOpen(true)}
+                                        disabled={isAddingCatalog}
+                                        aria-label="Добавить из справочника"
+                                    >
+                                        <BookOpen className="size-4" />
+                                        <span className="hidden sm:inline">Из справочника</span>
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>Выбрать материалы из каталога</TooltipContent>
+                            </Tooltip>
+                        </div>
                     </div>
                 )}
             />

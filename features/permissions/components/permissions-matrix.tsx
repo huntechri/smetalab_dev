@@ -89,7 +89,7 @@ export function PermissionsMatrix() {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-title flex items-center gap-2 bg-transparent text-zinc-900">

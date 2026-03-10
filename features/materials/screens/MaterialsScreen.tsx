@@ -65,7 +65,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
     if (!mounted) return null;
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4">
             <input
                 type="file"
                 ref={actions.fileInputRef}
@@ -76,17 +76,15 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
                 title="Загрузить материалы из файла"
             />
 
-            <Breadcrumb className="px-1 md:px-0">
-                <BreadcrumbList>
-                    <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Материалы</BreadcrumbPage></BreadcrumbItem>
-                </BreadcrumbList>
-            </Breadcrumb>
-
-            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between px-1 md:px-0">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
+                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
+                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Материалы</BreadcrumbPage></BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
                 <MaterialsHeader isLoading={search.isLoadingMore} totalCount={totalCount} />
-                <div className="hidden" aria-hidden="true" />
             </div>
 
             <div className="relative">
