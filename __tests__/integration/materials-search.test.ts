@@ -3,6 +3,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { materials, users, teams, teamMembers } from '@/lib/data/db/schema';
 import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { generateEmbedding } from '@/lib/ai/embeddings';
+import { __queryEmbeddingsInternal } from '@/lib/ai/query-embeddings';
 import { eq, sql } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { resetDatabase } from '@/lib/data/db/test-utils';
@@ -66,10 +67,12 @@ describe('Materials search integration', () => {
     };
 
     beforeEach(async () => {
+        __queryEmbeddingsInternal.clearCache();
         await setupUserAndTeam();
     });
 
     afterEach(async () => {
+        __queryEmbeddingsInternal.clearCache();
         await cleanup();
     });
 
@@ -136,14 +139,15 @@ describe('Materials search integration', () => {
         }
     });
 
-    it('skips embedding generation for queries with two tokens or fewer', async () => {
+    it('uses embeddings for queries with two tokens or more', async () => {
         const generateEmbeddingMock = vi.mocked(generateEmbedding);
         generateEmbeddingMock.mockClear();
+        generateEmbeddingMock.mockResolvedValue(new Array(1536).fill(0.01));
 
         const result = await MaterialsService.search(testTeamId, 'red brick');
 
         expect(result.success).toBe(true);
-        expect(generateEmbeddingMock).not.toHaveBeenCalled();
+        expect(generateEmbeddingMock).toHaveBeenCalledTimes(1);
     });
 
     it('uses embeddings for queries with three tokens or more', async () => {
@@ -155,6 +159,27 @@ describe('Materials search integration', () => {
 
         expect(result.success).toBe(true);
         expect(generateEmbeddingMock).toHaveBeenCalledTimes(1);
+    });
+
+    it('falls back to lexical search when query embedding generation fails', async () => {
+        const generateEmbeddingMock = vi.mocked(generateEmbedding);
+        generateEmbeddingMock.mockClear();
+        generateEmbeddingMock.mockResolvedValueOnce(null);
+
+        await db.insert(materials).values({
+            tenantId: testTeamId,
+            code: 'F-001',
+            name: 'Red Brick Wall Panel',
+            status: 'active',
+        });
+
+        const result = await MaterialsService.search(testTeamId, 'red brick wall');
+
+        expect(generateEmbeddingMock).toHaveBeenCalledTimes(1);
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.some((item) => item.code === 'F-001')).toBe(true);
+        }
     });
 
     it('uses deterministic tie-breakers for equal scores', async () => {
