@@ -8,6 +8,7 @@ import { eq } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { generateEmbedding } from '@/lib/ai/embeddings';
 import { resetDatabase } from '@/lib/data/db/test-utils';
+import { __queryEmbeddingsInternal } from '@/lib/ai/query-embeddings';
 
 vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }));
 vi.mock('@/lib/ai/embeddings', () => ({ generateEmbedding: vi.fn() }));
@@ -29,6 +30,7 @@ describe('Works Search and Batch Operations', () => {
     let testTeamId: number;
 
     beforeEach(async () => {
+        __queryEmbeddingsInternal.clearCache();
         // Global cleanup
         await resetDatabase();
 
@@ -49,6 +51,7 @@ describe('Works Search and Batch Operations', () => {
     });
 
     afterEach(async () => {
+        __queryEmbeddingsInternal.clearCache();
         if (testTeamId) {
             await db.delete(works).where(eq(works.tenantId, testTeamId));
             await db.delete(teamMembers).where(eq(teamMembers.teamId, testTeamId));
@@ -81,6 +84,24 @@ describe('Works Search and Batch Operations', () => {
         if (result.success) {
             expect(result.data).toHaveLength(1);
             expect(result.data[0].name).toBe('Specialized Painting Work');
+        }
+    });
+
+    it('falls back to lexical search when query embedding generation fails', async () => {
+        vi.mocked(generateEmbedding).mockResolvedValueOnce(null);
+
+        await db.insert(works).values({
+            tenantId: testTeamId,
+            code: 'SEARCH-LEX-1',
+            name: 'Ceiling Painting Work',
+            status: 'active',
+        });
+
+        const result = await WorksService.search(testTeamId, 'ceiling painting');
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.some((item) => item.code === 'SEARCH-LEX-1')).toBe(true);
         }
     });
 

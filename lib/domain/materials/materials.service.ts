@@ -9,6 +9,7 @@ import { materialSchema } from '@/lib/validations/schemas';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { after } from 'next/server';
 import { SYNONYMS } from '@/lib/ai/dictionaries/synonyms';
+import { getCachedQueryEmbedding } from '@/lib/ai/query-embeddings';
 
 const FTS_RANK_WEIGHTS = [0.1, 0.2, 0.4, 1.0] as const;
 
@@ -19,6 +20,8 @@ const SEARCH_SCORE_WEIGHTS = {
     vendor: 0.6,
     vector: 0.4,
 } as const;
+
+const MATERIALS_VECTOR_SCORE_THRESHOLD = 0.42;
 
 export class MaterialsService {
     static async getMany(
@@ -241,17 +244,24 @@ export class MaterialsService {
 
         const { expandedQuery, tokens } = this.preprocessSearchQuery(query);
         const normalizedQuery = query.trim().toLowerCase();
-        const shouldUseVector = tokens.length >= 3;
+        const shouldUseVector = tokens.length >= 2;
 
         const MAX_RESULTS = 300;
-        const LEXICAL_CANDIDATES_LIMIT = 450;
-        const VECTOR_CANDIDATES_LIMIT = 180;
+        const isDetailedQuery = tokens.length >= 4;
+        const LEXICAL_CANDIDATES_LIMIT = isDetailedQuery ? 500 : 380;
+        const VECTOR_CANDIDATES_LIMIT = isDetailedQuery ? 220 : 140;
 
         try {
-            const queryEmbedding = shouldUseVector ? await generateEmbedding(expandedQuery) : null;
+            const queryEmbeddingResult = shouldUseVector
+                ? await getCachedQueryEmbedding(teamId, expandedQuery)
+                : { embedding: null, degradedReason: null };
+            const queryEmbedding = queryEmbeddingResult.embedding;
             if (shouldUseVector && !queryEmbedding) {
-                console.error('generateEmbedding failed for query:', expandedQuery);
-                return error('Ошибка ИИ');
+                console.warn('Materials search degraded to lexical mode', {
+                    teamId,
+                    query: normalizedQuery,
+                    reason: queryEmbeddingResult.degradedReason,
+                });
             }
 
             const queryLike = `%${normalizedQuery}%`;
@@ -289,11 +299,15 @@ export class MaterialsService {
                 .orderBy(sql`${lexicalRank} DESC`, materials.id)
                 .limit(LEXICAL_CANDIDATES_LIMIT);
 
-            const vectorCandidates = shouldUseVector
+            const vectorCandidates = queryEmbedding
                 ? await db
                     .select({ id: materials.id })
                     .from(materials)
-                    .where(and(...baseFilters, sql`${materials.embedding} IS NOT NULL`))
+                    .where(and(
+                        ...baseFilters,
+                        sql`${materials.embedding} IS NOT NULL`,
+                        sql`(1 - (${materials.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector)) >= ${MATERIALS_VECTOR_SCORE_THRESHOLD}`,
+                    ))
                     .orderBy(sql`${materials.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`, materials.id)
                     .limit(VECTOR_CANDIDATES_LIMIT)
                 : [];
@@ -320,7 +334,7 @@ export class MaterialsService {
             const trgmScore = sql<number>`COALESCE(similarity(${nameSource}, ${normalizedQuery}), 0)`;
             const phraseBoost = sql<number>`CASE WHEN COALESCE(${materials.nameNorm}, ${materials.name}) ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
             const vendorBoost = sql<number>`CASE WHEN COALESCE(${materials.vendor}, '') ILIKE ${queryLike} THEN 1.0 ELSE 0.0 END`;
-            const vectorScore = shouldUseVector
+            const vectorScore = queryEmbedding
                 ? sql<number>`
                     CASE
                         WHEN ${materials.embedding} IS NOT NULL
@@ -329,7 +343,7 @@ export class MaterialsService {
                     END
                 `
                 : sql<number>`0`;
-            const vectorWeight = shouldUseVector ? SEARCH_SCORE_WEIGHTS.vector : 0;
+            const vectorWeight = queryEmbedding ? SEARCH_SCORE_WEIGHTS.vector : 0;
             const totalScore = sql<number>`
                 (${ftsScore} * ${sql`${SEARCH_SCORE_WEIGHTS.fts}`}::float4)
                 + (${trgmScore} * ${sql`${SEARCH_SCORE_WEIGHTS.trgm}`}::float4)
