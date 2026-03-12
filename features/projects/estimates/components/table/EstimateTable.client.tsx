@@ -441,6 +441,8 @@ export function EstimateTable({
   };
 
   const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
+    const insertAfterWork = pendingInsertAfterWork;
+
     try {
       const safePrice = Number(catalogWork.price);
       const created = await estimatesActionRepo.addWork(estimateId, {
@@ -448,7 +450,7 @@ export function EstimateTable({
         unit: catalogWork.unit || "шт",
         price: Number.isFinite(safePrice) ? safePrice : 0,
         qty: 1,
-        insertAfterWorkId: pendingInsertAfterWork?.id,
+        insertAfterWorkId: insertAfterWork?.id,
       });
 
       setRows((prev) => {
@@ -459,14 +461,16 @@ export function EstimateTable({
         return [...prev, created].sort((left, right) => left.order - right.order);
       });
       setExpandedWorkIds((prev) => new Set([...prev, created.id]));
-      setPendingInsertAfterWork(null);
+      if (insertAfterWork) {
+        setPendingInsertAfterWork({ id: created.id, name: created.name });
+      }
 
       void reloadRows();
 
       toast({
         title: "Работа добавлена",
-        description: pendingInsertAfterWork
-          ? `Позиция добавлена ниже: ${pendingInsertAfterWork.name}`
+        description: insertAfterWork
+          ? `Позиция добавлена ниже: ${insertAfterWork.name}`
           : catalogWork.name,
       });
     } catch {
