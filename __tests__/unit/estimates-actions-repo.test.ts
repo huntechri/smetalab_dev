@@ -61,10 +61,11 @@ describe('estimatesActionRepo', () => {
             },
         });
 
-        const row = await estimatesActionRepo.addSection('est-1');
+        const row = await estimatesActionRepo.addSection('est-1', { code: '1', name: 'Раздел 1' });
 
         expect(actionsMocks.addEstimateSectionAction).toHaveBeenCalledWith('est-1', {
-            name: 'Новый раздел',
+            code: '1',
+            name: 'Раздел 1',
             insertAfterRowId: undefined,
         });
         expect(row.kind).toBe('section');

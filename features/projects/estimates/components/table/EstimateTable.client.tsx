@@ -95,6 +95,10 @@ export function EstimateTable({
   const [patternDescription, setPatternDescription] = useState("");
   const [isPatternSaving, setIsPatternSaving] = useState(false);
   const [isPatternApplying, setIsPatternApplying] = useState(false);
+  const [isSectionDialogOpen, setIsSectionDialogOpen] = useState(false);
+  const [sectionCodeInput, setSectionCodeInput] = useState('');
+  const [sectionNameInput, setSectionNameInput] = useState('');
+  const [sectionInsertAfterRowId, setSectionInsertAfterRowId] = useState<string | undefined>(undefined);
   const [isPatternsLoading, setIsPatternsLoading] = useState(false);
   const [patterns, setPatterns] = useState<EstimatePatternListItem[]>([]);
   const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
@@ -486,20 +490,43 @@ export function EstimateTable({
   };
 
 
-  const addSection = async (insertAfterRowId?: string) => {
+  const openCreateSectionDialog = (insertAfterRowId?: string) => {
+    setSectionCodeInput('');
+    setSectionNameInput('');
+    setSectionInsertAfterRowId(insertAfterRowId);
+    setIsSectionDialogOpen(true);
+  };
+
+  const createSection = async () => {
+    if (!sectionCodeInput.trim() || !sectionNameInput.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Заполните поля",
+        description: "Укажите номер и название раздела.",
+      });
+      return;
+    }
+
     try {
       const created = await estimatesActionRepo.addSection(estimateId, {
-        insertAfterRowId,
+        code: sectionCodeInput.trim(),
+        name: sectionNameInput.trim(),
+        insertAfterRowId: sectionInsertAfterRowId,
       });
 
       setRows((prev) => [...prev, created].sort((left, right) => left.order - right.order));
-      toast({ title: "Раздел добавлен", description: created.name });
+      setIsSectionDialogOpen(false);
+      setSectionInsertAfterRowId(undefined);
+      toast({ title: "Раздел добавлен", description: `${created.code} ${created.name}` });
       void reloadRows();
-    } catch {
+    } catch (addSectionError) {
       toast({
         variant: "destructive",
         title: "Ошибка",
-        description: "Не удалось добавить раздел.",
+        description:
+          addSectionError instanceof Error
+            ? addSectionError.message
+            : "Не удалось добавить раздел.",
       });
     }
   };
@@ -721,6 +748,8 @@ export function EstimateTable({
             insertWorkAfter(workId, workName),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
+          onRequestCreateSection: (insertAfterRowId) =>
+            openCreateSectionDialog(insertAfterRowId),
           onRemoveRow: removeRow,
           sectionTotalsById,
         })}
@@ -750,7 +779,7 @@ export function EstimateTable({
               size="sm"
               className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
               aria-label="Добавить раздел"
-              onClick={() => void addSection()}
+              onClick={() => openCreateSectionDialog()}
             >
               <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="hidden sm:inline">
@@ -960,6 +989,43 @@ export function EstimateTable({
         parentWorkName={activeMaterialForReplace?.name ?? ""}
         mode="replace"
       />
+
+      <Dialog open={isSectionDialogOpen} onOpenChange={setIsSectionDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Добавить раздел</DialogTitle>
+            <DialogDescription>
+              Укажите номер и название раздела. Раздел можно добавить в любую
+              точку сметы.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="section-code">№ раздела</Label>
+            <Input
+              id="section-code"
+              value={sectionCodeInput}
+              onChange={(event) => setSectionCodeInput(event.target.value)}
+              placeholder="Например: 1.1"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="section-name">Название раздела</Label>
+            <Input
+              id="section-name"
+              value={sectionNameInput}
+              onChange={(event) => setSectionNameInput(event.target.value)}
+              placeholder="Например: Демонтажные работы"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={() => void createSection()}>Добавить</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog
         open={isCoefficientDialogOpen}
         onOpenChange={setIsCoefficientDialogOpen}

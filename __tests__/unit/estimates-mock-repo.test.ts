@@ -16,7 +16,7 @@ describe('estimatesMockRepo', () => {
 
 
     it('adds section row for estimate', async () => {
-        const section = await estimatesMockRepo.addSection('est-001', { name: 'Черновые работы' });
+        const section = await estimatesMockRepo.addSection('est-001', { code: '1', name: 'Черновые работы' });
         expect(section.kind).toBe('section');
         expect(section.name).toBe('Черновые работы');
     });
