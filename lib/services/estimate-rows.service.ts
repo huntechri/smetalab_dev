@@ -17,6 +17,12 @@ const addWorkSchema = z.object({
     insertAfterWorkId: z.string().uuid().optional(),
 });
 
+
+const addSectionSchema = z.object({
+    name: z.string().trim().min(1).default('Новый раздел'),
+    insertAfterRowId: z.string().uuid().optional(),
+});
+
 const addMaterialSchema = z.object({
     name: z.string().trim().min(1).optional().default('Новый материал'),
     unit: z.string().trim().min(1).default('шт'),
@@ -39,7 +45,7 @@ const patchRowSchema = z.object({
 
 type EstimateRowEntity = {
     id: string;
-    kind: 'work' | 'material';
+    kind: 'section' | 'work' | 'material';
     parentWorkId: string | null;
     code: string;
     name: string;
@@ -54,6 +60,21 @@ type EstimateRowEntity = {
 };
 
 const toEstimateRowDto = (row: EstimateRowEntity, coefPercent: number): EstimateRow => {
+    if (row.kind === 'section') {
+        return {
+            ...row,
+            parentWorkId: row.parentWorkId ?? undefined,
+            materialId: row.materialId ?? undefined,
+            imageUrl: row.imageUrl ?? undefined,
+            basePrice: row.price,
+            price: 0,
+            sum: 0,
+            qty: 0,
+            expense: 0,
+            unit: '',
+        };
+    }
+
     if (row.kind !== 'work') {
         return {
             ...row,
@@ -243,7 +264,10 @@ const estimateRowContribution = (row: Pick<EstimateRowEntity, 'kind' | 'sum'>, c
     if (row.kind === 'work') {
         return row.sum * (1 + coefPercent / 100);
     }
-    return row.sum;
+    if (row.kind === 'material') {
+        return row.sum;
+    }
+    return 0;
 };
 
 const recalculateEstimateTotal = async (tx: typeof db, estimateId: string) => {
@@ -477,6 +501,89 @@ export class EstimateRowsService {
         }
     }
 
+    static async addSection(teamId: number, estimateId: string, rawPayload?: unknown): Promise<Result<EstimateRow>> {
+        const parsed = addSectionSchema.safeParse(rawPayload ?? {});
+        if (!parsed.success) {
+            return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
+        }
+
+        try {
+            const estimate = await ensureEstimateAccess(teamId, estimateId);
+            if (!estimate) {
+                return error('Смета не найдена', 'NOT_FOUND');
+            }
+
+            const created = await db.transaction(async (tx) => {
+                const payload = parsed.data;
+                let nextOrder = 100;
+
+                if (payload.insertAfterRowId) {
+                    const anchorRow = await tx.query.estimateRows.findFirst({
+                        where: and(
+                            eq(estimateRows.id, payload.insertAfterRowId),
+                            eq(estimateRows.estimateId, estimateId),
+                            withActiveTenant(estimateRows, teamId),
+                        ),
+                        columns: { order: true },
+                    });
+
+                    if (!anchorRow) {
+                        throw new Error('ANCHOR_ROW_NOT_FOUND');
+                    }
+
+                    nextOrder = anchorRow.order + 1;
+                } else {
+                    const [{ maxOrder }] = await tx
+                        .select({ maxOrder: sql<number>`COALESCE(MAX(${estimateRows.order}), 0)` })
+                        .from(estimateRows)
+                        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+
+                    nextOrder = maxOrder + 100;
+                }
+
+                await tx
+                    .update(estimateRows)
+                    .set({ order: sql`${estimateRows.order} + 1` })
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
+
+                const [{ sectionsCount }] = await tx
+                    .select({ sectionsCount: sql<number>`COALESCE(COUNT(*) FILTER (WHERE ${estimateRows.kind} = 'section'), 0)::int` })
+                    .from(estimateRows)
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+
+                const [section] = await tx
+                    .insert(estimateRows)
+                    .values({
+                        tenantId: teamId,
+                        estimateId,
+                        kind: 'section',
+                        code: `S${sectionsCount + 1}`,
+                        name: payload.name,
+                        unit: '',
+                        qty: 0,
+                        price: 0,
+                        sum: 0,
+                        expense: 0,
+                        order: nextOrder,
+                    })
+                    .returning();
+
+                await renumberEstimateCodes(tx, teamId, estimateId, { startOrder: nextOrder });
+
+                return section;
+            });
+
+            return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
+        } catch (e) {
+            if (e instanceof Error && e.message === 'ANCHOR_ROW_NOT_FOUND') {
+                return error('Строка для вставки раздела не найдена', 'NOT_FOUND');
+            }
+
+            console.error('EstimateRowsService.addSection error:', e);
+            return error('Ошибка при добавлении раздела');
+        }
+    }
+
     static async addMaterial(teamId: number, estimateId: string, parentWorkId: string, rawPayload: unknown): Promise<Result<EstimateRow>> {
         const parsed = addMaterialSchema.safeParse(rawPayload ?? {});
         if (!parsed.success) {
@@ -585,6 +692,20 @@ export class EstimateRowsService {
                 }
 
                 const patch = parsed.data;
+
+                if (existing.kind === 'section') {
+                    const [row] = await tx
+                        .update(estimateRows)
+                        .set({
+                            name: patch.name ?? existing.name,
+                            updatedAt: new Date(),
+                        })
+                        .where(eq(estimateRows.id, rowId))
+                        .returning();
+
+                    return { row, touchedWork: false };
+                }
+
                 let nextQty = patch.qty ?? existing.qty;
                 const nextPrice = patch.price ?? existing.price;
                 let nextExpense = patch.expense ?? existing.expense;

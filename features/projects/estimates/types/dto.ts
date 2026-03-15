@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const estimateStatusSchema = z.enum(['draft', 'in_progress', 'approved']);
 export type EstimateStatus = z.infer<typeof estimateStatusSchema>;
 
-export const estimateRowKindSchema = z.enum(['work', 'material']);
+export const estimateRowKindSchema = z.enum(['section', 'work', 'material']);
 export type EstimateRowKind = z.infer<typeof estimateRowKindSchema>;
 
 export const estimateMetaSchema = z.object({

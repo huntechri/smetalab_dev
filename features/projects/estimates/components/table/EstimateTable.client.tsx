@@ -13,6 +13,7 @@ import {
   FileDown,
   Trash2,
   MoreHorizontal,
+  FolderTree,
 } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import {
@@ -39,6 +40,7 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { estimatesActionRepo } from "../../repository/estimates.actions";
 import { getVisibleRows } from "../../lib/rows-visible";
+import { getSectionTotals } from "../../lib/section-totals";
 import { EstimateRow, RowPatch } from "../../types/dto";
 import { getEstimateColumns } from "./columns";
 import { WorkCatalogPicker } from "@/features/catalog/components/WorkCatalogPicker.client";
@@ -145,6 +147,7 @@ export function EstimateTable({
       ),
     [rows],
   );
+  const sectionTotalsById = useMemo(() => getSectionTotals(rows), [rows]);
 
   const addedWorkNames = useMemo(
     () => new Set(rows.filter((r) => r.kind === "work").map((r) => r.name)),
@@ -482,6 +485,25 @@ export function EstimateTable({
     }
   };
 
+
+  const addSection = async (insertAfterRowId?: string) => {
+    try {
+      const created = await estimatesActionRepo.addSection(estimateId, {
+        insertAfterRowId,
+      });
+
+      setRows((prev) => [...prev, created].sort((left, right) => left.order - right.order));
+      toast({ title: "Раздел добавлен", description: created.name });
+      void reloadRows();
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Не удалось добавить раздел.",
+      });
+    }
+  };
+
   const importEstimate = async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -700,6 +722,7 @@ export function EstimateTable({
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
           onRemoveRow: removeRow,
+          sectionTotalsById,
         })}
         data={visibleRows}
         filterColumn="name"
@@ -720,6 +743,18 @@ export function EstimateTable({
               <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="hidden sm:inline">
                 Режим расчета
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+              aria-label="Добавить раздел"
+              onClick={() => void addSection()}
+            >
+              <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
+              <span className="hidden sm:inline">
+                Раздел
               </span>
             </Button>
             <Button
