@@ -97,12 +97,11 @@ export const estimatesMockRepo: EstimatesRepository = {
             }
         });
 
-        const sectionRows = rows.filter((row) => row.kind === 'section').length;
         const row: EstimateRow = {
             id: `s-${crypto.randomUUID().slice(0, 8)}`,
             kind: 'section',
-            code: `S${sectionRows + 1}`,
-            name: payload?.name ?? 'Новый раздел',
+            code: payload.code,
+            name: payload.name,
             unit: '',
             qty: 0,
             price: 0,

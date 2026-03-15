@@ -29,10 +29,11 @@ export const estimatesActionRepo = {
         return result.data;
     },
 
-    async addSection(estimateId: string, payload?: { name?: string; insertAfterRowId?: string }): Promise<EstimateRow> {
+    async addSection(estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string }): Promise<EstimateRow> {
         const result = await addEstimateSectionAction(estimateId, {
-            name: payload?.name ?? 'Новый раздел',
-            insertAfterRowId: payload?.insertAfterRowId,
+            code: payload.code,
+            name: payload.name,
+            insertAfterRowId: payload.insertAfterRowId,
         });
 
         if (!result.success) {

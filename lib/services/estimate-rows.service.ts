@@ -19,7 +19,8 @@ const addWorkSchema = z.object({
 
 
 const addSectionSchema = z.object({
-    name: z.string().trim().min(1).default('Новый раздел'),
+    code: z.string().trim().min(1).max(30),
+    name: z.string().trim().min(1).max(200),
     insertAfterRowId: z.string().uuid().optional(),
 });
 
@@ -546,10 +547,23 @@ export class EstimateRowsService {
                     .set({ order: sql`${estimateRows.order} + 1` })
                     .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
 
-                const [{ sectionsCount }] = await tx
-                    .select({ sectionsCount: sql<number>`COALESCE(COUNT(*) FILTER (WHERE ${estimateRows.kind} = 'section'), 0)::int` })
+                const normalizedSectionCode = payload.code.trim().toLocaleLowerCase();
+                const duplicateSectionCode = await tx
+                    .select({ id: estimateRows.id })
                     .from(estimateRows)
-                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+                    .where(
+                        and(
+                            eq(estimateRows.estimateId, estimateId),
+                            eq(estimateRows.kind, 'section'),
+                            withActiveTenant(estimateRows, teamId),
+                            sql`lower(trim(${estimateRows.code})) = ${normalizedSectionCode}`,
+                        ),
+                    )
+                    .limit(1);
+
+                if (duplicateSectionCode.length > 0) {
+                    throw new Error('DUPLICATE_SECTION_CODE');
+                }
 
                 const [section] = await tx
                     .insert(estimateRows)
@@ -557,7 +571,7 @@ export class EstimateRowsService {
                         tenantId: teamId,
                         estimateId,
                         kind: 'section',
-                        code: `S${sectionsCount + 1}`,
+                        code: payload.code,
                         name: payload.name,
                         unit: '',
                         qty: 0,
@@ -577,6 +591,10 @@ export class EstimateRowsService {
         } catch (e) {
             if (e instanceof Error && e.message === 'ANCHOR_ROW_NOT_FOUND') {
                 return error('Строка для вставки раздела не найдена', 'NOT_FOUND');
+            }
+
+            if (e instanceof Error && e.message === 'DUPLICATE_SECTION_CODE') {
+                return error('Раздел с таким номером уже существует', 'CONFLICT');
             }
 
             console.error('EstimateRowsService.addSection error:', e);

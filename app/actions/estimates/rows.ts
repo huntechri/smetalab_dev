@@ -9,7 +9,7 @@ export const getEstimateRowsAction = safeAction(
 );
 
 export const addEstimateSectionAction = safeAction(
-    async ({ team }, estimateId: string, payload?: { name?: string; insertAfterRowId?: string }) =>
+    async ({ team }, estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string }) =>
         EstimateRowsService.addSection(team.id, estimateId, payload),
     { name: 'addEstimateSectionAction' }
 );

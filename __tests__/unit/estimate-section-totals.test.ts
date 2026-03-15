@@ -13,7 +13,7 @@ describe('getSectionTotals', () => {
 
         const result = getSectionTotals(rows);
 
-        expect(result.get(SECTION_WITHOUT_GROUP_ID)).toBe(10);
-        expect(result.get('s1')).toBe(25);
+        expect(result.get(SECTION_WITHOUT_GROUP_ID)).toEqual({ works: 10, materials: 0, total: 10 });
+        expect(result.get('s1')).toEqual({ works: 20, materials: 5, total: 25 });
     });
 });
