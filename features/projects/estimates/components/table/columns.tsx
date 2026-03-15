@@ -219,7 +219,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             {item.kind === 'material' ? (
                                 <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
                             ) : null}
-                            <DropdownMenuItem className="text-destructive" onClick={() => void actions.onRemoveRow(item.id)}>Удалить</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive" onClick={() => void actions.onRemoveRow(item.id)}>{item.kind === 'section' ? 'Удалить раздел' : 'Удалить'}</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
