@@ -88,7 +88,9 @@ export class EstimatePatternsService {
         return error('Невозможно сохранить пустую смету как шаблон', 'VALIDATION_ERROR');
       }
 
-      const snapshotRows: PatternSnapshotRow[] = rows.map((row) => ({
+      const snapshotRows: PatternSnapshotRow[] = rows
+        .filter((row): row is typeof row & { kind: 'work' | 'material' } => row.kind === 'work' || row.kind === 'material')
+        .map((row) => ({
         kind: row.kind,
         parentWorkTempKey: row.parentWorkId,
         tempKey: row.id,

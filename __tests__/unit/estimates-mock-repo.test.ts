@@ -14,6 +14,13 @@ describe('estimatesMockRepo', () => {
     });
 
 
+
+    it('adds section row for estimate', async () => {
+        const section = await estimatesMockRepo.addSection('est-001', { name: 'Черновые работы' });
+        expect(section.kind).toBe('section');
+        expect(section.name).toBe('Черновые работы');
+    });
+
     it('adds work for estimate ids loaded from DB even when mock store is empty', async () => {
         const row = await estimatesMockRepo.addWork('db-estimate-42', {
             name: 'Очистка потолка',
