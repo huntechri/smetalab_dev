@@ -51,6 +51,42 @@ describe('EstimateExportService', () => {
         });
     });
 
+
+    it('ignores sections in totals calculation', () => {
+        const totals = __estimateExportServiceInternal.computeTotals([
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 1,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 2,
+            },
+        ]);
+
+        expect(totals).toEqual({ works: 100, materials: 0, grand: 100 });
+    });
+
     it('builds deterministic export file name', () => {
         const name = EstimateExportService.buildFilename({
             estimateId: 'id',
@@ -70,6 +106,20 @@ describe('EstimateExportService', () => {
             estimateName: 'Смета',
             projectName: 'Проект',
             rows: [
+                {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
                 {
                     id: '1',
                     kind: 'work',
@@ -103,6 +153,20 @@ describe('EstimateExportService', () => {
             estimateName: 'Смета Тест',
             projectName: 'Проект Тест',
             rows: [
+                {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
                 {
                     id: '1',
                     kind: 'work',
