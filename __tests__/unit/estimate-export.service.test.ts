@@ -87,6 +87,88 @@ describe('EstimateExportService', () => {
         expect(totals).toEqual({ works: 100, materials: 0, grand: 100 });
     });
 
+
+    it('computes section display totals from subsequent rows', () => {
+        const totals = __estimateExportServiceInternal.computeSectionDisplayTotals([
+            {
+                id: 's2',
+                kind: 'section',
+                parentWorkId: null,
+                code: '2',
+                name: 'Раздел 2',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 300,
+            },
+            {
+                id: 'm2',
+                kind: 'material',
+                parentWorkId: 'w2',
+                code: '2.1.1',
+                name: 'Материал 2',
+                imageUrl: null,
+                unit: 'шт',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 320,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа 1',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 200,
+                sum: 200,
+                expense: 0,
+                order: 120,
+            },
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 100,
+            },
+            {
+                id: 'w2',
+                kind: 'work',
+                parentWorkId: null,
+                code: '2.1',
+                name: 'Работа 2',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 300,
+                sum: 300,
+                expense: 0,
+                order: 310,
+            },
+        ]);
+
+        expect(totals.rowSumById.get('s1')).toBe(200);
+        expect(totals.rowSumById.get('s2')).toBe(400);
+        expect(totals.rowSumById.get('w1')).toBe(200);
+        expect(totals.rowSumById.get('w2')).toBe(300);
+        expect(totals.rowSumById.get('m2')).toBe(100);
+    });
+
     it('builds deterministic export file name', () => {
         const name = EstimateExportService.buildFilename({
             estimateId: 'id',
@@ -143,8 +225,10 @@ describe('EstimateExportService', () => {
         await workbook.xlsx.load(buffer);
         const sheet = workbook.getWorksheet('Смета');
         const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
+        const sectionSum = sheet?.getRow(5).getCell(8).value;
 
         expect(headers).not.toContain('Расход');
+        expect(sectionSum).toBe(200);
     });
 
     it('exports pdf for cyrillic names', async () => {
