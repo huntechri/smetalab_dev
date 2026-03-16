@@ -244,26 +244,25 @@ describe('EstimateExportService', () => {
         const sectionSum = sheet?.getRow(5).getCell(8).value;
         const workRowSum = sheet?.getRow(6).getCell(8).value as { formula?: string } | null;
         const materialRowSum = sheet?.getRow(7).getCell(8).value as { formula?: string } | null;
-        const sectionWorksLabel = sheet?.getRow(9).getCell(1).value;
-        const sectionWorksSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
-        const sectionMaterialsLabel = sheet?.getRow(10).getCell(1).value;
-        const sectionMaterialsSum = sheet?.getRow(10).getCell(8).value as { formula?: string } | null;
-        const totalsWorksLabel = sheet?.getRow(12).getCell(1).value;
-        const totalsMaterialsLabel = sheet?.getRow(13).getCell(1).value;
+        const sectionWorksLabel = sheet?.getRow(8).getCell(3).value;
+        const sectionWorksSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
+        const sectionMaterialsLabel = sheet?.getRow(9).getCell(3).value;
+        const sectionMaterialsSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
 
         expect(headers).not.toContain('Расход');
         expect(sectionSum).toBe('');
         expect(workRowSum?.formula).toBe('F6*G6');
         expect(materialRowSum?.formula).toBe('F7*G7');
-        expect(sectionWorksLabel).toBe('Итого работы (1 Раздел 1)');
+        expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
         expect(sectionWorksSum?.formula).toContain('SUMIFS');
         expect(sectionWorksSum?.formula).toContain('"Работа"');
-        expect(sectionMaterialsLabel).toBe('Итого материалы (1 Раздел 1)');
+        expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
         expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
         expect(sectionMaterialsSum?.formula).toContain('"Материал"');
-        expect(totalsWorksLabel).toBe('Итого работы');
-        expect(totalsMaterialsLabel).toBe('Итого материалы');
-        expect(sheet?.getSheetValues().flat().includes('Итого смета')).toBe(false);
+        const flattened = sheet?.getSheetValues().flat().map((value) => String(value ?? '')) ?? [];
+        expect(flattened.some((value) => value.includes('Итого работы'))).toBe(false);
+        expect(flattened.some((value) => value.includes('Итого материалы'))).toBe(false);
+        expect(flattened.some((value) => value.includes('Итого смета'))).toBe(false);
     });
 
     it('exports pdf for cyrillic names', async () => {
