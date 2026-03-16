@@ -37,6 +37,7 @@ export default async function Page({ params }: PageProps) {
         slug: projectData.slug,
         customerName: projectData.customerName || '',
         counterpartyId: projectData.counterpartyId || undefined,
+        objectAddress: projectData.objectAddress || '',
         contractAmount: projectData.contractAmount,
         startDate: projectData.startDate?.toISOString() || '',
         endDate: projectData.endDate?.toISOString() || '',

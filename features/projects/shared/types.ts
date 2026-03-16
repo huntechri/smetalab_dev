@@ -17,6 +17,7 @@ export type ProjectListItem = {
     name: string;
     customerName: string;
     counterpartyId?: string;
+    objectAddress?: string;
     contractAmount: number;
     startDate: string;
     endDate: string;
