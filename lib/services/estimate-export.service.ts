@@ -323,45 +323,76 @@ export class EstimateExportService {
     static async exportXlsx(payload: EstimateExportPayload): Promise<Buffer> {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Смета', {
-            views: [{ state: 'frozen', ySplit: 6 }],
+            views: [{ state: 'frozen', ySplit: 12 }],
         });
 
+        // Отключаем автоматический заголовок, убирая поле header, оставляем только форматирование колонок
         worksheet.columns = [
-            { header: 'Код', key: 'code', width: 12 },
-            { header: 'Тип', key: 'kind', width: 12 },
-            { header: 'Наименование', key: 'name', width: 60 },
-            { header: 'Изображение', key: 'preview', width: 14 },
-            { header: 'Ед.', key: 'unit', width: 10 },
-            { header: 'Кол-во', key: 'qty', width: 12 },
-            { header: 'Цена', key: 'price', width: 14 },
-            { header: 'Сумма', key: 'sum', width: 16 },
+            { key: 'code', width: 12 },
+            { key: 'kind', width: 12 },
+            { key: 'name', width: 60 },
+            { key: 'preview', width: 14 },
+            { key: 'unit', width: 10 },
+            { key: 'qty', width: 12 },
+            { key: 'price', width: 14 },
+            { key: 'sum', width: 16 },
         ];
 
-        worksheet.mergeCells('A1:D1');
-        worksheet.getCell('A1').value = `Проект: ${payload.projectName}`;
-        worksheet.getCell('A1').font = { bold: true, size: 12 };
+        // 5 пустых строк для логотипа (1-5)
 
-        worksheet.mergeCells('E1:H1');
-        worksheet.getCell('E1').value = `Дата: ${payload.exportDate}`;
-        worksheet.getCell('E1').font = { bold: true, size: 12 };
+        const headerFont = { size: 11, bold: false };
+        const headerBorder: Partial<ExcelJS.Borders> = {
+            top: { style: 'thin' },
+            left: { style: 'thin' },
+            right: { style: 'thin' },
+            bottom: { style: 'thin' },
+        };
 
-        worksheet.mergeCells('A2:H2');
-        worksheet.getCell('A2').value = `Заказчик: ${payload.customerName}`;
+        const applyStyleToHeaderCell = (cell: ExcelJS.Cell) => {
+            cell.font = headerFont;
+            cell.border = headerBorder;
+            cell.alignment = { vertical: 'middle', horizontal: 'left' };
+        };
 
-        worksheet.mergeCells('A3:H3');
-        worksheet.getCell('A3').value = `Подрядчик: ${payload.contractorName}`;
+        // Проект и Дата (Строка 6)
+        worksheet.mergeCells('A6:D6');
+        const cellA6 = worksheet.getCell('A6');
+        cellA6.value = `Проект: ${payload.projectName}`;
+        applyStyleToHeaderCell(cellA6);
 
-        worksheet.mergeCells('A4:H4');
-        worksheet.getCell('A4').value = `Адрес объекта: ${payload.objectAddress}`;
+        worksheet.mergeCells('E6:H6');
+        const cellE6 = worksheet.getCell('E6');
+        cellE6.value = `Дата: ${payload.exportDate}`;
+        applyStyleToHeaderCell(cellE6);
 
-        worksheet.mergeCells('A5:H5');
-        worksheet.getCell('A5').value = `Смета: ${payload.estimateName} | Договор №: `;
+        // Заказчик (Строка 7)
+        worksheet.mergeCells('A7:H7');
+        const cellA7 = worksheet.getCell('A7');
+        cellA7.value = `Заказчик: ${payload.customerName}`;
+        applyStyleToHeaderCell(cellA7);
 
-        for (let row = 2; row <= 5; row += 1) {
-            worksheet.getCell(`A${row}`).font = { bold: true };
-        }
+        // Подрядчик (Строка 8)
+        worksheet.mergeCells('A8:H8');
+        const cellA8 = worksheet.getCell('A8');
+        cellA8.value = `Подрядчик: ${payload.contractorName}`;
+        applyStyleToHeaderCell(cellA8);
 
-        const headerRow = worksheet.getRow(6);
+        // Адрес (Строка 9)
+        worksheet.mergeCells('A9:H9');
+        const cellA9 = worksheet.getCell('A9');
+        cellA9.value = `Адрес объекта: ${payload.objectAddress}`;
+        applyStyleToHeaderCell(cellA9);
+
+        // Договор (Строка 10)
+        worksheet.mergeCells('A10:H10');
+        const cellA10 = worksheet.getCell('A10');
+        cellA10.value = `Договор №: `;
+        applyStyleToHeaderCell(cellA10);
+
+        // 1 пустая строка (11)
+
+        // Заголовок таблицы (Строка 12)
+        const headerRow = worksheet.getRow(12);
         headerRow.values = ['Код', 'Тип', 'Наименование', 'Изображение', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
         headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
@@ -455,7 +486,7 @@ export class EstimateExportService {
             return currentRowIndex;
         };
 
-        let rowIndex = 7;
+        let rowIndex = 13;
         let activeSection: { code: string; name: string } | null = null;
         let activeSectionDataStartRow: number | null = null;
 
@@ -597,6 +628,73 @@ export class EstimateExportService {
                 addSummaryRow(sectionRange, 'работы', 'Работа');
                 addSummaryRow(sectionRange, 'материалы', 'Материал');
             }
+
+            // Добавляем итоговые суммы по всей смете
+            rowIndex += 1;
+            const addFinalTotalRow = (label: string, kindLabel: 'Работа' | 'Материал') => {
+                const totalRow = worksheet.getRow(rowIndex);
+                totalRow.getCell(3).value = label;
+                // Суммируем все ячейки в колонке H, где в колонке B стоит соответствующий тип (Работа/Материал)
+                // Диапазон от 13 строки (начало данных) до текущей строки - 2 (конец таблицы разделов)
+                const lastDataRow = rowIndex - 1;
+                totalRow.getCell(8).value = {
+                    formula: `SUMIF($B$13:$B$${lastDataRow},"${kindLabel}",$H$13:$H$${lastDataRow})`,
+                };
+                totalRow.getCell(8).numFmt = CURRENCY_FORMAT;
+
+                for (let col = 1; col <= 8; col += 1) {
+                    const cell = totalRow.getCell(col);
+                    cell.font = { bold: true, size: 12 };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFDBEAFE' }, // Light blue
+                    };
+                    cell.alignment = {
+                        vertical: 'middle',
+                        horizontal: col >= 6 ? 'right' : 'left',
+                        wrapText: col === 3,
+                    };
+                    cell.border = {
+                        top: { style: 'medium' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' },
+                        bottom: { style: 'medium' },
+                    };
+                }
+                rowIndex += 1;
+            };
+
+            addFinalTotalRow('ВСЕГО ПО СМЕТЕ (РАБОТЫ)', 'Работа');
+            addFinalTotalRow('ВСЕГО ПО СМЕТЕ (МАТЕРИАЛЫ)', 'Материал');
+
+            // Итоговая сумма (Гранд-итого)
+            const grandTotalRow = worksheet.getRow(rowIndex);
+            grandTotalRow.getCell(3).value = 'ОБЩАЯ СТОИМОСТЬ СМЕТЫ';
+            grandTotalRow.getCell(8).value = {
+                formula: `H${rowIndex - 2}+H${rowIndex - 1}`,
+            };
+            grandTotalRow.getCell(8).numFmt = CURRENCY_FORMAT;
+            for (let col = 1; col <= 8; col += 1) {
+                const cell = grandTotalRow.getCell(col);
+                cell.font = { bold: true, size: 13, color: { argb: 'FFFFFFFF' } };
+                cell.fill = {
+                    type: 'pattern',
+                    pattern: 'solid',
+                    fgColor: { argb: 'FF1E40AF' }, // Navy blue
+                };
+                cell.alignment = {
+                    vertical: 'middle',
+                    horizontal: col >= 6 ? 'right' : 'left',
+                };
+                cell.border = {
+                    top: { style: 'medium' },
+                    left: { style: 'thin' },
+                    right: { style: 'thin' },
+                    bottom: { style: 'double' },
+                };
+            }
+            rowIndex += 1;
         }
 
         const buffer = await workbook.xlsx.writeBuffer();
