@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { estimateRows, estimates, projects } from '@/lib/data/db/schema';
+import { counterparties, estimateRows, estimates, projects, teams } from '@/lib/data/db/schema';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 
@@ -33,6 +33,10 @@ export type EstimateExportPayload = {
     estimateId: string;
     estimateName: string;
     projectName: string;
+    exportDate: string;
+    customerName: string;
+    contractorName: string;
+    objectAddress: string;
     rows: EstimateExportRow[];
     totals: {
         works: number;
@@ -241,11 +245,17 @@ export class EstimateExportService {
                     id: estimates.id,
                     name: estimates.name,
                     projectName: projects.name,
+                    customerName: projects.customerName,
+                    objectAddress: projects.objectAddress,
+                    contractorName: teams.name,
+                    counterpartyName: counterparties.name,
                     coefPercent: estimates.coefPercent,
                 })
                 .from(estimates)
                 .innerJoin(projects, eq(projects.id, estimates.projectId))
-                .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId), withActiveTenant(projects, teamId)))
+                .innerJoin(teams, eq(teams.id, estimates.tenantId))
+                .leftJoin(counterparties, and(eq(counterparties.id, projects.counterpartyId), withActiveTenant(counterparties, teamId)))
+                .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId), withActiveTenant(projects, teamId), eq(teams.id, teamId)))
                 .limit(1)
                 .then((rows) => rows[0]);
 
@@ -297,6 +307,10 @@ export class EstimateExportService {
                 estimateId: estimateRecord.id,
                 estimateName: estimateRecord.name,
                 projectName: estimateRecord.projectName,
+                exportDate: new Date().toLocaleDateString('ru-RU'),
+                customerName: estimateRecord.customerName || estimateRecord.counterpartyName || '-',
+                contractorName: estimateRecord.contractorName || '-',
+                objectAddress: estimateRecord.objectAddress || '-',
                 rows: rowsWithCoef,
                 totals,
             });
@@ -309,7 +323,7 @@ export class EstimateExportService {
     static async exportXlsx(payload: EstimateExportPayload): Promise<Buffer> {
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet('Смета', {
-            views: [{ state: 'frozen', ySplit: 4 }],
+            views: [{ state: 'frozen', ySplit: 6 }],
         });
 
         worksheet.columns = [
@@ -323,17 +337,31 @@ export class EstimateExportService {
             { header: 'Сумма', key: 'sum', width: 16 },
         ];
 
-        worksheet.mergeCells('A1:H1');
+        worksheet.mergeCells('A1:D1');
         worksheet.getCell('A1').value = `Проект: ${payload.projectName}`;
         worksheet.getCell('A1').font = { bold: true, size: 12 };
 
+        worksheet.mergeCells('E1:H1');
+        worksheet.getCell('E1').value = `Дата: ${payload.exportDate}`;
+        worksheet.getCell('E1').font = { bold: true, size: 12 };
+
         worksheet.mergeCells('A2:H2');
-        worksheet.getCell('A2').value = `Смета: ${payload.estimateName}`;
+        worksheet.getCell('A2').value = `Заказчик: ${payload.customerName}`;
 
         worksheet.mergeCells('A3:H3');
-        worksheet.getCell('A3').value = `Дата экспорта: ${new Date().toLocaleString('ru-RU')}`;
+        worksheet.getCell('A3').value = `Подрядчик: ${payload.contractorName}`;
 
-        const headerRow = worksheet.getRow(4);
+        worksheet.mergeCells('A4:H4');
+        worksheet.getCell('A4').value = `Адрес объекта: ${payload.objectAddress}`;
+
+        worksheet.mergeCells('A5:H5');
+        worksheet.getCell('A5').value = `Смета: ${payload.estimateName} | Договор №: `;
+
+        for (let row = 2; row <= 5; row += 1) {
+            worksheet.getCell(`A${row}`).font = { bold: true };
+        }
+
+        const headerRow = worksheet.getRow(6);
         headerRow.values = ['Код', 'Тип', 'Наименование', 'Изображение', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
         headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
@@ -427,7 +455,7 @@ export class EstimateExportService {
             return currentRowIndex;
         };
 
-        let rowIndex = 5;
+        let rowIndex = 7;
         let activeSection: { code: string; name: string } | null = null;
         let activeSectionDataStartRow: number | null = null;
 

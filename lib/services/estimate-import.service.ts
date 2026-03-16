@@ -19,6 +19,7 @@ const importedEstimateRowSchema = z.object({
 export type ImportedEstimateRow = z.infer<typeof importedEstimateRowSchema>;
 
 type ParsedHeader = {
+  rowIndex: number;
   codeCol: number;
   kindCol?: number;
   nameCol: number;
@@ -55,30 +56,54 @@ function parseNumberCell(value: ExcelJS.CellValue | undefined): number {
 }
 
 function parseHeader(worksheet: ExcelJS.Worksheet): ParsedHeader {
-  const headerRow = worksheet.getRow(4);
-  const values = Array.from({ length: 12 }, (_, index) =>
-    normalizeCellValue(headerRow.getCell(index + 1).value).toLocaleLowerCase(),
-  );
+  const tryParse = (headerRowIndex: number): ParsedHeader | null => {
+    const headerRow = worksheet.getRow(headerRowIndex);
+    const values = Array.from({ length: 12 }, (_, index) =>
+      normalizeCellValue(headerRow.getCell(index + 1).value).toLocaleLowerCase(),
+    );
 
-  const indexOf = (label: string) => {
-    const idx = values.findIndex((value) => value === label);
-    return idx >= 0 ? idx + 1 : undefined;
+    const indexOf = (label: string) => {
+      const idx = values.findIndex((value) => value === label);
+      return idx >= 0 ? idx + 1 : undefined;
+    };
+
+    const codeCol = indexOf("код");
+    const nameCol = indexOf("наименование");
+    const unitCol = indexOf("ед.");
+    const qtyCol = indexOf("кол-во");
+    const priceCol = indexOf("цена");
+    const kindCol = indexOf("тип");
+
+    if (!codeCol || !nameCol || !unitCol || !qtyCol || !priceCol) {
+      return null;
+    }
+
+    return {
+      rowIndex: headerRowIndex,
+      codeCol,
+      kindCol,
+      nameCol,
+      unitCol,
+      qtyCol,
+      priceCol,
+    };
   };
 
-  const codeCol = indexOf("код") ?? 1;
-  const kindCol = indexOf("тип");
-  const nameCol = indexOf("наименование") ?? (kindCol ? 3 : 2);
-  const unitCol = indexOf("ед.") ?? (kindCol ? 5 : 4);
-  const qtyCol = indexOf("кол-во") ?? (kindCol ? 6 : 5);
-  const priceCol = indexOf("цена") ?? (kindCol ? 7 : 6);
+  for (let rowIndex = 1; rowIndex <= Math.min(20, worksheet.rowCount); rowIndex += 1) {
+    const parsed = tryParse(rowIndex);
+    if (parsed) {
+      return parsed;
+    }
+  }
 
   return {
-    codeCol,
-    kindCol,
-    nameCol,
-    unitCol,
-    qtyCol,
-    priceCol,
+    rowIndex: 4,
+    codeCol: 1,
+    kindCol: 2,
+    nameCol: 3,
+    unitCol: 5,
+    qtyCol: 6,
+    priceCol: 7,
   };
 }
 
@@ -113,7 +138,7 @@ function parseRowsFromWorksheet(
   const rows: ImportedEstimateRow[] = [];
   const header = parseHeader(worksheet);
 
-  for (let rowIndex = 5; rowIndex <= worksheet.rowCount; rowIndex += 1) {
+  for (let rowIndex = header.rowIndex + 1; rowIndex <= worksheet.rowCount; rowIndex += 1) {
     const row = worksheet.getRow(rowIndex);
     const code = normalizeCellValue(row.getCell(header.codeCol).value);
     const name = normalizeCellValue(row.getCell(header.nameCol).value).trimStart();
