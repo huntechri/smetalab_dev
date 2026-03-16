@@ -284,6 +284,7 @@ export class EstimateExportService {
             { header: 'Кол-во', key: 'qty', width: 12 },
             { header: 'Цена', key: 'price', width: 14 },
             { header: 'Сумма', key: 'sum', width: 16 },
+            { header: 'SectionKey', key: 'sectionKey', width: 2, hidden: true },
         ];
 
         worksheet.mergeCells('A1:H1');
@@ -322,14 +323,11 @@ export class EstimateExportService {
             imageMap.set(row.id, image);
         }));
 
-        const displayTotals = computeSectionDisplayTotals(payload.rows);
+        const sectionRows: Array<{ id: string; label: string }> = [];
+        let currentSectionId: string | null = null;
 
         let rowIndex = 5;
         for (const row of payload.rows) {
-            const displaySum = displayTotals.rowSumById.get(row.id) ?? row.sum;
-            const sectionBreakdown = row.kind === 'section'
-                ? (displayTotals.bySectionId.get(row.id) ?? { works: 0, materials: 0, total: displaySum })
-                : null;
             const excelRow = worksheet.getRow(rowIndex);
             excelRow.getCell(1).value = row.code;
             const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
@@ -338,9 +336,16 @@ export class EstimateExportService {
             excelRow.getCell(5).value = row.kind === 'section' ? '' : row.unit;
             excelRow.getCell(6).value = row.kind === 'section' ? '' : row.qty;
             excelRow.getCell(7).value = row.kind === 'section' ? '' : row.price;
-            excelRow.getCell(8).value = row.kind === 'section'
-                ? `Р: ${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} | М: ${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} | Итого: ${Math.round(displaySum).toLocaleString('ru-RU')}`
-                : displaySum;
+
+            if (row.kind === 'section') {
+                currentSectionId = row.id;
+                sectionRows.push({ id: row.id, label: `${row.code} ${row.name}`.trim() });
+                excelRow.getCell(8).value = '';
+                excelRow.getCell(9).value = row.id;
+            } else {
+                excelRow.getCell(8).value = { formula: `F${rowIndex}*G${rowIndex}` };
+                excelRow.getCell(9).value = currentSectionId ?? '';
+            }
 
             if (row.kind === 'section') {
                 excelRow.eachCell((cell: ExcelJS.Cell) => {
@@ -378,7 +383,7 @@ export class EstimateExportService {
                 });
             }
 
-            for (let col = 1; col <= 8; col += 1) {
+            for (let col = 1; col <= 9; col += 1) {
                 const cell = excelRow.getCell(col);
                 cell.alignment = {
                     vertical: 'middle',
@@ -386,12 +391,14 @@ export class EstimateExportService {
                     wrapText: col === 3,
                 };
 
-                cell.border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    right: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                };
+                if (col <= 8) {
+                    cell.border = {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                    };
+                }
 
                 if ((col === 7 || col === 8) && row.kind !== 'section') {
                     cell.numFmt = CURRENCY_FORMAT;
@@ -401,11 +408,13 @@ export class EstimateExportService {
             rowIndex += 1;
         }
 
-        const addTotalRow = (label: string, value: number) => {
+        const dataEndRow = rowIndex - 1;
+
+        const addFormulaRow = (label: string, formula: string) => {
             const row = worksheet.getRow(rowIndex);
             row.getCell(1).value = label;
             worksheet.mergeCells(`A${rowIndex}:G${rowIndex}`);
-            row.getCell(8).value = value;
+            row.getCell(8).value = { formula };
             row.getCell(1).font = { bold: true };
             row.getCell(8).font = { bold: true };
             row.getCell(8).numFmt = CURRENCY_FORMAT;
@@ -420,10 +429,28 @@ export class EstimateExportService {
             rowIndex += 1;
         };
 
+        const dataRangeSum = `$H$5:$H$${dataEndRow}`;
+        const sectionRange = `$I$5:$I$${dataEndRow}`;
+        const kindRange = `$B$5:$B$${dataEndRow}`;
+
+        if (sectionRows.length > 0) {
+            rowIndex += 1;
+            for (const section of sectionRows) {
+                const escapedId = section.id.replace(/"/g, '""');
+                addFormulaRow(
+                    `Итого работы (${section.label})`,
+                    `SUMIFS(${dataRangeSum},${sectionRange},"${escapedId}",${kindRange},"Работа")`,
+                );
+                addFormulaRow(
+                    `Итого материалы (${section.label})`,
+                    `SUMIFS(${dataRangeSum},${sectionRange},"${escapedId}",${kindRange},"Материал")`,
+                );
+            }
+        }
+
         rowIndex += 1;
-        addTotalRow('Итого работы', payload.totals.works);
-        addTotalRow('Итого материалы', payload.totals.materials);
-        addTotalRow('Итого смета', payload.totals.grand);
+        addFormulaRow('Итого работы', `SUMIFS(${dataRangeSum},${kindRange},"Работа")`);
+        addFormulaRow('Итого материалы', `SUMIFS(${dataRangeSum},${kindRange},"Материал")`);
 
         const buffer = await workbook.xlsx.writeBuffer();
         return Buffer.from(buffer);
@@ -469,7 +496,7 @@ export class EstimateExportService {
             page.drawText(row.kind === 'section' ? '' : row.qty.toLocaleString('ru-RU'), { x: 530, y, size: 8, font });
             page.drawText(
                 row.kind === 'section'
-                    ? `R:${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} M:${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} T:${Math.round(displaySum).toLocaleString('ru-RU')} RUB`
+                    ? `R:${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} M:${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} RUB`
                     : `${Math.round(displaySum).toLocaleString('ru-RU')} RUB`,
                 { x: 610, y, size: 8, font: row.kind === 'section' || row.kind === 'work' ? bold : font },
             );
