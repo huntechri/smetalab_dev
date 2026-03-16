@@ -13,6 +13,7 @@ import {
   FileDown,
   Trash2,
   MoreHorizontal,
+  FolderTree,
 } from "lucide-react";
 import { Badge } from "@/shared/ui/badge";
 import {
@@ -39,6 +40,7 @@ import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
 import { estimatesActionRepo } from "../../repository/estimates.actions";
 import { getVisibleRows } from "../../lib/rows-visible";
+import { getSectionTotals } from "../../lib/section-totals";
 import { EstimateRow, RowPatch } from "../../types/dto";
 import { getEstimateColumns } from "./columns";
 import { WorkCatalogPicker } from "@/features/catalog/components/WorkCatalogPicker.client";
@@ -93,6 +95,10 @@ export function EstimateTable({
   const [patternDescription, setPatternDescription] = useState("");
   const [isPatternSaving, setIsPatternSaving] = useState(false);
   const [isPatternApplying, setIsPatternApplying] = useState(false);
+  const [isSectionDialogOpen, setIsSectionDialogOpen] = useState(false);
+  const [sectionCodeInput, setSectionCodeInput] = useState('');
+  const [sectionNameInput, setSectionNameInput] = useState('');
+  const [sectionInsertAfterRowId, setSectionInsertAfterRowId] = useState<string | undefined>(undefined);
   const [isPatternsLoading, setIsPatternsLoading] = useState(false);
   const [patterns, setPatterns] = useState<EstimatePatternListItem[]>([]);
   const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
@@ -145,6 +151,7 @@ export function EstimateTable({
       ),
     [rows],
   );
+  const sectionTotalsById = useMemo(() => getSectionTotals(rows), [rows]);
 
   const addedWorkNames = useMemo(
     () => new Set(rows.filter((r) => r.kind === "work").map((r) => r.name)),
@@ -482,6 +489,48 @@ export function EstimateTable({
     }
   };
 
+
+  const openCreateSectionDialog = (insertAfterRowId?: string) => {
+    setSectionCodeInput('');
+    setSectionNameInput('');
+    setSectionInsertAfterRowId(insertAfterRowId);
+    setIsSectionDialogOpen(true);
+  };
+
+  const createSection = async () => {
+    if (!sectionCodeInput.trim() || !sectionNameInput.trim()) {
+      toast({
+        variant: "destructive",
+        title: "Заполните поля",
+        description: "Укажите номер и название раздела.",
+      });
+      return;
+    }
+
+    try {
+      const created = await estimatesActionRepo.addSection(estimateId, {
+        code: sectionCodeInput.trim(),
+        name: sectionNameInput.trim(),
+        insertAfterRowId: sectionInsertAfterRowId,
+      });
+
+      setRows((prev) => [...prev, created].sort((left, right) => left.order - right.order));
+      setIsSectionDialogOpen(false);
+      setSectionInsertAfterRowId(undefined);
+      toast({ title: "Раздел добавлен", description: `${created.code} ${created.name}` });
+      void reloadRows();
+    } catch (addSectionError) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description:
+          addSectionError instanceof Error
+            ? addSectionError.message
+            : "Не удалось добавить раздел.",
+      });
+    }
+  };
+
   const importEstimate = async () => {
     const fileInput = document.createElement("input");
     fileInput.type = "file";
@@ -699,7 +748,10 @@ export function EstimateTable({
             insertWorkAfter(workId, workName),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
+          onRequestCreateSection: (insertAfterRowId) =>
+            openCreateSectionDialog(insertAfterRowId),
           onRemoveRow: removeRow,
+          sectionTotalsById,
         })}
         data={visibleRows}
         filterColumn="name"
@@ -720,6 +772,18 @@ export function EstimateTable({
               <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
               <span className="hidden sm:inline">
                 Режим расчета
+              </span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm"
+              aria-label="Добавить раздел"
+              onClick={() => openCreateSectionDialog()}
+            >
+              <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
+              <span className="hidden sm:inline">
+                Раздел
               </span>
             </Button>
             <Button
@@ -925,6 +989,43 @@ export function EstimateTable({
         parentWorkName={activeMaterialForReplace?.name ?? ""}
         mode="replace"
       />
+
+      <Dialog open={isSectionDialogOpen} onOpenChange={setIsSectionDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Добавить раздел</DialogTitle>
+            <DialogDescription>
+              Укажите номер и название раздела. Раздел можно добавить в любую
+              точку сметы.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-2">
+            <Label htmlFor="section-code">№ раздела</Label>
+            <Input
+              id="section-code"
+              value={sectionCodeInput}
+              onChange={(event) => setSectionCodeInput(event.target.value)}
+              placeholder="Например: 1.1"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="section-name">Название раздела</Label>
+            <Input
+              id="section-name"
+              value={sectionNameInput}
+              onChange={(event) => setSectionNameInput(event.target.value)}
+              placeholder="Например: Демонтажные работы"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
+              Отмена
+            </Button>
+            <Button onClick={() => void createSection()}>Добавить</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <Dialog
         open={isCoefficientDialogOpen}
         onOpenChange={setIsCoefficientDialogOpen}

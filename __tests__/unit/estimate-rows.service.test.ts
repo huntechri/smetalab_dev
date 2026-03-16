@@ -221,6 +221,50 @@ describe('EstimateRowsService duplicate protection', () => {
         expect(tx.update).toHaveBeenCalled();
     });
 
+
+
+    it('removes section without deleting works/materials', async () => {
+        const tx = {
+            query: {
+                estimateRows: {
+                    findFirst: vi.fn().mockResolvedValue({
+                        id: 'section-1',
+                        estimateId: 'est-1',
+                        kind: 'section',
+                        order: 999,
+                    }),
+                },
+            },
+            select: vi
+                .fn()
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn().mockResolvedValue([{ kind: 'section', sum: 0 }]),
+                    })),
+                }))
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({
+                            orderBy: vi.fn().mockResolvedValue([]),
+                        })),
+                    })),
+                })),
+            update: vi.fn(() => ({
+                set: vi.fn(() => ({ where: vi.fn() })),
+            })),
+            execute: vi.fn().mockResolvedValue([]),
+        };
+
+        dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
+
+        const result = await EstimateRowsService.remove(7, 'est-1', 'section-1');
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.removedIds).toEqual(['section-1']);
+        }
+        expect(executionServiceMocks.bumpSyncVersion).not.toHaveBeenCalled();
+    });
     it('returns conflict when adding duplicate material under same work', async () => {
         const tx = {
             query: {

@@ -124,6 +124,7 @@ describe('EstimateTable insert-below flow', () => {
     });
 
     capturedOnInsertWorkAfter?.('work-1', 'Работа 1');
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     const addButtons = await screen.findAllByRole('button', { name: 'add-work' });
     fireEvent.click(addButtons[0]);
@@ -131,6 +132,10 @@ describe('EstimateTable insert-below flow', () => {
     await waitFor(() => {
       expect(addWorkMock).toHaveBeenCalledTimes(1);
     });
+    await waitFor(() => {
+      expect(toastMock).toHaveBeenCalledTimes(1);
+    });
+    await new Promise((resolve) => setTimeout(resolve, 50));
 
     fireEvent.click(addButtons[0]);
 
