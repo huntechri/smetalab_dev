@@ -30,6 +30,7 @@ export default async function Page() {
         slug: p.slug,
         customerName: p.customerName || p.counterpartyName || '',
         counterpartyId: p.counterpartyId || undefined,
+        objectAddress: p.objectAddress || '',
         contractAmount: p.contractAmount,
         startDate: p.startDate?.toISOString() || '',
         endDate: p.endDate?.toISOString() || '',
