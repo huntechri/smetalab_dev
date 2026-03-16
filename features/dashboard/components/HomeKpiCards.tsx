@@ -1,18 +1,7 @@
 import { TrendingUp, Users, Activity } from "lucide-react";
 
 import { Badge } from "@/shared/ui/badge";
-import {
-    Card,
-    CardAction,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/shared/ui/card";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/shared/ui/tooltip";
+import { KPICard } from "@/shared/ui/kpi-card";
 import { HomeDashboardKpi } from '../types';
 
 type HomeKpiCardsProps = {
@@ -33,8 +22,6 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
         : kpi.remainingDays < 0
             ? `Просрочено ${Math.abs(kpi.remainingDays)} дн.`
             : `${kpi.remainingDays} дн.`;
-
-    const valueBaseClassName = "text-xl sm:text-2xl lg:text-3xl font-semibold tabular-nums break-words leading-tight";
 
     const getProfitValueClassName = (profit: number, revenue: number) => {
         if (profit < 0) return "text-red-600 dark:text-red-400";
@@ -62,95 +49,64 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
     return (
         <section aria-labelledby="home-kpi-title">
             <h1 id="home-kpi-title" className="sr-only">Сводка проекта</h1>
-            <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-sm grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Card className="@container/card">
-                            <CardHeader>
-                                <CardDescription>Доход</CardDescription>
-                                <CardTitle className={`${valueBaseClassName} text-green-600 dark:text-green-400`}>
-                                    {formattedRevenue}
-                                </CardTitle>
-                                <CardAction>
-                                    <Badge variant="outline">
-                                        <TrendingUp />
-                                        План
-                                    </Badge>
-                                </CardAction>
-                            </CardHeader>
-                        </Card>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={8}>
-                        План раб. + план мат.
-                    </TooltipContent>
-                </Tooltip>
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                <KPICard
+                    title="Доход"
+                    value={formattedRevenue}
+                    valueClassName="text-green-600 dark:text-green-400"
+                    className="h-[95px]"
+                    badge={
+                        <Badge variant="outline">
+                            <TrendingUp className="h-3 w-3 mr-1" />
+                            План
+                        </Badge>
+                    }
+                    tooltip="План работа + план материал"
+                />
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Card className="@container/card">
-                            <CardHeader>
-                                <CardDescription>Прибыль</CardDescription>
-                                <CardTitle className={`${valueBaseClassName} ${getProfitValueClassName(kpi.profit, kpi.revenue)}`}>
-                                    {formattedProfit}
-                                </CardTitle>
-                                <CardAction>
-                                    <Badge variant="outline">
-                                        <Activity />
-                                        Δ План/Факт
-                                    </Badge>
-                                </CardAction>
-                            </CardHeader>
-                        </Card>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={8}>
-                        (План раб. + план мат.) − (Факт раб. + факт мат.)
-                    </TooltipContent>
-                </Tooltip>
+                <KPICard
+                    title="Прибыль"
+                    value={formattedProfit}
+                    valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
+                    className="h-[95px]"
+                    badge={
+                        <Badge variant="outline">
+                            <Activity className="h-3 w-3 mr-1" />
+                            Δ План/Факт
+                        </Badge>
+                    }
+                    tooltip="(План раб. + план мат.) − (Факт раб. + факт мат.)"
+                />
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Card className="@container/card">
-                            <CardHeader>
-                                <CardDescription>Прогресс</CardDescription>
-                                <CardTitle className={`${valueBaseClassName} ${getProgressValueClassName(kpi.progress)}`}>
-                                    {kpi.progress}%
-                                </CardTitle>
-                                <CardAction>
-                                    <Badge variant="outline">
-                                        <Users />
-                                        По работам
-                                    </Badge>
-                                </CardAction>
-                            </CardHeader>
-                        </Card>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={8}>
-                        Выполнение работ
-                    </TooltipContent>
-                </Tooltip>
+                <KPICard
+                    title="Прогресс"
+                    value={`${kpi.progress}%`}
+                    valueClassName={getProgressValueClassName(kpi.progress)}
+                    className="h-[95px]"
+                    badge={
+                        <Badge variant="outline">
+                            <Users className="h-3 w-3 mr-1" />
+                            По работам
+                        </Badge>
+                    }
+                    tooltip="Выполнение работ"
+                />
 
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Card className="@container/card">
-                            <CardHeader>
-                                <CardDescription>Срок</CardDescription>
-                                <CardTitle className={`${valueBaseClassName} ${getRemainingDaysValueClassName(kpi.remainingDays)}`}>
-                                    {remainingDaysLabel}
-                                </CardTitle>
-                                <CardAction>
-                                    <Badge variant="outline">
-                                        <TrendingUp />
-                                        До конца
-                                    </Badge>
-                                </CardAction>
-                            </CardHeader>
-                        </Card>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={8}>
-                        Оставшееся время до завершения
-                    </TooltipContent>
-                </Tooltip>
+                <KPICard
+                    title="Срок"
+                    value={remainingDaysLabel}
+                    valueClassName={getRemainingDaysValueClassName(kpi.remainingDays)}
+                    className="h-[95px]"
+                    badge={
+                        <Badge variant="outline">
+                            <TrendingUp className="h-3 w-3 mr-1" />
+                            До конца
+                        </Badge>
+                    }
+                    tooltip="Оставшееся время до завершения"
+                />
             </div>
         </section>
     );
 }
+
