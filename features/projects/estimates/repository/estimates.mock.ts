@@ -83,6 +83,38 @@ export const estimatesMockRepo: EstimatesRepository = {
         recalculateTotals(estimateId);
         return estimateRowSchema.parse(row);
     },
+    async addSection(estimateId, payload) {
+        await delay(120, 320);
+        const rows = getRowsOrCreate(estimateId);
+        const maxOrder = Math.max(0, ...rows.map((row) => row.order));
+        const nextOrder = payload?.insertAfterRowId
+            ? (rows.find((row) => row.id === payload.insertAfterRowId)?.order ?? maxOrder) + 1
+            : maxOrder + 100;
+
+        rows.forEach((existing) => {
+            if (existing.order >= nextOrder) {
+                existing.order += 1;
+            }
+        });
+
+        const row: EstimateRow = {
+            id: `s-${crypto.randomUUID().slice(0, 8)}`,
+            kind: 'section',
+            code: payload.code,
+            name: payload.name,
+            unit: '',
+            qty: 0,
+            price: 0,
+            sum: 0,
+            expense: 0,
+            order: nextOrder,
+        };
+
+        rows.push(row);
+        recalculateTotals(estimateId);
+        return estimateRowSchema.parse(row);
+    },
+
     async addWork(estimateId, payload) {
         await delay(120, 320);
         const rows = getRowsOrCreate(estimateId);

@@ -1,7 +1,7 @@
-import { getTeamForUser } from '@/lib/data/db/queries';
+import { getTeamForUserWithMembers } from '@/lib/data/db/queries';
 
 export class TeamApiService {
   static async getCurrentTeam() {
-    return getTeamForUser();
+    return getTeamForUserWithMembers();
   }
 }

@@ -12,6 +12,7 @@ import {
 } from "@/shared/ui/breadcrumb";
 import { Loader2 } from 'lucide-react';
 import { MaterialRow } from '@/types/material-row';
+import { Skeleton } from '@/shared/ui/skeleton';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';
 import { MaterialsDeleteDialog } from '../components/MaterialsDeleteDialog';
 
@@ -62,7 +63,15 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
         });
     }, [editor.setEditFormData]);
 
-    if (!mounted) return null;
+    if (!mounted) {
+        return (
+            <div className="space-y-4">
+                <Skeleton className="h-8 w-48" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-[420px] w-full" />
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-4">

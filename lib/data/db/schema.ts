@@ -31,7 +31,7 @@ export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'co
 export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
 export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
 export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
-export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['work', 'material']);
+export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['section', 'work', 'material']);
 export const globalPurchaseSourceEnum = pgEnum('global_purchase_source', ['manual', 'catalog']);
 export const estimateExecutionSourceEnum = pgEnum('estimate_execution_source', ['from_estimate', 'extra']);
 export const estimateExecutionStatusEnum = pgEnum('estimate_execution_status', ['not_started', 'in_progress', 'done']);
@@ -732,6 +732,7 @@ export const projects = pgTable('projects', {
   counterpartyId: uuid('counterparty_id')
     .references(() => counterparties.id),
   customerName: text('customer_name'), // For manual entry
+  objectAddress: text('object_address'),
 
   contractAmount: integer('contract_amount').notNull().default(0),
   startDate: timestamp('start_date'),

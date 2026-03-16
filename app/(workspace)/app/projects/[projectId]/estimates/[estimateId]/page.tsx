@@ -1,4 +1,4 @@
-import { EstimateDetailsShell } from '@/features/projects';
+import { EstimateDetailsShell } from '@/features/projects/estimates/screens/EstimateDetailsShell.client';
 import { getEstimateBySlug } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
