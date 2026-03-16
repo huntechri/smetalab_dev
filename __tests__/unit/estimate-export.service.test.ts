@@ -249,8 +249,10 @@ describe('EstimateExportService', () => {
         const sectionMaterialsLabel = sheet?.getRow(9).getCell(3).value;
         const sectionMaterialsSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
         const sectionSummaryTitle = sheet?.getRow(11).getCell(3).value;
-        const sectionSummaryLabel = sheet?.getRow(12).getCell(3).value;
-        const sectionSummaryTotal = sheet?.getRow(12).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryWorksLabel = sheet?.getRow(12).getCell(3).value;
+        const sectionSummaryWorksTotal = sheet?.getRow(12).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryMaterialsLabel = sheet?.getRow(13).getCell(3).value;
+        const sectionSummaryMaterialsTotal = sheet?.getRow(13).getCell(8).value as { formula?: string } | null;
         const workRowHeight = sheet?.getRow(6).height;
 
         expect(headers).not.toContain('Расход');
@@ -266,8 +268,10 @@ describe('EstimateExportService', () => {
         expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
         expect(sectionMaterialsSum?.formula).toContain('"Материал"');
         expect(sectionSummaryTitle).toBe('Общие итоги по разделам');
-        expect(sectionSummaryLabel).toBe('Итого раздела № 1 (Раздел 1)');
-        expect(sectionSummaryTotal?.formula).toBe('SUM($H$6:$H$7)');
+        expect(sectionSummaryWorksLabel).toBe('Итого раздела № 1 (работы)');
+        expect(sectionSummaryWorksTotal?.formula).toBe('SUMIFS($H$6:$H$7,$B$6:$B$7,"Работа")');
+        expect(sectionSummaryMaterialsLabel).toBe('Итого раздела № 1 (материалы)');
+        expect(sectionSummaryMaterialsTotal?.formula).toBe('SUMIFS($H$6:$H$7,$B$6:$B$7,"Материал")');
     });
 
     it('exports pdf for cyrillic names', async () => {

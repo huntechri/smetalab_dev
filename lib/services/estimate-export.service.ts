@@ -101,6 +101,29 @@ type DownloadedImage = {
 const CURRENCY_FORMAT = '#,##0.00 [$₽-419]';
 const WORK_ROW_BASE_HEIGHT = 24;
 const MATERIAL_IMAGE_SIZE = 34;
+const MATERIAL_IMAGE_COLUMN_WIDTH_CHARS = 14;
+const MATERIAL_ROW_HEIGHT_POINTS = 44;
+
+function estimateColumnWidthPixels(columnWidthChars: number): number {
+    return Math.floor(columnWidthChars * 7 + 5);
+}
+
+function pointsToPixels(points: number): number {
+    return points * (96 / 72);
+}
+
+function getCenteredImageAnchor(rowIndex: number): { col: number; row: number } {
+    const columnWidthPx = estimateColumnWidthPixels(MATERIAL_IMAGE_COLUMN_WIDTH_CHARS);
+    const rowHeightPx = pointsToPixels(MATERIAL_ROW_HEIGHT_POINTS);
+
+    const offsetX = Math.max(0, (columnWidthPx - MATERIAL_IMAGE_SIZE) / 2);
+    const offsetY = Math.max(0, (rowHeightPx - MATERIAL_IMAGE_SIZE) / 2);
+
+    return {
+        col: 3 + (columnWidthPx > 0 ? offsetX / columnWidthPx : 0),
+        row: (rowIndex - 1) + (rowHeightPx > 0 ? offsetY / rowHeightPx : 0),
+    };
+}
 
 function calculateWorkRowHeight(name: string): number {
     const normalized = name.trim();
@@ -459,12 +482,13 @@ export class EstimateExportService {
 
             const image = imageMap.get(row.id);
             if (image) {
+                const imageAnchor = getCenteredImageAnchor(rowIndex);
                 const imageId = workbook.addImage({
                     base64: `data:image/${image.extension};base64,${image.buffer.toString('base64')}`,
                     extension: image.extension,
                 });
                 worksheet.addImage(imageId, {
-                    tl: { col: 3.33, row: rowIndex - 1 + 0.2 },
+                    tl: imageAnchor,
                     ext: { width: MATERIAL_IMAGE_SIZE, height: MATERIAL_IMAGE_SIZE },
                 });
             }
@@ -503,12 +527,18 @@ export class EstimateExportService {
             summaryTitleRow.getCell(3).alignment = { vertical: 'middle', horizontal: 'left' };
             rowIndex += 1;
 
-            for (const sectionRange of sectionRanges) {
+            const addSummaryRow = (
+                sectionRange: { code: string; name: string; startRow: number; endRow: number },
+                suffix: 'работы' | 'материалы',
+                kindLabel: 'Работа' | 'Материал',
+            ) => {
                 const summaryRow = worksheet.getRow(rowIndex);
                 summaryRow.getCell(1).value = sectionRange.code;
                 summaryRow.getCell(2).value = 'Раздел';
-                summaryRow.getCell(3).value = `Итого раздела № ${sectionRange.code} (${sectionRange.name})`;
-                summaryRow.getCell(8).value = { formula: `SUM($H$${sectionRange.startRow}:$H$${sectionRange.endRow})` };
+                summaryRow.getCell(3).value = `Итого раздела № ${sectionRange.code} (${suffix})`;
+                summaryRow.getCell(8).value = {
+                    formula: `SUMIFS($H$${sectionRange.startRow}:$H$${sectionRange.endRow},$B$${sectionRange.startRow}:$B$${sectionRange.endRow},"${kindLabel}")`,
+                };
                 summaryRow.getCell(8).numFmt = CURRENCY_FORMAT;
 
                 for (let col = 1; col <= 8; col += 1) {
@@ -533,6 +563,11 @@ export class EstimateExportService {
                 }
 
                 rowIndex += 1;
+            };
+
+            for (const sectionRange of sectionRanges) {
+                addSummaryRow(sectionRange, 'работы', 'Работа');
+                addSummaryRow(sectionRange, 'материалы', 'Материал');
             }
         }
 
