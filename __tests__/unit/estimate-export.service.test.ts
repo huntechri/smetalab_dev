@@ -51,6 +51,126 @@ describe('EstimateExportService', () => {
         });
     });
 
+
+    it('ignores sections in totals calculation', () => {
+        const totals = __estimateExportServiceInternal.computeTotals([
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 1,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 2,
+            },
+        ]);
+
+        expect(totals).toEqual({ works: 100, materials: 0, grand: 100 });
+    });
+
+
+    it('computes section display totals from subsequent rows', () => {
+        const totals = __estimateExportServiceInternal.computeSectionDisplayTotals([
+            {
+                id: 's2',
+                kind: 'section',
+                parentWorkId: null,
+                code: '2',
+                name: 'Раздел 2',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 300,
+            },
+            {
+                id: 'm2',
+                kind: 'material',
+                parentWorkId: 'w2',
+                code: '2.1.1',
+                name: 'Материал 2',
+                imageUrl: null,
+                unit: 'шт',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 320,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа 1',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 200,
+                sum: 200,
+                expense: 0,
+                order: 120,
+            },
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 100,
+            },
+            {
+                id: 'w2',
+                kind: 'work',
+                parentWorkId: null,
+                code: '2.1',
+                name: 'Работа 2',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 300,
+                sum: 300,
+                expense: 0,
+                order: 310,
+            },
+        ]);
+
+        expect(totals.bySectionId.get('s1')).toEqual({ works: 200, materials: 0, total: 200 });
+        expect(totals.bySectionId.get('s2')).toEqual({ works: 300, materials: 100, total: 400 });
+        expect(totals.rowSumById.get('s1')).toBe(200);
+        expect(totals.rowSumById.get('s2')).toBe(400);
+        expect(totals.rowSumById.get('w1')).toBe(200);
+        expect(totals.rowSumById.get('w2')).toBe(300);
+        expect(totals.rowSumById.get('m2')).toBe(100);
+    });
+
     it('builds deterministic export file name', () => {
         const name = EstimateExportService.buildFilename({
             estimateId: 'id',
@@ -71,6 +191,20 @@ describe('EstimateExportService', () => {
             projectName: 'Проект',
             rows: [
                 {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
+                {
                     id: '1',
                     kind: 'work',
                     parentWorkId: null,
@@ -84,8 +218,22 @@ describe('EstimateExportService', () => {
                     expense: 0,
                     order: 100,
                 },
+                {
+                    id: '2',
+                    kind: 'material',
+                    parentWorkId: '1',
+                    code: '1.1',
+                    name: 'Материал',
+                    imageUrl: null,
+                    unit: 'шт',
+                    qty: 4,
+                    price: 50,
+                    sum: 200,
+                    expense: 0,
+                    order: 110,
+                },
             ],
-            totals: { works: 200, materials: 0, grand: 200 },
+            totals: { works: 200, materials: 200, grand: 400 },
         });
 
         const ExcelJS = (await import('exceljs')).default;
@@ -93,8 +241,28 @@ describe('EstimateExportService', () => {
         await workbook.xlsx.load(buffer);
         const sheet = workbook.getWorksheet('Смета');
         const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
+        const sectionSum = sheet?.getRow(5).getCell(8).value;
+        const workRowSum = sheet?.getRow(6).getCell(8).value as { formula?: string } | null;
+        const materialRowSum = sheet?.getRow(7).getCell(8).value as { formula?: string } | null;
+        const sectionWorksLabel = sheet?.getRow(8).getCell(3).value;
+        const sectionWorksSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
+        const sectionMaterialsLabel = sheet?.getRow(9).getCell(3).value;
+        const sectionMaterialsSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
 
         expect(headers).not.toContain('Расход');
+        expect(sectionSum).toBe('');
+        expect(workRowSum?.formula).toBe('F6*G6');
+        expect(materialRowSum?.formula).toBe('F7*G7');
+        expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
+        expect(sectionWorksSum?.formula).toContain('SUMIFS');
+        expect(sectionWorksSum?.formula).toContain('"Работа"');
+        expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
+        expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
+        expect(sectionMaterialsSum?.formula).toContain('"Материал"');
+        const flattened = sheet?.getSheetValues().flat().map((value) => String(value ?? '')) ?? [];
+        expect(flattened.some((value) => value.includes('Итого работы'))).toBe(false);
+        expect(flattened.some((value) => value.includes('Итого материалы'))).toBe(false);
+        expect(flattened.some((value) => value.includes('Итого смета'))).toBe(false);
     });
 
     it('exports pdf for cyrillic names', async () => {
@@ -103,6 +271,20 @@ describe('EstimateExportService', () => {
             estimateName: 'Смета Тест',
             projectName: 'Проект Тест',
             rows: [
+                {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
                 {
                     id: '1',
                     kind: 'work',

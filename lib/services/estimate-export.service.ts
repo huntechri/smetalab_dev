@@ -14,7 +14,7 @@ export type EstimateExportFormat = z.infer<typeof exportFormatSchema>;
 
 const estimateExportRowSchema = z.object({
     id: z.string(),
-    kind: z.enum(['work', 'material']),
+    kind: z.enum(['section', 'work', 'material']),
     parentWorkId: z.string().nullable(),
     code: z.string(),
     name: z.string(),
@@ -40,6 +40,58 @@ export type EstimateExportPayload = {
         grand: number;
     };
 };
+
+
+
+type SectionTotalsBreakdown = {
+    works: number;
+    materials: number;
+    total: number;
+};
+
+type SectionDisplayTotals = {
+    bySectionId: Map<string, SectionTotalsBreakdown>;
+    rowSumById: Map<string, number>;
+};
+
+function computeSectionDisplayTotals(rows: EstimateExportRow[]): SectionDisplayTotals {
+    const sorted = rows.slice().sort((left, right) => left.order - right.order);
+    const bySectionId = new Map<string, SectionTotalsBreakdown>();
+    const rowSumById = new Map<string, number>();
+    let currentSectionId: string | null = null;
+
+    for (const row of sorted) {
+        if (row.kind === 'section') {
+            currentSectionId = row.id;
+            if (!bySectionId.has(row.id)) {
+                bySectionId.set(row.id, { works: 0, materials: 0, total: 0 });
+            }
+            rowSumById.set(row.id, 0);
+            continue;
+        }
+
+        rowSumById.set(row.id, row.sum);
+
+        if (currentSectionId) {
+            const sectionTotals = bySectionId.get(currentSectionId) ?? { works: 0, materials: 0, total: 0 };
+            const nextTotals: SectionTotalsBreakdown = {
+                works: row.kind === 'work' ? sectionTotals.works + row.sum : sectionTotals.works,
+                materials: row.kind === 'material' ? sectionTotals.materials + row.sum : sectionTotals.materials,
+                total: sectionTotals.total + row.sum,
+            };
+
+            bySectionId.set(currentSectionId, nextTotals);
+        }
+    }
+
+    for (const row of sorted) {
+        if (row.kind === 'section') {
+            rowSumById.set(row.id, bySectionId.get(row.id)?.total ?? 0);
+        }
+    }
+
+    return { bySectionId, rowSumById };
+}
 
 type DownloadedImage = {
     buffer: Buffer;
@@ -84,7 +136,7 @@ function computeTotals(rows: EstimateExportRow[]) {
     const totals = rows.reduce((acc, row) => {
         if (row.kind === 'work') {
             acc.works += row.sum;
-        } else {
+        } else if (row.kind === 'material') {
             acc.materials += row.sum;
         }
         return acc;
@@ -225,7 +277,8 @@ export class EstimateExportService {
 
         worksheet.columns = [
             { header: 'Код', key: 'code', width: 12 },
-            { header: 'Наименование', key: 'name', width: 48 },
+            { header: 'Тип', key: 'kind', width: 12 },
+            { header: 'Наименование', key: 'name', width: 44 },
             { header: 'Превью', key: 'preview', width: 14 },
             { header: 'Ед.', key: 'unit', width: 10 },
             { header: 'Кол-во', key: 'qty', width: 12 },
@@ -233,18 +286,18 @@ export class EstimateExportService {
             { header: 'Сумма', key: 'sum', width: 16 },
         ];
 
-        worksheet.mergeCells('A1:G1');
+        worksheet.mergeCells('A1:H1');
         worksheet.getCell('A1').value = `Проект: ${payload.projectName}`;
         worksheet.getCell('A1').font = { bold: true, size: 12 };
 
-        worksheet.mergeCells('A2:G2');
+        worksheet.mergeCells('A2:H2');
         worksheet.getCell('A2').value = `Смета: ${payload.estimateName}`;
 
-        worksheet.mergeCells('A3:G3');
+        worksheet.mergeCells('A3:H3');
         worksheet.getCell('A3').value = `Дата экспорта: ${new Date().toLocaleString('ru-RU')}`;
 
         const headerRow = worksheet.getRow(4);
-        headerRow.values = ['Код', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
+        headerRow.values = ['Код', 'Тип', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
         headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -269,15 +322,99 @@ export class EstimateExportService {
             imageMap.set(row.id, image);
         }));
 
+        const writeSectionSubtotalRows = (
+            section: { code: string; name: string } | null,
+            startRow: number | null,
+            endRow: number,
+            currentRowIndex: number,
+        ): number => {
+            if (!section || startRow === null) {
+                return currentRowIndex;
+            }
+
+            const createFormula = (kindLabel: 'Работа' | 'Материал') => {
+                if (endRow < startRow) {
+                    return '0';
+                }
+
+                return `SUMIFS($H$${startRow}:$H$${endRow},$B$${startRow}:$B$${endRow},"${kindLabel}")`;
+            };
+
+            const addSubtotalRow = (suffix: 'работы' | 'материал', kindLabel: 'Работа' | 'Материал') => {
+                const subtotalRow = worksheet.getRow(currentRowIndex);
+                subtotalRow.getCell(1).value = section.code;
+                subtotalRow.getCell(2).value = 'Раздел';
+                subtotalRow.getCell(3).value = `Итого по разделу № ${section.code} (${suffix})`;
+                subtotalRow.getCell(8).value = { formula: createFormula(kindLabel) };
+                subtotalRow.getCell(8).numFmt = CURRENCY_FORMAT;
+
+                subtotalRow.eachCell((cell: ExcelJS.Cell) => {
+                    cell.font = { bold: true, color: { argb: 'FF1E3A8A' } };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFF1F5F9' },
+                    };
+                });
+
+                for (let col = 1; col <= 8; col += 1) {
+                    const cell = subtotalRow.getCell(col);
+                    cell.alignment = {
+                        vertical: 'middle',
+                        horizontal: col >= 6 ? 'right' : 'left',
+                        wrapText: col === 3,
+                    };
+                    cell.border = {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                    };
+                }
+
+                currentRowIndex += 1;
+            };
+
+            addSubtotalRow('работы', 'Работа');
+            addSubtotalRow('материал', 'Материал');
+            return currentRowIndex;
+        };
+
         let rowIndex = 5;
+        let activeSection: { code: string; name: string } | null = null;
+        let activeSectionDataStartRow: number | null = null;
+
         for (const row of payload.rows) {
+            if (row.kind === 'section') {
+                rowIndex = writeSectionSubtotalRows(activeSection, activeSectionDataStartRow, rowIndex - 1, rowIndex);
+                activeSection = { code: row.code, name: row.name };
+                activeSectionDataStartRow = null;
+            }
+
             const excelRow = worksheet.getRow(rowIndex);
             excelRow.getCell(1).value = row.code;
-            excelRow.getCell(2).value = row.kind === 'material' ? `   ${row.name}` : row.name;
-            excelRow.getCell(4).value = row.unit;
-            excelRow.getCell(5).value = row.qty;
-            excelRow.getCell(6).value = row.price;
-            excelRow.getCell(7).value = row.sum;
+            const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
+            excelRow.getCell(2).value = kindLabel;
+            excelRow.getCell(3).value = row.kind === 'material' ? `   ${row.name}` : row.name;
+            excelRow.getCell(5).value = row.kind === 'section' ? '' : row.unit;
+            excelRow.getCell(6).value = row.kind === 'section' ? '' : row.qty;
+            excelRow.getCell(7).value = row.kind === 'section' ? '' : row.price;
+            excelRow.getCell(8).value = row.kind === 'section' ? '' : { formula: `F${rowIndex}*G${rowIndex}` };
+
+            if (row.kind !== 'section' && activeSectionDataStartRow === null) {
+                activeSectionDataStartRow = rowIndex;
+            }
+
+            if (row.kind === 'section') {
+                excelRow.eachCell((cell: ExcelJS.Cell) => {
+                    cell.font = { bold: true, color: { argb: 'FF0F172A' } };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFE2E8F0' },
+                    };
+                });
+            }
 
             if (row.kind === 'work') {
                 excelRow.eachCell((cell: ExcelJS.Cell) => {
@@ -290,7 +427,7 @@ export class EstimateExportService {
                 });
             }
 
-            excelRow.height = row.kind === 'material' ? 44 : 24;
+            excelRow.height = row.kind === 'material' ? 44 : row.kind === 'section' ? 26 : 24;
 
             const image = imageMap.get(row.id);
             if (image) {
@@ -299,17 +436,17 @@ export class EstimateExportService {
                     extension: image.extension,
                 });
                 worksheet.addImage(imageId, {
-                    tl: { col: 2.1, row: rowIndex - 1 + 0.1 },
+                    tl: { col: 3.1, row: rowIndex - 1 + 0.1 },
                     ext: { width: 42, height: 42 },
                 });
             }
 
-            for (let col = 1; col <= 7; col += 1) {
+            for (let col = 1; col <= 8; col += 1) {
                 const cell = excelRow.getCell(col);
                 cell.alignment = {
                     vertical: 'middle',
-                    horizontal: col >= 5 ? 'right' : 'left',
-                    wrapText: col === 2,
+                    horizontal: col >= 6 ? 'right' : 'left',
+                    wrapText: col === 3,
                 };
 
                 cell.border = {
@@ -319,7 +456,7 @@ export class EstimateExportService {
                     bottom: { style: 'thin' },
                 };
 
-                if (col === 6 || col === 7) {
+                if ((col === 7 || col === 8) && row.kind !== 'section') {
                     cell.numFmt = CURRENCY_FORMAT;
                 }
             }
@@ -327,29 +464,7 @@ export class EstimateExportService {
             rowIndex += 1;
         }
 
-        const addTotalRow = (label: string, value: number) => {
-            const row = worksheet.getRow(rowIndex);
-            row.getCell(1).value = label;
-            worksheet.mergeCells(`A${rowIndex}:F${rowIndex}`);
-            row.getCell(7).value = value;
-            row.getCell(1).font = { bold: true };
-            row.getCell(7).font = { bold: true };
-            row.getCell(7).numFmt = CURRENCY_FORMAT;
-            row.eachCell((cell: ExcelJS.Cell) => {
-                cell.border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    right: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                };
-            });
-            rowIndex += 1;
-        };
-
-        rowIndex += 1;
-        addTotalRow('Итого работы', payload.totals.works);
-        addTotalRow('Итого материалы', payload.totals.materials);
-        addTotalRow('Итого смета', payload.totals.grand);
+        rowIndex = writeSectionSubtotalRows(activeSection, activeSectionDataStartRow, rowIndex - 1, rowIndex);
 
         const buffer = await workbook.xlsx.writeBuffer();
         return Buffer.from(buffer);
@@ -371,21 +486,34 @@ export class EstimateExportService {
         y -= 24;
         page.drawText('Kod', { x: 32, y, size: 9, font: bold });
         page.drawText('Naimenovanie', { x: 90, y, size: 9, font: bold });
+        page.drawText('Tip', { x: 430, y, size: 9, font: bold });
         page.drawText('Ed.', { x: 490, y, size: 9, font: bold });
         page.drawText('Kol-vo', { x: 530, y, size: 9, font: bold });
         page.drawText('Summa', { x: 610, y, size: 9, font: bold });
 
+        const displayTotals = computeSectionDisplayTotals(payload.rows);
+
         y -= 14;
         for (const row of payload.rows) {
+            const displaySum = displayTotals.rowSumById.get(row.id) ?? row.sum;
+            const sectionBreakdown = row.kind === 'section'
+                ? (displayTotals.bySectionId.get(row.id) ?? { works: 0, materials: 0, total: displaySum })
+                : null;
             if (y < 60) {
                 break;
             }
 
             page.drawText(row.code, { x: 32, y, size: 8, font });
-            page.drawText(`${row.kind === 'material' ? '- ' : ''}${toPdfSafeText(row.name)}`.slice(0, 68), { x: 90, y, size: 8, font: row.kind === 'work' ? bold : font });
-            page.drawText(toPdfSafeText(row.unit).slice(0, 6), { x: 490, y, size: 8, font });
-            page.drawText(row.qty.toLocaleString('ru-RU'), { x: 530, y, size: 8, font });
-            page.drawText(`${Math.round(row.sum).toLocaleString('ru-RU')} RUB`, { x: 610, y, size: 8, font: row.kind === 'work' ? bold : font });
+            page.drawText(`${row.kind === 'material' ? '- ' : ''}${toPdfSafeText(row.name)}`.slice(0, 64), { x: 90, y, size: 8, font: row.kind === 'section' ? bold : row.kind === 'work' ? bold : font });
+            page.drawText(row.kind === 'section' ? 'Razdel' : row.kind === 'work' ? 'Rabota' : 'Material', { x: 430, y, size: 8, font });
+            page.drawText(row.kind === 'section' ? '' : toPdfSafeText(row.unit).slice(0, 6), { x: 490, y, size: 8, font });
+            page.drawText(row.kind === 'section' ? '' : row.qty.toLocaleString('ru-RU'), { x: 530, y, size: 8, font });
+            page.drawText(
+                row.kind === 'section'
+                    ? `R:${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} M:${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} RUB`
+                    : `${Math.round(displaySum).toLocaleString('ru-RU')} RUB`,
+                { x: 610, y, size: 8, font: row.kind === 'section' || row.kind === 'work' ? bold : font },
+            );
             y -= 12;
         }
 
@@ -409,4 +537,5 @@ export class EstimateExportService {
 
 export const __estimateExportServiceInternal = {
     computeTotals,
+    computeSectionDisplayTotals,
 };

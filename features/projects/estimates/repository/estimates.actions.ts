@@ -1,5 +1,6 @@
 import {
     addEstimateMaterialAction,
+    addEstimateSectionAction,
     addEstimateWorkAction,
     getEstimateRowsAction,
     patchEstimateRowAction,
@@ -25,6 +26,20 @@ export const estimatesActionRepo = {
         if (!result.success) {
             throw new Error(result.error.message);
         }
+        return result.data;
+    },
+
+    async addSection(estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string }): Promise<EstimateRow> {
+        const result = await addEstimateSectionAction(estimateId, {
+            code: payload.code,
+            name: payload.name,
+            insertAfterRowId: payload.insertAfterRowId,
+        });
+
+        if (!result.success) {
+            throw new Error(result.error.message);
+        }
+
         return result.data;
     },
 

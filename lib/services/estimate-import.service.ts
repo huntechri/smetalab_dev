@@ -9,13 +9,23 @@ import { Result, error, success } from "@/lib/utils/result";
 
 const importedEstimateRowSchema = z.object({
   code: z.string().trim().min(1),
+  kind: z.enum(["section", "work", "material"]),
   name: z.string().trim().min(1),
-  unit: z.string().trim().min(1),
+  unit: z.string().trim(),
   qty: z.number().nonnegative(),
   price: z.number().nonnegative(),
 });
 
 export type ImportedEstimateRow = z.infer<typeof importedEstimateRowSchema>;
+
+type ParsedHeader = {
+  codeCol: number;
+  kindCol?: number;
+  nameCol: number;
+  unitCol: number;
+  qtyCol: number;
+  priceCol: number;
+};
 
 function normalizeCellValue(value: ExcelJS.CellValue | undefined): string {
   if (typeof value === "string") {
@@ -44,15 +54,69 @@ function parseNumberCell(value: ExcelJS.CellValue | undefined): number {
   return Number.isFinite(parsed) ? parsed : Number.NaN;
 }
 
+function parseHeader(worksheet: ExcelJS.Worksheet): ParsedHeader {
+  const headerRow = worksheet.getRow(4);
+  const values = Array.from({ length: 12 }, (_, index) =>
+    normalizeCellValue(headerRow.getCell(index + 1).value).toLocaleLowerCase(),
+  );
+
+  const indexOf = (label: string) => {
+    const idx = values.findIndex((value) => value === label);
+    return idx >= 0 ? idx + 1 : undefined;
+  };
+
+  const codeCol = indexOf("код") ?? 1;
+  const kindCol = indexOf("тип");
+  const nameCol = indexOf("наименование") ?? (kindCol ? 3 : 2);
+  const unitCol = indexOf("ед.") ?? (kindCol ? 5 : 4);
+  const qtyCol = indexOf("кол-во") ?? (kindCol ? 6 : 5);
+  const priceCol = indexOf("цена") ?? (kindCol ? 7 : 6);
+
+  return {
+    codeCol,
+    kindCol,
+    nameCol,
+    unitCol,
+    qtyCol,
+    priceCol,
+  };
+}
+
+function parseKind(
+  code: string,
+  kindCellValue: string,
+): "section" | "work" | "material" {
+  const normalizedKind = kindCellValue.toLocaleLowerCase();
+
+  if (normalizedKind === "раздел") {
+    return "section";
+  }
+
+  if (normalizedKind === "работа") {
+    return "work";
+  }
+
+  if (normalizedKind === "материал") {
+    return "material";
+  }
+
+  if (code.includes(".")) {
+    return "material";
+  }
+
+  return "work";
+}
+
 function parseRowsFromWorksheet(
   worksheet: ExcelJS.Worksheet,
 ): Result<ImportedEstimateRow[]> {
   const rows: ImportedEstimateRow[] = [];
+  const header = parseHeader(worksheet);
 
   for (let rowIndex = 5; rowIndex <= worksheet.rowCount; rowIndex += 1) {
     const row = worksheet.getRow(rowIndex);
-    const code = normalizeCellValue(row.getCell(1).value);
-    const name = normalizeCellValue(row.getCell(2).value).trimStart();
+    const code = normalizeCellValue(row.getCell(header.codeCol).value);
+    const name = normalizeCellValue(row.getCell(header.nameCol).value).trimStart();
 
     if (!code || !name) {
       continue;
@@ -62,17 +126,24 @@ function parseRowsFromWorksheet(
       continue;
     }
 
-    const unit = normalizeCellValue(row.getCell(4).value) || "шт";
-    const qty = parseNumberCell(row.getCell(5).value);
-    const price = parseNumberCell(row.getCell(6).value);
+    const rawKind = header.kindCol
+      ? normalizeCellValue(row.getCell(header.kindCol).value)
+      : "";
+    const kind = parseKind(code, rawKind);
+
+    const unit = kind === "section" ? "" : normalizeCellValue(row.getCell(header.unitCol).value) || "шт";
+    const qty = kind === "section" ? 0 : parseNumberCell(row.getCell(header.qtyCol).value);
+    const price = kind === "section" ? 0 : parseNumberCell(row.getCell(header.priceCol).value);
 
     const parsed = importedEstimateRowSchema.safeParse({
       code,
+      kind,
       name,
       unit,
       qty,
       price,
     });
+
     if (!parsed.success) {
       return error(
         `Некорректные данные в строке ${rowIndex}`,
@@ -144,6 +215,7 @@ export class EstimateImportService {
           );
 
         const workRowsToInsert: (typeof estimateRows.$inferInsert)[] = [];
+        const sectionRowsToInsert: (typeof estimateRows.$inferInsert)[] = [];
         const materialRowsToInsert: {
           workIdx: number;
           data: typeof estimateRows.$inferInsert;
@@ -152,15 +224,11 @@ export class EstimateImportService {
 
         for (let index = 0; index < importedRows.length; index += 1) {
           const item = importedRows[index];
-          const parentCode = item.code.includes(".")
-            ? item.code.split(".").slice(0, -1).join(".")
-            : null;
-          const kind: "work" | "material" = parentCode ? "material" : "work";
           const sum = item.qty * item.price;
           const rowData: typeof estimateRows.$inferInsert = {
             tenantId: teamId,
             estimateId,
-            kind,
+            kind: item.kind,
             code: item.code,
             name: item.name,
             unit: item.unit,
@@ -171,37 +239,66 @@ export class EstimateImportService {
             order: (index + 1) * 10,
           };
 
-          if (kind === "work") {
+          if (item.kind === "section") {
+            sectionRowsToInsert.push(rowData);
+            continue;
+          }
+
+          if (item.kind === "work") {
             workRowsToInsert.push(rowData);
             parentByCode.set(item.code, workRowsToInsert.length - 1);
-          } else {
-            const workIdx = parentCode ? parentByCode.get(parentCode) : undefined;
-            if (typeof workIdx === "undefined") {
-              throw new Error(`INVALID_PARENT_${item.code}`);
-            }
-            materialRowsToInsert.push({ workIdx, data: rowData });
+            continue;
           }
+
+          const parentCode = item.code.includes(".")
+            ? item.code.split(".").slice(0, -1).join(".")
+            : null;
+          const workIdx = parentCode ? parentByCode.get(parentCode) : undefined;
+          if (typeof workIdx === "undefined") {
+            throw new Error(`INVALID_PARENT_${item.code}`);
+          }
+
+          materialRowsToInsert.push({ workIdx, data: rowData });
         }
 
-        const insertedWorks =
-          workRowsToInsert.length > 0
+        const simpleRowsToInsert = [...sectionRowsToInsert, ...workRowsToInsert].sort(
+          (left, right) => (left.order ?? 0) - (right.order ?? 0),
+        );
+
+        const insertedRows =
+          simpleRowsToInsert.length > 0
             ? await tx
                 .insert(estimateRows)
-                .values(workRowsToInsert)
-                .returning({ id: estimateRows.id })
+                .values(simpleRowsToInsert)
+                .returning({ id: estimateRows.id, code: estimateRows.code, kind: estimateRows.kind })
             : [];
 
+        const insertedWorkByCode = new Map(
+          insertedRows.filter((row) => row.kind === "work").map((row) => [row.code, row.id]),
+        );
+
         if (materialRowsToInsert.length > 0) {
-          const materialValues = materialRowsToInsert.map((material) => ({
-            ...material.data,
-            parentWorkId: insertedWorks[material.workIdx].id,
-          }));
+          const materialValues = materialRowsToInsert.map((material) => {
+            const parentCode = material.data.code?.split(".").slice(0, -1).join(".") ?? "";
+            const parentWorkId = insertedWorkByCode.get(parentCode);
+
+            if (!parentWorkId) {
+              throw new Error(`INVALID_PARENT_${material.data.code}`);
+            }
+
+            return {
+              ...material.data,
+              parentWorkId,
+            };
+          });
 
           await tx.insert(estimateRows).values(materialValues);
         }
 
         const [{ total }] = await tx
-          .select({ total: sql<number>`COALESCE(SUM(${estimateRows.sum}), 0)` })
+          .select({
+            total: sql<number>`COALESCE(SUM(CASE WHEN ${estimateRows.kind} = 'section' THEN 0 ELSE ${estimateRows.sum} END), 0)`,
+          })
           .from(estimateRows)
           .where(
             and(
