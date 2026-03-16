@@ -284,7 +284,6 @@ export class EstimateExportService {
             { header: 'Кол-во', key: 'qty', width: 12 },
             { header: 'Цена', key: 'price', width: 14 },
             { header: 'Сумма', key: 'sum', width: 16 },
-            { header: 'SectionKey', key: 'sectionKey', width: 2, hidden: true },
         ];
 
         worksheet.mergeCells('A1:H1');
@@ -323,11 +322,75 @@ export class EstimateExportService {
             imageMap.set(row.id, image);
         }));
 
-        const sectionRows: Array<{ id: string; label: string }> = [];
-        let currentSectionId: string | null = null;
+        const writeSectionSubtotalRows = (
+            section: { code: string; name: string } | null,
+            startRow: number | null,
+            endRow: number,
+            currentRowIndex: number,
+        ): number => {
+            if (!section || startRow === null) {
+                return currentRowIndex;
+            }
+
+            const createFormula = (kindLabel: 'Работа' | 'Материал') => {
+                if (endRow < startRow) {
+                    return '0';
+                }
+
+                return `SUMIFS($H$${startRow}:$H$${endRow},$B$${startRow}:$B$${endRow},"${kindLabel}")`;
+            };
+
+            const addSubtotalRow = (suffix: 'работы' | 'материал', kindLabel: 'Работа' | 'Материал') => {
+                const subtotalRow = worksheet.getRow(currentRowIndex);
+                subtotalRow.getCell(1).value = section.code;
+                subtotalRow.getCell(2).value = 'Раздел';
+                subtotalRow.getCell(3).value = `Итого по разделу № ${section.code} (${suffix})`;
+                subtotalRow.getCell(8).value = { formula: createFormula(kindLabel) };
+                subtotalRow.getCell(8).numFmt = CURRENCY_FORMAT;
+
+                subtotalRow.eachCell((cell: ExcelJS.Cell) => {
+                    cell.font = { bold: true, color: { argb: 'FF1E3A8A' } };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFF1F5F9' },
+                    };
+                });
+
+                for (let col = 1; col <= 8; col += 1) {
+                    const cell = subtotalRow.getCell(col);
+                    cell.alignment = {
+                        vertical: 'middle',
+                        horizontal: col >= 6 ? 'right' : 'left',
+                        wrapText: col === 3,
+                    };
+                    cell.border = {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                    };
+                }
+
+                currentRowIndex += 1;
+            };
+
+            addSubtotalRow('работы', 'Работа');
+            addSubtotalRow('материал', 'Материал');
+            return currentRowIndex;
+        };
 
         let rowIndex = 5;
+        let activeSection: { code: string; name: string } | null = null;
+        let activeSectionDataStartRow: number | null = null;
+
         for (const row of payload.rows) {
+            if (row.kind === 'section') {
+                rowIndex = writeSectionSubtotalRows(activeSection, activeSectionDataStartRow, rowIndex - 1, rowIndex);
+                activeSection = { code: row.code, name: row.name };
+                activeSectionDataStartRow = null;
+            }
+
             const excelRow = worksheet.getRow(rowIndex);
             excelRow.getCell(1).value = row.code;
             const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
@@ -336,15 +399,10 @@ export class EstimateExportService {
             excelRow.getCell(5).value = row.kind === 'section' ? '' : row.unit;
             excelRow.getCell(6).value = row.kind === 'section' ? '' : row.qty;
             excelRow.getCell(7).value = row.kind === 'section' ? '' : row.price;
+            excelRow.getCell(8).value = row.kind === 'section' ? '' : { formula: `F${rowIndex}*G${rowIndex}` };
 
-            if (row.kind === 'section') {
-                currentSectionId = row.id;
-                sectionRows.push({ id: row.id, label: `${row.code} ${row.name}`.trim() });
-                excelRow.getCell(8).value = '';
-                excelRow.getCell(9).value = row.id;
-            } else {
-                excelRow.getCell(8).value = { formula: `F${rowIndex}*G${rowIndex}` };
-                excelRow.getCell(9).value = currentSectionId ?? '';
+            if (row.kind !== 'section' && activeSectionDataStartRow === null) {
+                activeSectionDataStartRow = rowIndex;
             }
 
             if (row.kind === 'section') {
@@ -383,7 +441,7 @@ export class EstimateExportService {
                 });
             }
 
-            for (let col = 1; col <= 9; col += 1) {
+            for (let col = 1; col <= 8; col += 1) {
                 const cell = excelRow.getCell(col);
                 cell.alignment = {
                     vertical: 'middle',
@@ -391,14 +449,12 @@ export class EstimateExportService {
                     wrapText: col === 3,
                 };
 
-                if (col <= 8) {
-                    cell.border = {
-                        top: { style: 'thin' },
-                        left: { style: 'thin' },
-                        right: { style: 'thin' },
-                        bottom: { style: 'thin' },
-                    };
-                }
+                cell.border = {
+                    top: { style: 'thin' },
+                    left: { style: 'thin' },
+                    right: { style: 'thin' },
+                    bottom: { style: 'thin' },
+                };
 
                 if ((col === 7 || col === 8) && row.kind !== 'section') {
                     cell.numFmt = CURRENCY_FORMAT;
@@ -408,49 +464,7 @@ export class EstimateExportService {
             rowIndex += 1;
         }
 
-        const dataEndRow = rowIndex - 1;
-
-        const addFormulaRow = (label: string, formula: string) => {
-            const row = worksheet.getRow(rowIndex);
-            row.getCell(1).value = label;
-            worksheet.mergeCells(`A${rowIndex}:G${rowIndex}`);
-            row.getCell(8).value = { formula };
-            row.getCell(1).font = { bold: true };
-            row.getCell(8).font = { bold: true };
-            row.getCell(8).numFmt = CURRENCY_FORMAT;
-            row.eachCell((cell: ExcelJS.Cell) => {
-                cell.border = {
-                    top: { style: 'thin' },
-                    left: { style: 'thin' },
-                    right: { style: 'thin' },
-                    bottom: { style: 'thin' },
-                };
-            });
-            rowIndex += 1;
-        };
-
-        const dataRangeSum = `$H$5:$H$${dataEndRow}`;
-        const sectionRange = `$I$5:$I$${dataEndRow}`;
-        const kindRange = `$B$5:$B$${dataEndRow}`;
-
-        if (sectionRows.length > 0) {
-            rowIndex += 1;
-            for (const section of sectionRows) {
-                const escapedId = section.id.replace(/"/g, '""');
-                addFormulaRow(
-                    `Итого работы (${section.label})`,
-                    `SUMIFS(${dataRangeSum},${sectionRange},"${escapedId}",${kindRange},"Работа")`,
-                );
-                addFormulaRow(
-                    `Итого материалы (${section.label})`,
-                    `SUMIFS(${dataRangeSum},${sectionRange},"${escapedId}",${kindRange},"Материал")`,
-                );
-            }
-        }
-
-        rowIndex += 1;
-        addFormulaRow('Итого работы', `SUMIFS(${dataRangeSum},${kindRange},"Работа")`);
-        addFormulaRow('Итого материалы', `SUMIFS(${dataRangeSum},${kindRange},"Материал")`);
+        rowIndex = writeSectionSubtotalRows(activeSection, activeSectionDataStartRow, rowIndex - 1, rowIndex);
 
         const buffer = await workbook.xlsx.writeBuffer();
         return Buffer.from(buffer);
