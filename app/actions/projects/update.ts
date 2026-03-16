@@ -16,7 +16,7 @@ export const updateProjectAction = safeAction(
             return error('Невалидные данные', 'VALIDATION_ERROR', validated.error.flatten().fieldErrors);
         }
 
-        const { name, counterpartyId, startDate, endDate } = validated.data;
+        const { name, counterpartyId, objectAddress, startDate, endDate } = validated.data;
 
         const { data: counterparties } = await getCounterparties(team.id, { search: '' });
         const cp = counterparties.find(c => c.id === counterpartyId);
@@ -28,6 +28,7 @@ export const updateProjectAction = safeAction(
                     name,
                     counterpartyId,
                     customerName: cp?.name || null,
+                    objectAddress: objectAddress?.trim() ? objectAddress.trim() : null,
                     startDate: startDate || null,
                     endDate: endDate || null,
                     updatedAt: new Date(),

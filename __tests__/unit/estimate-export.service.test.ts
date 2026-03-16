@@ -51,11 +51,135 @@ describe('EstimateExportService', () => {
         });
     });
 
+
+    it('ignores sections in totals calculation', () => {
+        const totals = __estimateExportServiceInternal.computeTotals([
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 1,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 2,
+            },
+        ]);
+
+        expect(totals).toEqual({ works: 100, materials: 0, grand: 100 });
+    });
+
+
+    it('computes section display totals from subsequent rows', () => {
+        const totals = __estimateExportServiceInternal.computeSectionDisplayTotals([
+            {
+                id: 's2',
+                kind: 'section',
+                parentWorkId: null,
+                code: '2',
+                name: 'Раздел 2',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 300,
+            },
+            {
+                id: 'm2',
+                kind: 'material',
+                parentWorkId: 'w2',
+                code: '2.1.1',
+                name: 'Материал 2',
+                imageUrl: null,
+                unit: 'шт',
+                qty: 1,
+                price: 100,
+                sum: 100,
+                expense: 0,
+                order: 320,
+            },
+            {
+                id: 'w1',
+                kind: 'work',
+                parentWorkId: null,
+                code: '1.1',
+                name: 'Работа 1',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 200,
+                sum: 200,
+                expense: 0,
+                order: 120,
+            },
+            {
+                id: 's1',
+                kind: 'section',
+                parentWorkId: null,
+                code: '1',
+                name: 'Раздел 1',
+                imageUrl: null,
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 100,
+            },
+            {
+                id: 'w2',
+                kind: 'work',
+                parentWorkId: null,
+                code: '2.1',
+                name: 'Работа 2',
+                imageUrl: null,
+                unit: 'м2',
+                qty: 1,
+                price: 300,
+                sum: 300,
+                expense: 0,
+                order: 310,
+            },
+        ]);
+
+        expect(totals.bySectionId.get('s1')).toEqual({ works: 200, materials: 0, total: 200 });
+        expect(totals.bySectionId.get('s2')).toEqual({ works: 300, materials: 100, total: 400 });
+        expect(totals.rowSumById.get('s1')).toBe(200);
+        expect(totals.rowSumById.get('s2')).toBe(400);
+        expect(totals.rowSumById.get('w1')).toBe(200);
+        expect(totals.rowSumById.get('w2')).toBe(300);
+        expect(totals.rowSumById.get('m2')).toBe(100);
+    });
+
     it('builds deterministic export file name', () => {
         const name = EstimateExportService.buildFilename({
             estimateId: 'id',
             estimateName: 'Смета Черновая 1',
             projectName: 'ЖК Остров B35',
+            exportDate: '01.01.2026',
+            customerName: 'Заказчик',
+            contractorName: 'Подрядчик',
+            objectAddress: 'Адрес',
             rows: [],
             totals: { works: 0, materials: 0, grand: 0 },
         }, 'xlsx');
@@ -69,7 +193,25 @@ describe('EstimateExportService', () => {
             estimateId: 'id',
             estimateName: 'Смета',
             projectName: 'Проект',
+            exportDate: '01.01.2026',
+            customerName: 'ООО Заказчик',
+            contractorName: 'ООО Подрядчик',
+            objectAddress: 'г. Москва, ул. Тестовая, 1',
             rows: [
+                {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
                 {
                     id: '1',
                     kind: 'work',
@@ -84,17 +226,72 @@ describe('EstimateExportService', () => {
                     expense: 0,
                     order: 100,
                 },
+                {
+                    id: '2',
+                    kind: 'material',
+                    parentWorkId: '1',
+                    code: '1.1',
+                    name: 'Материал',
+                    imageUrl: null,
+                    unit: 'шт',
+                    qty: 4,
+                    price: 50,
+                    sum: 200,
+                    expense: 0,
+                    order: 110,
+                },
             ],
-            totals: { works: 200, materials: 0, grand: 200 },
+            totals: { works: 200, materials: 200, grand: 400 },
         });
 
         const ExcelJS = (await import('exceljs')).default;
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(buffer);
         const sheet = workbook.getWorksheet('Смета');
-        const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
+        const headers = sheet?.getRow(6).values as Array<string | number | null | undefined>;
+        const sectionSum = sheet?.getRow(7).getCell(8).value;
+        const workRowSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
+        const materialRowSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
+        const sectionWorksLabel = sheet?.getRow(10).getCell(3).value;
+        const sectionWorksSum = sheet?.getRow(10).getCell(8).value as { formula?: string } | null;
+        const sectionMaterialsLabel = sheet?.getRow(11).getCell(3).value;
+        const sectionMaterialsSum = sheet?.getRow(11).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryTitle = sheet?.getRow(13).getCell(3).value;
+        const sectionSummaryWorksLabel = sheet?.getRow(14).getCell(3).value;
+        const sectionSummaryWorksTotal = sheet?.getRow(14).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryMaterialsLabel = sheet?.getRow(15).getCell(3).value;
+        const sectionSummaryMaterialsTotal = sheet?.getRow(15).getCell(8).value as { formula?: string } | null;
+        const workRowHeight = sheet?.getRow(8).height;
+        const projectCell = sheet?.getCell('A1').value;
+        const dateCell = sheet?.getCell('E1').value;
+        const customerCell = sheet?.getCell('A2').value;
+        const contractorCell = sheet?.getCell('A3').value;
+        const addressCell = sheet?.getCell('A4').value;
+        const contractCell = sheet?.getCell('A5').value;
 
         expect(headers).not.toContain('Расход');
+        expect(headers).toContain('Изображение');
+        expect(projectCell).toBe('Проект: Проект');
+        expect(dateCell).toBe('Дата: 01.01.2026');
+        expect(customerCell).toBe('Заказчик: ООО Заказчик');
+        expect(contractorCell).toBe('Подрядчик: ООО Подрядчик');
+        expect(addressCell).toBe('Адрес объекта: г. Москва, ул. Тестовая, 1');
+        expect(contractCell).toBe('Смета: Смета | Договор №: ');
+        expect(sectionSum).toBe('');
+        expect(workRowSum?.formula).toBe('F8*G8');
+        expect(materialRowSum?.formula).toBe('F9*G9');
+        expect(workRowHeight).toBeGreaterThanOrEqual(24);
+        expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
+        expect(sectionWorksSum?.formula).toContain('SUMIFS');
+        expect(sectionWorksSum?.formula).toContain('"Работа"');
+        expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
+        expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
+        expect(sectionMaterialsSum?.formula).toContain('"Материал"');
+        expect(sectionSummaryTitle).toBe('Общие итоги по разделам');
+        expect(sectionSummaryWorksLabel).toBe('Итого раздела № 1 (работы)');
+        expect(sectionSummaryWorksTotal?.formula).toBe('SUMIFS($H$8:$H$9,$B$8:$B$9,"Работа")');
+        expect(sectionSummaryMaterialsLabel).toBe('Итого раздела № 1 (материалы)');
+        expect(sectionSummaryMaterialsTotal?.formula).toBe('SUMIFS($H$8:$H$9,$B$8:$B$9,"Материал")');
     });
 
     it('exports pdf for cyrillic names', async () => {
@@ -102,7 +299,25 @@ describe('EstimateExportService', () => {
             estimateId: 'id',
             estimateName: 'Смета Тест',
             projectName: 'Проект Тест',
+            exportDate: '01.01.2026',
+            customerName: 'ООО Заказчик',
+            contractorName: 'ООО Подрядчик',
+            objectAddress: 'г. Москва, ул. Пушкина, д. 1',
             rows: [
+                {
+                    id: 's1',
+                    kind: 'section',
+                    parentWorkId: null,
+                    code: '1',
+                    name: 'Раздел 1',
+                    imageUrl: null,
+                    unit: '',
+                    qty: 0,
+                    price: 0,
+                    sum: 0,
+                    expense: 0,
+                    order: 90,
+                },
                 {
                     id: '1',
                     kind: 'work',

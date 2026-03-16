@@ -1,5 +1,26 @@
 import { AppHomeScreen } from '@/features/dashboard';
+import { HomeDashboardKpiService } from '@/lib/services/home-dashboard-kpi.service';
+import { HomePerformanceDynamicsService } from '@/lib/services/home-performance-dynamics.service';
+import { getTeamForUser } from '@/lib/data/db/queries';
 
-export default function AppHomePage() {
-    return <AppHomeScreen />;
+const EMPTY_KPI = {
+    revenue: 0,
+    profit: 0,
+    progress: 0,
+    remainingDays: null,
+} as const;
+
+export default async function AppHomePage() {
+    const team = await getTeamForUser();
+
+    if (!team) {
+        return <AppHomeScreen kpi={EMPTY_KPI} dynamics={[]} />;
+    }
+
+    const [kpi, dynamics] = await Promise.all([
+        HomeDashboardKpiService.getByTeamId(team.id),
+        HomePerformanceDynamicsService.listByTeamId(team.id),
+    ]);
+
+    return <AppHomeScreen kpi={kpi} dynamics={dynamics} />;
 }

@@ -2,13 +2,10 @@
 
 import { Suspense, use, useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
-import { EstimateParams } from '../components/tabs/EstimateParams';
-import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
-import { EstimateExecution } from '../components/tabs/EstimateExecution';
-import { EstimateDocuments } from '../components/tabs/EstimateDocuments';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { Skeleton } from '@/shared/ui/skeleton';
 import {
@@ -22,6 +19,34 @@ import {
 import Link from 'next/link';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
+
+const EstimateParams = dynamic(
+    () => import('../components/tabs/EstimateParams').then((mod) => mod.EstimateParams),
+    {
+        loading: () => <Skeleton className="h-[520px] w-full" />,
+    },
+);
+
+const EstimateProcurement = dynamic(
+    () => import('../components/tabs/EstimateProcurement').then((mod) => mod.EstimateProcurement),
+    {
+        loading: () => <Skeleton className="h-[520px] w-full" />,
+    },
+);
+
+const EstimateExecution = dynamic(
+    () => import('../components/tabs/EstimateExecution').then((mod) => mod.EstimateExecution),
+    {
+        loading: () => <Skeleton className="h-[520px] w-full" />,
+    },
+);
+
+const EstimateDocuments = dynamic(
+    () => import('../components/tabs/EstimateDocuments').then((mod) => mod.EstimateDocuments),
+    {
+        loading: () => <Skeleton className="h-[240px] w-full" />,
+    },
+);
 
 
 
@@ -67,11 +92,24 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
     const tabParam = searchParams.get('tab') ?? 'estimate';
     const initialTab = availableTabs.has(tabParam) ? tabParam : 'estimate';
     const [tab, setTab] = useState(initialTab);
+    const [loadedTabs, setLoadedTabs] = useState<Set<string>>(() => new Set([initialTab]));
 
     useEffect(() => {
         const nextTab = availableTabs.has(tabParam) ? tabParam : 'estimate';
         setTab(nextTab);
     }, [tabParam]);
+
+    useEffect(() => {
+        setLoadedTabs((prev) => {
+            if (prev.has(tab)) {
+                return prev;
+            }
+
+            const next = new Set(prev);
+            next.add(tab);
+            return next;
+        });
+    }, [tab]);
 
     return (
         <div className="space-y-2">
@@ -122,13 +160,23 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="params" className="mt-2 md:mt-3">
-                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
-                    </Suspense>
+                    {loadedTabs.has('params') ? (
+                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                            <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
+                        </Suspense>
+                    ) : (
+                        <Skeleton className="h-[520px] w-full" />
+                    )}
                 </TabsContent>
-                <TabsContent value="procurement"><EstimateProcurement estimateId={estimateId} /></TabsContent>
-                <TabsContent value="execution"><EstimateExecution estimateId={estimateId} /></TabsContent>
-                <TabsContent value="docs"><EstimateDocuments /></TabsContent>
+                <TabsContent value="procurement" className="mt-2 md:mt-3">
+                    {loadedTabs.has('procurement') ? <EstimateProcurement estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                </TabsContent>
+                <TabsContent value="execution" className="mt-2 md:mt-3">
+                    {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                </TabsContent>
+                <TabsContent value="docs" className="mt-2 md:mt-3">
+                    {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}
+                </TabsContent>
             </Tabs>
         </div>
     );

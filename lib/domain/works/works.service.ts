@@ -10,6 +10,10 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { ensureWorksCodeSortKeyColumn } from '@/lib/data/db/schema-compat';
 import { after } from 'next/server';
 import { buildWorkCodeSortKey } from './code-sort';
+import { getCachedQueryEmbedding } from '@/lib/ai/query-embeddings';
+
+const WORKS_VECTOR_SCORE_THRESHOLD = 0.45;
+const WORKS_FTS_SCORE_WEIGHT = 0.9;
 
 export class WorksService {
     static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
@@ -293,12 +297,23 @@ export class WorksService {
         const shouldUseVector = tokens.length >= 2;
 
         const MAX_RESULTS = 200;
-        const LEXICAL_CANDIDATES_LIMIT = 350;
-        const VECTOR_CANDIDATES_LIMIT = 140;
+        const isDetailedQuery = tokens.length >= 4;
+        const LEXICAL_CANDIDATES_LIMIT = isDetailedQuery ? 420 : 320;
+        const VECTOR_CANDIDATES_LIMIT = isDetailedQuery ? 180 : 120;
 
         try {
-            const queryEmbedding = shouldUseVector ? await generateEmbedding(normalizedQuery) : null;
-            if (shouldUseVector && !queryEmbedding) return error('Ошибка ИИ');
+            const queryEmbeddingResult = shouldUseVector
+                ? await getCachedQueryEmbedding(teamId, normalizedQuery)
+                : { embedding: null, degradedReason: null };
+            const queryEmbedding = queryEmbeddingResult.embedding;
+
+            if (shouldUseVector && !queryEmbedding) {
+                console.warn('Works search degraded to lexical mode', {
+                    teamId,
+                    query: normalizedQuery,
+                    reason: queryEmbeddingResult.degradedReason,
+                });
+            }
 
             const queryLike = `%${normalizedQuery}%`;
             const tsQuery = sql`websearch_to_tsquery('simple', ${normalizedQuery})`;
@@ -316,6 +331,7 @@ export class WorksService {
                 + CASE WHEN ${nameSource} ILIKE ${queryLike} THEN 0.8 ELSE 0 END
                 + CASE WHEN ${works.code} ILIKE ${queryLike} THEN 1.0 ELSE 0 END
             )`;
+            const ftsScore = sql<number>`COALESCE(ts_rank(${works.searchVector}, ${tsQuery}), 0)`;
 
             const baseFilters = [
                 withActiveTenant(works, teamId),
@@ -333,11 +349,15 @@ export class WorksService {
                 .orderBy(sql`${lexicalRank} DESC`, works.sortOrder, works.id)
                 .limit(LEXICAL_CANDIDATES_LIMIT);
 
-            const vectorCandidates = shouldUseVector
+            const vectorCandidates = queryEmbedding
                 ? await db
                     .select({ id: works.id })
                     .from(works)
-                    .where(and(...baseFilters, sql`${works.embedding} IS NOT NULL`))
+                    .where(and(
+                        ...baseFilters,
+                        sql`${works.embedding} IS NOT NULL`,
+                        sql`(1 - (${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector)) >= ${WORKS_VECTOR_SCORE_THRESHOLD}`,
+                    ))
                     .orderBy(sql`${works.embedding} <=> ${JSON.stringify(queryEmbedding)}::vector`, works.sortOrder, works.id)
                     .limit(VECTOR_CANDIDATES_LIMIT)
                 : [];
@@ -360,7 +380,8 @@ export class WorksService {
                 : sql<number>`0`;
 
             const totalScore = sql<number>`
-                (${trgmScore} * 0.3)
+                (${ftsScore} * ${WORKS_FTS_SCORE_WEIGHT})
+                + (${trgmScore} * 0.3)
                 + (${phraseBoost} * 0.4)
                 + (${codeBoost} * 0.5)
                 + (${vectorScore} * 0.8)

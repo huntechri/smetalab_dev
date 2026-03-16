@@ -67,6 +67,7 @@ export function CreateProjectDialog({
         defaultValues: {
             name: '',
             counterpartyId: undefined,
+            objectAddress: '',
             startDate: undefined,
             endDate: undefined,
         },
@@ -77,6 +78,7 @@ export function CreateProjectDialog({
             form.reset({
                 name: project.name,
                 counterpartyId: project.counterpartyId || undefined,
+                objectAddress: project.objectAddress || '',
                 startDate: project.startDate ? new Date(project.startDate) : undefined,
                 endDate: project.endDate ? new Date(project.endDate) : undefined,
             });
@@ -84,6 +86,7 @@ export function CreateProjectDialog({
             form.reset({
                 name: '',
                 counterpartyId: undefined,
+                objectAddress: '',
                 startDate: undefined,
                 endDate: undefined,
             });
@@ -201,6 +204,20 @@ export function CreateProjectDialog({
                                                 </Command>
                                             </PopoverContent>
                                         </Popover>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+
+                            <FormField
+                                control={form.control}
+                                name="objectAddress"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Адрес объекта (необязательно)</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Введите адрес объекта" {...field} value={field.value ?? ''} />
+                                        </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}

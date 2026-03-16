@@ -8,6 +8,12 @@ export const getEstimateRowsAction = safeAction(
     { name: 'getEstimateRowsAction' }
 );
 
+export const addEstimateSectionAction = safeAction(
+    async ({ team }, estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string }) =>
+        EstimateRowsService.addSection(team.id, estimateId, payload),
+    { name: 'addEstimateSectionAction' }
+);
+
 export const addEstimateWorkAction = safeAction(
     async ({ team }, estimateId: string, payload: { name: string; unit?: string; qty?: number; price?: number; expense?: number; insertAfterWorkId?: string }) =>
         EstimateRowsService.addWork(team.id, estimateId, payload),

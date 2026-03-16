@@ -3,6 +3,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const actionsMocks = vi.hoisted(() => ({
     patchEstimateRowAction: vi.fn(),
     addEstimateWorkAction: vi.fn(),
+    addEstimateSectionAction: vi.fn(),
     addEstimateMaterialAction: vi.fn(),
     removeEstimateRowAction: vi.fn(),
     updateEstimateStatusAction: vi.fn(),
@@ -13,6 +14,7 @@ const actionsMocks = vi.hoisted(() => ({
 vi.mock('@/app/actions/estimates/rows', () => ({
     patchEstimateRowAction: actionsMocks.patchEstimateRowAction,
     addEstimateWorkAction: actionsMocks.addEstimateWorkAction,
+    addEstimateSectionAction: actionsMocks.addEstimateSectionAction,
     addEstimateMaterialAction: actionsMocks.addEstimateMaterialAction,
     removeEstimateRowAction: actionsMocks.removeEstimateRowAction,
 }));
@@ -33,11 +35,40 @@ describe('estimatesActionRepo', () => {
     beforeEach(() => {
         actionsMocks.patchEstimateRowAction.mockReset();
         actionsMocks.addEstimateWorkAction.mockReset();
+        actionsMocks.addEstimateSectionAction.mockReset();
         actionsMocks.addEstimateMaterialAction.mockReset();
         actionsMocks.removeEstimateRowAction.mockReset();
         actionsMocks.updateEstimateStatusAction.mockReset();
         actionsMocks.updateEstimateCoefficientAction.mockReset();
         actionsMocks.resetEstimateCoefficientAction.mockReset();
+    });
+
+
+    it('calls addEstimateSectionAction and returns created section', async () => {
+        actionsMocks.addEstimateSectionAction.mockResolvedValue({
+            success: true,
+            data: {
+                id: 's-1',
+                kind: 'section',
+                code: 'S1',
+                name: 'Раздел 1',
+                unit: '',
+                qty: 0,
+                price: 0,
+                sum: 0,
+                expense: 0,
+                order: 50,
+            },
+        });
+
+        const row = await estimatesActionRepo.addSection('est-1', { code: '1', name: 'Раздел 1' });
+
+        expect(actionsMocks.addEstimateSectionAction).toHaveBeenCalledWith('est-1', {
+            code: '1',
+            name: 'Раздел 1',
+            insertAfterRowId: undefined,
+        });
+        expect(row.kind).toBe('section');
     });
 
     it('calls addEstimateWorkAction and returns created row', async () => {

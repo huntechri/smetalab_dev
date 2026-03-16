@@ -11,7 +11,7 @@ const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; est
     <div data-testid="project-dashboard">{project.name}</div>
 ));
 
-vi.mock('@/features/projects', () => ({
+vi.mock('@/features/projects/dashboard/screens/ProjectDashboard', () => ({
     ProjectDashboard: (props: { project: { name: string }; estimates: Array<{ id: string }> }) => projectDashboardSpy(props),
 }));
 
