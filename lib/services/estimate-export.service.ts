@@ -43,14 +43,20 @@ export type EstimateExportPayload = {
 
 
 
+type SectionTotalsBreakdown = {
+    works: number;
+    materials: number;
+    total: number;
+};
+
 type SectionDisplayTotals = {
-    bySectionId: Map<string, number>;
+    bySectionId: Map<string, SectionTotalsBreakdown>;
     rowSumById: Map<string, number>;
 };
 
 function computeSectionDisplayTotals(rows: EstimateExportRow[]): SectionDisplayTotals {
     const sorted = rows.slice().sort((left, right) => left.order - right.order);
-    const bySectionId = new Map<string, number>();
+    const bySectionId = new Map<string, SectionTotalsBreakdown>();
     const rowSumById = new Map<string, number>();
     let currentSectionId: string | null = null;
 
@@ -58,7 +64,7 @@ function computeSectionDisplayTotals(rows: EstimateExportRow[]): SectionDisplayT
         if (row.kind === 'section') {
             currentSectionId = row.id;
             if (!bySectionId.has(row.id)) {
-                bySectionId.set(row.id, 0);
+                bySectionId.set(row.id, { works: 0, materials: 0, total: 0 });
             }
             rowSumById.set(row.id, 0);
             continue;
@@ -67,13 +73,20 @@ function computeSectionDisplayTotals(rows: EstimateExportRow[]): SectionDisplayT
         rowSumById.set(row.id, row.sum);
 
         if (currentSectionId) {
-            bySectionId.set(currentSectionId, (bySectionId.get(currentSectionId) ?? 0) + row.sum);
+            const sectionTotals = bySectionId.get(currentSectionId) ?? { works: 0, materials: 0, total: 0 };
+            const nextTotals: SectionTotalsBreakdown = {
+                works: row.kind === 'work' ? sectionTotals.works + row.sum : sectionTotals.works,
+                materials: row.kind === 'material' ? sectionTotals.materials + row.sum : sectionTotals.materials,
+                total: sectionTotals.total + row.sum,
+            };
+
+            bySectionId.set(currentSectionId, nextTotals);
         }
     }
 
     for (const row of sorted) {
         if (row.kind === 'section') {
-            rowSumById.set(row.id, bySectionId.get(row.id) ?? 0);
+            rowSumById.set(row.id, bySectionId.get(row.id)?.total ?? 0);
         }
     }
 
@@ -314,6 +327,9 @@ export class EstimateExportService {
         let rowIndex = 5;
         for (const row of payload.rows) {
             const displaySum = displayTotals.rowSumById.get(row.id) ?? row.sum;
+            const sectionBreakdown = row.kind === 'section'
+                ? (displayTotals.bySectionId.get(row.id) ?? { works: 0, materials: 0, total: displaySum })
+                : null;
             const excelRow = worksheet.getRow(rowIndex);
             excelRow.getCell(1).value = row.code;
             const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
@@ -322,7 +338,9 @@ export class EstimateExportService {
             excelRow.getCell(5).value = row.kind === 'section' ? '' : row.unit;
             excelRow.getCell(6).value = row.kind === 'section' ? '' : row.qty;
             excelRow.getCell(7).value = row.kind === 'section' ? '' : row.price;
-            excelRow.getCell(8).value = displaySum;
+            excelRow.getCell(8).value = row.kind === 'section'
+                ? `Р: ${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} | М: ${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} | Итого: ${Math.round(displaySum).toLocaleString('ru-RU')}`
+                : displaySum;
 
             if (row.kind === 'section') {
                 excelRow.eachCell((cell: ExcelJS.Cell) => {
@@ -375,7 +393,7 @@ export class EstimateExportService {
                     bottom: { style: 'thin' },
                 };
 
-                if (col === 7 || col === 8) {
+                if ((col === 7 || col === 8) && row.kind !== 'section') {
                     cell.numFmt = CURRENCY_FORMAT;
                 }
             }
@@ -437,6 +455,9 @@ export class EstimateExportService {
         y -= 14;
         for (const row of payload.rows) {
             const displaySum = displayTotals.rowSumById.get(row.id) ?? row.sum;
+            const sectionBreakdown = row.kind === 'section'
+                ? (displayTotals.bySectionId.get(row.id) ?? { works: 0, materials: 0, total: displaySum })
+                : null;
             if (y < 60) {
                 break;
             }
@@ -446,7 +467,12 @@ export class EstimateExportService {
             page.drawText(row.kind === 'section' ? 'Razdel' : row.kind === 'work' ? 'Rabota' : 'Material', { x: 430, y, size: 8, font });
             page.drawText(row.kind === 'section' ? '' : toPdfSafeText(row.unit).slice(0, 6), { x: 490, y, size: 8, font });
             page.drawText(row.kind === 'section' ? '' : row.qty.toLocaleString('ru-RU'), { x: 530, y, size: 8, font });
-            page.drawText(`${Math.round(displaySum).toLocaleString('ru-RU')} RUB`, { x: 610, y, size: 8, font: row.kind === 'section' || row.kind === 'work' ? bold : font });
+            page.drawText(
+                row.kind === 'section'
+                    ? `R:${Math.round(sectionBreakdown?.works ?? 0).toLocaleString('ru-RU')} M:${Math.round(sectionBreakdown?.materials ?? 0).toLocaleString('ru-RU')} T:${Math.round(displaySum).toLocaleString('ru-RU')} RUB`
+                    : `${Math.round(displaySum).toLocaleString('ru-RU')} RUB`,
+                { x: 610, y, size: 8, font: row.kind === 'section' || row.kind === 'work' ? bold : font },
+            );
             y -= 12;
         }
 

@@ -162,6 +162,8 @@ describe('EstimateExportService', () => {
             },
         ]);
 
+        expect(totals.bySectionId.get('s1')).toEqual({ works: 200, materials: 0, total: 200 });
+        expect(totals.bySectionId.get('s2')).toEqual({ works: 300, materials: 100, total: 400 });
         expect(totals.rowSumById.get('s1')).toBe(200);
         expect(totals.rowSumById.get('s2')).toBe(400);
         expect(totals.rowSumById.get('w1')).toBe(200);
@@ -216,8 +218,22 @@ describe('EstimateExportService', () => {
                     expense: 0,
                     order: 100,
                 },
+                {
+                    id: '2',
+                    kind: 'material',
+                    parentWorkId: '1',
+                    code: '1.1',
+                    name: 'Материал',
+                    imageUrl: null,
+                    unit: 'шт',
+                    qty: 4,
+                    price: 50,
+                    sum: 200,
+                    expense: 0,
+                    order: 110,
+                },
             ],
-            totals: { works: 200, materials: 0, grand: 200 },
+            totals: { works: 200, materials: 200, grand: 400 },
         });
 
         const ExcelJS = (await import('exceljs')).default;
@@ -228,7 +244,7 @@ describe('EstimateExportService', () => {
         const sectionSum = sheet?.getRow(5).getCell(8).value;
 
         expect(headers).not.toContain('Расход');
-        expect(sectionSum).toBe(200);
+        expect(sectionSum).toBe('Р: 200 | М: 200 | Итого: 400');
     });
 
     it('exports pdf for cyrillic names', async () => {
