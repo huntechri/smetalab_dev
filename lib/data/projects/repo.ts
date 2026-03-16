@@ -24,6 +24,7 @@ export async function getProjects(teamId: number) {
             tenantId: projects.tenantId,
             counterpartyId: projects.counterpartyId,
             customerName: projects.customerName,
+            objectAddress: projects.objectAddress,
             contractAmount: projects.contractAmount,
             startDate: projects.startDate,
             endDate: projects.endDate,

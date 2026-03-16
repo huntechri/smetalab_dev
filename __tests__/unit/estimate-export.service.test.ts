@@ -176,6 +176,10 @@ describe('EstimateExportService', () => {
             estimateId: 'id',
             estimateName: 'Смета Черновая 1',
             projectName: 'ЖК Остров B35',
+            exportDate: '01.01.2026',
+            customerName: 'Заказчик',
+            contractorName: 'Подрядчик',
+            objectAddress: 'Адрес',
             rows: [],
             totals: { works: 0, materials: 0, grand: 0 },
         }, 'xlsx');
@@ -189,6 +193,10 @@ describe('EstimateExportService', () => {
             estimateId: 'id',
             estimateName: 'Смета',
             projectName: 'Проект',
+            exportDate: '01.01.2026',
+            customerName: 'ООО Заказчик',
+            contractorName: 'ООО Подрядчик',
+            objectAddress: 'г. Москва, ул. Тестовая, 1',
             rows: [
                 {
                     id: 's1',
@@ -240,29 +248,50 @@ describe('EstimateExportService', () => {
         const workbook = new ExcelJS.Workbook();
         await workbook.xlsx.load(buffer);
         const sheet = workbook.getWorksheet('Смета');
-        const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
-        const sectionSum = sheet?.getRow(5).getCell(8).value;
-        const workRowSum = sheet?.getRow(6).getCell(8).value as { formula?: string } | null;
-        const materialRowSum = sheet?.getRow(7).getCell(8).value as { formula?: string } | null;
-        const sectionWorksLabel = sheet?.getRow(8).getCell(3).value;
-        const sectionWorksSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
-        const sectionMaterialsLabel = sheet?.getRow(9).getCell(3).value;
-        const sectionMaterialsSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
+        const headers = sheet?.getRow(6).values as Array<string | number | null | undefined>;
+        const sectionSum = sheet?.getRow(7).getCell(8).value;
+        const workRowSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
+        const materialRowSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
+        const sectionWorksLabel = sheet?.getRow(10).getCell(3).value;
+        const sectionWorksSum = sheet?.getRow(10).getCell(8).value as { formula?: string } | null;
+        const sectionMaterialsLabel = sheet?.getRow(11).getCell(3).value;
+        const sectionMaterialsSum = sheet?.getRow(11).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryTitle = sheet?.getRow(13).getCell(3).value;
+        const sectionSummaryWorksLabel = sheet?.getRow(14).getCell(3).value;
+        const sectionSummaryWorksTotal = sheet?.getRow(14).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryMaterialsLabel = sheet?.getRow(15).getCell(3).value;
+        const sectionSummaryMaterialsTotal = sheet?.getRow(15).getCell(8).value as { formula?: string } | null;
+        const workRowHeight = sheet?.getRow(8).height;
+        const projectCell = sheet?.getCell('A1').value;
+        const dateCell = sheet?.getCell('E1').value;
+        const customerCell = sheet?.getCell('A2').value;
+        const contractorCell = sheet?.getCell('A3').value;
+        const addressCell = sheet?.getCell('A4').value;
+        const contractCell = sheet?.getCell('A5').value;
 
         expect(headers).not.toContain('Расход');
+        expect(headers).toContain('Изображение');
+        expect(projectCell).toBe('Проект: Проект');
+        expect(dateCell).toBe('Дата: 01.01.2026');
+        expect(customerCell).toBe('Заказчик: ООО Заказчик');
+        expect(contractorCell).toBe('Подрядчик: ООО Подрядчик');
+        expect(addressCell).toBe('Адрес объекта: г. Москва, ул. Тестовая, 1');
+        expect(contractCell).toBe('Смета: Смета | Договор №: ');
         expect(sectionSum).toBe('');
-        expect(workRowSum?.formula).toBe('F6*G6');
-        expect(materialRowSum?.formula).toBe('F7*G7');
+        expect(workRowSum?.formula).toBe('F8*G8');
+        expect(materialRowSum?.formula).toBe('F9*G9');
+        expect(workRowHeight).toBeGreaterThanOrEqual(24);
         expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
         expect(sectionWorksSum?.formula).toContain('SUMIFS');
         expect(sectionWorksSum?.formula).toContain('"Работа"');
         expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
         expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
         expect(sectionMaterialsSum?.formula).toContain('"Материал"');
-        const flattened = sheet?.getSheetValues().flat().map((value) => String(value ?? '')) ?? [];
-        expect(flattened.some((value) => value.includes('Итого работы'))).toBe(false);
-        expect(flattened.some((value) => value.includes('Итого материалы'))).toBe(false);
-        expect(flattened.some((value) => value.includes('Итого смета'))).toBe(false);
+        expect(sectionSummaryTitle).toBe('Общие итоги по разделам');
+        expect(sectionSummaryWorksLabel).toBe('Итого раздела № 1 (работы)');
+        expect(sectionSummaryWorksTotal?.formula).toBe('SUMIFS($H$8:$H$9,$B$8:$B$9,"Работа")');
+        expect(sectionSummaryMaterialsLabel).toBe('Итого раздела № 1 (материалы)');
+        expect(sectionSummaryMaterialsTotal?.formula).toBe('SUMIFS($H$8:$H$9,$B$8:$B$9,"Материал")');
     });
 
     it('exports pdf for cyrillic names', async () => {
@@ -270,6 +299,10 @@ describe('EstimateExportService', () => {
             estimateId: 'id',
             estimateName: 'Смета Тест',
             projectName: 'Проект Тест',
+            exportDate: '01.01.2026',
+            customerName: 'ООО Заказчик',
+            contractorName: 'ООО Подрядчик',
+            objectAddress: 'г. Москва, ул. Пушкина, д. 1',
             rows: [
                 {
                     id: 's1',

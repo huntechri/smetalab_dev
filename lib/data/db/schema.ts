@@ -732,6 +732,7 @@ export const projects = pgTable('projects', {
   counterpartyId: uuid('counterparty_id')
     .references(() => counterparties.id),
   customerName: text('customer_name'), // For manual entry
+  objectAddress: text('object_address'),
 
   contractAmount: integer('contract_amount').notNull().default(0),
   startDate: timestamp('start_date'),
