@@ -242,9 +242,28 @@ describe('EstimateExportService', () => {
         const sheet = workbook.getWorksheet('Смета');
         const headers = sheet?.getRow(4).values as Array<string | number | null | undefined>;
         const sectionSum = sheet?.getRow(5).getCell(8).value;
+        const workRowSum = sheet?.getRow(6).getCell(8).value as { formula?: string } | null;
+        const materialRowSum = sheet?.getRow(7).getCell(8).value as { formula?: string } | null;
+        const sectionWorksLabel = sheet?.getRow(9).getCell(1).value;
+        const sectionWorksSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
+        const sectionMaterialsLabel = sheet?.getRow(10).getCell(1).value;
+        const sectionMaterialsSum = sheet?.getRow(10).getCell(8).value as { formula?: string } | null;
+        const totalsWorksLabel = sheet?.getRow(12).getCell(1).value;
+        const totalsMaterialsLabel = sheet?.getRow(13).getCell(1).value;
 
         expect(headers).not.toContain('Расход');
-        expect(sectionSum).toBe('Р: 200 | М: 200 | Итого: 400');
+        expect(sectionSum).toBe('');
+        expect(workRowSum?.formula).toBe('F6*G6');
+        expect(materialRowSum?.formula).toBe('F7*G7');
+        expect(sectionWorksLabel).toBe('Итого работы (1 Раздел 1)');
+        expect(sectionWorksSum?.formula).toContain('SUMIFS');
+        expect(sectionWorksSum?.formula).toContain('"Работа"');
+        expect(sectionMaterialsLabel).toBe('Итого материалы (1 Раздел 1)');
+        expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
+        expect(sectionMaterialsSum?.formula).toContain('"Материал"');
+        expect(totalsWorksLabel).toBe('Итого работы');
+        expect(totalsMaterialsLabel).toBe('Итого материалы');
+        expect(sheet?.getSheetValues().flat().includes('Итого смета')).toBe(false);
     });
 
     it('exports pdf for cyrillic names', async () => {
