@@ -248,21 +248,26 @@ describe('EstimateExportService', () => {
         const sectionWorksSum = sheet?.getRow(8).getCell(8).value as { formula?: string } | null;
         const sectionMaterialsLabel = sheet?.getRow(9).getCell(3).value;
         const sectionMaterialsSum = sheet?.getRow(9).getCell(8).value as { formula?: string } | null;
+        const sectionSummaryTitle = sheet?.getRow(11).getCell(3).value;
+        const sectionSummaryLabel = sheet?.getRow(12).getCell(3).value;
+        const sectionSummaryTotal = sheet?.getRow(12).getCell(8).value as { formula?: string } | null;
+        const workRowHeight = sheet?.getRow(6).height;
 
         expect(headers).not.toContain('Расход');
+        expect(headers).toContain('Изображение');
         expect(sectionSum).toBe('');
         expect(workRowSum?.formula).toBe('F6*G6');
         expect(materialRowSum?.formula).toBe('F7*G7');
+        expect(workRowHeight).toBeGreaterThanOrEqual(24);
         expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
         expect(sectionWorksSum?.formula).toContain('SUMIFS');
         expect(sectionWorksSum?.formula).toContain('"Работа"');
         expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
         expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
         expect(sectionMaterialsSum?.formula).toContain('"Материал"');
-        const flattened = sheet?.getSheetValues().flat().map((value) => String(value ?? '')) ?? [];
-        expect(flattened.some((value) => value.includes('Итого работы'))).toBe(false);
-        expect(flattened.some((value) => value.includes('Итого материалы'))).toBe(false);
-        expect(flattened.some((value) => value.includes('Итого смета'))).toBe(false);
+        expect(sectionSummaryTitle).toBe('Общие итоги по разделам');
+        expect(sectionSummaryLabel).toBe('Итого раздела № 1 (Раздел 1)');
+        expect(sectionSummaryTotal?.formula).toBe('SUM($H$6:$H$7)');
     });
 
     it('exports pdf for cyrillic names', async () => {

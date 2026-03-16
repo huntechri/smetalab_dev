@@ -99,6 +99,20 @@ type DownloadedImage = {
 };
 
 const CURRENCY_FORMAT = '#,##0.00 [$₽-419]';
+const WORK_ROW_BASE_HEIGHT = 24;
+const MATERIAL_IMAGE_SIZE = 34;
+
+function calculateWorkRowHeight(name: string): number {
+    const normalized = name.trim();
+    if (normalized.length === 0) {
+        return WORK_ROW_BASE_HEIGHT;
+    }
+
+    const linesByLength = Math.ceil(normalized.length / 58);
+    const lineBreakCount = normalized.split('\n').length;
+    const estimatedLines = Math.max(linesByLength, lineBreakCount);
+    return Math.max(WORK_ROW_BASE_HEIGHT, estimatedLines * 16);
+}
 
 const RU_TO_LATIN_MAP: Record<string, string> = {
     а: 'a', б: 'b', в: 'v', г: 'g', д: 'd', е: 'e', ё: 'e', ж: 'zh', з: 'z', и: 'i', й: 'y',
@@ -278,8 +292,8 @@ export class EstimateExportService {
         worksheet.columns = [
             { header: 'Код', key: 'code', width: 12 },
             { header: 'Тип', key: 'kind', width: 12 },
-            { header: 'Наименование', key: 'name', width: 44 },
-            { header: 'Превью', key: 'preview', width: 14 },
+            { header: 'Наименование', key: 'name', width: 60 },
+            { header: 'Изображение', key: 'preview', width: 14 },
             { header: 'Ед.', key: 'unit', width: 10 },
             { header: 'Кол-во', key: 'qty', width: 12 },
             { header: 'Цена', key: 'price', width: 14 },
@@ -297,7 +311,7 @@ export class EstimateExportService {
         worksheet.getCell('A3').value = `Дата экспорта: ${new Date().toLocaleString('ru-RU')}`;
 
         const headerRow = worksheet.getRow(4);
-        headerRow.values = ['Код', 'Тип', 'Наименование', 'Превью', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
+        headerRow.values = ['Код', 'Тип', 'Наименование', 'Изображение', 'Ед.', 'Кол-во', 'Цена', 'Сумма'];
         headerRow.eachCell((cell: ExcelJS.Cell) => {
             cell.font = { bold: true };
             cell.alignment = { vertical: 'middle', horizontal: 'center' };
@@ -315,6 +329,7 @@ export class EstimateExportService {
         });
 
         const imageMap = new Map<string, DownloadedImage | null>();
+        const sectionRanges: Array<{ code: string; name: string; startRow: number; endRow: number }> = [];
         const materialRows = payload.rows.filter((row) => row.kind === 'material' && row.imageUrl);
 
         await Promise.all(materialRows.map(async (row) => {
@@ -330,6 +345,15 @@ export class EstimateExportService {
         ): number => {
             if (!section || startRow === null) {
                 return currentRowIndex;
+            }
+
+            if (endRow >= startRow) {
+                sectionRanges.push({
+                    code: section.code,
+                    name: section.name,
+                    startRow,
+                    endRow,
+                });
             }
 
             const createFormula = (kindLabel: 'Работа' | 'Материал') => {
@@ -427,7 +451,11 @@ export class EstimateExportService {
                 });
             }
 
-            excelRow.height = row.kind === 'material' ? 44 : row.kind === 'section' ? 26 : 24;
+            excelRow.height = row.kind === 'material'
+                ? 44
+                : row.kind === 'section'
+                    ? 26
+                    : calculateWorkRowHeight(row.name);
 
             const image = imageMap.get(row.id);
             if (image) {
@@ -436,8 +464,8 @@ export class EstimateExportService {
                     extension: image.extension,
                 });
                 worksheet.addImage(imageId, {
-                    tl: { col: 3.1, row: rowIndex - 1 + 0.1 },
-                    ext: { width: 42, height: 42 },
+                    tl: { col: 3.33, row: rowIndex - 1 + 0.2 },
+                    ext: { width: MATERIAL_IMAGE_SIZE, height: MATERIAL_IMAGE_SIZE },
                 });
             }
 
@@ -465,6 +493,48 @@ export class EstimateExportService {
         }
 
         rowIndex = writeSectionSubtotalRows(activeSection, activeSectionDataStartRow, rowIndex - 1, rowIndex);
+
+        if (sectionRanges.length > 0) {
+            rowIndex += 1;
+
+            const summaryTitleRow = worksheet.getRow(rowIndex);
+            summaryTitleRow.getCell(3).value = 'Общие итоги по разделам';
+            summaryTitleRow.getCell(3).font = { bold: true, color: { argb: 'FF0F172A' } };
+            summaryTitleRow.getCell(3).alignment = { vertical: 'middle', horizontal: 'left' };
+            rowIndex += 1;
+
+            for (const sectionRange of sectionRanges) {
+                const summaryRow = worksheet.getRow(rowIndex);
+                summaryRow.getCell(1).value = sectionRange.code;
+                summaryRow.getCell(2).value = 'Раздел';
+                summaryRow.getCell(3).value = `Итого раздела № ${sectionRange.code} (${sectionRange.name})`;
+                summaryRow.getCell(8).value = { formula: `SUM($H$${sectionRange.startRow}:$H$${sectionRange.endRow})` };
+                summaryRow.getCell(8).numFmt = CURRENCY_FORMAT;
+
+                for (let col = 1; col <= 8; col += 1) {
+                    const cell = summaryRow.getCell(col);
+                    cell.font = { bold: true, color: { argb: 'FF14532D' } };
+                    cell.fill = {
+                        type: 'pattern',
+                        pattern: 'solid',
+                        fgColor: { argb: 'FFECFDF5' },
+                    };
+                    cell.alignment = {
+                        vertical: 'middle',
+                        horizontal: col >= 6 ? 'right' : 'left',
+                        wrapText: col === 3,
+                    };
+                    cell.border = {
+                        top: { style: 'thin' },
+                        left: { style: 'thin' },
+                        right: { style: 'thin' },
+                        bottom: { style: 'thin' },
+                    };
+                }
+
+                rowIndex += 1;
+            }
+        }
 
         const buffer = await workbook.xlsx.writeBuffer();
         return Buffer.from(buffer);
