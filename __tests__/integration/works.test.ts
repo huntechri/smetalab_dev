@@ -121,7 +121,7 @@ describe('Works Integration Tests', () => {
         expect(updated.codeSortKey).toBe('~');
     });
 
-    it('should_keep_ui_order_with_numeric_codes_first_then_sort_order', async () => {
+    it('should_keep_ui_order_by_sort_order', async () => {
         await db.insert(works).values([
             { tenantId: testTeamId, code: '2.10', name: '2.10', sortOrder: 200, status: 'active' },
             { tenantId: testTeamId, code: '2.2', name: '2.2', sortOrder: 150, status: 'active' },
@@ -134,7 +134,7 @@ describe('Works Integration Tests', () => {
         if (!result.success) return;
 
         const orderedCodes = result.data.map((item) => item.code);
-        expect(orderedCodes).toEqual(['2.2', '2.10', 'ZZZ', 'ABC']);
+        expect(orderedCodes).toEqual(['ZZZ', 'ABC', '2.2', '2.10']);
     });
 
     it('should_handle_insert_after_correctly', async () => {

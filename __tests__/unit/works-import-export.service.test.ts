@@ -43,6 +43,15 @@ describe('WorksImportExportService', () => {
     const result = await WorksImportExportService.importFromFile(20, file);
 
     expect(WorksService.upsertMany).toHaveBeenCalledTimes(1);
+    expect(WorksService.upsertMany).toHaveBeenCalledWith(
+      20,
+      expect.arrayContaining([
+        expect.objectContaining({
+          code: 'W-1',
+          sortOrder: 100,
+        }),
+      ])
+    );
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.summaryMessage).toContain('Успешно: 1');

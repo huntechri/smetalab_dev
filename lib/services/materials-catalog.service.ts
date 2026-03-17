@@ -31,7 +31,7 @@ export class MaterialsCatalogService {
       options.limit,
       options.query,
       options.offset,
-      options.cursor?.lastCode,
+      options.cursor?.lastSortOrder,
       options.cursor?.lastId
     );
   }

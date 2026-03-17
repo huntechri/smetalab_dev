@@ -54,7 +54,7 @@ describe('MaterialsCatalogService', () => {
       query: 'q',
       offset: 10,
       limit: 20,
-      cursor: { lastCode: '001', lastId: '00000000-0000-0000-0000-000000000001' },
+      cursor: { lastSortOrder: 100, lastId: '00000000-0000-0000-0000-000000000001' },
     });
     await MaterialsCatalogService.search(1, 'q');
     await MaterialsCatalogService.generateMissingEmbeddings(1);
@@ -64,7 +64,7 @@ describe('MaterialsCatalogService', () => {
       20,
       'q',
       10,
-      '001',
+      100,
       '00000000-0000-0000-0000-000000000001'
     );
     expect(MaterialsService.search).toHaveBeenCalledWith(1, 'q');

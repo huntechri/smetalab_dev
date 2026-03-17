@@ -28,6 +28,7 @@ export function useMaterialsTable(data: MaterialRow[], setData: React.Dispatch<R
             imageLocalUrl: null,
             tags: null,
             metadata: {},
+            sortOrder: 0,
             isPlaceholder: true
         };
 

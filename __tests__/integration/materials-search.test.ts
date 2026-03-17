@@ -267,9 +267,9 @@ describe('Materials search integration', () => {
 
     it('uses offset in getMany pagination', async () => {
         await db.insert(materials).values([
-            { tenantId: testTeamId, code: 'P-001', name: 'Page 1', status: 'active' },
-            { tenantId: testTeamId, code: 'P-002', name: 'Page 2', status: 'active' },
-            { tenantId: testTeamId, code: 'P-003', name: 'Page 3', status: 'active' },
+            { tenantId: testTeamId, code: 'P-001', name: 'Page 1', status: 'active', sortOrder: 100 },
+            { tenantId: testTeamId, code: 'P-002', name: 'Page 2', status: 'active', sortOrder: 200 },
+            { tenantId: testTeamId, code: 'P-003', name: 'Page 3', status: 'active', sortOrder: 300 },
         ]);
 
         const firstPage = await MaterialsService.getMany(testTeamId, 2, undefined, 0);
@@ -282,14 +282,14 @@ describe('Materials search integration', () => {
         }
     });
 
-    it('keeps cursor pagination stable when codes are equal by using id tie-breaker', async () => {
+    it('keeps cursor pagination stable when sort orders are equal by using id tie-breaker', async () => {
         await db.execute(sql`DROP INDEX IF EXISTS idx_materials_code_tenant_unique`);
 
         try {
             await db.insert(materials).values([
-                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 1', status: 'active' },
-                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 2', status: 'active' },
-                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 3', status: 'active' },
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 1', status: 'active', sortOrder: 100 },
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 2', status: 'active', sortOrder: 100 },
+                { tenantId: testTeamId, code: 'DUP-001', name: 'Dup 3', status: 'active', sortOrder: 100 },
             ]);
 
             const page1 = await MaterialsService.getMany(testTeamId, 2);
@@ -304,7 +304,7 @@ describe('Materials search integration', () => {
                 return;
             }
 
-            const page2 = await MaterialsService.getMany(testTeamId, 2, undefined, 0, last.code, last.id);
+            const page2 = await MaterialsService.getMany(testTeamId, 2, undefined, 0, last.sortOrder, last.id);
             expect(page2.success).toBe(true);
 
             if (page2.success) {
@@ -317,6 +317,21 @@ describe('Materials search integration', () => {
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_materials_code_tenant_unique
                 ON materials (tenant_id, code)
             `);
+        }
+    });
+
+    it('returns materials in explicit sort order instead of code order', async () => {
+        await db.insert(materials).values([
+            { tenantId: testTeamId, code: 'M-300', name: 'Third', status: 'active', sortOrder: 300 },
+            { tenantId: testTeamId, code: 'M-100', name: 'First', status: 'active', sortOrder: 100 },
+            { tenantId: testTeamId, code: 'M-200', name: 'Second', status: 'active', sortOrder: 200 },
+        ]);
+
+        const result = await MaterialsService.getMany(testTeamId, 10);
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data.map((item) => item.code)).toEqual(['M-100', 'M-200', 'M-300']);
         }
     });
 });
