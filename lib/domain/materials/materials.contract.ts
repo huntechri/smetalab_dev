@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 export const materialsCursorSchema = z.object({
-  lastCode: z.string().min(1),
+  lastSortOrder: z.number(),
   lastId: z.string().uuid(),
 });
 

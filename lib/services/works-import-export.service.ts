@@ -25,10 +25,11 @@ export class WorksImportExportService {
 
     const { data: parsedRows, summary } = parseResult.data;
 
-    const newWorks: NewWork[] = parsedRows.map((row) => ({
+    const newWorks: NewWork[] = parsedRows.map((row, index) => ({
       tenantId: teamId,
       code: String(row.code),
       name: String(row.name),
+      sortOrder: (index + 1) * 100,
       unit: row.unit ? String(row.unit) : undefined,
       price: row.price ? Number(row.price) : undefined,
       phase: row.phase ? String(row.phase) : undefined,
@@ -63,7 +64,8 @@ export class WorksImportExportService {
         description: works.description,
       })
       .from(works)
-      .where(and(withActiveTenant(works, teamId), eq(works.status, 'active')));
+      .where(and(withActiveTenant(works, teamId), eq(works.status, 'active')))
+      .orderBy(works.sortOrder, works.id);
 
     return success(worksData);
   }

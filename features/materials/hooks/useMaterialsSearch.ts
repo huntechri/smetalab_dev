@@ -7,7 +7,7 @@ export function useMaterialsSearch(
     data: MaterialRow[],
     setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>
 ) {
-    return useGuideTableSearch<MaterialRow, { lastCode?: string; lastId?: string }>({
+    return useGuideTableSearch<MaterialRow, { lastSortOrder?: number; lastId?: string }>({
         initialData,
         data,
         setData,
@@ -20,8 +20,11 @@ export function useMaterialsSearch(
             };
         },
         searchPage: ({ query }) => fetchMoreMaterials({ query }),
-        loadMorePage: ({ query, lastCode, lastId }) =>
-            fetchMoreMaterials({ query, cursor: lastCode && lastId ? { lastCode, lastId } : undefined }),
-        getCursorFromLast: (lastItem) => ({ lastCode: lastItem?.code, lastId: lastItem?.id }),
+        loadMorePage: ({ query, lastSortOrder, lastId }) =>
+            fetchMoreMaterials({
+                query,
+                cursor: typeof lastSortOrder === 'number' && lastId ? { lastSortOrder, lastId } : undefined,
+            }),
+        getCursorFromLast: (lastItem) => ({ lastSortOrder: lastItem?.sortOrder, lastId: lastItem?.id }),
     });
 }

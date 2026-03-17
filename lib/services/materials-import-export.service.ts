@@ -6,6 +6,7 @@ import { ExcelService } from '@/lib/services/excel.service';
 import { success, error, type Result } from '@/lib/utils/result';
 import { materialsHeaderMap, materialsRequiredFields } from '@/lib/constants/import-configs';
 import { withActiveTenant } from '@/lib/data/db/queries';
+import { ensureMaterialsSortOrderColumn } from '@/lib/data/db/schema-compat';
 
 export class MaterialsImportExportService {
   static async importFromFile(teamId: number, file: File): Promise<Result<{ summaryMessage: string; materialsToUpsert: NewMaterial[] }>> {
@@ -25,11 +26,12 @@ export class MaterialsImportExportService {
 
     const { data: parsedRows, summary } = parseResult.data;
 
-    const materialsToUpsert: NewMaterial[] = parsedRows.map((row) => ({
+    const materialsToUpsert: NewMaterial[] = parsedRows.map((row, index) => ({
       tenantId: teamId,
       code: String(row.code),
       name: String(row.name),
       nameNorm: String(row.name).toLowerCase(),
+      sortOrder: (index + 1) * 100,
       unit: row.unit ? String(row.unit) : undefined,
       price: row.price ? Number(row.price) : undefined,
       vendor: row.vendor ? String(row.vendor) : undefined,
@@ -54,6 +56,8 @@ export class MaterialsImportExportService {
   }
 
   static async exportForTeam(teamId: number) {
+    await ensureMaterialsSortOrderColumn();
+
     const dbData = await db
       .select({
         'Код': materials.code,
@@ -71,7 +75,8 @@ export class MaterialsImportExportService {
         'Описание': materials.description,
       })
       .from(materials)
-      .where(and(withActiveTenant(materials, teamId), eq(materials.status, 'active')));
+      .where(and(withActiveTenant(materials, teamId), eq(materials.status, 'active')))
+      .orderBy(materials.sortOrder, materials.id);
 
     return success(dbData);
   }

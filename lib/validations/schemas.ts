@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const materialSchema = z.object({
     code: z.string().min(1, 'Код обязателен'),
     name: z.string().min(1, 'Наименование обязательно'),
+    sortOrder: z.number().optional(),
     unit: z.string().optional().nullable(),
     price: z.number().optional().nullable(),
     vendor: z.string().optional().nullable(),
