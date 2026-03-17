@@ -14,26 +14,29 @@ describe('schema compatibility helpers', () => {
   });
 
   it('runs compatibility SQL only once across repeated calls', async () => {
-    const { ensureWorksCodeSortKeyColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
+    const { ensureWorksCodeSortKeyColumn, ensureMaterialsSortOrderColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
     resetSchemaCompatibilityStateForTests();
 
     executeMock.mockResolvedValue(undefined);
 
     await ensureWorksCodeSortKeyColumn();
     await ensureWorksCodeSortKeyColumn();
+    await ensureMaterialsSortOrderColumn();
+    await ensureMaterialsSortOrderColumn();
 
-    expect(executeMock).toHaveBeenCalledTimes(2);
+    expect(executeMock).toHaveBeenCalledTimes(7);
   });
 
   it('retries after failed ensure call', async () => {
-    const { ensureWorksCodeSortKeyColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
+    const { ensureWorksCodeSortKeyColumn, ensureMaterialsSortOrderColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
     resetSchemaCompatibilityStateForTests();
 
     executeMock.mockRejectedValueOnce(new Error('boom')).mockResolvedValue(undefined);
 
     await expect(ensureWorksCodeSortKeyColumn()).rejects.toThrow('boom');
     await ensureWorksCodeSortKeyColumn();
+    await ensureMaterialsSortOrderColumn();
 
-    expect(executeMock).toHaveBeenCalledTimes(3);
+    expect(executeMock).toHaveBeenCalledTimes(8);
   });
 });
