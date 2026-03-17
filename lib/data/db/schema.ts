@@ -588,6 +588,8 @@ export const materials = pgTable('materials', {
 
   tags: text('tags').array(),
 
+  sortOrder: doublePrecision('sort_order').notNull().default(0),
+
   status: workStatusEnum('status').notNull().default('draft'),
   metadata: jsonb('metadata').default({}),
 
@@ -599,8 +601,10 @@ export const materials = pgTable('materials', {
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
 }, (table) => [
   index('materials_tenant_status_idx').on(table.tenantId).where(sql`deleted_at IS NULL AND status = 'active'`),
+  index('materials_sort_order_idx').on(table.sortOrder),
+  index('materials_tenant_sort_order_idx').on(table.tenantId, table.sortOrder).where(sql`deleted_at IS NULL`),
   uniqueIndex('idx_materials_code_tenant_unique').on(table.tenantId, table.code),
-  index('materials_tenant_code_idx').on(table.tenantId, table.code).where(sql`deleted_at IS NULL`),
+  index('materials_tenant_deleted_sort_order_idx').on(table.tenantId, table.deletedAt, table.sortOrder),
   index('materials_tenant_active_category_idx').on(table.tenantId, table.categoryLv1).where(sql`deleted_at IS NULL AND status = 'active'`),
   index('materials_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
   index('materials_name_norm_trgm_idx').using('gin', sql`${table.nameNorm} gin_trgm_ops`),

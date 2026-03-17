@@ -134,6 +134,15 @@ describe('Works Search and Batch Operations', () => {
         expect(afterUpdate).toHaveLength(3);
         const updated = afterUpdate.find(w => w.code === 'B-1');
         expect(updated?.name).toBe('Batch 1 Updated');
+
+        await WorksService.upsertMany(testTeamId, [
+            { tenantId: testTeamId, code: 'B-2', name: 'Batch 2 Moved', sortOrder: 100 },
+            { tenantId: testTeamId, code: 'B-1', name: 'Batch 1 Moved', sortOrder: 200 },
+            { tenantId: testTeamId, code: 'B-3', name: 'Batch 3 Moved', sortOrder: 300 },
+        ]);
+
+        const reordered = await db.select().from(works).where(eq(works.tenantId, testTeamId)).orderBy(works.sortOrder);
+        expect(reordered.map((item) => item.code)).toEqual(['B-2', 'B-1', 'B-3']);
     });
 
     it('matches multi-word prefix queries in regular catalog search', async () => {

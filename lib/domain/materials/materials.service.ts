@@ -1,4 +1,4 @@
-import { and, eq, isNull, sql, inArray } from 'drizzle-orm';
+import { and, eq, gt, isNull, sql, inArray } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { materials, NewMaterial } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
@@ -10,6 +10,7 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { after } from 'next/server';
 import { SYNONYMS } from '@/lib/ai/dictionaries/synonyms';
 import { getCachedQueryEmbedding } from '@/lib/ai/query-embeddings';
+import { ensureMaterialsSortOrderColumn } from '@/lib/data/db/schema-compat';
 
 const FTS_RANK_WEIGHTS = [0.1, 0.2, 0.4, 1.0] as const;
 
@@ -29,11 +30,13 @@ export class MaterialsService {
         limit?: number,
         search?: string,
         offset?: number,
-        lastCode?: string,
+        lastSortOrder?: number,
         lastId?: string,
         categoryLv1?: string
     ): Promise<Result<MaterialRow[]>> {
         try {
+            await ensureMaterialsSortOrderColumn();
+
             const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
             const normalizedSearch = search?.trim().toLowerCase();
             const finalOffset = offset && offset > 0 ? offset : 0;
@@ -59,11 +62,11 @@ export class MaterialsService {
                 )`);
             }
 
-            if (lastCode) {
+            if (typeof lastSortOrder === 'number') {
                 if (lastId) {
-                    filters.push(sql`(${materials.code}, ${materials.id}) > (${lastCode}, ${lastId})`);
+                    filters.push(sql`(${materials.sortOrder}, ${materials.id}) > (${lastSortOrder}, ${lastId})`);
                 } else {
-                    filters.push(sql`${materials.code} > ${lastCode}`);
+                    filters.push(gt(materials.sortOrder, lastSortOrder));
                 }
             }
 
@@ -90,10 +93,11 @@ export class MaterialsService {
                     imageLocalUrl: materials.imageLocalUrl,
                     status: materials.status,
                     createdAt: materials.createdAt,
+                    sortOrder: materials.sortOrder,
                 })
                 .from(materials)
                 .where(and(...filters))
-                .orderBy(materials.code, materials.id)
+                .orderBy(materials.sortOrder, materials.id)
                 .limit(finalLimit)
                 .offset(finalOffset) as MaterialRow[];
 
@@ -110,12 +114,21 @@ export class MaterialsService {
         const data = validation.data;
 
         try {
+            await ensureMaterialsSortOrderColumn();
+
             const normalizedCode = this.normalizeCode(data.code) ?? data.code;
+            const lastMaterial = typeof data.sortOrder === 'number'
+                ? null
+                : await db.query.materials.findFirst({
+                    where: withActiveTenant(materials, teamId),
+                    orderBy: (materials, { desc }) => [desc(materials.sortOrder)],
+                });
             const [inserted] = await db.insert(materials).values({
                 ...data,
                 code: normalizedCode, nameNorm: data.name.toLowerCase(),
                 tenantId: teamId,
                 status: 'active',
+                sortOrder: typeof data.sortOrder === 'number' ? data.sortOrder : (lastMaterial?.sortOrder ?? 0) + 100,
             }).returning({ id: materials.id });
 
             after(async () => {
@@ -141,6 +154,8 @@ export class MaterialsService {
 
     static async update(teamId: number, id: string, rawData: Partial<NewMaterial>): Promise<Result<void>> {
         try {
+            await ensureMaterialsSortOrderColumn();
+
             const updateData = { ...rawData, updatedAt: new Date() };
             const norm = this.normalizeCode(updateData.code);
             if (norm !== undefined) {
@@ -376,6 +391,7 @@ export class MaterialsService {
                 createdAt: materials.createdAt,
                 updatedAt: materials.updatedAt,
                 deletedAt: materials.deletedAt,
+                sortOrder: materials.sortOrder,
                 ftsScore,
                 trgmScore,
                 phraseBoost,
@@ -397,6 +413,8 @@ export class MaterialsService {
 
     static async upsertMany(teamId: number, data: NewMaterial[]): Promise<Result<void>> {
         try {
+            await ensureMaterialsSortOrderColumn();
+
             // Deduplicate only items WITH code. Items without code should be processed individually/as-is.
             const uniqueDataMap = new Map<string, NewMaterial>();
             const noCodeList: NewMaterial[] = [];
@@ -414,13 +432,26 @@ export class MaterialsService {
 
             await db.transaction(async (tx) => {
                 const DB_BATCH_SIZE = 500;
+                const lastMaterial = await tx.query.materials.findFirst({
+                    where: withActiveTenant(materials, teamId),
+                    orderBy: (materials, { desc }) => [desc(materials.sortOrder)],
+                });
+                let currentMaxSortOrder = lastMaterial?.sortOrder ?? 0;
 
                 for (let i = 0; i < totalToProcess.length; i += DB_BATCH_SIZE) {
-                    const batch = totalToProcess.slice(i, i + DB_BATCH_SIZE).map(item => ({
+                    const batch = totalToProcess.slice(i, i + DB_BATCH_SIZE).map((item, idx) => ({
                         ...item,
                         tenantId: teamId,
-                        nameNorm: item.name.toLowerCase()
+                        nameNorm: item.name.toLowerCase(),
+                        sortOrder: typeof item.sortOrder === 'number' ? item.sortOrder : currentMaxSortOrder + (idx + 1) * 100,
                     }));
+
+                    if (batch.length > 0) {
+                        const lastInBatch = batch[batch.length - 1];
+                        if (typeof lastInBatch.sortOrder === 'number') {
+                            currentMaxSortOrder = Math.max(currentMaxSortOrder, lastInBatch.sortOrder);
+                        }
+                    }
 
                     await tx.insert(materials).values(batch)
                         .onConflictDoUpdate({
@@ -440,6 +471,7 @@ export class MaterialsService {
                                 imageUrl: sql`excluded.image_url`,
                                 imageLocalUrl: sql`COALESCE(excluded.image_local_url, materials.image_local_url)`,
                                 description: sql`excluded.description`,
+                                sortOrder: sql`excluded.sort_order`,
                                 updatedAt: new Date(),
                             }
                         });

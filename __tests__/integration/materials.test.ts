@@ -6,6 +6,7 @@ import { createMaterial, updateMaterial, deleteMaterial, deleteAllMaterials } fr
 import { and, eq } from 'drizzle-orm';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { resetDatabase } from '@/lib/data/db/test-utils';
+import { MaterialsService } from '@/lib/domain/materials/materials.service';
 
 // ---------------------------------------------------------------------
 // Mocks
@@ -175,6 +176,23 @@ describe('Materials Integration Tests', () => {
         expect(result.success).toBe(true);
         const inDb = await db.select().from(materials).where(eq(materials.tenantId, testTeamId));
         expect(inDb).toHaveLength(0);
+    });
+
+    it('should_append_new_materials_and_update_sort_order_on_upsert', async () => {
+        await MaterialsService.upsertMany(testTeamId, [
+            { tenantId: testTeamId, code: 'M-001', name: 'First', sortOrder: 100 },
+            { tenantId: testTeamId, code: 'M-002', name: 'Second', sortOrder: 200 },
+        ]);
+
+        await MaterialsService.upsertMany(testTeamId, [
+            { tenantId: testTeamId, code: 'M-002', name: 'Second moved', sortOrder: 100 },
+            { tenantId: testTeamId, code: 'M-001', name: 'First moved', sortOrder: 200 },
+            { tenantId: testTeamId, code: 'M-003', name: 'Third new', sortOrder: 300 },
+        ]);
+
+        const inDb = await db.select().from(materials).where(eq(materials.tenantId, testTeamId)).orderBy(materials.sortOrder);
+        expect(inDb.map((item) => item.code)).toEqual(['m-002', 'm-001', 'm-003']);
+        expect(inDb.find((item) => item.code === 'm-002')?.name).toBe('Second moved');
     });
 
     // -----------------------------------------------------------------

@@ -48,6 +48,7 @@ describe('MaterialsImportExportService', () => {
       expect(result.data.summaryMessage).toContain('Успешно: 1');
       expect(result.data.materialsToUpsert[0].tenantId).toBe(10);
       expect(result.data.materialsToUpsert[0].nameNorm).toBe('материал');
+      expect(result.data.materialsToUpsert[0].sortOrder).toBe(100);
     }
   });
 });

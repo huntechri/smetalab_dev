@@ -87,9 +87,10 @@ export class WorksService {
                 .from(works)
                 .where(and(...filters))
                 .orderBy(
-                    effectiveCodeSortKey,
                     works.sortOrder,
-                    works.code
+                    effectiveCodeSortKey,
+                    works.code,
+                    works.id
                 )
                 .limit(finalLimit);
 
@@ -109,6 +110,12 @@ export class WorksService {
             await ensureWorksCodeSortKeyColumn();
 
             const finalCode = data.code || `W-${Date.now()}`;
+            const lastWork = typeof data.sortOrder === 'number'
+                ? null
+                : await db.query.works.findFirst({
+                    where: withActiveTenant(works, teamId),
+                    orderBy: (works, { desc }) => [desc(works.sortOrder)],
+                });
 
             const [inserted] = await db.insert(works).values({
                 ...data,
@@ -117,7 +124,7 @@ export class WorksService {
                 status: 'active',
                 code: finalCode,
                 codeSortKey: buildWorkCodeSortKey(finalCode),
-                sortOrder: data.sortOrder || 0,
+                sortOrder: typeof data.sortOrder === 'number' ? data.sortOrder : (lastWork?.sortOrder ?? 0) + 100,
             }).returning({ id: works.id });
 
             // Generate embedding in background
@@ -491,6 +498,7 @@ export class WorksService {
                                 subcategory: sql`excluded.subcategory`,
                                 shortDescription: sql`excluded.short_description`,
                                 description: sql`excluded.description`,
+                                sortOrder: sql`excluded.sort_order`,
                                 updatedAt: new Date(),
                             }
                         });
