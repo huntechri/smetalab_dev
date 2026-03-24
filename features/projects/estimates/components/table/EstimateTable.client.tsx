@@ -308,7 +308,7 @@ export function EstimateTable({
         const newWorkQty = Number(parsedValue);
         // Если расход у материала 0, но есть количество, пытаемся восстановить расход на лету
         const effectiveExpense = row.expense > 0 ? row.expense : (targetRow.qty > 0 ? row.qty / targetRow.qty : 0);
-        const newChildQty = Math.round(newWorkQty * effectiveExpense * 1000) / 1000;
+        const newChildQty = Math.ceil(newWorkQty * effectiveExpense);
         return {
           ...row,
           expense: effectiveExpense,
