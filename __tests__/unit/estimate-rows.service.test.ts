@@ -310,3 +310,73 @@ describe('EstimateRowsService duplicate protection', () => {
         expect(tx.insert).not.toHaveBeenCalled();
     });
 });
+
+describe('EstimateRowsService.patch calculation and rounding', () => {
+    beforeEach(() => {
+        dbMock.query.estimates.findFirst.mockReset();
+        dbMock.transaction.mockReset();
+        dbMock.query.estimates.findFirst.mockResolvedValue({ id: 'est-1', coefPercent: 0 });
+    });
+
+    it('rounds material quantity UP to nearest integer when work quantity changes (cascading)', async () => {
+        const updateMock = {
+            set: vi.fn().mockReturnThis(),
+            where: vi.fn().mockReturnThis(),
+            returning: vi.fn().mockResolvedValue([{ id: 'updated-id' }]),
+        };
+
+        const tx = {
+            query: {
+                estimates: {
+                    findFirst: vi.fn().mockResolvedValue({ coefPercent: 0 }),
+                },
+                estimateRows: {
+                    findFirst: vi.fn().mockResolvedValue({
+                        id: 'work-1',
+                        kind: 'work',
+                        qty: 10,
+                        price: 100,
+                        sum: 1000,
+                        estimateId: 'est-1',
+                    }),
+                },
+            },
+            select: vi.fn(() => ({
+                from: vi.fn(() => ({
+                    where: vi.fn().mockResolvedValue([
+                        {
+                            id: 'mat-1',
+                            kind: 'material',
+                            parentWorkId: 'work-1',
+                            estimateId: 'est-1',
+                            qty: 5,
+                            expense: 0.5,
+                            price: 200,
+                            sum: 1000,
+                            deletedAt: null,
+                        },
+                    ]),
+                })),
+            })),
+            update: vi.fn(() => updateMock),
+        };
+
+        dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
+
+        // Change work qty from 10 to 11.
+        // Material qty = 11 * 0.5 = 5.5.
+        // With Math.ceil, it should become 6.
+        await EstimateRowsService.patch(7, 'est-1', 'work-1', { qty: 11 });
+
+        // 1. Work update
+        // 2. Material cascading update
+        // 3. Estimate total update
+        expect(tx.update).toHaveBeenCalledTimes(3);
+        
+        // Verify the cascading update for the material (2nd call to update)
+        // Note: the index of calls depends on the order in the code.
+        const materialUpdateSet = updateMock.set.mock.calls[1][0];
+        // 11 * 0.5 = 5.5, should be 6
+        expect(materialUpdateSet).toMatchObject({ qty: 6 });
+    });
+});

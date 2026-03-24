@@ -769,7 +769,7 @@ export class EstimateRowsService {
                     for (const child of children) {
                         // Если у материала расход 0, пытаемся его восстановить из текущего количества и старого объема работы
                         const effectiveExpense = child.expense > 0 ? child.expense : (existing.qty > 0 ? child.qty / existing.qty : 0);
-                        const newChildQty = Math.round(nextQty * effectiveExpense * 1000) / 1000;
+                        const newChildQty = Math.ceil(nextQty * effectiveExpense);
 
                         await tx
                             .update(estimateRows)
