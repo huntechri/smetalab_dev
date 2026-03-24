@@ -29,11 +29,12 @@ export const estimatesActionRepo = {
         return result.data;
     },
 
-    async addSection(estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string }): Promise<EstimateRow> {
+    async addSection(estimateId: string, payload: { code: string; name: string; insertAfterRowId?: string; insertBeforeRowId?: string }): Promise<EstimateRow> {
         const result = await addEstimateSectionAction(estimateId, {
             code: payload.code,
             name: payload.name,
             insertAfterRowId: payload.insertAfterRowId,
+            insertBeforeRowId: payload.insertBeforeRowId,
         });
 
         if (!result.success) {
