@@ -22,6 +22,7 @@ const addSectionSchema = z.object({
     code: z.string().trim().min(1).max(30),
     name: z.string().trim().min(1).max(200),
     insertAfterRowId: z.string().uuid().optional(),
+    insertBeforeRowId: z.string().uuid().optional(),
 });
 
 const addMaterialSchema = z.object({
@@ -518,7 +519,23 @@ export class EstimateRowsService {
                 const payload = parsed.data;
                 let nextOrder = 100;
 
-                if (payload.insertAfterRowId) {
+                if (payload.insertBeforeRowId) {
+                    // Вставить ДО указанной строки — берём её order как позицию вставки
+                    const targetRow = await tx.query.estimateRows.findFirst({
+                        where: and(
+                            eq(estimateRows.id, payload.insertBeforeRowId),
+                            eq(estimateRows.estimateId, estimateId),
+                            withActiveTenant(estimateRows, teamId),
+                        ),
+                        columns: { order: true },
+                    });
+
+                    if (!targetRow) {
+                        throw new Error('ANCHOR_ROW_NOT_FOUND');
+                    }
+
+                    nextOrder = targetRow.order;
+                } else if (payload.insertAfterRowId) {
                     const anchorRow = await tx.query.estimateRows.findFirst({
                         where: and(
                             eq(estimateRows.id, payload.insertAfterRowId),

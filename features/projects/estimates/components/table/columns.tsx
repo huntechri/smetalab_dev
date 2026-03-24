@@ -1,9 +1,9 @@
 'use client';
 
 import { Button } from '@/shared/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, FileStack, FolderTree, Plus, Settings } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileStack, FolderTree, FolderUp, Plus, Settings } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { SectionTotals } from '../../lib/section-totals';
 import { EditableCell } from './cells/EditableCell';
@@ -17,6 +17,7 @@ export type EstimateColumnActions = {
     onOpenMaterialCatalog: (workId: string, workName: string) => void;
     onInsertWorkAfter: (workId: string, workName: string) => void;
     onRequestCreateSection: (insertAfterRowId?: string) => void;
+    onRequestCreateSectionBefore: (insertBeforeRowId: string) => void;
     onReplaceMaterial: (materialId: string, materialName: string) => void;
     onRemoveRow: (rowId: string) => Promise<void>;
     sectionTotalsById: Map<string, SectionTotals>;
@@ -212,13 +213,21 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => actions.onRequestCreateSectionBefore(item.id)}>
+                                <FolderUp className="mr-2 size-4" />
+                                Добавить раздел выше
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => actions.onRequestCreateSection(item.id)}>
                                 <FolderTree className="mr-2 size-4" />
                                 Добавить раздел ниже
                             </DropdownMenuItem>
                             {item.kind === 'material' ? (
-                                <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
+                                <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
+                                </>
                             ) : null}
+                            <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-destructive" onClick={() => void actions.onRemoveRow(item.id)}>{item.kind === 'section' ? 'Удалить раздел' : 'Удалить'}</DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>

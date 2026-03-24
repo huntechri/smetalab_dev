@@ -86,5 +86,5 @@ export default [
             ],
         },
     },
-    { ignores: ["node_modules/**", ".next/**", "bin/**", "test-results/**"] },
+    { ignores: ["node_modules/**", ".next/**", ".vercel/**", "drizzle/**", "bin/**", "test-results/**"] },
 ];

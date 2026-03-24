@@ -99,6 +99,7 @@ export function EstimateTable({
   const [sectionCodeInput, setSectionCodeInput] = useState('');
   const [sectionNameInput, setSectionNameInput] = useState('');
   const [sectionInsertAfterRowId, setSectionInsertAfterRowId] = useState<string | undefined>(undefined);
+  const [sectionInsertBeforeRowId, setSectionInsertBeforeRowId] = useState<string | undefined>(undefined);
   const [isPatternsLoading, setIsPatternsLoading] = useState(false);
   const [patterns, setPatterns] = useState<EstimatePatternListItem[]>([]);
   const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
@@ -494,6 +495,15 @@ export function EstimateTable({
     setSectionCodeInput('');
     setSectionNameInput('');
     setSectionInsertAfterRowId(insertAfterRowId);
+    setSectionInsertBeforeRowId(undefined);
+    setIsSectionDialogOpen(true);
+  };
+
+  const openCreateSectionDialogBefore = (insertBeforeRowId: string) => {
+    setSectionCodeInput('');
+    setSectionNameInput('');
+    setSectionInsertAfterRowId(undefined);
+    setSectionInsertBeforeRowId(insertBeforeRowId);
     setIsSectionDialogOpen(true);
   };
 
@@ -512,11 +522,13 @@ export function EstimateTable({
         code: sectionCodeInput.trim(),
         name: sectionNameInput.trim(),
         insertAfterRowId: sectionInsertAfterRowId,
+        insertBeforeRowId: sectionInsertBeforeRowId,
       });
 
       setRows((prev) => [...prev, created].sort((left, right) => left.order - right.order));
       setIsSectionDialogOpen(false);
       setSectionInsertAfterRowId(undefined);
+      setSectionInsertBeforeRowId(undefined);
       toast({ title: "Раздел добавлен", description: `${created.code} ${created.name}` });
       void reloadRows();
     } catch (addSectionError) {
@@ -748,6 +760,8 @@ export function EstimateTable({
             insertWorkAfter(workId, workName),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
+          onRequestCreateSectionBefore: (insertBeforeRowId) =>
+            openCreateSectionDialogBefore(insertBeforeRowId),
           onRequestCreateSection: (insertAfterRowId) =>
             openCreateSectionDialog(insertAfterRowId),
           onRemoveRow: removeRow,
@@ -995,8 +1009,11 @@ export function EstimateTable({
           <DialogHeader>
             <DialogTitle>Добавить раздел</DialogTitle>
             <DialogDescription>
-              Укажите номер и название раздела. Раздел можно добавить в любую
-              точку сметы.
+              {sectionInsertBeforeRowId
+                ? 'Раздел будет вставлен перед выбранной строкой.'
+                : sectionInsertAfterRowId
+                  ? 'Раздел будет вставлен после выбранной строки.'
+                  : 'Раздел будет добавлен в конец сметы.'}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
