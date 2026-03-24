@@ -213,14 +213,18 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => actions.onRequestCreateSectionBefore(item.id)}>
-                                <FolderUp className="mr-2 size-4" />
-                                Добавить раздел выше
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => actions.onRequestCreateSection(item.id)}>
-                                <FolderTree className="mr-2 size-4" />
-                                Добавить раздел ниже
-                            </DropdownMenuItem>
+                            {item.kind !== 'material' && (
+                                <>
+                                    <DropdownMenuItem onClick={() => actions.onRequestCreateSectionBefore(item.id)}>
+                                        <FolderUp className="mr-2 size-4" />
+                                        Добавить раздел выше
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem onClick={() => actions.onRequestCreateSection(item.id)}>
+                                        <FolderTree className="mr-2 size-4" />
+                                        Добавить раздел ниже
+                                    </DropdownMenuItem>
+                                </>
+                            )}
                             {item.kind === 'material' ? (
                                 <>
                                     <DropdownMenuSeparator />
