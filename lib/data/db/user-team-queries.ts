@@ -88,7 +88,10 @@ export const getUser = cache(async () => {
       role: teamMembers.role,
     })
     .from(users)
-    .leftJoin(teamMembers, eq(users.id, teamMembers.userId))
+    .leftJoin(
+      teamMembers,
+      and(eq(users.id, teamMembers.userId), isNull(teamMembers.leftAt))
+    )
     .where(and(eq(users.id, sessionData.user.id), isNull(users.deletedAt)))
     .limit(1);
 
@@ -110,7 +113,10 @@ export async function getUserWithTeam(userId: number) {
       teamId: teamMembers.teamId,
     })
     .from(users)
-    .leftJoin(teamMembers, eq(users.id, teamMembers.userId))
+    .leftJoin(
+      teamMembers,
+      and(eq(users.id, teamMembers.userId), isNull(teamMembers.leftAt))
+    )
     .where(eq(users.id, userId))
     .limit(1);
 
@@ -170,7 +176,10 @@ async function getImpersonationTeam(
 ) {
   if (mode === 'withMembers') {
     const session = await db.query.impersonationSessions.findFirst({
-      where: eq(impersonationSessions.sessionToken, impersonationToken),
+      where: and(
+        eq(impersonationSessions.sessionToken, impersonationToken),
+        isNull(impersonationSessions.endedAt)
+      ),
       with: {
         targetTeam: {
           with: {
@@ -194,7 +203,10 @@ async function getImpersonationTeam(
   }
 
   const session = await db.query.impersonationSessions.findFirst({
-    where: eq(impersonationSessions.sessionToken, impersonationToken),
+    where: and(
+      eq(impersonationSessions.sessionToken, impersonationToken),
+      isNull(impersonationSessions.endedAt)
+    ),
     with: {
       targetTeam: true,
     },
