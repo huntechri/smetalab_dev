@@ -31,9 +31,9 @@ describe('session helpers', () => {
   });
 
   it('uses /api/refresh as the refresh endpoint path', async () => {
-    const { REFRESH_ENDPOINT_PATH, LEGACY_REFRESH_ENDPOINT_PATH } = await import('@/lib/infrastructure/auth/session');
+    const { REFRESH_ENDPOINT_PATH, REFRESH_ENDPOINT_ALIASES } = await import('@/lib/infrastructure/auth/session');
 
     expect(REFRESH_ENDPOINT_PATH).toBe('/api/refresh');
-    expect(LEGACY_REFRESH_ENDPOINT_PATH).toBe('/api/auth/refresh');
+    expect(REFRESH_ENDPOINT_ALIASES).toEqual(['/api/auth/refresh']);
   });
 });

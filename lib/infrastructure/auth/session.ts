@@ -39,10 +39,10 @@ type SessionData = {
 const ACCESS_TOKEN_EXPIRY = '15m'; // 15 minutes
 const REFRESH_TOKEN_EXPIRY = '7d';  // 7 days
 export const REFRESH_ENDPOINT_PATH = '/api/refresh';
-export const LEGACY_REFRESH_ENDPOINT_PATH = '/api/auth/refresh';
 
 export const SESSION_COOKIE_NAME = 'access_token';
 export const REFRESH_COOKIE_NAME = 'refresh_token';
+export const REFRESH_ENDPOINT_ALIASES = ['/api/auth/refresh'] as const;
 
 export async function signToken(payload: SessionData, expiry: string = '1d') {
   const key = getAuthSecretKey();
@@ -114,5 +114,7 @@ export async function clearSession() {
   cookieStore.delete(SESSION_COOKIE_NAME);
   cookieStore.delete(REFRESH_COOKIE_NAME);
   cookieStore.delete({ name: REFRESH_COOKIE_NAME, path: REFRESH_ENDPOINT_PATH });
-  cookieStore.delete({ name: REFRESH_COOKIE_NAME, path: LEGACY_REFRESH_ENDPOINT_PATH });
+  for (const aliasPath of REFRESH_ENDPOINT_ALIASES) {
+    cookieStore.delete({ name: REFRESH_COOKIE_NAME, path: aliasPath });
+  }
 }
