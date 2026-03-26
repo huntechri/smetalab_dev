@@ -362,6 +362,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 filterColumn="name"
                 filterPlaceholder="Поиск по работам..."
                 height="580px"
+                compactMobileToolbar
                 actions={
                     <AddExtraWorkSheet
                         estimateId={estimateId}

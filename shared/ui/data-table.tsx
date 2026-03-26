@@ -58,6 +58,7 @@ interface DataTableProps<TData, TValue> {
     actions?: React.ReactNode;
     emptyState?: React.ReactNode;
     getRowClassName?: (row: TData) => string;
+    compactMobileToolbar?: boolean;
 }
 
 // --- Stable Virtuoso Components ---
@@ -145,6 +146,7 @@ export function DataTable<TData, TValue>({
     actions,
     emptyState,
     getRowClassName,
+    compactMobileToolbar = false,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = useState(false)
 
@@ -192,11 +194,20 @@ export function DataTable<TData, TValue>({
             <div className="space-y-4">
                 {/* Search Filter */}
                 {filterColumn && (
-                    <div className="flex flex-col gap-3 xl:flex-row xl:items-center justify-between px-1 md:px-0">
+                    <div className={cn(
+                        "justify-between px-1 md:px-0",
+                        compactMobileToolbar
+                            ? "flex items-center gap-2 xl:flex-row xl:items-center"
+                            : "flex flex-col gap-3 xl:flex-row xl:items-center"
+                    )}>
                         {/* Search Input & AI Toggle Group */}
-                        <div className="flex items-center gap-2 w-full xl:w-auto shrink-0">
+                        <div className={cn(
+                            "flex items-center gap-2 shrink-0",
+                            compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
+                        )}>
                             <div className={cn(
-                                "relative flex-1 min-w-[200px] transition-all duration-300",
+                                "relative flex-1 transition-all duration-300",
+                                compactMobileToolbar ? "min-w-0" : "min-w-[200px]",
                                 isAiMode ? "xl:w-[350px]" : "xl:w-[280px]"
                             )}>
                                 {isSearching ? (
@@ -275,7 +286,14 @@ export function DataTable<TData, TValue>({
 
                         {/* Actions Group */}
                         {actions && (
-                            <div className="flex items-center gap-2 w-full xl:w-auto justify-start xl:justify-end overflow-x-auto pb-1 xl:pb-0 scrollbar-hide" role="group" aria-label="Действия таблицы">
+                            <div
+                                className={cn(
+                                    "flex items-center gap-2 xl:w-auto xl:justify-end overflow-x-auto pb-1 xl:pb-0 scrollbar-hide",
+                                    compactMobileToolbar ? "w-auto justify-end shrink-0" : "w-full justify-start"
+                                )}
+                                role="group"
+                                aria-label="Действия таблицы"
+                            >
                                 {actions}
                             </div>
                         )}
