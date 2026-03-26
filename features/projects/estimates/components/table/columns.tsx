@@ -27,14 +27,14 @@ export type EstimateColumnActions = {
 export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<VisibleEstimateRow>[] => [
     {
         accessorKey: 'code',
-        size: 80,
-        minSize: 80,
-        maxSize: 100,
-        header: () => <div className="pl-1">№ / Код</div>,
+        size: 70,
+        minSize: 60,
+        maxSize: 80,
+        header: () => <div className="pl-1">Код</div>,
         cell: ({ row }) => {
             const item = row.original;
             if (item.kind === 'section') {
-                return <div className="pl-1 tabular-nums text-xs md:text-sm font-semibold">{item.code}</div>;
+                return <div className="pl-1 tabular-nums text-[12px] font-semibold">{item.code}</div>;
             }
 
             if (item.kind === 'work') {
@@ -44,27 +44,27 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-7 hover:bg-muted/80"
+                            className="size-6 hover:bg-muted/80"
                             onClick={() => actions.onToggleExpand(item.id)}
                             aria-label={expanded ? 'Свернуть работу' : 'Развернуть работу'}
                         >
                             {expanded ? (
-                                <ChevronDown className="size-4 text-muted-foreground transition-transform duration-200" />
+                                <ChevronDown className="size-3.5 text-muted-foreground transition-transform duration-200" />
                             ) : (
-                                <ChevronRight className="size-4 text-muted-foreground transition-transform duration-200" />
+                                <ChevronRight className="size-3.5 text-muted-foreground transition-transform duration-200" />
                             )}
                         </Button>
-                        <span className="tabular-nums text-xs md:text-sm font-medium">{item.code}</span>
+                        <span className="tabular-nums text-[12px] font-medium">{item.code}</span>
                     </div>
                 );
             }
-            return <div className="pl-9 tabular-nums text-xs md:text-sm text-muted-foreground/80">{item.code}</div>;
+            return <div className="pl-9 tabular-nums text-[12px] text-muted-foreground/80">{item.code}</div>;
         },
     },
     {
         accessorKey: 'name',
-        size: 600,
-        minSize: 300,
+        size: 450,
+        minSize: 200,
         header: 'Наименование',
         cell: ({ row }) => {
             const item = row.original;
@@ -73,10 +73,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div
                         className={
                             item.kind === 'section'
-                                ? 'text-xs md:text-sm font-semibold uppercase tracking-wide truncate'
+                                ? 'text-[12px] font-semibold uppercase tracking-wide truncate'
                                 : item.kind === 'work'
-                                  ? 'text-xs md:text-sm font-normal truncate'
-                                  : 'text-xs md:text-sm italic text-muted-foreground'
+                                  ? 'text-[12px] font-normal truncate'
+                                  : 'text-[12px] italic text-muted-foreground'
                         }
                         title={item.name}
                     >
@@ -88,8 +88,8 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     },
     {
         accessorKey: 'imageUrl',
-        header: 'Изображение',
-        size: 110,
+        header: 'Фото',
+        size: 60,
         cell: ({ row }) => {
             if (row.original.kind === 'work' || row.original.kind === 'section') {
                 return null;
@@ -101,54 +101,49 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     {
         accessorKey: 'unit',
         header: () => <div className="text-center">Ед. изм.</div>,
-        size: 100,
+        size: 70,
         cell: ({ row }) => (
-            <div className={row.original.kind === 'section' ? 'text-center text-xs md:text-sm text-muted-foreground/50' : row.original.kind === 'material' ? 'text-xs md:text-sm italic text-muted-foreground text-center' : 'text-center text-xs md:text-sm text-muted-foreground font-medium'}>
+            <div className={row.original.kind === 'section' ? 'text-center text-[12px] text-muted-foreground/50' : row.original.kind === 'material' ? 'text-[12px] italic text-muted-foreground text-center' : 'text-center text-[12px] text-muted-foreground font-medium'}>
                 {row.original.unit}
             </div>
         )
     },
     {
         accessorKey: 'qty',
-        size: 100,
+        size: 80,
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} />}
             </div>
         )
     },
     {
         accessorKey: 'price',
-        size: 110,
+        size: 100,
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} />}
             </div>
         )
     },
     {
         accessorKey: 'sum',
-        size: 180,
+        size: 140,
         header: () => <div className="text-right">Сумма</div>,
         cell: ({ row }) => {
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-xs md:text-sm">
-                        <div className="font-semibold tabular-nums">
-                            <MoneyCell value={sectionTotals.total} />
-                        </div>
-                        <div className="text-[10px] md:text-xs text-muted-foreground tabular-nums leading-tight">
-                            Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
-                        </div>
+                    <div className="pr-6 text-right text-[12px] font-semibold tabular-nums">
+                        Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
                     </div>
                 );
             }
 
             return (
-                <div className={`text-right tabular-nums pr-6 text-xs md:text-sm ${row.original.kind === 'material' ? 'italic text-muted-foreground' : 'font-medium text-primary/90'}`}>
+                <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : 'font-medium text-primary/90'}`}>
                     <MoneyCell value={row.original.sum} />
                 </div>
             );
@@ -156,14 +151,14 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     },
     {
         accessorKey: 'expense',
-        size: 100,
+        size: 90,
         header: () => <div className="text-right">Расход</div>,
         cell: ({ row }) => {
             if (row.original.kind === 'work' || row.original.kind === 'section') {
-                return <div className="text-right tabular-nums pr-6 text-xs md:text-sm" />;
+                return <div className="text-right tabular-nums pr-6 text-[12px]" />;
             }
             return (
-                <div className="text-right tabular-nums pr-6 text-xs md:text-sm">
+                <div className="text-right tabular-nums pr-6 text-[12px]">
                     <EditableCell
                         type="number"
                         align="right"
@@ -178,6 +173,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
     },
     {
         id: 'actions',
+        size: 100,
         header: () => <div className="text-center">Действия</div>,
         cell: ({ row }) => {
             const item = row.original;
@@ -188,29 +184,29 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             <Button
                                 size="icon"
                                 variant="ghost"
-                                className="size-8"
+                                className="size-7"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
                                 aria-label="Добавить материал"
                             >
-                                <Plus className="size-4 text-muted-foreground" />
+                                <Plus className="size-3.5 text-muted-foreground" />
                             </Button>
                             <Button
                                 size="icon"
                                 variant="ghost"
-                                className="size-8"
+                                className="size-7"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
                                 aria-label="Добавить работу ниже"
                             >
-                                <FileStack className="size-4 text-primary/80" />
+                                <FileStack className="size-3.5 text-primary/80" />
                             </Button>
                         </>
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-8 focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
-                                <Settings className="size-4 text-muted-foreground" />
+                            <Button size="icon" variant="ghost" className="size-7 focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
+                                <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
