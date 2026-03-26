@@ -20,6 +20,8 @@ vi.mock('@/lib/infrastructure/auth/session', () => ({
   verifyToken: verifyTokenSpy,
   SESSION_COOKIE_NAME: 'access_token',
   REFRESH_COOKIE_NAME: 'refresh_token',
+  COOKIE_OPTIONS_ACCESS: { httpOnly: true, secure: true, sameSite: 'none', path: '/' },
+  COOKIE_OPTIONS_REFRESH: { httpOnly: true, secure: true, sameSite: 'none', path: '/' },
 }));
 
 vi.mock('@/lib/services/auth-refresh.service', () => ({
