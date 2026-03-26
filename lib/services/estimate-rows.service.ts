@@ -783,22 +783,30 @@ export class EstimateRowsService {
                         .from(estimateRows)
                         .where(and(eq(estimateRows.parentWorkId, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
 
+                    const childUpdates = [];
+
                     for (const child of children) {
                         // Если у материала расход 0, пытаемся его восстановить из текущего количества и старого объема работы
                         const effectiveExpense = child.expense > 0 ? child.expense : (existing.qty > 0 ? child.qty / existing.qty : 0);
                         const newChildQty = Math.ceil(nextQty * effectiveExpense);
 
-                        await tx
-                            .update(estimateRows)
-                            .set({
-                                qty: newChildQty,
-                                expense: effectiveExpense,
-                                sum: newChildQty * child.price,
-                                updatedAt: new Date(),
-                            })
-                            .where(eq(estimateRows.id, child.id));
+                        childUpdates.push(
+                            tx.update(estimateRows)
+                                .set({
+                                    qty: newChildQty,
+                                    expense: effectiveExpense,
+                                    sum: newChildQty * child.price,
+                                    updatedAt: new Date(),
+                                })
+                                .where(eq(estimateRows.id, child.id))
+                        );
+                    }
+
+                    if (childUpdates.length > 0) {
+                        await Promise.all(childUpdates);
                     }
                 }
+
 
                 await recalculateEstimateTotal(tx, estimateId);
                 return { row, touchedWork: existing.kind === 'work' };
