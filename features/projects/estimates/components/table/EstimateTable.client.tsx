@@ -801,6 +801,7 @@ export function EstimateTable({
           sectionTotalsById,
         })}
         data={visibleRows}
+        getRowClassName={(row) => row.kind === 'section' ? 'bg-[#f60]/10 text-[#f60] hover:bg-[#f60]/20 font-semibold' : ''}
         filterColumn="name"
         filterPlaceholder="Поиск по строкам сметы..."
         height="580px"
