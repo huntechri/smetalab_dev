@@ -19,6 +19,7 @@ export type EstimateColumnActions = {
     onRequestCreateSection: (insertAfterRowId?: string) => void;
     onRequestCreateSectionBefore: (insertBeforeRowId: string) => void;
     onReplaceMaterial: (materialId: string, materialName: string) => void;
+    onReplaceWork: (workId: string, workName: string) => void;
     onRemoveRow: (rowId: string) => Promise<void>;
     sectionTotalsById: Map<string, SectionTotals>;
 };
@@ -225,6 +226,12 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                     </DropdownMenuItem>
                                 </>
                             )}
+                            {item.kind === 'work' ? (
+                                <>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => actions.onReplaceWork(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
+                                </>
+                            ) : null}
                             {item.kind === 'material' ? (
                                 <>
                                     <DropdownMenuSeparator />
