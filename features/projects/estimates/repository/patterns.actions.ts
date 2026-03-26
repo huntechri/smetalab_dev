@@ -17,7 +17,7 @@ export type EstimatePatternListItem = {
 };
 
 export type EstimatePatternPreviewRow = {
-  kind: 'work' | 'material';
+  kind: 'section' | 'work' | 'material';
   parentWorkTempKey: string | null;
   tempKey: string;
   code: string;
