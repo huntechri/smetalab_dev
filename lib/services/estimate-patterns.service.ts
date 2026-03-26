@@ -17,7 +17,7 @@ const applyPatternSchema = z.object({
 });
 
 type PatternSnapshotRow = {
-  kind: 'work' | 'material';
+  kind: 'section' | 'work' | 'material';
   parentWorkTempKey: string | null;
   tempKey: string;
   code: string;
@@ -89,7 +89,7 @@ export class EstimatePatternsService {
       }
 
       const snapshotRows: PatternSnapshotRow[] = rows
-        .filter((row): row is typeof row & { kind: 'work' | 'material' } => row.kind === 'work' || row.kind === 'material')
+        .filter((row): row is typeof row & { kind: 'section' | 'work' | 'material' } => row.kind === 'section' || row.kind === 'work' || row.kind === 'material')
         .map((row) => ({
         kind: row.kind,
         parentWorkTempKey: row.parentWorkId,
@@ -171,6 +171,26 @@ export class EstimatePatternsService {
           .update(estimateRows)
           .set({ deletedAt: new Date(), updatedAt: new Date() })
           .where(and(eq(estimateRows.estimateId, parsed.data.estimateId), withActiveTenant(estimateRows, teamId)));
+
+        const sections = snapshot.rows.filter((row) => row.kind === 'section');
+        if (sections.length > 0) {
+          await tx.insert(estimateRows).values(sections.map((row) => ({
+            tenantId: teamId,
+            estimateId: parsed.data.estimateId,
+            kind: 'section' as const,
+            parentWorkId: null,
+            code: row.code,
+            name: row.name,
+            materialId: null,
+            imageUrl: null,
+            unit: row.unit || '',
+            qty: row.qty || 0,
+            price: row.price || 0,
+            sum: row.sum || 0,
+            expense: row.expense || 0,
+            order: row.order,
+          })));
+        }
 
         const works = snapshot.rows.filter((row) => row.kind === 'work');
         const workCodeMap = new Map<string, string>();

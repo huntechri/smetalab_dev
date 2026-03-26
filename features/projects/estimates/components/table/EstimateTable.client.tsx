@@ -58,6 +58,7 @@ import {
 } from "../../repository/patterns.actions";
 
 type ActiveWorkForMaterial = { id: string; name: string };
+type ActiveWorkForReplace = { id: string; name: string };
 type ActiveMaterialForReplace = { id: string; name: string };
 type PendingInsertAfterWork = { id: string; name: string };
 
@@ -83,6 +84,8 @@ export function EstimateTable({
   const [isCalculationModeOpen, setIsCalculationModeOpen] = useState(false);
   const [activeWorkForMaterial, setActiveWorkForMaterial] =
     useState<ActiveWorkForMaterial | null>(null);
+  const [activeWorkForReplace, setActiveWorkForReplace] =
+    useState<ActiveWorkForReplace | null>(null);
   const [activeMaterialForReplace, setActiveMaterialForReplace] =
     useState<ActiveMaterialForReplace | null>(null);
   const [pendingInsertAfterWork, setPendingInsertAfterWork] =
@@ -443,6 +446,34 @@ export function EstimateTable({
     }
   };
 
+  const replaceWorkFromCatalog = async (catalogWork: CatalogWork) => {
+    if (!activeWorkForReplace) return;
+    const targetWorkId = activeWorkForReplace.id;
+    try {
+      const safePrice = Number(catalogWork.price);
+      const updated = await estimatesActionRepo.patchRow(
+        estimateId,
+        targetWorkId,
+        {
+          name: catalogWork.name,
+          unit: catalogWork.unit || "шт",
+          price: Number.isFinite(safePrice) ? safePrice : 0,
+        },
+      );
+      setRows((prev) =>
+        prev.map((row) => (row.id === targetWorkId ? updated : row)),
+      );
+      setActiveWorkForReplace(null);
+      toast({ title: "Работа заменена", description: catalogWork.name });
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Не удалось заменить работу.",
+      });
+    }
+  };
+
   const insertWorkAfter = (workId: string, workName: string) => {
     setPendingInsertAfterWork({ id: workId, name: workName });
     setIsCalculationModeOpen(true);
@@ -758,6 +789,8 @@ export function EstimateTable({
             setActiveWorkForMaterial({ id: workId, name: workName }),
           onInsertWorkAfter: (workId, workName) =>
             insertWorkAfter(workId, workName),
+          onReplaceWork: (workId, workName) =>
+            setActiveWorkForReplace({ id: workId, name: workName }),
           onReplaceMaterial: (materialId, materialName) =>
             setActiveMaterialForReplace({ id: materialId, name: materialName }),
           onRequestCreateSectionBefore: (insertBeforeRowId) =>
@@ -768,6 +801,7 @@ export function EstimateTable({
           sectionTotalsById,
         })}
         data={visibleRows}
+        getRowClassName={(row) => row.kind === 'section' ? 'bg-[#f60]/10 text-[#f60] hover:bg-[#f60]/20 font-semibold' : ''}
         filterColumn="name"
         filterPlaceholder="Поиск по строкам сметы..."
         height="580px"
@@ -952,11 +986,12 @@ export function EstimateTable({
         </Badge>
       </div>
       <Sheet
-        open={isCalculationModeOpen}
+        open={isCalculationModeOpen || Boolean(activeWorkForReplace)}
         onOpenChange={(nextOpen) => {
           setIsCalculationModeOpen(nextOpen);
           if (!nextOpen) {
             setPendingInsertAfterWork(null);
+            setActiveWorkForReplace(null);
           }
         }}
       >
@@ -966,24 +1001,35 @@ export function EstimateTable({
         >
           <div className="p-6 border-b">
             <SheetTitle className="text-xl md:text-2xl">
-              Справочник работ
+              {activeWorkForReplace ? "Замена работы" : "Справочник работ"}
             </SheetTitle>
             <SheetDescription className="text-sm space-y-1">
-              <span>
-                Выберите необходимые позиции для автоматического добавления в
-                смету.
-              </span>
-              {pendingInsertAfterWork ? (
-                <span className="block text-primary font-medium">
-                  Режим вставки: ниже работы «{pendingInsertAfterWork.name}»
-                </span>
-              ) : null}
+              {activeWorkForReplace ? (
+                <>
+                  <span>Выберите новую работу для замены текущей.</span>
+                  <span className="block text-primary font-medium">
+                    Заменяемая позиция: {activeWorkForReplace.name}
+                  </span>
+                </>
+              ) : (
+                <>
+                  <span>
+                    Выберите необходимые позиции для автоматического добавления в
+                    смету.
+                  </span>
+                  {pendingInsertAfterWork ? (
+                    <span className="block text-primary font-medium">
+                      Режим вставки: ниже работы «{pendingInsertAfterWork.name}»
+                    </span>
+                  ) : null}
+                </>
+              )}
             </SheetDescription>
           </div>
           <div className="flex-1 overflow-hidden flex flex-col">
             <WorkCatalogPicker
-              onAddWork={addWorkFromCatalog}
-              addedWorkNames={addedWorkNames}
+              onAddWork={activeWorkForReplace ? replaceWorkFromCatalog : addWorkFromCatalog}
+              addedWorkNames={activeWorkForReplace ? new Set() : addedWorkNames}
             />
           </div>
         </SheetContent>

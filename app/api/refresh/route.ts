@@ -4,6 +4,8 @@ import { cookies } from 'next/headers';
 import {
   REFRESH_COOKIE_NAME,
   SESSION_COOKIE_NAME,
+  COOKIE_OPTIONS_ACCESS,
+  COOKIE_OPTIONS_REFRESH,
 } from '@/lib/infrastructure/auth/session';
 import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
 
@@ -24,19 +26,13 @@ export async function POST(_req: NextRequest) {
   const response = NextResponse.json({ success: true });
 
   response.cookies.set(SESSION_COOKIE_NAME, result.accessToken, {
+    ...COOKIE_OPTIONS_ACCESS,
     expires: result.accessExpires,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
   });
 
   response.cookies.set(REFRESH_COOKIE_NAME, result.refreshToken, {
+    ...COOKIE_OPTIONS_REFRESH,
     expires: result.refreshExpires,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
   });
 
   return response;
