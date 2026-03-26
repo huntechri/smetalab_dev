@@ -34,10 +34,10 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
     }
 
     return (
-        <SidebarGroup>
-            <SidebarGroupLabel className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/70 mb-2 px-3">{label}</SidebarGroupLabel>
+        <SidebarGroup className="py-3">
+            <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-widest text-sidebar-foreground/50 mb-3 px-3">{label}</SidebarGroupLabel>
             <SidebarGroupContent>
-                <SidebarMenu className="gap-1.5 px-2">
+                <SidebarMenu className="gap-2 px-2">
                     {items.map((item) => {
                         const itemIsActive = isActive
                             ? isActive(item)
@@ -45,7 +45,7 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
 
                         return (
                             <SidebarMenuItem key={item.title}>
-                                <SidebarMenuButton asChild isActive={itemIsActive} className={cn('h-10 rounded-xl px-4 transition-all duration-300 hover:bg-muted/60 data-[active=true]:bg-primary/10 data-[active=true]:text-primary data-[active=true]:font-semibold', itemIsActive && 'shadow-sm ring-1 ring-primary/20')}>
+                                <SidebarMenuButton asChild isActive={itemIsActive} className={cn('h-11 rounded-lg px-4 transition-all duration-200 hover:bg-sidebar-accent/60 data-[active=true]:bg-sidebar-primary/12 data-[active=true]:text-sidebar-primary data-[active=true]:font-medium border-l-2 border-l-transparent', itemIsActive && 'data-[active=true]:border-l-sidebar-primary data-[active=true]:shadow-sm')}>
                                     <Link
                                         href={item.url}
                                         prefetch={true}
@@ -58,8 +58,8 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
                                         }}
                                         className="gap-3"
                                     >
-                                        <item.icon className={cn('h-4 w-4', itemIsActive ? 'text-primary' : 'text-muted-foreground')} />
-                                        <span className={cn('text-sm transition-colors', itemIsActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground')}>{item.title}</span>
+                                        <item.icon className={cn('h-4 w-4 transition-colors', itemIsActive ? 'text-sidebar-primary' : 'text-sidebar-foreground/60')} />
+                                        <span className={cn('text-sm transition-colors', itemIsActive ? 'text-sidebar-primary font-medium' : 'text-sidebar-foreground/75 hover:text-sidebar-foreground')}>{item.title}</span>
                                     </Link>
                                 </SidebarMenuButton>
                             </SidebarMenuItem>

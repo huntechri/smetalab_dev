@@ -49,12 +49,12 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
     return (
         <section aria-labelledby="home-kpi-title">
             <h1 id="home-kpi-title" className="sr-only">Сводка проекта</h1>
-            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
                 <KPICard
                     title="Доход"
                     value={formattedRevenue}
                     valueClassName="text-green-600 dark:text-green-400"
-                    className="h-[95px]"
+                    className="h-[72px] sm:h-[85px] md:h-[95px]"
                     badge={
                         <Badge variant="outline">
                             <TrendingUp className="h-3 w-3 mr-1" />
@@ -68,7 +68,7 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     title="Прибыль"
                     value={formattedProfit}
                     valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
-                    className="h-[95px]"
+                    className="h-[72px] sm:h-[85px] md:h-[95px]"
                     badge={
                         <Badge variant="outline">
                             <Activity className="h-3 w-3 mr-1" />
@@ -82,7 +82,7 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     title="Прогресс"
                     value={`${kpi.progress}%`}
                     valueClassName={getProgressValueClassName(kpi.progress)}
-                    className="h-[95px]"
+                    className="h-[72px] sm:h-[85px] md:h-[95px]"
                     badge={
                         <Badge variant="outline">
                             <Users className="h-3 w-3 mr-1" />
@@ -96,7 +96,7 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     title="Срок"
                     value={remainingDaysLabel}
                     valueClassName={getRemainingDaysValueClassName(kpi.remainingDays)}
-                    className="h-[95px]"
+                    className="h-[72px] sm:h-[85px] md:h-[95px]"
                     badge={
                         <Badge variant="outline">
                             <TrendingUp className="h-3 w-3 mr-1" />
@@ -109,4 +109,3 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
         </section>
     );
 }
-
