@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: 'X-Frame-Options',
-            value: 'DENY',
+            value: 'SAMEORIGIN', // Changed from DENY to allow same-origin and controlled framing
           },
           {
             key: 'X-Content-Type-Options',
@@ -61,7 +61,7 @@ const nextConfig: NextConfig = {
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",
-              "frame-ancestors 'none'",
+              "frame-ancestors 'self' https://*.builder.io http://localhost:*", // Allow framing by self and Builder.io
             ].join('; '),
           },
         ],

@@ -227,7 +227,7 @@ export const estimatePatterns = pgTable('estimate_patterns', {
   materialsCount: integer('materials_count').notNull().default(0),
   snapshot: jsonb('snapshot').$type<{
     rows: Array<{
-      kind: 'work' | 'material';
+      kind: 'section' | 'work' | 'material';
       parentWorkTempKey: string | null;
       tempKey: string;
       code: string;

@@ -55,12 +55,13 @@ interface DataTableProps<TData, TValue> {
     onEndReached?: () => void
     externalSearchValue?: string
     onSearchValueChange?: (val: string) => void
-    actions?: React.ReactNode
-    emptyState?: React.ReactNode
+    actions?: React.ReactNode;
+    emptyState?: React.ReactNode;
+    getRowClassName?: (row: TData) => string;
 }
 
 // --- Stable Virtuoso Components ---
-const VirtuosoTableComponents: TableComponents<Row<unknown>, { flatHeaders: unknown[] }> = {
+const VirtuosoTableComponents: TableComponents<Row<any>, { flatHeaders: unknown[] }> = {
     Table: ({ children, style, ...props }) => (
         <table
             {...props}
@@ -95,16 +96,19 @@ interface DataTableRowProps<TData> {
     row: Row<TData>;
 }
 
-const DataTableRow = memo(<TData,>({ row }: DataTableRowProps<TData>) => {
+const DataTableRow = memo(<TData,>({ row, className }: { row: Row<TData>, className?: string }) => {
     return (
         <>
             {row.getVisibleCells().map((cell) => (
                 <td
                     key={cell.id}
-                    className="p-3 md:p-4 align-middle border-b transition-colors"
+                    className={cn(
+                        "px-3 py-1.5 md:px-4 md:py-2 align-middle border-b transition-colors",
+                        className
+                    )}
                     style={{ width: cell.column.getSize() }}
                 >
-                    <div className="w-full text-xs md:text-sm">
+                    <div className="w-full text-[12px] leading-tight">
                         {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
@@ -117,7 +121,8 @@ const DataTableRow = memo(<TData,>({ row }: DataTableRowProps<TData>) => {
 }, (prev, next) => {
     // Only re-render if the actual row data or selected state changes
     return prev.row.original === next.row.original &&
-        prev.row.getIsSelected() === next.row.getIsSelected();
+        prev.row.getIsSelected() === next.row.getIsSelected() &&
+        prev.className === next.className;
 });
 DataTableRow.displayName = "DataTableRow";
 
@@ -139,6 +144,7 @@ export function DataTable<TData, TValue>({
     onEndReached,
     actions,
     emptyState,
+    getRowClassName,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = useState(false)
 
@@ -217,9 +223,9 @@ export function DataTable<TData, TValue>({
                                     className={cn(
                                         "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-xs md:text-sm placeholder:text-xs md:placeholder:text-sm shadow-sm md:shadow-none",
                                         isAiMode ? (
-                                            "border-indigo-400/50 ring-indigo-400/20 focus-visible:ring-indigo-500/30 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
+                                            "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
-                                            "focus-visible:ring-primary/20"
+                                            "focus-visible:ring-0 focus-visible:border-primary/40"
                                         )
                                     )}
                                     onKeyDown={(e) => {
@@ -319,7 +325,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
+                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-normal text-muted-foreground border-b transition-colors bg-muted/5 tracking-tight"
                                                     style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -337,7 +343,7 @@ export function DataTable<TData, TValue>({
                                                                 }}
                                                                 aria-label="Сортировать столбец"
                                                             >
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-[12px]">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -346,7 +352,7 @@ export function DataTable<TData, TValue>({
                                                             </button>
                                                         ) : (
                                                             <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-[12px]">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -403,11 +409,9 @@ export function DataTable<TData, TValue>({
                                                 return (
                                                     <th
                                                         key={header.id}
-                                                        className={cn(
-                                                            "h-12 px-3 md:px-4 text-left align-middle text-xs font-normal text-muted-foreground/70 border-b tracking-tight transition-colors bg-muted/5 backdrop-blur-sm",
-                                                            isAiMode && "border-indigo-100/50 text-indigo-900/60 bg-indigo-50/10"
-                                                        )}
-                                                        style={{ width: `${header.getSize()}px` }}
+                                                        colSpan={header.colSpan}
+                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[10px] font-medium text-white border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                        style={{ width: header.getSize() }}
                                                         aria-sort={ariaSort}
                                                     >
                                                         {header.isPlaceholder ? null : (
@@ -449,8 +453,11 @@ export function DataTable<TData, TValue>({
                                     ))}
                                 </>
                             )}
-                            itemContent={(_index, row) => (
-                                <DataTableRow row={row} />
+                            itemContent={(_index, row: Row<TData>) => (
+                                <DataTableRow 
+                                    row={row} 
+                                    className={getRowClassName?.(row.original)} 
+                                />
                             )}
                         />
                     )}
