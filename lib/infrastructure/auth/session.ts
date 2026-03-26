@@ -73,6 +73,20 @@ export async function getSession() {
   return await verifyToken(session);
 }
 
+export const COOKIE_OPTIONS_ACCESS = {
+  httpOnly: true,
+  secure: true, // Required for sameSite: 'none'
+  sameSite: 'none' as const,
+  path: '/',
+};
+
+export const COOKIE_OPTIONS_REFRESH = {
+  httpOnly: true,
+  secure: true, // Required for sameSite: 'none'
+  sameSite: 'none' as const,
+  path: '/',
+};
+
 export async function setSession(user: User) {
   const now = Date.now();
   const accessExpires = new Date(now + 15 * 60 * 1000); // 15m
@@ -93,19 +107,13 @@ export async function setSession(user: User) {
   const cookieStore = await cookies();
 
   cookieStore.set(SESSION_COOKIE_NAME, accessToken, {
+    ...COOKIE_OPTIONS_ACCESS,
     expires: accessExpires,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    path: '/',
   });
 
   cookieStore.set(REFRESH_COOKIE_NAME, refreshToken, {
+    ...COOKIE_OPTIONS_REFRESH,
     expires: refreshExpires,
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'strict',
-    path: '/',
   });
 }
 

@@ -45,14 +45,14 @@ export function KPICard({
             )}
             {...props}
         >
-            <div className="flex flex-col justify-center flex-1 p-3 sm:p-4 min-h-0">
+            <div className="flex flex-col justify-center flex-1 p-2 sm:p-3 md:p-4 min-h-0">
                 <CardHeader className="p-0 space-y-0 relative">
-                    <CardDescription className="text-[10px] sm:text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
+                    <CardDescription className="text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
                         {title}
                     </CardDescription>
                     <CardTitle
                         className={cn(
-                            "text-xl sm:text-2xl lg:text-[24px] font-bold tabular-nums wrap-break-word leading-tight mt-1 mb-0.5",
+                            "text-base sm:text-lg md:text-2xl lg:text-[24px] font-bold tabular-nums wrap-break-word leading-tight mt-0.5 sm:mt-1 mb-0",
                             valueClassName
                         )}
                     >

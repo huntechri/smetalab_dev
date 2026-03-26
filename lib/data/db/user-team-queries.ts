@@ -18,6 +18,8 @@ import {
   REFRESH_COOKIE_NAME,
   SESSION_COOKIE_NAME,
   verifyToken,
+  COOKIE_OPTIONS_ACCESS,
+  COOKIE_OPTIONS_REFRESH,
 } from '@/lib/infrastructure/auth/session';
 import { refreshSessionTokens } from '@/lib/services/auth-refresh.service';
 import { SYSTEM_TENANT_ID } from './tenant';
@@ -39,19 +41,13 @@ async function tryRefreshSessionFromCookie(): Promise<SessionData> {
 
   try {
     cookieStore.set(SESSION_COOKIE_NAME, refreshResult.accessToken, {
+      ...COOKIE_OPTIONS_ACCESS,
       expires: refreshResult.accessExpires,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
     });
 
     cookieStore.set(REFRESH_COOKIE_NAME, refreshResult.refreshToken, {
+      ...COOKIE_OPTIONS_REFRESH,
       expires: refreshResult.refreshExpires,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      path: '/',
     });
   } catch {
     // Some contexts (e.g. RSC) expose read-only cookies; token refresh still works for current request.

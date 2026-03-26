@@ -85,25 +85,25 @@ export function AppSidebar() {
             <Sidebar>
                 <SidebarHeader>
                     <div className="flex items-center gap-2 px-2 py-4">
-                        <div className="h-8 w-8 rounded-lg bg-orange-200 animate-pulse" />
-                        <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+                        <div className="h-8 w-8 rounded-lg bg-sidebar-accent animate-pulse" />
+                        <div className="h-4 w-24 bg-sidebar-accent animate-pulse rounded" />
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
                     <div className="px-4 py-6 space-y-6">
                         <div className="space-y-2">
-                            <div className="h-3 w-16 bg-muted animate-pulse rounded" />
+                            <div className="h-3 w-16 bg-sidebar-accent animate-pulse rounded" />
                             <div className="space-y-1">
                                 {[1, 2, 3, 4, 5].map((i) => (
-                                    <div key={i} className="h-9 w-full bg-muted/50 animate-pulse rounded-md" />
+                                    <div key={i} className="h-11 w-full bg-sidebar-accent animate-pulse rounded-lg" />
                                 ))}
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <div className="h-3 w-20 bg-muted animate-pulse rounded" />
+                            <div className="h-3 w-20 bg-sidebar-accent animate-pulse rounded" />
                             <div className="space-y-1">
                                 {[1, 2, 3].map((i) => (
-                                    <div key={i} className="h-9 w-full bg-muted/50 animate-pulse rounded-md" />
+                                    <div key={i} className="h-11 w-full bg-sidebar-accent animate-pulse rounded-lg" />
                                 ))}
                             </div>
                         </div>
@@ -124,16 +124,16 @@ export function AppSidebar() {
     const filteredGuideNavItems = filterItems(guideNavItems);
 
     return (
-        <Sidebar className="border-r-border/40 bg-sidebar/80 backdrop-blur-xl">
+        <Sidebar className="border-r-sidebar-border bg-sidebar backdrop-blur-sm">
             <SidebarHeader>
                 <div className="flex items-center gap-3 px-3 py-5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 text-white font-bold shadow-sm ring-1 ring-orange-500/20" aria-hidden="true">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold shadow-sm ring-1 ring-orange-400/30" aria-hidden="true">
                         S
                     </div>
-                    <span className="text-xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent">Smetalab</span>
+                    <span className="text-lg font-bold tracking-tight text-sidebar-foreground">Smetalab</span>
                 </div>
             </SidebarHeader>
-            <SidebarContent className="px-2 space-y-4">
+            <SidebarContent className="px-2 space-y-3">
                 <SidebarNav
                     label="Навигация"
                     items={filteredMainNavItems}
