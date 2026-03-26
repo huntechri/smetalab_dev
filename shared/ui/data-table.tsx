@@ -217,9 +217,9 @@ export function DataTable<TData, TValue>({
                                     className={cn(
                                         "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-xs md:text-sm placeholder:text-xs md:placeholder:text-sm shadow-sm md:shadow-none",
                                         isAiMode ? (
-                                            "border-indigo-400/50 ring-indigo-400/20 focus-visible:ring-indigo-500/30 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
+                                            "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
-                                            "focus-visible:ring-primary/20"
+                                            "focus-visible:ring-0 focus-visible:border-primary/40"
                                         )
                                     )}
                                     onKeyDown={(e) => {

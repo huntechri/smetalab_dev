@@ -3,7 +3,7 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, FileStack, FolderTree, FolderUp, Plus, Settings } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileStack, FolderTree, FolderUp, Plus, RefreshCw, Settings, Trash2 } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { SectionTotals } from '../../lib/section-totals';
 import { EditableCell } from './cells/EditableCell';
@@ -209,7 +209,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-8" aria-label="Действия с строкой">
+                            <Button size="icon" variant="ghost" className="size-8 focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
                                 <Settings className="size-4 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -226,20 +226,22 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                     </DropdownMenuItem>
                                 </>
                             )}
-                            {item.kind === 'work' ? (
+                            
+                            {(item.kind === 'work' || item.kind === 'material') && (
                                 <>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => actions.onReplaceWork(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
+                                    {item.kind === 'work' && <DropdownMenuSeparator />}
+                                    <DropdownMenuItem onClick={() => item.kind === 'work' ? actions.onReplaceWork(item.id, item.name) : actions.onReplaceMaterial(item.id, item.name)}>
+                                        <RefreshCw className="mr-2 size-4" />
+                                        Изменить / заменить
+                                    </DropdownMenuItem>
                                 </>
-                            ) : null}
-                            {item.kind === 'material' ? (
-                                <>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => actions.onReplaceMaterial(item.id, item.name)}>Изменить / заменить</DropdownMenuItem>
-                                </>
-                            ) : null}
+                            )}
+
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive" onClick={() => void actions.onRemoveRow(item.id)}>{item.kind === 'section' ? 'Удалить раздел' : 'Удалить'}</DropdownMenuItem>
+                            <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/10" onClick={() => void actions.onRemoveRow(item.id)}>
+                                <Trash2 className="mr-2 size-4" />
+                                {item.kind === 'section' ? 'Удалить раздел' : 'Удалить'}
+                            </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
                 </div>
