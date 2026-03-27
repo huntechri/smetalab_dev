@@ -85,7 +85,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
             />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-                <MaterialsHeader isLoading={search.isLoadingMore} totalCount={totalCount} />
+                <MaterialsHeader isLoading={search.isAiSearching} totalCount={totalCount} />
             </div>
 
             <div className="relative">
@@ -101,7 +101,8 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
                 <MaterialsTableWrapper
                     data={data}
                     isAiMode={search.isAiMode}
-                    isSearching={search.isAiSearching || search.isLoadingMore}
+                    isSearching={search.isAiSearching || search.isSearching}
+                    loadingMore={search.isLoadingMore}
                     searchTerm={search.searchTerm}
                     onSearch={search.handleSearch}
                     onAiModeChange={search.setIsAiMode}

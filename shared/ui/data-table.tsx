@@ -54,6 +54,7 @@ interface DataTableProps<TData, TValue> {
     onAiModeChange?: (val: boolean) => void
     isLoading?: boolean
     isSearching?: boolean
+    loadingMore?: boolean
     onEndReached?: () => void
     externalSearchValue?: string
     onSearchValueChange?: (val: string) => void
@@ -144,6 +145,7 @@ export function DataTable<TData, TValue>({
     onAiModeChange,
     isLoading,
     isSearching,
+    loadingMore,
     externalSearchValue,
     onSearchValueChange,
     onEndReached,
@@ -313,6 +315,19 @@ export function DataTable<TData, TValue>({
                     )}
                     style={{ contain: 'layout style paint' }}
                 >
+                    {loadingMore && (
+                        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/18 backdrop-blur-[1px]">
+                            <div
+                                role="status"
+                                aria-live="polite"
+                                className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg"
+                            >
+                                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                <span>Догружаем строки…</span>
+                            </div>
+                        </div>
+                    )}
+
                     {isAiMode && (
                         <div className="absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2 pointer-events-none" />
                     )}
