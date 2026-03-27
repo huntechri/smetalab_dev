@@ -92,3 +92,11 @@ vi.mock('next/headers', () => ({
 vi.mock('next/server', () => ({
   after: vi.fn((cb) => cb()),
 }));
+
+// Глобальный мок для breadcrumb-provider
+vi.mock('@/components/providers/breadcrumb-provider', () => ({
+  useBreadcrumbs: vi.fn(() => ({
+    breadcrumbs: [],
+    setBreadcrumbs: vi.fn(),
+  })),
+}));

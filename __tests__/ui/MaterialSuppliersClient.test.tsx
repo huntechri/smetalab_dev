@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react';
 import { MaterialSuppliersClient } from '@/features/material-suppliers';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import React from 'react';
 import type { MaterialSupplier } from '@/lib/data/db/schema';
 
@@ -68,11 +69,12 @@ describe('MaterialSuppliersClient', () => {
     await waitFor(() => expect(screen.getByText('Создать поставщика')).toBeInTheDocument());
   });
 
-  it('renders breadcrumb navigation', () => {
+  it('sets breadcrumb navigation', () => {
     render(<MaterialSuppliersClient initialData={[]} totalCount={0} tenantId={1} />);
-    const breadcrumb = screen.getAllByRole('navigation', { name: 'breadcrumb' })[0];
-    expect(within(breadcrumb).getByText('Главная')).toBeInTheDocument();
-    expect(within(breadcrumb).getByText('Справочники')).toBeInTheDocument();
-    expect(within(breadcrumb).getByText('Поставщики')).toBeInTheDocument();
+    expect(useBreadcrumbs).toHaveBeenCalledWith([
+      { label: 'Главная', href: '/app' },
+      { label: 'Справочники' },
+      { label: 'Поставщики' },
+    ]);
   });
 });

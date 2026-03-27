@@ -2,14 +2,7 @@
 
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/shared/ui/breadcrumb";
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { Loader2 } from 'lucide-react';
 import { MaterialRow } from '@/types/material-row';
 import { Skeleton } from '@/shared/ui/skeleton';
@@ -56,6 +49,12 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
         onRowDelete: rowActions.handleRowDelete,
     });
 
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Справочники' },
+        { label: 'Материалы' },
+    ]);
+
     const handleEditFieldChange = useCallback((field: string, val: unknown) => {
         editor.setEditFormData((prev) => {
             if (!prev) return prev;
@@ -86,13 +85,6 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
             />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Материалы</BreadcrumbPage></BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
                 <MaterialsHeader isLoading={search.isLoadingMore} totalCount={totalCount} />
             </div>
 

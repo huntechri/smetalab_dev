@@ -32,7 +32,7 @@ import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } fro
 
 const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-const tableCellTextClassName = 'text-xs md:text-sm';
+const tableCellTextClassName = 'text-[12px]';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
 const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left h-auto py-1 items-start justify-start`;
@@ -77,7 +77,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
         <Button
           variant="ghost"
           size="sm"
-          className={cn('h-7 px-2 gap-1 max-w-[220px] justify-start border border-transparent hover:border-border text-xs md:text-sm', !name && 'text-muted-foreground')}
+          className={cn('h-7 px-2 gap-1 max-w-[220px] justify-start border border-transparent hover:border-border text-[12px]', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
@@ -88,7 +88,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           ) : (
             <span className="size-2.5 rounded-full bg-muted-foreground/40 shrink-0" aria-hidden="true" />
           )}
-          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-xs md:text-sm">{name}</Badge> : <span className="text-xs md:text-sm">Поставщик</span>}
+          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
         </Button>
       </PopoverTrigger>
@@ -152,14 +152,14 @@ const ProjectCell = React.memo(function ProjectCell({
         <Button
           variant="ghost"
           size="sm"
-          className={cn('h-7 px-2 gap-1 w-full max-w-[220px] justify-start border border-transparent hover:border-border text-xs md:text-sm', !name && 'text-muted-foreground')}
+          className={cn('h-7 px-2 gap-1 w-full max-w-[220px] justify-start border border-transparent hover:border-border text-[12px]', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Выбрать объект"
         >
           {disabled && (
             <Loader2 className="size-3 animate-spin mr-1" />
           )}
-          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-xs md:text-sm">{name}</Badge> : <span className="text-xs md:text-sm">Без привязки</span>}
+          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Без привязки</span>}
           <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
         </Button>
       </PopoverTrigger>
@@ -423,10 +423,10 @@ export function getGlobalPurchasesColumns({
     {
       id: 'actions',
       header: 'Действия',
-      size: 80,
-      minSize: 75,
+      size: 110,
+      minSize: 100,
       cell: ({ row }) => (
-        <div className="flex justify-center">
+        <div className="flex justify-start pl-2">
           <DeleteRowAction
             rowId={row.original.id}
             materialName={row.original.materialName}
