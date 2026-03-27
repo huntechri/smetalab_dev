@@ -28,7 +28,7 @@ export function AppHeader() {
             <SidebarTrigger className="-ml-2 hover:bg-muted/80 rounded-lg transition-colors" />
             <Separator orientation="vertical" className="h-6 bg-border/40" />
             <div className="flex-1 min-w-0">
-                {breadcrumbs.length > 0 ? (
+                {breadcrumbs.length > 0 && (
                     <>
                         <Breadcrumb className="hidden md:block">
                             <BreadcrumbList>
@@ -91,8 +91,6 @@ export function AppHeader() {
                             </BreadcrumbList>
                         </Breadcrumb>
                     </>
-                ) : (
-                    <h1 className="text-sm font-bold uppercase tracking-[0.2em] text-foreground/70 truncate">{pageTitle}</h1>
                 )}
             </div>
             <div className="flex items-center gap-2 md:gap-4 shrink-0">
