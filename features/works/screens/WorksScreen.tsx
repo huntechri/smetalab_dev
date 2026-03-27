@@ -114,7 +114,6 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
                         isAiMode={search.isAiMode}
                         isSearching={search.isAiSearching || search.isSearching}
                         loadingMore={search.isLoadingMore}
-                        loadingMore={search.isLoadingMore}
                         searchTerm={search.searchTerm}
                         onSearch={search.handleSearch}
                         onAiModeChange={search.setIsAiMode}
