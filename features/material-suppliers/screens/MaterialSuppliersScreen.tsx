@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { MaterialSupplierRow } from '@/types/material-supplier-row';
 import { columns } from '../components/columns';
 import { DataTable } from '@/shared/ui/data-table';
@@ -27,6 +27,18 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
   const [activeSearch, setActiveSearch] = useState('');
   const [hasMore, setHasMore] = useState(initialData.length < totalCount);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [tableHeight, setTableHeight] = useState('720px');
+  const buttonClassName = 'h-9 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] tracking-tight transition-all active:scale-95 shadow-none rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] px-2 gap-1.5 justify-center';
+
+  useEffect(() => {
+    const updateHeight = () => {
+      setTableHeight(window.innerWidth < 768 ? '400px' : '720px');
+    };
+
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    return () => window.removeEventListener('resize', updateHeight);
+  }, []);
 
   useBreadcrumbs([
     { label: 'Главная', href: '/app' },
@@ -90,12 +102,15 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-2">
       <h1 className="sr-only">Поставщики</h1>
 
       <DataTable
         columns={columns}
         data={suppliers}
+        height={tableHeight}
+        className="text-[12px]"
+        filterInputClassName="bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]"
         filterColumn="name"
         onSearch={handleSearch}
         isSearching={isLoadingMore}
@@ -107,7 +122,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
             {canLoadMore && (
               <Button
                 variant="outline"
-                className="h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
+                className={buttonClassName}
                 onClick={() => { void loadPage(); }}
                 disabled={isLoadingMore}
               >
@@ -118,7 +133,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
             <Button
               onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
               variant="outline"
-              className="shrink-0 h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
+              className={`${buttonClassName} shrink-0 ml-auto`}
               aria-label="Добавить поставщика"
             >
               <Plus className="h-4 w-4 mr-1" />

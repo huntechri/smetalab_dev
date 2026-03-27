@@ -20,7 +20,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
     {
         accessorKey: "name",
         header: "Наименование",
-        cell: ({ row }) => <div className="font-normal text-xs md:text-sm truncate" title={row.getValue("name") as string}>{row.getValue("name")}</div>,
+        cell: ({ row }) => <div className="font-normal text-[12px] truncate" title={row.getValue("name") as string}>{row.getValue("name")}</div>,
     },
     {
         accessorKey: "type",
@@ -32,7 +32,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 contractor: "Подрядчик",
                 supplier: "Поставщик"
             };
-            return <Badge variant="outline" className="h-6 px-2 text-xs md:text-sm">{map[type] || type}</Badge>;
+            return <Badge variant="outline" className="h-6 px-2 text-[12px]">{map[type] || type}</Badge>;
         },
     },
     {
@@ -44,27 +44,27 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 individual: "Физ. лицо",
                 company: "Юр. лицо"
             };
-            return <span className="text-muted-foreground text-xs md:text-sm">{map[status] || status}</span>;
+            return <span className="text-muted-foreground text-[12px]">{map[status] || status}</span>;
         },
     },
     {
         accessorKey: "inn",
         header: "ИНН",
-        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("inn") || "—"}</span>,
+        cell: ({ row }) => <span className="text-[12px]">{row.getValue("inn") || "—"}</span>,
     },
     {
         accessorKey: "phone",
         header: "Телефон",
-        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("phone") || "—"}</span>,
+        cell: ({ row }) => <span className="text-[12px]">{row.getValue("phone") || "—"}</span>,
     },
     {
         accessorKey: "email",
         header: "Email",
-        cell: ({ row }) => <span className="text-xs md:text-sm">{row.getValue("email") || "—"}</span>,
+        cell: ({ row }) => <span className="text-[12px]">{row.getValue("email") || "—"}</span>,
     },
     {
         id: "actions",
-        header: () => <div className="text-right pr-4">Действия</div>,
+        header: () => <div className="text-right pr-4 text-[12px]">Действия</div>,
         cell: ({ row, table }) => {
             const meta = table.options.meta as TableMeta<CounterpartyRow> | undefined;
 
@@ -78,13 +78,13 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="min-w-40">
-                            <DropdownMenuLabel className="text-xs md:text-sm">Действия</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)} className="text-xs md:text-sm py-1.5">
+                            <DropdownMenuLabel className="text-[12px]">Действия</DropdownMenuLabel>
+                            <DropdownMenuItem onClick={() => meta?.onEdit?.(row.original)} className="text-[12px] py-1.5">
                                 <Pencil className="mr-2 h-4 w-4" />
                                 Редактировать
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => meta?.onDelete?.(row.original)} className="text-destructive text-xs md:text-sm py-1.5">
+                            <DropdownMenuItem onClick={() => meta?.onDelete?.(row.original)} className="text-destructive text-[12px] py-1.5">
                                 <Trash className="mr-2 h-4 w-4" />
                                 Удалить
                             </DropdownMenuItem>

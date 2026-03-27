@@ -71,7 +71,7 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
 
     if (!mounted) {
         return (
-            <div className="space-y-4">
+            <div className="space-y-2">
                 <Skeleton className="h-8 w-48" />
                 <Skeleton className="h-12 w-full" />
                 <Skeleton className="h-[420px] w-full" />
@@ -80,7 +80,7 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <input
                 type="file"
                 ref={actions.fileInputRef}
@@ -101,8 +101,8 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
                         <div className="flex flex-col items-center gap-3 p-6 bg-card border shadow-xl rounded-xl animate-in fade-in zoom-in duration-200">
                             <Loader2 className="h-10 w-10 animate-spin text-primary" />
                             <div className="flex flex-col items-center gap-1">
-                                <p className="text-sm font-semibold">{isInserting ? "Сохранение записи..." : "Идет импорт данных..."}</p>
-                                <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-medium">Пожалуйста, подождите</p>
+                                <p className="text-[12px] font-semibold">{isInserting ? "Сохранение записи..." : "Идет импорт данных..."}</p>
+                                <p className="text-[12px] text-muted-foreground uppercase tracking-wider font-medium">Пожалуйста, подождите</p>
                             </div>
                         </div>
                     </div>
