@@ -288,7 +288,7 @@ export function DataTable<TData, TValue>({
                         {actions && (
                             <div
                                 className={cn(
-                                    "flex items-center gap-2 xl:w-auto xl:justify-end overflow-x-auto pb-1 xl:pb-0 scrollbar-hide",
+                                    "flex items-center gap-2 xl:w-auto xl:justify-end overflow-x-auto xl:pb-0 scrollbar-hide",
                                     compactMobileToolbar ? "w-auto justify-end shrink-0" : "w-full justify-start"
                                 )}
                                 role="group"

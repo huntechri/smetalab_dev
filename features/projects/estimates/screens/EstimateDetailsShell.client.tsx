@@ -8,14 +8,7 @@ import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { Skeleton } from '@/shared/ui/skeleton';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/shared/ui/breadcrumb';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import Link from 'next/link';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
@@ -99,6 +92,13 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
         setTab(nextTab);
     }, [tabParam]);
 
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Проекты', href: '/app/projects' },
+        { label: project.name, href: `/app/projects/${project.slug}` },
+        { label: estimate.name },
+    ]);
+
     useEffect(() => {
         setLoadedTabs((prev) => {
             if (prev.has(tab)) {
@@ -113,31 +113,6 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
 
     return (
         <div className="space-y-2">
-            <Breadcrumb>
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
-                            <Link href="/app">Главная</Link>
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
-                            <Link href="/app/projects">Проекты</Link>
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
-                            <Link href={`/app/projects/${project.slug}`}>{project.name}</Link>
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                        <BreadcrumbPage>{estimate.name}</BreadcrumbPage>
-                    </BreadcrumbItem>
-                </BreadcrumbList>
-            </Breadcrumb>
 
             <Tabs
                 value={tab}

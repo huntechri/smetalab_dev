@@ -4,14 +4,7 @@ import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/shared/ui/breadcrumb";
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import Link from 'next/link';
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
 
@@ -39,28 +32,15 @@ type ProjectDashboardProps = {
 };
 
 export function ProjectDashboard({ project, estimates, performanceDynamics, kpi }: ProjectDashboardProps) {
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Проекты', href: '/app/projects' },
+        { label: project.name },
+    ]);
+
     return (
         <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
             <div className="px-1 md:px-0">
-                <Breadcrumb className="mb-2">
-                    <BreadcrumbList>
-                        <BreadcrumbItem>
-                            <BreadcrumbLink asChild>
-                                <Link href="/app">Главная</Link>
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbLink asChild>
-                                <Link href="/app/projects">Проекты</Link>
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>{project.name}</BreadcrumbPage>
-                        </BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
                 <h1 className="sr-only">{project.name}</h1>
             </div>
 

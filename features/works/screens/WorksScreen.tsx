@@ -4,14 +4,7 @@ import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Loader2 } from 'lucide-react';
 import { Skeleton } from '@/shared/ui/skeleton';
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/shared/ui/breadcrumb";
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { TooltipProvider } from "@/shared/ui/tooltip";
 
 import { WorkRow } from '@/types/work-row';
@@ -59,6 +52,12 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
         onRowDelete: actions.handleRowDelete,
     });
 
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Справочники' },
+        { label: 'Работы' },
+    ]);
+
     useEffect(() => {
         setData(initialData);
     }, [initialData, setData]);
@@ -93,13 +92,6 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
             />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-                <Breadcrumb>
-                    <BreadcrumbList>
-                        <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-                        <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Работы</BreadcrumbPage></BreadcrumbItem>
-                    </BreadcrumbList>
-                </Breadcrumb>
                 <WorksHeader isLoading={search.isAiSearching} totalCount={totalCount} />
             </div>
 

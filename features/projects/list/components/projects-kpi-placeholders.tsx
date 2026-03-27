@@ -61,7 +61,7 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
     ];
 
     return (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
             {stats.map((stat, index) => (
                 <KPICard
                     key={index}
@@ -69,12 +69,7 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
                     value={stat.value}
                     description={stat.description}
                     valueClassName={stat.color}
-                    className="h-[95px] flex flex-col justify-center"
-                    badge={
-                        <Badge variant="outline" className="text-[9px] h-4 px-1.5 font-bold border-0 bg-muted/50 text-muted-foreground uppercase opacity-70">
-                            {stat.trend}
-                        </Badge>
-                    }
+                    className="h-[72px] sm:h-[85px] md:h-[95px] flex flex-col justify-center"
                 />
             ))}
         </div>

@@ -51,18 +51,12 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
     };
 
     return (
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
             <KPICard
                 title="Доход"
                 value={formattedRevenue}
                 valueClassName="text-green-600 dark:text-green-400"
-                className="h-[95px]"
-                badge={
-                    <Badge variant="outline">
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                        План
-                    </Badge>
-                }
+                className="h-[72px] sm:h-[85px] md:h-[95px]"
                 tooltip="План работа + план материал"
             />
 
@@ -70,13 +64,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 title="Прибыль"
                 value={formattedProfit}
                 valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
-                className="h-[95px]"
-                badge={
-                    <Badge variant="outline">
-                        <Activity className="h-3 w-3 mr-1" />
-                        Δ План/Факт
-                    </Badge>
-                }
+                className="h-[72px] sm:h-[85px] md:h-[95px]"
                 tooltip="(План раб. + план мат.) − (Факт раб. + факт мат.)"
             />
 
@@ -84,13 +72,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 title="Прогресс"
                 value={`${kpi.progress}%`}
                 valueClassName={getProgressValueClassName(kpi.progress)}
-                className="h-[95px]"
-                badge={
-                    <Badge variant="outline">
-                        <Users className="h-3 w-3 mr-1" />
-                        По работам
-                    </Badge>
-                }
+                className="h-[72px] sm:h-[85px] md:h-[95px]"
                 tooltip="Выполнение работ"
             />
 
@@ -98,13 +80,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 title="Срок"
                 value={remainingDaysLabel}
                 valueClassName={getRemainingDaysValueClassName(kpi.remainingDays)}
-                className="h-[95px]"
-                badge={
-                    <Badge variant="outline">
-                        <TrendingUp className="h-3 w-3 mr-1" />
-                        До конца
-                    </Badge>
-                }
+                className="h-[72px] sm:h-[85px] md:h-[95px]"
                 tooltip="Оставшееся время до завершения"
             />
         </div>

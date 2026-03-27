@@ -7,6 +7,7 @@ import { ProjectsToolbar } from '../components/projects-toolbar';
 import { ProjectsList } from '../components/projects-list';
 import { CreateProjectDialog } from '../components/create-project-dialog';
 import { useProjectsScreen } from '../hooks/use-projects-screen';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 type ProjectsScreenProps = {
     initialProjects: ProjectListItem[];
@@ -49,6 +50,11 @@ export function ProjectsScreen({ initialProjects, counterparties }: ProjectsScre
             setProjects((previousProjects) => previousProjects.filter((project) => project.id !== projectId));
         }
     };
+
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Проекты' },
+    ]);
 
     return (
         <div className="space-y-4">
