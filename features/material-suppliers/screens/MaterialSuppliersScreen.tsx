@@ -9,14 +9,7 @@ import { Loader2, Plus } from 'lucide-react';
 import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplierSheet';
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';
 import { listMaterialSuppliers } from '@/app/actions/material-suppliers';
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/shared/ui/breadcrumb';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 const PAGE_SIZE = 100;
 
@@ -34,6 +27,12 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
   const [activeSearch, setActiveSearch] = useState('');
   const [hasMore, setHasMore] = useState(initialData.length < totalCount);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
+
+  useBreadcrumbs([
+    { label: 'Главная', href: '/app' },
+    { label: 'Справочники' },
+    { label: 'Поставщики' },
+  ]);
 
   const { handleDelete } = useMaterialSuppliersActions();
 
@@ -92,13 +91,6 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
   return (
     <div className="space-y-4">
-      <Breadcrumb className="px-1 md:px-0">
-        <BreadcrumbList>
-          <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-          <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Поставщики</BreadcrumbPage></BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
       <h1 className="sr-only">Поставщики</h1>
 
       <DataTable

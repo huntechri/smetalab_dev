@@ -55,12 +55,6 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     value={formattedRevenue}
                     valueClassName="text-green-600 dark:text-green-400"
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    badge={
-                        <Badge variant="outline">
-                            <TrendingUp className="h-3 w-3 mr-1" />
-                            План
-                        </Badge>
-                    }
                     tooltip="План работа + план материал"
                 />
 
@@ -69,12 +63,6 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     value={formattedProfit}
                     valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    badge={
-                        <Badge variant="outline">
-                            <Activity className="h-3 w-3 mr-1" />
-                            Δ План/Факт
-                        </Badge>
-                    }
                     tooltip="(План раб. + план мат.) − (Факт раб. + факт мат.)"
                 />
 
@@ -83,12 +71,6 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     value={`${kpi.progress}%`}
                     valueClassName={getProgressValueClassName(kpi.progress)}
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    badge={
-                        <Badge variant="outline">
-                            <Users className="h-3 w-3 mr-1" />
-                            По работам
-                        </Badge>
-                    }
                     tooltip="Выполнение работ"
                 />
 
@@ -97,12 +79,6 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     value={remainingDaysLabel}
                     valueClassName={getRemainingDaysValueClassName(kpi.remainingDays)}
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    badge={
-                        <Badge variant="outline">
-                            <TrendingUp className="h-3 w-3 mr-1" />
-                            До конца
-                        </Badge>
-                    }
                     tooltip="Оставшееся время до завершения"
                 />
             </div>

@@ -9,14 +9,7 @@ import { Button } from "@/shared/ui/button";
 import { Plus, Loader2 } from "lucide-react";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from "@/shared/ui/breadcrumb";
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { fetchCounterpartiesPage } from "@/app/actions/counterparties";
 import { useAppToast } from "@/components/providers/use-app-toast";
 
@@ -33,6 +26,12 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
     const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
     const [rowsCount, setRowsCount] = useState(totalCount);
+
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Справочники' },
+        { label: 'Контрагенты' },
+    ]);
 
     // Search state
     const [searchTerm, setSearchTerm] = useState("");
@@ -151,13 +150,6 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
 
     return (
         <div className="space-y-4">
-            <Breadcrumb className="px-1 md:px-0">
-                <BreadcrumbList>
-                    <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbLink>Справочники</BreadcrumbLink></BreadcrumbItem>
-                    <BreadcrumbSeparator /><BreadcrumbItem><BreadcrumbPage>Контрагенты</BreadcrumbPage></BreadcrumbItem>
-                </BreadcrumbList>
-            </Breadcrumb>
             <h1 className="sr-only">Контрагенты</h1>
 
             <DataTable

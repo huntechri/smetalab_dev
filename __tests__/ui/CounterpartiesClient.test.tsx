@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react';
 import { CounterpartiesClient } from '@/features/counterparties';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import React from 'react';
 import type { Counterparty } from '@/lib/data/db/schema';
 
@@ -126,7 +127,7 @@ describe('CounterpartiesClient', () => {
         });
     });
 
-    it('renders breadcrumb navigation', () => {
+    it('sets breadcrumb navigation', () => {
         render(
             <CounterpartiesClient
                 initialData={[]}
@@ -135,15 +136,11 @@ describe('CounterpartiesClient', () => {
             />
         );
 
-        // Get all nav elements with breadcrumb label and find the first one
-        const breadcrumbNavs = screen.getAllByRole('navigation', { name: 'breadcrumb' });
-        expect(breadcrumbNavs.length).toBeGreaterThan(0);
-
-        // Check content within the first breadcrumb
-        const breadcrumbNav = breadcrumbNavs[0];
-        expect(within(breadcrumbNav).getByText('Главная')).toBeInTheDocument();
-        expect(within(breadcrumbNav).getByText('Справочники')).toBeInTheDocument();
-        expect(within(breadcrumbNav).getByText('Контрагенты')).toBeInTheDocument();
+        expect(useBreadcrumbs).toHaveBeenCalledWith([
+            { label: 'Главная', href: '/app' },
+            { label: 'Справочники' },
+            { label: 'Контрагенты' },
+        ]);
     });
 
     it('renders counterparties table without footer counters', () => {
