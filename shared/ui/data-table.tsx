@@ -43,6 +43,8 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     height?: string
+    className?: string
+    filterInputClassName?: string
     filterColumn?: string
     filterPlaceholder?: string
     meta?: TableMeta<TData>
@@ -131,6 +133,8 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     height = "600px",
+    className,
+    filterInputClassName,
     filterColumn,
     filterPlaceholder = "Поиск...",
     meta,
@@ -191,7 +195,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <TooltipProvider>
-            <div className="space-y-4">
+            <div className={cn("space-y-4", className)}>
                 {/* Search Filter */}
                 {filterColumn && (
                     <div className={cn(
@@ -232,7 +236,8 @@ export function DataTable<TData, TValue>({
                                         }
                                     }}
                                     className={cn(
-                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-xs md:text-sm placeholder:text-xs md:placeholder:text-sm shadow-sm md:shadow-none",
+                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-[12px] placeholder:text-[12px] shadow-sm md:shadow-none",
+                                        filterInputClassName,
                                         isAiMode ? (
                                             "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
@@ -249,7 +254,7 @@ export function DataTable<TData, TValue>({
                                     <div
                                         role="status"
                                         aria-live="polite"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
                                     >
                                         AI
                                     </div>
@@ -262,7 +267,7 @@ export function DataTable<TData, TValue>({
                                         <TooltipTrigger asChild>
                                             <div className="flex items-center gap-3 cursor-help">
                                                 <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
-                                                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
+                                                <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                             </div>
                                         </TooltipTrigger>
                                         <TooltipContent>

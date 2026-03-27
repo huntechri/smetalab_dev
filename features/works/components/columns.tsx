@@ -131,7 +131,7 @@ const IndexCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
     return (
         <div className="relative group/cell flex items-center justify-center h-full min-h-[40px]">
 
-            <div className="font-medium text-xs md:text-sm text-muted-foreground">
+            <div className="font-medium text-[12px] text-muted-foreground">
                 {isPlaceholder ? "..." : index}
             </div>
         </div>
@@ -147,7 +147,7 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
         return (
             <Input
                 placeholder="Наименование работы..."
-                className="h-8 text-xs md:text-sm bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
+                className="h-8 text-[12px] bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
                 autoFocus
                 value={row.original.name || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })}
@@ -159,20 +159,20 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
 
     return (
         <div className="flex flex-col gap-1.5 py-1.5 min-w-0">
-            <div className="text-xs md:text-sm font-normal truncate" title={name || undefined}>
+            <div className="text-[12px] font-normal truncate" title={name || undefined}>
                 {name}
             </div>
             {(phase || category || subcategory) && (
                 <div className="flex flex-wrap items-center gap-1 opacity-80 group-hover/row:opacity-100 transition-opacity">
                     {phase && (
-                        <Badge variant="outline" className="h-5 px-1.5 py-0 text-[10px] md:text-xs bg-blue-50/50 text-blue-700 border-blue-200/50 rounded-sm font-medium">
+                        <Badge variant="outline" className="h-5 px-1.5 py-0 text-[12px] bg-blue-50/50 text-blue-700 border-blue-200/50 rounded-sm font-medium">
                             {phase}
                         </Badge>
                     )}
                     {category && (
                         <>
                             {phase && <ChevronRight className="h-3 w-3 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-5 px-1.5 py-0 text-[10px] md:text-xs bg-slate-50/50 text-slate-700 border-slate-200/50 rounded-sm font-medium">
+                            <Badge variant="outline" className="h-5 px-1.5 py-0 text-[12px] bg-slate-50/50 text-slate-700 border-slate-200/50 rounded-sm font-medium">
                                 {category}
                             </Badge>
                         </>
@@ -180,7 +180,7 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
                     {subcategory && (
                         <>
                             {(phase || category) && <ChevronRight className="h-3 w-3 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-5 px-1.5 py-0 text-[10px] md:text-xs bg-indigo-50/50 text-indigo-700 border-indigo-200/50 rounded-sm font-medium">
+                            <Badge variant="outline" className="h-5 px-1.5 py-0 text-[12px] bg-indigo-50/50 text-indigo-700 border-indigo-200/50 rounded-sm font-medium">
                                 {subcategory}
                             </Badge>
                         </>
@@ -204,7 +204,7 @@ const UnitCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
             />
         )
     }
-    return <div className="text-center text-xs md:text-sm text-muted-foreground font-medium">{row.getValue("unit")}</div>
+    return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
 });
 UnitCell.displayName = "UnitCell";
 
@@ -217,7 +217,7 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
             <Input
                 type="number"
                 placeholder="Цена"
-                className="h-8 text-xs md:text-sm text-center bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
+                className="h-8 text-[12px] text-center bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
                 value={row.original.price || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })}
             />
@@ -235,7 +235,7 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
     }, [priceValue]);
 
     return (
-        <div className="text-center font-bold text-xs md:text-sm tracking-tighter text-foreground tabular-nums">
+        <div className="text-center font-bold text-[12px] tracking-tighter text-foreground tabular-nums">
             {formatted}
         </div>
     )
@@ -286,7 +286,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100 px-1 text-xs font-normal" aria-label="Действия" title="Действия">
+                            <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100 px-1 text-[12px] font-normal" aria-label="Действия" title="Действия">
                                 Действия
                             </Button>
                         </DropdownMenuTrigger>

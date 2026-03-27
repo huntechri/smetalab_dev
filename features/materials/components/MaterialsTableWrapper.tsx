@@ -35,12 +35,12 @@ export function MaterialsTableWrapper({
     actions,
     tableActions
 }: MaterialsTableWrapperProps) {
-    const [tableHeight, setTableHeight] = React.useState("600px");
+    const [tableHeight, setTableHeight] = React.useState("720px");
 
     React.useEffect(() => {
         const updateHeight = () => {
             // 400px is roughly 6 rows + header
-            setTableHeight(window.innerWidth < 768 ? "400px" : "600px");
+            setTableHeight(window.innerWidth < 768 ? "400px" : "720px");
         };
 
         updateHeight();
@@ -53,6 +53,8 @@ export function MaterialsTableWrapper({
             columns={columns}
             data={data}
             height={tableHeight}
+            className="text-[12px]"
+            filterInputClassName="bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]"
             filterColumn="name"
             filterPlaceholder="Поиск по наименованию..."
             showAiSearch={true}
