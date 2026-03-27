@@ -773,7 +773,7 @@ export function EstimateTable({
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3 [--table-height:380px] md:[--table-height:532px]">
       <DataTable
         columns={getEstimateColumns({
           expandedWorkIds,
@@ -804,7 +804,7 @@ export function EstimateTable({
         getRowClassName={(row) => row.kind === 'section' ? 'bg-[#f60]/10 text-[#f60] hover:bg-[#f60]/20 font-semibold' : ''}
         filterColumn="name"
         filterPlaceholder="Поиск по строкам сметы..."
-        height="580px"
+        height="var(--table-height)"
         compactMobileToolbar
         actions={
           <div className="flex items-center gap-1.5 sm:gap-2">
@@ -919,7 +919,7 @@ export function EstimateTable({
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="icon-sm" aria-label="Действия по смете">
+                  <Button variant="outline" className="h-9 w-9 px-0" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Действия по смете</span>
                   </Button>
@@ -967,22 +967,16 @@ export function EstimateTable({
         }
       />
       <div className="flex flex-wrap items-center justify-end gap-2 px-1">
-        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-          <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Работы:</span>
-          <span className="text-xs sm:text-sm font-semibold tabular-nums">
+        <Badge variant="outline" className="flex items-center gap-1.5 px-2 h-7 rounded-md border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
+          <span className="text-[10px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Работы:</span>
+          <span className="text-xs font-semibold tabular-nums">
             {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.works)}
           </span>
         </Badge>
-        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-          <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Материалы:</span>
-          <span className="text-xs sm:text-sm font-semibold tabular-nums">
+        <Badge variant="outline" className="flex items-center gap-1.5 px-2 h-7 rounded-md border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
+          <span className="text-[10px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Материалы:</span>
+          <span className="text-xs font-semibold tabular-nums">
             {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.materials)}
-          </span>
-        </Badge>
-        <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-          <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider">Итого:</span>
-          <span className="text-xs sm:text-sm font-bold tabular-nums">
-            {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.works + totals.materials)}
           </span>
         </Badge>
       </div>

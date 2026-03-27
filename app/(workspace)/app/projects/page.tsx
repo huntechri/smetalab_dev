@@ -45,19 +45,6 @@ export default async function Page() {
 
     return (
         <div className="mx-auto w-full max-w-[1600px] space-y-3 pt-0.5 pb-4">
-            <Breadcrumb>
-                <BreadcrumbList>
-                    <BreadcrumbItem>
-                        <BreadcrumbLink asChild>
-                            <Link href="/app">Главная</Link>
-                        </BreadcrumbLink>
-                    </BreadcrumbItem>
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                        <BreadcrumbPage>Проекты</BreadcrumbPage>
-                    </BreadcrumbItem>
-                </BreadcrumbList>
-            </Breadcrumb>
             <h1 className="sr-only">Проекты</h1>
             <ProjectsScreen
                 initialProjects={projects}

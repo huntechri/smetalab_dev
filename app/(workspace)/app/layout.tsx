@@ -4,6 +4,7 @@ import { AppHeader } from '@/components/layout/app-header';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
 import { UserProvider } from '@/components/providers/permissions-provider';
+import { BreadcrumbProvider } from '@/components/providers/breadcrumb-provider';
 import { ImpersonationBanner } from '@/features/admin/components/impersonation-banner';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
@@ -15,10 +16,11 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
     return (
         <UserProvider permissions={permissionsInfo} user={user} team={team}>
-            <a href="#main" className="skip-link sr-only focus:not-sr-only">
-                Перейти к основному контенту
-            </a>
-            <SidebarProvider>
+            <BreadcrumbProvider>
+                <a href="#main" className="skip-link sr-only focus:not-sr-only">
+                    Перейти к основному контенту
+                </a>
+                <SidebarProvider>
                 <AppSidebar />
                 <SidebarInset>
                     <ImpersonationBanner />
@@ -27,7 +29,8 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                         {children}
                     </main>
                 </SidebarInset>
-            </SidebarProvider>
+                </SidebarProvider>
+            </BreadcrumbProvider>
         </UserProvider>
     );
 }
