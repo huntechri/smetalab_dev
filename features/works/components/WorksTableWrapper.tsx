@@ -7,6 +7,7 @@ interface WorksTableWrapperProps {
     data: WorkRow[];
     isAiMode: boolean;
     isSearching: boolean;
+    loadingMore: boolean;
     searchTerm: string;
     onSearch: (query: string) => void;
     onAiModeChange: (val: boolean) => void;
@@ -28,6 +29,7 @@ export function WorksTableWrapper({
     data,
     isAiMode,
     isSearching,
+    loadingMore,
     searchTerm,
     onSearch,
     onAiModeChange,
@@ -63,6 +65,7 @@ export function WorksTableWrapper({
             isAiMode={isAiMode}
             onAiModeChange={onAiModeChange}
             isSearching={isSearching}
+            loadingMore={loadingMore}
             externalSearchValue={searchTerm}
             onSearchValueChange={onSearchValueChange}
             onEndReached={onEndReached}
