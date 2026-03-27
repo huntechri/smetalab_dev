@@ -32,8 +32,9 @@ export function GlobalPurchasesImportExportActions({
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="outline"
-            className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
+            variant="secondary"
+            size="sm"
+            className="h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none shrink-0"
             onClick={onExport}
             aria-label="Экспорт закупок"
           >
@@ -48,8 +49,9 @@ export function GlobalPurchasesImportExportActions({
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="outline"
-            className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
+            variant="secondary"
+            size="sm"
+            className="h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none shrink-0"
             onClick={onImportClick}
             aria-label="Импорт закупок"
           >

@@ -35,6 +35,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
+    const globalPurchasesBtnClassName = "h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none";
+
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
     const [openProjectFilter, setOpenProjectFilter] = useState(false);
@@ -198,11 +200,12 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
                                             <Button
-                                                variant="outline"
+                                                variant="secondary"
                                                 size="sm"
                                                 className={cn(
-                                                    "h-9 px-3 gap-2 w-full sm:w-[200px] justify-between text-xs md:text-sm shadow-sm md:shadow-none bg-background",
-                                                    !filterProjectId && "text-muted-foreground"
+                                                    globalPurchasesBtnClassName,
+                                                    "w-full sm:w-[200px] justify-between",
+                                                    !filterProjectId && "text-muted-foreground/80"
                                                 )}
                                             >
                                                 <div className="flex items-center gap-2 truncate">
@@ -258,9 +261,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
-                                            <Button type="button" variant="outline" size="sm" className="h-9 gap-2 w-full sm:w-[255px] justify-between font-mono tabular-nums text-xs md:text-sm shadow-sm md:shadow-none bg-background">
+                                            <Button type="button" variant="secondary" size="sm" className={cn(globalPurchasesBtnClassName, "w-full sm:w-[255px] justify-between font-mono tabular-nums")}>
                                                 <CalendarDays className="size-4 opacity-70" />
-                                                <span className="flex-1 text-left sm:text-center">
+                                                <span className="flex-1 text-left sm:text-center text-[13px] font-medium tracking-tight">
                                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
                                                 </span>
                                             </Button>
@@ -296,8 +299,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="outline"
-                                        className="h-9 gap-2 px-3 text-xs md:text-sm shadow-sm md:shadow-none bg-background shrink-0"
+                                        variant="secondary"
+                                        size="sm"
+                                        className={cn(globalPurchasesBtnClassName, "px-3")}
                                         onClick={() => void handleAddManualRow()}
                                         disabled={isAddingManual}
                                         aria-label="Добавить строку вручную"
@@ -313,8 +317,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="default"
-                                        className="h-9 gap-2 px-4 shadow-sm text-xs md:text-sm shrink-0 font-semibold tracking-tight transition-all active:scale-95"
+                                        variant="secondary"
+                                        size="sm"
+                                        className={cn(globalPurchasesBtnClassName)}
                                         onClick={() => setIsCatalogOpen(true)}
                                         disabled={isAddingCatalog}
                                         aria-label="Добавить из справочника"
@@ -329,7 +334,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="sm:hidden ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon-sm" aria-label="Действия по закупкам">
+                                    <Button variant="secondary" size="icon" className="size-8 rounded-[7.6px] bg-background border border-border/70 hover:bg-secondary/80 transition-colors" aria-label="Действия по закупкам">
                                         <MoreHorizontal className="size-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
