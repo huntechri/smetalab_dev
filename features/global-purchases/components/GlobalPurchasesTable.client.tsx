@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download } from 'lucide-react';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
@@ -22,6 +22,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from '@/lib/utils';
 import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
 import { GlobalPurchasesImportExportActions } from './GlobalPurchasesImportExportActions';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -187,6 +188,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
                 height="625px"
+                compactMobileToolbar
                 actions={(
                     <div className="flex flex-col xl:flex-row w-full xl:w-auto items-stretch xl:items-center gap-3 xl:gap-2">
                         {/* Filters Group */}
@@ -282,7 +284,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="hidden xl:block w-px h-6 bg-border mx-1" />
 
                         {/* Actions Group */}
-                        <div className="flex flex-row items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-hide">
+                        <div className="hidden sm:flex flex-row items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-hide">
                             <GlobalPurchasesImportExportActions
                                 importInputRef={importInputRef}
                                 onExport={handleExport}
@@ -323,6 +325,33 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 </TooltipTrigger>
                                 <TooltipContent>Выбрать материалы из каталога</TooltipContent>
                             </Tooltip>
+                        </div>
+                        <div className="sm:hidden ml-auto">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="icon-sm" aria-label="Действия по закупкам">
+                                        <MoreHorizontal className="size-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="w-56">
+                                    <DropdownMenuItem className="gap-2" onClick={handleImportClick}>
+                                        <Upload className="size-4 text-muted-foreground" />
+                                        <span>Импорт CSV</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2" onClick={handleExport}>
+                                        <Download className="size-4 text-muted-foreground" />
+                                        <span>Экспорт CSV</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2" onClick={() => void handleAddManualRow()} disabled={isAddingManual}>
+                                        <Plus className="size-4 text-muted-foreground" />
+                                        <span>{isAddingManual ? 'Добавление...' : 'Вручную'}</span>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem className="gap-2" onClick={() => setIsCatalogOpen(true)} disabled={isAddingCatalog}>
+                                        <BookOpen className="size-4 text-muted-foreground" />
+                                        <span>Из справочника</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </div>
                     </div>
                 )}

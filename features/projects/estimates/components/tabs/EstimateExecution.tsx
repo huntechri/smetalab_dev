@@ -9,7 +9,7 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
-import { Plus } from 'lucide-react';
+import { MoreHorizontal, Plus } from 'lucide-react';
 
 import {
     DropdownMenu,
@@ -149,7 +149,8 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button variant="outline" className="h-9 gap-1.5 px-0 size-9 sm:size-auto sm:px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95" aria-label="Добавить дополнительную работу">
-                    <Plus className="h-4 w-4" />
+                    <MoreHorizontal className="h-4 w-4 sm:hidden" />
+                    <Plus className="hidden h-4 w-4 sm:block" />
                     <span className="hidden sm:inline">Добавить доп. работу</span>
                 </Button>
             </SheetTrigger>
@@ -362,6 +363,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 filterColumn="name"
                 filterPlaceholder="Поиск по работам..."
                 height="580px"
+                compactMobileToolbar
                 actions={
                     <AddExtraWorkSheet
                         estimateId={estimateId}
