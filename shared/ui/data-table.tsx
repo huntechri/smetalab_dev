@@ -363,7 +363,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[10px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
                                                     style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -381,7 +381,7 @@ export function DataTable<TData, TValue>({
                                                                 }}
                                                                 aria-label="Сортировать столбец"
                                                             >
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-xs">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -390,7 +390,7 @@ export function DataTable<TData, TValue>({
                                                             </button>
                                                         ) : (
                                                             <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-xs">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -448,7 +448,7 @@ export function DataTable<TData, TValue>({
                                                     <th
                                                         key={header.id}
                                                         colSpan={header.colSpan}
-                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[10px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
                                                         style={{ width: header.getSize() }}
                                                         aria-sort={ariaSort}
                                                     >
@@ -466,7 +466,7 @@ export function DataTable<TData, TValue>({
                                                                     }}
                                                                     aria-label="Сортировать столбец"
                                                                 >
-                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    <div className="truncate flex-1 text-xs">
                                                                         {flexRender(
                                                                             header.column.columnDef.header,
                                                                             header.getContext()
@@ -475,7 +475,7 @@ export function DataTable<TData, TValue>({
                                                                 </button>
                                                             ) : (
                                                                 <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    <div className="truncate flex-1 text-xs">
                                                                         {flexRender(
                                                                             header.column.columnDef.header,
                                                                             header.getContext()

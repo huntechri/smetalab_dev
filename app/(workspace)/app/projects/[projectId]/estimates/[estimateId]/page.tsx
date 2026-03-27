@@ -34,7 +34,7 @@ export default async function Page({ params }: PageProps) {
     const roomParamsPromise: Promise<EstimateRoomParam[]> = EstimateRoomParamsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-4">
+        <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-0 -mb-4 md:-mb-6 lg:-mb-8">
             <EstimateDetailsShell
                 estimateId={estimate.id}
                 rowsPromise={rowsPromise}

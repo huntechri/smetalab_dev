@@ -1,0 +1,18 @@
+export const estimateBadgeClassName = [
+  'inline-flex',
+  'items-center',
+  'justify-center',
+  'gap-1',
+  'rounded-[7.6px]',
+  'border-transparent',
+  'bg-[hsl(220_100%_60%_/_0.05)]',
+  'px-2',
+  'py-[2px]',
+  'text-[10px]',
+  'font-bold',
+  'leading-[15px]',
+  'tracking-[0.5px]',
+  'text-[hsl(230_84%_49%_/_0.8)]',
+  'uppercase',
+  'shadow-none',
+].join(' ')

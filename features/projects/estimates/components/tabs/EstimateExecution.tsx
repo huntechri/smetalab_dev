@@ -37,7 +37,7 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
 });
 
 function getStatusDisplay(status: EstimateExecutionStatus) {
-    const base = "cursor-pointer border-0 h-5 w-[88px] md:h-6 md:w-[100px] justify-center px-1 text-[9px] md:text-[10px] font-medium uppercase tracking-wider";
+    const base = "cursor-pointer border-0 h-5 min-w-[88px] justify-center px-2 text-[12px] font-medium uppercase tracking-wider";
     if (status === 'done') {
         return <Badge className={cn("bg-emerald-600 hover:bg-emerald-600 text-white", base)}>Выполнено</Badge>;
     }
@@ -67,19 +67,19 @@ function ExecutionStatusCell({
                 <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-orange-50 focus:text-orange-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-orange-500" />
-                        <span className="text-xs font-medium md:text-sm">Подготовка</span>
+                        <span className="text-xs font-medium">Подготовка</span>
                     </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onStatusChange('in_progress')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-blue-50 focus:text-blue-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-blue-500" />
-                        <span className="text-xs font-medium md:text-sm">В процессе</span>
+                        <span className="text-xs font-medium">В процессе</span>
                     </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onStatusChange('done')} className="h-8 cursor-pointer rounded-md focus:bg-emerald-50 focus:text-emerald-700">
                     <div className="flex items-center gap-2 w-full">
                         <div className="w-2 h-2 rounded-full bg-emerald-500" />
-                        <span className="text-xs font-medium md:text-sm">Выполнено</span>
+                        <span className="text-xs font-medium">Выполнено</span>
                     </div>
                 </DropdownMenuItem>
             </DropdownMenuContent>
@@ -120,7 +120,7 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="h-8 text-right tabular-nums text-xs font-normal md:text-sm"
+            className="h-8 text-right tabular-nums text-xs font-normal"
         />
     );
 }
@@ -262,7 +262,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
             accessorKey: 'code',
             header: 'Код',
             size: 60,
-            cell: ({ row }) => <span className="text-xs font-normal text-muted-foreground md:text-sm">{row.original.code}</span>,
+            cell: ({ row }) => <span className="text-xs font-normal text-muted-foreground">{row.original.code}</span>,
         },
         {
             accessorKey: 'name',
@@ -270,9 +270,9 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
             size: 450,
             cell: ({ row }) => (
                 <div className="space-y-1">
-                    <div className="text-xs md:text-sm font-normal truncate" title={row.original.name}>{row.original.name}</div>
+                    <div className="text-xs font-normal truncate" title={row.original.name}>{row.original.name}</div>
                     {row.original.source === 'extra' ? (
-                        <Badge variant="secondary" className="h-4 px-1 text-[10px] uppercase tracking-wider md:text-xs">
+                        <Badge variant="secondary" className="h-4 px-1 text-xs uppercase tracking-wider">
                             Доп. работа
                         </Badge>
                     ) : null}
@@ -282,25 +282,25 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'unit',
             header: 'Ед.',
-            cell: ({ row }) => <div className="text-xs text-muted-foreground font-medium md:text-sm">{row.original.unit}</div>,
+            cell: ({ row }) => <div className="text-xs text-muted-foreground font-medium">{row.original.unit}</div>,
             size: 80,
         },
         {
             accessorKey: 'plannedQty',
             header: () => <div className="text-right whitespace-nowrap">Кол-во</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-normal text-muted-foreground md:text-sm">{numberFormatter.format(row.original.plannedQty)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums text-xs font-normal text-muted-foreground">{numberFormatter.format(row.original.plannedQty)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedPrice',
             header: () => <div className="text-right whitespace-nowrap">Цена</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.plannedPrice)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs">{moneyFormatter.format(row.original.plannedPrice)}</div>,
             size: 120,
         },
         {
             accessorKey: 'plannedSum',
             header: () => <div className="text-right whitespace-nowrap">План сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.plannedSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs">{moneyFormatter.format(row.original.plannedSum)}</div>,
             size: 130,
         },
         {
@@ -318,7 +318,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         {
             accessorKey: 'actualSum',
             header: () => <div className="text-right whitespace-nowrap">Факт сумма</div>,
-            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs md:text-sm">{moneyFormatter.format(row.original.actualSum)}</div>,
+            cell: ({ row }) => <div className="text-right tabular-nums font-bold tracking-tight text-xs">{moneyFormatter.format(row.original.actualSum)}</div>,
             size: 150,
         },
         {
@@ -356,13 +356,13 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <DataTable
                 columns={columns}
                 data={rows}
                 filterColumn="name"
                 filterPlaceholder="Поиск по работам..."
-                height="580px"
+                height="600px"
                 compactMobileToolbar
                 actions={
                     <AddExtraWorkSheet
@@ -372,7 +372,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                     />
                 }
             />
-            <div className="flex justify-end px-1">
+            <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
             </div>
         </div>
