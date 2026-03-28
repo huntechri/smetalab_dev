@@ -28,7 +28,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
   const [hasMore, setHasMore] = useState(initialData.length < totalCount);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [tableHeight, setTableHeight] = useState('720px');
-  const buttonClassName = 'h-9 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] tracking-tight transition-all active:scale-95 shadow-none rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] px-2 gap-1.5 justify-center';
+
 
   useEffect(() => {
     const updateHeight = () => {
@@ -121,8 +121,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
           <div className="flex items-center gap-2 w-full sm:w-auto">
             {canLoadMore && (
               <Button
-                variant="outline"
-                className={buttonClassName}
+                variant="standard"
                 onClick={() => { void loadPage(); }}
                 disabled={isLoadingMore}
               >
@@ -132,8 +131,8 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
             )}
             <Button
               onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
-              variant="outline"
-              className={`${buttonClassName} shrink-0 ml-auto`}
+              variant="standard"
+              className="shrink-0 ml-auto"
               aria-label="Добавить поставщика"
             >
               <Plus className="h-4 w-4 mr-1" />

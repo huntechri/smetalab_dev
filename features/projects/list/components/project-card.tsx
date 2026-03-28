@@ -12,7 +12,7 @@ type ProjectCardProps = {
 
 export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
     return (
-        <Card className="flex flex-col h-full py-0 border-primary/10 hover:border-primary/30 transition-colors duration-200 group">
+        <Card className="flex flex-col h-full py-0 border-border rounded-[7.6px] bg-white shadow-none transition-colors duration-200 group hover:border-border/60">
             <CardContent className="flex flex-col flex-1 min-w-0 p-3 sm:p-4 gap-2.5">
                 <div className="flex min-w-0 items-start gap-2">
                     <ProjectStatusDot status={project.status} />
@@ -35,7 +35,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         aria-valuemin={0}
                         aria-valuemax={100}
                         aria-label={`Progress for ${project.name}`}
-                        className="h-2 w-full overflow-hidden rounded-full bg-muted"
+                        className="h-2 w-full overflow-hidden rounded-[7.6px] bg-muted/60"
                     >
                         <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
                     </div>

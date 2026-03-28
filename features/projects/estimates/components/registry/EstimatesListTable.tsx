@@ -126,7 +126,11 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
         return (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="icon-sm" title="Удалить смету">
+              <Button
+                variant="ghost"
+                className="h-8 w-8 px-0 transition-colors bg-white hover:bg-red-50 hover:text-red-600 border border-border rounded-[7.6px] shadow-none"
+                title="Удалить смету"
+              >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </AlertDialogTrigger>
@@ -164,7 +168,8 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
       columns={columns}
       data={rows}
       filterColumn="name"
-      filterPlaceholder="Поиск сметы..."
+      filterPlaceholder="Поиск..."
+      filterInputClassName="bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]"
       height="450px"
       actions={actions}
     />

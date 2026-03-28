@@ -43,6 +43,19 @@ vi.mock('@/components/providers/use-app-toast', () => ({
   useAppToast: () => ({ toast: toastMock }),
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: vi.fn(),
+    replace: vi.fn(),
+    prefetch: vi.fn(),
+    back: vi.fn(),
+    forward: vi.fn(),
+    refresh: vi.fn(),
+  }),
+  usePathname: () => '/',
+  useSearchParams: () => new URLSearchParams(),
+}));
+
 vi.mock('@/shared/ui/data-table', () => ({
   DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
 }));

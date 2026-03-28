@@ -53,9 +53,9 @@ const buildTabHref = (pathname: string, search: string, nextTab: string) => {
 };
 
 
-function EstimateTableLoader({ estimateId, rowsPromise, initialCoefPercent }: { estimateId: string; rowsPromise: Promise<EstimateRow[]>; initialCoefPercent: number }) {
+function EstimateTableLoader({ estimateId, rowsPromise, initialCoefPercent, projectSlug, estimateName }: { estimateId: string; rowsPromise: Promise<EstimateRow[]>; initialCoefPercent: number; projectSlug: string; estimateName: string }) {
     const rows = use(rowsPromise);
-    return <EstimateTable estimateId={estimateId} initialRows={rows} initialCoefPercent={initialCoefPercent} />;
+    return <EstimateTable estimateId={estimateId} initialRows={rows} initialCoefPercent={initialCoefPercent} projectSlug={projectSlug} estimateName={estimateName} />;
 }
 
 function EstimateParamsLoader({ estimateId, roomParamsPromise }: { estimateId: string; roomParamsPromise: Promise<EstimateRoomParam[]> }) {
@@ -123,15 +123,15 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                 }}
             >
                 <TabsList className="w-[540px] max-w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                    <TabsTrigger value="estimate" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Смета</TabsTrigger>
-                    <TabsTrigger value="params" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Выполнение</TabsTrigger>
-                    <TabsTrigger value="docs" className="px-4 py-2 text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Документы</TabsTrigger>
+                    <TabsTrigger value="estimate" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Смета</TabsTrigger>
+                    <TabsTrigger value="params" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Параметры</TabsTrigger>
+                    <TabsTrigger value="procurement" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Закупки</TabsTrigger>
+                    <TabsTrigger value="execution" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
+                    <TabsTrigger value="docs" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" className="mt-2">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} />
+                        <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} projectSlug={project.slug} estimateName={estimate.name} />
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="params" className="mt-2">

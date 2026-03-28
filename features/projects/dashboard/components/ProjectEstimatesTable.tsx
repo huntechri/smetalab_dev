@@ -52,7 +52,11 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}
                 actions={
-                    <Button onClick={() => setIsDialogOpen(true)} size="sm" className="w-full sm:w-auto">
+                    <Button
+                        onClick={() => setIsDialogOpen(true)}
+                        variant="standard"
+                        className="w-full sm:w-auto"
+                    >
                         Создать смету
                     </Button>
                 }
