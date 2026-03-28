@@ -41,7 +41,9 @@ export function SidebarNav({ label, items, pathname, isActive }: SidebarNavProps
                     {items.map((item) => {
                         const itemIsActive = isActive
                             ? isActive(item)
-                            : pathname === item.url;
+                            : item.url === '/app'
+                                ? pathname === '/app'
+                                : pathname === item.url || pathname.startsWith(item.url + '/');
 
                         return (
                             <SidebarMenuItem key={item.title}>

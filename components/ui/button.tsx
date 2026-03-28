@@ -19,6 +19,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
         link: "h-auto min-h-0 p-0 text-primary underline-offset-4 hover:underline",
+        standard: "h-8 px-2 bg-white hover:bg-secondary border border-border rounded-[7.6px] text-[14px] font-medium leading-[20px] transition-all active:scale-95 shadow-none text-foreground",
       },
       size: {
         xs: "h-6 gap-1 rounded-md px-2 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3",

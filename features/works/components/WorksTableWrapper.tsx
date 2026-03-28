@@ -57,9 +57,9 @@ export function WorksTableWrapper({
             data={data}
             height={tableHeight}
             className="text-[12px]"
-            filterInputClassName="bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]"
+            filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
             filterColumn="name"
-            filterPlaceholder="Поиск по наименованию..."
+            filterPlaceholder="Поиск..."
             showAiSearch={true}
             onSearch={onSearch}
             isAiMode={isAiMode}

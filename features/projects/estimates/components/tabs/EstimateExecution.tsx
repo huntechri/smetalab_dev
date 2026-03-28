@@ -148,7 +148,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="outline" className="h-9 gap-1.5 px-0 size-9 sm:size-auto sm:px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95" aria-label="Добавить дополнительную работу">
+                <Button variant="standard" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
                     <MoreHorizontal className="h-4 w-4 sm:hidden" />
                     <Plus className="hidden h-4 w-4 sm:block" />
                     <span className="hidden sm:inline">Добавить доп. работу</span>
@@ -361,7 +361,8 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 columns={columns}
                 data={rows}
                 filterColumn="name"
-                filterPlaceholder="Поиск по работам..."
+                filterPlaceholder="Поиск..."
+                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
                 compactMobileToolbar
                 actions={

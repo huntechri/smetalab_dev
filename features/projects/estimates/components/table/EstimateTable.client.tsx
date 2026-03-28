@@ -38,6 +38,8 @@ import {
 } from "@/shared/ui/dialog";
 import { Input } from "@/shared/ui/input";
 import { Label } from "@/shared/ui/label";
+import { useRouter } from "next/navigation";
+import { useEstimateMutations } from "../../hooks/use-estimate-mutations";
 import { estimatesActionRepo } from "../../repository/estimates.actions";
 import { getVisibleRows } from "../../lib/rows-visible";
 import { getSectionTotals } from "../../lib/section-totals";
@@ -67,11 +69,17 @@ export function EstimateTable({
   estimateId,
   initialRows,
   initialCoefPercent,
+  projectSlug,
+  estimateName,
 }: {
   estimateId: string;
   initialRows: EstimateRow[];
   initialCoefPercent: number;
+  projectSlug: string;
+  estimateName: string;
 }) {
+  const router = useRouter();
+  const { deleteEstimate } = useEstimateMutations();
   const [rows, setRows] = useState(initialRows);
   const [coefPercent, setCoefPercent] = useState(initialCoefPercent);
   const [coefInputValue, setCoefInputValue] = useState(
@@ -98,6 +106,8 @@ export function EstimateTable({
   const [patternName, setPatternName] = useState("");
   const [patternDescription, setPatternDescription] = useState("");
   const [isPatternSaving, setIsPatternSaving] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isPatternApplying, setIsPatternApplying] = useState(false);
   const [isSectionDialogOpen, setIsSectionDialogOpen] = useState(false);
   const [sectionCodeInput, setSectionCodeInput] = useState('');
@@ -802,15 +812,16 @@ export function EstimateTable({
           sectionTotalsById,
         })}
         data={visibleRows}
-        getRowClassName={(row) => row.kind === 'section' ? 'bg-[#f60]/10 text-[#f60] hover:bg-[#f60]/20 font-semibold' : ''}
+        getRowClassName={(row) => row.kind === 'section' ? 'bg-slate-50/80 border-y border-slate-200/60 font-bold text-slate-900' : ''}
         filterColumn="name"
-        filterPlaceholder="Поиск по строкам сметы..."
+        filterPlaceholder="Поиск..."
+        filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
         height="var(--table-height)"
         compactMobileToolbar
         actions={
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
-              variant="outline"
+              variant="standard"
               size="sm"
               className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
               aria-label="Режим расчета"
@@ -825,7 +836,7 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="outline"
+              variant="standard"
               size="sm"
               className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
               aria-label="Добавить раздел"
@@ -837,7 +848,7 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="outline"
+              variant="standard"
               size="sm"
               className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
               aria-label="Сохранить смету"
@@ -849,12 +860,12 @@ export function EstimateTable({
               </span>
             </Button>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="outline" size="sm" className="h-8 gap-1.5 px-3" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="standard" size="sm" className="h-8 gap-1.5 px-3" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span className="text-xs md:text-sm">Шаблон</span>
               </Button>
               <Button
-                variant="outline"
+                variant="standard"
                 size="sm"
                 className="h-8 gap-1.5 px-3"
                 onClick={openCoefficientDialog}
@@ -863,7 +874,7 @@ export function EstimateTable({
                 <span className="text-xs md:text-sm">Коэффициент</span>
               </Button>
               <Button
-                variant="outline"
+                variant="standard"
                 size="sm"
                 className="h-8 gap-1.5 px-3"
                 onClick={() => void importEstimate()}
@@ -877,7 +888,7 @@ export function EstimateTable({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant="outline"
+                    variant="standard"
                     size="sm"
                     className="h-8 gap-1.5 px-3"
                     disabled={isExporting}
@@ -910,7 +921,8 @@ export function EstimateTable({
               variant="destructive"
               size="sm"
               className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
-              aria-label="Удалить"
+              aria-label="Удалить смету"
+              onClick={() => setIsDeleteDialogOpen(true)}
             >
               <Trash2 className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">
@@ -920,7 +932,7 @@ export function EstimateTable({
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="h-9 w-9 px-0" aria-label="Действия по смете">
+                  <Button variant="standard" className="h-8 w-8 px-0" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Действия по смете</span>
                   </Button>
@@ -1063,7 +1075,7 @@ export function EstimateTable({
             <Input
               id="section-code"
               value={sectionCodeInput}
-              onChange={(event) => setSectionCodeInput(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSectionCodeInput(event.target.value)}
               placeholder="Например: 1.1"
             />
           </div>
@@ -1072,15 +1084,15 @@ export function EstimateTable({
             <Input
               id="section-name"
               value={sectionNameInput}
-              onChange={(event) => setSectionNameInput(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setSectionNameInput(event.target.value)}
               placeholder="Например: Демонтажные работы"
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
+            <Button variant="standard" onClick={() => setIsSectionDialogOpen(false)}>
               Отмена
             </Button>
-            <Button onClick={() => void createSection()}>Добавить</Button>
+            <Button variant="standard" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void createSection()}>Добавить</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1102,7 +1114,7 @@ export function EstimateTable({
             <Input
               id="estimate-coef"
               value={coefInputValue}
-              onChange={(event) => setCoefInputValue(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setCoefInputValue(event.target.value)}
               placeholder="Например: 20"
             />
             <p className="text-xs text-muted-foreground">
@@ -1112,7 +1124,7 @@ export function EstimateTable({
           </div>
           <DialogFooter className="gap-2 sm:justify-between">
             <Button
-              variant="outline"
+              variant="standard"
               onClick={() => setIsCoefficientDialogOpen(false)}
               disabled={isApplyingCoefficient}
             >
@@ -1120,13 +1132,15 @@ export function EstimateTable({
             </Button>
             <div className="flex items-center gap-2">
               <Button
-                variant="secondary"
+                variant="standard"
                 onClick={() => void resetCoefficient()}
                 disabled={isApplyingCoefficient || coefPercent === 0}
               >
                 Сбросить
               </Button>
               <Button
+                variant="standard"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                 onClick={() => void applyCoefficient()}
                 disabled={isApplyingCoefficient}
               >
@@ -1150,7 +1164,7 @@ export function EstimateTable({
             <Input
               id="pattern-name"
               value={patternName}
-              onChange={(event) => setPatternName(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPatternName(event.target.value)}
               placeholder="Например: Квартира 60м² — базовый ремонт"
             />
           </div>
@@ -1159,15 +1173,15 @@ export function EstimateTable({
             <Input
               id="pattern-description"
               value={patternDescription}
-              onChange={(event) => setPatternDescription(event.target.value)}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => setPatternDescription(event.target.value)}
               placeholder="Краткое описание состава работ"
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsSavePatternOpen(false)}>
+            <Button variant="standard" onClick={() => setIsSavePatternOpen(false)}>
               Отмена
             </Button>
-            <Button onClick={() => void savePattern()} disabled={isPatternSaving}>
+            <Button variant="standard" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void savePattern()} disabled={isPatternSaving}>
               {isPatternSaving ? "Сохранение..." : "Сохранить шаблон"}
             </Button>
           </DialogFooter>
@@ -1222,11 +1236,44 @@ export function EstimateTable({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsApplyPatternOpen(false)}>
+            <Button variant="standard" onClick={() => setIsApplyPatternOpen(false)}>
               Отмена
             </Button>
-            <Button onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
+            <Button variant="standard" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
               {isPatternApplying ? "Применение..." : "Применить шаблон"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Удалить смету</DialogTitle>
+            <DialogDescription>
+              Вы уверены, что хотите полностью удалить смету &quot;{estimateName}&quot;? 
+              Это действие необратимо и приведет к удалению всех строк и материалов.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="standard" onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeleting}>
+              Отмена
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={async () => {
+                setIsDeleting(true);
+                const success = await deleteEstimate({ estimateId, estimateName });
+                if (success) {
+                  router.push(`/app/projects/${projectSlug}`);
+                } else {
+                  setIsDeleting(false);
+                  setIsDeleteDialogOpen(false);
+                }
+              }} 
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Удаление..." : "Удалить смету"}
             </Button>
           </DialogFooter>
         </DialogContent>

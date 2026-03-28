@@ -167,8 +167,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                         {canLoadMore && (
                             <Button
-                                variant="outline"
-                                className="h-9 text-[12px] font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
+                                variant="standard"
                                 onClick={handleLoadMore}
                                 disabled={isLoadingMore}
                             >
@@ -179,8 +178,8 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                         )}
                         <Button
                             onClick={handleCreate}
-                            variant="outline"
-                            className="shrink-0 h-9 text-[12px] font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
+                            variant="standard"
+                            className="shrink-0 ml-auto"
                             aria-label="Добавить контрагента"
                         >
                             <Plus className="h-4 w-4 mr-1" />

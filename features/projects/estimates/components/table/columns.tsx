@@ -3,7 +3,7 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, FileStack, FolderTree, FolderUp, Plus, RefreshCw, Settings, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { SectionTotals } from '../../lib/section-totals';
 import { EditableCell } from './cells/EditableCell';
@@ -73,7 +73,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div
                         className={
                             item.kind === 'section'
-                                ? 'text-[12px] font-semibold uppercase tracking-wide truncate'
+                                ? 'text-[11px] font-bold uppercase tracking-widest truncate'
                                 : item.kind === 'work'
                                   ? 'text-[12px] font-normal truncate'
                                   : 'text-[12px] italic text-muted-foreground'
@@ -136,7 +136,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-[12px] font-semibold tabular-nums">
+                    <div className="pr-6 text-right text-[11px] font-bold tracking-tight tabular-nums opacity-90">
                         Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
                     </div>
                 );
@@ -183,29 +183,29 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         <>
                             <Button
                                 size="icon"
-                                variant="ghost"
-                                className="size-7"
+                                variant="standard"
+                                className="size-7 rounded-[6px]"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
                                 aria-label="Добавить материал"
                             >
-                                <Plus className="size-3.5 text-muted-foreground" />
+                                <Wrench className="size-3.5 text-muted-foreground" />
                             </Button>
                             <Button
                                 size="icon"
-                                variant="ghost"
-                                className="size-7"
+                                variant="standard"
+                                className="size-7 rounded-[6px]"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
                                 aria-label="Добавить работу ниже"
                             >
-                                <FileStack className="size-3.5 text-primary/80" />
+                                <HardHat className="size-3.5 text-primary/80" />
                             </Button>
                         </>
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-7 focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
+                            <Button size="icon" variant="standard" className="size-7 rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>
