@@ -17,6 +17,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
 
@@ -67,7 +68,7 @@ export function TeamMembersCard({
                                 placeholder="Имя или email"
                                 value={searchQuery}
                                 onChange={(event) => onSearchQueryChange(event.target.value)}
-                                className="h-9 w-full xl:w-64 text-sm transition-colors"
+                                className="h-8 w-full xl:w-64 rounded-[7.6px] bg-white border border-border shadow-none text-[14px] font-medium leading-[20px] transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                             />
                         </div>
                         <div className="space-y-1.5">
@@ -77,8 +78,11 @@ export function TeamMembersCard({
                                     <Button
                                         key={item.value}
                                         type="button"
-                                        variant={roleFilter === item.value ? 'secondary' : 'outline'}
-                                        className="h-9 px-3 text-sm shadow-sm transition-all"
+                                        variant={roleFilter === item.value ? 'secondary' : 'standard'}
+                                        className={cn(
+                                            "h-8 px-3 text-[14px] font-medium leading-[20px] shadow-none transition-all",
+                                            roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
+                                        )}
                                         onClick={() => onRoleFilterChange(item.value)}
                                         aria-pressed={roleFilter === item.value}
                                         aria-label={`Фильтр: ${item.label}`}
@@ -114,12 +118,12 @@ export function TeamMembersCard({
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-muted/50 transition-colors"
+                                                    variant="standard"
+                                                    size="icon-sm"
+                                                    className="size-7 rounded-[6px] text-muted-foreground hover:text-foreground transition-all"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
-                                                    <MoreHorizontal className="h-4 w-4" />
+                                                    <MoreHorizontal className="size-3.5" />
                                                 </Button>
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent align="end">
@@ -140,6 +144,7 @@ export function TeamMembersCard({
                                                 <AlertDialogCancel>Отмена</AlertDialogCancel>
                                                 <AlertDialogAction
                                                     variant="destructive"
+                                                    className="h-8 px-3 rounded-[7.6px]"
                                                     onClick={() => onRemoveMember(member.id)}
                                                 >
                                                     Удалить

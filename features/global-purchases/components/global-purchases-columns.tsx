@@ -201,14 +201,14 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="ghost"
+            variant="standard"
             size="icon-sm"
-            className="text-muted-foreground hover:text-destructive transition-colors"
+            className="size-7 rounded-[6px] text-muted-foreground hover:text-destructive transition-colors shrink-0"
             onClick={() => setOpen(true)}
             disabled={disabled}
             aria-label="Удалить строку"
           >
-            <Trash2 className="size-4" />
+            <Trash2 className="size-3.5" />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Удалить строку закупки</TooltipContent>
