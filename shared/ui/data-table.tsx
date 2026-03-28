@@ -43,6 +43,8 @@ interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
     height?: string
+    className?: string
+    filterInputClassName?: string
     filterColumn?: string
     filterPlaceholder?: string
     meta?: TableMeta<TData>
@@ -52,6 +54,7 @@ interface DataTableProps<TData, TValue> {
     onAiModeChange?: (val: boolean) => void
     isLoading?: boolean
     isSearching?: boolean
+    loadingMore?: boolean
     onEndReached?: () => void
     externalSearchValue?: string
     onSearchValueChange?: (val: string) => void
@@ -131,6 +134,8 @@ export function DataTable<TData, TValue>({
     columns,
     data,
     height = "600px",
+    className,
+    filterInputClassName,
     filterColumn,
     filterPlaceholder = "Поиск...",
     meta,
@@ -140,6 +145,7 @@ export function DataTable<TData, TValue>({
     onAiModeChange,
     isLoading,
     isSearching,
+    loadingMore,
     externalSearchValue,
     onSearchValueChange,
     onEndReached,
@@ -191,7 +197,7 @@ export function DataTable<TData, TValue>({
 
     return (
         <TooltipProvider>
-            <div className="space-y-4">
+            <div className={cn("space-y-4", className)}>
                 {/* Search Filter */}
                 {filterColumn && (
                     <div className={cn(
@@ -232,7 +238,8 @@ export function DataTable<TData, TValue>({
                                         }
                                     }}
                                     className={cn(
-                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-xs md:text-sm placeholder:text-xs md:placeholder:text-sm shadow-sm md:shadow-none",
+                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-[12px] placeholder:text-[12px] shadow-sm md:shadow-none",
+                                        filterInputClassName,
                                         isAiMode ? (
                                             "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
                                         ) : (
@@ -249,7 +256,7 @@ export function DataTable<TData, TValue>({
                                     <div
                                         role="status"
                                         aria-live="polite"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[9px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
                                     >
                                         AI
                                     </div>
@@ -262,7 +269,7 @@ export function DataTable<TData, TValue>({
                                         <TooltipTrigger asChild>
                                             <div className="flex items-center gap-3 cursor-help">
                                                 <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
-                                                <span className="text-xs font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
+                                                <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                             </div>
                                         </TooltipTrigger>
                                         <TooltipContent>
@@ -308,6 +315,19 @@ export function DataTable<TData, TValue>({
                     )}
                     style={{ contain: 'layout style paint' }}
                 >
+                    {loadingMore && (
+                        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/18 backdrop-blur-[1px]">
+                            <div
+                                role="status"
+                                aria-live="polite"
+                                className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg"
+                            >
+                                <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                <span>Загрузка...</span>
+                            </div>
+                        </div>
+                    )}
+
                     {isAiMode && (
                         <div className="absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2 pointer-events-none" />
                     )}
@@ -343,7 +363,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[10px] font-medium text-white border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
                                                     style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -351,7 +371,7 @@ export function DataTable<TData, TValue>({
                                                         isSortable ? (
                                                             <button
                                                                 type="button"
-                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer text-white/90 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                 onClick={header.column.getToggleSortingHandler()}
                                                                 onKeyDown={(e) => {
                                                                     if (e.key === 'Enter' || e.key === ' ') {
@@ -361,7 +381,7 @@ export function DataTable<TData, TValue>({
                                                                 }}
                                                                 aria-label="Сортировать столбец"
                                                             >
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-xs">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -370,7 +390,7 @@ export function DataTable<TData, TValue>({
                                                             </button>
                                                         ) : (
                                                             <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                <div className="truncate flex-1 text-xs md:text-sm">
+                                                                <div className="truncate flex-1 text-xs">
                                                                     {flexRender(
                                                                         header.column.columnDef.header,
                                                                         header.getContext()
@@ -428,7 +448,7 @@ export function DataTable<TData, TValue>({
                                                     <th
                                                         key={header.id}
                                                         colSpan={header.colSpan}
-                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[10px] font-medium text-white border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
                                                         style={{ width: header.getSize() }}
                                                         aria-sort={ariaSort}
                                                     >
@@ -436,7 +456,7 @@ export function DataTable<TData, TValue>({
                                                             isSortable ? (
                                                                 <button
                                                                     type="button"
-                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer text-white/90 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                     onClick={header.column.getToggleSortingHandler()}
                                                                     onKeyDown={(e) => {
                                                                         if (e.key === 'Enter' || e.key === ' ') {
@@ -446,7 +466,7 @@ export function DataTable<TData, TValue>({
                                                                     }}
                                                                     aria-label="Сортировать столбец"
                                                                 >
-                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    <div className="truncate flex-1 text-xs">
                                                                         {flexRender(
                                                                             header.column.columnDef.header,
                                                                             header.getContext()
@@ -455,7 +475,7 @@ export function DataTable<TData, TValue>({
                                                                 </button>
                                                             ) : (
                                                                 <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                    <div className="truncate flex-1 text-xs md:text-sm">
+                                                                    <div className="truncate flex-1 text-xs">
                                                                         {flexRender(
                                                                             header.column.columnDef.header,
                                                                             header.getContext()

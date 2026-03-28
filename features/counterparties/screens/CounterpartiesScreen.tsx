@@ -156,6 +156,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                 columns={columns}
                 data={rows}
                 height={tableHeight}
+                className="text-[12px]"
                 filterColumn="name"
                 filterPlaceholder="Поиск по названию..."
                 externalSearchValue={searchTerm}
@@ -167,7 +168,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                         {canLoadMore && (
                             <Button
                                 variant="outline"
-                                className="h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
+                                className="h-9 text-[12px] font-semibold tracking-tight transition-all active:scale-95 shadow-sm"
                                 onClick={handleLoadMore}
                                 disabled={isLoadingMore}
                             >
@@ -179,7 +180,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                         <Button
                             onClick={handleCreate}
                             variant="outline"
-                            className="shrink-0 h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
+                            className="shrink-0 h-9 text-[12px] font-semibold tracking-tight transition-all active:scale-95 shadow-sm ml-auto"
                             aria-label="Добавить контрагента"
                         >
                             <Plus className="h-4 w-4 mr-1" />

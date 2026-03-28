@@ -64,7 +64,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
 
     if (!mounted) {
         return (
-            <div className="space-y-4">
+            <div className="space-y-2">
                 <Skeleton className="h-8 w-48" />
                 <Skeleton className="h-12 w-full" />
                 <Skeleton className="h-[420px] w-full" />
@@ -73,7 +73,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <input
                 type="file"
                 ref={actions.fileInputRef}
@@ -85,7 +85,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
             />
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0">
-                <MaterialsHeader isLoading={search.isLoadingMore} totalCount={totalCount} />
+                <MaterialsHeader isLoading={search.isAiSearching} totalCount={totalCount} />
             </div>
 
             <div className="relative">
@@ -93,7 +93,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-[1px] rounded-2xl">
                         <div className="flex flex-col items-center gap-3 p-6 bg-card border shadow-xl rounded-xl">
                             <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                            <p className="text-sm font-semibold">{actions.isInserting ? "Сохранение..." : "Импорт..."}</p>
+                            <p className="text-[12px] font-semibold">{actions.isInserting ? "Сохранение..." : "Импорт..."}</p>
                         </div>
                     </div>
                 )}
@@ -101,7 +101,8 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
                 <MaterialsTableWrapper
                     data={data}
                     isAiMode={search.isAiMode}
-                    isSearching={search.isAiSearching || search.isLoadingMore}
+                    isSearching={search.isAiSearching || search.isSearching}
+                    loadingMore={search.isLoadingMore}
                     searchTerm={search.searchTerm}
                     onSearch={search.handleSearch}
                     onAiModeChange={search.setIsAiMode}

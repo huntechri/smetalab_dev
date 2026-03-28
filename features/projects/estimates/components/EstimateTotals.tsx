@@ -1,6 +1,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Badge } from '@/shared/ui/badge';
+import { estimateBadgeClassName } from './estimate-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -26,28 +27,23 @@ export function EstimateTotals({
 
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)} {...props}>
-            <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-                <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">План:</span>
-                <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(planned)}</span>
+            <Badge variant="outline" className={estimateBadgeClassName}>
+                <span>План:</span>
+                <span className="text-[10px] font-bold tabular-nums normal-case tracking-normal leading-[15px]">{moneyFormatter.format(planned)}</span>
             </Badge>
 
-            <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1.5 rounded-lg border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-                <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">Факт:</span>
-                <span className="text-xs sm:text-sm font-semibold tabular-nums">{moneyFormatter.format(actual)}</span>
+            <Badge variant="outline" className={estimateBadgeClassName}>
+                <span>Факт:</span>
+                <span className="text-[10px] font-bold tabular-nums normal-case tracking-normal leading-[15px]">{moneyFormatter.format(actual)}</span>
             </Badge>
 
             {showDelta && (
                 <Badge
                     variant="outline"
-                    className={cn(
-                        "flex items-center gap-1.5 px-2 py-1.5 rounded-lg border font-normal",
-                        deltaTotal > 0 ? "bg-emerald-50/50 hover:bg-emerald-50/50 border-emerald-200/50 text-emerald-700" :
-                            deltaTotal < 0 ? "bg-orange-50/50 hover:bg-orange-50/50 border-orange-200/50 text-orange-700" :
-                                "bg-muted/30 hover:bg-muted/30 text-foreground"
-                    )}
+                    className={estimateBadgeClassName}
                 >
-                    <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wider opacity-80">Δ:</span>
-                    <span className="text-xs sm:text-sm font-bold tabular-nums">
+                    <span>Δ:</span>
+                    <span className="text-[10px] font-bold tabular-nums normal-case tracking-normal leading-[15px]">
                         {deltaTotal > 0 ? '+' : ''}{moneyFormatter.format(deltaTotal)}
                     </span>
                 </Badge>

@@ -37,12 +37,13 @@ export function MaterialsToolbar({
     handleDeleteAll,
 }: MaterialsToolbarProps) {
     const isActionDisabled = isDeletingAll || !hasData;
+    const buttonClassName = "flex-1 sm:flex-none h-9 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] tracking-tight transition-all active:scale-95 shadow-none rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] px-2 gap-1.5 justify-center";
 
     return (
         <>
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" className="flex-1 sm:flex-none h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm" onClick={handleImportClick} disabled={isImporting}>
+                    <Button variant="outline" className={buttonClassName} onClick={handleImportClick} disabled={isImporting}>
                         {isImporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Upload className="mr-2 h-4 w-4" />}
                         <span className="inline">Импорт</span>
                     </Button>
@@ -52,7 +53,7 @@ export function MaterialsToolbar({
 
             <Tooltip>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" className="flex-1 sm:flex-none h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm" onClick={handleExport} disabled={isExporting}>
+                    <Button variant="outline" className={buttonClassName} onClick={handleExport} disabled={isExporting}>
                         {isExporting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Download className="mr-2 h-4 w-4" />}
                         <span className="inline">Экспорт</span>
                     </Button>
@@ -67,7 +68,7 @@ export function MaterialsToolbar({
                             <AlertDialogTrigger asChild>
                                 <Button
                                     variant="destructive"
-                                    className={`flex-1 sm:flex-none h-9 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-sm ${isActionDisabled ? 'pointer-events-none' : ''}`}
+                                    className={`${buttonClassName} ${isActionDisabled ? 'pointer-events-none' : ''}`}
                                     disabled={isActionDisabled}
                                 >
                                     {isDeletingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
