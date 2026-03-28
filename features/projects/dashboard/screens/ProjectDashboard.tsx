@@ -5,8 +5,8 @@ import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import Link from 'next/link';
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
+import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
 
 type EstimateListItem = {
     id: string;
@@ -38,6 +38,10 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
         { label: project.name },
     ]);
 
+    const canShowDynamicsChart = canShowDynamicsChartByEstimateStatuses(
+        estimates.map((estimate) => estimate.status),
+    );
+
     return (
         <div className="flex flex-col gap-4 lg:gap-6 pt-1 pb-4 lg:pt-2 lg:pb-6">
             <div className="px-1 md:px-0">
@@ -47,7 +51,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
             <div className="space-y-4 lg:space-y-10">
                 <div className="@container/main space-y-4 lg:space-y-10">
                     <DashboardKpiCards kpi={kpi} />
-                    <DashboardChart data={performanceDynamics} />
+                    {canShowDynamicsChart ? <DashboardChart data={performanceDynamics} /> : null}
                 </div>
 
                 <ProjectEstimatesTable

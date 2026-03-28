@@ -8,15 +8,15 @@ import { HomeDashboardKpiService } from '@/lib/services/home-dashboard-kpi.servi
 import { HomePerformanceDynamicsService } from '@/lib/services/home-performance-dynamics.service';
 
 const appHomeScreenSpy = vi.fn(
-    (props: { kpi: { revenue: number }; dynamics: Array<{ date: string }> }) => (
+    (props: { kpi: { revenue: number }; dynamics: Array<{ date: string }>; showDynamicsChart: boolean }) => (
         <div data-testid="app-home-screen">
-            {props.kpi.revenue}:{props.dynamics.length}
+            {props.kpi.revenue}:{props.dynamics.length}:{props.showDynamicsChart ? 'show' : 'hide'}
         </div>
     ),
 );
 
 vi.mock('@/features/dashboard', () => ({
-    AppHomeScreen: (props: { kpi: { revenue: number }; dynamics: Array<{ date: string }> }) => appHomeScreenSpy(props),
+    AppHomeScreen: (props: { kpi: { revenue: number }; dynamics: Array<{ date: string }>; showDynamicsChart: boolean }) => appHomeScreenSpy(props),
 }));
 
 vi.mock('@/lib/data/db/queries', () => ({
@@ -45,6 +45,7 @@ vi.mock('@/lib/services/home-performance-dynamics.service', () => ({
                 procurementFact: 320,
             },
         ])),
+        hasVisibleEstimatesByTeamId: vi.fn(async () => true),
     },
 }));
 
@@ -53,6 +54,7 @@ beforeEach(() => {
     vi.mocked(getTeamForUser).mockClear();
     vi.mocked(HomeDashboardKpiService.getByTeamId).mockClear();
     vi.mocked(HomePerformanceDynamicsService.listByTeamId).mockClear();
+    vi.mocked(HomePerformanceDynamicsService.hasVisibleEstimatesByTeamId).mockClear();
 });
 
 afterEach(() => {
@@ -64,10 +66,11 @@ test('loads consolidated home dashboard data for current team', async () => {
 
     render(pageComponent as React.ReactElement);
 
-    expect(screen.getByTestId('app-home-screen')).toHaveTextContent('180000:1');
+    expect(screen.getByTestId('app-home-screen')).toHaveTextContent('180000:1:show');
     expect(getTeamForUser).toHaveBeenCalledTimes(1);
     expect(HomeDashboardKpiService.getByTeamId).toHaveBeenCalledWith(7);
     expect(HomePerformanceDynamicsService.listByTeamId).toHaveBeenCalledWith(7);
+    expect(HomePerformanceDynamicsService.hasVisibleEstimatesByTeamId).toHaveBeenCalledWith(7);
     expect(appHomeScreenSpy).toHaveBeenCalledTimes(1);
 });
 
@@ -78,7 +81,8 @@ test('returns empty dashboard values when team is missing', async () => {
 
     render(pageComponent as React.ReactElement);
 
-    expect(screen.getByTestId('app-home-screen')).toHaveTextContent('0:0');
+    expect(screen.getByTestId('app-home-screen')).toHaveTextContent('0:0:hide');
     expect(HomeDashboardKpiService.getByTeamId).not.toHaveBeenCalled();
     expect(HomePerformanceDynamicsService.listByTeamId).not.toHaveBeenCalled();
+    expect(HomePerformanceDynamicsService.hasVisibleEstimatesByTeamId).not.toHaveBeenCalled();
 });

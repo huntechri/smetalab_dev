@@ -1,6 +1,10 @@
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
 
 export type DynamicsRange = '1m' | '3m' | '12m';
+export type DynamicsMode = 'level' | 'flow';
+export type DynamicsChartPoint = PerformanceDynamicsPoint & {
+    balance: number;
+};
 
 type RangeBoundaries = {
     start: Date;
@@ -16,6 +20,9 @@ export const toIsoDate = (value: Date) => {
 };
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
+
+const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress';
+const ESTIMATE_STATUS_APPROVED = 'approved';
 
 const normalizeDate = (date: Date) => {
     const normalized = new Date(date);
@@ -178,8 +185,37 @@ export const buildDynamicsTimeline = (
     return applyCarryForward(aggregated.timeline, aggregated.openingBalance);
 };
 
+export const buildDynamicsFlowTimeline = (
+    data: PerformanceDynamicsPoint[],
+    range: DynamicsRange,
+    now: Date = new Date(),
+): PerformanceDynamicsPoint[] => {
+    const { start, end } = getRangeBoundaries(range, now);
+
+    const aggregated = range === '1m'
+        ? aggregateByDay(data, start, end)
+        : aggregateByMonth(data, start, end);
+
+    return aggregated.timeline;
+};
+
 export const hasActivityInTimeline = (timeline: PerformanceDynamicsPoint[]) => {
     return timeline.some((point) =>
         point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
+    );
+};
+
+export const withBalanceSeries = (timeline: PerformanceDynamicsPoint[]): DynamicsChartPoint[] => {
+    return timeline.map((point) => ({
+        ...point,
+        balance: normalizeMoney(
+            point.executionPlan + point.procurementPlan - point.executionFact - point.procurementFact,
+        ),
+    }));
+};
+
+export const canShowDynamicsChartByEstimateStatuses = (estimateStatuses: readonly string[]) => {
+    return estimateStatuses.some(
+        (status) => status === ESTIMATE_STATUS_IN_PROGRESS || status === ESTIMATE_STATUS_APPROVED,
     );
 };

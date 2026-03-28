@@ -1,11 +1,11 @@
 "use client";
 
 import * as React from "react";
-import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis, ReferenceLine } from "recharts";
+import { AppWindowIcon, CalendarIcon, CodeIcon } from "lucide-react";
+import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 import {
     Card,
-    CardAction,
     CardContent,
     CardHeader,
     CardTitle,
@@ -18,18 +18,8 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/shared/ui/chart";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/shared/ui/select";
-import {
-    ToggleGroup,
-    ToggleGroupItem,
-} from "@/shared/ui/toggle-group";
-import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline, toIsoDate } from '../lib/performance-dynamics';
+import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics';
 import { HomePerformanceDynamicsPoint } from '../types';
 
 const chartConfig = {
@@ -49,6 +39,10 @@ const chartConfig = {
         label: "Факт мат.",
         color: "hsl(163, 94%, 24%)",
     },
+    balance: {
+        label: "Баланс",
+        color: "var(--foreground)",
+    },
 } satisfies ChartConfig;
 
 type HomeDynamicsChartProps = {
@@ -67,50 +61,80 @@ const formatDateTick = (value: string, range: DynamicsRange) => {
 
 export function HomeDynamicsChart({ data }: HomeDynamicsChartProps) {
     const [timeRange, setTimeRange] = React.useState<DynamicsRange>('3m');
+    const [mode, setMode] = React.useState<DynamicsMode>('level');
 
-    const timeline = React.useMemo(
+    const levelTimeline = React.useMemo(
         () => buildDynamicsTimeline(data, timeRange),
         [data, timeRange],
     );
 
+    const flowTimeline = React.useMemo(
+        () => buildDynamicsFlowTimeline(data, timeRange),
+        [data, timeRange],
+    );
+
+    const timeline = mode === 'level' ? levelTimeline : flowTimeline;
+
+    const chartData = React.useMemo(
+        () => timeline.map((point, index) => ({
+            ...point,
+            balance: Math.round((
+                levelTimeline[index]!.executionPlan
+                + levelTimeline[index]!.procurementPlan
+                - levelTimeline[index]!.executionFact
+                - levelTimeline[index]!.procurementFact
+                + Number.EPSILON
+            ) * 100) / 100,
+        })),
+        [timeline, levelTimeline],
+    );
+
     const hasActivity = React.useMemo(
-        () => hasActivityInTimeline(timeline),
-        [timeline],
+        () => mode === 'level'
+            ? hasActivityInTimeline(levelTimeline)
+            : hasActivityInTimeline(flowTimeline) || hasActivityInTimeline(levelTimeline),
+        [mode, flowTimeline, levelTimeline],
     );
 
     return (
         <Card className="@container/card px-4 lg:px-6">
-            <CardHeader className="px-0">
-                <CardTitle>Динамика проекта</CardTitle>
-                <CardAction className="w-full sm:w-auto">
-                    <ToggleGroup
-                        type="single"
-                        value={timeRange}
-                        onValueChange={(value) => {
-                            if (value) setTimeRange(value as DynamicsRange);
-                        }}
-                        variant="outline"
-                        className="hidden w-fit *:data-[slot=toggle-group-item]:!px-3 @[767px]/card:flex"
-                    >
-                        <ToggleGroupItem value="1m">1 месяц</ToggleGroupItem>
-                        <ToggleGroupItem value="3m">3 месяца</ToggleGroupItem>
-                        <ToggleGroupItem value="12m">12 месяцев</ToggleGroupItem>
-                    </ToggleGroup>
-                    <Select value={timeRange} onValueChange={(value) => setTimeRange(value as DynamicsRange)}>
-                        <SelectTrigger
-                            className="ml-auto flex h-8 w-[6.5rem] text-xs **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate @[767px]/card:hidden"
-                            size="sm"
-                            aria-label="Выбрать период"
-                        >
-                            <SelectValue placeholder="Период" />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                            <SelectItem value="1m" className="rounded-lg">1 месяц</SelectItem>
-                            <SelectItem value="3m" className="rounded-lg">3 месяца</SelectItem>
-                            <SelectItem value="12m" className="rounded-lg">12 месяцев</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </CardAction>
+            <CardHeader className="px-0 gap-3 !grid-cols-1">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+                    <CardTitle>Динамика проекта</CardTitle>
+                    <Tabs value={mode} onValueChange={(value) => setMode(value as DynamicsMode)} className="w-full sm:ml-auto sm:w-auto sm:shrink-0">
+                        <TabsList className="w-full justify-start overflow-x-auto sm:w-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
+                            <TabsTrigger value="level" aria-label="Режим Уровень" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                <AppWindowIcon aria-hidden="true" className="size-4" />
+                                Уровень
+                            </TabsTrigger>
+                            <TabsTrigger value="flow" aria-label="Режим Поток" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                <CodeIcon aria-hidden="true" className="size-4" />
+                                Поток
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </div>
+                <div className="w-full">
+                    <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as DynamicsRange)} className="w-full sm:ml-auto sm:w-auto">
+                        <TabsList className="w-full justify-start overflow-x-auto sm:w-fit h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
+                            <TabsTrigger value="1m" aria-label="Период 1 месяц" className="flex-none px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                <CalendarIcon aria-hidden="true" className="size-4" />
+                                <span className="sm:hidden">1м</span>
+                                <span className="hidden sm:inline">1 месяц</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="3m" aria-label="Период 3 месяца" className="flex-none px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                <CalendarIcon aria-hidden="true" className="size-4" />
+                                <span className="sm:hidden">3м</span>
+                                <span className="hidden sm:inline">3 месяца</span>
+                            </TabsTrigger>
+                            <TabsTrigger value="12m" aria-label="Период 12 месяцев" className="flex-none px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                <CalendarIcon aria-hidden="true" className="size-4" />
+                                <span className="sm:hidden">12м</span>
+                                <span className="hidden sm:inline">12 месяцев</span>
+                            </TabsTrigger>
+                        </TabsList>
+                    </Tabs>
+                </div>
             </CardHeader>
             <CardContent className="px-0 pt-4 sm:pt-6">
                 {!hasActivity ? (
@@ -122,7 +146,7 @@ export function HomeDynamicsChart({ data }: HomeDynamicsChartProps) {
                         config={chartConfig}
                         className="aspect-auto h-[200px] sm:h-[280px] w-full"
                     >
-                        <ComposedChart data={timeline}>
+                        <ComposedChart data={chartData}>
                             <defs>
                                 <linearGradient id="homeFillExecution" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stopColor="var(--color-executionPlan)" stopOpacity={0.1} />
@@ -205,6 +229,16 @@ export function HomeDynamicsChart({ data }: HomeDynamicsChartProps) {
                                 strokeWidth={2}
                                 strokeDasharray="5 5"
                                 dot={{ r: 2, fill: "var(--color-procurementFact)" }}
+                                activeDot={{ r: 4 }}
+                                connectNulls
+                            />
+                            <Line
+                                dataKey="balance"
+                                name="balance"
+                                type="monotone"
+                                stroke="var(--color-balance)"
+                                strokeWidth={2}
+                                dot={false}
                                 activeDot={{ r: 4 }}
                                 connectNulls
                             />

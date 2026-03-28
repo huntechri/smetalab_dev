@@ -1,4 +1,4 @@
-import { and, eq, exists, gte, lte, sql } from 'drizzle-orm';
+import { and, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -26,6 +26,8 @@ const toIsoDate = (value: Date) => {
 };
 const toIsoTimestamp = (value: Date) => value.toISOString();
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
+const ESTIMATE_STATUS_APPROVED = 'approved' as const;
+const ESTIMATE_VISIBLE_STATUSES = [ESTIMATE_STATUS_IN_PROGRESS, ESTIMATE_STATUS_APPROVED] as const;
 const endOfMonth = (value: Date) => new Date(value.getFullYear(), value.getMonth() + 1, 0, 23, 59, 59, 999);
 
 const normalizeMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
@@ -103,7 +105,7 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         gte(estimateExecutionRows.createdAt, startDate),
@@ -121,7 +123,7 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         sql`${estimateExecutionRows.completedAt} IS NOT NULL`,
@@ -141,7 +143,7 @@ export class ProjectPerformanceDynamicsService {
                 .where(
                     and(
                         eq(estimates.projectId, projectId),
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         eq(estimateRows.kind, 'material'),
                         withActiveTenant(estimates, teamId),
                         withActiveTenant(estimateRows, teamId),
@@ -167,7 +169,7 @@ export class ProjectPerformanceDynamicsService {
                                 .where(
                                     and(
                                         eq(estimates.projectId, projectId),
-                                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                                         withActiveTenant(estimates, teamId),
                                     ),
                                 ),
