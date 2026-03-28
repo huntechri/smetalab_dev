@@ -7,8 +7,14 @@ import { TeamMembersCard } from '../components/TeamMembersCard';
 import { useTeamPage } from '../hooks/useTeamPage';
 import { Card } from '@/shared/ui/card';
 import { Separator } from '@/shared/ui/separator';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 export function TeamScreen() {
+    useBreadcrumbs([
+        { label: 'Главная', href: '/app' },
+        { label: 'Команда' },
+    ]);
+
     const { hasPermission } = usePermissions();
     const {
         email,
