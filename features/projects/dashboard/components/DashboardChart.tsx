@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts"
+import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis, ReferenceLine } from "recharts"
 
 import {
     Card,
@@ -30,24 +30,24 @@ import {
     ToggleGroupItem,
 } from "@/shared/ui/toggle-group"
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service'
-import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
+import { buildDynamicsTimeline, DynamicsRange, hasActivityInTimeline, toIsoDate } from '../lib/performance-dynamics'
 
 const chartConfig = {
     executionPlan: {
         label: "План раб.",
-        color: "var(--chart-1)",
+        color: "hsl(217, 91%, 60%)",
     },
     executionFact: {
         label: "Факт раб.",
-        color: "var(--chart-2)",
+        color: "hsl(224, 76%, 48%)",
     },
     procurementPlan: {
         label: "План мат.",
-        color: "var(--chart-3)",
+        color: "hsl(162, 72%, 48%)",
     },
     procurementFact: {
         label: "Факт мат.",
-        color: "var(--chart-4)",
+        color: "hsl(163, 94%, 24%)",
     },
 } satisfies ChartConfig
 
@@ -124,13 +124,9 @@ export function DashboardChart({ data }: DashboardChartProps) {
                     >
                         <ComposedChart data={timeline}>
                             <defs>
-                                <linearGradient id="fillExecutionPlan" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-executionPlan)" stopOpacity={0.2} />
-                                    <stop offset="95%" stopColor="var(--color-executionPlan)" stopOpacity={0.04} />
-                                </linearGradient>
-                                <linearGradient id="fillProcurementPlan" x1="0" y1="0" x2="0" y2="1">
-                                    <stop offset="5%" stopColor="var(--color-procurementPlan)" stopOpacity={0.16} />
-                                    <stop offset="95%" stopColor="var(--color-procurementPlan)" stopOpacity={0.04} />
+                                <linearGradient id="fillExecution" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="var(--color-executionPlan)" stopOpacity={0.1} />
+                                    <stop offset="100%" stopColor="var(--color-executionPlan)" stopOpacity={0.01} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border" />
@@ -155,23 +151,15 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 }).format(Number(value))}
                             />
                             <ChartTooltip
-                                cursor={false}
+                                cursor={{ stroke: 'var(--border)', strokeWidth: 1 }}
                                 content={
                                     <ChartTooltipContent
-                                        className="max-w-[min(18rem,calc(100vw-2rem))] text-[11px] sm:text-xs"
+                                        className="w-[180px]"
                                         labelFormatter={(value) => {
                                             const date = new Date(value as string)
-
-                                            if (timeRange === '1m') {
-                                                return date.toLocaleDateString('ru-RU', {
-                                                    month: 'long',
-                                                    day: 'numeric',
-                                                    year: 'numeric',
-                                                })
-                                            }
-
                                             return date.toLocaleDateString('ru-RU', {
                                                 month: 'long',
+                                                day: timeRange === '1m' ? 'numeric' : undefined,
                                                 year: 'numeric',
                                             })
                                         }}
@@ -184,37 +172,41 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 dataKey="executionPlan"
                                 name="executionPlan"
                                 type="monotone"
-                                fill="url(#fillExecutionPlan)"
+                                fill="url(#fillExecution)"
                                 stroke="var(--color-executionPlan)"
                                 strokeWidth={2}
+                                connectNulls
                             />
                             <Area
                                 dataKey="procurementPlan"
                                 name="procurementPlan"
                                 type="monotone"
-                                fill="url(#fillProcurementPlan)"
+                                fill="none"
                                 stroke="var(--color-procurementPlan)"
                                 strokeWidth={2}
+                                connectNulls
                             />
                             <Line
                                 dataKey="executionFact"
                                 name="executionFact"
                                 type="monotone"
                                 stroke="var(--color-executionFact)"
-                                strokeWidth={2.5}
-                                strokeDasharray="6 4"
-                                dot={{ r: 2 }}
+                                strokeWidth={2}
+                                strokeDasharray="5 5"
+                                dot={{ r: 2, fill: "var(--color-executionFact)" }}
                                 activeDot={{ r: 4 }}
+                                connectNulls
                             />
                             <Line
                                 dataKey="procurementFact"
                                 name="procurementFact"
                                 type="monotone"
                                 stroke="var(--color-procurementFact)"
-                                strokeWidth={2.5}
-                                strokeDasharray="6 4"
-                                dot={{ r: 2 }}
+                                strokeWidth={2}
+                                strokeDasharray="5 5"
+                                dot={{ r: 2, fill: "var(--color-procurementFact)" }}
                                 activeDot={{ r: 4 }}
+                                connectNulls
                             />
                         </ComposedChart>
                     </ChartContainer>

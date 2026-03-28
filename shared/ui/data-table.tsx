@@ -363,7 +363,7 @@ export function DataTable<TData, TValue>({
                                             return (
                                                 <th
                                                     key={header.id}
-                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
                                                     style={{ width: `${header.getSize()}px` }}
                                                     aria-sort={ariaSort}
                                                 >
@@ -371,7 +371,7 @@ export function DataTable<TData, TValue>({
                                                         isSortable ? (
                                                             <button
                                                                 type="button"
-                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer text-white/90 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                 onClick={header.column.getToggleSortingHandler()}
                                                                 onKeyDown={(e) => {
                                                                     if (e.key === 'Enter' || e.key === ' ') {
@@ -448,7 +448,7 @@ export function DataTable<TData, TValue>({
                                                     <th
                                                         key={header.id}
                                                         colSpan={header.colSpan}
-                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[12px] font-medium text-white/90 border-b border-white/10 tracking-wider transition-colors bg-black"
+                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
                                                         style={{ width: header.getSize() }}
                                                         aria-sort={ariaSort}
                                                     >
@@ -456,7 +456,7 @@ export function DataTable<TData, TValue>({
                                                             isSortable ? (
                                                                 <button
                                                                     type="button"
-                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer text-white/90 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
                                                                     onClick={header.column.getToggleSortingHandler()}
                                                                     onKeyDown={(e) => {
                                                                         if (e.key === 'Enter' || e.key === ' ') {

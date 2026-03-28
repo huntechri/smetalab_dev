@@ -41,7 +41,8 @@ export function ProjectsToolbar({
             </div>
             <Button
                 onClick={onAddClick}
-                className="w-full sm:w-auto h-9 text-xs md:text-sm font-medium tracking-tight transition-colors active:scale-95 shadow-sm"
+                variant="ghost"
+                className="w-full sm:w-auto h-9 text-[14px] font-medium leading-[20px] transition-colors bg-white hover:bg-secondary border border-border rounded-[7.6px] px-3 active:scale-95 shadow-none"
             >
                 Создать проект
             </Button>
