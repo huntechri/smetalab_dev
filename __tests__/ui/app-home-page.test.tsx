@@ -12,6 +12,7 @@ describe('AppHomeScreen', () => {
                     progress: 62,
                     remainingDays: 12,
                 }}
+                showDynamicsChart={true}
                 dynamics={[
                     {
                         date: '2026-01-10',
@@ -29,7 +30,7 @@ describe('AppHomeScreen', () => {
         expect(screen.getByText('Прибыль')).toBeInTheDocument();
         expect(screen.getByText('Прогресс')).toBeInTheDocument();
         expect(screen.getByText('Срок')).toBeInTheDocument();
-        expect(screen.getByText('Динамика проекта')).toBeInTheDocument();
+        expect(screen.getByText((_, element) => element?.textContent === 'Динамика проекта')).toBeInTheDocument();
 
         expect(screen.queryByText('Фокус на сегодня')).not.toBeInTheDocument();
         expect(screen.queryByText('Команда')).not.toBeInTheDocument();
