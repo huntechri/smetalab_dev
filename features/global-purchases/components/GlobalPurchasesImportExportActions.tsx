@@ -18,7 +18,7 @@ export function GlobalPurchasesImportExportActions({
   onImportClick,
   onFileChange,
 }: GlobalPurchasesImportExportActionsProps) {
-  const buttonClassName = 'h-8 px-2 gap-1.5 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] shadow-none transition-all justify-center';
+  const buttonClassName = 'h-8 px-3 gap-1.5 bg-white hover:bg-secondary border border-border rounded-[7.6px] text-[14px] font-medium leading-[20px] transition-all active:scale-95 shadow-none text-foreground justify-center';
 
   return (
     <>

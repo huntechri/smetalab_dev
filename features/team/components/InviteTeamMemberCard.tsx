@@ -44,7 +44,7 @@ export function InviteTeamMemberCard({
                             placeholder="colleague@company.com"
                             value={email}
                             onChange={(event) => onEmailChange(event.target.value)}
-                            className="h-9 text-sm transition-colors"
+                            className="h-8 rounded-[7.6px] bg-white border border-border shadow-none text-[14px] font-medium leading-[20px] transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                             required
                         />
                     </div>
@@ -52,9 +52,9 @@ export function InviteTeamMemberCard({
                         <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="standard" className="w-full justify-between sm:w-44 h-9">
+                                <Button variant="standard" className="w-full justify-between sm:w-44 h-8 px-3 gap-1.5 shadow-none">
                                     {getRoleLabel(role)}
-                                    <Shield className="h-4 w-4 text-muted-foreground" />
+                                    <Shield className="size-3.5 text-muted-foreground opacity-70" />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
@@ -64,8 +64,8 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" variant="standard" disabled={isInviting} className="w-full sm:w-auto h-9 shrink-0">
-                        <Mail className="mr-2 h-4 w-4" />
+                    <Button type="submit" variant="standard" disabled={isInviting} className="w-full sm:w-auto h-8 px-3 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-none">
+                        <Mail className="size-3.5" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
                 </form>
