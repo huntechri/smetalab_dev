@@ -64,7 +64,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className={cn("w-full justify-between h-8 font-normal text-xs px-2", className)}
+                    className={cn("w-full justify-between h-8 font-normal text-[12px] px-2", className)}
                 >
                     <span className="truncate">{value || placeholder}</span>
                     <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
@@ -76,14 +76,14 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                         placeholder="Поиск или ввод..."
                         value={inputValue}
                         onValueChange={setInputValue}
-                        className="h-8 text-xs"
+                        className="h-8 text-[12px]"
                     />
                     <CommandList className="max-h-[200px]">
                         <CommandEmpty>
                             <div className="p-1 px-2">
                                 <Button
                                     variant="ghost"
-                                    className="w-full justify-start text-[10px] h-7 px-1 text-primary hover:text-primary"
+                                    className="w-full justify-start text-[12px] h-7 px-1 text-primary hover:text-primary"
                                     onClick={handleCreate}
                                 >
                                     <Plus className="mr-1 h-3 w-3" />
@@ -97,7 +97,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                                     key={unit}
                                     value={unit}
                                     onSelect={handleSelect}
-                                    className="text-xs py-1"
+                                    className="text-[12px] py-1"
                                 >
                                     <Check
                                         className={cn(

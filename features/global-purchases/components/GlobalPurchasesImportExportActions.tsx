@@ -18,6 +18,8 @@ export function GlobalPurchasesImportExportActions({
   onImportClick,
   onFileChange,
 }: GlobalPurchasesImportExportActionsProps) {
+  const buttonClassName = 'h-8 px-2 gap-1.5 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] shadow-none transition-all justify-center';
+
   return (
     <>
       <input
@@ -25,6 +27,8 @@ export function GlobalPurchasesImportExportActions({
         type="file"
         accept=".csv"
         className="hidden"
+        aria-label="Импорт закупок из CSV"
+        title="Импорт закупок из CSV"
         onChange={(event) => void onFileChange(event)}
       />
 
@@ -34,7 +38,7 @@ export function GlobalPurchasesImportExportActions({
             type="button"
             variant="secondary"
             size="sm"
-            className="h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none shrink-0"
+            className={buttonClassName}
             onClick={onExport}
             aria-label="Экспорт закупок"
           >
@@ -51,7 +55,7 @@ export function GlobalPurchasesImportExportActions({
             type="button"
             variant="secondary"
             size="sm"
-            className="h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none shrink-0"
+            className={buttonClassName}
             onClick={onImportClick}
             aria-label="Импорт закупок"
           >

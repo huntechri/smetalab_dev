@@ -35,7 +35,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
-    const globalPurchasesBtnClassName = "h-8 px-2 gap-[6px] text-[14px] font-medium rounded-[7.6px] bg-background text-foreground border border-border/70 hover:bg-secondary/80 transition-colors shadow-sm md:shadow-none";
+    const globalPurchasesBtnClassName = "h-8 px-2 gap-1.5 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] shadow-none transition-all justify-center";
 
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
@@ -190,6 +190,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
                 height="625px"
+                filterInputClassName="bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]"
                 compactMobileToolbar
                 actions={(
                     <div className="flex flex-col xl:flex-row w-full xl:w-auto items-stretch xl:items-center gap-3 xl:gap-2">

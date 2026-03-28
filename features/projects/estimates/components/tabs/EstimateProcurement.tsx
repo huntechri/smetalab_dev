@@ -19,27 +19,27 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
     maximumFractionDigits: 2,
 });
 
-const tableCellTextClassName = 'text-xs md:text-sm';
-const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal text-muted-foreground md:text-sm';
-const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs md:text-sm';
+const tableCellTextClassName = 'text-xs';
+const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal text-muted-foreground';
+const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs';
 
 const renderDeltaBadge = (value: number) => {
     if (value === 0) {
-        return <Badge variant="secondary" className="h-6 px-2 text-xs md:text-sm">0</Badge>;
+        return <Badge variant="secondary" className="h-6 px-2 text-[12px]">0</Badge>;
     }
 
     if (value > 0) {
-        return <Badge className="h-6 px-2 text-xs md:text-sm bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
+        return <Badge className="h-6 px-2 text-[12px] bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge variant="destructive" className="h-6 px-2 text-xs md:text-sm">{numberFormatter.format(value)}</Badge>;
+    return <Badge variant="destructive" className="h-6 px-2 text-[12px]">{numberFormatter.format(value)}</Badge>;
 };
 
 const columns: ColumnDef<EstimateProcurementRow>[] = [
     {
         accessorKey: 'materialName',
         header: 'Материал',
-        cell: ({ row }) => <div className="text-xs md:text-sm font-normal truncate" title={row.original.materialName}>{row.original.materialName}</div>,
+        cell: ({ row }) => <div className="text-xs font-normal truncate" title={row.original.materialName}>{row.original.materialName}</div>,
         size: 450,
     },
     {
@@ -161,15 +161,15 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     }
 
     return (
-        <div className="space-y-4">
+        <div className="space-y-2">
             <DataTable
                 columns={columns}
                 data={rows}
                 filterColumn="materialName"
                 filterPlaceholder="Поиск по материалам..."
-                height="580px"
+                height="600px"
             />
-            <div className="flex justify-end px-1">
+            <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
             </div>
         </div>

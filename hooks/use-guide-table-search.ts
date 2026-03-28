@@ -38,6 +38,7 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
     const [searchTerm, setSearchTerm] = useState('');
     const [isAiMode, setIsAiMode] = useState(false);
     const [isAiSearching, startAiSearchTransition] = useTransition();
+    const [isSearching, setIsSearching] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
 
@@ -63,14 +64,17 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
             return;
         }
 
-        setIsLoadingMore(true);
-        const res = await searchPage({ query: targetQuery });
-        if (res.success) {
-            const nextData = res.data ?? [];
-            setData(nextData);
-            setHasMore(nextData.length === pageSize);
+        setIsSearching(true);
+        try {
+            const res = await searchPage({ query: targetQuery });
+            if (res.success) {
+                const nextData = res.data ?? [];
+                setData(nextData);
+                setHasMore(nextData.length === pageSize);
+            }
+        } finally {
+            setIsSearching(false);
         }
-        setIsLoadingMore(false);
     };
 
     useEffect(() => {
@@ -84,22 +88,25 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
         if (isLoadingMore || !hasMore || isAiMode) return;
 
         setIsLoadingMore(true);
-        const lastItem = data[data.length - 1];
-        const cursor = getCursorFromLast(lastItem);
-        const res = await loadMorePage({
-            query: searchTerm,
-            ...cursor,
-        });
+        try {
+            const lastItem = data[data.length - 1];
+            const cursor = getCursorFromLast(lastItem);
+            const res = await loadMorePage({
+                query: searchTerm,
+                ...cursor,
+            });
 
-        const nextData = res.data ?? [];
+            const nextData = res.data ?? [];
 
-        if (res.success && nextData.length > 0) {
-            setData(prev => [...prev, ...nextData]);
-            setHasMore(nextData.length === pageSize);
-        } else {
-            setHasMore(false);
+            if (res.success && nextData.length > 0) {
+                setData(prev => [...prev, ...nextData]);
+                setHasMore(nextData.length === pageSize);
+            } else {
+                setHasMore(false);
+            }
+        } finally {
+            setIsLoadingMore(false);
         }
-        setIsLoadingMore(false);
     };
 
     return {
@@ -108,6 +115,7 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
         isAiMode,
         setIsAiMode,
         isAiSearching,
+        isSearching,
         isLoadingMore,
         handleSearch,
         loadMore

@@ -46,6 +46,7 @@ import { getEstimateColumns } from "./columns";
 import { WorkCatalogPicker } from "@/features/catalog/components/WorkCatalogPicker.client";
 import { MaterialCatalogDialog } from "@/features/catalog/components/MaterialCatalogDialog.client";
 import { CatalogMaterial, CatalogWork } from "@/features/catalog/types/dto";
+import { estimateBadgeClassName } from "../estimate-badge-styles";
 import {
   ESTIMATE_COEF_MAX,
   ESTIMATE_COEF_MIN,
@@ -773,7 +774,7 @@ export function EstimateTable({
   };
 
   return (
-    <div className="space-y-3 [--table-height:380px] md:[--table-height:532px]">
+    <div className="space-y-2 [--table-height:600px]">
       <DataTable
         columns={getEstimateColumns({
           expandedWorkIds,
@@ -966,16 +967,16 @@ export function EstimateTable({
           </div>
         }
       />
-      <div className="flex flex-wrap items-center justify-end gap-2 px-1">
-        <Badge variant="outline" className="flex items-center gap-1.5 px-2 h-7 rounded-md border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-          <span className="text-[10px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Работы:</span>
-          <span className="text-xs font-semibold tabular-nums">
+      <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/60 bg-background/95 px-1 pt-1">
+        <Badge variant="outline" className={estimateBadgeClassName}>
+          <span>Работы:</span>
+          <span className="text-[10px] font-bold tabular-nums normal-case tracking-normal leading-[15px]">
             {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.works)}
           </span>
         </Badge>
-        <Badge variant="outline" className="flex items-center gap-1.5 px-2 h-7 rounded-md border bg-muted/30 hover:bg-muted/30 text-foreground font-normal">
-          <span className="text-[10px] sm:text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Материалы:</span>
-          <span className="text-xs font-semibold tabular-nums">
+        <Badge variant="outline" className={estimateBadgeClassName}>
+          <span>Материалы:</span>
+          <span className="text-[10px] font-bold tabular-nums normal-case tracking-normal leading-[15px]">
             {new Intl.NumberFormat("ru-RU", { style: 'currency', currency: 'RUB', maximumFractionDigits: 2 }).format(totals.materials)}
           </span>
         </Badge>

@@ -151,9 +151,9 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/2" placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
+                return <Input className="h-8 text-[12px] font-medium border-primary/20 bg-primary/2" placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
             }
-            return <div className="font-medium text-xs md:text-sm px-2 text-muted-foreground">{row.getValue("code")}</div>
+            return <div className="font-medium text-[12px] px-2 text-muted-foreground">{row.getValue("code")}</div>
         }
     },
     {
@@ -164,15 +164,15 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs font-medium border-primary/20 bg-primary/2" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
+                return <Input className="h-8 text-[12px] font-medium border-primary/20 bg-primary/2" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
             }
             return (
                 <div className="flex flex-col gap-0.5 py-1 min-w-0">
-                    <span className="text-xs md:text-sm font-normal truncate" title={row.getValue("name")}>
+                    <span className="text-[12px] font-normal truncate" title={row.getValue("name")}>
                         {row.getValue("name")}
                     </span>
                     {row.original.vendor && (
-                        <span className="text-[10px] text-foreground/80 font-medium truncate uppercase tracking-tight">
+                        <span className="text-[12px] text-foreground/80 font-medium truncate uppercase tracking-tight">
                             {row.original.vendor}
                         </span>
                     )}
@@ -188,17 +188,17 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs border-primary/20" placeholder="URL..." value={row.original.imageUrl || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl: e.target.value })} />
+                return <Input className="h-8 text-[12px] border-primary/20" placeholder="URL..." value={row.original.imageUrl || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl: e.target.value })} />
             }
             const imageUrl = row.original.imageLocalUrl ?? row.original.imageUrl
-            if (!imageUrl) return <div className="w-10 h-10 bg-muted/30 rounded flex items-center justify-center text-[10px] text-muted-foreground/50">N/A</div>
+            if (!imageUrl) return <div className="w-[25px] h-[25px] bg-muted/30 rounded flex items-center justify-center text-[10px] text-muted-foreground/50">N/A</div>
             return (
-                <div className="w-10 h-10 relative group-hover/row:scale-110 transition-transform overflow-hidden rounded shadow-sm border border-border/50">
+                <div className="w-[25px] h-[25px] relative group-hover/row:scale-110 transition-transform overflow-hidden rounded shadow-sm border border-border/50">
                     <Image
                         src={imageUrl}
                         alt={row.original.name ? `Фото материала: ${row.original.name}` : 'Фото материала'}
                         fill
-                        sizes="40px"
+                        sizes="25px"
                         className="object-cover"
                         loading="lazy"
                     />
@@ -214,9 +214,9 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs text-center border-primary/20 bg-primary/2" placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
+                return <Input className="h-8 text-[12px] text-center border-primary/20 bg-primary/2" placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
             }
-            return <div className="text-center text-xs md:text-sm text-muted-foreground font-medium">{row.getValue("unit")}</div>
+            return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
         }
     },
     {
@@ -227,11 +227,11 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs text-center font-bold border-primary/20 bg-primary/2" type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
+                return <Input className="h-8 text-[12px] text-center font-bold border-primary/20 bg-primary/2" type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
             }
             const price = parseFloat(row.getValue("price"))
             const formatted = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", minimumFractionDigits: 0 }).format(price || 0)
-            return <div className="text-center font-bold text-xs md:text-sm tracking-tight">{formatted}</div>
+            return <div className="text-center font-bold text-[12px] tracking-tight">{formatted}</div>
         }
     },
     {
@@ -242,17 +242,14 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-xs border-primary/20" placeholder="Кат1..." value={row.original.categoryLv1 || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1: e.target.value })} />
+                return <Input className="h-8 text-[12px] border-primary/20" placeholder="Кат1..." value={row.original.categoryLv1 || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1: e.target.value })} />
             }
             const cats = [row.original.categoryLv1, row.original.categoryLv2, row.original.categoryLv3, row.original.categoryLv4].filter(Boolean)
             return (
                 <div className="flex flex-col gap-0.5">
-                    <span className="text-[11px] font-medium text-muted-foreground truncate" title={cats.join(' > ')}>
+                    <span className="text-[10px] font-medium text-muted-foreground whitespace-normal break-words leading-tight" title={cats.join(' > ')}>
                         {cats.join(' / ') || '—'}
                     </span>
-                    {row.original.weight && (
-                        <span className="text-[10px] text-foreground/70">{row.original.weight} кг</span>
-                    )}
                 </div>
             )
         }
