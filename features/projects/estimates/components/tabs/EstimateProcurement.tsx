@@ -166,7 +166,8 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 columns={columns}
                 data={rows}
                 filterColumn="materialName"
-                filterPlaceholder="Поиск по материалам..."
+                filterPlaceholder="Поиск..."
+                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">

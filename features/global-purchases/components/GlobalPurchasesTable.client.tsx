@@ -35,7 +35,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
-    const globalPurchasesBtnClassName = "h-8 px-2 gap-1.5 bg-transparent hover:bg-[hsl(240_4.7%_96%_/_0.82)] text-[14px] leading-[21px] font-medium font-[Manrope] rounded-[7.6px] border border-[hsl(240_5.9%_90%_/_0.7)] text-[hsl(240_10%_3.9%)] shadow-none transition-all justify-center";
+
 
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
@@ -188,9 +188,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 columns={columns}
                 data={displayedRows}
                 filterColumn="materialName"
-                filterPlaceholder="Поиск по материалам..."
+                filterPlaceholder="Поиск..."
                 height="625px"
-                filterInputClassName="bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]"
+                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 compactMobileToolbar
                 actions={(
                     <div className="flex flex-col xl:flex-row w-full xl:w-auto items-stretch xl:items-center gap-3 xl:gap-2">
@@ -201,11 +201,10 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
                                             <Button
-                                                variant="secondary"
+                                                variant="standard"
                                                 size="sm"
                                                 className={cn(
-                                                    globalPurchasesBtnClassName,
-                                                    "w-full sm:w-[200px] justify-between",
+                                                    "h-8 w-full sm:w-[200px] justify-between",
                                                     !filterProjectId && "text-muted-foreground/80"
                                                 )}
                                             >
@@ -262,7 +261,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
-                                            <Button type="button" variant="secondary" size="sm" className={cn(globalPurchasesBtnClassName, "w-full sm:w-[255px] justify-between font-mono tabular-nums")}>
+                                            <Button type="button" variant="standard" size="sm" className="h-8 w-full sm:w-[255px] justify-between font-mono tabular-nums">
                                                 <CalendarDays className="size-4 opacity-70" />
                                                 <span className="flex-1 text-left sm:text-center text-[13px] font-medium tracking-tight">
                                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
@@ -300,9 +299,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="secondary"
+                                        variant="standard"
                                         size="sm"
-                                        className={cn(globalPurchasesBtnClassName, "px-3")}
+                                        className="h-8 px-3"
                                         onClick={() => void handleAddManualRow()}
                                         disabled={isAddingManual}
                                         aria-label="Добавить строку вручную"
@@ -318,9 +317,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="secondary"
+                                        variant="standard"
                                         size="sm"
-                                        className={cn(globalPurchasesBtnClassName)}
+                                        className="h-8"
                                         onClick={() => setIsCatalogOpen(true)}
                                         disabled={isAddingCatalog}
                                         aria-label="Добавить из справочника"
