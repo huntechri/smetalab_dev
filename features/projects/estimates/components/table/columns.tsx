@@ -3,7 +3,7 @@
 import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
-import { ChevronDown, ChevronRight, FileStack, FolderTree, FolderUp, Plus, RefreshCw, Settings, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { SectionTotals } from '../../lib/section-totals';
 import { EditableCell } from './cells/EditableCell';
@@ -183,29 +183,29 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         <>
                             <Button
                                 size="icon"
-                                variant="ghost"
-                                className="size-7"
+                                variant="standard"
+                                className="size-7 rounded-[6px]"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
                                 aria-label="Добавить материал"
                             >
-                                <Plus className="size-3.5 text-muted-foreground" />
+                                <Wrench className="size-3.5 text-muted-foreground" />
                             </Button>
                             <Button
                                 size="icon"
-                                variant="ghost"
-                                className="size-7"
+                                variant="standard"
+                                className="size-7 rounded-[6px]"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
                                 aria-label="Добавить работу ниже"
                             >
-                                <FileStack className="size-3.5 text-primary/80" />
+                                <HardHat className="size-3.5 text-primary/80" />
                             </Button>
                         </>
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="ghost" className="size-7 focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
+                            <Button size="icon" variant="standard" className="size-7 rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>

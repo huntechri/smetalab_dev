@@ -52,7 +52,7 @@ export function InviteTeamMemberCard({
                         <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" className="w-full justify-between sm:w-44 h-9 text-sm shadow-sm">
+                                <Button variant="standard" className="w-full justify-between sm:w-44 h-9">
                                     {getRoleLabel(role)}
                                     <Shield className="h-4 w-4 text-muted-foreground" />
                                 </Button>
@@ -64,7 +64,7 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" disabled={isInviting} className="w-full sm:w-auto h-9 text-sm shadow-sm shrink-0">
+                    <Button type="submit" variant="standard" disabled={isInviting} className="w-full sm:w-auto h-9 shrink-0">
                         <Mail className="mr-2 h-4 w-4" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>

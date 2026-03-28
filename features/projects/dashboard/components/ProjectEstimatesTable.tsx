@@ -54,8 +54,8 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 actions={
                     <Button
                         onClick={() => setIsDialogOpen(true)}
-                        variant="ghost"
-                        className="w-full sm:w-auto h-9 text-[14px] font-medium leading-[20px] transition-colors bg-white hover:bg-secondary border border-border rounded-[7.6px] px-3 shadow-none"
+                        variant="standard"
+                        className="w-full sm:w-auto"
                     >
                         Создать смету
                     </Button>

@@ -160,10 +160,10 @@ export function CreateProjectDialog({
                                             <PopoverTrigger asChild>
                                                 <FormControl>
                                                     <Button
-                                                        variant="outline"
+                                                        variant="standard"
                                                         role="combobox"
                                                         className={cn(
-                                                            'w-full justify-between font-normal',
+                                                            'w-full justify-between font-medium h-8 px-2',
                                                             !field.value && 'text-muted-foreground'
                                                         )}
                                                     >
@@ -262,13 +262,13 @@ export function CreateProjectDialog({
                         <DialogFooter>
                             <Button
                                 type="button"
-                                variant="ghost"
+                                variant="standard"
                                 onClick={() => onOpenChange(false)}
                                 disabled={isSubmitting}
                             >
                                 Отменить
                             </Button>
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button type="submit" variant="standard" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>

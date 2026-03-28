@@ -13,9 +13,9 @@ export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleP
         <div className="flex items-center gap-1.5 p-0.5">
             <Button
                 type="button"
-                variant="ghost"
+                variant="standard"
                 className={cn(
-                    "h-9 w-9 px-0 transition-colors bg-white hover:bg-secondary border border-border rounded-[7.6px] font-medium text-[14px] leading-[20px]",
+                    "h-8 w-9 px-0",
                     value === 'grid' && "bg-secondary"
                 )}
                 onClick={() => onValueChange('grid')}
@@ -25,9 +25,9 @@ export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleP
             </Button>
             <Button
                 type="button"
-                variant="ghost"
+                variant="standard"
                 className={cn(
-                    "h-9 w-9 px-0 transition-colors bg-white hover:bg-secondary border border-border rounded-[7.6px] font-medium text-[14px] leading-[20px]",
+                    "h-8 w-9 px-0",
                     value === 'list' && "bg-secondary"
                 )}
                 onClick={() => onValueChange('list')}

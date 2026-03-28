@@ -168,8 +168,8 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
       columns={columns}
       data={rows}
       filterColumn="name"
-      filterPlaceholder="Поиск сметы..."
-      filterInputClassName="bg-white border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40"
+      filterPlaceholder="Поиск..."
+      filterInputClassName="bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]"
       height="450px"
       actions={actions}
     />
