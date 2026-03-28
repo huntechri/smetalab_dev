@@ -73,7 +73,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div
                         className={
                             item.kind === 'section'
-                                ? 'text-[12px] font-semibold uppercase tracking-wide truncate'
+                                ? 'text-[11px] font-bold uppercase tracking-widest truncate'
                                 : item.kind === 'work'
                                   ? 'text-[12px] font-normal truncate'
                                   : 'text-[12px] italic text-muted-foreground'
@@ -136,7 +136,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-[12px] font-semibold tabular-nums">
+                    <div className="pr-6 text-right text-[11px] font-bold tracking-tight tabular-nums opacity-90">
                         Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
                     </div>
                 );
