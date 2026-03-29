@@ -1,6 +1,10 @@
 import { HomePerformanceDynamicsPoint } from '../types';
 
 export type DynamicsRange = '1m' | '3m' | '12m';
+export type DynamicsMode = 'level' | 'flow';
+export type HomeDynamicsChartPoint = HomePerformanceDynamicsPoint & {
+    balance: number;
+};
 
 type RangeBoundaries = {
     start: Date;
@@ -178,8 +182,31 @@ export const buildDynamicsTimeline = (
     return applyCarryForward(aggregated.timeline, aggregated.openingBalance);
 };
 
+export const buildDynamicsFlowTimeline = (
+    data: HomePerformanceDynamicsPoint[],
+    range: DynamicsRange,
+    now: Date = new Date(),
+): HomePerformanceDynamicsPoint[] => {
+    const { start, end } = getRangeBoundaries(range, now);
+
+    const aggregated = range === '1m'
+        ? aggregateByDay(data, start, end)
+        : aggregateByMonth(data, start, end);
+
+    return aggregated.timeline;
+};
+
 export const hasActivityInTimeline = (timeline: HomePerformanceDynamicsPoint[]) => {
     return timeline.some((point) =>
         point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
     );
+};
+
+export const withBalanceSeries = (timeline: HomePerformanceDynamicsPoint[]): HomeDynamicsChartPoint[] => {
+    return timeline.map((point) => ({
+        ...point,
+        balance: normalizeMoney(
+            point.executionPlan + point.procurementPlan - point.executionFact - point.procurementFact,
+        ),
+    }));
 };

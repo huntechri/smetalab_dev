@@ -1,11 +1,13 @@
-import { and, eq, exists, gte, lte, sql } from 'drizzle-orm';
+import { and, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { estimateExecutionRows, estimateRows, estimates, globalPurchases } from '@/lib/data/db/schema';
+import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projects } from '@/lib/data/db/schema';
 import { buildPerformanceDynamics, PerformanceDynamicsPoint } from './project-performance-dynamics.service';
 
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
+const ESTIMATE_STATUS_APPROVED = 'approved' as const;
+const ESTIMATE_VISIBLE_STATUSES = [ESTIMATE_STATUS_IN_PROGRESS, ESTIMATE_STATUS_APPROVED] as const;
 
 const toIsoDate = (value: Date) => {
     const year = value.getFullYear();
@@ -19,6 +21,25 @@ const toIsoTimestamp = (value: Date) => value.toISOString();
 const endOfMonth = (value: Date) => new Date(value.getFullYear(), value.getMonth() + 1, 0, 23, 59, 59, 999);
 
 export class HomePerformanceDynamicsService {
+    static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
+        const [estimate] = await db
+            .select({ id: estimates.id })
+            .from(estimates)
+            .innerJoin(projects, eq(projects.id, estimates.projectId))
+            .where(
+                and(
+                    eq(estimates.tenantId, teamId),
+                    eq(projects.tenantId, teamId),
+                    inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
+                    withActiveTenant(estimates, teamId),
+                    withActiveTenant(projects, teamId),
+                ),
+            )
+            .limit(1);
+
+        return Boolean(estimate);
+    }
+
     static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
         const periodEnd = endOfMonth(today);
@@ -34,10 +55,15 @@ export class HomePerformanceDynamicsService {
                 })
                 .from(estimateExecutionRows)
                 .innerJoin(estimates, eq(estimates.id, estimateExecutionRows.estimateId))
+                .innerJoin(projects, eq(projects.id, estimates.projectId))
                 .where(
                     and(
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        eq(estimates.tenantId, teamId),
+                        eq(projects.tenantId, teamId),
+                        eq(estimateExecutionRows.tenantId, teamId),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         withActiveTenant(estimates, teamId),
+                        withActiveTenant(projects, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         gte(estimateExecutionRows.createdAt, startDate),
                         lte(estimateExecutionRows.createdAt, periodEnd),
@@ -51,10 +77,15 @@ export class HomePerformanceDynamicsService {
                 })
                 .from(estimateExecutionRows)
                 .innerJoin(estimates, eq(estimates.id, estimateExecutionRows.estimateId))
+                .innerJoin(projects, eq(projects.id, estimates.projectId))
                 .where(
                     and(
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        eq(estimates.tenantId, teamId),
+                        eq(projects.tenantId, teamId),
+                        eq(estimateExecutionRows.tenantId, teamId),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         withActiveTenant(estimates, teamId),
+                        withActiveTenant(projects, teamId),
                         withActiveTenant(estimateExecutionRows, teamId),
                         sql`${estimateExecutionRows.completedAt} IS NOT NULL`,
                         sql`${estimateExecutionRows.completedAt} >= ${rangeStartTimestamp}::timestamp`,
@@ -70,11 +101,16 @@ export class HomePerformanceDynamicsService {
                 })
                 .from(estimateRows)
                 .innerJoin(estimates, eq(estimates.id, estimateRows.estimateId))
+                .innerJoin(projects, eq(projects.id, estimates.projectId))
                 .where(
                     and(
-                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                        eq(estimates.tenantId, teamId),
+                        eq(projects.tenantId, teamId),
+                        eq(estimateRows.tenantId, teamId),
+                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                         eq(estimateRows.kind, 'material'),
                         withActiveTenant(estimates, teamId),
+                        withActiveTenant(projects, teamId),
                         withActiveTenant(estimateRows, teamId),
                         gte(estimateRows.createdAt, startDate),
                         lte(estimateRows.createdAt, periodEnd),
@@ -89,17 +125,22 @@ export class HomePerformanceDynamicsService {
                 .from(globalPurchases)
                 .where(
                     and(
+                        eq(globalPurchases.tenantId, teamId),
                         withActiveTenant(globalPurchases, teamId),
                         sql`${globalPurchases.projectId} IS NOT NULL`,
                         exists(
                             db
                                 .select({ id: estimates.id })
                                 .from(estimates)
+                                .innerJoin(projects, eq(projects.id, estimates.projectId))
                                 .where(
                                     and(
+                                        eq(estimates.tenantId, teamId),
+                                        eq(projects.tenantId, teamId),
                                         eq(estimates.projectId, globalPurchases.projectId),
-                                        eq(estimates.status, ESTIMATE_STATUS_IN_PROGRESS),
+                                        inArray(estimates.status, ESTIMATE_VISIBLE_STATUSES),
                                         withActiveTenant(estimates, teamId),
+                                        withActiveTenant(projects, teamId),
                                     ),
                                 ),
                         ),

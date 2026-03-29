@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildDynamicsTimeline, hasActivityInTimeline } from '@/features/projects/dashboard/lib/performance-dynamics';
+import {
+    buildDynamicsFlowTimeline,
+    buildDynamicsTimeline,
+    canShowDynamicsChartByEstimateStatuses,
+    hasActivityInTimeline,
+    withBalanceSeries,
+} from '@/features/projects/dashboard/lib/performance-dynamics';
 import { buildPerformanceDynamics } from '@/lib/services/project-performance-dynamics.service';
 
 describe('buildPerformanceDynamics', () => {
@@ -116,9 +122,71 @@ describe('buildDynamicsTimeline', () => {
     });
 });
 
+describe('buildDynamicsFlowTimeline', () => {
+    it('returns period deltas without carry-forward', () => {
+        const now = new Date('2025-02-20T00:00:00.000Z');
+
+        const timeline = buildDynamicsFlowTimeline([
+            { date: '2024-12-10', executionPlan: 100, executionFact: 30, procurementPlan: 25, procurementFact: 10 },
+            { date: '2025-01-20', executionPlan: 10, executionFact: 3, procurementPlan: 2, procurementFact: 1 },
+        ], '1m', now);
+
+        expect(timeline.at(0)).toEqual({
+            date: '2025-01-20',
+            executionPlan: 10,
+            executionFact: 3,
+            procurementPlan: 2,
+            procurementFact: 1,
+        });
+        expect(timeline.find((item) => item.date === '2025-01-21')).toEqual({
+            date: '2025-01-21',
+            executionPlan: 0,
+            executionFact: 0,
+            procurementPlan: 0,
+            procurementFact: 0,
+        });
+    });
+});
+
 describe('hasActivityInTimeline', () => {
     it('returns false for all-zero timeline and true when any series has value', () => {
         expect(hasActivityInTimeline([{ date: '2025-02-01', executionPlan: 0, executionFact: 0, procurementPlan: 0, procurementFact: 0 }])).toBe(false);
         expect(hasActivityInTimeline([{ date: '2025-02-01', executionPlan: 0, executionFact: 1, procurementPlan: 0, procurementFact: 0 }])).toBe(true);
+    });
+});
+
+describe('withBalanceSeries', () => {
+    it('adds balance series by formula (plan work + plan materials) - (fact work + fact materials)', () => {
+        const result = withBalanceSeries([
+            {
+                date: '2025-03-01',
+                executionPlan: 100,
+                executionFact: 60,
+                procurementPlan: 30,
+                procurementFact: 10,
+            },
+        ]);
+
+        expect(result).toEqual([
+            {
+                date: '2025-03-01',
+                executionPlan: 100,
+                executionFact: 60,
+                procurementPlan: 30,
+                procurementFact: 10,
+                balance: 60,
+            },
+        ]);
+    });
+});
+
+describe('canShowDynamicsChartByEstimateStatuses', () => {
+    it('returns false when only draft statuses exist', () => {
+        expect(canShowDynamicsChartByEstimateStatuses(['draft', 'draft'])).toBe(false);
+    });
+
+    it('returns true when at least one in_progress or approved status exists', () => {
+        expect(canShowDynamicsChartByEstimateStatuses(['draft', 'in_progress'])).toBe(true);
+        expect(canShowDynamicsChartByEstimateStatuses(['approved'])).toBe(true);
     });
 });

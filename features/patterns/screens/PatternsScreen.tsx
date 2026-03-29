@@ -6,9 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Badge } from '@/shared/ui/badge';
 import { useAppToast } from '@/components/providers/use-app-toast';
+import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { estimatePatternsActionRepo, EstimatePatternListItem, EstimatePatternPreviewRow } from '@/features/projects/estimates/repository/patterns.actions';
 
 export function PatternsScreen() {
+  useBreadcrumbs([
+    { label: 'Главная', href: '/app' },
+    { label: 'Шаблоны' },
+  ]);
+
   const { toast } = useAppToast();
   const [items, setItems] = useState<EstimatePatternListItem[]>([]);
   const [selectedName, setSelectedName] = useState<string>('');
