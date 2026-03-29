@@ -14,13 +14,14 @@ export default async function AppHomePage() {
     const team = await getTeamForUser();
 
     if (!team) {
-        return <AppHomeScreen kpi={EMPTY_KPI} dynamics={[]} />;
+        return <AppHomeScreen kpi={EMPTY_KPI} dynamics={[]} showDynamicsChart={false} />;
     }
 
-    const [kpi, dynamics] = await Promise.all([
+    const [kpi, dynamics, showDynamicsChart] = await Promise.all([
         HomeDashboardKpiService.getByTeamId(team.id),
         HomePerformanceDynamicsService.listByTeamId(team.id),
+        HomePerformanceDynamicsService.hasVisibleEstimatesByTeamId(team.id),
     ]);
 
-    return <AppHomeScreen kpi={kpi} dynamics={dynamics} />;
+    return <AppHomeScreen kpi={kpi} dynamics={dynamics} showDynamicsChart={showDynamicsChart} />;
 }
