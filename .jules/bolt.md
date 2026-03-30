@@ -29,3 +29,7 @@
 ## 2026-03-30 - Status Recompute Should Be Aggregate-Driven
 **Learning:** Project status recalculation appeared in multiple flows and repeatedly loaded all estimate statuses just to answer three aggregate questions (total, approved, has-active). This duplicates O(n) data transfer on every status change.
 **Action:** For derived status fields, standardize on aggregate SQL counters and keep pure status decision logic in a shared helper to avoid regressions between call sites.
+
+## 2026-03-30 - Cache Invalidity on Soft-Delete
+**Learning:** Procurement cache freshness relied on `MAX(updatedAt)` over active source rows. After soft-delete of all material rows, active source timestamps became `NULL`, so stale cache rows survived and users still saw removed materials in procurement.
+**Action:** Cache refresh decision must explicitly handle the “sources empty but cache non-empty” state and trigger cache cleanup in that case.
