@@ -40,6 +40,7 @@ export const updateProjectAction = safeAction(
                     )
                 );
 
+            revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);
         } catch (err) {

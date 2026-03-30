@@ -5,6 +5,7 @@ import { getTeamForUser } from '@/lib/data/db/queries';
 
 const EMPTY_KPI = {
     revenue: 0,
+    expense: 0,
     profit: 0,
     progress: 0,
     remainingDays: null,

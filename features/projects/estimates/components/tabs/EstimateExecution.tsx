@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
@@ -132,12 +133,14 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
 }) {
     const [open, setOpen] = useState(false);
     const { toast } = useAppToast();
+    const router = useRouter();
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
             const created = await estimateExecutionActionsRepo.addExtraWork(estimateId, buildExtraWorkFromCatalog(catalogWork));
 
             onCreated(created);
+            router.refresh(); // Update dashboard KPI
             toast({ title: 'Работа добавлена во вкладку «Выполнение»', description: created.name });
             setOpen(false);
         } catch (error) {
@@ -179,6 +182,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const requestVersionRef = useRef<Record<string, number>>({});
     const { toast } = useAppToast();
+    const router = useRouter();
 
     const loadRows = useCallback(async (silent = false) => {
         try {
@@ -249,6 +253,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 ...item,
                 ...updated,
             } : item));
+            router.refresh(); // Update dashboard KPI
         } catch (error) {
             if (requestVersion === requestVersionRef.current[rowId] && previousRow) {
                 setRows((current) => current.map((row) => row.id === rowId ? previousRow as EstimateExecutionRow : row));
