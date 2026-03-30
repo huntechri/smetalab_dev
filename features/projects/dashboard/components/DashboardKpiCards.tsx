@@ -6,6 +6,7 @@ import { KPICard } from "@/shared/ui/kpi-card"
 type DashboardKpiCardsProps = {
     kpi: {
         revenue: number;
+        expense: number;
         profit: number;
         progress: number;
         remainingDays: number | null;
@@ -20,6 +21,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
     });
 
     const formattedRevenue = currencyFormatter.format(kpi.revenue);
+    const formattedExpense = currencyFormatter.format(kpi.expense);
     const formattedProfit = currencyFormatter.format(kpi.profit);
     const remainingDaysLabel = kpi.remainingDays === null
         ? 'Без срока'
@@ -32,13 +34,6 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
 
         const profitPercent = revenue > 0 ? (profit / revenue) * 100 : 0;
         if (profitPercent <= 15) return "text-orange-500 dark:text-orange-400";
-
-        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
-    };
-
-    const getProgressValueClassName = (progress: number) => {
-        if (progress < 30) return "text-red-600 dark:text-red-400";
-        if (progress < 60) return "text-orange-500 dark:text-orange-400";
 
         return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
     };
@@ -57,7 +52,15 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 value={formattedRevenue}
                 valueClassName="text-green-600 dark:text-green-400"
                 className="h-[72px] sm:h-[85px] md:h-[95px]"
-                tooltip="План работа + план материал"
+                tooltip="Работы по смете + материал по смете (план)"
+            />
+
+            <KPICard
+                title="Расход"
+                value={formattedExpense}
+                valueClassName="text-red-600 dark:text-red-400"
+                className="h-[72px] sm:h-[85px] md:h-[95px]"
+                tooltip="Выполнение факт + закупки факт"
             />
 
             <KPICard
@@ -65,15 +68,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 value={formattedProfit}
                 valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
                 className="h-[72px] sm:h-[85px] md:h-[95px]"
-                tooltip="(План раб. + план мат.) − (Факт раб. + факт мат.)"
-            />
-
-            <KPICard
-                title="Прогресс"
-                value={`${kpi.progress}%`}
-                valueClassName={getProgressValueClassName(kpi.progress)}
-                className="h-[72px] sm:h-[85px] md:h-[95px]"
-                tooltip="Выполнение работ"
+                tooltip="Доход общ. - Расход общ."
             />
 
             <KPICard

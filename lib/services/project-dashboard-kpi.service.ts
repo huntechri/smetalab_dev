@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
-import { estimateExecutionRows, estimateRows, estimates, globalPurchases } from '@/lib/data/db/schema';
+import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projects } from '@/lib/data/db/schema';
 
 export type ProjectDashboardKpiData = {
     plannedWorks: number;
@@ -13,6 +13,7 @@ export type ProjectDashboardKpiData = {
 
 export type ProjectDashboardKpiViewModel = {
     revenue: number;
+    expense: number;
     profit: number;
     progress: number;
     remainingDays: number | null;
@@ -45,11 +46,12 @@ export function buildProjectDashboardKpiViewModel(input: {
     now?: Date;
 }): ProjectDashboardKpiViewModel {
     const revenue = input.finance.plannedWorks + input.finance.plannedMaterials;
-    const totalActual = input.finance.actualWorks + input.finance.actualMaterials;
+    const expense = input.finance.actualWorks + input.finance.actualMaterials;
 
     return {
         revenue,
-        profit: revenue - totalActual,
+        expense,
+        profit: revenue - expense,
         progress: input.progress,
         remainingDays: calculateDaysRemaining(input.endDate, input.now),
     };
@@ -65,10 +67,14 @@ export class ProjectDashboardKpiService {
                 FROM ${estimateExecutionRows}
                 INNER JOIN ${estimates}
                     ON ${estimates.id} = ${estimateExecutionRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             ),
             material_totals AS (
                 SELECT
@@ -76,19 +82,27 @@ export class ProjectDashboardKpiService {
                 FROM ${estimateRows}
                 INNER JOIN ${estimates}
                     ON ${estimates.id} = ${estimateRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
                     AND ${estimateRows.kind} = 'material'
                     AND ${withActiveTenant(estimateRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             ),
             purchase_totals AS (
                 SELECT
                     COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0) AS actual_materials
                 FROM ${globalPurchases}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${globalPurchases.projectId}
                 WHERE
                     ${globalPurchases.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(globalPurchases, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             )
             SELECT
                 execution_totals.planned_works AS "plannedWorks",

@@ -19,6 +19,14 @@ vi.mock('@/components/providers/use-app-toast', () => ({
   useAppToast: () => ({ toast: toastMock }),
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    refresh: vi.fn(),
+    push: vi.fn(),
+    replace: vi.fn(),
+  }),
+}));
+
 const makeRows = (): EstimateMeta[] => [
   {
     id: 'est-1',

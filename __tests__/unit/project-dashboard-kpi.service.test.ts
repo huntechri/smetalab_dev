@@ -36,6 +36,7 @@ describe('project-dashboard-kpi.service', () => {
 
         expect(result).toEqual({
             revenue: 200_000,
+            expense: 130_000,
             profit: 70_000,
             progress: 65,
             remainingDays: 12,
