@@ -114,7 +114,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
     return (
         <div className="space-y-2">
 
-            // Keep tab content mounted to avoid losing optimistic estimate table state between tab switches.
+            {/* Keep estimate tab mounted to avoid losing optimistic table state between tab switches. */}
             <Tabs
                 value={tab}
                 onValueChange={(nextValue) => {
@@ -135,7 +135,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                         <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} projectSlug={project.slug} estimateName={estimate.name} />
                     </Suspense>
                 </TabsContent>
-                <TabsContent value="params" forceMount className="mt-2">
+                <TabsContent value="params" className="mt-2">
                     {loadedTabs.has('params') ? (
                         <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
                             <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
@@ -144,13 +144,13 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                         <Skeleton className="h-[520px] w-full" />
                     )}
                 </TabsContent>
-                <TabsContent value="procurement" forceMount className="mt-2">
+                <TabsContent value="procurement" className="mt-2">
                     {loadedTabs.has('procurement') ? <EstimateProcurement estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
-                <TabsContent value="execution" forceMount className="mt-2">
+                <TabsContent value="execution" className="mt-2">
                     {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
-                <TabsContent value="docs" forceMount className="mt-2">
+                <TabsContent value="docs" className="mt-2">
                     {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}
                 </TabsContent>
             </Tabs>
