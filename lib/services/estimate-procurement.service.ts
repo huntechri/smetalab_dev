@@ -303,6 +303,14 @@ export function shouldRefreshProcurementCache(params: {
     return latestSourceAt > maxRefreshedAt;
 }
 
+const toDateOrNull = (value: Date | string | null | undefined): Date | null => {
+    if (!value) return null;
+    if (value instanceof Date) return value;
+
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+};
+
 export class EstimateProcurementService {
     private static async shouldRefreshCache(teamId: number, estimateId: string, projectId: string) {
         const [cacheState] = await db
@@ -341,12 +349,13 @@ export class EstimateProcurementService {
         ]);
 
         const latestSourceAt = [planState[0]?.maxUpdatedAt, factState[0]?.maxUpdatedAt]
+            .map((value) => toDateOrNull(value as Date | string | null | undefined))
             .filter((value): value is Date => value instanceof Date)
             .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
 
         return shouldRefreshProcurementCache({
             cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
-            maxRefreshedAt: cacheState?.maxRefreshedAt ?? null,
+            maxRefreshedAt: toDateOrNull(cacheState?.maxRefreshedAt as Date | string | null | undefined),
             latestSourceAt,
         });
     }

@@ -88,6 +88,44 @@ describe('EstimateExecutionService sync behavior', () => {
         expect(progressRefreshMock).not.toHaveBeenCalled();
     });
 
+    it('soft-deletes all generated execution rows when estimate has no works', async () => {
+        dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
+
+        const txUpdateWhereMock = vi.fn().mockResolvedValue([]);
+        const txUpdateSetMock = vi.fn(() => ({ where: txUpdateWhereMock }));
+        const txUpdateMock = vi.fn(() => ({ set: txUpdateSetMock }));
+        const txSelectMock = vi.fn(() => ({
+            from: vi.fn(() => ({
+                where: vi.fn(() => ({ orderBy: vi.fn().mockResolvedValue([]) })),
+            })),
+        }));
+
+        dbMock.transaction.mockImplementation(async (callback: (tx: { execute: ReturnType<typeof vi.fn>; select: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; insert: ReturnType<typeof vi.fn> }) => Promise<unknown>) => {
+            const tx = {
+                execute: vi.fn().mockResolvedValue([
+                    {
+                        id: 'est-1',
+                        project_id: 'pr-1',
+                        coef_percent: 0,
+                        execution_sync_version: 2,
+                        execution_synced_version: 1,
+                    },
+                ]),
+                select: txSelectMock,
+                update: txUpdateMock,
+                insert: vi.fn(),
+            };
+
+            return callback(tx);
+        });
+
+        await EstimateExecutionService.syncEstimateIfStale(1, 'est-1');
+
+        expect(dbMock.transaction).toHaveBeenCalledTimes(1);
+        expect(txSelectMock).toHaveBeenCalledTimes(1);
+        expect(txUpdateMock).toHaveBeenCalledTimes(2);
+    });
+
     it('syncEstimateIfStale writes once for concurrent calls', async () => {
         dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
         let executionSyncedVersion = 0;
