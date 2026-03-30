@@ -1,5 +1,8 @@
 import * as React from 'react';
 import { DataTable } from "@/shared/ui/data-table";
+import { Button } from "@/shared/ui/button";
+import { Plus, FilePlus } from "lucide-react";
+import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { columns } from "./columns";
 import { MaterialRow } from '@/types/material-row';
 
@@ -59,6 +62,23 @@ export function MaterialsTableWrapper({
             filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
             filterColumn="name"
             filterPlaceholder="Поиск..."
+            emptyState={
+                <TableEmptyState
+                    title="Справочник материалов пуст"
+                    description="Добавьте первый материал или импортируйте базу из файла"
+                    icon={FilePlus}
+                    action={
+                        <Button
+                            variant="standard"
+                            className="h-8 rounded-[7.6px] px-6 font-medium"
+                            onClick={() => tableActions.onInsertRequest()}
+                        >
+                            <Plus className="size-3.5 mr-2" />
+                            Добавить материал
+                        </Button>
+                    }
+                />
+            }
             showAiSearch={true}
             onSearch={onSearch}
             isAiMode={isAiMode}

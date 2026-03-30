@@ -25,6 +25,7 @@ type ProjectDashboardProps = {
     performanceDynamics: PerformanceDynamicsPoint[];
     kpi: {
         revenue: number;
+        expense: number;
         profit: number;
         progress: number;
         remainingDays: number | null;
@@ -59,12 +60,6 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                     projectSlug={project.slug}
                     initialEstimates={estimates}
                 />
-
-                <div>
-                    <div className="rounded-xl border border-dashed p-8 text-center text-muted-foreground">
-                        Additional widgets (Team, Activity) will be implemented here
-                    </div>
-                </div>
             </div>
         </div>
     );

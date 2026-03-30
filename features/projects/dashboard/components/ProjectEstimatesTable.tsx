@@ -5,6 +5,8 @@ import { Button } from '@/shared/ui/button';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
+import { FilePlus } from 'lucide-react';
 
 type EstimateListItem = {
     id: string;
@@ -51,6 +53,22 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
             <EstimatesListTable
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}
+                emptyState={
+                    <TableEmptyState
+                        title="Нет смет в проекте"
+                        description="Создайте первую смету, чтобы начать работу"
+                        icon={FilePlus}
+                        action={
+                            <Button
+                                onClick={() => setIsDialogOpen(true)}
+                                variant="standard"
+                                className="h-8 rounded-[7.6px] px-6"
+                            >
+                                Создать смету
+                            </Button>
+                        }
+                    />
+                }
                 actions={
                     <Button
                         onClick={() => setIsDialogOpen(true)}

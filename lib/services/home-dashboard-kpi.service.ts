@@ -19,6 +19,7 @@ type HomeDashboardProjectsSummary = {
 
 export type HomeDashboardKpiViewModel = {
     revenue: number;
+    expense: number;
     profit: number;
     progress: number;
     remainingDays: number | null;
@@ -47,9 +48,13 @@ export class HomeDashboardKpiService {
                 FROM ${estimateExecutionRows}
                 INNER JOIN ${estimates}
                     ON ${estimates.id} = ${estimateExecutionRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
                 WHERE
-                    ${withActiveTenant(estimateExecutionRows, teamId)}
+                    ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             ),
             material_totals AS (
                 SELECT
@@ -57,17 +62,25 @@ export class HomeDashboardKpiService {
                 FROM ${estimateRows}
                 INNER JOIN ${estimates}
                     ON ${estimates.id} = ${estimateRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
                 WHERE
-                    ${estimateRows.kind} = 'material'
+                    ${projects.status} IN ('active', 'completed')
+                    AND ${estimateRows.kind} = 'material'
                     AND ${withActiveTenant(estimateRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             ),
             purchase_totals AS (
                 SELECT
                     COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0) AS actual_materials
                 FROM ${globalPurchases}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${globalPurchases.projectId}
                 WHERE
-                    ${withActiveTenant(globalPurchases, teamId)}
+                    ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(globalPurchases, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
                     AND ${globalPurchases.projectId} IS NOT NULL
             )
             SELECT
@@ -85,9 +98,11 @@ export class HomeDashboardKpiService {
         return sql<HomeDashboardProjectsSummary>`
             SELECT
                 COALESCE(ROUND(AVG(${projects.progress})), 0) AS "avgProgress",
-                MIN(${projects.endDate}) FILTER (WHERE ${projects.status} <> 'completed') AS "nearestEndDate"
+                MIN(${projects.endDate}) FILTER (WHERE ${projects.status} = 'active') AS "nearestEndDate"
             FROM ${projects}
-            WHERE ${withActiveTenant(projects, teamId)}
+            WHERE 
+                ${projects.status} IN ('active', 'completed')
+                AND ${withActiveTenant(projects, teamId)}
         `;
     }
 
@@ -112,6 +127,7 @@ export class HomeDashboardKpiService {
 
         return {
             revenue,
+            expense: totalActual,
             profit: revenue - totalActual,
             progress: Number(projectsSummary?.avgProgress ?? 0),
             remainingDays: calculateDaysRemaining(nearestEndDate),

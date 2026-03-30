@@ -36,6 +36,7 @@ export const createProjectAction = safeAction(
 
             await createProjectUseCase(projectData);
 
+            revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);
         } catch (err) {

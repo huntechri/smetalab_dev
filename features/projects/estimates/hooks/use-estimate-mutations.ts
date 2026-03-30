@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 import type React from 'react';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { estimatesActionRepo } from '../repository/estimates.actions';
@@ -18,6 +19,7 @@ interface DeleteEstimatePayload {
 
 export function useEstimateMutations() {
   const { toast } = useAppToast();
+  const router = useRouter();
 
   async function updateEstimateStatus({ estimateId, currentStatus, nextStatus, setRows }: UpdateStatusPayload): Promise<void> {
     if (nextStatus === currentStatus) {
@@ -28,6 +30,7 @@ export function useEstimateMutations() {
 
     try {
       await estimatesActionRepo.updateStatus(estimateId, nextStatus);
+      router.refresh();
     } catch (error) {
       setRows((current) => current.map((item) => (item.id === estimateId ? { ...item, status: currentStatus } : item)));
       toast({
@@ -42,6 +45,7 @@ export function useEstimateMutations() {
     try {
       await estimatesActionRepo.delete(estimateId);
       setRows?.((current) => current.filter((item) => item.id !== estimateId));
+      router.refresh();
       toast({
         title: 'Смета удалена',
         description: `Смета "${estimateName}" была успешно удалена.`,

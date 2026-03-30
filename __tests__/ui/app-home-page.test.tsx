@@ -8,6 +8,7 @@ describe('AppHomeScreen', () => {
             <AppHomeScreen
                 kpi={{
                     revenue: 150_000,
+                    expense: 110_000,
                     profit: 40_000,
                     progress: 62,
                     remainingDays: 12,
@@ -27,8 +28,8 @@ describe('AppHomeScreen', () => {
 
         expect(screen.getByRole('heading', { level: 1, name: 'Сводка проекта' })).toBeInTheDocument();
         expect(screen.getByText('Доход')).toBeInTheDocument();
+        expect(screen.getByText('Расход')).toBeInTheDocument();
         expect(screen.getByText('Прибыль')).toBeInTheDocument();
-        expect(screen.getByText('Прогресс')).toBeInTheDocument();
         expect(screen.getByText('Срок')).toBeInTheDocument();
         expect(screen.getByText((_, element) => element?.textContent === 'Динамика проекта')).toBeInTheDocument();
 

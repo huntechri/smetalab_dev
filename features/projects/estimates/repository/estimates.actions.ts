@@ -82,7 +82,7 @@ export const estimatesActionRepo = {
     },
 
 
-    async updateStatus(estimateId: string, status: 'draft' | 'in_progress' | 'approved'): Promise<{ status: 'draft' | 'in_progress' | 'approved' }> {
+    async updateStatus(estimateId: string, status: 'draft' | 'in_progress' | 'approved'): Promise<{ status: 'draft' | 'in_progress' | 'approved'; projectId: string }> {
         const result = await updateEstimateStatusAction(estimateId, { status });
         if (!result.success) {
             throw new Error(result.error.message);
