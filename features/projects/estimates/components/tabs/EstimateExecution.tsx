@@ -10,7 +10,8 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal, Plus, FilePlus } from 'lucide-react';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
 
 import {
     DropdownMenu,
@@ -370,6 +371,20 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
                 compactMobileToolbar
+                emptyState={
+                    <TableEmptyState
+                        title="Список выполнения пуст"
+                        description="Для начала работы добавьте позиции во вкладку «Смета» или создайте дополнительную работу"
+                        icon={FilePlus}
+                        action={
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                            />
+                        }
+                    />
+                }
                 actions={
                     <AddExtraWorkSheet
                         estimateId={estimateId}
