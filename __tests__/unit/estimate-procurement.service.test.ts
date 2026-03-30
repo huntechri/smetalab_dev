@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildEstimateProcurementRows } from '@/lib/services/estimate-procurement.service';
+import { buildEstimateProcurementRows, shouldRefreshProcurementCache } from '@/lib/services/estimate-procurement.service';
 
 describe('buildEstimateProcurementRows', () => {
     it('consolidates plan rows, merges actual purchases and includes fact-only rows', () => {
@@ -39,5 +39,37 @@ describe('buildEstimateProcurementRows', () => {
             actualQty: 70,
             purchaseCount: 1,
         });
+    });
+});
+
+describe('shouldRefreshProcurementCache', () => {
+    it('refreshes when cache has rows but source rows were deleted', () => {
+        expect(
+            shouldRefreshProcurementCache({
+                cacheHasRows: true,
+                maxRefreshedAt: new Date('2026-01-10T12:00:00.000Z'),
+                latestSourceAt: null,
+            }),
+        ).toBe(true);
+    });
+
+    it('does not refresh repeatedly when both cache and sources are empty', () => {
+        expect(
+            shouldRefreshProcurementCache({
+                cacheHasRows: false,
+                maxRefreshedAt: null,
+                latestSourceAt: null,
+            }),
+        ).toBe(false);
+    });
+
+    it('refreshes when sources are newer than cache', () => {
+        expect(
+            shouldRefreshProcurementCache({
+                cacheHasRows: true,
+                maxRefreshedAt: new Date('2026-01-10T12:00:00.000Z'),
+                latestSourceAt: new Date('2026-01-10T12:00:01.000Z'),
+            }),
+        ).toBe(true);
     });
 });

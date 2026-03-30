@@ -284,10 +284,32 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
     );
 };
 
+export function shouldRefreshProcurementCache(params: {
+    cacheHasRows: boolean;
+    maxRefreshedAt: Date | null;
+    latestSourceAt: Date | null;
+}): boolean {
+    const { cacheHasRows, maxRefreshedAt, latestSourceAt } = params;
+
+    // PERF+CORRECTNESS: if all source rows are gone, refresh only when stale cache rows still exist.
+    if (!latestSourceAt) {
+        return cacheHasRows;
+    }
+
+    if (!maxRefreshedAt) {
+        return true;
+    }
+
+    return latestSourceAt > maxRefreshedAt;
+}
+
 export class EstimateProcurementService {
     private static async shouldRefreshCache(teamId: number, estimateId: string, projectId: string) {
         const [cacheState] = await db
-            .select({ maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})` })
+            .select({
+                maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})`,
+                rowsCount: sql<number>`COUNT(*)::int`,
+            })
             .from(estimateProcurementCache)
             .where(
                 and(
@@ -295,8 +317,6 @@ export class EstimateProcurementService {
                     withActiveTenant(estimateProcurementCache, teamId),
                 ),
             );
-
-        if (!cacheState?.maxRefreshedAt) return true;
 
         const [planState, factState] = await Promise.all([
             db
@@ -324,8 +344,11 @@ export class EstimateProcurementService {
             .filter((value): value is Date => value instanceof Date)
             .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
 
-        if (!latestSourceAt) return false;
-        return latestSourceAt > cacheState.maxRefreshedAt;
+        return shouldRefreshProcurementCache({
+            cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
+            maxRefreshedAt: cacheState?.maxRefreshedAt ?? null,
+            latestSourceAt,
+        });
     }
 
     private static async refreshCache(teamId: number, estimateId: string, projectId: string) {
