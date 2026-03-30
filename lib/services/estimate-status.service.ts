@@ -1,10 +1,10 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { estimates, projects } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { error, Result, success } from '@/lib/utils/result';
-import { resolveProjectStatusFromEstimateStatuses } from './project-status.service';
+import { resolveProjectStatusFromCounts } from './project-status.service';
 
 const updateEstimateStatusSchema = z.object({
   status: z.enum(['draft', 'in_progress', 'approved']),
@@ -35,12 +35,21 @@ export class EstimateStatusService {
           .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)))
           .returning({ id: estimates.id, status: estimates.status, projectId: estimates.projectId });
 
-        const projectEstimateStatuses = await tx
-          .select({ status: estimates.status })
+        const [statusStats] = await tx
+          .select({
+            total: sql<number>`count(*)`,
+            approved: sql<number>`count(*) filter (where ${estimates.status} = 'approved')`,
+            active: sql<number>`count(*) filter (where ${estimates.status} in ('in_progress', 'approved'))`,
+          })
           .from(estimates)
           .where(and(eq(estimates.projectId, estimate.projectId), withActiveTenant(estimates, teamId)));
 
-        const nextProjectStatus = resolveProjectStatusFromEstimateStatuses(projectEstimateStatuses.map((row) => row.status));
+        // PERF: status recomputation needs aggregates only, not all estimate rows.
+        const nextProjectStatus = resolveProjectStatusFromCounts(
+          Number(statusStats?.total ?? 0),
+          Number(statusStats?.approved ?? 0),
+          Number(statusStats?.active ?? 0),
+        );
 
         await tx
           .update(projects)
