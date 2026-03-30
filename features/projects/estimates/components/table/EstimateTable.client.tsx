@@ -14,7 +14,9 @@ import {
   Trash2,
   MoreHorizontal,
   FolderTree,
+  FilePlus,
 } from "lucide-react";
+import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { Badge } from "@/shared/ui/badge";
 import {
   Sheet,
@@ -813,6 +815,42 @@ export function EstimateTable({
         })}
         data={visibleRows}
         getRowClassName={(row) => row.kind === 'section' ? 'bg-slate-50/80 border-y border-slate-200/60 font-bold text-slate-900' : ''}
+        emptyState={
+          <TableEmptyState
+            title="Смета еще не заполнена"
+            description="Добавьте разделы, работы и материалы или импортируйте готовую смету из Excel"
+            icon={FilePlus}
+            action={
+              <div className="flex flex-wrap items-center justify-center gap-2">
+                <Button 
+                  variant="standard" 
+                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  onClick={() => openCreateSectionDialog()}
+                >
+                  <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                  Создать раздел
+                </Button>
+                <Button 
+                  variant="standard" 
+                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  onClick={() => setIsCalculationModeOpen(true)}
+                >
+                  <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                  Добавить работу
+                </Button>
+                <Button 
+                  variant="standard" 
+                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  onClick={() => void importEstimate()}
+                  disabled={isImporting}
+                >
+                  <FileUp className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                  Импорт из Excel
+                </Button>
+              </div>
+            }
+          />
+        }
         filterColumn="name"
         filterPlaceholder="Поиск..."
         filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"

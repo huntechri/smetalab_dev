@@ -1,5 +1,5 @@
 import { Inbox } from 'lucide-react';
-import { StateShell } from './StateShell';
+import { TableEmptyState } from '../table-empty-state';
 
 interface EmptyStateProps {
     title?: string;
@@ -15,11 +15,11 @@ export function EmptyState({
     className,
 }: EmptyStateProps) {
     return (
-        <StateShell
+        <TableEmptyState
             title={title}
             description={description}
             action={action}
-            icon={<Inbox className="h-5 w-5" />}
+            icon={Inbox}
             className={className}
         />
     );
