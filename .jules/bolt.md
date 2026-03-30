@@ -21,3 +21,7 @@
 ## 2026-02-03 - Robust Seeding with TRUNCATE CASCADE and RETURNING
 **Learning:** Seeding scripts that delete and re-insert reference data (like permissions) are fragile if they rely on static IDs or don't handle dependent tables.
 **Action:** Use `TRUNCATE TABLE ... RESTART IDENTITY CASCADE` to cleanly wipe data and dependencies. Use `RETURNING` clause on `INSERT` to capture dynamic IDs for subsequent inserts in the same transaction.
+
+## 2026-03-30 - Progress Recalculation Hot Path
+**Learning:** `ProjectProgressService.refreshForProject` fetched every execution row just to compute totals (`rows.length` + `filter`). For large projects this scales network transfer and memory as O(n) per recalculation, even though only two counts are needed.
+**Action:** For progress/KPI recomputations, push aggregation to SQL (`count(*)`, `count(*) filter`) and return one row only; reserve row-level fetches for screens that actually render row details.

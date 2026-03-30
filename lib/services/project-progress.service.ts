@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateExecutionRows, estimates, projects } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -19,9 +19,10 @@ export function calculateProjectProgress(completedWorks: number, totalWorks: num
 
 export class ProjectProgressService {
   static async refreshForProject(teamId: number, projectId: string) {
-    const rows = await db
+    const [progressStats] = await db
       .select({
-        status: estimateExecutionRows.status,
+        totalWorks: sql<number>`count(*)`,
+        completedWorks: sql<number>`count(*) filter (where ${estimateExecutionRows.status} = 'done')`,
       })
       .from(estimateExecutionRows)
       .innerJoin(estimates, eq(estimateExecutionRows.estimateId, estimates.id))
@@ -34,8 +35,10 @@ export class ProjectProgressService {
         ),
       );
 
-    const totalWorks = rows.length;
-    const completedWorks = rows.filter((row) => row.status === 'done').length;
+    // PERF: Aggregate in SQL to avoid loading every execution row into Node.js memory.
+    // Expected impact: O(1) rows transferred instead of O(n), faster on large projects.
+    const totalWorks = Number(progressStats?.totalWorks ?? 0);
+    const completedWorks = Number(progressStats?.completedWorks ?? 0);
     const percent = calculateProjectProgress(completedWorks, totalWorks);
 
     await db
