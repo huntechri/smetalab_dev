@@ -1,6 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
@@ -9,7 +10,8 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { MoreHorizontal, Plus, FilePlus } from 'lucide-react';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
 
 import {
     DropdownMenu,
@@ -132,12 +134,14 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
 }) {
     const [open, setOpen] = useState(false);
     const { toast } = useAppToast();
+    const router = useRouter();
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
             const created = await estimateExecutionActionsRepo.addExtraWork(estimateId, buildExtraWorkFromCatalog(catalogWork));
 
             onCreated(created);
+            router.refresh(); // Update dashboard KPI
             toast({ title: 'Работа добавлена во вкладку «Выполнение»', description: created.name });
             setOpen(false);
         } catch (error) {
@@ -179,6 +183,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const requestVersionRef = useRef<Record<string, number>>({});
     const { toast } = useAppToast();
+    const router = useRouter();
 
     const loadRows = useCallback(async (silent = false) => {
         try {
@@ -249,6 +254,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 ...item,
                 ...updated,
             } : item));
+            router.refresh(); // Update dashboard KPI
         } catch (error) {
             if (requestVersion === requestVersionRef.current[rowId] && previousRow) {
                 setRows((current) => current.map((row) => row.id === rowId ? previousRow as EstimateExecutionRow : row));
@@ -365,6 +371,20 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
                 compactMobileToolbar
+                emptyState={
+                    <TableEmptyState
+                        title="Список выполнения пуст"
+                        description="Для начала работы добавьте позиции во вкладку «Смета» или создайте дополнительную работу"
+                        icon={FilePlus}
+                        action={
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                            />
+                        }
+                    />
+                }
                 actions={
                     <AddExtraWorkSheet
                         estimateId={estimateId}

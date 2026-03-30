@@ -5,7 +5,8 @@ import { MaterialSupplierRow } from '@/types/material-supplier-row';
 import { columns } from '../components/columns';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
-import { Loader2, Plus } from 'lucide-react';
+import { Loader2, Plus, FilePlus } from 'lucide-react';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplierSheet';
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';
 import { listMaterialSuppliers } from '@/app/actions/material-suppliers';
@@ -117,6 +118,23 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         externalSearchValue={searchTerm}
         onSearchValueChange={setSearchTerm}
         onEndReached={() => { void loadPage(); }}
+        emptyState={
+            <TableEmptyState
+                title="Список поставщиков пуст"
+                description="Добавьте первого поставщика для ведения базы материалов"
+                icon={FilePlus}
+                action={
+                    <Button
+                        variant="standard"
+                        className="h-8 rounded-[7.6px] px-6 font-medium"
+                        onClick={() => { setEditingSupplier(null); setIsSheetOpen(true); }}
+                    >
+                        <Plus className="size-3.5 mr-2" />
+                        Добавить поставщика
+                    </Button>
+                }
+            />
+        }
         actions={
           <div className="flex items-center gap-2 w-full sm:w-auto">
             {canLoadMore && (

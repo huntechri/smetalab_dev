@@ -23,6 +23,14 @@ vi.mock('@/shared/ui/data-table', () => ({
     },
 }));
 
+vi.mock('next/navigation', () => ({
+    useRouter: () => ({
+        refresh: vi.fn(),
+        push: vi.fn(),
+        replace: vi.fn(),
+    }),
+}));
+
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 
 describe('estimates navigation links', () => {

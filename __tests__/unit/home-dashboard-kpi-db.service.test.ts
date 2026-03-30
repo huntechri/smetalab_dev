@@ -42,6 +42,7 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
         expect(dbExecuteMock).toHaveBeenCalledTimes(2);
         expect(result).toEqual({
             revenue: 500000,
+            expense: 300000,
             profit: 200000,
             progress: 64,
             remainingDays: expect.any(Number),
@@ -69,6 +70,7 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
 
         expect(result).toEqual({
             revenue: 0,
+            expense: 0,
             profit: 0,
             progress: 0,
             remainingDays: null,

@@ -11,7 +11,7 @@ const updateEstimateStatusSchema = z.object({
 });
 
 export class EstimateStatusService {
-  static async update(teamId: number, estimateId: string, rawPayload: unknown): Promise<Result<{ status: 'draft' | 'in_progress' | 'approved' }>> {
+  static async update(teamId: number, estimateId: string, rawPayload: unknown): Promise<Result<{ status: 'draft' | 'in_progress' | 'approved'; projectId: string }>> {
     const parsed = updateEstimateStatusSchema.safeParse(rawPayload);
     if (!parsed.success) {
       return error(`Ошибка валидации: ${parsed.error.message}`, 'VALIDATION_ERROR');
@@ -54,7 +54,10 @@ export class EstimateStatusService {
         return error('Не удалось обновить статус сметы', 'UPDATE_FAILED');
       }
 
-      return success({ status: updatedEstimate.status });
+      return success({ 
+        status: updatedEstimate.status as 'draft' | 'in_progress' | 'approved', 
+        projectId: updatedEstimate.projectId 
+      });
     } catch (err) {
       if (err instanceof Error && err.message === 'NOT_FOUND') {
         return error('Смета не найдена', 'NOT_FOUND');

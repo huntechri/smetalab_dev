@@ -6,7 +6,8 @@ import { CounterpartyRow } from "@/types/counterparty-row";
 import { columns } from "../components/columns";
 import { DataTable } from "@/shared/ui/data-table";
 import { Button } from "@/shared/ui/button";
-import { Plus, Loader2 } from "lucide-react";
+import { Plus, Loader2, FilePlus } from "lucide-react";
+import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
@@ -163,6 +164,23 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
                 onSearchValueChange={setSearchTerm}
                 isSearching={isSearching}
                 onEndReached={handleLoadMore}
+                emptyState={
+                    <TableEmptyState
+                        title="Список контрагентов пуст"
+                        description="Добавьте первого контрагента, чтобы начать работу"
+                        icon={FilePlus}
+                        action={
+                            <Button
+                                variant="standard"
+                                className="h-8 rounded-[7.6px] px-6 font-medium"
+                                onClick={handleCreate}
+                            >
+                                <Plus className="size-3.5 mr-2" />
+                                Добавить контрагента
+                            </Button>
+                        }
+                    />
+                }
                 actions={
                     <div className="flex items-center gap-2 w-full sm:w-auto">
                         {canLoadMore && (

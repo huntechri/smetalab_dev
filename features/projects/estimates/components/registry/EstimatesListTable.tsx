@@ -69,9 +69,10 @@ type EstimatesListTableProps = {
   estimates: EstimateMeta[];
   projectSlug?: string;
   actions?: React.ReactNode;
+  emptyState?: React.ReactNode;
 };
 
-export function EstimatesListTable({ estimates, projectSlug, actions }: EstimatesListTableProps) {
+export function EstimatesListTable({ estimates, projectSlug, actions, emptyState }: EstimatesListTableProps) {
   const [rows, setRows] = useState<EstimateMeta[]>(estimates);
   const { updateEstimateStatus, deleteEstimate } = useEstimateMutations();
 
@@ -172,6 +173,7 @@ export function EstimatesListTable({ estimates, projectSlug, actions }: Estimate
       filterInputClassName="bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]"
       height="450px"
       actions={actions}
+      emptyState={emptyState}
     />
   );
 }

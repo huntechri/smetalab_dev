@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download } from 'lucide-react';
+import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download, FilePlus } from 'lucide-react';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
@@ -191,6 +192,35 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterPlaceholder="Поиск..."
                 height="625px"
                 filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
+                emptyState={
+                    <TableEmptyState
+                        title="Закупки не найдены"
+                        description="В выбранном периоде нет данных. Добавьте закупку вручную или из справочника."
+                        icon={FilePlus}
+                        action={
+                            <div className="flex flex-wrap items-center justify-center gap-2">
+                                <Button
+                                    variant="standard"
+                                    className="h-8 rounded-[7.6px] px-4 font-medium"
+                                    onClick={() => void handleAddManualRow()}
+                                    disabled={isAddingManual}
+                                >
+                                    <Plus className="size-3.5 mr-2" />
+                                    Добавить вручную
+                                </Button>
+                                <Button
+                                    variant="standard"
+                                    className="h-8 rounded-[7.6px] px-4 font-medium"
+                                    onClick={() => setIsCatalogOpen(true)}
+                                    disabled={isAddingCatalog}
+                                >
+                                    <BookOpen className="size-3.5 mr-2" />
+                                    Из справочника
+                                </Button>
+                            </div>
+                        }
+                    />
+                }
                 compactMobileToolbar
                 actions={(
                     <div className="flex flex-row xl:flex-row w-auto xl:w-auto items-center xl:items-center gap-2 xl:gap-2">

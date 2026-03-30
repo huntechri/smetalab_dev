@@ -14,6 +14,7 @@ export const deleteProjectAction = safeAction(
                 return error('Проект не найден или у вас нет прав на его удаление', 'PROJECT_NOT_FOUND');
             }
 
+            revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);
         } catch (err) {
