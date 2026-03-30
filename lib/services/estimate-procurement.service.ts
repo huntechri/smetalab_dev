@@ -418,25 +418,50 @@ export class EstimateProcurementService {
 
             if (rows.length === 0) return;
 
-            await tx.insert(estimateProcurementCache).values(rows.map((row) => ({
-                tenantId: teamId,
-                estimateId,
-                projectId,
-                matchKey: row.matchKey,
-                materialName: row.materialName,
-                unit: row.unit,
-                source: row.source,
-                plannedQty: row.plannedQty,
-                plannedPrice: row.plannedPrice,
-                plannedAmount: row.plannedAmount,
-                actualQty: row.actualQty,
-                actualAvgPrice: row.actualAvgPrice,
-                actualAmount: row.actualAmount,
-                qtyDelta: row.qtyDelta,
-                amountDelta: row.amountDelta,
-                purchaseCount: row.purchaseCount,
-                lastPurchaseDate: row.lastPurchaseDate,
-            })));
+            await tx
+                .insert(estimateProcurementCache)
+                .values(rows.map((row) => ({
+                    tenantId: teamId,
+                    estimateId,
+                    projectId,
+                    matchKey: row.matchKey,
+                    materialName: row.materialName,
+                    unit: row.unit,
+                    source: row.source,
+                    plannedQty: row.plannedQty,
+                    plannedPrice: row.plannedPrice,
+                    plannedAmount: row.plannedAmount,
+                    actualQty: row.actualQty,
+                    actualAvgPrice: row.actualAvgPrice,
+                    actualAmount: row.actualAmount,
+                    qtyDelta: row.qtyDelta,
+                    amountDelta: row.amountDelta,
+                    purchaseCount: row.purchaseCount,
+                    lastPurchaseDate: row.lastPurchaseDate,
+                })))
+                // CORRECTNESS: unique key ignores deleted_at, so upsert reuses soft-deleted cache rows.
+                .onConflictDoUpdate({
+                    target: [estimateProcurementCache.tenantId, estimateProcurementCache.estimateId, estimateProcurementCache.matchKey],
+                    set: {
+                        projectId: sql`excluded.project_id`,
+                        materialName: sql`excluded.material_name`,
+                        unit: sql`excluded.unit`,
+                        source: sql`excluded.source`,
+                        plannedQty: sql`excluded.planned_qty`,
+                        plannedPrice: sql`excluded.planned_price`,
+                        plannedAmount: sql`excluded.planned_amount`,
+                        actualQty: sql`excluded.actual_qty`,
+                        actualAvgPrice: sql`excluded.actual_avg_price`,
+                        actualAmount: sql`excluded.actual_amount`,
+                        qtyDelta: sql`excluded.qty_delta`,
+                        amountDelta: sql`excluded.amount_delta`,
+                        purchaseCount: sql`excluded.purchase_count`,
+                        lastPurchaseDate: sql`excluded.last_purchase_date`,
+                        refreshedAt: sql`now()`,
+                        updatedAt: sql`now()`,
+                        deletedAt: null,
+                    },
+                });
         });
     }
 
