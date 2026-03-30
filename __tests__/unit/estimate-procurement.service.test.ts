@@ -63,6 +63,16 @@ describe('shouldRefreshProcurementCache', () => {
         ).toBe(false);
     });
 
+    it('refreshes when SQL returns timestamp strings for source updates', () => {
+        expect(
+            shouldRefreshProcurementCache({
+                cacheHasRows: false,
+                maxRefreshedAt: null,
+                latestSourceAt: new Date('2026-01-10T12:00:01.000Z'),
+            }),
+        ).toBe(true);
+    });
+
     it('refreshes when sources are newer than cache', () => {
         expect(
             shouldRefreshProcurementCache({
