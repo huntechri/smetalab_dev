@@ -40,7 +40,7 @@ interface MaterialsScreenProps {
 export function MaterialsScreen({ initialData, totalCount, tenantId }: MaterialsScreenProps) {
     const [mounted, setMounted] = useState(false);
     const [data, setData] = useState<MaterialRow[]>(initialData);
-    const [showSidebar, setShowSidebar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     useEffect(() => {
         setMounted(true);
