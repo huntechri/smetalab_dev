@@ -8,6 +8,7 @@ import {
     SheetTrigger,
 } from "@/shared/ui/sheet";
 import { WorksSidebar } from './WorksSidebar';
+import { cn } from "@/lib/utils";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -35,6 +36,8 @@ interface WorksToolbarProps {
     handleDeleteAll: () => void;
     filters?: { category?: string; phase?: string };
     setFilters?: (filters: { category?: string; phase?: string } | ((prev: { category?: string; phase?: string }) => { category?: string; phase?: string })) => void;
+    showSidebar?: boolean;
+    setShowSidebar?: (show: boolean) => void;
 }
 
 export function WorksToolbar({
@@ -47,12 +50,15 @@ export function WorksToolbar({
     handleDeleteAll,
     filters,
     setFilters,
+    showSidebar,
+    setShowSidebar,
 }: WorksToolbarProps) {
     const isActionDisabled = isDeletingAll || !hasData;
 
 
     return (
         <>
+            {/* Mobile Filter Button */}
             <div className="lg:hidden">
                 <Sheet>
                     <SheetTrigger asChild>
@@ -71,6 +77,21 @@ export function WorksToolbar({
                         </div>
                     </SheetContent>
                 </Sheet>
+            </div>
+
+            {/* Desktop Toggle Sidebar Button */}
+            <div className="hidden lg:block">
+                <Button 
+                    variant="standard" 
+                    size="icon-sm" 
+                    className={cn(
+                        "h-8 w-8 mr-1 transition-all duration-200",
+                        showSidebar && "bg-secondary text-secondary-foreground ring-1 ring-border/50"
+                    )}
+                    onClick={() => setShowSidebar?.(!showSidebar)}
+                >
+                    <Filter className={cn("h-4 w-4 transition-transform", showSidebar && "scale-110")} />
+                </Button>
             </div>
             <Tooltip>
                 <TooltipTrigger asChild>

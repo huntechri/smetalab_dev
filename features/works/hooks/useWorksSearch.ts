@@ -12,11 +12,11 @@ export function useWorksSearch(
         initialData,
         data,
         setData,
-        aiSearch: async (query: string) => {
+        aiSearch: async (query: string, _filters) => {
             const result = await searchWorks(query);
             return {
                 success: result.success,
-                data: "data" in result ? result.data : [],
+                data: "data" in result ? result.data as WorkRow[] : [],
                 message: result.message,
             };
         },
