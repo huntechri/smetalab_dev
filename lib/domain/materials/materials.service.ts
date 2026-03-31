@@ -4,6 +4,7 @@ import { materials, NewMaterial } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
 import { buildMaterialContext, MaterialContextInput } from '@/lib/ai/embedding-context';
 import { MaterialRow } from '@/types/material-row';
+import { MaterialCategoryNode } from './materials.contract';
 import { Result, success, error } from '@/lib/utils/result';
 import { materialSchema } from '@/lib/validations/schemas';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -32,12 +33,21 @@ export class MaterialsService {
         offset?: number,
         lastSortOrder?: number,
         lastId?: string,
-        categoryLv1?: string
+        categoryLv1?: string,
+        categoryLv2?: string,
+        categoryLv3?: string,
+        categoryLv4?: string
     ): Promise<Result<MaterialRow[]>> {
         try {
             await ensureMaterialsSortOrderColumn();
 
             const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
+
+            if (categoryLv1) filters.push(eq(materials.categoryLv1, categoryLv1));
+            if (categoryLv2) filters.push(eq(materials.categoryLv2, categoryLv2));
+            if (categoryLv3) filters.push(eq(materials.categoryLv3, categoryLv3));
+            if (categoryLv4) filters.push(eq(materials.categoryLv4, categoryLv4));
+
             const normalizedSearch = search?.trim().toLowerCase();
             const finalOffset = offset && offset > 0 ? offset : 0;
 
@@ -254,7 +264,14 @@ export class MaterialsService {
         return { expandedQuery, tokens };
     }
 
-    static async search(teamId: number, query: string, categoryLv1?: string): Promise<Result<MaterialRow[]>> {
+    static async search(
+        teamId: number, 
+        query: string, 
+        categoryLv1?: string,
+        categoryLv2?: string,
+        categoryLv3?: string,
+        categoryLv4?: string
+    ): Promise<Result<MaterialRow[]>> {
         if (!query || query.trim().length < 1) return error('Короткий запрос');
 
         const { expandedQuery, tokens } = this.preprocessSearchQuery(query);
@@ -306,6 +323,9 @@ export class MaterialsService {
             if (categoryLv1 && categoryLv1 !== 'all') {
                 baseFilters.push(eq(materials.categoryLv1, categoryLv1));
             }
+            if (categoryLv2) baseFilters.push(eq(materials.categoryLv2, categoryLv2));
+            if (categoryLv3) baseFilters.push(eq(materials.categoryLv3, categoryLv3));
+            if (categoryLv4) baseFilters.push(eq(materials.categoryLv4, categoryLv4));
 
             const lexicalCandidates = await db
                 .select({ id: materials.id })
@@ -508,6 +528,65 @@ export class MaterialsService {
         } catch (e) {
             console.error('getMaterialCategories error:', e);
             return error('Ошибка получения категорий материалов');
+        }
+    }
+
+    static async getCategoryTree(teamId: number): Promise<Result<MaterialCategoryNode[]>> {
+        try {
+            const rows = await db
+                .select({
+                    lv1: materials.categoryLv1,
+                    lv2: materials.categoryLv2,
+                    lv3: materials.categoryLv3,
+                    lv4: materials.categoryLv4
+                })
+                .from(materials)
+                .where(and(
+                    withActiveTenant(materials, teamId),
+                    eq(materials.status, 'active')
+                ));
+
+            // Build tree manually from distinct combinations
+            const combinations = Array.from(new Set(rows.map(r => JSON.stringify({
+                lv1: r.lv1 || "",
+                lv2: r.lv2 || "",
+                lv3: r.lv3 || "",
+                lv4: r.lv4 || ""
+            })))).map(s => JSON.parse(s));
+
+            const uniqSorted = (values: string[]) => Array.from(new Set(values.filter(Boolean))).sort((a, b) => a.localeCompare(b, 'ru'));
+
+            const lv1Values = uniqSorted(combinations.map(c => c.lv1));
+            const tree: MaterialCategoryNode[] = lv1Values.map(lv1 => {
+                const lv1Combos = combinations.filter(c => c.lv1 === lv1);
+                const lv2Values = uniqSorted(lv1Combos.map(c => c.lv2));
+                
+                return {
+                    name: lv1,
+                    children: lv2Values.map(lv2 => {
+                        const lv2Combos = lv1Combos.filter(c => c.lv2 === lv2);
+                        const lv3Values = uniqSorted(lv2Combos.map(c => c.lv3));
+
+                        return {
+                            name: lv2,
+                            children: lv3Values.map(lv3 => {
+                                const lv3Combos = lv2Combos.filter(c => c.lv3 === lv3);
+                                const lv4Values = uniqSorted(lv3Combos.map(c => c.lv4));
+
+                                return {
+                                    name: lv3,
+                                    children: lv4Values.map(lv4 => ({ name: lv4, children: [] }))
+                                };
+                            })
+                        };
+                    })
+                };
+            });
+
+            return success(tree);
+        } catch (e) {
+            console.error('getCategoryTree error:', e);
+            return error('Ошибка построения дерева категорий');
         }
     }
 

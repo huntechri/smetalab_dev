@@ -62,7 +62,7 @@ describe('WorksCatalogService', () => {
     await WorksCatalogService.reorder(1);
     await WorksCatalogService.getUniqueUnits(1);
 
-    expect(WorksService.getMany).toHaveBeenCalledWith(1, 20, 'q', 100, 'A');
+    expect(WorksService.getMany).toHaveBeenCalledWith(1, 20, 'q', 100, 'A', undefined);
     expect(WorksService.search).toHaveBeenCalledWith(1, 'q');
     expect(WorksService.reorder).toHaveBeenCalledWith(1);
     expect(WorksService.getUniqueUnits).toHaveBeenCalledWith(1);

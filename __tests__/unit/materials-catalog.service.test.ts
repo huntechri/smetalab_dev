@@ -55,8 +55,12 @@ describe('MaterialsCatalogService', () => {
       offset: 10,
       limit: 20,
       cursor: { lastSortOrder: 100, lastId: '00000000-0000-0000-0000-000000000001' },
+      categoryLv1: 'c1',
+      categoryLv2: 'c2',
+      categoryLv3: 'c3',
+      categoryLv4: 'c4'
     });
-    await MaterialsCatalogService.search(1, 'q');
+    await MaterialsCatalogService.search(1, 'q', 'c1', 'c2', 'c3', 'c4');
     await MaterialsCatalogService.generateMissingEmbeddings(1);
 
     expect(MaterialsService.getMany).toHaveBeenCalledWith(
@@ -65,9 +69,13 @@ describe('MaterialsCatalogService', () => {
       'q',
       10,
       100,
-      '00000000-0000-0000-0000-000000000001'
+      '00000000-0000-0000-0000-000000000001',
+      'c1',
+      'c2',
+      'c3',
+      'c4'
     );
-    expect(MaterialsService.search).toHaveBeenCalledWith(1, 'q');
+    expect(MaterialsService.search).toHaveBeenCalledWith(1, 'q', 'c1', 'c2', 'c3', 'c4');
     expect(MaterialsService.generateMissingEmbeddings).toHaveBeenCalledWith(1);
   });
 });

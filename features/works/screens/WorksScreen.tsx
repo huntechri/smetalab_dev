@@ -2,11 +2,19 @@
 
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Filter } from 'lucide-react';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { TooltipProvider } from "@/shared/ui/tooltip";
 import { Button } from '@/shared/ui/button';
+import { cn } from '@/lib/utils';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/shared/ui/sheet";
 
 import { WorkRow } from '@/types/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';
@@ -71,6 +79,8 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
         });
     }, [editor.setEditFormData]);
 
+    const [showSidebar, setShowSidebar] = useState(true);
+
     if (!mounted) {
         return (
             <div className="space-y-2">
@@ -99,10 +109,12 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
                 </div>
             </div>
 
-            <div className="flex flex-col lg:flex-row gap-6 items-start relative px-1 md:px-0">
-                <aside className="hidden lg:block w-64 shrink-0 sticky top-4">
-                    <WorksSidebar filters={search.filters} setFilters={search.setFilters} />
-                </aside>
+            <div className="flex flex-col lg:flex-row gap-6 items-start relative px-1 md:px-0 transition-all duration-300">
+                {showSidebar && (
+                    <aside className="hidden lg:block w-64 shrink-0 sticky top-4 animate-in slide-in-from-left duration-200">
+                        <WorksSidebar filters={search.filters} setFilters={search.setFilters} />
+                    </aside>
+                )}
 
                 <div className="flex-1 min-w-0 w-full relative">
                     {(actions.isImporting || isInserting) && (
@@ -139,6 +151,8 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
                                     handleDeleteAll={actions.handleDeleteAll}
                                     filters={search.filters}
                                     setFilters={search.setFilters}
+                                    showSidebar={showSidebar}
+                                    setShowSidebar={setShowSidebar}
                                 />
                             )}
                             tableActions={{

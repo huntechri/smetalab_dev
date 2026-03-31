@@ -18,7 +18,7 @@ interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unkno
     data: TData[];
     setData: React.Dispatch<React.SetStateAction<TData[]>>;
     pageSize?: number;
-    aiSearch: (query: string) => Promise<SearchResult<TData>>;
+    aiSearch: (query: string, filters: TFilters) => Promise<SearchResult<TData>>;
     searchPage: (args: { query: string } & TFilters) => Promise<LoadMoreResult<TData>>;
     loadMorePage: (args: { query: string } & TCursor & TFilters) => Promise<LoadMoreResult<TData>>;
     getCursorFromLast: (lastItem: TData | undefined, filters: TFilters) => TCursor;
@@ -56,7 +56,7 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
 
         if (isAiMode) {
             startAiSearchTransition(async () => {
-                const result = await aiSearch(targetQuery);
+                const result = await aiSearch(targetQuery, targetFilters);
                 if (result.success) {
                     setData(result.data ?? []);
                     setHasMore(false);

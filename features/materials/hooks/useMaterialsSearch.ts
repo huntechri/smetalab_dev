@@ -7,24 +7,37 @@ export function useMaterialsSearch(
     data: MaterialRow[],
     setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>
 ) {
-    return useGuideTableSearch<MaterialRow, { lastSortOrder?: number; lastId?: string }>({
+    return useGuideTableSearch<
+        MaterialRow, 
+        { lastSortOrder?: number; lastId?: string }, 
+        { 
+            categoryLv1?: string; 
+            categoryLv2?: string; 
+            categoryLv3?: string; 
+            categoryLv4?: string 
+        }
+    >({
         initialData,
         data,
         setData,
-        aiSearch: async (query: string) => {
-            const result = await searchMaterials(query);
+        aiSearch: async (query: string, filters) => {
+            const result = await searchMaterials({ query, ...filters });
             return {
                 success: result.success,
-                data: "data" in result ? result.data : [],
+                data: result.success ? result.data : [],
                 message: result.message,
             };
         },
-        searchPage: ({ query }) => fetchMoreMaterials({ query }),
-        loadMorePage: ({ query, lastSortOrder, lastId }) =>
+        searchPage: (args) => fetchMoreMaterials(args),
+        loadMorePage: ({ query, lastSortOrder, lastId, ...filters }) =>
             fetchMoreMaterials({
                 query,
+                ...filters,
                 cursor: typeof lastSortOrder === 'number' && lastId ? { lastSortOrder, lastId } : undefined,
             }),
-        getCursorFromLast: (lastItem) => ({ lastSortOrder: lastItem?.sortOrder, lastId: lastItem?.id }),
+        getCursorFromLast: (lastItem) => ({ 
+            lastSortOrder: lastItem?.sortOrder ? Number(lastItem.sortOrder) : undefined, 
+            lastId: lastItem?.id 
+        }),
     });
 }
