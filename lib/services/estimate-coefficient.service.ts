@@ -1,4 +1,4 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { estimates } from '@/lib/data/db/schema';
@@ -20,7 +20,11 @@ export class EstimateCoefficientService {
         try {
             const [updated] = await db
                 .update(estimates)
-                .set({ coefPercent: parsed.data.coefPercent, updatedAt: new Date() })
+                .set({
+                    coefPercent: parsed.data.coefPercent,
+                    executionSyncVersion: sql`${estimates.executionSyncVersion} + 1`,
+                    updatedAt: new Date(),
+                })
                 .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)))
                 .returning({ coefPercent: estimates.coefPercent });
 
