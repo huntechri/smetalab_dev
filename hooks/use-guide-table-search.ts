@@ -13,18 +13,19 @@ interface LoadMoreResult<TData> {
     message?: string;
 }
 
-interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unknown>> {
+interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = {}> {
     initialData: TData[];
     data: TData[];
     setData: React.Dispatch<React.SetStateAction<TData[]>>;
     pageSize?: number;
     aiSearch: (query: string) => Promise<SearchResult<TData>>;
-    searchPage: (args: { query: string }) => Promise<LoadMoreResult<TData>>;
-    loadMorePage: (args: { query: string } & TCursor) => Promise<LoadMoreResult<TData>>;
-    getCursorFromLast: (lastItem: TData | undefined) => TCursor;
+    searchPage: (args: { query: string } & TFilters) => Promise<LoadMoreResult<TData>>;
+    loadMorePage: (args: { query: string } & TCursor & TFilters) => Promise<LoadMoreResult<TData>>;
+    getCursorFromLast: (lastItem: TData | undefined, filters: TFilters) => TCursor;
+    initialFilters?: TFilters;
 }
 
-export function useGuideTableSearch<TData, TCursor extends Record<string, unknown>>({
+export function useGuideTableSearch<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = {}>({
     initialData,
     data,
     setData,
@@ -33,19 +34,21 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
     searchPage,
     loadMorePage,
     getCursorFromLast,
-}: UseGuideTableSearchOptions<TData, TCursor>) {
+    initialFilters = {} as TFilters,
+}: UseGuideTableSearchOptions<TData, TCursor, TFilters>) {
     const { toast } = useAppToast();
+    const [filters, setFilters] = useState<TFilters>(initialFilters);
     const [searchTerm, setSearchTerm] = useState('');
     const [isAiMode, setIsAiMode] = useState(false);
     const [isAiSearching, startAiSearchTransition] = useTransition();
     const [isSearching, setIsSearching] = useState(false);
     const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-
-    const handleSearch = async (query: string) => {
+    const handleSearch = async (query?: string, nextFilters?: TFilters) => {
         const targetQuery = query ?? searchTerm;
+        const targetFilters = nextFilters ?? filters;
 
-        if (targetQuery.length === 0) {
+        if (targetQuery.length === 0 && Object.values(targetFilters).every(v => !v || v === 'all')) {
             setData(initialData);
             setHasMore(initialData.length >= pageSize);
             return;
@@ -66,7 +69,7 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
 
         setIsSearching(true);
         try {
-            const res = await searchPage({ query: targetQuery });
+            const res = await searchPage({ query: targetQuery, ...targetFilters });
             if (res.success) {
                 const nextData = res.data ?? [];
                 setData(nextData);
@@ -78,11 +81,11 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
     };
 
     useEffect(() => {
-        if (!searchTerm) {
+        if (!searchTerm && Object.values(filters).every(v => !v || v === 'all')) {
             setData(initialData);
             setHasMore(initialData.length >= pageSize);
         }
-    }, [initialData, pageSize, searchTerm, setData]);
+    }, [initialData, pageSize, searchTerm, setData, filters]);
 
     const loadMore = async () => {
         if (isLoadingMore || !hasMore || isAiMode) return;
@@ -90,10 +93,11 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
         setIsLoadingMore(true);
         try {
             const lastItem = data[data.length - 1];
-            const cursor = getCursorFromLast(lastItem);
+            const cursor = getCursorFromLast(lastItem, filters);
             const res = await loadMorePage({
                 query: searchTerm,
                 ...cursor,
+                ...filters,
             });
 
             const nextData = res.data ?? [];
@@ -112,6 +116,17 @@ export function useGuideTableSearch<TData, TCursor extends Record<string, unknow
     return {
         searchTerm,
         setSearchTerm,
+        filters,
+        setFilters: (newFilters: TFilters | ((prev: TFilters) => TFilters)) => {
+            if (typeof newFilters === 'function') {
+                const next = newFilters(filters);
+                setFilters(next);
+                handleSearch(searchTerm, next);
+            } else {
+                setFilters(newFilters);
+                handleSearch(searchTerm, newFilters);
+            }
+        },
         isAiMode,
         setIsAiMode,
         isAiSearching,
