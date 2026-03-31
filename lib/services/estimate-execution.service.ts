@@ -103,7 +103,8 @@ export class EstimateExecutionService {
 
         const plannedIds = plannedWorks.map((work) => work.id);
 
-        if (plannedIds.length > 0) {
+        if (plannedIds.length === 0) {
+            // CORRECTNESS: when estimate has no works, all generated execution rows must be soft-deleted.
             await tx
                 .update(estimateExecutionRows)
                 .set({ deletedAt: new Date(), updatedAt: new Date() })
@@ -112,14 +113,23 @@ export class EstimateExecutionService {
                         eq(estimateExecutionRows.estimateId, estimateId),
                         eq(estimateExecutionRows.source, 'from_estimate'),
                         withActiveTenant(estimateExecutionRows, teamId),
-                        notInArray(estimateExecutionRows.estimateRowId, plannedIds),
                     ),
                 );
-        }
 
-        if (plannedIds.length === 0) {
             return;
         }
+
+        await tx
+            .update(estimateExecutionRows)
+            .set({ deletedAt: new Date(), updatedAt: new Date() })
+            .where(
+                and(
+                    eq(estimateExecutionRows.estimateId, estimateId),
+                    eq(estimateExecutionRows.source, 'from_estimate'),
+                    withActiveTenant(estimateExecutionRows, teamId),
+                    notInArray(estimateExecutionRows.estimateRowId, plannedIds),
+                ),
+            );
 
         const now = new Date();
         const values = plannedWorks.map((work) => {

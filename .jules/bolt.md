@@ -21,3 +21,15 @@
 ## 2026-02-03 - Robust Seeding with TRUNCATE CASCADE and RETURNING
 **Learning:** Seeding scripts that delete and re-insert reference data (like permissions) are fragile if they rely on static IDs or don't handle dependent tables.
 **Action:** Use `TRUNCATE TABLE ... RESTART IDENTITY CASCADE` to cleanly wipe data and dependencies. Use `RETURNING` clause on `INSERT` to capture dynamic IDs for subsequent inserts in the same transaction.
+
+## 2026-03-30 - Progress Recalculation Hot Path
+**Learning:** `ProjectProgressService.refreshForProject` fetched every execution row just to compute totals (`rows.length` + `filter`). For large projects this scales network transfer and memory as O(n) per recalculation, even though only two counts are needed.
+**Action:** For progress/KPI recomputations, push aggregation to SQL (`count(*)`, `count(*) filter`) and return one row only; reserve row-level fetches for screens that actually render row details.
+
+## 2026-03-30 - Status Recompute Should Be Aggregate-Driven
+**Learning:** Project status recalculation appeared in multiple flows and repeatedly loaded all estimate statuses just to answer three aggregate questions (total, approved, has-active). This duplicates O(n) data transfer on every status change.
+**Action:** For derived status fields, standardize on aggregate SQL counters and keep pure status decision logic in a shared helper to avoid regressions between call sites.
+
+## 2026-03-30 - Cache Invalidity on Soft-Delete
+**Learning:** Procurement cache freshness relied on `MAX(updatedAt)` over active source rows. After soft-delete of all material rows, active source timestamps became `NULL`, so stale cache rows survived and users still saw removed materials in procurement.
+**Action:** Cache refresh decision must explicitly handle the “sources empty but cache non-empty” state and trigger cache cleanup in that case.

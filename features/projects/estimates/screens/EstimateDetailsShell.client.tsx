@@ -114,6 +114,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
     return (
         <div className="space-y-2">
 
+            {/* Keep estimate tab mounted to avoid losing optimistic table state between tab switches. */}
             <Tabs
                 value={tab}
                 onValueChange={(nextValue) => {
@@ -129,7 +130,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     <TabsTrigger value="execution" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
                     <TabsTrigger value="docs" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
                 </TabsList>
-                <TabsContent value="estimate" className="mt-2">
+                <TabsContent value="estimate" forceMount className="mt-2">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
                         <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} projectSlug={project.slug} estimateName={estimate.name} />
                     </Suspense>
