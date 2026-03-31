@@ -8,7 +8,7 @@ export function useWorksSearch(
     data: WorkRow[],
     setData: React.Dispatch<React.SetStateAction<WorkRow[]>>
 ) {
-    return useGuideTableSearch<WorkRow, { lastSortOrder?: number; limit: number }>({
+    return useGuideTableSearch<WorkRow, { lastSortOrder?: number; limit: number }, { category?: string; phase?: string }>({
         initialData,
         data,
         setData,
@@ -20,8 +20,8 @@ export function useWorksSearch(
                 message: result.message,
             };
         },
-        searchPage: ({ query }) => fetchMoreWorks({ query }),
-        loadMorePage: ({ query, lastSortOrder, limit }) => fetchMoreWorks({ query, lastSortOrder, limit }),
-        getCursorFromLast: (lastItem) => ({ lastSortOrder: lastItem?.sortOrder, limit: 50 }),
+        searchPage: ({ query, category, phase }) => fetchMoreWorks({ query, category, phase }),
+        loadMorePage: ({ query, lastSortOrder, limit, category, phase }) => fetchMoreWorks({ query, lastSortOrder, limit, category, phase }),
+        getCursorFromLast: (lastItem, { category, phase }) => ({ lastSortOrder: lastItem?.sortOrder, limit: 50, category, phase }),
     });
 }

@@ -1,0 +1,74 @@
+
+> @ lint C:\Users\Admin\smetalabv3
+> npx eslint .
+
+
+C:\Users\Admin\smetalabv3\__tests__\ui\CounterpartiesClient.test.tsx
+  1:46  warning  'within' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\__tests__\ui\MaterialSuppliersClient.test.tsx
+  1:46  warning  'within' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\app\(workspace)\app\projects\page.tsx
+   7:5  warning  'Breadcrumb' is defined but never used. Allowed unused vars must match /^_/u           @typescript-eslint/no-unused-vars
+   8:5  warning  'BreadcrumbItem' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+   9:5  warning  'BreadcrumbLink' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  10:5  warning  'BreadcrumbList' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  11:5  warning  'BreadcrumbPage' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  12:5  warning  'BreadcrumbSeparator' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  14:8  warning  'Link' is defined but never used. Allowed unused vars must match /^_/u                 @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\dashboard\components\HomeKpiCards.tsx
+  1:10  warning  'TrendingUp' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1:22  warning  'Users' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  1:29  warning  'Activity' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  3:10  warning  'Badge' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\materials\components\MaterialsHeader.tsx
+  8:46  warning  'totalCount' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\projects\dashboard\components\DashboardKpiCards.tsx
+  1:10  warning  'TrendingUp' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+  1:22  warning  'Users' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+  1:29  warning  'Activity' is defined but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+  3:10  warning  'Badge' is defined but never used. Allowed unused vars must match /^_/u       @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\projects\estimates\screens\EstimateDetailsShell.client.tsx
+  12:8  warning  'Link' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\projects\list\components\projects-kpi-placeholders.tsx
+  5:10  warning  'Badge' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\works\components\WorksHeader.tsx
+  8:42  warning  'totalCount' is defined but never used. Allowed unused args must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\works\components\WorksSidebar.tsx
+  6:10  warning  'Badge' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\works\components\columns.tsx
+   16:5   warning  'Tooltip' is defined but never used. Allowed unused vars must match /^_/u          @typescript-eslint/no-unused-vars
+   17:5   warning  'TooltipContent' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+   18:5   warning  'TooltipProvider' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+   19:5   warning  'TooltipTrigger' is defined but never used. Allowed unused vars must match /^_/u   @typescript-eslint/no-unused-vars
+  128:11  warning  'meta' is assigned a value but never used. Allowed unused vars must match /^_/u    @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\features\works\screens\WorksScreen.tsx
+  9:10  warning  'Button' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+C:\Users\Admin\smetalabv3\hooks\use-guide-table-search.ts
+  16:129  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+  28:128  error  The `{}` ("empty object") type allows any non-nullish value, including literals like `0` and `""`.
+- If that's what you want, disable this lint rule with an inline comment or configure the 'allowObjectTypes' rule option.
+- If you want a type meaning "any object", you probably want `object` instead.
+- If you want a type meaning "any value", you probably want `unknown` instead  @typescript-eslint/no-empty-object-type
+
+C:\Users\Admin\smetalabv3\shared\ui\data-table.tsx
+  68:52  warning  Unexpected any. Specify a different type                                             @typescript-eslint/no-explicit-any
+  99:11  warning  'DataTableRowProps' is defined but never used. Allowed unused vars must match /^_/u  @typescript-eslint/no-unused-vars
+
+тЬЦ 32 problems (2 errors, 30 warnings)
+
+тАЙELIFECYCLEтАЙ Command failed with exit code 1.
