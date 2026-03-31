@@ -181,4 +181,57 @@ describe('EstimateExecutionService sync behavior', () => {
         expect(dbMock.transaction).toHaveBeenCalledTimes(2);
         expect(progressRefreshMock).not.toHaveBeenCalled();
     });
+
+    it('updates factual price from estimate base price when syncing existing execution rows', async () => {
+        dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
+
+        const onConflictDoUpdateMock = vi.fn().mockResolvedValue([]);
+        const insertValuesMock = vi.fn(() => ({ onConflictDoUpdate: onConflictDoUpdateMock }));
+        const insertMock = vi.fn(() => ({ values: insertValuesMock }));
+
+        dbMock.transaction.mockImplementation(async (callback: (tx: { execute: ReturnType<typeof vi.fn>; select: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; insert: ReturnType<typeof vi.fn> }) => Promise<unknown>) => {
+            const tx = {
+                execute: vi.fn().mockResolvedValue([
+                    {
+                        id: 'est-1',
+                        project_id: 'pr-1',
+                        coef_percent: 15,
+                        execution_sync_version: 2,
+                        execution_synced_version: 1,
+                    },
+                ]),
+                select: vi.fn(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({
+                            orderBy: vi.fn().mockResolvedValue([
+                                {
+                                    id: 'row-1',
+                                    code: '1',
+                                    name: 'Работа',
+                                    unit: 'м2',
+                                    qty: 2,
+                                    price: 1000,
+                                    sum: 2000,
+                                    order: 10,
+                                },
+                            ]),
+                        })),
+                    })),
+                })),
+                update: vi.fn(() => ({
+                    set: vi.fn(() => ({ where: vi.fn().mockResolvedValue([]) })),
+                })),
+                insert: insertMock,
+            };
+
+            return callback(tx);
+        });
+
+        await EstimateExecutionService.syncEstimateIfStale(1, 'est-1');
+
+        expect(onConflictDoUpdateMock).toHaveBeenCalledTimes(1);
+        const [{ set }] = onConflictDoUpdateMock.mock.calls[0] as Array<{ set: Record<string, unknown> }>;
+        expect(set).toHaveProperty('actualPrice');
+        expect(set).toHaveProperty('actualSum');
+    });
 });
