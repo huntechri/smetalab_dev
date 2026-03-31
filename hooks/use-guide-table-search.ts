@@ -13,7 +13,7 @@ interface LoadMoreResult<TData> {
     message?: string;
 }
 
-interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = {}> {
+interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = Record<string, unknown>> {
     initialData: TData[];
     data: TData[];
     setData: React.Dispatch<React.SetStateAction<TData[]>>;
@@ -25,7 +25,7 @@ interface UseGuideTableSearchOptions<TData, TCursor extends Record<string, unkno
     initialFilters?: TFilters;
 }
 
-export function useGuideTableSearch<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = {}>({
+export function useGuideTableSearch<TData, TCursor extends Record<string, unknown>, TFilters extends Record<string, unknown> = Record<string, unknown>>({
     initialData,
     data,
     setData,
