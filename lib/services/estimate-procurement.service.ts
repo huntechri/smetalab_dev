@@ -284,10 +284,44 @@ export const buildEstimateProcurementRows = (planRows: PlanRow[], factRows: Fact
     );
 };
 
+export function shouldRefreshProcurementCache(params: {
+    cacheHasRows: boolean;
+    maxRefreshedAt: Date | null;
+    latestSourceAt: Date | null;
+}): boolean {
+    const { cacheHasRows, maxRefreshedAt, latestSourceAt } = params;
+
+    // PERF+CORRECTNESS: if all source rows are gone, refresh only when stale cache rows still exist.
+    if (!latestSourceAt) {
+        return cacheHasRows;
+    }
+
+    if (!maxRefreshedAt) {
+        return true;
+    }
+
+    return latestSourceAt > maxRefreshedAt;
+}
+
+const toDateOrNull = (value: unknown): Date | null => {
+    if (value === null || value === undefined) return null;
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value;
+
+    if (typeof value === 'string' || typeof value === 'number') {
+        const parsed = new Date(value);
+        return Number.isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    return null;
+};
+
 export class EstimateProcurementService {
     private static async shouldRefreshCache(teamId: number, estimateId: string, projectId: string) {
         const [cacheState] = await db
-            .select({ maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})` })
+            .select({
+                maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})`,
+                rowsCount: sql<number>`COUNT(*)::int`,
+            })
             .from(estimateProcurementCache)
             .where(
                 and(
@@ -295,8 +329,6 @@ export class EstimateProcurementService {
                     withActiveTenant(estimateProcurementCache, teamId),
                 ),
             );
-
-        if (!cacheState?.maxRefreshedAt) return true;
 
         const [planState, factState] = await Promise.all([
             db
@@ -321,11 +353,15 @@ export class EstimateProcurementService {
         ]);
 
         const latestSourceAt = [planState[0]?.maxUpdatedAt, factState[0]?.maxUpdatedAt]
+            .map((value) => toDateOrNull(value))
             .filter((value): value is Date => value instanceof Date)
             .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
 
-        if (!latestSourceAt) return false;
-        return latestSourceAt > cacheState.maxRefreshedAt;
+        return shouldRefreshProcurementCache({
+            cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
+            maxRefreshedAt: toDateOrNull(cacheState?.maxRefreshedAt),
+            latestSourceAt,
+        });
     }
 
     private static async refreshCache(teamId: number, estimateId: string, projectId: string) {
@@ -382,25 +418,50 @@ export class EstimateProcurementService {
 
             if (rows.length === 0) return;
 
-            await tx.insert(estimateProcurementCache).values(rows.map((row) => ({
-                tenantId: teamId,
-                estimateId,
-                projectId,
-                matchKey: row.matchKey,
-                materialName: row.materialName,
-                unit: row.unit,
-                source: row.source,
-                plannedQty: row.plannedQty,
-                plannedPrice: row.plannedPrice,
-                plannedAmount: row.plannedAmount,
-                actualQty: row.actualQty,
-                actualAvgPrice: row.actualAvgPrice,
-                actualAmount: row.actualAmount,
-                qtyDelta: row.qtyDelta,
-                amountDelta: row.amountDelta,
-                purchaseCount: row.purchaseCount,
-                lastPurchaseDate: row.lastPurchaseDate,
-            })));
+            await tx
+                .insert(estimateProcurementCache)
+                .values(rows.map((row) => ({
+                    tenantId: teamId,
+                    estimateId,
+                    projectId,
+                    matchKey: row.matchKey,
+                    materialName: row.materialName,
+                    unit: row.unit,
+                    source: row.source,
+                    plannedQty: row.plannedQty,
+                    plannedPrice: row.plannedPrice,
+                    plannedAmount: row.plannedAmount,
+                    actualQty: row.actualQty,
+                    actualAvgPrice: row.actualAvgPrice,
+                    actualAmount: row.actualAmount,
+                    qtyDelta: row.qtyDelta,
+                    amountDelta: row.amountDelta,
+                    purchaseCount: row.purchaseCount,
+                    lastPurchaseDate: row.lastPurchaseDate,
+                })))
+                // CORRECTNESS: unique key ignores deleted_at, so upsert reuses soft-deleted cache rows.
+                .onConflictDoUpdate({
+                    target: [estimateProcurementCache.tenantId, estimateProcurementCache.estimateId, estimateProcurementCache.matchKey],
+                    set: {
+                        projectId: sql`excluded.project_id`,
+                        materialName: sql`excluded.material_name`,
+                        unit: sql`excluded.unit`,
+                        source: sql`excluded.source`,
+                        plannedQty: sql`excluded.planned_qty`,
+                        plannedPrice: sql`excluded.planned_price`,
+                        plannedAmount: sql`excluded.planned_amount`,
+                        actualQty: sql`excluded.actual_qty`,
+                        actualAvgPrice: sql`excluded.actual_avg_price`,
+                        actualAmount: sql`excluded.actual_amount`,
+                        qtyDelta: sql`excluded.qty_delta`,
+                        amountDelta: sql`excluded.amount_delta`,
+                        purchaseCount: sql`excluded.purchase_count`,
+                        lastPurchaseDate: sql`excluded.last_purchase_date`,
+                        refreshedAt: sql`now()`,
+                        updatedAt: sql`now()`,
+                        deletedAt: null,
+                    },
+                });
         });
     }
 
