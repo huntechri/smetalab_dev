@@ -30,6 +30,9 @@ describe('EstimateCoefficientService', () => {
         const result = await EstimateCoefficientService.update(1, 'est-1', { coefPercent: 25 });
 
         expect(result.success).toBe(true);
+        expect(dbMock.set).toHaveBeenCalledTimes(1);
+        const [payload] = dbMock.set.mock.calls[0] as Array<[Record<string, unknown>]>;
+        expect(payload).toHaveProperty('executionSyncVersion');
         if (result.success) {
             expect(result.data.coefPercent).toBe(25);
         }
