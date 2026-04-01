@@ -43,10 +43,6 @@ export class MaterialsService {
 
             const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
 
-            if (categoryLv1) filters.push(eq(materials.categoryLv1, categoryLv1));
-            if (categoryLv2) filters.push(eq(materials.categoryLv2, categoryLv2));
-            if (categoryLv3) filters.push(eq(materials.categoryLv3, categoryLv3));
-            if (categoryLv4) filters.push(eq(materials.categoryLv4, categoryLv4));
 
             const normalizedSearch = search?.trim().toLowerCase();
             const finalOffset = offset && offset > 0 ? offset : 0;
@@ -83,6 +79,9 @@ export class MaterialsService {
             if (categoryLv1 && categoryLv1 !== 'all') {
                 filters.push(eq(materials.categoryLv1, categoryLv1));
             }
+            if (categoryLv2) filters.push(eq(materials.categoryLv2, categoryLv2));
+            if (categoryLv3) filters.push(eq(materials.categoryLv3, categoryLv3));
+            if (categoryLv4) filters.push(eq(materials.categoryLv4, categoryLv4));
 
             const finalLimit = limit || (search ? 50 : 50);
 
