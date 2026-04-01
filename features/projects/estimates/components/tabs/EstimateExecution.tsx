@@ -27,7 +27,6 @@ import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execu
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
 import { EstimateTotals } from '../EstimateTotals';
-import { downloadEstimateExecutionXlsx } from '../../lib/tab-export';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -349,13 +348,8 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
     const addedWorkNames = useMemo(() => new Set(rows.map((row) => row.name)), [rows]);
     const handleExport = useCallback(() => {
-        try {
-            downloadEstimateExecutionXlsx(rows, estimateId);
-            toast({ title: 'Экспорт завершен', description: 'Выполнение сметы выгружено в Excel.' });
-        } catch {
-            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось сформировать Excel-файл.' });
-        }
-    }, [estimateId, rows, toast]);
+        window.open(`/api/estimates/${estimateId}/export/execution`, '_blank', 'noopener,noreferrer');
+    }, [estimateId]);
 
     if (isLoading) {
         return (

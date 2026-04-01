@@ -10,8 +10,6 @@ import { Download } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
 import { EstimateTotals } from '../EstimateTotals';
-import { downloadEstimateProcurementXlsx } from '../../lib/tab-export';
-import { useAppToast } from '@/components/providers/use-app-toast';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -106,7 +104,6 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     const [rows, setRows] = useState<EstimateProcurementRow[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-    const { toast } = useAppToast();
 
     useEffect(() => {
         let active = true;
@@ -166,12 +163,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     }
 
     const handleExport = () => {
-        try {
-            downloadEstimateProcurementXlsx(rows, estimateId);
-            toast({ title: 'Экспорт завершен', description: 'Закупки сметы выгружены в Excel.' });
-        } catch {
-            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось сформировать Excel-файл.' });
-        }
+        window.open(`/api/estimates/${estimateId}/export/procurement`, '_blank', 'noopener,noreferrer');
     };
 
     return (
