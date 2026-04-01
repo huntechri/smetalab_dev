@@ -332,13 +332,16 @@ export class EstimateProcurementService {
 
         const [planState, factState] = await Promise.all([
             db
+                // BUG-FIX: intentionally include soft-deleted rows (no deletedAt IS NULL filter)
+                // so that deleting a single material row still moves MAX(updatedAt) forward
+                // and invalidates the procurement cache correctly.
                 .select({ maxUpdatedAt: sql<Date | null>`MAX(${estimateRows.updatedAt})` })
                 .from(estimateRows)
                 .where(
                     and(
                         eq(estimateRows.estimateId, estimateId),
                         eq(estimateRows.kind, 'material'),
-                        withActiveTenant(estimateRows, teamId),
+                        eq(estimateRows.tenantId, teamId),
                     ),
                 ),
             db
