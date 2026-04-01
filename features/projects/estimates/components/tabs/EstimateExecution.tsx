@@ -366,6 +366,12 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
     return (
         <div className="space-y-2">
+            <div className="flex justify-end sm:hidden">
+                <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleExport}>
+                    <Download className="h-4 w-4" />
+                    Экспорт Excel
+                </Button>
+            </div>
             <DataTable
                 columns={columns}
                 data={rows}
@@ -390,7 +396,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 }
                 actions={
                     <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleExport}>
+                        <Button variant="outline" size="sm" className="hidden h-8 gap-1.5 sm:inline-flex" onClick={handleExport}>
                             <Download className="h-4 w-4" />
                             Экспорт Excel
                         </Button>
