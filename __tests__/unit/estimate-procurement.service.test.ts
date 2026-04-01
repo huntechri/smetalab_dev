@@ -82,4 +82,22 @@ describe('shouldRefreshProcurementCache', () => {
             }),
         ).toBe(true);
     });
+
+    /**
+     * Regression test: deleting one of two material rows must invalidate the
+     * procurement cache (previously it stayed stale because MAX(updatedAt) was
+     * filtered with deletedAt IS NULL, hiding the soft-deleted row's timestamp).
+     *
+     * Fix: planState query no longer applies the deletedAt IS NULL filter, so
+     * the deleted row's updated_at raises latestSourceAt above maxRefreshedAt.
+     */
+    it('refreshes when one of several material rows is soft-deleted (regression)', () => {
+        expect(
+            shouldRefreshProcurementCache({
+                cacheHasRows: true,
+                maxRefreshedAt: new Date('2026-01-10T12:00:00.000Z'),
+                latestSourceAt: new Date('2026-01-10T12:00:01.000Z'),
+            }),
+        ).toBe(true);
+    });
 });
