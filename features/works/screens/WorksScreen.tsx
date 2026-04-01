@@ -79,7 +79,7 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
         });
     }, [editor.setEditFormData]);
 
-    const [showSidebar, setShowSidebar] = useState(true);
+    const [showSidebar, setShowSidebar] = useState(false);
 
     if (!mounted) {
         return (
