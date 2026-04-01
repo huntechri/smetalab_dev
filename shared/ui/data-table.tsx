@@ -65,6 +65,7 @@ interface DataTableProps<TData, TValue> {
 }
 
 // --- Stable Virtuoso Components ---
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const VirtuosoTableComponents: TableComponents<Row<any>, { flatHeaders: unknown[] }> = {
     Table: ({ children, style, ...props }) => (
         <table
@@ -96,9 +97,7 @@ const VirtuosoTableComponents: TableComponents<Row<any>, { flatHeaders: unknown[
     )),
 };
 
-interface DataTableRowProps<TData> {
-    row: Row<TData>;
-}
+
 
 const DataTableRow = memo(<TData,>({ row, className }: { row: Row<TData>, className?: string }) => {
     return (

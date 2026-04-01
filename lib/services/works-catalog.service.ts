@@ -31,9 +31,9 @@ export class WorksCatalogService {
 
   static fetchMore(
     teamId: number,
-    options: { query?: string; lastSortOrder?: number; limit?: number; category?: string } = {}
+    options: { query?: string; lastSortOrder?: number; limit?: number; category?: string; phase?: string } = {}
   ) {
-    return WorksService.getMany(teamId, options.limit, options.query, options.lastSortOrder, options.category);
+    return WorksService.getMany(teamId, options.limit, options.query, options.lastSortOrder, options.category, options.phase);
   }
 
   static search(teamId: number, query: string) {
@@ -46,5 +46,13 @@ export class WorksCatalogService {
 
   static getUniqueUnits(teamId: number) {
     return WorksService.getUniqueUnits(teamId);
+  }
+
+  static getPhases(teamId: number) {
+    return WorksService.getPhases(teamId);
+  }
+
+  static getCategories(teamId: number) {
+    return WorksService.getCategories(teamId);
   }
 }

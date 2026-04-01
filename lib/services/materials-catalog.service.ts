@@ -32,12 +32,31 @@ export class MaterialsCatalogService {
       options.query,
       options.offset,
       options.cursor?.lastSortOrder,
-      options.cursor?.lastId
+      options.cursor?.lastId,
+      options.categoryLv1,
+      options.categoryLv2,
+      options.categoryLv3,
+      options.categoryLv4
     );
   }
 
-  static search(teamId: number, query: string) {
-    return MaterialsService.search(teamId, query);
+  static getCategories(teamId: number) {
+    return MaterialsService.getCategories(teamId);
+  }
+
+  static getCategoryTree(teamId: number) {
+    return MaterialsService.getCategoryTree(teamId);
+  }
+
+  static search(
+    teamId: number, 
+    query: string, 
+    categoryLv1?: string,
+    categoryLv2?: string,
+    categoryLv3?: string,
+    categoryLv4?: string
+  ) {
+    return MaterialsService.search(teamId, query, categoryLv1, categoryLv2, categoryLv3, categoryLv4);
   }
 
   static generateMissingEmbeddings(teamId: number) {
