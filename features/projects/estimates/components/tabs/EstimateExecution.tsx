@@ -10,7 +10,7 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
-import { MoreHorizontal, Plus, FilePlus } from 'lucide-react';
+import { MoreHorizontal, Plus, FilePlus, Download } from 'lucide-react';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 
 import {
@@ -27,6 +27,7 @@ import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execu
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
 import { EstimateTotals } from '../EstimateTotals';
+import { downloadEstimateExecutionXlsx } from '../../lib/tab-export';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -347,6 +348,14 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
     }, { planned: 0, actual: 0 }), [rows]);
 
     const addedWorkNames = useMemo(() => new Set(rows.map((row) => row.name)), [rows]);
+    const handleExport = useCallback(() => {
+        try {
+            downloadEstimateExecutionXlsx(rows, estimateId);
+            toast({ title: 'Экспорт завершен', description: 'Выполнение сметы выгружено в Excel.' });
+        } catch {
+            toast({ variant: 'destructive', title: 'Ошибка экспорта', description: 'Не удалось сформировать Excel-файл.' });
+        }
+    }, [estimateId, rows, toast]);
 
     if (isLoading) {
         return (
@@ -386,11 +395,17 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                     />
                 }
                 actions={
-                    <AddExtraWorkSheet
-                        estimateId={estimateId}
-                        onCreated={(row) => setRows((prev) => [...prev, row])}
-                        addedWorkNames={addedWorkNames}
-                    />
+                    <div className="flex items-center gap-2">
+                        <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleExport}>
+                            <Download className="h-4 w-4" />
+                            Экспорт Excel
+                        </Button>
+                        <AddExtraWorkSheet
+                            estimateId={estimateId}
+                            onCreated={(row) => setRows((prev) => [...prev, row])}
+                            addedWorkNames={addedWorkNames}
+                        />
+                    </div>
                 }
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
