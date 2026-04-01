@@ -1,5 +1,14 @@
 import { Button } from '@/shared/ui/button';
-import { Upload, Download, Trash2, Loader2 } from 'lucide-react';
+import { Upload, Download, Trash2, Loader2, Filter } from 'lucide-react';
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/shared/ui/sheet";
+import { WorksSidebar } from './WorksSidebar';
+import { cn } from "@/lib/utils";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -25,6 +34,10 @@ interface WorksToolbarProps {
     handleImportClick: () => void;
     handleExport: () => void;
     handleDeleteAll: () => void;
+    filters?: { category?: string; phase?: string };
+    setFilters?: (filters: { category?: string; phase?: string } | ((prev: { category?: string; phase?: string }) => { category?: string; phase?: string })) => void;
+    showSidebar?: boolean;
+    setShowSidebar?: (show: boolean) => void;
 }
 
 export function WorksToolbar({
@@ -35,12 +48,51 @@ export function WorksToolbar({
     handleImportClick,
     handleExport,
     handleDeleteAll,
+    filters,
+    setFilters,
+    showSidebar,
+    setShowSidebar,
 }: WorksToolbarProps) {
     const isActionDisabled = isDeletingAll || !hasData;
 
 
     return (
         <>
+            {/* Mobile Filter Button */}
+            <div className="lg:hidden">
+                <Sheet>
+                    <SheetTrigger asChild>
+                        <Button variant="standard" size="icon-sm" className="h-8 w-8 mr-1">
+                            <Filter className="h-4 w-4" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="w-[300px] p-6 focus-visible:ring-0">
+                        <SheetHeader className="mb-4">
+                            <SheetTitle className="text-[16px] font-bold uppercase tracking-wider text-left">Параметры</SheetTitle>
+                        </SheetHeader>
+                        <div className="h-full">
+                            {filters && setFilters && (
+                                <WorksSidebar filters={filters} setFilters={setFilters} isMobile />
+                            )}
+                        </div>
+                    </SheetContent>
+                </Sheet>
+            </div>
+
+            {/* Desktop Toggle Sidebar Button */}
+            <div className="hidden lg:block">
+                <Button 
+                    variant="standard" 
+                    size="icon-sm" 
+                    className={cn(
+                        "h-8 w-8 mr-1 transition-all duration-200",
+                        showSidebar && "bg-secondary text-secondary-foreground ring-1 ring-border/50"
+                    )}
+                    onClick={() => setShowSidebar?.(!showSidebar)}
+                >
+                    <Filter className={cn("h-4 w-4 transition-transform", showSidebar && "scale-110")} />
+                </Button>
+            </div>
             <Tooltip>
                 <TooltipTrigger asChild>
                     <Button variant="standard" onClick={handleImportClick} disabled={isImporting}>
@@ -68,10 +120,10 @@ export function WorksToolbar({
                             <AlertDialogTrigger asChild>
                                 <Button
                                     variant="destructive"
-                                    className={`h-8 rounded-[7.6px] active:scale-95 shadow-none ${isActionDisabled ? 'pointer-events-none' : ''}`}
+                                    className={`h-8 rounded-[7.6px] px-2 sm:px-4 active:scale-95 shadow-none ${isActionDisabled ? 'pointer-events-none' : ''}`}
                                     disabled={isActionDisabled}
                                 >
-                                    {isDeletingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="mr-2 h-4 w-4" />}
+                                    {isDeletingAll ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4 sm:mr-2" />}
                                     <span className="hidden sm:inline">Удалить всё</span>
                                 </Button>
                             </AlertDialogTrigger>

@@ -16,3 +16,17 @@ export const fetchMoreMaterials = safeAction(
     },
     { name: 'fetchMoreMaterials' }
 );
+
+export const getMaterialCategories = safeAction(
+    async ({ team }) => {
+        return await MaterialsCatalogService.getCategories(team.id);
+    },
+    { name: 'getMaterialCategories' }
+);
+
+export const getMaterialCategoryTree = safeAction(
+    async ({ team }) => {
+        return await MaterialsCatalogService.getCategoryTree(team.id);
+    },
+    { name: 'getMaterialCategoryTree' }
+);

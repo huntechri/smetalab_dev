@@ -16,7 +16,7 @@ const WORKS_VECTOR_SCORE_THRESHOLD = 0.45;
 const WORKS_FTS_SCORE_WEIGHT = 0.9;
 
 export class WorksService {
-    static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string): Promise<Result<WorkRow[]>> {
+    static async getMany(teamId: number | null, limit?: number, search?: string, lastSortOrder?: number, category?: string, phase?: string): Promise<Result<WorkRow[]>> {
         try {
             await ensureWorksCodeSortKeyColumn();
 
@@ -59,6 +59,10 @@ export class WorksService {
 
             if (category && category !== 'all') {
                 filters.push(eq(works.category, category));
+            }
+
+            if (phase && phase !== 'all') {
+                filters.push(eq(works.phase, phase));
             }
 
             if (typeof lastSortOrder === 'number') {
@@ -423,6 +427,25 @@ export class WorksService {
         } catch (e) {
             console.error('searchWorks error:', e);
             return error('Ошибка поиска');
+        }
+    }
+
+    static async getPhases(teamId: number | null): Promise<Result<string[]>> {
+        try {
+            const phases = await db
+                .selectDistinct({ phase: works.phase })
+                .from(works)
+                .where(and(
+                    withActiveTenant(works, teamId),
+                    sql`${works.phase} IS NOT NULL`,
+                    sql`length(trim(${works.phase})) > 0`
+                ))
+                .orderBy(works.phase);
+
+            return success(phases.map(({ phase }) => phase as string));
+        } catch (e) {
+            console.error('getWorkPhases error:', e);
+            return error('Ошибка при получении этапов работ');
         }
     }
 
