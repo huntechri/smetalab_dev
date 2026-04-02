@@ -1,4 +1,4 @@
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateRoomParams, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -134,33 +134,48 @@ export class EstimateRoomParamsService {
 
                 const toDelete = currentRows.filter((row) => !incomingIds.has(row.id));
 
-                for (const { incoming, current } of toUpdate) {
-                    const updatedRows = await tx
-                        .update(estimateRoomParams)
-                        .set({
-                            order: incoming.order,
-                            name: incoming.name,
-                            perimeter: incoming.perimeter,
-                            height: incoming.height,
-                            floorArea: incoming.floorArea,
-                            ceilingArea: incoming.ceilingArea,
-                            ceilingSlopes: incoming.ceilingSlopes,
-                            doorsCount: incoming.doorsCount,
-                            wallSegments: incoming.wallSegments,
-                            windows: incoming.windows,
-                            portals: incoming.portals,
-                            updatedAt: new Date(),
-                        })
-                        .where(and(
-                            eq(estimateRoomParams.id, current.id),
-                            eq(estimateRoomParams.updatedAt, current.updatedAt),
-                            eq(estimateRoomParams.estimateId, estimateId),
-                            withActiveTenant(estimateRoomParams, teamId),
-                            isNull(estimateRoomParams.deletedAt),
-                        ))
-                        .returning({ id: estimateRoomParams.id });
+                if (toUpdate.length > 0) {
+                    const now = new Date();
+                    const updateMatchCondition = sql.join(
+                        toUpdate.map(({ current }) => sql`(${estimateRoomParams.id} = ${current.id} AND ${estimateRoomParams.updatedAt} = ${current.updatedAt})`),
+                        sql` OR `,
+                    );
+                    const orderCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.order}`), sql` `);
+                    const nameCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.name}`), sql` `);
+                    const perimeterCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.perimeter}`), sql` `);
+                    const heightCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.height}`), sql` `);
+                    const floorAreaCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.floorArea}`), sql` `);
+                    const ceilingAreaCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.ceilingArea}`), sql` `);
+                    const ceilingSlopesCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.ceilingSlopes}`), sql` `);
+                    const doorsCountCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.doorsCount}`), sql` `);
+                    const wallSegmentsCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.wallSegments}`), sql` `);
+                    const windowsCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.windows}`), sql` `);
+                    const portalsCase = sql.join(toUpdate.map(({ incoming, current }) => sql`WHEN ${estimateRoomParams.id} = ${current.id} THEN ${incoming.portals}`), sql` `);
 
-                    if (updatedRows.length !== 1) {
+                    const updatedRows = await tx.execute<{ id: string }>(sql`
+                        UPDATE ${estimateRoomParams}
+                        SET
+                            ${estimateRoomParams.order} = CASE ${estimateRoomParams.id} ${orderCase} ELSE ${estimateRoomParams.order} END,
+                            ${estimateRoomParams.name} = CASE ${estimateRoomParams.id} ${nameCase} ELSE ${estimateRoomParams.name} END,
+                            ${estimateRoomParams.perimeter} = CASE ${estimateRoomParams.id} ${perimeterCase} ELSE ${estimateRoomParams.perimeter} END,
+                            ${estimateRoomParams.height} = CASE ${estimateRoomParams.id} ${heightCase} ELSE ${estimateRoomParams.height} END,
+                            ${estimateRoomParams.floorArea} = CASE ${estimateRoomParams.id} ${floorAreaCase} ELSE ${estimateRoomParams.floorArea} END,
+                            ${estimateRoomParams.ceilingArea} = CASE ${estimateRoomParams.id} ${ceilingAreaCase} ELSE ${estimateRoomParams.ceilingArea} END,
+                            ${estimateRoomParams.ceilingSlopes} = CASE ${estimateRoomParams.id} ${ceilingSlopesCase} ELSE ${estimateRoomParams.ceilingSlopes} END,
+                            ${estimateRoomParams.doorsCount} = CASE ${estimateRoomParams.id} ${doorsCountCase} ELSE ${estimateRoomParams.doorsCount} END,
+                            ${estimateRoomParams.wallSegments} = CASE ${estimateRoomParams.id} ${wallSegmentsCase} ELSE ${estimateRoomParams.wallSegments} END,
+                            ${estimateRoomParams.windows} = CASE ${estimateRoomParams.id} ${windowsCase} ELSE ${estimateRoomParams.windows} END,
+                            ${estimateRoomParams.portals} = CASE ${estimateRoomParams.id} ${portalsCase} ELSE ${estimateRoomParams.portals} END,
+                            ${estimateRoomParams.updatedAt} = ${now}
+                        WHERE
+                            ${estimateRoomParams.estimateId} = ${estimateId}
+                            AND ${withActiveTenant(estimateRoomParams, teamId)}
+                            AND ${estimateRoomParams.deletedAt} IS NULL
+                            AND (${updateMatchCondition})
+                        RETURNING ${estimateRoomParams.id} AS id
+                    `);
+
+                    if (updatedRows.length !== toUpdate.length) {
                         throw new ConcurrencyError('Комната была изменена другим пользователем');
                     }
                 }
@@ -183,20 +198,24 @@ export class EstimateRoomParamsService {
                     })));
                 }
 
-                for (const row of toDelete) {
-                    const deletedRows = await tx
-                        .update(estimateRoomParams)
-                        .set({ deletedAt: new Date(), updatedAt: new Date() })
-                        .where(and(
-                            eq(estimateRoomParams.id, row.id),
-                            eq(estimateRoomParams.updatedAt, row.updatedAt),
-                            eq(estimateRoomParams.estimateId, estimateId),
-                            withActiveTenant(estimateRoomParams, teamId),
-                            isNull(estimateRoomParams.deletedAt),
-                        ))
-                        .returning({ id: estimateRoomParams.id });
+                if (toDelete.length > 0) {
+                    const now = new Date();
+                    const deleteMatchCondition = sql.join(
+                        toDelete.map((row) => sql`(${estimateRoomParams.id} = ${row.id} AND ${estimateRoomParams.updatedAt} = ${row.updatedAt})`),
+                        sql` OR `,
+                    );
+                    const deletedRows = await tx.execute<{ id: string }>(sql`
+                        UPDATE ${estimateRoomParams}
+                        SET ${estimateRoomParams.deletedAt} = ${now}, ${estimateRoomParams.updatedAt} = ${now}
+                        WHERE
+                            ${estimateRoomParams.estimateId} = ${estimateId}
+                            AND ${withActiveTenant(estimateRoomParams, teamId)}
+                            AND ${estimateRoomParams.deletedAt} IS NULL
+                            AND (${deleteMatchCondition})
+                        RETURNING ${estimateRoomParams.id} AS id
+                    `);
 
-                    if (deletedRows.length !== 1) {
+                    if (deletedRows.length !== toDelete.length) {
                         throw new ConcurrencyError('Комната была удалена или изменена другим пользователем');
                     }
                 }
