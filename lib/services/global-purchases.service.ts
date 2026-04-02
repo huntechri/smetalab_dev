@@ -372,8 +372,8 @@ export class GlobalPurchasesService {
         const priceCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.price}`), sql` `);
         const amountCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.amount}`), sql` `);
 
-        const updatedRows = preparedUpdates.length > 0
-          ? await tx.update(globalPurchases)
+        if (preparedUpdates.length > 0) {
+          await tx.update(globalPurchases)
             .set({
               materialName: sql`CASE ${globalPurchases.id} ${materialNameCase} ELSE ${globalPurchases.materialName} END`,
               materialId: sql`CASE ${globalPurchases.id} ${materialIdCase} ELSE ${globalPurchases.materialId} END`,
@@ -388,12 +388,7 @@ export class GlobalPurchasesService {
               amount: sql`CASE ${globalPurchases.id} ${amountCase} ELSE ${globalPurchases.amount} END`,
               updatedAt: now,
             })
-            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.id, rowIds)))
-            .returning({ id: globalPurchases.id })
-          : [];
-
-        if (updatedRows.length !== preparedUpdates.length) {
-          throw new Error('NOT_FOUND');
+            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.id, rowIds)));
         }
 
         const reloadedRows = rowIds.length > 0
@@ -401,6 +396,9 @@ export class GlobalPurchasesService {
             where: and(inArray(globalPurchases.id, rowIds), withActiveTenant(globalPurchases, teamId)),
           })
           : [];
+        if (reloadedRows.length !== preparedUpdates.length) {
+          throw new Error('NOT_FOUND');
+        }
         const reloadedMap = new Map(reloadedRows.map((row) => [row.id, row]));
         const orderedUpdatedRows = preparedUpdates.map((row) => {
           const updated = reloadedMap.get(row.rowId);
