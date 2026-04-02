@@ -412,12 +412,21 @@ export class GlobalPurchasesService {
         }
 
         const insertedRows: typeof globalPurchases.$inferSelect[] = [];
+        const purchaseDates = [...groupedByDate.keys()];
+        const maxOrdersByDate = purchaseDates.length > 0
+          ? await tx
+            .select({
+              purchaseDate: globalPurchases.purchaseDate,
+              maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)`,
+            })
+            .from(globalPurchases)
+            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.purchaseDate, purchaseDates)))
+            .groupBy(globalPurchases.purchaseDate)
+          : [];
+        const maxOrderByDate = new Map(maxOrdersByDate.map((row) => [row.purchaseDate, row.maxOrder]));
 
         for (const [purchaseDate, rows] of groupedByDate.entries()) {
-          const [{ maxOrder }] = await tx
-            .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
-            .from(globalPurchases)
-            .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, purchaseDate)));
+          const maxOrder = maxOrderByDate.get(purchaseDate) ?? 0;
 
           const values = rows.map((row, index) => {
             const project = projectMapByName.get(row.projectName.trim().toLowerCase());

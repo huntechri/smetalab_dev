@@ -68,6 +68,7 @@ const createTx = (currentRows: MockRoomRow[], returningQueue: Array<Array<{ id: 
     const whereMock = vi.fn();
     const setMock = vi.fn(() => ({ where: whereMock }));
     const updateMock = vi.fn(() => ({ set: setMock }));
+    const executeMock = vi.fn().mockImplementation(async () => returningQueue.shift() ?? [{ id: 'ok' }]);
 
     whereMock.mockImplementation(() => ({
         returning: vi.fn().mockResolvedValue(returningQueue.shift() ?? [{ id: 'ok' }]),
@@ -80,12 +81,13 @@ const createTx = (currentRows: MockRoomRow[], returningQueue: Array<Array<{ id: 
             })),
         })),
         update: updateMock,
+        execute: executeMock,
         insert: vi.fn(() => ({
             values: vi.fn().mockResolvedValue(undefined),
         })),
     };
 
-    return { tx, updateMock, insertMock: tx.insert };
+    return { tx, updateMock, executeMock, insertMock: tx.insert };
 };
 
 describe('EstimateRoomParamsService.save diff updates', () => {
@@ -97,7 +99,7 @@ describe('EstimateRoomParamsService.save diff updates', () => {
 
     it('updates only changed row when one field changed', async () => {
         const existing = room('11111111-1111-4111-8111-111111111111', 0);
-        const { tx, updateMock, insertMock } = createTx([existing]);
+        const { tx, executeMock, insertMock } = createTx([existing]);
 
         dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
 
@@ -105,14 +107,14 @@ describe('EstimateRoomParamsService.save diff updates', () => {
         const result = await EstimateRoomParamsService.save(5, 'est-1', payload);
 
         expect(result.success).toBe(true);
-        expect(updateMock).toHaveBeenCalledTimes(1);
+        expect(executeMock).toHaveBeenCalledTimes(1);
         expect(insertMock).not.toHaveBeenCalled();
     });
 
     it('soft-deletes removed room and keeps unchanged rows intact', async () => {
         const kept = room('11111111-1111-4111-8111-111111111111', 0);
         const removed = room('22222222-2222-4222-8222-222222222222', 1);
-        const { tx, updateMock, insertMock } = createTx([kept, removed]);
+        const { tx, executeMock, insertMock } = createTx([kept, removed]);
 
         dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
 
@@ -120,7 +122,7 @@ describe('EstimateRoomParamsService.save diff updates', () => {
         const result = await EstimateRoomParamsService.save(5, 'est-1', payload);
 
         expect(result.success).toBe(true);
-        expect(updateMock).toHaveBeenCalledTimes(1);
+        expect(executeMock).toHaveBeenCalledTimes(1);
         expect(insertMock).not.toHaveBeenCalled();
     });
 
@@ -128,7 +130,11 @@ describe('EstimateRoomParamsService.save diff updates', () => {
         const r1 = room('11111111-1111-4111-8111-111111111111', 0);
         const r2 = room('22222222-2222-4222-8222-222222222222', 1);
         const r3 = room('33333333-3333-4333-8333-333333333333', 2);
-        const { tx, updateMock, insertMock } = createTx([r1, r2, r3]);
+        const { tx, executeMock, insertMock } = createTx([r1, r2, r3], [[
+            { id: r1.id },
+            { id: r2.id },
+            { id: r3.id },
+        ]]);
 
         dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
 
@@ -141,7 +147,7 @@ describe('EstimateRoomParamsService.save diff updates', () => {
         const result = await EstimateRoomParamsService.save(5, 'est-1', payload);
 
         expect(result.success).toBe(true);
-        expect(updateMock).toHaveBeenCalledTimes(3);
+        expect(executeMock).toHaveBeenCalledTimes(1);
         expect(insertMock).not.toHaveBeenCalled();
     });
 
