@@ -4,7 +4,7 @@ import { and, eq } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { counterparties, estimateRows, estimates, projects, teams } from '@/lib/data/db/schema';
+import { counterparties, estimateRows, estimates, materials, projects, teams, works } from '@/lib/data/db/schema';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 
@@ -16,7 +16,9 @@ const estimateExportRowSchema = z.object({
     id: z.string(),
     kind: z.enum(['section', 'work', 'material']),
     parentWorkId: z.string().nullable(),
+    materialId: z.string().nullable().optional(),
     code: z.string(),
+    techCode: z.string().optional(),
     name: z.string(),
     imageUrl: z.string().nullable(),
     unit: z.string(),
@@ -190,6 +192,10 @@ function computeTotals(rows: EstimateExportRow[]) {
     };
 }
 
+function normalizeCatalogName(value: string): string {
+    return value.trim().toLocaleLowerCase();
+}
+
 async function downloadImage(imageUrl: string): Promise<DownloadedImage | null> {
     try {
         const response = await fetch(imageUrl, {
@@ -268,6 +274,7 @@ export class EstimateExportService {
                     id: estimateRows.id,
                     kind: estimateRows.kind,
                     parentWorkId: estimateRows.parentWorkId,
+                    materialId: estimateRows.materialId,
                     code: estimateRows.code,
                     name: estimateRows.name,
                     imageUrl: estimateRows.imageUrl,
@@ -287,15 +294,46 @@ export class EstimateExportService {
                 return error('Ошибка формирования данных для экспорта', 'VALIDATION_ERROR');
             }
 
+            const [worksCatalogRows, materialsCatalogRows] = await Promise.all([
+                db
+                    .select({ code: works.code, name: works.name })
+                    .from(works)
+                    .where(and(withActiveTenant(works, teamId), eq(works.status, 'active'))),
+                db
+                    .select({ id: materials.id, code: materials.code, name: materials.name })
+                    .from(materials)
+                    .where(and(withActiveTenant(materials, teamId), eq(materials.status, 'active'))),
+            ]);
+
+            const workCodeByName = new Map<string, string>();
+            for (const row of worksCatalogRows) {
+                workCodeByName.set(normalizeCatalogName(row.name), row.code);
+            }
+
+            const materialCodeById = new Map<string, string>();
+            const materialCodeByName = new Map<string, string>();
+            for (const row of materialsCatalogRows) {
+                materialCodeById.set(row.id, row.code);
+                materialCodeByName.set(normalizeCatalogName(row.name), row.code);
+            }
+
             const coefPercent = estimateRecord.coefPercent ?? 0;
             const rowsWithCoef = parsedRows.data.map((row) => {
+                const normalizedRowName = normalizeCatalogName(row.name);
+                const techCode = row.kind === 'work'
+                    ? (workCodeByName.get(normalizedRowName) ?? row.code)
+                    : row.kind === 'material'
+                        ? (row.materialId ? materialCodeById.get(row.materialId) : undefined) ?? materialCodeByName.get(normalizedRowName) ?? row.code
+                        : '';
+
                 if (row.kind !== 'work') {
-                    return row;
+                    return { ...row, techCode };
                 }
 
                 const effectivePrice = applyEstimateCoefficient(row.price, coefPercent);
                 return {
                     ...row,
+                    techCode,
                     price: effectivePrice,
                     sum: effectivePrice * row.qty,
                 };
@@ -499,7 +537,7 @@ export class EstimateExportService {
             }
 
             const excelRow = worksheet.getRow(rowIndex);
-            excelRow.getCell(1).value = row.code;
+            excelRow.getCell(1).value = row.techCode ?? row.code;
             excelRow.getCell(2).value = row.code;
             const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
             excelRow.getCell(3).value = kindLabel;
