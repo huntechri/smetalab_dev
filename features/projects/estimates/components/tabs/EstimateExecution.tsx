@@ -127,10 +127,11 @@ function NumberEditCell({
     );
 }
 
-function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
+function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, triggerVariant = 'button' }: {
     estimateId: string;
     onCreated: (row: EstimateExecutionRow) => void;
     addedWorkNames: Set<string>;
+    triggerVariant?: 'button' | 'menu-item';
 }) {
     const [open, setOpen] = useState(false);
     const { toast } = useAppToast();
@@ -152,10 +153,17 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-                <Button variant="standard" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
-                    <Plus className="h-4 w-4" />
-                    <span className="hidden sm:inline">Добавить доп. работу</span>
-                </Button>
+                {triggerVariant === 'menu-item' ? (
+                    <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Добавить доп. работу
+                    </DropdownMenuItem>
+                ) : (
+                    <Button variant="standard" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
+                        <Plus className="h-4 w-4" />
+                        <span className="hidden sm:inline">Добавить доп. работу</span>
+                    </Button>
+                )}
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md">
                 <SheetHeader>
@@ -388,26 +396,39 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                     />
                 }
                 actions={
-                    <div className="flex items-center gap-2">
+                    <>
+                        <div className="hidden items-center gap-2 sm:flex">
+                            <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleExport}>
+                                <Download className="h-4 w-4" />
+                                Экспорт Excel
+                            </Button>
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                            />
+                        </div>
+
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon" className="h-8 w-8">
+                                <Button variant="outline" size="icon" className="h-8 w-8 sm:hidden">
                                     <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="min-w-[190px]">
+                            <DropdownMenuContent align="end" className="min-w-[220px]">
                                 <DropdownMenuItem onClick={handleExport}>
                                     <Download className="mr-2 h-4 w-4" />
                                     Экспорт Excel
                                 </DropdownMenuItem>
+                                <AddExtraWorkSheet
+                                    estimateId={estimateId}
+                                    onCreated={(row) => setRows((prev) => [...prev, row])}
+                                    addedWorkNames={addedWorkNames}
+                                    triggerVariant="menu-item"
+                                />
                             </DropdownMenuContent>
                         </DropdownMenu>
-                        <AddExtraWorkSheet
-                            estimateId={estimateId}
-                            onCreated={(row) => setRows((prev) => [...prev, row])}
-                            addedWorkNames={addedWorkNames}
-                        />
-                    </div>
+                    </>
                 }
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
