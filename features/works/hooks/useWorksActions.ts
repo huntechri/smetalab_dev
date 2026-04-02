@@ -30,9 +30,6 @@ export function useWorksActions({ setData }: UseWorksActionsOptions) {
             const result = await exportWorks()
             if (result.success) {
                 const worksheet = XLSX.utils.json_to_sheet(result.data)
-                const cols = [...(worksheet["!cols"] ?? [])]
-                cols[0] = { ...(cols[0] ?? {}), hidden: true }
-                worksheet["!cols"] = cols
                 const workbook = XLSX.utils.book_new()
                 XLSX.utils.book_append_sheet(workbook, worksheet, "Works")
                 XLSX.writeFile(workbook, "works_export.xlsx")

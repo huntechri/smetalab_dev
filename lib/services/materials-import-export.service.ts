@@ -60,7 +60,6 @@ export class MaterialsImportExportService {
 
     const dbData = await db
       .select({
-        'КОД': materials.id,
         'Код': materials.code,
         'Наименование': materials.name,
         'Ед изм': materials.unit,

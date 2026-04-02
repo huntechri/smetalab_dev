@@ -17,9 +17,6 @@ export function useMaterialsActions(data: MaterialRow[], setData: React.Dispatch
             const result = await exportMaterials();
             if (result.success) {
                 const worksheet = XLSX.utils.json_to_sheet(result.data);
-                const cols = [...(worksheet['!cols'] ?? [])];
-                cols[0] = { ...(cols[0] ?? {}), hidden: true };
-                worksheet['!cols'] = cols;
                 const workbook = XLSX.utils.book_new();
                 XLSX.utils.book_append_sheet(workbook, worksheet, 'Materials');
                 XLSX.writeFile(workbook, 'materials_export.xlsx');

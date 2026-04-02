@@ -499,7 +499,7 @@ export class EstimateExportService {
             }
 
             const excelRow = worksheet.getRow(rowIndex);
-            excelRow.getCell(1).value = row.id;
+            excelRow.getCell(1).value = row.code;
             excelRow.getCell(2).value = row.code;
             const kindLabel = row.kind === 'section' ? 'Раздел' : row.kind === 'work' ? 'Работа' : 'Материал';
             excelRow.getCell(3).value = kindLabel;
