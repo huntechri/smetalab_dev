@@ -297,9 +297,27 @@ export class GlobalPurchasesService {
         const existingMap = new Map(existingRows.map((row) => [row.id, row]));
         const projectCache = new Map<string, ProjectSnapshot | null>();
         const supplierCache = new Map<string, SupplierSnapshot | null>();
-        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
-
+        const updatesByRowId = new Map<string, (typeof parsed.data.updates)[number]>();
         for (const update of parsed.data.updates) {
+          updatesByRowId.set(update.rowId, update);
+        }
+
+        const preparedUpdates: Array<{
+          rowId: string;
+          materialName: string;
+          materialId: string | null;
+          unit: string;
+          note: string;
+          purchaseDate: string;
+          projectId: string | null;
+          projectName: string;
+          supplierId: string | null;
+          qty: number;
+          price: number;
+          amount: number;
+        }> = [];
+
+        for (const update of updatesByRowId.values()) {
           const existing = existingMap.get(update.rowId);
           if (!existing) {
             throw new Error('NOT_FOUND');
@@ -324,29 +342,77 @@ export class GlobalPurchasesService {
             }
           }
 
-          const [updated] = await tx.update(globalPurchases)
-            .set({
-              materialName: patch.materialName ?? existing.materialName,
-              materialId: patch.materialId !== undefined ? patch.materialId : existing.materialId,
-              unit: patch.unit ?? existing.unit,
-              note: patch.note ?? existing.note,
-              purchaseDate: patch.purchaseDate ?? existing.purchaseDate,
-              projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
-              projectName: project?.name ?? existing.projectName,
-              supplierId: patch.supplierId !== undefined ? patch.supplierId : existing.supplierId,
-              qty: nextQty,
-              price: nextPrice,
-              amount: calculateAmount(nextQty, nextPrice),
-              updatedAt: new Date(),
-            })
-            .where(and(eq(globalPurchases.id, update.rowId), withActiveTenant(globalPurchases, teamId)))
-            .returning();
-
-          updatedRows.push(updated);
+          preparedUpdates.push({
+            rowId: update.rowId,
+            materialName: patch.materialName ?? existing.materialName,
+            materialId: patch.materialId !== undefined ? patch.materialId : existing.materialId,
+            unit: patch.unit ?? existing.unit,
+            note: patch.note ?? existing.note,
+            purchaseDate: patch.purchaseDate ?? existing.purchaseDate,
+            projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
+            projectName: project?.name ?? existing.projectName,
+            supplierId: patch.supplierId !== undefined ? patch.supplierId : existing.supplierId,
+            qty: nextQty,
+            price: nextPrice,
+            amount: calculateAmount(nextQty, nextPrice),
+          });
         }
 
-        const projectIds = [...new Set(updatedRows.map((row) => row.projectId).filter((id): id is string => !!id))];
-        const supplierIds = [...new Set(updatedRows.map((row) => row.supplierId).filter((id): id is string => !!id))];
+        const rowIds = preparedUpdates.map((row) => row.rowId);
+        const now = new Date();
+        const materialNameCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.materialName}`), sql` `);
+        const materialIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.materialId}`), sql` `);
+        const unitCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.unit}`), sql` `);
+        const noteCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.note}`), sql` `);
+        const purchaseDateCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.purchaseDate}`), sql` `);
+        const projectIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.projectId}`), sql` `);
+        const projectNameCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.projectName}`), sql` `);
+        const supplierIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.supplierId}`), sql` `);
+        const qtyCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.qty}`), sql` `);
+        const priceCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.price}`), sql` `);
+        const amountCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.amount}`), sql` `);
+
+        const updatedRows = preparedUpdates.length > 0
+          ? await tx.execute<{ id: string }>(sql`
+            UPDATE ${globalPurchases}
+            SET
+              ${globalPurchases.materialName} = CASE ${globalPurchases.id} ${materialNameCase} ELSE ${globalPurchases.materialName} END,
+              ${globalPurchases.materialId} = CASE ${globalPurchases.id} ${materialIdCase} ELSE ${globalPurchases.materialId} END,
+              ${globalPurchases.unit} = CASE ${globalPurchases.id} ${unitCase} ELSE ${globalPurchases.unit} END,
+              ${globalPurchases.note} = CASE ${globalPurchases.id} ${noteCase} ELSE ${globalPurchases.note} END,
+              ${globalPurchases.purchaseDate} = CASE ${globalPurchases.id} ${purchaseDateCase} ELSE ${globalPurchases.purchaseDate} END,
+              ${globalPurchases.projectId} = CASE ${globalPurchases.id} ${projectIdCase} ELSE ${globalPurchases.projectId} END,
+              ${globalPurchases.projectName} = CASE ${globalPurchases.id} ${projectNameCase} ELSE ${globalPurchases.projectName} END,
+              ${globalPurchases.supplierId} = CASE ${globalPurchases.id} ${supplierIdCase} ELSE ${globalPurchases.supplierId} END,
+              ${globalPurchases.qty} = CASE ${globalPurchases.id} ${qtyCase} ELSE ${globalPurchases.qty} END,
+              ${globalPurchases.price} = CASE ${globalPurchases.id} ${priceCase} ELSE ${globalPurchases.price} END,
+              ${globalPurchases.amount} = CASE ${globalPurchases.id} ${amountCase} ELSE ${globalPurchases.amount} END,
+              ${globalPurchases.updatedAt} = ${now}
+            WHERE ${withActiveTenant(globalPurchases, teamId)} AND ${inArray(globalPurchases.id, rowIds)}
+            RETURNING ${globalPurchases.id} AS id
+          `)
+          : [];
+
+        if (updatedRows.length !== preparedUpdates.length) {
+          throw new Error('NOT_FOUND');
+        }
+
+        const reloadedRows = rowIds.length > 0
+          ? await tx.query.globalPurchases.findMany({
+            where: and(inArray(globalPurchases.id, rowIds), withActiveTenant(globalPurchases, teamId)),
+          })
+          : [];
+        const reloadedMap = new Map(reloadedRows.map((row) => [row.id, row]));
+        const orderedUpdatedRows = preparedUpdates.map((row) => {
+          const updated = reloadedMap.get(row.rowId);
+          if (!updated) {
+            throw new Error('NOT_FOUND');
+          }
+          return updated;
+        });
+
+        const projectIds = [...new Set(orderedUpdatedRows.map((row) => row.projectId).filter((id): id is string => !!id))];
+        const supplierIds = [...new Set(orderedUpdatedRows.map((row) => row.supplierId).filter((id): id is string => !!id))];
 
         const projectsList = projectIds.length > 0
           ? await tx.query.projects.findMany({
@@ -365,7 +431,7 @@ export class GlobalPurchasesService {
         const projectMap = new Map(projectsList.map((project) => [project.id, project.name]));
         const supplierMap = new Map(suppliersList.map((supplier) => [supplier.id, { name: supplier.name, color: supplier.color }]));
 
-        return updatedRows.map((row) => toRow(
+        return orderedUpdatedRows.map((row) => toRow(
           row,
           row.projectId ? projectMap.get(row.projectId) ?? null : null,
           row.supplierId ? supplierMap.get(row.supplierId) ?? null : null
