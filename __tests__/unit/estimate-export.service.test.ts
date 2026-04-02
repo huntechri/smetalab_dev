@@ -202,7 +202,7 @@ describe('EstimateExportService', () => {
                     id: 's1',
                     kind: 'section',
                     parentWorkId: null,
-                    code: '1',
+                    code: 'S-001',
                     name: 'Раздел 1',
                     imageUrl: null,
                     unit: '',
@@ -213,10 +213,10 @@ describe('EstimateExportService', () => {
                     order: 90,
                 },
                 {
-                    id: '1',
+                    id: 'work-db-id',
                     kind: 'work',
                     parentWorkId: null,
-                    code: '1',
+                    code: 'W-001',
                     name: 'Работа',
                     imageUrl: null,
                     unit: 'м2',
@@ -227,10 +227,10 @@ describe('EstimateExportService', () => {
                     order: 100,
                 },
                 {
-                    id: '2',
+                    id: 'material-db-id',
                     kind: 'material',
-                    parentWorkId: '1',
-                    code: '1.1',
+                    parentWorkId: 'work-db-id',
+                    code: 'M-001',
                     name: 'Материал',
                     imageUrl: null,
                     unit: 'шт',
@@ -274,7 +274,7 @@ describe('EstimateExportService', () => {
 
         expect(headers).not.toContain('Расход');
         expect(technicalCodeHeader).toBe('КОД');
-        expect(technicalCodeValue).toBe('1');
+        expect(technicalCodeValue).toBe('W-001');
         expect(technicalColumnHidden).toBe(true);
         expect(headers).toContain('Изображение');
         expect(projectCell).toBe('Проект: Проект');
@@ -284,19 +284,20 @@ describe('EstimateExportService', () => {
         expect(addressCell).toBe('Адрес объекта: г. Москва, ул. Тестовая, 1');
         expect(contractCell).toBe('Договор №: ');
         expect(sectionSum).toBe('');
+        expect(sheet?.getRow(14).getCell(2).value).toBe('W-001');
         expect(workRowSum?.formula).toBe('G14*H14');
         expect(materialRowSum?.formula).toBe('G15*H15');
         expect(workRowHeight).toBeGreaterThanOrEqual(24);
-        expect(sectionWorksLabel).toBe('Итого по разделу № 1 (работы)');
+        expect(sectionWorksLabel).toBe('Итого по разделу № S-001 (работы)');
         expect(sectionWorksSum?.formula).toContain('SUMIFS');
         expect(sectionWorksSum?.formula).toContain('"Работа"');
-        expect(sectionMaterialsLabel).toBe('Итого по разделу № 1 (материал)');
+        expect(sectionMaterialsLabel).toBe('Итого по разделу № S-001 (материал)');
         expect(sectionMaterialsSum?.formula).toContain('SUMIFS');
         expect(sectionMaterialsSum?.formula).toContain('"Материал"');
         expect(sectionSummaryTitle).toBe('Общие итоги по разделам');
-        expect(sectionSummaryWorksLabel).toBe('Итого раздела № 1 (работы)');
+        expect(sectionSummaryWorksLabel).toBe('Итого раздела № S-001 (работы)');
         expect(sectionSummaryWorksTotal?.formula).toBe('SUMIFS($I$14:$I$15,$C$14:$C$15,"Работа")');
-        expect(sectionSummaryMaterialsLabel).toBe('Итого раздела № 1 (материалы)');
+        expect(sectionSummaryMaterialsLabel).toBe('Итого раздела № S-001 (материалы)');
         expect(sectionSummaryMaterialsTotal?.formula).toBe('SUMIFS($I$14:$I$15,$C$14:$C$15,"Материал")');
     });
 

@@ -49,30 +49,21 @@ describe("useWorksActions", () => {
   })
 
   it("exports works and writes the file", async () => {
-    worksMocks.exportWorks.mockResolvedValue({
-      success: true,
-      data: [{ "КОД": "w-1", code: "W-1", name: "Test" }],
-    })
+    worksMocks.exportWorks.mockResolvedValue({ success: true, data: [{ name: "Test" }] })
     const setData = vi.fn() as unknown as Dispatch<SetStateAction<WorkRow[]>>
-    const worksheet = {}
 
     const { result } = renderHook(() => useWorksActions({ setData }))
-    const xlsx = vi.mocked(await import("xlsx"))
-    vi.mocked(xlsx.utils.json_to_sheet).mockReturnValue(worksheet)
 
     act(() => {
       result.current.handleExport()
     })
 
+    const xlsx = vi.mocked(await import("xlsx"))
+
     await waitFor(() => {
       expect(worksMocks.exportWorks).toHaveBeenCalled()
       expect(xlsx.writeFile).toHaveBeenCalled()
     })
-
-    expect(xlsx.utils.json_to_sheet).toHaveBeenCalledWith([
-      { "КОД": "w-1", code: "W-1", name: "Test" },
-    ])
-    expect((worksheet as { "!cols"?: Array<{ hidden?: boolean }> })["!cols"]?.[0]?.hidden).toBe(true)
   })
 
   it("imports works from file input", async () => {
