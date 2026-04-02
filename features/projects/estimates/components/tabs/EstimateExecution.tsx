@@ -153,8 +153,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames }: {
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
                 <Button variant="standard" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
-                    <MoreHorizontal className="h-4 w-4 sm:hidden" />
-                    <Plus className="hidden h-4 w-4 sm:block" />
+                    <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">Добавить доп. работу</span>
                 </Button>
             </SheetTrigger>
@@ -366,12 +365,6 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
     return (
         <div className="space-y-2">
-            <div className="flex justify-end sm:hidden">
-                <Button variant="outline" size="sm" className="h-8 gap-1.5" onClick={handleExport}>
-                    <Download className="h-4 w-4" />
-                    Экспорт Excel
-                </Button>
-            </div>
             <DataTable
                 columns={columns}
                 data={rows}
@@ -396,10 +389,19 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 }
                 actions={
                     <div className="flex items-center gap-2">
-                        <Button variant="outline" size="sm" className="hidden h-8 gap-1.5 sm:inline-flex" onClick={handleExport}>
-                            <Download className="h-4 w-4" />
-                            Экспорт Excel
-                        </Button>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon" className="h-8 w-8">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="min-w-[190px]">
+                                <DropdownMenuItem onClick={handleExport}>
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Экспорт Excel
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
                         <AddExtraWorkSheet
                             estimateId={estimateId}
                             onCreated={(row) => setRows((prev) => [...prev, row])}
