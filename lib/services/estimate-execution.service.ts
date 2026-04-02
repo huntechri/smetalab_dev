@@ -252,8 +252,10 @@ export class EstimateExecutionService {
             .where(and(isNull(estimates.deletedAt), sql`${estimates.executionSyncedVersion} < ${estimates.executionSyncVersion}`))
             .limit(limit);
 
-        for (const estimate of staleEstimates) {
-            await this.syncEstimateIfStale(estimate.tenantId, estimate.id);
+        const concurrency = 10;
+        for (let i = 0; i < staleEstimates.length; i += concurrency) {
+            const chunk = staleEstimates.slice(i, i + concurrency);
+            await Promise.all(chunk.map((estimate) => this.syncEstimateIfStale(estimate.tenantId, estimate.id)));
         }
 
         return staleEstimates.length;

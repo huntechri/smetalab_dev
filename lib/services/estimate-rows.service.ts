@@ -783,27 +783,66 @@ export class EstimateRowsService {
                         .from(estimateRows)
                         .where(and(eq(estimateRows.parentWorkId, rowId), eq(estimateRows.estimateId, estimateId), isNull(estimateRows.deletedAt)));
 
-                    const childUpdates = [];
-
-                    for (const child of children) {
+                    const childMutations = children.map((child) => {
                         // Если у материала расход 0, пытаемся его восстановить из текущего количества и старого объема работы
                         const effectiveExpense = child.expense > 0 ? child.expense : (existing.qty > 0 ? child.qty / existing.qty : 0);
                         const newChildQty = Math.ceil(nextQty * effectiveExpense);
+                        return {
+                            id: child.id,
+                            qty: newChildQty,
+                            expense: effectiveExpense,
+                            sum: newChildQty * child.price,
+                        };
+                    });
 
-                        childUpdates.push(
-                            tx.update(estimateRows)
+                    if (childMutations.length > 0) {
+                        if (childMutations.length === 1) {
+                            const only = childMutations[0];
+                            await tx.update(estimateRows)
                                 .set({
-                                    qty: newChildQty,
-                                    expense: effectiveExpense,
-                                    sum: newChildQty * child.price,
+                                    qty: only.qty,
+                                    expense: only.expense,
+                                    sum: only.sum,
                                     updatedAt: new Date(),
                                 })
-                                .where(eq(estimateRows.id, child.id))
-                        );
-                    }
+                                .where(and(
+                                    eq(estimateRows.id, only.id),
+                                    eq(estimateRows.parentWorkId, rowId),
+                                    eq(estimateRows.estimateId, estimateId),
+                                    isNull(estimateRows.deletedAt),
+                                ));
+                            await recalculateEstimateTotal(tx, estimateId);
+                            return { row, touchedWork: existing.kind === 'work' };
+                        }
 
-                    if (childUpdates.length > 0) {
-                        await Promise.all(childUpdates);
+                        const now = new Date();
+                        const ids = childMutations.map((row) => row.id);
+                        const qtyCase = sql.join(
+                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.qty}`),
+                            sql` `,
+                        );
+                        const expenseCase = sql.join(
+                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.expense}`),
+                            sql` `,
+                        );
+                        const sumCase = sql.join(
+                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.sum}`),
+                            sql` `,
+                        );
+
+                        await tx.update(estimateRows)
+                            .set({
+                                qty: sql`CASE ${estimateRows.id} ${qtyCase} ELSE ${estimateRows.qty} END`,
+                                expense: sql`CASE ${estimateRows.id} ${expenseCase} ELSE ${estimateRows.expense} END`,
+                                sum: sql`CASE ${estimateRows.id} ${sumCase} ELSE ${estimateRows.sum} END`,
+                                updatedAt: now,
+                            })
+                            .where(and(
+                                inArray(estimateRows.id, ids),
+                                eq(estimateRows.parentWorkId, rowId),
+                                eq(estimateRows.estimateId, estimateId),
+                                isNull(estimateRows.deletedAt),
+                            ));
                     }
                 }
 

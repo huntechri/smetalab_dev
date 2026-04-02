@@ -297,9 +297,27 @@ export class GlobalPurchasesService {
         const existingMap = new Map(existingRows.map((row) => [row.id, row]));
         const projectCache = new Map<string, ProjectSnapshot | null>();
         const supplierCache = new Map<string, SupplierSnapshot | null>();
-        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
-
+        const updatesByRowId = new Map<string, (typeof parsed.data.updates)[number]>();
         for (const update of parsed.data.updates) {
+          updatesByRowId.set(update.rowId, update);
+        }
+
+        const preparedUpdates: Array<{
+          rowId: string;
+          materialName: string;
+          materialId: string | null;
+          unit: string;
+          note: string;
+          purchaseDate: string;
+          projectId: string | null;
+          projectName: string;
+          supplierId: string | null;
+          qty: number;
+          price: number;
+          amount: number;
+        }> = [];
+
+        for (const update of updatesByRowId.values()) {
           const existing = existingMap.get(update.rowId);
           if (!existing) {
             throw new Error('NOT_FOUND');
@@ -324,29 +342,60 @@ export class GlobalPurchasesService {
             }
           }
 
+          preparedUpdates.push({
+            rowId: update.rowId,
+            materialName: patch.materialName ?? existing.materialName,
+            materialId: patch.materialId !== undefined ? patch.materialId : existing.materialId,
+            unit: patch.unit ?? existing.unit,
+            note: patch.note ?? existing.note,
+            purchaseDate: patch.purchaseDate ?? existing.purchaseDate,
+            projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
+            projectName: project?.name ?? existing.projectName,
+            supplierId: patch.supplierId !== undefined ? patch.supplierId : existing.supplierId,
+            qty: nextQty,
+            price: nextPrice,
+            amount: calculateAmount(nextQty, nextPrice),
+          });
+        }
+
+        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
+        for (const prepared of preparedUpdates) {
           const [updated] = await tx.update(globalPurchases)
             .set({
-              materialName: patch.materialName ?? existing.materialName,
-              materialId: patch.materialId !== undefined ? patch.materialId : existing.materialId,
-              unit: patch.unit ?? existing.unit,
-              note: patch.note ?? existing.note,
-              purchaseDate: patch.purchaseDate ?? existing.purchaseDate,
-              projectId: patch.projectId !== undefined ? patch.projectId : existing.projectId,
-              projectName: project?.name ?? existing.projectName,
-              supplierId: patch.supplierId !== undefined ? patch.supplierId : existing.supplierId,
-              qty: nextQty,
-              price: nextPrice,
-              amount: calculateAmount(nextQty, nextPrice),
+              materialName: prepared.materialName,
+              materialId: prepared.materialId,
+              unit: prepared.unit,
+              note: prepared.note,
+              purchaseDate: prepared.purchaseDate,
+              projectId: prepared.projectId,
+              projectName: prepared.projectName,
+              supplierId: prepared.supplierId,
+              qty: prepared.qty,
+              price: prepared.price,
+              amount: prepared.amount,
               updatedAt: new Date(),
             })
-            .where(and(eq(globalPurchases.id, update.rowId), withActiveTenant(globalPurchases, teamId)))
+            .where(and(eq(globalPurchases.id, prepared.rowId), withActiveTenant(globalPurchases, teamId)))
             .returning();
+
+          if (!updated) {
+            throw new Error('NOT_FOUND');
+          }
 
           updatedRows.push(updated);
         }
 
-        const projectIds = [...new Set(updatedRows.map((row) => row.projectId).filter((id): id is string => !!id))];
-        const supplierIds = [...new Set(updatedRows.map((row) => row.supplierId).filter((id): id is string => !!id))];
+        const updatedMap = new Map(updatedRows.map((row) => [row.id, row]));
+        const orderedUpdatedRows = preparedUpdates.map((row) => {
+          const updated = updatedMap.get(row.rowId);
+          if (!updated) {
+            throw new Error('NOT_FOUND');
+          }
+          return updated;
+        });
+
+        const projectIds = [...new Set(orderedUpdatedRows.map((row) => row.projectId).filter((id): id is string => !!id))];
+        const supplierIds = [...new Set(orderedUpdatedRows.map((row) => row.supplierId).filter((id): id is string => !!id))];
 
         const projectsList = projectIds.length > 0
           ? await tx.query.projects.findMany({
@@ -365,7 +414,7 @@ export class GlobalPurchasesService {
         const projectMap = new Map(projectsList.map((project) => [project.id, project.name]));
         const supplierMap = new Map(suppliersList.map((supplier) => [supplier.id, { name: supplier.name, color: supplier.color }]));
 
-        return updatedRows.map((row) => toRow(
+        return orderedUpdatedRows.map((row) => toRow(
           row,
           row.projectId ? projectMap.get(row.projectId) ?? null : null,
           row.supplierId ? supplierMap.get(row.supplierId) ?? null : null
@@ -412,12 +461,21 @@ export class GlobalPurchasesService {
         }
 
         const insertedRows: typeof globalPurchases.$inferSelect[] = [];
+        const purchaseDates = [...groupedByDate.keys()];
+        const maxOrdersByDate = purchaseDates.length > 0
+          ? await tx
+            .select({
+              purchaseDate: globalPurchases.purchaseDate,
+              maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)`,
+            })
+            .from(globalPurchases)
+            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.purchaseDate, purchaseDates)))
+            .groupBy(globalPurchases.purchaseDate)
+          : [];
+        const maxOrderByDate = new Map(maxOrdersByDate.map((row) => [row.purchaseDate, row.maxOrder]));
 
         for (const [purchaseDate, rows] of groupedByDate.entries()) {
-          const [{ maxOrder }] = await tx
-            .select({ maxOrder: sql<number>`COALESCE(MAX(${globalPurchases.order}), 0)` })
-            .from(globalPurchases)
-            .where(and(withActiveTenant(globalPurchases, teamId), eq(globalPurchases.purchaseDate, purchaseDate)));
+          const maxOrder = maxOrderByDate.get(purchaseDate) ?? 0;
 
           const values = rows.map((row, index) => {
             const project = projectMapByName.get(row.projectName.trim().toLowerCase());
