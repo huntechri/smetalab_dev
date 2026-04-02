@@ -5,9 +5,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { DataTable } from '@/shared/ui/data-table';
+import { Button } from '@/shared/ui/button';
+import { Download, MoreHorizontal } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
 import { EstimateTotals } from '../EstimateTotals';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -160,6 +163,10 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
         return <div className="rounded-md border p-4 text-sm text-muted-foreground">В смете и закупках нет материалов для отображения.</div>;
     }
 
+    const handleExport = () => {
+        window.open(`/api/estimates/${estimateId}/export/procurement`, '_blank', 'noopener,noreferrer');
+    };
+
     return (
         <div className="space-y-2">
             <DataTable
@@ -169,6 +176,29 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 filterPlaceholder="Поиск..."
                 filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
+                compactMobileToolbar
+                actions={(
+                    <>
+                        <Button variant="outline" size="sm" className="hidden h-8 gap-1.5 sm:inline-flex" onClick={handleExport}>
+                            <Download className="h-4 w-4" />
+                            Экспорт Excel
+                        </Button>
+
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="outline" size="icon" className="h-8 w-8 sm:hidden">
+                                    <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={handleExport}>
+                                    <Download className="mr-2 h-4 w-4" />
+                                    Экспорт Excel
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </>
+                )}
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
