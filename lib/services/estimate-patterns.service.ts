@@ -195,13 +195,13 @@ export class EstimatePatternsService {
         const works = snapshot.rows.filter((row) => row.kind === 'work');
         const workCodeMap = new Map<string, string>();
 
-        for (const row of works) {
-          const [createdWork] = await tx
+        if (works.length > 0) {
+          const createdWorks = await tx
             .insert(estimateRows)
-            .values({
+            .values(works.map((row) => ({
               tenantId: teamId,
               estimateId: parsed.data.estimateId,
-              kind: 'work',
+              kind: 'work' as const,
               code: row.code,
               name: row.name,
               unit: row.unit,
@@ -210,10 +210,20 @@ export class EstimatePatternsService {
               sum: row.sum,
               expense: row.expense,
               order: row.order,
-            })
+            })))
             .returning({ id: estimateRows.id });
 
-          workCodeMap.set(row.tempKey, createdWork.id);
+          if (createdWorks.length !== works.length) {
+            throw new Error('Не удалось корректно применить шаблон: расхождение количества вставленных работ');
+          }
+
+          works.forEach((row, index) => {
+            const createdWork = createdWorks[index];
+            if (!createdWork) {
+              throw new Error('Не удалось сопоставить вставленные работы с шаблоном');
+            }
+            workCodeMap.set(row.tempKey, createdWork.id);
+          });
         }
 
         const materials = snapshot.rows.filter((row) => row.kind === 'material');
