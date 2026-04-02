@@ -218,7 +218,17 @@ export class EstimateImportService {
     teamId: number,
     estimateId: string,
     importedRows: ImportedEstimateRow[],
-  ): Promise<Result<{ imported: number }>> {
+  ): Promise<Result<{
+    imported: number;
+    matchingSummary: {
+      worksMatched: number;
+      worksUnmatched: number;
+      materialsMatched: number;
+      materialsUnmatched: number;
+      unmatchedWorkNames: string[];
+      unmatchedMaterialNames: string[];
+    };
+  }>> {
     try {
       const estimate = await db.query.estimates.findFirst({
         where: and(
@@ -231,7 +241,7 @@ export class EstimateImportService {
         return error("Смета не найдена", "NOT_FOUND");
       }
 
-      await db.transaction(async (tx) => {
+      const matchingSummary = await db.transaction(async (tx) => {
         await tx
           .update(estimateRows)
           .set({ deletedAt: new Date(), updatedAt: new Date() })
@@ -251,6 +261,12 @@ export class EstimateImportService {
         }[] = [];
         let activeWorkIdx: number | null = null;
         let nextAutoWorkCode = 1;
+        let worksMatched = 0;
+        let worksUnmatched = 0;
+        let materialsMatched = 0;
+        let materialsUnmatched = 0;
+        const unmatchedWorkNames = new Set<string>();
+        const unmatchedMaterialNames = new Set<string>();
 
         const [worksCatalogRows, materialsCatalogRows] = await Promise.all([
           tx
@@ -307,6 +323,13 @@ export class EstimateImportService {
           }
 
           if (item.kind === "work") {
+            if (matchedWork) {
+              worksMatched += 1;
+            } else {
+              worksUnmatched += 1;
+              unmatchedWorkNames.add(item.name);
+            }
+
             workRowsToInsert.push(rowData);
             activeWorkIdx = workRowsToInsert.length - 1;
             nextAutoWorkCode += 1;
@@ -315,6 +338,13 @@ export class EstimateImportService {
 
           if (activeWorkIdx === null) {
             throw new Error(`INVALID_PARENT_ROW_${index + 1}`);
+          }
+
+          if (matchedMaterial) {
+            materialsMatched += 1;
+          } else {
+            materialsUnmatched += 1;
+            unmatchedMaterialNames.add(item.name);
           }
 
           materialRowsToInsert.push({ workIdx: activeWorkIdx, data: rowData });
@@ -368,9 +398,21 @@ export class EstimateImportService {
           .update(estimates)
           .set({ total: Math.round(total), updatedAt: new Date() })
           .where(eq(estimates.id, estimateId));
+
+        return {
+          worksMatched,
+          worksUnmatched,
+          materialsMatched,
+          materialsUnmatched,
+          unmatchedWorkNames: [...unmatchedWorkNames],
+          unmatchedMaterialNames: [...unmatchedMaterialNames],
+        };
       });
 
-      return success({ imported: importedRows.length });
+      return success({
+        imported: importedRows.length,
+        matchingSummary,
+      });
     } catch (serviceError) {
       if (
         serviceError instanceof Error &&
