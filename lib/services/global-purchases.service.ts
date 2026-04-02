@@ -373,24 +373,23 @@ export class GlobalPurchasesService {
         const amountCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.amount}`), sql` `);
 
         const updatedRows = preparedUpdates.length > 0
-          ? await tx.execute<{ id: string }>(sql`
-            UPDATE ${globalPurchases}
-            SET
-              ${globalPurchases.materialName} = CASE ${globalPurchases.id} ${materialNameCase} ELSE ${globalPurchases.materialName} END,
-              ${globalPurchases.materialId} = CASE ${globalPurchases.id} ${materialIdCase} ELSE ${globalPurchases.materialId} END,
-              ${globalPurchases.unit} = CASE ${globalPurchases.id} ${unitCase} ELSE ${globalPurchases.unit} END,
-              ${globalPurchases.note} = CASE ${globalPurchases.id} ${noteCase} ELSE ${globalPurchases.note} END,
-              ${globalPurchases.purchaseDate} = CASE ${globalPurchases.id} ${purchaseDateCase} ELSE ${globalPurchases.purchaseDate} END,
-              ${globalPurchases.projectId} = CASE ${globalPurchases.id} ${projectIdCase} ELSE ${globalPurchases.projectId} END,
-              ${globalPurchases.projectName} = CASE ${globalPurchases.id} ${projectNameCase} ELSE ${globalPurchases.projectName} END,
-              ${globalPurchases.supplierId} = CASE ${globalPurchases.id} ${supplierIdCase} ELSE ${globalPurchases.supplierId} END,
-              ${globalPurchases.qty} = CASE ${globalPurchases.id} ${qtyCase} ELSE ${globalPurchases.qty} END,
-              ${globalPurchases.price} = CASE ${globalPurchases.id} ${priceCase} ELSE ${globalPurchases.price} END,
-              ${globalPurchases.amount} = CASE ${globalPurchases.id} ${amountCase} ELSE ${globalPurchases.amount} END,
-              ${globalPurchases.updatedAt} = ${now}
-            WHERE ${withActiveTenant(globalPurchases, teamId)} AND ${inArray(globalPurchases.id, rowIds)}
-            RETURNING ${globalPurchases.id} AS id
-          `)
+          ? await tx.update(globalPurchases)
+            .set({
+              materialName: sql`CASE ${globalPurchases.id} ${materialNameCase} ELSE ${globalPurchases.materialName} END`,
+              materialId: sql`CASE ${globalPurchases.id} ${materialIdCase} ELSE ${globalPurchases.materialId} END`,
+              unit: sql`CASE ${globalPurchases.id} ${unitCase} ELSE ${globalPurchases.unit} END`,
+              note: sql`CASE ${globalPurchases.id} ${noteCase} ELSE ${globalPurchases.note} END`,
+              purchaseDate: sql`CASE ${globalPurchases.id} ${purchaseDateCase} ELSE ${globalPurchases.purchaseDate} END`,
+              projectId: sql`CASE ${globalPurchases.id} ${projectIdCase} ELSE ${globalPurchases.projectId} END`,
+              projectName: sql`CASE ${globalPurchases.id} ${projectNameCase} ELSE ${globalPurchases.projectName} END`,
+              supplierId: sql`CASE ${globalPurchases.id} ${supplierIdCase} ELSE ${globalPurchases.supplierId} END`,
+              qty: sql`CASE ${globalPurchases.id} ${qtyCase} ELSE ${globalPurchases.qty} END`,
+              price: sql`CASE ${globalPurchases.id} ${priceCase} ELSE ${globalPurchases.price} END`,
+              amount: sql`CASE ${globalPurchases.id} ${amountCase} ELSE ${globalPurchases.amount} END`,
+              updatedAt: now,
+            })
+            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.id, rowIds)))
+            .returning({ id: globalPurchases.id })
           : [];
 
         if (updatedRows.length !== preparedUpdates.length) {
