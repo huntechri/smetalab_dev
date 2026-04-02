@@ -358,50 +358,36 @@ export class GlobalPurchasesService {
           });
         }
 
-        const rowIds = preparedUpdates.map((row) => row.rowId);
-        const now = new Date();
-        const materialNameCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.materialName}`), sql` `);
-        const materialIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.materialId}`), sql` `);
-        const unitCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.unit}`), sql` `);
-        const noteCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.note}`), sql` `);
-        const purchaseDateCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.purchaseDate}`), sql` `);
-        const projectIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.projectId}`), sql` `);
-        const projectNameCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.projectName}`), sql` `);
-        const supplierIdCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.supplierId}`), sql` `);
-        const qtyCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.qty}`), sql` `);
-        const priceCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.price}`), sql` `);
-        const amountCase = sql.join(preparedUpdates.map((row) => sql`WHEN ${globalPurchases.id} = ${row.rowId} THEN ${row.amount}`), sql` `);
-
-        if (preparedUpdates.length > 0) {
-          await tx.update(globalPurchases)
+        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
+        for (const prepared of preparedUpdates) {
+          const [updated] = await tx.update(globalPurchases)
             .set({
-              materialName: sql`CASE ${globalPurchases.id} ${materialNameCase} ELSE ${globalPurchases.materialName} END`,
-              materialId: sql`CASE ${globalPurchases.id} ${materialIdCase} ELSE ${globalPurchases.materialId} END`,
-              unit: sql`CASE ${globalPurchases.id} ${unitCase} ELSE ${globalPurchases.unit} END`,
-              note: sql`CASE ${globalPurchases.id} ${noteCase} ELSE ${globalPurchases.note} END`,
-              purchaseDate: sql`CASE ${globalPurchases.id} ${purchaseDateCase} ELSE ${globalPurchases.purchaseDate} END`,
-              projectId: sql`CASE ${globalPurchases.id} ${projectIdCase} ELSE ${globalPurchases.projectId} END`,
-              projectName: sql`CASE ${globalPurchases.id} ${projectNameCase} ELSE ${globalPurchases.projectName} END`,
-              supplierId: sql`CASE ${globalPurchases.id} ${supplierIdCase} ELSE ${globalPurchases.supplierId} END`,
-              qty: sql`CASE ${globalPurchases.id} ${qtyCase} ELSE ${globalPurchases.qty} END`,
-              price: sql`CASE ${globalPurchases.id} ${priceCase} ELSE ${globalPurchases.price} END`,
-              amount: sql`CASE ${globalPurchases.id} ${amountCase} ELSE ${globalPurchases.amount} END`,
-              updatedAt: now,
+              materialName: prepared.materialName,
+              materialId: prepared.materialId,
+              unit: prepared.unit,
+              note: prepared.note,
+              purchaseDate: prepared.purchaseDate,
+              projectId: prepared.projectId,
+              projectName: prepared.projectName,
+              supplierId: prepared.supplierId,
+              qty: prepared.qty,
+              price: prepared.price,
+              amount: prepared.amount,
+              updatedAt: new Date(),
             })
-            .where(and(withActiveTenant(globalPurchases, teamId), inArray(globalPurchases.id, rowIds)));
+            .where(and(eq(globalPurchases.id, prepared.rowId), withActiveTenant(globalPurchases, teamId)))
+            .returning();
+
+          if (!updated) {
+            throw new Error('NOT_FOUND');
+          }
+
+          updatedRows.push(updated);
         }
 
-        const reloadedRows = rowIds.length > 0
-          ? await tx.query.globalPurchases.findMany({
-            where: and(inArray(globalPurchases.id, rowIds), withActiveTenant(globalPurchases, teamId)),
-          })
-          : [];
-        if (reloadedRows.length !== preparedUpdates.length) {
-          throw new Error('NOT_FOUND');
-        }
-        const reloadedMap = new Map(reloadedRows.map((row) => [row.id, row]));
+        const updatedMap = new Map(updatedRows.map((row) => [row.id, row]));
         const orderedUpdatedRows = preparedUpdates.map((row) => {
-          const updated = reloadedMap.get(row.rowId);
+          const updated = updatedMap.get(row.rowId);
           if (!updated) {
             throw new Error('NOT_FOUND');
           }
