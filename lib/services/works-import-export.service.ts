@@ -53,6 +53,7 @@ export class WorksImportExportService {
   static async exportForTeam(teamId: number) {
     const worksData = await db
       .select({
+        'КОД': works.id,
         code: works.code,
         name: works.name,
         unit: works.unit,
