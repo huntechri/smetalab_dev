@@ -72,6 +72,8 @@ type CacheAggregateRow = EstimateProcurementRow & {
 const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
 const normalizeUnitKey = (unit: string) => unit.trim().toLocaleLowerCase('ru-RU');
 const buildMatchKey = (materialId: string | null, name: string) => materialId ? `id:${materialId}` : `name:${normalizeMaterialKey(name)}`;
+const uuidLikeMatchKey = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const isIdLikeMatchKey = (matchKey: string) => matchKey.startsWith('id:') || uuidLikeMatchKey.test(matchKey);
 
 const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
 
@@ -87,7 +89,12 @@ const takeFactByMaterialName = (
     }
 
     const planUnit = normalizeUnitKey(plan.unit);
-    const preferred = candidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? candidates[0];
+    const nameCandidates = candidates.filter((candidate) => !isIdLikeMatchKey(candidate.matchKey));
+    if (nameCandidates.length === 0) {
+        return undefined;
+    }
+
+    const preferred = nameCandidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? nameCandidates[0];
     const index = candidates.indexOf(preferred);
     if (index >= 0) {
         candidates.splice(index, 1);
@@ -176,19 +183,33 @@ const buildRowsFromAggregates = (
 
     for (const [key, plan] of planMap.entries()) {
         const exactFact = factMap.get(key);
-        const fact = exactFact ?? takeFactByMaterialName(factMap, factByName, plan);
+        const fallbackFact = takeFactByMaterialName(factMap, factByName, plan);
+
+        let resolvedQty = exactFact?.actualQty ?? 0;
+        let resolvedAmount = exactFact?.actualAmount ?? 0;
+        let resolvedPurchaseCount = exactFact?.purchaseCount ?? 0;
+        let resolvedLastPurchaseDate = exactFact?.lastPurchaseDate ?? null;
+
+        if (fallbackFact) {
+            resolvedQty += fallbackFact.actualQty;
+            resolvedAmount += fallbackFact.actualAmount;
+            resolvedPurchaseCount += fallbackFact.purchaseCount;
+            resolvedLastPurchaseDate = !resolvedLastPurchaseDate || (fallbackFact.lastPurchaseDate && fallbackFact.lastPurchaseDate > resolvedLastPurchaseDate)
+                ? (fallbackFact.lastPurchaseDate ?? resolvedLastPurchaseDate)
+                : resolvedLastPurchaseDate;
+        }
 
         const plannedQty = plan.plannedQty;
         const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedPrice = plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0;
 
-        const actualQty = fact?.actualQty ?? 0;
-        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
+        const actualQty = resolvedQty;
+        const actualAmount = roundMoney(resolvedAmount);
         const actualAvgPrice = actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0;
 
         rows.push({
             materialName: plan.materialName,
-            unit: plan.unit || fact?.unit || 'шт',
+            unit: plan.unit || exactFact?.unit || fallbackFact?.unit || 'шт',
             source: 'estimate',
             plannedQty: roundMoney(plannedQty),
             plannedPrice,
@@ -198,8 +219,8 @@ const buildRowsFromAggregates = (
             actualAmount,
             qtyDelta: roundMoney(plannedQty - actualQty),
             amountDelta: roundMoney(plannedAmount - actualAmount),
-            purchaseCount: fact?.purchaseCount ?? 0,
-            lastPurchaseDate: fact?.lastPurchaseDate ?? null,
+            purchaseCount: resolvedPurchaseCount,
+            lastPurchaseDate: resolvedLastPurchaseDate,
         });
 
         if (exactFact) {
@@ -265,16 +286,31 @@ const buildCacheRowsFromAggregates = (
 
     for (const [matchKey, plan] of planMap.entries()) {
         const exactFact = factMap.get(matchKey);
-        const fact = exactFact ?? takeFactByMaterialName(factMap, factByName, plan);
+
+        const fallbackFact = takeFactByMaterialName(factMap, factByName, plan);
+        let resolvedQty = exactFact?.actualQty ?? 0;
+        let resolvedAmount = exactFact?.actualAmount ?? 0;
+        let resolvedPurchaseCount = exactFact?.purchaseCount ?? 0;
+        let resolvedLastPurchaseDate = exactFact?.lastPurchaseDate ?? null;
+
+        if (fallbackFact) {
+            resolvedQty += fallbackFact.actualQty;
+            resolvedAmount += fallbackFact.actualAmount;
+            resolvedPurchaseCount += fallbackFact.purchaseCount;
+            resolvedLastPurchaseDate = !resolvedLastPurchaseDate || (fallbackFact.lastPurchaseDate && fallbackFact.lastPurchaseDate > resolvedLastPurchaseDate)
+                ? (fallbackFact.lastPurchaseDate ?? resolvedLastPurchaseDate)
+                : resolvedLastPurchaseDate;
+        }
+
         const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedQty = roundMoney(plan.plannedQty);
-        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
-        const actualQty = roundMoney(fact?.actualQty ?? 0);
+        const actualAmount = roundMoney(resolvedAmount);
+        const actualQty = roundMoney(resolvedQty);
 
         rows.push({
             matchKey,
             materialName: plan.materialName,
-            unit: plan.unit || fact?.unit || 'шт',
+            unit: plan.unit || exactFact?.unit || fallbackFact?.unit || 'шт',
             source: 'estimate',
             plannedQty,
             plannedPrice: plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0,
@@ -284,8 +320,8 @@ const buildCacheRowsFromAggregates = (
             actualAmount,
             qtyDelta: roundMoney(plannedQty - actualQty),
             amountDelta: roundMoney(plannedAmount - actualAmount),
-            purchaseCount: fact?.purchaseCount ?? 0,
-            lastPurchaseDate: fact?.lastPurchaseDate ?? null,
+            purchaseCount: resolvedPurchaseCount,
+            lastPurchaseDate: resolvedLastPurchaseDate,
         });
 
         if (exactFact) {
