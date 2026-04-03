@@ -193,7 +193,7 @@ const buildRowsFromAggregates = (
 
     for (const [key, plan] of planMap.entries()) {
         const exactFact = factMap.get(key);
-        const fallbackFact = exactFact ? undefined : takeFactByMaterialName(factMap, factByName, plan);
+        const fallbackFact = takeFactByMaterialName(factMap, factByName, plan);
 
         let resolvedQty = exactFact?.actualQty ?? 0;
         let resolvedAmount = exactFact?.actualAmount ?? 0;
@@ -297,7 +297,7 @@ const buildCacheRowsFromAggregates = (
     for (const [matchKey, plan] of planMap.entries()) {
         const exactFact = factMap.get(matchKey);
 
-        const fallbackFact = exactFact ? undefined : takeFactByMaterialName(factMap, factByName, plan);
+        const fallbackFact = takeFactByMaterialName(factMap, factByName, plan);
         let resolvedQty = exactFact?.actualQty ?? 0;
         let resolvedAmount = exactFact?.actualAmount ?? 0;
         let resolvedPurchaseCount = exactFact?.purchaseCount ?? 0;
