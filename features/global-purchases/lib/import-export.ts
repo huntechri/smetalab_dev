@@ -5,6 +5,7 @@ export type ImportablePurchaseRow = {
   purchaseDate: string;
   projectName: string;
   materialName: string;
+  materialId?: string | null;
   unit: string;
   qty: number;
   price: number;
@@ -20,6 +21,7 @@ const csvRowSchema = z.object({
   purchaseDate: z.string().date(),
   projectName: z.string().trim().max(160),
   materialName: z.string().trim().min(1).max(240),
+  materialId: z.string().uuid().nullable().optional(),
   unit: z.string().trim().min(1).max(20),
   qty: z.number().finite().min(0),
   price: z.number().finite().min(0),
@@ -27,7 +29,7 @@ const csvRowSchema = z.object({
   supplierName: z.string().trim().max(160),
 });
 
-const CSV_HEADERS = ['Дата', 'Объект', 'Материал', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
+const CSV_HEADERS = ['Дата', 'Объект', 'Материал', 'ID материала', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
 const MATERIAL_HEADER_ALIASES = ['Материал', 'Наименование материала'] as const;
 
 const normalizeHeader = (value: string) => value.trim().toLowerCase();
@@ -82,6 +84,7 @@ export const exportGlobalPurchasesCsv = (rows: ImportablePurchaseRow[]): string 
       toCsvCell(row.purchaseDate),
       toCsvCell(row.projectName),
       toCsvCell(row.materialName),
+      toCsvCell(row.materialId ?? ''),
       toCsvCell(row.unit),
       toCsvCell(row.qty),
       toCsvCell(row.price),
@@ -94,7 +97,7 @@ export const exportGlobalPurchasesCsv = (rows: ImportablePurchaseRow[]): string 
   return `\uFEFF${lines.join('\n')}`;
 };
 
-const XLSX_HEADERS = ['Дата', 'Объект', 'Наименование материала', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
+const XLSX_HEADERS = ['Дата', 'Объект', 'Наименование материала', 'ID материала', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
 const thinBorder = { style: 'thin' as const, color: { argb: 'FFD9D9D9' } };
 
 const toArgbColor = (color: string | null | undefined): string | null => {
@@ -115,6 +118,7 @@ export const exportGlobalPurchasesXlsx = async (rows: ExportablePurchaseRow[]): 
     { width: 14 },
     { width: 22 },
     { width: 64 },
+    { width: 40 },
     { width: 12 },
     { width: 12 },
     { width: 12 },
@@ -143,6 +147,7 @@ export const exportGlobalPurchasesXlsx = async (rows: ExportablePurchaseRow[]): 
       row.purchaseDate,
       row.projectName,
       row.materialName,
+      row.materialId ?? '',
       row.unit,
       row.qty,
       row.price,
@@ -153,7 +158,7 @@ export const exportGlobalPurchasesXlsx = async (rows: ExportablePurchaseRow[]): 
 
     dataRow.eachCell((cell, colNumber) => {
       cell.border = { top: thinBorder, left: thinBorder, bottom: thinBorder, right: thinBorder };
-      if (colNumber === 3) {
+      if (colNumber === 3 || colNumber === 4) {
         cell.alignment = { wrapText: true, vertical: 'top' };
       } else {
         cell.alignment = { vertical: 'middle' };
@@ -162,7 +167,7 @@ export const exportGlobalPurchasesXlsx = async (rows: ExportablePurchaseRow[]): 
 
     const supplierArgb = toArgbColor(row.supplierColor);
     if (supplierArgb) {
-      const supplierCell = dataRow.getCell(8);
+      const supplierCell = dataRow.getCell(9);
       supplierCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: supplierArgb } };
     }
   }
@@ -191,6 +196,7 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
     purchaseDate: headers.indexOf(normalizeHeader('Дата')),
     projectName: headers.indexOf(normalizeHeader('Объект')),
     materialName: materialHeaderIndex,
+    materialId: headers.indexOf(normalizeHeader('ID материала')),
     unit: headers.indexOf(normalizeHeader('Ед.')),
     qty: headers.indexOf(normalizeHeader('Кол-во')),
     price: headers.indexOf(normalizeHeader('Цена')),
@@ -198,7 +204,18 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
     note: headers.indexOf(normalizeHeader('Примечание')),
   };
 
-  if (Object.values(headerIndex).some((index) => index < 0)) {
+  const requiredHeaderIndex = {
+    purchaseDate: headerIndex.purchaseDate,
+    projectName: headerIndex.projectName,
+    materialName: headerIndex.materialName,
+    unit: headerIndex.unit,
+    qty: headerIndex.qty,
+    price: headerIndex.price,
+    supplierName: headerIndex.supplierName,
+    note: headerIndex.note,
+  };
+
+  if (Object.values(requiredHeaderIndex).some((index) => index < 0)) {
     throw new Error('Некорректный формат CSV. Проверьте заголовки файла.');
   }
 
@@ -209,11 +226,14 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
 
     const qty = Number((cells[headerIndex.qty] ?? '').replace(',', '.'));
     const price = Number((cells[headerIndex.price] ?? '').replace(',', '.'));
+    const rawMaterialId = headerIndex.materialId >= 0 ? (cells[headerIndex.materialId] ?? '') : '';
+    const materialId = rawMaterialId.trim();
 
     const row = csvRowSchema.parse({
       purchaseDate: cells[headerIndex.purchaseDate] ?? '',
       projectName: cells[headerIndex.projectName] ?? '',
       materialName: cells[headerIndex.materialName] ?? '',
+      materialId: materialId.length > 0 ? materialId : undefined,
       unit: cells[headerIndex.unit] ?? '',
       qty,
       price,
@@ -258,6 +278,7 @@ export const parseGlobalPurchasesXlsx = async (input: ArrayBuffer): Promise<Impo
     purchaseDate: headers.indexOf(normalizeHeader('Дата')),
     projectName: headers.indexOf(normalizeHeader('Объект')),
     materialName: materialHeaderIndex,
+    materialId: headers.indexOf(normalizeHeader('ID материала')),
     unit: headers.indexOf(normalizeHeader('Ед.')),
     qty: headers.indexOf(normalizeHeader('Кол-во')),
     price: headers.indexOf(normalizeHeader('Цена')),
@@ -265,7 +286,18 @@ export const parseGlobalPurchasesXlsx = async (input: ArrayBuffer): Promise<Impo
     note: headers.indexOf(normalizeHeader('Примечание')),
   };
 
-  if (Object.values(headerIndex).some((index) => index < 0)) {
+  const requiredHeaderIndex = {
+    purchaseDate: headerIndex.purchaseDate,
+    projectName: headerIndex.projectName,
+    materialName: headerIndex.materialName,
+    unit: headerIndex.unit,
+    qty: headerIndex.qty,
+    price: headerIndex.price,
+    supplierName: headerIndex.supplierName,
+    note: headerIndex.note,
+  };
+
+  if (Object.values(requiredHeaderIndex).some((index) => index < 0)) {
     throw new Error('Некорректный формат XLSX. Проверьте заголовки файла.');
   }
 
@@ -277,13 +309,14 @@ export const parseGlobalPurchasesXlsx = async (input: ArrayBuffer): Promise<Impo
     const purchaseDate = toCellText(row.getCell(headerIndex.purchaseDate + 1).value);
     const projectName = toCellText(row.getCell(headerIndex.projectName + 1).value);
     const materialName = toCellText(row.getCell(headerIndex.materialName + 1).value);
+    const materialId = headerIndex.materialId >= 0 ? toCellText(row.getCell(headerIndex.materialId + 1).value) : '';
     const unit = toCellText(row.getCell(headerIndex.unit + 1).value);
     const qtyText = toCellText(row.getCell(headerIndex.qty + 1).value);
     const priceText = toCellText(row.getCell(headerIndex.price + 1).value);
     const supplierName = toCellText(row.getCell(headerIndex.supplierName + 1).value);
     const note = toCellText(row.getCell(headerIndex.note + 1).value);
 
-    const hasAnyValue = [purchaseDate, projectName, materialName, unit, qtyText, priceText, supplierName, note]
+    const hasAnyValue = [purchaseDate, projectName, materialName, materialId, unit, qtyText, priceText, supplierName, note]
       .some((value) => value.length > 0);
     if (!hasAnyValue) {
       continue;
@@ -296,6 +329,7 @@ export const parseGlobalPurchasesXlsx = async (input: ArrayBuffer): Promise<Impo
       purchaseDate,
       projectName,
       materialName,
+      materialId: materialId.length > 0 ? materialId : undefined,
       unit,
       qty,
       price,

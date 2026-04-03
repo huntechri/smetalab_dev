@@ -160,4 +160,61 @@ describe('Global purchases supplier badges integration', () => {
     expect(totalAmount).toBeGreaterThan(0);
   });
 
+  it('resolves materialId during import by explicit id or catalog name', async () => {
+    const [materialByName] = await db.insert(materials).values({
+      tenantId: teamA,
+      code: 'MAT-GLUE',
+      name: 'Клей для ПГП/ГКЛ/ГВЛ Knauf Перлфикс гипсовый 30 кг',
+      nameNorm: 'клей для пгп/гкл/гвл knauf перлфикс гипсовый 30 кг',
+      unit: 'шт',
+      price: 460,
+      status: 'active',
+    }).returning();
+
+    const [materialById] = await db.insert(materials).values({
+      tenantId: teamA,
+      code: 'MAT-ID',
+      name: 'Шпаклевка финишная',
+      nameNorm: 'шпаклевка финишная',
+      unit: 'меш',
+      price: 700,
+      status: 'active',
+    }).returning();
+
+    const imported = await GlobalPurchasesService.importRows(teamA, {
+      rows: [
+        {
+          purchaseDate: '2026-02-02',
+          projectName: '',
+          materialName: 'Клей для ПГП/ГКЛ/ГВЛ Knauf Перлфикс гипсовый 30 кг',
+          unit: 'шт',
+          qty: 8,
+          price: 460,
+          note: '',
+          supplierName: '',
+        },
+        {
+          purchaseDate: '2026-02-02',
+          projectName: '',
+          materialName: 'Любое имя из файла',
+          materialId: materialById.id,
+          unit: 'меш',
+          qty: 3,
+          price: 700,
+          note: '',
+          supplierName: '',
+        },
+      ],
+    });
+
+    expect(imported.success).toBe(true);
+    if (!imported.success) return;
+
+    const importedByName = imported.data.find((row) => row.materialName === materialByName.name);
+    const importedById = imported.data.find((row) => row.materialId === materialById.id);
+
+    expect(importedByName?.materialId).toBe(materialByName.id);
+    expect(importedById?.materialId).toBe(materialById.id);
+  });
+
 });
