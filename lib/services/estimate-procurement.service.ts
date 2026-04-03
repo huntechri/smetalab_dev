@@ -97,11 +97,14 @@ const takeFactByMaterialName = (
 
     const planUnit = normalizeUnitKey(plan.unit);
     const nameCandidates = candidates.filter((candidate) => !isIdLikeMatchKey(candidate.matchKey));
-    if (nameCandidates.length === 0) {
+    const exactNameCandidates = nameCandidates.filter(
+        (candidate) => normalizeMaterialKey(candidate.materialName) === normalizedName,
+    );
+    if (exactNameCandidates.length === 0) {
         return undefined;
     }
 
-    const preferred = nameCandidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? nameCandidates[0];
+    const preferred = exactNameCandidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? exactNameCandidates[0];
     const index = candidates.indexOf(preferred);
     if (index >= 0) {
         candidates.splice(index, 1);
