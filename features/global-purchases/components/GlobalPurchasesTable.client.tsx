@@ -320,7 +320,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="hidden sm:flex flex-row items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-hide">
                             <GlobalPurchasesImportExportActions
                                 importInputRef={importInputRef}
-                                onExport={handleExport}
+                                onExport={() => void handleExport()}
                                 onImportClick={handleImportClick}
                                 onFileChange={handleImportFileChange}
                             />
@@ -373,9 +373,9 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                         <Upload className="size-4 text-muted-foreground" />
                                         <span>Импорт CSV</span>
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem className="gap-2" onClick={handleExport}>
+                                    <DropdownMenuItem className="gap-2" onClick={() => void handleExport()}>
                                         <Download className="size-4 text-muted-foreground" />
-                                        <span>Экспорт CSV</span>
+                                        <span>Экспорт XLSX</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="gap-2" onClick={() => void handleAddManualRow()} disabled={isAddingManual}>
                                         <Plus className="size-4 text-muted-foreground" />
