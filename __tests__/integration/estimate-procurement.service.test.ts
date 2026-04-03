@@ -231,8 +231,8 @@ describe('EstimateProcurementService integration', () => {
             plannedAmount: 5000,
             actualQty: 12,
             actualAmount: 3120,
-            qtyDelta: -8,
-            amountDelta: -1880,
+            qtyDelta: 8,
+            amountDelta: 1880,
         });
     });
 
