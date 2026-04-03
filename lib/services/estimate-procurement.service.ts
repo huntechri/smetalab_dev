@@ -69,7 +69,14 @@ type CacheAggregateRow = EstimateProcurementRow & {
     matchKey: string;
 };
 
-const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
+const normalizeMaterialKey = (name: string) => name
+    .normalize('NFKC')
+    .replaceAll('\u00A0', ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*\/\s*/g, '/')
+    .replace(/\s*-\s*/g, '-')
+    .trim()
+    .toLocaleLowerCase('ru-RU');
 const normalizeUnitKey = (unit: string) => unit.trim().toLocaleLowerCase('ru-RU');
 const buildMatchKey = (materialId: string | null, name: string) => materialId ? `id:${materialId}` : `name:${normalizeMaterialKey(name)}`;
 const uuidLikeMatchKey = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -436,6 +443,28 @@ export class EstimateProcurementService {
                 ),
             );
 
+        const cacheSplitRows = await db.execute(sql<{ has_name_split: boolean }>`
+            SELECT EXISTS (
+                SELECT 1
+                FROM ${estimateProcurementCache} AS e
+                JOIN ${estimateProcurementCache} AS f
+                  ON e.tenant_id = f.tenant_id
+                 AND e.estimate_id = f.estimate_id
+                 AND lower(trim(e.material_name)) = lower(trim(f.material_name))
+                 AND e.id <> f.id
+                WHERE e.tenant_id = ${teamId}
+                  AND e.estimate_id = ${estimateId}
+                  AND e.deleted_at IS NULL
+                  AND f.deleted_at IS NULL
+                  AND e.source = 'estimate'
+                  AND f.source = 'fact_only'
+                  AND e.planned_qty > 0
+                  AND e.actual_qty = 0
+                  AND f.actual_qty > 0
+            ) AS has_name_split
+        `);
+        const cacheSplitState = cacheSplitRows[0];
+
         const [planState, factState] = await Promise.all([
             db
                 // BUG-FIX: intentionally include soft-deleted rows (no deletedAt IS NULL filter)
@@ -465,6 +494,10 @@ export class EstimateProcurementService {
             .map((value) => toDateOrNull(value))
             .filter((value): value is Date => value instanceof Date)
             .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
+
+        if (cacheSplitState?.has_name_split) {
+            return true;
+        }
 
         return shouldRefreshProcurementCache({
             cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
