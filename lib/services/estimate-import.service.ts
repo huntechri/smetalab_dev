@@ -4,11 +4,12 @@ import { and, eq, isNull, sql } from "drizzle-orm";
 import { z } from "zod";
 import { db } from "@/lib/data/db/drizzle";
 import { withActiveTenant } from "@/lib/data/db/queries";
-import { estimateRows, estimates } from "@/lib/data/db/schema";
+import { estimateRows, estimates, materials, works } from "@/lib/data/db/schema";
+import { EstimateExecutionService } from "@/lib/services/estimate-execution.service";
 import { Result, error, success } from "@/lib/utils/result";
 
 const importedEstimateRowSchema = z.object({
-  code: z.string().trim().min(1),
+  code: z.string().trim().default(""),
   kind: z.enum(["section", "work", "material"]),
   name: z.string().trim().min(1),
   unit: z.string().trim(),
@@ -17,6 +18,10 @@ const importedEstimateRowSchema = z.object({
 });
 
 export type ImportedEstimateRow = z.infer<typeof importedEstimateRowSchema>;
+
+function normalizeCatalogName(value: string): string {
+  return value.trim().toLocaleLowerCase();
+}
 
 type ParsedHeader = {
   rowIndex: number;
@@ -143,7 +148,7 @@ function parseRowsFromWorksheet(
     const code = normalizeCellValue(row.getCell(header.codeCol).value);
     const name = normalizeCellValue(row.getCell(header.nameCol).value).trimStart();
 
-    if (!code || !name) {
+    if (!name) {
       continue;
     }
 
@@ -214,7 +219,17 @@ export class EstimateImportService {
     teamId: number,
     estimateId: string,
     importedRows: ImportedEstimateRow[],
-  ): Promise<Result<{ imported: number }>> {
+  ): Promise<Result<{
+    imported: number;
+    matchingSummary: {
+      worksMatched: number;
+      worksUnmatched: number;
+      materialsMatched: number;
+      materialsUnmatched: number;
+      unmatchedWorkNames: string[];
+      unmatchedMaterialNames: string[];
+    };
+  }>> {
     try {
       const estimate = await db.query.estimates.findFirst({
         where: and(
@@ -227,7 +242,7 @@ export class EstimateImportService {
         return error("Смета не найдена", "NOT_FOUND");
       }
 
-      await db.transaction(async (tx) => {
+      const matchingSummary = await db.transaction(async (tx) => {
         await tx
           .update(estimateRows)
           .set({ deletedAt: new Date(), updatedAt: new Date() })
@@ -245,18 +260,57 @@ export class EstimateImportService {
           workIdx: number;
           data: typeof estimateRows.$inferInsert;
         }[] = [];
-        const parentByCode = new Map<string, number>();
+        let activeWorkIdx: number | null = null;
+        let nextAutoWorkCode = 1;
+        let worksMatched = 0;
+        let worksUnmatched = 0;
+        let materialsMatched = 0;
+        let materialsUnmatched = 0;
+        const unmatchedWorkNames = new Set<string>();
+        const unmatchedMaterialNames = new Set<string>();
+
+        const [worksCatalogRows, materialsCatalogRows] = await Promise.all([
+          tx
+            .select({ code: works.code, name: works.name, unit: works.unit })
+            .from(works)
+            .where(and(withActiveTenant(works, teamId), eq(works.status, "active"))),
+          tx
+            .select({ id: materials.id, code: materials.code, name: materials.name, unit: materials.unit })
+            .from(materials)
+            .where(and(withActiveTenant(materials, teamId), eq(materials.status, "active"))),
+        ]);
+
+        const workCatalogByName = new Map<string, { code: string; name: string; unit: string | null }>();
+        for (const row of worksCatalogRows) {
+          workCatalogByName.set(normalizeCatalogName(row.name), row);
+        }
+
+        const materialCatalogByName = new Map<string, { id: string; code: string; name: string; unit: string | null }>();
+        for (const row of materialsCatalogRows) {
+          materialCatalogByName.set(normalizeCatalogName(row.name), row);
+        }
 
         for (let index = 0; index < importedRows.length; index += 1) {
           const item = importedRows[index];
           const sum = item.qty * item.price;
+          const normalizedName = normalizeCatalogName(item.name);
+          const matchedWork = item.kind === "work" ? workCatalogByName.get(normalizedName) : undefined;
+          const matchedMaterial = item.kind === "material" ? materialCatalogByName.get(normalizedName) : undefined;
+          const fallbackCode = item.code || String(nextAutoWorkCode);
+          const resolvedCode = item.kind === "work"
+            ? (matchedWork?.code || fallbackCode)
+            : item.kind === "material"
+              ? (matchedMaterial?.code || item.code || "")
+              : (item.code || `S-${index + 1}`);
+
           const rowData: typeof estimateRows.$inferInsert = {
             tenantId: teamId,
             estimateId,
             kind: item.kind,
-            code: item.code,
-            name: item.name,
-            unit: item.unit,
+            code: resolvedCode,
+            name: matchedWork?.name || matchedMaterial?.name || item.name,
+            materialId: matchedMaterial?.id ?? null,
+            unit: matchedWork?.unit || matchedMaterial?.unit || item.unit,
             qty: item.qty,
             price: item.price,
             sum,
@@ -270,20 +324,31 @@ export class EstimateImportService {
           }
 
           if (item.kind === "work") {
+            if (matchedWork) {
+              worksMatched += 1;
+            } else {
+              worksUnmatched += 1;
+              unmatchedWorkNames.add(item.name);
+            }
+
             workRowsToInsert.push(rowData);
-            parentByCode.set(item.code, workRowsToInsert.length - 1);
+            activeWorkIdx = workRowsToInsert.length - 1;
+            nextAutoWorkCode += 1;
             continue;
           }
 
-          const parentCode = item.code.includes(".")
-            ? item.code.split(".").slice(0, -1).join(".")
-            : null;
-          const workIdx = parentCode ? parentByCode.get(parentCode) : undefined;
-          if (typeof workIdx === "undefined") {
-            throw new Error(`INVALID_PARENT_${item.code}`);
+          if (activeWorkIdx === null) {
+            throw new Error(`INVALID_PARENT_ROW_${index + 1}`);
           }
 
-          materialRowsToInsert.push({ workIdx, data: rowData });
+          if (matchedMaterial) {
+            materialsMatched += 1;
+          } else {
+            materialsUnmatched += 1;
+            unmatchedMaterialNames.add(item.name);
+          }
+
+          materialRowsToInsert.push({ workIdx: activeWorkIdx, data: rowData });
         }
 
         const simpleRowsToInsert = [...sectionRowsToInsert, ...workRowsToInsert].sort(
@@ -298,17 +363,14 @@ export class EstimateImportService {
                 .returning({ id: estimateRows.id, code: estimateRows.code, kind: estimateRows.kind })
             : [];
 
-        const insertedWorkByCode = new Map(
-          insertedRows.filter((row) => row.kind === "work").map((row) => [row.code, row.id]),
-        );
+        const insertedWorks = insertedRows.filter((row) => row.kind === "work");
 
         if (materialRowsToInsert.length > 0) {
           const materialValues = materialRowsToInsert.map((material) => {
-            const parentCode = material.data.code?.split(".").slice(0, -1).join(".") ?? "";
-            const parentWorkId = insertedWorkByCode.get(parentCode);
+            const parentWorkId = insertedWorks[material.workIdx]?.id;
 
             if (!parentWorkId) {
-              throw new Error(`INVALID_PARENT_${material.data.code}`);
+              throw new Error(`INVALID_PARENT_ROW_${material.workIdx + 1}`);
             }
 
             return {
@@ -337,13 +399,27 @@ export class EstimateImportService {
           .update(estimates)
           .set({ total: Math.round(total), updatedAt: new Date() })
           .where(eq(estimates.id, estimateId));
+
+        return {
+          worksMatched,
+          worksUnmatched,
+          materialsMatched,
+          materialsUnmatched,
+          unmatchedWorkNames: [...unmatchedWorkNames],
+          unmatchedMaterialNames: [...unmatchedMaterialNames],
+        };
       });
 
-      return success({ imported: importedRows.length });
+      await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+
+      return success({
+        imported: importedRows.length,
+        matchingSummary,
+      });
     } catch (serviceError) {
       if (
         serviceError instanceof Error &&
-        serviceError.message.startsWith("INVALID_PARENT_")
+        serviceError.message.startsWith("INVALID_PARENT_ROW_")
       ) {
         return error(
           "Нарушена структура сметы: материал должен идти после родительской работы",
