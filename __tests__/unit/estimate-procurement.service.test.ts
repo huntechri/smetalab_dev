@@ -40,6 +40,22 @@ describe('buildEstimateProcurementRows', () => {
             purchaseCount: 1,
         });
     });
+
+    it('matches historical fact rows without materialId using robust name normalization', () => {
+        const rows = buildEstimateProcurementRows(
+            [{ name: 'Клей для ПГП / ГКЛ / ГВЛ Knauf Перлфикс гипсовый 30 кг', materialId: '22222222-2222-2222-2222-222222222222', unit: 'шт', qty: 8, price: 710 }],
+            [{ materialName: 'Клей для ПГП/ГКЛ/ГВЛ Knauf Перлфикс гипсовый 30\u00A0кг', materialId: null, unit: 'шт', qty: 8, price: 460, purchaseDate: '2026-12-20' }],
+        );
+
+        expect(rows).toHaveLength(1);
+        expect(rows[0]).toMatchObject({
+            source: 'estimate',
+            plannedQty: 8,
+            actualQty: 8,
+            qtyDelta: 0,
+            purchaseCount: 1,
+        });
+    });
 });
 
 describe('shouldRefreshProcurementCache', () => {
