@@ -832,9 +832,9 @@ export class EstimateRowsService {
 
                         await tx.update(estimateRows)
                             .set({
-                                qty: sql`CASE ${estimateRows.id} ${qtyCase} ELSE ${estimateRows.qty} END`,
-                                expense: sql`CASE ${estimateRows.id} ${expenseCase} ELSE ${estimateRows.expense} END`,
-                                sum: sql`CASE ${estimateRows.id} ${sumCase} ELSE ${estimateRows.sum} END`,
+                                qty: sql`CASE ${qtyCase} ELSE ${estimateRows.qty} END`,
+                                expense: sql`CASE ${expenseCase} ELSE ${estimateRows.expense} END`,
+                                sum: sql`CASE ${sumCase} ELSE ${estimateRows.sum} END`,
                                 updatedAt: now,
                             })
                             .where(and(
