@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import ExcelJS from 'exceljs';
-import { exportGlobalPurchasesCsv, exportGlobalPurchasesXlsx, parseGlobalPurchasesCsv } from '@/features/global-purchases/lib/import-export';
+import { exportGlobalPurchasesCsv, exportGlobalPurchasesXlsx, parseGlobalPurchasesCsv, parseGlobalPurchasesXlsx } from '@/features/global-purchases/lib/import-export';
 
 describe('global purchases import/export csv', () => {
     it('exports rows to csv with expected headers', () => {
@@ -35,6 +35,20 @@ describe('global purchases import/export csv', () => {
             note: 'Для фундамента',
             supplierName: 'БетонМаркет',
         }]);
+    });
+
+    it('parses csv with exported material header alias', () => {
+        const parsed = parseGlobalPurchasesCsv([
+            'Дата;Объект;Наименование материала;Ед.;Кол-во;Цена;Сумма;Поставщик;Примечание',
+            '2026-02-12;ЖК Мечта;Цемент М500;мешок;4;510;2040;БетонМаркет;Для фундамента',
+        ].join('\n'));
+
+        expect(parsed[0]).toMatchObject({
+            purchaseDate: '2026-02-12',
+            projectName: 'ЖК Мечта',
+            materialName: 'Цемент М500',
+            supplierName: 'БетонМаркет',
+        });
     });
 
     it('throws for invalid csv headers', () => {
@@ -88,5 +102,32 @@ describe('global purchases import/export csv', () => {
 
         const borderedCell = sheet?.getCell('A2');
         expect(borderedCell?.border?.top?.style).toBe('thin');
+    });
+
+    it('parses exported xlsx back into import rows including date/object/supplier', async () => {
+        const buffer = await exportGlobalPurchasesXlsx([{
+            purchaseDate: '2026-04-03',
+            projectName: 'КВ135',
+            materialName: 'Кабель ВВГнг',
+            unit: 'пог.м',
+            qty: 6,
+            price: 177,
+            note: 'Проверка импорта',
+            supplierName: 'Электрика',
+            supplierColor: '#ff00ff',
+        }]);
+
+        const parsed = await parseGlobalPurchasesXlsx(buffer);
+
+        expect(parsed).toEqual([{
+            purchaseDate: '2026-04-03',
+            projectName: 'КВ135',
+            materialName: 'Кабель ВВГнг',
+            unit: 'пог.м',
+            qty: 6,
+            price: 177,
+            note: 'Проверка импорта',
+            supplierName: 'Электрика',
+        }]);
     });
 });

@@ -28,6 +28,7 @@ const csvRowSchema = z.object({
 });
 
 const CSV_HEADERS = ['Дата', 'Объект', 'Материал', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
+const MATERIAL_HEADER_ALIASES = ['Материал', 'Наименование материала'] as const;
 
 const normalizeHeader = (value: string) => value.trim().toLowerCase();
 
@@ -182,10 +183,14 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
   }
 
   const headers = parseDelimitedLine(lines[0], ';').map(normalizeHeader);
+  const materialHeaderIndex = MATERIAL_HEADER_ALIASES
+    .map((header) => headers.indexOf(normalizeHeader(header)))
+    .find((index) => index >= 0) ?? -1;
+
   const headerIndex = {
     purchaseDate: headers.indexOf(normalizeHeader('Дата')),
     projectName: headers.indexOf(normalizeHeader('Объект')),
-    materialName: headers.indexOf(normalizeHeader('Материал')),
+    materialName: materialHeaderIndex,
     unit: headers.indexOf(normalizeHeader('Ед.')),
     qty: headers.indexOf(normalizeHeader('Кол-во')),
     price: headers.indexOf(normalizeHeader('Цена')),
@@ -220,4 +225,98 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
   }
 
   return parsedRows;
+};
+
+const toCellText = (value: ExcelJS.CellValue): string => {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'object' && 'result' in value) {
+    return value.result === undefined || value.result === null ? '' : String(value.result).trim();
+  }
+  return String(value).trim();
+};
+
+const parseXlsxNumber = (value: string): number => Number(value.replace(',', '.'));
+
+export const parseGlobalPurchasesXlsx = async (input: ArrayBuffer): Promise<ImportablePurchaseRow[]> => {
+  const workbook = new ExcelJS.Workbook();
+  await workbook.xlsx.load(input);
+
+  const sheet = workbook.worksheets[0];
+  if (!sheet) {
+    return [];
+  }
+
+  const headerRow = sheet.getRow(1);
+  const headerValues = Array.isArray(headerRow.values) ? headerRow.values.slice(1) : [];
+  const headers = headerValues.map((value) => normalizeHeader(toCellText(value as ExcelJS.CellValue)));
+
+  const materialHeaderIndex = MATERIAL_HEADER_ALIASES
+    .map((header) => headers.indexOf(normalizeHeader(header)))
+    .find((index) => index >= 0) ?? -1;
+
+  const headerIndex = {
+    purchaseDate: headers.indexOf(normalizeHeader('Дата')),
+    projectName: headers.indexOf(normalizeHeader('Объект')),
+    materialName: materialHeaderIndex,
+    unit: headers.indexOf(normalizeHeader('Ед.')),
+    qty: headers.indexOf(normalizeHeader('Кол-во')),
+    price: headers.indexOf(normalizeHeader('Цена')),
+    supplierName: headers.indexOf(normalizeHeader('Поставщик')),
+    note: headers.indexOf(normalizeHeader('Примечание')),
+  };
+
+  if (Object.values(headerIndex).some((index) => index < 0)) {
+    throw new Error('Некорректный формат XLSX. Проверьте заголовки файла.');
+  }
+
+  const parsedRows: ImportablePurchaseRow[] = [];
+
+  for (let rowNumber = 2; rowNumber <= sheet.rowCount; rowNumber += 1) {
+    const row = sheet.getRow(rowNumber);
+
+    const purchaseDate = toCellText(row.getCell(headerIndex.purchaseDate + 1).value);
+    const projectName = toCellText(row.getCell(headerIndex.projectName + 1).value);
+    const materialName = toCellText(row.getCell(headerIndex.materialName + 1).value);
+    const unit = toCellText(row.getCell(headerIndex.unit + 1).value);
+    const qtyText = toCellText(row.getCell(headerIndex.qty + 1).value);
+    const priceText = toCellText(row.getCell(headerIndex.price + 1).value);
+    const supplierName = toCellText(row.getCell(headerIndex.supplierName + 1).value);
+    const note = toCellText(row.getCell(headerIndex.note + 1).value);
+
+    const hasAnyValue = [purchaseDate, projectName, materialName, unit, qtyText, priceText, supplierName, note]
+      .some((value) => value.length > 0);
+    if (!hasAnyValue) {
+      continue;
+    }
+
+    const qty = parseXlsxNumber(qtyText);
+    const price = parseXlsxNumber(priceText);
+
+    const parsed = csvRowSchema.parse({
+      purchaseDate,
+      projectName,
+      materialName,
+      unit,
+      qty,
+      price,
+      note,
+      supplierName,
+    });
+
+    parsedRows.push(parsed);
+  }
+
+  return parsedRows;
+};
+
+export const parseGlobalPurchasesImportFile = async (file: File): Promise<ImportablePurchaseRow[]> => {
+  const lowerName = file.name.toLowerCase();
+
+  if (lowerName.endsWith('.xlsx')) {
+    const arrayBuffer = await file.arrayBuffer();
+    return parseGlobalPurchasesXlsx(arrayBuffer);
+  }
+
+  const text = await file.text();
+  return parseGlobalPurchasesCsv(text);
 };

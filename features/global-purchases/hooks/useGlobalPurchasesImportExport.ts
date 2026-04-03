@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import type { ChangeEvent } from 'react';
 import type { ImportablePurchaseRow } from '../lib/import-export';
-import { exportGlobalPurchasesXlsx, parseGlobalPurchasesCsv } from '../lib/import-export';
+import { exportGlobalPurchasesXlsx, parseGlobalPurchasesImportFile } from '../lib/import-export';
 import type { PurchaseRow, PurchaseRowsRange } from '../types/dto';
 
 type ToastPayload = {
@@ -55,8 +55,7 @@ export function useGlobalPurchasesImportExport({ displayedRows, range, importRow
     if (!file) return;
 
     try {
-      const text = await file.text();
-      const parsedRows = parseGlobalPurchasesCsv(text);
+      const parsedRows = await parseGlobalPurchasesImportFile(file);
       if (parsedRows.length === 0) {
         toast({ variant: 'destructive', title: 'Ошибка импорта', description: 'Файл не содержит строк для импорта.' });
         return;

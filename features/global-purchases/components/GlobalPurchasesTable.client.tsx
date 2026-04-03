@@ -371,7 +371,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <DropdownMenuContent align="end" className="w-56">
                                     <DropdownMenuItem className="gap-2" onClick={handleImportClick}>
                                         <Upload className="size-4 text-muted-foreground" />
-                                        <span>Импорт CSV</span>
+                                        <span>Импорт CSV/XLSX</span>
                                     </DropdownMenuItem>
                                     <DropdownMenuItem className="gap-2" onClick={() => void handleExport()}>
                                         <Download className="size-4 text-muted-foreground" />

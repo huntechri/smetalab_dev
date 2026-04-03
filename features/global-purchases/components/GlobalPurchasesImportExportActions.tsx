@@ -25,10 +25,10 @@ export function GlobalPurchasesImportExportActions({
       <input
         ref={importInputRef}
         type="file"
-        accept=".csv"
+        accept=".csv,.xlsx"
         className="hidden"
-        aria-label="Импорт закупок из CSV"
-        title="Импорт закупок из CSV"
+        aria-label="Импорт закупок из CSV/XLSX"
+        title="Импорт закупок из CSV/XLSX"
         onChange={(event) => void onFileChange(event)}
       />
 
@@ -60,10 +60,10 @@ export function GlobalPurchasesImportExportActions({
             aria-label="Импорт закупок"
           >
             <Upload className="size-4" />
-            <span className="hidden sm:inline">Импорт CSV</span>
+            <span className="hidden sm:inline">Импорт CSV/XLSX</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Импортировать строки закупок из CSV</TooltipContent>
+        <TooltipContent>Импортировать строки закупок из CSV или XLSX</TooltipContent>
       </Tooltip>
     </>
   );
