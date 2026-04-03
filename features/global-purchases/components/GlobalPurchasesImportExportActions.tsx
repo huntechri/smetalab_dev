@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 interface GlobalPurchasesImportExportActionsProps {
   importInputRef: RefObject<HTMLInputElement | null>;
-  onExport: () => void;
+  onExport: () => void | Promise<void>;
   onImportClick: () => void;
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -25,10 +25,10 @@ export function GlobalPurchasesImportExportActions({
       <input
         ref={importInputRef}
         type="file"
-        accept=".csv"
+        accept=".csv,.xlsx"
         className="hidden"
-        aria-label="Импорт закупок из CSV"
-        title="Импорт закупок из CSV"
+        aria-label="Импорт закупок из CSV/XLSX"
+        title="Импорт закупок из CSV/XLSX"
         onChange={(event) => void onFileChange(event)}
       />
 
@@ -39,14 +39,14 @@ export function GlobalPurchasesImportExportActions({
             variant="secondary"
             size="sm"
             className={buttonClassName}
-            onClick={onExport}
+            onClick={() => void onExport()}
             aria-label="Экспорт закупок"
           >
             <Download className="size-4" />
-            <span className="hidden sm:inline">Экспорт CSV</span>
+            <span className="hidden sm:inline">Экспорт XLSX</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Экспортировать отображаемые строки в CSV</TooltipContent>
+        <TooltipContent>Экспортировать отображаемые строки в XLSX</TooltipContent>
       </Tooltip>
 
       <Tooltip>
@@ -60,10 +60,10 @@ export function GlobalPurchasesImportExportActions({
             aria-label="Импорт закупок"
           >
             <Upload className="size-4" />
-            <span className="hidden sm:inline">Импорт CSV</span>
+            <span className="hidden sm:inline">Импорт CSV/XLSX</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Импортировать строки закупок из CSV</TooltipContent>
+        <TooltipContent>Импортировать строки закупок из CSV или XLSX</TooltipContent>
       </Tooltip>
     </>
   );

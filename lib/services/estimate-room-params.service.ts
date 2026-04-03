@@ -155,17 +155,17 @@ export class EstimateRoomParamsService {
                     const updatedRows = await tx.execute<{ id: string }>(sql`
                         UPDATE ${estimateRoomParams}
                         SET
-                            ${estimateRoomParams.order} = CASE ${estimateRoomParams.id} ${orderCase} ELSE ${estimateRoomParams.order} END,
-                            ${estimateRoomParams.name} = CASE ${estimateRoomParams.id} ${nameCase} ELSE ${estimateRoomParams.name} END,
-                            ${estimateRoomParams.perimeter} = CASE ${estimateRoomParams.id} ${perimeterCase} ELSE ${estimateRoomParams.perimeter} END,
-                            ${estimateRoomParams.height} = CASE ${estimateRoomParams.id} ${heightCase} ELSE ${estimateRoomParams.height} END,
-                            ${estimateRoomParams.floorArea} = CASE ${estimateRoomParams.id} ${floorAreaCase} ELSE ${estimateRoomParams.floorArea} END,
-                            ${estimateRoomParams.ceilingArea} = CASE ${estimateRoomParams.id} ${ceilingAreaCase} ELSE ${estimateRoomParams.ceilingArea} END,
-                            ${estimateRoomParams.ceilingSlopes} = CASE ${estimateRoomParams.id} ${ceilingSlopesCase} ELSE ${estimateRoomParams.ceilingSlopes} END,
-                            ${estimateRoomParams.doorsCount} = CASE ${estimateRoomParams.id} ${doorsCountCase} ELSE ${estimateRoomParams.doorsCount} END,
-                            ${estimateRoomParams.wallSegments} = CASE ${estimateRoomParams.id} ${wallSegmentsCase} ELSE ${estimateRoomParams.wallSegments} END,
-                            ${estimateRoomParams.windows} = CASE ${estimateRoomParams.id} ${windowsCase} ELSE ${estimateRoomParams.windows} END,
-                            ${estimateRoomParams.portals} = CASE ${estimateRoomParams.id} ${portalsCase} ELSE ${estimateRoomParams.portals} END,
+                            ${estimateRoomParams.order} = CASE ${orderCase} ELSE ${estimateRoomParams.order} END,
+                            ${estimateRoomParams.name} = CASE ${nameCase} ELSE ${estimateRoomParams.name} END,
+                            ${estimateRoomParams.perimeter} = CASE ${perimeterCase} ELSE ${estimateRoomParams.perimeter} END,
+                            ${estimateRoomParams.height} = CASE ${heightCase} ELSE ${estimateRoomParams.height} END,
+                            ${estimateRoomParams.floorArea} = CASE ${floorAreaCase} ELSE ${estimateRoomParams.floorArea} END,
+                            ${estimateRoomParams.ceilingArea} = CASE ${ceilingAreaCase} ELSE ${estimateRoomParams.ceilingArea} END,
+                            ${estimateRoomParams.ceilingSlopes} = CASE ${ceilingSlopesCase} ELSE ${estimateRoomParams.ceilingSlopes} END,
+                            ${estimateRoomParams.doorsCount} = CASE ${doorsCountCase} ELSE ${estimateRoomParams.doorsCount} END,
+                            ${estimateRoomParams.wallSegments} = CASE ${wallSegmentsCase} ELSE ${estimateRoomParams.wallSegments} END,
+                            ${estimateRoomParams.windows} = CASE ${windowsCase} ELSE ${estimateRoomParams.windows} END,
+                            ${estimateRoomParams.portals} = CASE ${portalsCase} ELSE ${estimateRoomParams.portals} END,
                             ${estimateRoomParams.updatedAt} = ${now}
                         WHERE
                             ${estimateRoomParams.estimateId} = ${estimateId}

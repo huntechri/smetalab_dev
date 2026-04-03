@@ -379,4 +379,69 @@ describe('EstimateRowsService.patch calculation and rounding', () => {
         // 11 * 0.5 = 5.5, should be 6
         expect(materialUpdateSet).toMatchObject({ qty: 6 });
     });
+
+    it('builds searched CASE SQL for bulk child recalculation without comparing uuid to boolean', async () => {
+        const updateMock = {
+            set: vi.fn().mockReturnThis(),
+            where: vi.fn().mockReturnThis(),
+            returning: vi.fn().mockResolvedValue([{ id: 'updated-id' }]),
+        };
+
+        const tx = {
+            query: {
+                estimates: {
+                    findFirst: vi.fn().mockResolvedValue({ coefPercent: 0 }),
+                },
+                estimateRows: {
+                    findFirst: vi.fn().mockResolvedValue({
+                        id: 'work-1',
+                        kind: 'work',
+                        qty: 10,
+                        price: 100,
+                        sum: 1000,
+                        estimateId: 'est-1',
+                    }),
+                },
+            },
+            select: vi.fn(() => ({
+                from: vi.fn(() => ({
+                    where: vi.fn().mockResolvedValue([
+                        {
+                            id: 'mat-1',
+                            kind: 'material',
+                            parentWorkId: 'work-1',
+                            estimateId: 'est-1',
+                            qty: 5,
+                            expense: 0.5,
+                            price: 200,
+                            sum: 1000,
+                            deletedAt: null,
+                        },
+                        {
+                            id: 'mat-2',
+                            kind: 'material',
+                            parentWorkId: 'work-1',
+                            estimateId: 'est-1',
+                            qty: 3,
+                            expense: 0.3,
+                            price: 300,
+                            sum: 900,
+                            deletedAt: null,
+                        },
+                    ]),
+                })),
+            })),
+            update: vi.fn(() => updateMock),
+        };
+
+        dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
+
+        await EstimateRowsService.patch(7, 'est-1', 'work-1', { qty: 11 });
+
+        const bulkSetPayload = updateMock.set.mock.calls[1][0] as { qty: { queryChunks: unknown[] } };
+        const qtyCaseExpression = bulkSetPayload.qty;
+
+        expect(qtyCaseExpression).toHaveProperty('queryChunks');
+        expect(qtyCaseExpression.queryChunks[1]).toHaveProperty('queryChunks');
+    });
 });
