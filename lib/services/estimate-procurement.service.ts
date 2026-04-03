@@ -70,9 +70,35 @@ type CacheAggregateRow = EstimateProcurementRow & {
 };
 
 const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
+const normalizeUnitKey = (unit: string) => unit.trim().toLocaleLowerCase('ru-RU');
 const buildMatchKey = (materialId: string | null, name: string) => materialId ? `id:${materialId}` : `name:${normalizeMaterialKey(name)}`;
 
 const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
+
+const takeFactByMaterialName = (
+    factMap: Map<string, FactAggregateInput>,
+    factByName: Map<string, FactAggregateInput[]>,
+    plan: PlanAggregateInput,
+): FactAggregateInput | undefined => {
+    const normalizedName = normalizeMaterialKey(plan.materialName);
+    const candidates = factByName.get(normalizedName);
+    if (!candidates || candidates.length === 0) {
+        return undefined;
+    }
+
+    const planUnit = normalizeUnitKey(plan.unit);
+    const preferred = candidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? candidates[0];
+    const index = candidates.indexOf(preferred);
+    if (index >= 0) {
+        candidates.splice(index, 1);
+    }
+    if (candidates.length === 0) {
+        factByName.delete(normalizedName);
+    }
+    factMap.delete(preferred.matchKey);
+
+    return preferred;
+};
 
 const aggregatePlan = (rows: PlanRow[]) => {
     const map = new Map<string, Aggregate>();
@@ -138,11 +164,19 @@ const buildRowsFromAggregates = (
 ): EstimateProcurementRow[] => {
     const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
     const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
+    const factByName = new Map<string, FactAggregateInput[]>();
+    for (const fact of factAggregates) {
+        const key = normalizeMaterialKey(fact.materialName);
+        const items = factByName.get(key) ?? [];
+        items.push(fact);
+        factByName.set(key, items);
+    }
 
     const rows: EstimateProcurementRow[] = [];
 
     for (const [key, plan] of planMap.entries()) {
-        const fact = factMap.get(key);
+        const exactFact = factMap.get(key);
+        const fact = exactFact ?? takeFactByMaterialName(factMap, factByName, plan);
 
         const plannedQty = plan.plannedQty;
         const plannedAmount = roundMoney(plan.plannedAmount);
@@ -168,7 +202,21 @@ const buildRowsFromAggregates = (
             lastPurchaseDate: fact?.lastPurchaseDate ?? null,
         });
 
-        factMap.delete(key);
+        if (exactFact) {
+            factMap.delete(key);
+
+            const byNameKey = normalizeMaterialKey(exactFact.materialName);
+            const byNameRows = factByName.get(byNameKey);
+            if (byNameRows) {
+                const byNameIndex = byNameRows.findIndex((item) => item.matchKey === exactFact.matchKey);
+                if (byNameIndex >= 0) {
+                    byNameRows.splice(byNameIndex, 1);
+                }
+                if (byNameRows.length === 0) {
+                    factByName.delete(byNameKey);
+                }
+            }
+        }
     }
 
     for (const fact of factMap.values()) {
@@ -205,11 +253,19 @@ const buildCacheRowsFromAggregates = (
 ): CacheAggregateRow[] => {
     const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
     const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
+    const factByName = new Map<string, FactAggregateInput[]>();
+    for (const fact of factAggregates) {
+        const key = normalizeMaterialKey(fact.materialName);
+        const items = factByName.get(key) ?? [];
+        items.push(fact);
+        factByName.set(key, items);
+    }
 
     const rows: CacheAggregateRow[] = [];
 
     for (const [matchKey, plan] of planMap.entries()) {
-        const fact = factMap.get(matchKey);
+        const exactFact = factMap.get(matchKey);
+        const fact = exactFact ?? takeFactByMaterialName(factMap, factByName, plan);
         const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedQty = roundMoney(plan.plannedQty);
         const actualAmount = roundMoney(fact?.actualAmount ?? 0);
@@ -232,7 +288,21 @@ const buildCacheRowsFromAggregates = (
             lastPurchaseDate: fact?.lastPurchaseDate ?? null,
         });
 
-        factMap.delete(matchKey);
+        if (exactFact) {
+            factMap.delete(matchKey);
+
+            const byNameKey = normalizeMaterialKey(exactFact.materialName);
+            const byNameRows = factByName.get(byNameKey);
+            if (byNameRows) {
+                const byNameIndex = byNameRows.findIndex((item) => item.matchKey === exactFact.matchKey);
+                if (byNameIndex >= 0) {
+                    byNameRows.splice(byNameIndex, 1);
+                }
+                if (byNameRows.length === 0) {
+                    factByName.delete(byNameKey);
+                }
+            }
+        }
     }
 
     for (const [matchKey, fact] of factMap.entries()) {

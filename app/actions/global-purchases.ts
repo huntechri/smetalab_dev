@@ -77,6 +77,7 @@ export const importGlobalPurchasesAction = safeAction(
       purchaseDate: string;
       projectName: string;
       materialName: string;
+      materialId?: string | null;
       unit: string;
       qty: number;
       price: number;

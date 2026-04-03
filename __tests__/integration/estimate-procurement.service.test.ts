@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
+import { eq } from 'drizzle-orm';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateRows, estimates, globalPurchases, materials, projects, teams } from '@/lib/data/db/schema';
 import { resetDatabase } from '@/lib/data/db/test-utils';
@@ -241,5 +242,44 @@ describe('EstimateProcurementService integration', () => {
         if (result.success) return;
 
         expect(result.error.code).toBe('NOT_FOUND');
+    });
+
+    it('matches by normalized name when historical purchases have no materialId', async () => {
+        const estimate = await db.query.estimates.findFirst({
+            where: eq(estimates.id, estimateId),
+            columns: { projectId: true },
+        });
+        expect(estimate?.projectId).toBeDefined();
+        if (!estimate?.projectId) return;
+
+        await db.insert(globalPurchases).values({
+            tenantId: teamA,
+            projectId: estimate.projectId,
+            projectName: 'Project A',
+            materialName: '  штукатурка  ',
+            materialId: null,
+            unit: 'меш',
+            qty: 5,
+            price: 130,
+            amount: 650,
+            note: '',
+            source: 'manual',
+            order: 999,
+            purchaseDate: '2026-01-12',
+        });
+
+        const result = await EstimateProcurementService.list(teamA, estimateId);
+        expect(result.success).toBe(true);
+        if (!result.success) return;
+
+        const plaster = result.data.find((row) => row.materialName === 'Штукатурка');
+        expect(plaster).toMatchObject({
+            source: 'estimate',
+            plannedQty: 100,
+            actualQty: 105,
+            actualAmount: 12250,
+            purchaseCount: 3,
+            lastPurchaseDate: '2026-01-12',
+        });
     });
 });

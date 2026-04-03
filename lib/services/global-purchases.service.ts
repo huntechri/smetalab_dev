@@ -2,7 +2,7 @@ import { and, asc, between, eq, inArray, isNull, sql } from 'drizzle-orm';
 import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { globalPurchases, materialSuppliers, projects } from '@/lib/data/db/schema';
+import { globalPurchases, materialSuppliers, materials, projects } from '@/lib/data/db/schema';
 import { getTodayIsoLocal, addDaysToIsoDate } from '@/features/global-purchases/lib/date';
 import { error, Result, success } from '@/lib/utils/result';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
@@ -45,6 +45,7 @@ const importRowSchema = z.object({
   purchaseDate: isoDateSchema,
   projectName: z.string().trim().max(160),
   materialName: z.string().trim().min(1).max(240),
+  materialId: z.string().uuid().nullable().optional(),
   unit: z.string().trim().min(1).max(20),
   qty: nonNegative,
   price: nonNegative,
@@ -64,6 +65,7 @@ const batchPatchSchema = z.object({
 });
 
 const calculateAmount = (qty: number, price: number) => Math.round((qty * price + Number.EPSILON) * 100) / 100;
+const normalizeLookupName = (value: string) => value.trim().toLocaleLowerCase('ru-RU');
 
 const toRow = (
   row: typeof globalPurchases.$inferSelect,
@@ -449,9 +451,14 @@ export class GlobalPurchasesService {
           where: withActiveTenant(materialSuppliers, teamId),
           columns: { id: true, name: true, color: true },
         });
+        const materialsList = await tx.query.materials.findMany({
+          where: withActiveTenant(materials, teamId),
+          columns: { id: true, name: true },
+        });
 
-        const projectMapByName = new Map(projectList.map((project) => [project.name.trim().toLowerCase(), project]));
-        const supplierMapByName = new Map(supplierList.map((supplier) => [supplier.name.trim().toLowerCase(), supplier]));
+        const projectMapByName = new Map(projectList.map((project) => [normalizeLookupName(project.name), project]));
+        const supplierMapByName = new Map(supplierList.map((supplier) => [normalizeLookupName(supplier.name), supplier]));
+        const materialMapByName = new Map(materialsList.map((material) => [normalizeLookupName(material.name), material]));
 
         const groupedByDate = new Map<string, typeof parsed.data.rows>();
         for (const row of parsed.data.rows) {
@@ -478,10 +485,12 @@ export class GlobalPurchasesService {
           const maxOrder = maxOrderByDate.get(purchaseDate) ?? 0;
 
           const values = rows.map((row, index) => {
-            const project = projectMapByName.get(row.projectName.trim().toLowerCase());
+            const project = projectMapByName.get(normalizeLookupName(row.projectName));
             const supplier = row.supplierName
-              ? supplierMapByName.get(row.supplierName.trim().toLowerCase())
+              ? supplierMapByName.get(normalizeLookupName(row.supplierName))
               : null;
+            const matchedMaterial = materialMapByName.get(normalizeLookupName(row.materialName));
+            const resolvedMaterialId = row.materialId ?? matchedMaterial?.id ?? null;
 
             return {
               tenantId: teamId,
@@ -489,7 +498,7 @@ export class GlobalPurchasesService {
               supplierId: supplier?.id ?? null,
               projectName: project?.name ?? row.projectName,
               materialName: row.materialName,
-              materialId: null,
+              materialId: resolvedMaterialId,
               unit: row.unit,
               qty: row.qty,
               price: row.price,
