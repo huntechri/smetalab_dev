@@ -26,6 +26,7 @@ import { estimateExecutionActionsRepo } from '../../repository/execution.actions
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';
 import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
+import { calculateExecutionTotals } from '../../lib/execution-totals';
 import { EstimateTotals } from '../EstimateTotals';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -347,11 +348,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         },
     ], [patchRow]);
 
-    const totals = useMemo(() => rows.reduce((acc, row) => {
-        acc.planned += row.plannedSum;
-        acc.actual += row.actualSum;
-        return acc;
-    }, { planned: 0, actual: 0 }), [rows]);
+    const totals = useMemo(() => calculateExecutionTotals(rows), [rows]);
 
     const addedWorkNames = useMemo(() => new Set(rows.map((row) => row.name)), [rows]);
     const handleExport = useCallback(() => {
