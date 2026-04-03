@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { useGlobalPurchasesImportExport } from '@/features/global-purchases/hooks/useGlobalPurchasesImportExport';
 
 describe('useGlobalPurchasesImportExport', () => {
-  it('exports csv and shows success toast', () => {
+  it('exports xlsx and shows success toast', async () => {
     const toast = vi.fn();
     const createObjectURLSpy = vi.spyOn(URL, 'createObjectURL').mockReturnValue('blob:url');
     const revokeObjectURLSpy = vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => undefined);
@@ -32,8 +32,8 @@ describe('useGlobalPurchasesImportExport', () => {
       toast,
     }));
 
-    act(() => {
-      result.current.handleExport();
+    await act(async () => {
+      await result.current.handleExport();
     });
 
     expect(createObjectURLSpy).toHaveBeenCalledTimes(1);

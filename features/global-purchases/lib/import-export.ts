@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import ExcelJS from 'exceljs';
 
 export type ImportablePurchaseRow = {
   purchaseDate: string;
@@ -9,6 +10,10 @@ export type ImportablePurchaseRow = {
   price: number;
   note: string;
   supplierName: string;
+};
+
+export type ExportablePurchaseRow = ImportablePurchaseRow & {
+  supplierColor?: string | null;
 };
 
 const csvRowSchema = z.object({
@@ -88,6 +93,83 @@ export const exportGlobalPurchasesCsv = (rows: ImportablePurchaseRow[]): string 
   return `\uFEFF${lines.join('\n')}`;
 };
 
+const XLSX_HEADERS = ['Дата', 'Объект', 'Наименование материала', 'Ед.', 'Кол-во', 'Цена', 'Сумма', 'Поставщик', 'Примечание'] as const;
+const thinBorder = { style: 'thin' as const, color: { argb: 'FFD9D9D9' } };
+
+const toArgbColor = (color: string | null | undefined): string | null => {
+  if (!color) return null;
+  const normalized = color.trim().replace('#', '');
+  if (!/^[0-9a-f]{6}$/i.test(normalized)) {
+    return null;
+  }
+
+  return `FF${normalized.toUpperCase()}`;
+};
+
+export const exportGlobalPurchasesXlsx = async (rows: ExportablePurchaseRow[]): Promise<ArrayBuffer> => {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet('Глобальные закупки');
+
+  sheet.columns = [
+    { width: 14 },
+    { width: 22 },
+    { width: 64 },
+    { width: 12 },
+    { width: 12 },
+    { width: 12 },
+    { width: 14 },
+    { width: 24 },
+    { width: 30 },
+  ];
+
+  const headerRow = sheet.addRow(XLSX_HEADERS);
+  headerRow.eachCell((cell) => {
+    cell.font = { bold: true };
+    cell.alignment = { vertical: 'middle', horizontal: 'center' };
+    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF3F4F6' } };
+    cell.border = { top: thinBorder, left: thinBorder, bottom: thinBorder, right: thinBorder };
+  });
+
+  let previousProjectName: string | null = null;
+  for (const row of rows) {
+    if (previousProjectName !== null && previousProjectName !== row.projectName) {
+      sheet.addRow([]);
+    }
+    previousProjectName = row.projectName;
+
+    const amount = Math.round((row.qty * row.price + Number.EPSILON) * 100) / 100;
+    const dataRow = sheet.addRow([
+      row.purchaseDate,
+      row.projectName,
+      row.materialName,
+      row.unit,
+      row.qty,
+      row.price,
+      amount,
+      row.supplierName,
+      row.note,
+    ]);
+
+    dataRow.eachCell((cell, colNumber) => {
+      cell.border = { top: thinBorder, left: thinBorder, bottom: thinBorder, right: thinBorder };
+      if (colNumber === 3) {
+        cell.alignment = { wrapText: true, vertical: 'top' };
+      } else {
+        cell.alignment = { vertical: 'middle' };
+      }
+    });
+
+    const supplierArgb = toArgbColor(row.supplierColor);
+    if (supplierArgb) {
+      const supplierCell = dataRow.getCell(8);
+      supplierCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: supplierArgb } };
+    }
+  }
+
+  const buffer = await workbook.xlsx.writeBuffer();
+  return buffer as ArrayBuffer;
+};
+
 export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] => {
   const normalized = input.replace(/^\uFEFF/, '').replaceAll('\r\n', '\n').trim();
   if (!normalized) {
@@ -139,4 +221,3 @@ export const parseGlobalPurchasesCsv = (input: string): ImportablePurchaseRow[] 
 
   return parsedRows;
 };
-

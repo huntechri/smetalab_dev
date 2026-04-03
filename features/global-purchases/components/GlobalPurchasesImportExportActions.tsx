@@ -7,7 +7,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 interface GlobalPurchasesImportExportActionsProps {
   importInputRef: RefObject<HTMLInputElement | null>;
-  onExport: () => void;
+  onExport: () => void | Promise<void>;
   onImportClick: () => void;
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
@@ -39,14 +39,14 @@ export function GlobalPurchasesImportExportActions({
             variant="secondary"
             size="sm"
             className={buttonClassName}
-            onClick={onExport}
+            onClick={() => void onExport()}
             aria-label="Экспорт закупок"
           >
             <Download className="size-4" />
-            <span className="hidden sm:inline">Экспорт CSV</span>
+            <span className="hidden sm:inline">Экспорт XLSX</span>
           </Button>
         </TooltipTrigger>
-        <TooltipContent>Экспортировать отображаемые строки в CSV</TooltipContent>
+        <TooltipContent>Экспортировать отображаемые строки в XLSX</TooltipContent>
       </Tooltip>
 
       <Tooltip>
