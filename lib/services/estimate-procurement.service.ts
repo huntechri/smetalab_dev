@@ -69,10 +69,53 @@ type CacheAggregateRow = EstimateProcurementRow & {
     matchKey: string;
 };
 
-const normalizeMaterialKey = (name: string) => name.trim().toLocaleLowerCase('ru-RU');
+const normalizeMaterialKey = (name: string) => name
+    .normalize('NFKC')
+    .replaceAll('\u00A0', ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*\/\s*/g, '/')
+    .replace(/\s*-\s*/g, '-')
+    .trim()
+    .toLocaleLowerCase('ru-RU');
+const normalizeUnitKey = (unit: string) => unit.trim().toLocaleLowerCase('ru-RU');
 const buildMatchKey = (materialId: string | null, name: string) => materialId ? `id:${materialId}` : `name:${normalizeMaterialKey(name)}`;
+const uuidLikeMatchKey = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const isIdLikeMatchKey = (matchKey: string) => matchKey.startsWith('id:') || uuidLikeMatchKey.test(matchKey);
 
 const roundMoney = (value: number) => Math.round((value + Number.EPSILON) * 100) / 100;
+
+const takeFactByMaterialName = (
+    factMap: Map<string, FactAggregateInput>,
+    factByName: Map<string, FactAggregateInput[]>,
+    plan: PlanAggregateInput,
+): FactAggregateInput | undefined => {
+    const normalizedName = normalizeMaterialKey(plan.materialName);
+    const candidates = factByName.get(normalizedName);
+    if (!candidates || candidates.length === 0) {
+        return undefined;
+    }
+
+    const planUnit = normalizeUnitKey(plan.unit);
+    const nameCandidates = candidates.filter((candidate) => !isIdLikeMatchKey(candidate.matchKey));
+    const exactNameCandidates = nameCandidates.filter(
+        (candidate) => normalizeMaterialKey(candidate.materialName) === normalizedName,
+    );
+    if (exactNameCandidates.length === 0) {
+        return undefined;
+    }
+
+    const preferred = exactNameCandidates.find((candidate) => normalizeUnitKey(candidate.unit) === planUnit) ?? exactNameCandidates[0];
+    const index = candidates.indexOf(preferred);
+    if (index >= 0) {
+        candidates.splice(index, 1);
+    }
+    if (candidates.length === 0) {
+        factByName.delete(normalizedName);
+    }
+    factMap.delete(preferred.matchKey);
+
+    return preferred;
+};
 
 const aggregatePlan = (rows: PlanRow[]) => {
     const map = new Map<string, Aggregate>();
@@ -138,23 +181,50 @@ const buildRowsFromAggregates = (
 ): EstimateProcurementRow[] => {
     const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
     const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
+    const factByName = new Map<string, FactAggregateInput[]>();
+    for (const fact of factAggregates) {
+        const key = normalizeMaterialKey(fact.materialName);
+        const items = factByName.get(key) ?? [];
+        items.push(fact);
+        factByName.set(key, items);
+    }
 
     const rows: EstimateProcurementRow[] = [];
 
     for (const [key, plan] of planMap.entries()) {
-        const fact = factMap.get(key);
+        const exactFact = factMap.get(key);
+        const fallbackCandidate = takeFactByMaterialName(factMap, factByName, plan);
+        const fallbackFact = fallbackCandidate
+            && exactFact
+            && fallbackCandidate.matchKey === exactFact.matchKey
+            ? undefined
+            : fallbackCandidate;
+
+        let resolvedQty = exactFact?.actualQty ?? 0;
+        let resolvedAmount = exactFact?.actualAmount ?? 0;
+        let resolvedPurchaseCount = exactFact?.purchaseCount ?? 0;
+        let resolvedLastPurchaseDate = exactFact?.lastPurchaseDate ?? null;
+
+        if (fallbackFact) {
+            resolvedQty += fallbackFact.actualQty;
+            resolvedAmount += fallbackFact.actualAmount;
+            resolvedPurchaseCount += fallbackFact.purchaseCount;
+            resolvedLastPurchaseDate = !resolvedLastPurchaseDate || (fallbackFact.lastPurchaseDate && fallbackFact.lastPurchaseDate > resolvedLastPurchaseDate)
+                ? (fallbackFact.lastPurchaseDate ?? resolvedLastPurchaseDate)
+                : resolvedLastPurchaseDate;
+        }
 
         const plannedQty = plan.plannedQty;
         const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedPrice = plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0;
 
-        const actualQty = fact?.actualQty ?? 0;
-        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
+        const actualQty = resolvedQty;
+        const actualAmount = roundMoney(resolvedAmount);
         const actualAvgPrice = actualQty > 0 ? roundMoney(actualAmount / actualQty) : 0;
 
         rows.push({
             materialName: plan.materialName,
-            unit: plan.unit || fact?.unit || 'шт',
+            unit: plan.unit || exactFact?.unit || fallbackFact?.unit || 'шт',
             source: 'estimate',
             plannedQty: roundMoney(plannedQty),
             plannedPrice,
@@ -164,11 +234,25 @@ const buildRowsFromAggregates = (
             actualAmount,
             qtyDelta: roundMoney(plannedQty - actualQty),
             amountDelta: roundMoney(plannedAmount - actualAmount),
-            purchaseCount: fact?.purchaseCount ?? 0,
-            lastPurchaseDate: fact?.lastPurchaseDate ?? null,
+            purchaseCount: resolvedPurchaseCount,
+            lastPurchaseDate: resolvedLastPurchaseDate,
         });
 
-        factMap.delete(key);
+        if (exactFact) {
+            factMap.delete(key);
+
+            const byNameKey = normalizeMaterialKey(exactFact.materialName);
+            const byNameRows = factByName.get(byNameKey);
+            if (byNameRows) {
+                const byNameIndex = byNameRows.findIndex((item) => item.matchKey === exactFact.matchKey);
+                if (byNameIndex >= 0) {
+                    byNameRows.splice(byNameIndex, 1);
+                }
+                if (byNameRows.length === 0) {
+                    factByName.delete(byNameKey);
+                }
+            }
+        }
     }
 
     for (const fact of factMap.values()) {
@@ -205,20 +289,48 @@ const buildCacheRowsFromAggregates = (
 ): CacheAggregateRow[] => {
     const planMap = new Map(planAggregates.map((row) => [row.matchKey, row]));
     const factMap = new Map(factAggregates.map((row) => [row.matchKey, row]));
+    const factByName = new Map<string, FactAggregateInput[]>();
+    for (const fact of factAggregates) {
+        const key = normalizeMaterialKey(fact.materialName);
+        const items = factByName.get(key) ?? [];
+        items.push(fact);
+        factByName.set(key, items);
+    }
 
     const rows: CacheAggregateRow[] = [];
 
     for (const [matchKey, plan] of planMap.entries()) {
-        const fact = factMap.get(matchKey);
+        const exactFact = factMap.get(matchKey);
+
+        const fallbackCandidate = takeFactByMaterialName(factMap, factByName, plan);
+        const fallbackFact = fallbackCandidate
+            && exactFact
+            && fallbackCandidate.matchKey === exactFact.matchKey
+            ? undefined
+            : fallbackCandidate;
+        let resolvedQty = exactFact?.actualQty ?? 0;
+        let resolvedAmount = exactFact?.actualAmount ?? 0;
+        let resolvedPurchaseCount = exactFact?.purchaseCount ?? 0;
+        let resolvedLastPurchaseDate = exactFact?.lastPurchaseDate ?? null;
+
+        if (fallbackFact) {
+            resolvedQty += fallbackFact.actualQty;
+            resolvedAmount += fallbackFact.actualAmount;
+            resolvedPurchaseCount += fallbackFact.purchaseCount;
+            resolvedLastPurchaseDate = !resolvedLastPurchaseDate || (fallbackFact.lastPurchaseDate && fallbackFact.lastPurchaseDate > resolvedLastPurchaseDate)
+                ? (fallbackFact.lastPurchaseDate ?? resolvedLastPurchaseDate)
+                : resolvedLastPurchaseDate;
+        }
+
         const plannedAmount = roundMoney(plan.plannedAmount);
         const plannedQty = roundMoney(plan.plannedQty);
-        const actualAmount = roundMoney(fact?.actualAmount ?? 0);
-        const actualQty = roundMoney(fact?.actualQty ?? 0);
+        const actualAmount = roundMoney(resolvedAmount);
+        const actualQty = roundMoney(resolvedQty);
 
         rows.push({
             matchKey,
             materialName: plan.materialName,
-            unit: plan.unit || fact?.unit || 'шт',
+            unit: plan.unit || exactFact?.unit || fallbackFact?.unit || 'шт',
             source: 'estimate',
             plannedQty,
             plannedPrice: plannedQty > 0 ? roundMoney(plannedAmount / plannedQty) : 0,
@@ -228,11 +340,25 @@ const buildCacheRowsFromAggregates = (
             actualAmount,
             qtyDelta: roundMoney(plannedQty - actualQty),
             amountDelta: roundMoney(plannedAmount - actualAmount),
-            purchaseCount: fact?.purchaseCount ?? 0,
-            lastPurchaseDate: fact?.lastPurchaseDate ?? null,
+            purchaseCount: resolvedPurchaseCount,
+            lastPurchaseDate: resolvedLastPurchaseDate,
         });
 
-        factMap.delete(matchKey);
+        if (exactFact) {
+            factMap.delete(matchKey);
+
+            const byNameKey = normalizeMaterialKey(exactFact.materialName);
+            const byNameRows = factByName.get(byNameKey);
+            if (byNameRows) {
+                const byNameIndex = byNameRows.findIndex((item) => item.matchKey === exactFact.matchKey);
+                if (byNameIndex >= 0) {
+                    byNameRows.splice(byNameIndex, 1);
+                }
+                if (byNameRows.length === 0) {
+                    factByName.delete(byNameKey);
+                }
+            }
+        }
     }
 
     for (const [matchKey, fact] of factMap.entries()) {
@@ -330,6 +456,28 @@ export class EstimateProcurementService {
                 ),
             );
 
+        const cacheSplitRows = await db.execute(sql<{ has_name_split: boolean }>`
+            SELECT EXISTS (
+                SELECT 1
+                FROM ${estimateProcurementCache} AS e
+                JOIN ${estimateProcurementCache} AS f
+                  ON e.tenant_id = f.tenant_id
+                 AND e.estimate_id = f.estimate_id
+                 AND lower(trim(e.material_name)) = lower(trim(f.material_name))
+                 AND e.id <> f.id
+                WHERE e.tenant_id = ${teamId}
+                  AND e.estimate_id = ${estimateId}
+                  AND e.deleted_at IS NULL
+                  AND f.deleted_at IS NULL
+                  AND e.source = 'estimate'
+                  AND f.source = 'fact_only'
+                  AND e.planned_qty > 0
+                  AND e.actual_qty = 0
+                  AND f.actual_qty > 0
+            ) AS has_name_split
+        `);
+        const cacheSplitState = cacheSplitRows[0];
+
         const [planState, factState] = await Promise.all([
             db
                 // BUG-FIX: intentionally include soft-deleted rows (no deletedAt IS NULL filter)
@@ -359,6 +507,10 @@ export class EstimateProcurementService {
             .map((value) => toDateOrNull(value))
             .filter((value): value is Date => value instanceof Date)
             .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
+
+        if (cacheSplitState?.has_name_split) {
+            return true;
+        }
 
         return shouldRefreshProcurementCache({
             cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
