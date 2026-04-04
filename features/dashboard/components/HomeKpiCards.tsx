@@ -45,11 +45,11 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
             <h1 id="home-kpi-title" className="sr-only">Сводка проекта</h1>
             <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
                 <KPICard
-                    title="Доход"
+                    title="Приход"
                     value={formattedRevenue}
                     valueClassName="text-green-600 dark:text-green-400"
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    tooltip="Работы по смете + материал по смете (план)"
+                    tooltip="Сумма подтвержденных поступлений по всем проектам"
                 />
 
                 <KPICard
@@ -65,7 +65,7 @@ export function HomeKpiCards({ kpi }: HomeKpiCardsProps) {
                     value={formattedProfit}
                     valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
                     className="h-[72px] sm:h-[85px] md:h-[95px]"
-                    tooltip="Доход общ. - Расход общ."
+                    tooltip="Поступления - факт работ - факт материалов"
                 />
 
                 <KPICard
