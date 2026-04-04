@@ -95,6 +95,12 @@ export const buildPerformanceDynamics = (
 };
 
 export class ProjectPerformanceDynamicsService {
+    private static isMissingProjectReceiptsTable(serviceError: unknown) {
+        if (!serviceError || typeof serviceError !== 'object') return false;
+        const maybeCause = (serviceError as { cause?: { code?: string } }).cause;
+        return maybeCause?.code === '42P01';
+    }
+
     static async list(teamId: number, projectId: string): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
         const periodEnd = endOfMonth(today);
@@ -102,23 +108,32 @@ export class ProjectPerformanceDynamicsService {
         const rangeStartTimestamp = toIsoTimestamp(startDate);
         const rangeEndTimestamp = toIsoTimestamp(periodEnd);
 
+        const receiptsFactRowsPromise = db
+            .select({
+                date: projectReceipts.receiptDate,
+                total: sql<number>`COALESCE(SUM(${projectReceipts.amount}), 0)`,
+            })
+            .from(projectReceipts)
+            .where(
+                and(
+                    eq(projectReceipts.projectId, projectId),
+                    eq(projectReceipts.status, 'confirmed'),
+                    withActiveTenant(projectReceipts, teamId),
+                    gte(projectReceipts.receiptDate, toIsoDate(startDate)),
+                    lte(projectReceipts.receiptDate, toIsoDate(periodEnd)),
+                ),
+            )
+            .groupBy(projectReceipts.receiptDate)
+            .catch((serviceError) => {
+                if (!this.isMissingProjectReceiptsTable(serviceError)) {
+                    throw serviceError;
+                }
+
+                return [];
+            });
+
         const [receiptsFactRows, executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
-            db
-                .select({
-                    date: projectReceipts.receiptDate,
-                    total: sql<number>`COALESCE(SUM(${projectReceipts.amount}), 0)`,
-                })
-                .from(projectReceipts)
-                .where(
-                    and(
-                        eq(projectReceipts.projectId, projectId),
-                        eq(projectReceipts.status, 'confirmed'),
-                        withActiveTenant(projectReceipts, teamId),
-                        gte(projectReceipts.receiptDate, toIsoDate(startDate)),
-                        lte(projectReceipts.receiptDate, toIsoDate(periodEnd)),
-                    ),
-                )
-                .groupBy(projectReceipts.receiptDate),
+            receiptsFactRowsPromise,
             db
                 .select({
                     date: sql<string>`DATE(${estimateExecutionRows.createdAt})`,

@@ -59,6 +59,12 @@ export function buildProjectDashboardKpiViewModel(input: {
 }
 
 export class ProjectDashboardKpiService {
+    private static isMissingProjectReceiptsTable(serviceError: unknown) {
+        if (!serviceError || typeof serviceError !== 'object') return false;
+        const maybeCause = (serviceError as { cause?: { code?: string } }).cause;
+        return maybeCause?.code === '42P01';
+    }
+
     private static buildTotalsQuery(teamId: number, projectId: string) {
         return sql<ProjectDashboardKpiData>`
             WITH execution_totals AS (
@@ -131,6 +137,63 @@ export class ProjectDashboardKpiService {
         `;
     }
 
+    private static buildTotalsQueryWithoutReceipts(teamId: number, projectId: string) {
+        return sql<Omit<ProjectDashboardKpiData, 'confirmedReceipts'>>`
+            WITH execution_totals AS (
+                SELECT
+                    COALESCE(SUM(${estimateExecutionRows.plannedSum}), 0) AS planned_works,
+                    COALESCE(SUM(${estimateExecutionRows.actualSum}), 0) AS actual_works
+                FROM ${estimateExecutionRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateExecutionRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(estimateExecutionRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
+            ),
+            material_totals AS (
+                SELECT
+                    COALESCE(SUM(${estimateRows.qty} * ${estimateRows.price}), 0) AS planned_materials
+                FROM ${estimateRows}
+                INNER JOIN ${estimates}
+                    ON ${estimates.id} = ${estimateRows.estimateId}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${estimates.projectId}
+                WHERE
+                    ${estimates.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
+                    AND ${estimateRows.kind} = 'material'
+                    AND ${withActiveTenant(estimateRows, teamId)}
+                    AND ${withActiveTenant(estimates, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
+            ),
+            purchase_totals AS (
+                SELECT
+                    COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0) AS actual_materials
+                FROM ${globalPurchases}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${globalPurchases.projectId}
+                WHERE
+                    ${globalPurchases.projectId} = ${projectId}
+                    AND ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(globalPurchases, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
+            )
+            SELECT
+                execution_totals.planned_works AS "plannedWorks",
+                material_totals.planned_materials AS "plannedMaterials",
+                execution_totals.actual_works AS "actualWorks",
+                purchase_totals.actual_materials AS "actualMaterials"
+            FROM execution_totals
+            CROSS JOIN material_totals
+            CROSS JOIN purchase_totals
+        `;
+    }
+
     private static buildProjectFootprintQuery(teamId: number, projectId: string) {
         return sql<{ totalRows: number }>`
             SELECT (
@@ -165,8 +228,19 @@ export class ProjectDashboardKpiService {
     }
 
     static async getByProjectId(teamId: number, projectId: string): Promise<ProjectDashboardKpiData> {
-        const rows = await db.execute(this.buildTotalsQuery(teamId, projectId));
-        const totals = rows[0];
+        let totals: Partial<ProjectDashboardKpiData> | undefined;
+
+        try {
+            const rows = await db.execute(this.buildTotalsQuery(teamId, projectId));
+            totals = rows[0];
+        } catch (serviceError) {
+            if (!this.isMissingProjectReceiptsTable(serviceError)) {
+                throw serviceError;
+            }
+
+            const fallbackRows = await db.execute(this.buildTotalsQueryWithoutReceipts(teamId, projectId));
+            totals = fallbackRows[0];
+        }
 
         return {
             confirmedReceipts: Number(totals?.confirmedReceipts ?? 0),

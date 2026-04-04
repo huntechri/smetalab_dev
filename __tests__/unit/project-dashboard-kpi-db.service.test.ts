@@ -75,4 +75,28 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
             ],
         });
     });
+
+    it('falls back to legacy KPI query when project_receipts table is not available yet', async () => {
+        dbExecuteMock
+            .mockRejectedValueOnce({ cause: { code: '42P01' } })
+            .mockResolvedValueOnce([
+                {
+                    plannedWorks: '120000',
+                    plannedMaterials: '45000',
+                    actualWorks: '90000',
+                    actualMaterials: '31000',
+                },
+            ]);
+
+        const result = await ProjectDashboardKpiService.getByProjectId(4, 'project-uuid');
+
+        expect(dbExecuteMock).toHaveBeenCalledTimes(2);
+        expect(result).toEqual({
+            confirmedReceipts: 0,
+            plannedWorks: 120000,
+            plannedMaterials: 45000,
+            actualWorks: 90000,
+            actualMaterials: 31000,
+        });
+    });
 });
