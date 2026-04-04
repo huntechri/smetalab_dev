@@ -2,6 +2,7 @@ import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
 import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
+import { getProgressGradient } from '../utils/progress-gradient';
 
 type ProjectRowProps = {
     project: ProjectListItem;
@@ -37,7 +38,10 @@ export function ProjectRow({ project, onDelete, onEdit }: ProjectRowProps) {
                             aria-label={`Progress for ${project.name}`}
                             className="h-1 w-24 overflow-hidden rounded-full bg-muted"
                         >
-                            <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+                            <div
+                                className="h-full"
+                                style={{ width: `${project.progress}%`, backgroundImage: getProgressGradient(project.progress) }}
+                            />
                         </div>
                     </div>
                 </div>
