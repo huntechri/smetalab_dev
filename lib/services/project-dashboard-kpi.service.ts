@@ -78,6 +78,7 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
+                    AND ${estimateExecutionRows.status} = 'done'
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
@@ -146,6 +147,7 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
+                    AND ${estimateExecutionRows.status} = 'done'
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}

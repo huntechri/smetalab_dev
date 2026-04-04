@@ -131,13 +131,13 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     window.history.replaceState(window.history.state, '', nextHref);
                 }}
             >
-                <TabsList className="w-[540px] max-w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                    <TabsTrigger value="estimate" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Смета</TabsTrigger>
-                    <TabsTrigger value="params" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
-                    <TabsTrigger value="finance" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Финансы</TabsTrigger>
-                    <TabsTrigger value="docs" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
+                <TabsList className="w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto md:h-8 p-1 md:p-0.5 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
+                    <TabsTrigger value="estimate" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Смета</TabsTrigger>
+                    <TabsTrigger value="params" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Параметры</TabsTrigger>
+                    <TabsTrigger value="procurement" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Закупки</TabsTrigger>
+                    <TabsTrigger value="execution" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
+                    <TabsTrigger value="finance" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Финансы</TabsTrigger>
+                    <TabsTrigger value="docs" className="px-5 py-2.5 md:px-3 md:py-0 md:h-7 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" forceMount className="mt-2">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>

@@ -2,12 +2,11 @@ import { sql } from 'drizzle-orm';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
-import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projects } from '@/lib/data/db/schema';
+import { estimateExecutionRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 import { calculateDaysRemaining } from './project-dashboard-kpi.service';
 
 type HomeDashboardKpiFinance = {
-    plannedWorks: number;
-    plannedMaterials: number;
+    confirmedReceipts: number;
     actualWorks: number;
     actualMaterials: number;
 };
@@ -39,11 +38,16 @@ const parseOptionalDate = (value: unknown): Date | null => {
 };
 
 export class HomeDashboardKpiService {
+    private static isMissingProjectReceiptsTable(serviceError: unknown) {
+        if (!serviceError || typeof serviceError !== 'object') return false;
+        const maybeCause = (serviceError as { cause?: { code?: string } }).cause;
+        return maybeCause?.code === '42P01';
+    }
+
     private static buildFinanceTotalsQuery(teamId: number) {
         return sql<HomeDashboardKpiFinance>`
             WITH execution_totals AS (
                 SELECT
-                    COALESCE(SUM(${estimateExecutionRows.plannedSum}), 0) AS planned_works,
                     COALESCE(SUM(${estimateExecutionRows.actualSum}), 0) AS actual_works
                 FROM ${estimateExecutionRows}
                 INNER JOIN ${estimates}
@@ -52,22 +56,59 @@ export class HomeDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${projects.status} IN ('active', 'completed')
+                    AND ${estimateExecutionRows.status} = 'done'
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
             ),
-            material_totals AS (
+            purchase_totals AS (
                 SELECT
-                    COALESCE(SUM(${estimateRows.qty} * ${estimateRows.price}), 0) AS planned_materials
-                FROM ${estimateRows}
+                    COALESCE(SUM(${globalPurchases.qty} * ${globalPurchases.price}), 0) AS actual_materials
+                FROM ${globalPurchases}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${globalPurchases.projectId}
+                WHERE
+                    ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(globalPurchases, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
+                    AND ${globalPurchases.projectId} IS NOT NULL
+            ),
+            receipt_totals AS (
+                SELECT
+                    COALESCE(SUM(${projectReceipts.amount}), 0) AS confirmed_receipts
+                FROM ${projectReceipts}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${projectReceipts.projectId}
+                WHERE
+                    ${projects.status} IN ('active', 'completed')
+                    AND ${projectReceipts.status} = 'confirmed'
+                    AND ${withActiveTenant(projectReceipts, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
+            )
+            SELECT
+                receipt_totals.confirmed_receipts AS "confirmedReceipts",
+                execution_totals.actual_works AS "actualWorks",
+                purchase_totals.actual_materials AS "actualMaterials"
+            FROM execution_totals
+            CROSS JOIN purchase_totals
+            CROSS JOIN receipt_totals
+        `;
+    }
+
+    private static buildFinanceTotalsQueryWithoutReceipts(teamId: number) {
+        return sql<Omit<HomeDashboardKpiFinance, 'confirmedReceipts'>>`
+            WITH execution_totals AS (
+                SELECT
+                    COALESCE(SUM(${estimateExecutionRows.actualSum}), 0) AS actual_works
+                FROM ${estimateExecutionRows}
                 INNER JOIN ${estimates}
-                    ON ${estimates.id} = ${estimateRows.estimateId}
+                    ON ${estimates.id} = ${estimateExecutionRows.estimateId}
                 INNER JOIN ${projects}
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${projects.status} IN ('active', 'completed')
-                    AND ${estimateRows.kind} = 'material'
-                    AND ${withActiveTenant(estimateRows, teamId)}
+                    AND ${estimateExecutionRows.status} = 'done'
+                    AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
             ),
@@ -84,12 +125,9 @@ export class HomeDashboardKpiService {
                     AND ${globalPurchases.projectId} IS NOT NULL
             )
             SELECT
-                execution_totals.planned_works AS "plannedWorks",
-                material_totals.planned_materials AS "plannedMaterials",
                 execution_totals.actual_works AS "actualWorks",
                 purchase_totals.actual_materials AS "actualMaterials"
             FROM execution_totals
-            CROSS JOIN material_totals
             CROSS JOIN purchase_totals
         `;
     }
@@ -107,20 +145,28 @@ export class HomeDashboardKpiService {
     }
 
     static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
-        const [financeRows, projectsRows] = await Promise.all([
-            db.execute(this.buildFinanceTotalsQuery(teamId)),
-            db.execute(this.buildProjectsSummaryQuery(teamId)),
-        ]);
+        let financeRows: Array<Partial<HomeDashboardKpiFinance>>;
+
+        try {
+            financeRows = await db.execute(this.buildFinanceTotalsQuery(teamId));
+        } catch (serviceError) {
+            if (!this.isMissingProjectReceiptsTable(serviceError)) {
+                throw serviceError;
+            }
+
+            financeRows = await db.execute(this.buildFinanceTotalsQueryWithoutReceipts(teamId));
+        }
+
+        const projectsRows = await db.execute(this.buildProjectsSummaryQuery(teamId));
 
         const finance = financeRows[0];
         const projectsSummary = projectsRows[0];
 
-        const plannedWorks = Number(finance?.plannedWorks ?? 0);
-        const plannedMaterials = Number(finance?.plannedMaterials ?? 0);
+        const confirmedReceipts = Number(finance?.confirmedReceipts ?? 0);
         const actualWorks = Number(finance?.actualWorks ?? 0);
         const actualMaterials = Number(finance?.actualMaterials ?? 0);
 
-        const revenue = plannedWorks + plannedMaterials;
+        const revenue = confirmedReceipts;
         const totalActual = actualWorks + actualMaterials;
         const nearestEndDateValue = projectsSummary?.nearestEndDate;
         const nearestEndDate = parseOptionalDate(nearestEndDateValue);

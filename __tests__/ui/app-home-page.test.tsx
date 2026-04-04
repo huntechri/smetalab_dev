@@ -27,7 +27,7 @@ describe('AppHomeScreen', () => {
         );
 
         expect(screen.getByRole('heading', { level: 1, name: 'Сводка проекта' })).toBeInTheDocument();
-        expect(screen.getByText('Доход')).toBeInTheDocument();
+        expect(screen.getByText('Приход')).toBeInTheDocument();
         expect(screen.getByText('Расход')).toBeInTheDocument();
         expect(screen.getByText('Прибыль')).toBeInTheDocument();
         expect(screen.getByText('Срок')).toBeInTheDocument();
