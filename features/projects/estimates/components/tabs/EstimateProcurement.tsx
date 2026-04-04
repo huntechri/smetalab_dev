@@ -11,6 +11,7 @@ import { estimateProcurementActionsRepo } from '@/features/projects/estimates/re
 import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
 import { EstimateTotals } from '../EstimateTotals';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { projectBadgeClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -26,16 +27,22 @@ const tableCellTextClassName = 'text-xs';
 const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal text-muted-foreground';
 const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs';
 
+const deltaBadgeToneClassName = {
+    positive: 'bg-[hsl(142_76%_36%_/_0.12)] text-[hsl(142_72%_30%)]',
+    zero: 'bg-[hsl(38_92%_50%_/_0.14)] text-[hsl(24_95%_34%)]',
+    negative: 'bg-[hsl(0_84%_60%_/_0.12)] text-[hsl(0_72%_42%)]',
+} as const;
+
 const renderDeltaBadge = (value: number) => {
     if (value === 0) {
-        return <Badge variant="secondary" className="h-6 px-2 text-[12px]">0</Badge>;
+        return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.zero}`}>0</Badge>;
     }
 
     if (value > 0) {
-        return <Badge className="h-6 px-2 text-[12px] bg-emerald-600 hover:bg-emerald-600">+{numberFormatter.format(value)}</Badge>;
+        return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.positive}`}>+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge variant="destructive" className="h-6 px-2 text-[12px]">{numberFormatter.format(value)}</Badge>;
+    return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.negative}`}>{numberFormatter.format(value)}</Badge>;
 };
 
 const columns: ColumnDef<EstimateProcurementRow>[] = [

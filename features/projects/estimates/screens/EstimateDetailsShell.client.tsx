@@ -9,9 +9,8 @@ import { EstimateRoomParam } from '../types/room-params.dto';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import Link from 'next/link';
 
-const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
+const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'finance', 'docs']);
 
 const EstimateParams = dynamic(
     () => import('../components/tabs/EstimateParams').then((mod) => mod.EstimateParams),
@@ -41,6 +40,16 @@ const EstimateDocuments = dynamic(
     },
 );
 
+const EstimateFinance = dynamic(
+    () => import('../components/tabs/EstimateFinance').then((mod) => mod.EstimateFinance),
+    {
+        loading: () => <Skeleton className="h-[520px] w-full" />,
+    },
+);
+
+const estimateTabsListClassName = 'w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto rounded-[9.6px] border border-[oklab(0.919723_0.0011749_-0.00385052_/_0.4)] bg-[oklab(0.967428_0.000417888_-0.00125271_/_0.4)] p-1 text-[#71717a] no-scrollbar';
+const estimateTabsTriggerClassName = 'flex items-center justify-center gap-1.5 rounded-[7.6px] border border-transparent px-3 py-2 text-center text-[12px] leading-[16px] font-semibold tracking-[0.3px] [font-family:Manrope] text-[#71717a] transition-colors data-[state=active]:bg-[#f60] data-[state=active]:text-white';
+
 
 
 
@@ -69,6 +78,7 @@ interface EstimateDetailsShellProps {
     rowsPromise: Promise<EstimateRow[]>;
     roomParamsPromise: Promise<EstimateRoomParam[]>;
     project: {
+        id: string;
         name: string;
         slug: string;
     };
@@ -123,12 +133,13 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     window.history.replaceState(window.history.state, '', nextHref);
                 }}
             >
-                <TabsList className="w-[540px] max-w-full justify-start overflow-x-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                    <TabsTrigger value="estimate" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Смета</TabsTrigger>
-                    <TabsTrigger value="params" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
-                    <TabsTrigger value="docs" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
+                <TabsList className={estimateTabsListClassName}>
+                    <TabsTrigger value="estimate" className={estimateTabsTriggerClassName}>Смета</TabsTrigger>
+                    <TabsTrigger value="params" className={estimateTabsTriggerClassName}>Параметры</TabsTrigger>
+                    <TabsTrigger value="procurement" className={estimateTabsTriggerClassName}>Закупки</TabsTrigger>
+                    <TabsTrigger value="execution" className={estimateTabsTriggerClassName}>Выполнение</TabsTrigger>
+                    <TabsTrigger value="finance" className={estimateTabsTriggerClassName}>Финансы</TabsTrigger>
+                    <TabsTrigger value="docs" className={estimateTabsTriggerClassName}>Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" forceMount className="mt-2">
                     <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
@@ -149,6 +160,9 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                 </TabsContent>
                 <TabsContent value="execution" className="mt-2">
                     {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                </TabsContent>
+                <TabsContent value="finance" className="mt-2">
+                    {loadedTabs.has('finance') ? <EstimateFinance projectId={project.id} /> : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
                 <TabsContent value="docs" className="mt-2">
                     {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}

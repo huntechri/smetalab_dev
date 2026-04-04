@@ -52,14 +52,27 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
             <div className="space-y-4 lg:space-y-10">
                 <div className="@container/main space-y-4 lg:space-y-10">
                     <DashboardKpiCards kpi={kpi} />
-                    {canShowDynamicsChart ? <DashboardChart data={performanceDynamics} /> : null}
-                </div>
 
-                <ProjectEstimatesTable
-                    projectId={project.id}
-                    projectSlug={project.slug}
-                    initialEstimates={estimates}
-                />
+                    <div
+                        className={canShowDynamicsChart
+                            ? 'grid grid-cols-1 gap-4 2xl:grid-cols-[792px_792px] 2xl:items-start 2xl:justify-between'
+                            : 'grid grid-cols-1'}
+                    >
+                        {canShowDynamicsChart ? (
+                            <div className="min-w-0">
+                                <DashboardChart data={performanceDynamics} />
+                            </div>
+                        ) : null}
+
+                        <div className="min-w-0">
+                            <ProjectEstimatesTable
+                                projectId={project.id}
+                                projectSlug={project.slug}
+                                initialEstimates={estimates}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     );

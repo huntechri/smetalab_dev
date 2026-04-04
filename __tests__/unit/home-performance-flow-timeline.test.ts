@@ -13,6 +13,7 @@ describe('home buildDynamicsFlowTimeline', () => {
 
         expect(timeline.find((point) => point.date === '2026-03-05')).toEqual({
             date: '2026-03-05',
+            receiptsFact: 0,
             executionPlan: 40,
             executionFact: 10,
             procurementPlan: 5,
@@ -21,6 +22,7 @@ describe('home buildDynamicsFlowTimeline', () => {
 
         expect(timeline.find((point) => point.date === '2026-03-06')).toEqual({
             date: '2026-03-06',
+            receiptsFact: 0,
             executionPlan: 0,
             executionFact: 0,
             procurementPlan: 0,
