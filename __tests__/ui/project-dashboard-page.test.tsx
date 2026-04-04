@@ -6,7 +6,6 @@ import Page from '@/app/(workspace)/app/projects/[projectId]/page';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { ProjectDashboardKpiService } from '@/lib/services/project-dashboard-kpi.service';
 import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
-import { ProjectReceiptsService } from '@/lib/services/project-receipts.service';
 
 const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
     <div data-testid="project-dashboard">{project.name}</div>
@@ -75,25 +74,6 @@ vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
         progress: 62,
         remainingDays: 12,
     })),
-}));
-
-vi.mock('@/lib/services/project-receipts.service', () => ({
-    ProjectReceiptsService: {
-        listByProject: vi.fn(async () => ({
-            success: true,
-            data: [],
-        })),
-        getAggregatesByProject: vi.fn(async () => ({
-            success: true,
-            data: {
-                totalConfirmedReceipts: 0,
-                confirmedCount: 0,
-                lastConfirmedReceiptDate: null,
-                lastConfirmedReceiptAmount: null,
-                hasCorrections: false,
-            },
-        })),
-    },
 }));
 
 test('project dashboard page maps project data and renders feature screen', async () => {
@@ -201,14 +181,3 @@ test('project dashboard launches independent queries in parallel after project l
 
     await expect(pagePromise).resolves.toBeTruthy();
 });
-    vi.mocked(ProjectReceiptsService.listByProject).mockImplementation(async () => ({ success: true, data: [] }));
-    vi.mocked(ProjectReceiptsService.getAggregatesByProject).mockImplementation(async () => ({
-        success: true,
-        data: {
-            totalConfirmedReceipts: 0,
-            confirmedCount: 0,
-            lastConfirmedReceiptDate: null,
-            lastConfirmedReceiptAmount: null,
-            hasCorrections: false,
-        },
-    }));
