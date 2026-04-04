@@ -21,6 +21,12 @@ const toIsoTimestamp = (value: Date) => value.toISOString();
 const endOfMonth = (value: Date) => new Date(value.getFullYear(), value.getMonth() + 1, 0, 23, 59, 59, 999);
 
 export class HomePerformanceDynamicsService {
+    private static isMissingProjectReceiptsTable(serviceError: unknown) {
+        if (!serviceError || typeof serviceError !== 'object') return false;
+        const maybeCause = (serviceError as { cause?: { code?: string } }).cause;
+        return maybeCause?.code === '42P01';
+    }
+
     static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
         const [estimate] = await db
             .select({ id: estimates.id })
@@ -47,23 +53,32 @@ export class HomePerformanceDynamicsService {
         const rangeStartTimestamp = toIsoTimestamp(startDate);
         const rangeEndTimestamp = toIsoTimestamp(periodEnd);
 
+        const receiptsFactRowsPromise = db
+            .select({
+                date: projectReceipts.receiptDate,
+                total: sql<number>`COALESCE(SUM(${projectReceipts.amount}), 0)`,
+            })
+            .from(projectReceipts)
+            .where(
+                and(
+                    eq(projectReceipts.tenantId, teamId),
+                    eq(projectReceipts.status, 'confirmed'),
+                    withActiveTenant(projectReceipts, teamId),
+                    gte(projectReceipts.receiptDate, toIsoDate(startDate)),
+                    lte(projectReceipts.receiptDate, toIsoDate(periodEnd)),
+                ),
+            )
+            .groupBy(projectReceipts.receiptDate)
+            .catch((serviceError) => {
+                if (!this.isMissingProjectReceiptsTable(serviceError)) {
+                    throw serviceError;
+                }
+
+                return [];
+            });
+
         const [receiptsFactRows, executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
-            db
-                .select({
-                    date: projectReceipts.receiptDate,
-                    total: sql<number>`COALESCE(SUM(${projectReceipts.amount}), 0)`,
-                })
-                .from(projectReceipts)
-                .where(
-                    and(
-                        eq(projectReceipts.tenantId, teamId),
-                        eq(projectReceipts.status, 'confirmed'),
-                        withActiveTenant(projectReceipts, teamId),
-                        gte(projectReceipts.receiptDate, toIsoDate(startDate)),
-                        lte(projectReceipts.receiptDate, toIsoDate(periodEnd)),
-                    ),
-                )
-                .groupBy(projectReceipts.receiptDate),
+            receiptsFactRowsPromise,
             db
                 .select({
                     date: sql<string>`DATE(${estimateExecutionRows.createdAt})`,
