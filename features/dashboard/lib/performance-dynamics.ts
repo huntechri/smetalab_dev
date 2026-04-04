@@ -32,6 +32,7 @@ const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() 
 type DynamicsSeriesValues = Omit<HomePerformanceDynamicsPoint, 'date'>;
 
 const addValues = (target: DynamicsSeriesValues, source: DynamicsSeriesValues) => {
+    target.receiptsFact = normalizeMoney(target.receiptsFact + source.receiptsFact);
     target.executionPlan = normalizeMoney(target.executionPlan + source.executionPlan);
     target.executionFact = normalizeMoney(target.executionFact + source.executionFact);
     target.procurementPlan = normalizeMoney(target.procurementPlan + source.procurementPlan);
@@ -46,6 +47,7 @@ const applyCarryForward = (
 
     return timeline.map((point) => {
         running = {
+            receiptsFact: normalizeMoney(running.receiptsFact + point.receiptsFact),
             executionPlan: normalizeMoney(running.executionPlan + point.executionPlan),
             executionFact: normalizeMoney(running.executionFact + point.executionFact),
             procurementPlan: normalizeMoney(running.procurementPlan + point.procurementPlan),
@@ -61,6 +63,7 @@ const applyCarryForward = (
 
 const createEmptyPoint = (date: string): HomePerformanceDynamicsPoint => ({
     date,
+    receiptsFact: 0,
     executionPlan: 0,
     executionFact: 0,
     procurementPlan: 0,
@@ -91,6 +94,7 @@ const aggregateByDay = (
 ): { timeline: HomePerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByDate = new Map<string, HomePerformanceDynamicsPoint>();
     const openingBalance = {
+        receiptsFact: 0,
         executionPlan: 0,
         executionFact: 0,
         procurementPlan: 0,
@@ -132,6 +136,7 @@ const aggregateByMonth = (
 ): { timeline: HomePerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByMonth = new Map<string, HomePerformanceDynamicsPoint>();
     const openingBalance = {
+        receiptsFact: 0,
         executionPlan: 0,
         executionFact: 0,
         procurementPlan: 0,
@@ -198,7 +203,7 @@ export const buildDynamicsFlowTimeline = (
 
 export const hasActivityInTimeline = (timeline: HomePerformanceDynamicsPoint[]) => {
     return timeline.some((point) =>
-        point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
+        point.receiptsFact !== 0 || point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
     );
 };
 
@@ -206,7 +211,7 @@ export const withBalanceSeries = (timeline: HomePerformanceDynamicsPoint[]): Hom
     return timeline.map((point) => ({
         ...point,
         balance: normalizeMoney(
-            point.executionPlan + point.procurementPlan - point.executionFact - point.procurementFact,
+            point.receiptsFact - point.executionFact - point.procurementFact,
         ),
     }));
 };
