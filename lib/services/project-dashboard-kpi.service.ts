@@ -78,7 +78,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
@@ -93,7 +92,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${estimateRows.kind} = 'material'
                     AND ${withActiveTenant(estimateRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
@@ -107,7 +105,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${globalPurchases.projectId}
                 WHERE
                     ${globalPurchases.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(globalPurchases, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
             ),
@@ -120,7 +117,6 @@ export class ProjectDashboardKpiService {
                 WHERE
                     ${projectReceipts.projectId} = ${projectId}
                     AND ${projectReceipts.status} = 'confirmed'
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(projectReceipts, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
             )
@@ -150,7 +146,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(estimateExecutionRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
@@ -165,7 +160,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${estimates.projectId}
                 WHERE
                     ${estimates.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${estimateRows.kind} = 'material'
                     AND ${withActiveTenant(estimateRows, teamId)}
                     AND ${withActiveTenant(estimates, teamId)}
@@ -179,7 +173,6 @@ export class ProjectDashboardKpiService {
                     ON ${projects.id} = ${globalPurchases.projectId}
                 WHERE
                     ${globalPurchases.projectId} = ${projectId}
-                    AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(globalPurchases, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
             )
