@@ -70,9 +70,24 @@ type EstimatesListTableProps = {
   projectSlug?: string;
   actions?: React.ReactNode;
   emptyState?: React.ReactNode;
+  showSearch?: boolean;
+  tableMinWidth?: string | number;
+  createInBodyAction?: React.ReactNode;
+  height?: string;
+  tableContainerClassName?: string;
 };
 
-export function EstimatesListTable({ estimates, projectSlug, actions, emptyState }: EstimatesListTableProps) {
+export function EstimatesListTable({
+  estimates,
+  projectSlug,
+  actions,
+  emptyState,
+  showSearch = true,
+  tableMinWidth = '800px',
+  createInBodyAction,
+  height = '450px',
+  tableContainerClassName,
+}: EstimatesListTableProps) {
   const [rows, setRows] = useState<EstimateMeta[]>(estimates);
   const { updateEstimateStatus, deleteEstimate } = useEstimateMutations();
 
@@ -84,10 +99,11 @@ export function EstimatesListTable({ estimates, projectSlug, actions, emptyState
     {
       accessorKey: 'name',
       header: 'Название',
+      size: 200,
       cell: ({ row }) => {
         const slug = projectSlug || row.original.projectId;
         return (
-          <Link className="font-normal text-xs md:text-sm hover:underline truncate" href={`/app/projects/${slug}/estimates/${row.original.slug}`} title={row.original.name}>
+          <Link className="block max-w-full truncate font-normal text-xs md:text-sm hover:underline" href={`/app/projects/${slug}/estimates/${row.original.slug}`} title={row.original.name}>
             {row.original.name}
           </Link>
         );
@@ -96,11 +112,13 @@ export function EstimatesListTable({ estimates, projectSlug, actions, emptyState
     {
       accessorKey: 'total',
       header: 'Сумма',
+      size: 145,
       cell: ({ row }) => <span className="font-bold tracking-tight text-xs md:text-sm tabular-nums">{new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(row.original.total)}</span>,
     },
     {
       accessorKey: 'status',
       header: 'Статус',
+      size: 130,
       cell: ({ row }) => (
         <EstimateStatusCell
           status={row.original.status}
@@ -118,60 +136,69 @@ export function EstimatesListTable({ estimates, projectSlug, actions, emptyState
     {
       accessorKey: 'createdAt',
       header: 'Дата создания',
+      size: 130,
       cell: ({ row }) => <span className="text-xs md:text-sm text-muted-foreground">{new Date(row.original.createdAt).toLocaleDateString('ru-RU')}</span>,
     },
     {
       id: 'actions',
-      header: 'Действие',
+      header: () => <div className="pr-1 text-right">Действие</div>,
+      size: createInBodyAction ? 112 : 78,
       cell: ({ row }) => {
         return (
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 w-8 px-0 transition-colors bg-white hover:bg-red-50 hover:text-red-600 border border-border rounded-[7.6px] shadow-none"
-                title="Удалить смету"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Вы уверены, что хотите удалить смету?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Смета "{row.original.name}" будет удалена. Это действие можно отменить только через администратора.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Отмена</AlertDialogCancel>
-                <AlertDialogAction
-                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-                  onClick={async () => {
-                    await deleteEstimate({
-                      estimateId: row.original.id,
-                      estimateName: row.original.name,
-                      setRows,
-                    });
-                  }}
+          <div className="flex items-center justify-end gap-1">
+            {createInBodyAction && row.index === 0 ? createInBodyAction : null}
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="h-8 w-8 px-0 transition-colors bg-white hover:bg-red-50 hover:text-red-600 border border-border rounded-[7.6px] shadow-none"
+                  title="Удалить смету"
                 >
-                  Удалить
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Вы уверены, что хотите удалить смету?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Смета "{row.original.name}" будет удалена. Это действие можно отменить только через администратора.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Отмена</AlertDialogCancel>
+                  <AlertDialogAction
+                    className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                    onClick={async () => {
+                      await deleteEstimate({
+                        estimateId: row.original.id,
+                        estimateName: row.original.name,
+                        setRows,
+                      });
+                    }}
+                  >
+                    Удалить
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         );
       },
     },
-  ], [deleteEstimate, projectSlug, updateEstimateStatus]);
+  ], [createInBodyAction, deleteEstimate, projectSlug, updateEstimateStatus]);
 
   return (
     <DataTable
       columns={columns}
       data={rows}
-      filterColumn="name"
-      filterPlaceholder="Поиск..."
-      filterInputClassName="bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]"
-      height="450px"
+      filterColumn={showSearch ? 'name' : undefined}
+      filterPlaceholder={showSearch ? 'Поиск...' : undefined}
+      filterInputClassName={showSearch ? 'bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]' : undefined}
+      height={height}
+      showFilter={showSearch}
+      tableMinWidth={tableMinWidth}
+      tableContainerClassName={tableContainerClassName}
       actions={actions}
       emptyState={emptyState}
     />
