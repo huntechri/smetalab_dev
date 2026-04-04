@@ -29,7 +29,6 @@ export class ProjectProgressService {
       .where(
         and(
           eq(estimates.projectId, projectId),
-          eq(estimateExecutionRows.source, 'from_estimate'),
           withActiveTenant(estimateExecutionRows, teamId),
           withActiveTenant(estimates, teamId),
         ),
