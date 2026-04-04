@@ -8,6 +8,7 @@ export type HomeDashboardKpi = {
 
 export type HomePerformanceDynamicsPoint = {
     date: string;
+    receiptsFact: number;
     executionPlan: number;
     executionFact: number;
     procurementPlan: number;

@@ -39,6 +39,7 @@ vi.mock('@/lib/services/home-performance-dynamics.service', () => ({
         listByTeamId: vi.fn(async () => ([
             {
                 date: '2026-02-01',
+                receiptsFact: 1500,
                 executionPlan: 1000,
                 executionFact: 800,
                 procurementPlan: 400,

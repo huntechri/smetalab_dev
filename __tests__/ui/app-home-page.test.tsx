@@ -17,6 +17,7 @@ describe('AppHomeScreen', () => {
                 dynamics={[
                     {
                         date: '2026-01-10',
+                        receiptsFact: 1_450_000,
                         executionPlan: 1_200_000,
                         executionFact: 980_000,
                         procurementPlan: 650_000,
