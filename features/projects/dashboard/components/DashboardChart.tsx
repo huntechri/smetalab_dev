@@ -23,6 +23,10 @@ import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dyn
 import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
 
 const chartConfig = {
+    receiptsFact: {
+        label: "Поступления",
+        color: "hsl(142, 70%, 45%)",
+    },
     executionPlan: {
         label: "План раб.",
         color: "hsl(217, 91%, 60%)",
@@ -76,11 +80,10 @@ export function DashboardChart({ data }: DashboardChartProps) {
     const timeline = mode === 'level' ? levelTimeline : flowTimeline
 
     const chartData = React.useMemo(
-        () => timeline.map((point, index) => ({
-            ...point,
-            balance: Math.round((
-                levelTimeline[index]!.executionPlan
-                + levelTimeline[index]!.procurementPlan
+            () => timeline.map((point, index) => ({
+                ...point,
+                balance: Math.round((
+                + levelTimeline[index]!.receiptsFact
                 - levelTimeline[index]!.executionFact
                 - levelTimeline[index]!.procurementFact
                 + Number.EPSILON
@@ -192,6 +195,15 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 }
                             />
                             <ChartLegend content={<ChartLegendContent className="flex-wrap justify-start gap-x-3 gap-y-2 text-[11px] sm:text-xs" />} />
+                            <Area
+                                dataKey="receiptsFact"
+                                name="receiptsFact"
+                                type="monotone"
+                                fill="none"
+                                stroke="var(--color-receiptsFact)"
+                                strokeWidth={2}
+                                connectNulls
+                            />
                             <Area
                                 dataKey="executionPlan"
                                 name="executionPlan"

@@ -281,6 +281,13 @@
       "when": 1773745455757,
       "tag": "0039_spotty_robin_chapel",
       "breakpoints": true
+    },
+    {
+      "idx": 40,
+      "version": "7",
+      "when": 1775285770168,
+      "tag": "0040_project_receipts",
+      "breakpoints": true
     }
   ]
 }

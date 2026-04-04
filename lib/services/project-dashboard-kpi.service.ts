@@ -2,9 +2,10 @@ import { sql } from 'drizzle-orm';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
-import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projects } from '@/lib/data/db/schema';
+import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 
 export type ProjectDashboardKpiData = {
+    confirmedReceipts: number;
     plannedWorks: number;
     plannedMaterials: number;
     actualWorks: number;
@@ -45,7 +46,7 @@ export function buildProjectDashboardKpiViewModel(input: {
     endDate: Date | null;
     now?: Date;
 }): ProjectDashboardKpiViewModel {
-    const revenue = input.finance.plannedWorks + input.finance.plannedMaterials;
+    const revenue = input.finance.confirmedReceipts;
     const expense = input.finance.actualWorks + input.finance.actualMaterials;
 
     return {
@@ -103,8 +104,22 @@ export class ProjectDashboardKpiService {
                     AND ${projects.status} IN ('active', 'completed')
                     AND ${withActiveTenant(globalPurchases, teamId)}
                     AND ${withActiveTenant(projects, teamId)}
+            ),
+            receipt_totals AS (
+                SELECT
+                    COALESCE(SUM(${projectReceipts.amount}), 0) AS confirmed_receipts
+                FROM ${projectReceipts}
+                INNER JOIN ${projects}
+                    ON ${projects.id} = ${projectReceipts.projectId}
+                WHERE
+                    ${projectReceipts.projectId} = ${projectId}
+                    AND ${projectReceipts.status} = 'confirmed'
+                    AND ${projects.status} IN ('active', 'completed')
+                    AND ${withActiveTenant(projectReceipts, teamId)}
+                    AND ${withActiveTenant(projects, teamId)}
             )
             SELECT
+                receipt_totals.confirmed_receipts AS "confirmedReceipts",
                 execution_totals.planned_works AS "plannedWorks",
                 material_totals.planned_materials AS "plannedMaterials",
                 execution_totals.actual_works AS "actualWorks",
@@ -112,6 +127,7 @@ export class ProjectDashboardKpiService {
             FROM execution_totals
             CROSS JOIN material_totals
             CROSS JOIN purchase_totals
+            CROSS JOIN receipt_totals
         `;
     }
 
@@ -153,6 +169,7 @@ export class ProjectDashboardKpiService {
         const totals = rows[0];
 
         return {
+            confirmedReceipts: Number(totals?.confirmedReceipts ?? 0),
             plannedWorks: Number(totals?.plannedWorks ?? 0),
             plannedMaterials: Number(totals?.plannedMaterials ?? 0),
             actualWorks: Number(totals?.actualWorks ?? 0),

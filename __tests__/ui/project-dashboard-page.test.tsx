@@ -6,6 +6,7 @@ import Page from '@/app/(workspace)/app/projects/[projectId]/page';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { ProjectDashboardKpiService } from '@/lib/services/project-dashboard-kpi.service';
 import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
+import { ProjectReceiptsService } from '@/lib/services/project-receipts.service';
 
 const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
     <div data-testid="project-dashboard">{project.name}</div>
@@ -49,6 +50,7 @@ vi.mock('@/lib/services/project-performance-dynamics.service', () => ({
     ProjectPerformanceDynamicsService: {
         list: vi.fn(async () => [{
             date: '2025-03-01',
+            receiptsFact: 50,
             executionPlan: 100,
             executionFact: 70,
             procurementPlan: 30,
@@ -60,6 +62,7 @@ vi.mock('@/lib/services/project-performance-dynamics.service', () => ({
 vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
     ProjectDashboardKpiService: {
         getByProjectId: vi.fn(async () => ({
+            confirmedReceipts: 130000,
             plannedWorks: 100000,
             plannedMaterials: 50000,
             actualWorks: 80000,
@@ -67,11 +70,30 @@ vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
         })),
     },
     buildProjectDashboardKpiViewModel: vi.fn(() => ({
-        revenue: 150000,
-        profit: 40000,
+        revenue: 130000,
+        profit: 20000,
         progress: 62,
         remainingDays: 12,
     })),
+}));
+
+vi.mock('@/lib/services/project-receipts.service', () => ({
+    ProjectReceiptsService: {
+        listByProject: vi.fn(async () => ({
+            success: true,
+            data: [],
+        })),
+        getAggregatesByProject: vi.fn(async () => ({
+            success: true,
+            data: {
+                totalConfirmedReceipts: 0,
+                confirmedCount: 0,
+                lastConfirmedReceiptDate: null,
+                lastConfirmedReceiptAmount: null,
+                hasCorrections: false,
+            },
+        })),
+    },
 }));
 
 test('project dashboard page maps project data and renders feature screen', async () => {
@@ -97,6 +119,7 @@ test('project dashboard page maps project data and renders feature screen', asyn
     expect(projectDashboardSpy.mock.calls[0]?.[0]?.performanceDynamics).toEqual([
         {
             date: '2025-03-01',
+            receiptsFact: 50,
             executionPlan: 100,
             executionFact: 70,
             procurementPlan: 30,
@@ -104,8 +127,8 @@ test('project dashboard page maps project data and renders feature screen', asyn
         },
     ]);
     expect(projectDashboardSpy.mock.calls[0]?.[0]?.kpi).toEqual({
-        revenue: 150000,
-        profit: 40000,
+        revenue: 130000,
+        profit: 20000,
         progress: 62,
         remainingDays: 12,
     });
@@ -129,12 +152,14 @@ test('project dashboard launches independent queries in parallel after project l
     const estimatesDeferred = createDeferred<Array<{ id: string; name: string; slug: string }>>();
     const dynamicsDeferred = createDeferred<Array<{
         date: string;
+        receiptsFact: number;
         executionPlan: number;
         executionFact: number;
         procurementPlan: number;
         procurementFact: number;
     }>>();
     const kpiDeferred = createDeferred<{
+        confirmedReceipts: number;
         plannedWorks: number;
         plannedMaterials: number;
         actualWorks: number;
@@ -159,6 +184,7 @@ test('project dashboard launches independent queries in parallel after project l
     dynamicsDeferred.resolve([
         {
             date: '2025-03-01',
+            receiptsFact: 50,
             executionPlan: 100,
             executionFact: 70,
             procurementPlan: 30,
@@ -166,6 +192,7 @@ test('project dashboard launches independent queries in parallel after project l
         },
     ]);
     kpiDeferred.resolve({
+        confirmedReceipts: 130000,
         plannedWorks: 100000,
         plannedMaterials: 50000,
         actualWorks: 80000,
@@ -174,3 +201,14 @@ test('project dashboard launches independent queries in parallel after project l
 
     await expect(pagePromise).resolves.toBeTruthy();
 });
+    vi.mocked(ProjectReceiptsService.listByProject).mockImplementation(async () => ({ success: true, data: [] }));
+    vi.mocked(ProjectReceiptsService.getAggregatesByProject).mockImplementation(async () => ({
+        success: true,
+        data: {
+            totalConfirmedReceipts: 0,
+            confirmedCount: 0,
+            lastConfirmedReceiptDate: null,
+            lastConfirmedReceiptAmount: null,
+            hasCorrections: false,
+        },
+    }));

@@ -4,9 +4,11 @@ import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
+import { ProjectReceiptsSection } from '../components/ProjectReceiptsSection';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
 import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
+import { ProjectReceiptAggregates, ProjectReceiptRow } from '@/lib/services/project-receipts.service';
 
 type EstimateListItem = {
     id: string;
@@ -23,6 +25,8 @@ type ProjectDashboardProps = {
     project: ProjectListItem;
     estimates: EstimateListItem[];
     performanceDynamics: PerformanceDynamicsPoint[];
+    receipts: ProjectReceiptRow[];
+    receiptAggregates: ProjectReceiptAggregates;
     kpi: {
         revenue: number;
         expense: number;
@@ -32,7 +36,7 @@ type ProjectDashboardProps = {
     };
 };
 
-export function ProjectDashboard({ project, estimates, performanceDynamics, kpi }: ProjectDashboardProps) {
+export function ProjectDashboard({ project, estimates, performanceDynamics, receipts, receiptAggregates, kpi }: ProjectDashboardProps) {
     useBreadcrumbs([
         { label: 'Главная', href: '/app' },
         { label: 'Проекты', href: '/app/projects' },
@@ -59,6 +63,11 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                     projectId={project.id}
                     projectSlug={project.slug}
                     initialEstimates={estimates}
+                />
+                <ProjectReceiptsSection
+                    projectId={project.id}
+                    initialRows={receipts}
+                    initialAggregates={receiptAggregates}
                 />
             </div>
         </div>

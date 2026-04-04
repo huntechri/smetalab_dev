@@ -24,6 +24,7 @@ describe('project-dashboard-kpi.service', () => {
     it('builds dashboard kpi model from planned and actual totals', () => {
         const result = buildProjectDashboardKpiViewModel({
             finance: {
+                confirmedReceipts: 160_000,
                 plannedWorks: 120_000,
                 plannedMaterials: 80_000,
                 actualWorks: 90_000,
@@ -35,9 +36,9 @@ describe('project-dashboard-kpi.service', () => {
         });
 
         expect(result).toEqual({
-            revenue: 200_000,
+            revenue: 160_000,
             expense: 130_000,
-            profit: 70_000,
+            profit: 30_000,
             progress: 65,
             remainingDays: 12,
         });

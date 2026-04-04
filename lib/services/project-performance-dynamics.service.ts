@@ -2,10 +2,11 @@ import { and, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
-import { estimateExecutionRows, estimateRows, estimates, globalPurchases } from '@/lib/data/db/schema';
+import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projectReceipts } from '@/lib/data/db/schema';
 
 export type PerformanceDynamicsPoint = {
     date: string;
+    receiptsFact: number;
     executionPlan: number;
     executionFact: number;
     procurementPlan: number;
@@ -41,6 +42,7 @@ const toDateKey = (raw: string | Date) => {
 };
 
 export const buildPerformanceDynamics = (
+    receiptsFactRows: AggregateRow[],
     executionPlanRows: AggregateRow[],
     executionFactRows: AggregateRow[],
     procurementPlanRows: AggregateRow[],
@@ -54,6 +56,7 @@ export const buildPerformanceDynamics = (
 
         const point: PerformanceDynamicsPoint = {
             date,
+            receiptsFact: 0,
             executionPlan: 0,
             executionFact: 0,
             procurementPlan: 0,
@@ -62,6 +65,11 @@ export const buildPerformanceDynamics = (
         seriesByDate.set(date, point);
         return point;
     };
+
+    for (const row of receiptsFactRows) {
+        const point = ensurePoint(toDateKey(row.date));
+        point.receiptsFact = normalizeMoney(point.receiptsFact + row.total);
+    }
 
     for (const row of executionPlanRows) {
         const point = ensurePoint(toDateKey(row.date));
@@ -94,7 +102,23 @@ export class ProjectPerformanceDynamicsService {
         const rangeStartTimestamp = toIsoTimestamp(startDate);
         const rangeEndTimestamp = toIsoTimestamp(periodEnd);
 
-        const [executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
+        const [receiptsFactRows, executionPlanRows, executionFactRows, procurementPlanRows, procurementFactRows] = await Promise.all([
+            db
+                .select({
+                    date: projectReceipts.receiptDate,
+                    total: sql<number>`COALESCE(SUM(${projectReceipts.amount}), 0)`,
+                })
+                .from(projectReceipts)
+                .where(
+                    and(
+                        eq(projectReceipts.projectId, projectId),
+                        eq(projectReceipts.status, 'confirmed'),
+                        withActiveTenant(projectReceipts, teamId),
+                        gte(projectReceipts.receiptDate, toIsoDate(startDate)),
+                        lte(projectReceipts.receiptDate, toIsoDate(periodEnd)),
+                    ),
+                )
+                .groupBy(projectReceipts.receiptDate),
             db
                 .select({
                     date: sql<string>`DATE(${estimateExecutionRows.createdAt})`,
@@ -182,6 +206,7 @@ export class ProjectPerformanceDynamicsService {
         ]);
 
         return buildPerformanceDynamics(
+            receiptsFactRows,
             executionPlanRows,
             executionFactRows,
             procurementPlanRows,

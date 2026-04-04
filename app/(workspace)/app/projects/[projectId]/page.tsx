@@ -4,6 +4,7 @@ import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
 import { ProjectDashboardKpiService, buildProjectDashboardKpiViewModel } from '@/lib/services/project-dashboard-kpi.service';
+import { ProjectReceiptsService } from '@/lib/services/project-receipts.service';
 import { redirect, notFound } from 'next/navigation';
 import { ProjectListItem, ProjectStatus } from '@/features/projects/shared/types';
 
@@ -25,10 +26,12 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
-    const [estimates, performanceDynamics, kpiData] = await Promise.all([
+    const [estimates, performanceDynamics, kpiData, receiptsResult, receiptAggregatesResult] = await Promise.all([
         getEstimatesByProjectId(projectData.id, team.id),
         ProjectPerformanceDynamicsService.list(team.id, projectData.id),
         ProjectDashboardKpiService.getByProjectId(team.id, projectData.id),
+        ProjectReceiptsService.listByProject(team.id, projectData.id),
+        ProjectReceiptsService.getAggregatesByProject(team.id, projectData.id),
     ]);
 
     const project: ProjectListItem = {
@@ -56,6 +59,14 @@ export default async function Page({ params }: PageProps) {
             project={project}
             estimates={estimates}
             performanceDynamics={performanceDynamics}
+            receipts={receiptsResult.success ? receiptsResult.data : []}
+            receiptAggregates={receiptAggregatesResult.success ? receiptAggregatesResult.data : {
+                totalConfirmedReceipts: 0,
+                confirmedCount: 0,
+                lastConfirmedReceiptDate: null,
+                lastConfirmedReceiptAmount: null,
+                hasCorrections: false,
+            }}
             kpi={kpi}
         />
     );
