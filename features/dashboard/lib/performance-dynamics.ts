@@ -29,9 +29,17 @@ const normalizeDate = (date: Date) => {
 
 const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-type DynamicsSeriesValues = Omit<HomePerformanceDynamicsPoint, 'date'>;
+type DynamicsSeriesValues = {
+    receiptsFact: number;
+    executionPlan: number;
+    executionFact: number;
+    procurementPlan: number;
+    procurementFact: number;
+};
 
-const toSeriesNumber = (value: number | undefined) => (Number.isFinite(value) ? value : 0);
+const toSeriesNumber = (value: number | undefined): number => (
+    typeof value === 'number' && Number.isFinite(value) ? value : 0
+);
 
 const addValues = (target: DynamicsSeriesValues, source: Partial<DynamicsSeriesValues>) => {
     target.receiptsFact = normalizeMoney(toSeriesNumber(target.receiptsFact) + toSeriesNumber(source.receiptsFact));
