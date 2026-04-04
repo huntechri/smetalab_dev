@@ -288,6 +288,13 @@
       "when": 1775285770168,
       "tag": "0040_project_receipts",
       "breakpoints": true
+    },
+    {
+      "idx": 41,
+      "version": "7",
+      "when": 1775285770169,
+      "tag": "0041_brainy_rumiko_fujikawa",
+      "breakpoints": true
     }
   ]
 }
