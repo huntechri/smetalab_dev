@@ -11,7 +11,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import Link from 'next/link';
 
-const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'docs']);
+const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'finance', 'docs']);
 
 const EstimateParams = dynamic(
     () => import('../components/tabs/EstimateParams').then((mod) => mod.EstimateParams),
@@ -38,6 +38,13 @@ const EstimateDocuments = dynamic(
     () => import('../components/tabs/EstimateDocuments').then((mod) => mod.EstimateDocuments),
     {
         loading: () => <Skeleton className="h-[240px] w-full" />,
+    },
+);
+
+const EstimateFinance = dynamic(
+    () => import('../components/tabs/EstimateFinance').then((mod) => mod.EstimateFinance),
+    {
+        loading: () => <Skeleton className="h-[520px] w-full" />,
     },
 );
 
@@ -69,6 +76,7 @@ interface EstimateDetailsShellProps {
     rowsPromise: Promise<EstimateRow[]>;
     roomParamsPromise: Promise<EstimateRoomParam[]>;
     project: {
+        id: string;
         name: string;
         slug: string;
     };
@@ -128,6 +136,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     <TabsTrigger value="params" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Параметры</TabsTrigger>
                     <TabsTrigger value="procurement" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Закупки</TabsTrigger>
                     <TabsTrigger value="execution" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Выполнение</TabsTrigger>
+                    <TabsTrigger value="finance" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Финансы</TabsTrigger>
                     <TabsTrigger value="docs" className="px-5 py-2.5 text-xs font-semibold tracking-wide data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground transition-all duration-200">Документы</TabsTrigger>
                 </TabsList>
                 <TabsContent value="estimate" forceMount className="mt-2">
@@ -149,6 +158,9 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                 </TabsContent>
                 <TabsContent value="execution" className="mt-2">
                     {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                </TabsContent>
+                <TabsContent value="finance" className="mt-2">
+                    {loadedTabs.has('finance') ? <EstimateFinance projectId={project.id} /> : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
                 <TabsContent value="docs" className="mt-2">
                     {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}

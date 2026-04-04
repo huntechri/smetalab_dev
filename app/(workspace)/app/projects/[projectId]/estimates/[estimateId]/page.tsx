@@ -39,7 +39,7 @@ export default async function Page({ params }: PageProps) {
                 estimateId={estimate.id}
                 rowsPromise={rowsPromise}
                 roomParamsPromise={roomParamsPromise}
-                project={{ name: project.name, slug: project.slug }}
+                project={{ id: project.id, name: project.name, slug: project.slug }}
                 estimate={{ name: estimate.name, slug: estimate.slug }}
                 initialCoefPercent={estimate.coefPercent ?? 0}
             />
