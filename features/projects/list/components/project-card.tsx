@@ -3,6 +3,7 @@ import { ProjectListItem } from '../../shared/types';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 import { ProjectActions } from './project-actions';
 import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
+import { getProgressGradient } from '../utils/progress-gradient';
 
 type ProjectCardProps = {
     project: ProjectListItem;
@@ -37,7 +38,10 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         aria-label={`Progress for ${project.name}`}
                         className="h-2 w-full overflow-hidden rounded-[7.6px] bg-muted/60"
                     >
-                        <div className="h-full bg-primary" style={{ width: `${project.progress}%` }} />
+                        <div
+                            className="h-full"
+                            style={{ width: `${project.progress}%`, backgroundImage: getProgressGradient(project.progress) }}
+                        />
                     </div>
                 </div>
                 <ProjectActions
