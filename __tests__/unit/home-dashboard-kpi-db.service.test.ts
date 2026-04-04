@@ -20,12 +20,11 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
         dbExecuteMock.mockReset();
     });
 
-    it('builds consolidated KPI model from finance totals and project summary', async () => {
+    it('builds consolidated KPI model from confirmed receipts and actual totals', async () => {
         dbExecuteMock
             .mockResolvedValueOnce([
                 {
-                    plannedWorks: '320000',
-                    plannedMaterials: '180000',
+                    confirmedReceipts: '280000',
                     actualWorks: '210000',
                     actualMaterials: '90000',
                 },
@@ -41,9 +40,9 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
 
         expect(dbExecuteMock).toHaveBeenCalledTimes(2);
         expect(result).toEqual({
-            revenue: 500000,
+            revenue: 280000,
             expense: 300000,
-            profit: 200000,
+            profit: -20000,
             progress: 64,
             remainingDays: expect.any(Number),
         });
@@ -53,8 +52,7 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
         dbExecuteMock
             .mockResolvedValueOnce([
                 {
-                    plannedWorks: '0',
-                    plannedMaterials: '0',
+                    confirmedReceipts: '0',
                     actualWorks: '0',
                     actualMaterials: '0',
                 },
@@ -73,6 +71,34 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
             expense: 0,
             profit: 0,
             progress: 0,
+            remainingDays: null,
+        });
+    });
+
+    it('falls back to finance query without receipts table when migration is not applied yet', async () => {
+        dbExecuteMock
+            .mockRejectedValueOnce({ cause: { code: '42P01' } })
+            .mockResolvedValueOnce([
+                {
+                    actualWorks: '1000',
+                    actualMaterials: '500',
+                },
+            ])
+            .mockResolvedValueOnce([
+                {
+                    avgProgress: '40',
+                    nearestEndDate: null,
+                },
+            ]);
+
+        const result = await HomeDashboardKpiService.getByTeamId(4);
+
+        expect(dbExecuteMock).toHaveBeenCalledTimes(3);
+        expect(result).toEqual({
+            revenue: 0,
+            expense: 1500,
+            profit: -1500,
+            progress: 40,
             remainingDays: null,
         });
     });

@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
@@ -28,6 +27,7 @@ import { parseDecimalInput, toDecimalInput } from '../../lib/decimal-input';
 import { buildExtraWorkFromCatalog } from '../../lib/execution-extra-work';
 import { calculateExecutionTotals } from '../../lib/execution-totals';
 import { EstimateTotals } from '../EstimateTotals';
+import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -40,16 +40,22 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
 });
 
 function getStatusDisplay(status: EstimateExecutionStatus) {
-    const base = "cursor-pointer border-0 h-5 min-w-[88px] justify-center px-2 text-[12px] font-medium uppercase tracking-wider";
+    const base = `${projectBadgeClassName} min-w-[88px] cursor-pointer`;
+    const tone = status === 'done'
+        ? projectStatusBadgeToneClassName.success
+        : status === 'in_progress'
+            ? projectStatusBadgeToneClassName.info
+            : projectStatusBadgeToneClassName.warning;
+
     if (status === 'done') {
-        return <Badge className={cn("bg-emerald-600 hover:bg-emerald-600 text-white", base)}>Выполнено</Badge>;
+        return <Badge variant="outline" className={`${base} ${tone}`}>Выполнено</Badge>;
     }
 
     if (status === 'in_progress') {
-        return <Badge className={cn("bg-blue-500 hover:bg-blue-600 text-white", base)}>В процессе</Badge>;
+        return <Badge variant="outline" className={`${base} ${tone}`}>В процессе</Badge>;
     }
 
-    return <Badge className={cn("bg-orange-500 hover:bg-orange-600 text-white", base)}>Подготовка</Badge>;
+    return <Badge variant="outline" className={`${base} ${tone}`}>Подготовка</Badge>;
 }
 
 function ExecutionStatusCell({
@@ -286,7 +292,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 <div className="space-y-1">
                     <div className="text-xs font-normal truncate" title={row.original.name}>{row.original.name}</div>
                     {row.original.source === 'extra' ? (
-                        <Badge variant="secondary" className="h-4 px-1 text-xs uppercase tracking-wider">
+                        <Badge variant="outline" className={projectBadgeClassName}>
                             Доп. работа
                         </Badge>
                     ) : null}

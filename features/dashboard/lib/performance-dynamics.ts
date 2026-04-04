@@ -29,13 +29,24 @@ const normalizeDate = (date: Date) => {
 
 const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() + 1, 0);
 
-type DynamicsSeriesValues = Omit<HomePerformanceDynamicsPoint, 'date'>;
+type DynamicsSeriesValues = {
+    receiptsFact: number;
+    executionPlan: number;
+    executionFact: number;
+    procurementPlan: number;
+    procurementFact: number;
+};
 
-const addValues = (target: DynamicsSeriesValues, source: DynamicsSeriesValues) => {
-    target.executionPlan = normalizeMoney(target.executionPlan + source.executionPlan);
-    target.executionFact = normalizeMoney(target.executionFact + source.executionFact);
-    target.procurementPlan = normalizeMoney(target.procurementPlan + source.procurementPlan);
-    target.procurementFact = normalizeMoney(target.procurementFact + source.procurementFact);
+const toSeriesNumber = (value: number | undefined): number => (
+    typeof value === 'number' && Number.isFinite(value) ? value : 0
+);
+
+const addValues = (target: DynamicsSeriesValues, source: Partial<DynamicsSeriesValues>) => {
+    target.receiptsFact = normalizeMoney(toSeriesNumber(target.receiptsFact) + toSeriesNumber(source.receiptsFact));
+    target.executionPlan = normalizeMoney(toSeriesNumber(target.executionPlan) + toSeriesNumber(source.executionPlan));
+    target.executionFact = normalizeMoney(toSeriesNumber(target.executionFact) + toSeriesNumber(source.executionFact));
+    target.procurementPlan = normalizeMoney(toSeriesNumber(target.procurementPlan) + toSeriesNumber(source.procurementPlan));
+    target.procurementFact = normalizeMoney(toSeriesNumber(target.procurementFact) + toSeriesNumber(source.procurementFact));
 };
 
 const applyCarryForward = (
@@ -46,10 +57,11 @@ const applyCarryForward = (
 
     return timeline.map((point) => {
         running = {
-            executionPlan: normalizeMoney(running.executionPlan + point.executionPlan),
-            executionFact: normalizeMoney(running.executionFact + point.executionFact),
-            procurementPlan: normalizeMoney(running.procurementPlan + point.procurementPlan),
-            procurementFact: normalizeMoney(running.procurementFact + point.procurementFact),
+            receiptsFact: normalizeMoney(toSeriesNumber(running.receiptsFact) + toSeriesNumber(point.receiptsFact)),
+            executionPlan: normalizeMoney(toSeriesNumber(running.executionPlan) + toSeriesNumber(point.executionPlan)),
+            executionFact: normalizeMoney(toSeriesNumber(running.executionFact) + toSeriesNumber(point.executionFact)),
+            procurementPlan: normalizeMoney(toSeriesNumber(running.procurementPlan) + toSeriesNumber(point.procurementPlan)),
+            procurementFact: normalizeMoney(toSeriesNumber(running.procurementFact) + toSeriesNumber(point.procurementFact)),
         };
 
         return {
@@ -61,6 +73,7 @@ const applyCarryForward = (
 
 const createEmptyPoint = (date: string): HomePerformanceDynamicsPoint => ({
     date,
+    receiptsFact: 0,
     executionPlan: 0,
     executionFact: 0,
     procurementPlan: 0,
@@ -91,6 +104,7 @@ const aggregateByDay = (
 ): { timeline: HomePerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByDate = new Map<string, HomePerformanceDynamicsPoint>();
     const openingBalance = {
+        receiptsFact: 0,
         executionPlan: 0,
         executionFact: 0,
         procurementPlan: 0,
@@ -132,6 +146,7 @@ const aggregateByMonth = (
 ): { timeline: HomePerformanceDynamicsPoint[]; openingBalance: DynamicsSeriesValues } => {
     const valuesByMonth = new Map<string, HomePerformanceDynamicsPoint>();
     const openingBalance = {
+        receiptsFact: 0,
         executionPlan: 0,
         executionFact: 0,
         procurementPlan: 0,
@@ -198,7 +213,7 @@ export const buildDynamicsFlowTimeline = (
 
 export const hasActivityInTimeline = (timeline: HomePerformanceDynamicsPoint[]) => {
     return timeline.some((point) =>
-        point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
+        point.receiptsFact !== 0 || point.executionPlan !== 0 || point.executionFact !== 0 || point.procurementPlan !== 0 || point.procurementFact !== 0,
     );
 };
 
@@ -206,7 +221,7 @@ export const withBalanceSeries = (timeline: HomePerformanceDynamicsPoint[]): Hom
     return timeline.map((point) => ({
         ...point,
         balance: normalizeMoney(
-            point.executionPlan + point.procurementPlan - point.executionFact - point.procurementFact,
+            point.receiptsFact - point.executionFact - point.procurementFact,
         ),
     }));
 };

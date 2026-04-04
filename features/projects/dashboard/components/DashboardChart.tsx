@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { AppWindowIcon, CalendarIcon, CodeIcon } from "lucide-react"
+import { AppWindowIcon, CalendarIcon, CodeIcon, SlidersHorizontal } from "lucide-react"
 import { Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts"
 
 import {
@@ -18,35 +18,61 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/shared/ui/chart"
+import { Button } from "@/shared/ui/button"
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service'
 import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
 
 const chartConfig = {
+    receiptsFact: {
+        label: "Приход",
+        color: "#16A34A",
+    },
     executionPlan: {
         label: "План раб.",
-        color: "hsl(217, 91%, 60%)",
+        color: "#93C5FD",
     },
     executionFact: {
         label: "Факт раб.",
-        color: "hsl(224, 76%, 48%)",
+        color: "#2563EB",
     },
     procurementPlan: {
         label: "План мат.",
-        color: "hsl(162, 72%, 48%)",
+        color: "#FCD34D",
     },
     procurementFact: {
         label: "Факт мат.",
-        color: "hsl(163, 94%, 24%)",
+        color: "#D97706",
     },
     balance: {
         label: "Баланс",
-        color: "var(--foreground)",
+        color: "#6D28D9",
     },
 } satisfies ChartConfig
 
 type DashboardChartProps = {
     data: PerformanceDynamicsPoint[];
+}
+
+type DashboardSeriesKey = keyof typeof chartConfig
+
+const dashboardSeriesOptions: Array<{ key: DashboardSeriesKey; label: string }> = [
+    { key: 'receiptsFact', label: 'Приход' },
+    { key: 'executionPlan', label: 'План работ' },
+    { key: 'executionFact', label: 'Факт работ' },
+    { key: 'procurementPlan', label: 'План материалов' },
+    { key: 'procurementFact', label: 'Факт материалов' },
+    { key: 'balance', label: 'Баланс' },
+]
+
+const defaultVisibleSeries: Record<DashboardSeriesKey, boolean> = {
+    receiptsFact: true,
+    executionPlan: true,
+    executionFact: true,
+    procurementPlan: true,
+    procurementFact: true,
+    balance: true,
 }
 
 const formatDateTick = (value: string, range: DynamicsRange) => {
@@ -62,6 +88,7 @@ const formatDateTick = (value: string, range: DynamicsRange) => {
 export function DashboardChart({ data }: DashboardChartProps) {
     const [timeRange, setTimeRange] = React.useState<DynamicsRange>('3m')
     const [mode, setMode] = React.useState<DynamicsMode>('level')
+    const [visibleSeries, setVisibleSeries] = React.useState<Record<DashboardSeriesKey, boolean>>(defaultVisibleSeries)
 
     const levelTimeline = React.useMemo(
         () => buildDynamicsTimeline(data, timeRange),
@@ -76,11 +103,10 @@ export function DashboardChart({ data }: DashboardChartProps) {
     const timeline = mode === 'level' ? levelTimeline : flowTimeline
 
     const chartData = React.useMemo(
-        () => timeline.map((point, index) => ({
-            ...point,
-            balance: Math.round((
-                levelTimeline[index]!.executionPlan
-                + levelTimeline[index]!.procurementPlan
+            () => timeline.map((point, index) => ({
+                ...point,
+                balance: Math.round((
+                + levelTimeline[index]!.receiptsFact
                 - levelTimeline[index]!.executionFact
                 - levelTimeline[index]!.procurementFact
                 + Number.EPSILON
@@ -90,29 +116,80 @@ export function DashboardChart({ data }: DashboardChartProps) {
     )
 
     const hasActivity = React.useMemo(
-        () => mode === 'level'
-            ? hasActivityInTimeline(levelTimeline)
-            : hasActivityInTimeline(flowTimeline) || hasActivityInTimeline(levelTimeline),
-        [mode, flowTimeline, levelTimeline],
+        () => {
+            const hasTimelineActivity = mode === 'level'
+                ? hasActivityInTimeline(levelTimeline)
+                : hasActivityInTimeline(flowTimeline) || hasActivityInTimeline(levelTimeline)
+
+            if (!hasTimelineActivity) {
+                return false
+            }
+
+            return chartData.some((point) =>
+                dashboardSeriesOptions.some(({ key }) => visibleSeries[key] && Number(point[key] ?? 0) !== 0),
+            )
+        },
+        [mode, flowTimeline, levelTimeline, chartData, visibleSeries],
     )
 
+    const setSeriesVisibility = React.useCallback((key: DashboardSeriesKey, checked: boolean) => {
+        setVisibleSeries((prev) => {
+            if (!checked && prev[key]) {
+                const enabledCount = Object.values(prev).filter(Boolean).length
+                if (enabledCount <= 1) {
+                    return prev
+                }
+            }
+
+            return { ...prev, [key]: checked }
+        })
+    }, [])
+
     return (
-        <Card className="@container/card px-4 lg:px-6">
+        <Card className="@container/card rounded-[13.6px] border border-[#e4e4e7] bg-white text-[#09090b] shadow-none p-6 gap-6 leading-6 text-[12px]">
             <CardHeader className="px-0 gap-3 !grid-cols-1">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                     <CardTitle>Динамика проекта</CardTitle>
-                    <Tabs value={mode} onValueChange={(value) => setMode(value as DynamicsMode)} className="w-full sm:ml-auto sm:w-auto sm:shrink-0">
-                        <TabsList className="w-full justify-start overflow-x-auto sm:w-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
-                            <TabsTrigger value="level" aria-label="Режим Уровень" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
-                                <AppWindowIcon aria-hidden="true" className="size-4" />
-                                Уровень
-                            </TabsTrigger>
-                            <TabsTrigger value="flow" aria-label="Режим Поток" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
-                                <CodeIcon aria-hidden="true" className="size-4" />
-                                Поток
-                            </TabsTrigger>
-                        </TabsList>
-                    </Tabs>
+                    <div className="flex w-full items-center gap-2 sm:ml-auto sm:w-auto sm:shrink-0">
+                        <Tabs value={mode} onValueChange={(value) => setMode(value as DynamicsMode)} className="w-full sm:w-auto sm:shrink-0">
+                            <TabsList className="w-full justify-start overflow-x-auto sm:w-auto h-auto p-1 bg-muted/40 backdrop-blur-sm border border-border/40 no-scrollbar">
+                                <TabsTrigger value="level" aria-label="Режим Уровень" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                    <AppWindowIcon aria-hidden="true" className="size-4" />
+                                    Уровень
+                                </TabsTrigger>
+                                <TabsTrigger value="flow" aria-label="Режим Поток" className="px-3 py-2 text-xs font-semibold tracking-wide transition-all duration-200 data-[state=active]:bg-sidebar-primary data-[state=active]:text-sidebar-primary-foreground">
+                                    <CodeIcon aria-hidden="true" className="size-4" />
+                                    Поток
+                                </TabsTrigger>
+                            </TabsList>
+                        </Tabs>
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="h-8 rounded-[7.6px] border border-[hsl(240_5.9%_90%)] bg-[hsl(0_0%_100%)] px-[10px] text-[hsl(240_10%_3.9%)] [font-family:Manrope] text-[14px] font-medium leading-5 gap-2 shadow-none"
+                                    aria-label="Выбрать серии графика"
+                                >
+                                    <SlidersHorizontal className="size-4" aria-hidden="true" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="min-w-[210px]">
+                                <DropdownMenuLabel>Показывать на графике</DropdownMenuLabel>
+                                <DropdownMenuSeparator />
+                                {dashboardSeriesOptions.map((series) => (
+                                    <DropdownMenuCheckboxItem
+                                        key={series.key}
+                                        checked={visibleSeries[series.key]}
+                                        onSelect={(event) => event.preventDefault()}
+                                        onCheckedChange={(checked) => setSeriesVisibility(series.key, checked === true)}
+                                    >
+                                        {series.label}
+                                    </DropdownMenuCheckboxItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
                 </div>
                 <div className="w-full">
                     <Tabs value={timeRange} onValueChange={(value) => setTimeRange(value as DynamicsRange)} className="w-full sm:ml-auto sm:w-auto">
@@ -151,6 +228,10 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                 <linearGradient id="fillExecution" x1="0" y1="0" x2="0" y2="1">
                                     <stop offset="0%" stopColor="var(--color-executionPlan)" stopOpacity={0.1} />
                                     <stop offset="100%" stopColor="var(--color-executionPlan)" stopOpacity={0.01} />
+                                </linearGradient>
+                                <linearGradient id="fillProcurement" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="var(--color-procurementPlan)" stopOpacity={0.1} />
+                                    <stop offset="100%" stopColor="var(--color-procurementPlan)" stopOpacity={0.01} />
                                 </linearGradient>
                             </defs>
                             <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-border" />
@@ -191,57 +272,80 @@ export function DashboardChart({ data }: DashboardChartProps) {
                                     />
                                 }
                             />
-                            <ChartLegend content={<ChartLegendContent className="flex-wrap justify-start gap-x-3 gap-y-2 text-[11px] sm:text-xs" />} />
-                            <Area
-                                dataKey="executionPlan"
-                                name="executionPlan"
-                                type="monotone"
-                                fill="url(#fillExecution)"
-                                stroke="var(--color-executionPlan)"
-                                strokeWidth={2}
-                                connectNulls
-                            />
-                            <Area
-                                dataKey="procurementPlan"
-                                name="procurementPlan"
-                                type="monotone"
-                                fill="none"
-                                stroke="var(--color-procurementPlan)"
-                                strokeWidth={2}
-                                connectNulls
-                            />
-                            <Line
-                                dataKey="executionFact"
-                                name="executionFact"
-                                type="monotone"
-                                stroke="var(--color-executionFact)"
-                                strokeWidth={2}
-                                strokeDasharray="5 5"
-                                dot={{ r: 2, fill: "var(--color-executionFact)" }}
-                                activeDot={{ r: 4 }}
-                                connectNulls
-                            />
-                            <Line
-                                dataKey="procurementFact"
-                                name="procurementFact"
-                                type="monotone"
-                                stroke="var(--color-procurementFact)"
-                                strokeWidth={2}
-                                strokeDasharray="5 5"
-                                dot={{ r: 2, fill: "var(--color-procurementFact)" }}
-                                activeDot={{ r: 4 }}
-                                connectNulls
-                            />
-                            <Line
-                                dataKey="balance"
-                                name="balance"
-                                type="monotone"
-                                stroke="var(--color-balance)"
-                                strokeWidth={2}
-                                dot={false}
-                                activeDot={{ r: 4 }}
-                                connectNulls
-                            />
+                            <ChartLegend content={<ChartLegendContent className="flex-wrap justify-start gap-x-3 gap-y-2 text-xs" />} />
+                            {visibleSeries.receiptsFact ? (
+                                <Area
+                                    dataKey="receiptsFact"
+                                    name="receiptsFact"
+                                    type="monotone"
+                                    fill="none"
+                                    stroke="var(--color-receiptsFact)"
+                                    strokeWidth={2}
+                                    connectNulls
+                                />
+                            ) : null}
+                            {visibleSeries.executionPlan ? (
+                                <Area
+                                    dataKey="executionPlan"
+                                    name="executionPlan"
+                                    type="monotone"
+                                    fill="url(#fillExecution)"
+                                    stroke="var(--color-executionPlan)"
+                                    strokeWidth={2}
+                                    strokeDasharray="5 5"
+                                    connectNulls
+                                />
+                            ) : null}
+                            {visibleSeries.procurementPlan ? (
+                                <Area
+                                    dataKey="procurementPlan"
+                                    name="procurementPlan"
+                                    type="monotone"
+                                    fill="url(#fillProcurement)"
+                                    stroke="var(--color-procurementPlan)"
+                                    strokeWidth={2}
+                                    strokeDasharray="5 5"
+                                    connectNulls
+                                />
+                            ) : null}
+                            {visibleSeries.executionFact ? (
+                                <Line
+                                    dataKey="executionFact"
+                                    name="executionFact"
+                                    type="monotone"
+                                    stroke="var(--color-executionFact)"
+                                    strokeWidth={2}
+                                    strokeDasharray="5 5"
+                                    dot={{ r: 2, fill: "var(--color-executionFact)" }}
+                                    activeDot={{ r: 4 }}
+                                    connectNulls
+                                />
+                            ) : null}
+                            {visibleSeries.procurementFact ? (
+                                <Line
+                                    dataKey="procurementFact"
+                                    name="procurementFact"
+                                    type="monotone"
+                                    stroke="var(--color-procurementFact)"
+                                    strokeWidth={2}
+                                    strokeDasharray="5 5"
+                                    dot={{ r: 2, fill: "var(--color-procurementFact)" }}
+                                    activeDot={{ r: 4 }}
+                                    connectNulls
+                                />
+                            ) : null}
+                            {visibleSeries.balance ? (
+                                <Line
+                                    dataKey="balance"
+                                    name="balance"
+                                    type="monotone"
+                                    stroke="var(--color-balance)"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    activeDot={{ r: 4 }}
+                                    connectNulls
+                                />
+                            ) : null}
                         </ComposedChart>
                     </ChartContainer>
                 )}

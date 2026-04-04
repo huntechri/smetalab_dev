@@ -23,6 +23,7 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
     it('loads all KPI totals from a single SQL statement', async () => {
         dbExecuteMock.mockResolvedValue([
             {
+                confirmedReceipts: '140000',
                 plannedWorks: '120000',
                 plannedMaterials: '45000',
                 actualWorks: '90000',
@@ -34,6 +35,7 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
 
         expect(dbExecuteMock).toHaveBeenCalledTimes(1);
         expect(result).toEqual({
+            confirmedReceipts: 140000,
             plannedWorks: 120000,
             plannedMaterials: 45000,
             actualWorks: 90000,
@@ -71,6 +73,30 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
                 'CTE Scan on execution_totals  (cost=0.00..1.00 rows=1 width=32)',
                 'CTE Scan on material_totals  (cost=0.00..1.00 rows=1 width=32)',
             ],
+        });
+    });
+
+    it('falls back to legacy KPI query when project_receipts table is not available yet', async () => {
+        dbExecuteMock
+            .mockRejectedValueOnce({ cause: { code: '42P01' } })
+            .mockResolvedValueOnce([
+                {
+                    plannedWorks: '120000',
+                    plannedMaterials: '45000',
+                    actualWorks: '90000',
+                    actualMaterials: '31000',
+                },
+            ]);
+
+        const result = await ProjectDashboardKpiService.getByProjectId(4, 'project-uuid');
+
+        expect(dbExecuteMock).toHaveBeenCalledTimes(2);
+        expect(result).toEqual({
+            confirmedReceipts: 0,
+            plannedWorks: 120000,
+            plannedMaterials: 45000,
+            actualWorks: 90000,
+            actualMaterials: 31000,
         });
     });
 });

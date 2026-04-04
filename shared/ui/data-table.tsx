@@ -62,42 +62,10 @@ interface DataTableProps<TData, TValue> {
     emptyState?: React.ReactNode;
     getRowClassName?: (row: TData) => string;
     compactMobileToolbar?: boolean;
+    showFilter?: boolean;
+    tableMinWidth?: string | number;
+    tableContainerClassName?: string;
 }
-
-// --- Stable Virtuoso Components ---
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const VirtuosoTableComponents: TableComponents<Row<any>, { flatHeaders: unknown[] }> = {
-    Table: ({ children, style, ...props }) => (
-        <table
-            {...props}
-            style={{
-                ...style,
-                width: '100%',
-                minWidth: '800px',
-                tableLayout: 'fixed',
-                borderCollapse: 'separate',
-                borderSpacing: 0
-            }}
-        >
-            {children}
-        </table>
-    ),
-    TableHead: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
-        <thead {...props} ref={ref} className="z-40" />
-    )),
-    TableRow: ({ style, ...props }) => (
-        <tr
-            {...props}
-            style={style}
-            className="border-b last:border-0 hover:bg-muted/60 transition-colors group/row cursor-default animate-in fade-in slide-in-from-left-1 duration-300"
-        />
-    ),
-    TableBody: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
-        <tbody {...props} ref={ref} />
-    )),
-};
-
-
 
 const DataTableRow = memo(<TData,>({ row, className }: { row: Row<TData>, className?: string }) => {
     return (
@@ -152,8 +120,12 @@ export function DataTable<TData, TValue>({
     emptyState,
     getRowClassName,
     compactMobileToolbar = false,
+    showFilter = true,
+    tableMinWidth = '800px',
+    tableContainerClassName,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = useState(false)
+    const hasFilterControls = Boolean(showFilter && filterColumn)
 
     const isAiMode = externalAiMode ?? internalAiMode;
     const setIsAiMode = onAiModeChange ?? setInternalAiMode;
@@ -180,6 +152,41 @@ export function DataTable<TData, TValue>({
         }
     }, [searchValue, onSearch]);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const virtuosoTableComponents = useMemo<TableComponents<Row<any>, { flatHeaders: unknown[] }>>(
+        () => ({
+            Table: ({ children, style, ...props }) => (
+                <table
+                    {...props}
+                    style={{
+                        ...style,
+                        width: '100%',
+                        minWidth: tableMinWidth,
+                        tableLayout: 'fixed',
+                        borderCollapse: 'separate',
+                        borderSpacing: 0,
+                    }}
+                >
+                    {children}
+                </table>
+            ),
+            TableHead: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
+                <thead {...props} ref={ref} className="z-40" />
+            )),
+            TableRow: ({ style, ...props }) => (
+                <tr
+                    {...props}
+                    style={style}
+                    className="border-b last:border-0 hover:bg-muted/60 transition-colors group/row cursor-default animate-in fade-in slide-in-from-left-1 duration-300"
+                />
+            ),
+            TableBody: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
+                <tbody {...props} ref={ref} />
+            )),
+        }),
+        [tableMinWidth]
+    );
+
 
     const virtuosoOverscan = useMemo(() => {
         const parsedHeight = Number.parseInt(height, 10);
@@ -198,7 +205,7 @@ export function DataTable<TData, TValue>({
         <TooltipProvider>
             <div className={cn("space-y-4", className)}>
                 {/* Search Filter */}
-                {filterColumn && (
+                {(actions || hasFilterControls) && (
                     <div className={cn(
                         "justify-between px-1 md:px-0",
                         compactMobileToolbar
@@ -206,96 +213,103 @@ export function DataTable<TData, TValue>({
                             : "flex flex-col gap-3 xl:flex-row xl:items-center"
                     )}>
                         {/* Search Input & AI Toggle Group */}
-                        <div className={cn(
-                            "flex items-center gap-2 shrink-0",
-                            compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
-                        )}>
+                        {hasFilterControls ? (
                             <div className={cn(
-                                "relative flex-1 transition-all duration-300",
-                                compactMobileToolbar ? "min-w-0" : "min-w-[200px]",
-                                isAiMode ? "xl:w-[350px]" : "xl:w-[280px]"
+                                "flex items-center gap-2 shrink-0",
+                                compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
                             )}>
-                                {isSearching ? (
-                                    <Loader2 aria-hidden="true" className="absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 text-indigo-500 animate-spin" />
-                                ) : (
-                                    <Search aria-hidden="true" className={cn(
-                                        "absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 transition-colors duration-200",
-                                        isAiMode ? "text-indigo-500" : "text-muted-foreground group-focus-within/search:text-primary"
-                                    )} />
-                                )}
-                                <Input
-                                    aria-label={filterPlaceholder}
-                                    placeholder={isAiMode ? "Опишите, что нужно найти (ИИ)..." : filterPlaceholder}
-                                    value={searchValue}
-                                    onChange={(event) => {
-                                        const val = event.target.value
-                                        setSearchValue(val)
-                                        onSearchValueChange?.(val)
-
-                                        if (val === "") {
-                                            onSearch?.("")
-                                        }
-                                    }}
-                                    className={cn(
-                                        "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-[12px] placeholder:text-[12px] shadow-sm md:shadow-none",
-                                        filterInputClassName,
-                                        isAiMode ? (
-                                            "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
-                                        ) : (
-                                            "focus-visible:ring-0 focus-visible:border-primary/40"
-                                        )
+                                <div className={cn(
+                                    "relative flex-1 transition-all duration-300",
+                                    compactMobileToolbar ? "min-w-0" : "min-w-[200px]",
+                                    isAiMode ? "xl:w-[350px]" : "xl:w-[280px]"
+                                )}>
+                                    {isSearching ? (
+                                        <Loader2 aria-hidden="true" className="absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 text-indigo-500 animate-spin" />
+                                    ) : (
+                                        <Search aria-hidden="true" className={cn(
+                                            "absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 transition-colors duration-200",
+                                            isAiMode ? "text-indigo-500" : "text-muted-foreground group-focus-within/search:text-primary"
+                                        )} />
                                     )}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleSearchClick()
-                                        }
-                                    }}
-                                />
-                                {isAiMode && (
-                                    <div
-                                        role="status"
-                                        aria-live="polite"
-                                        className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
-                                    >
-                                        AI
+                                    <Input
+                                        aria-label={filterPlaceholder}
+                                        placeholder={isAiMode ? "Опишите, что нужно найти (ИИ)..." : filterPlaceholder}
+                                        value={searchValue}
+                                        onChange={(event) => {
+                                            const val = event.target.value
+                                            setSearchValue(val)
+                                            onSearchValueChange?.(val)
+
+                                            if (val === "") {
+                                                onSearch?.("")
+                                            }
+                                        }}
+                                        className={cn(
+                                            "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-[12px] placeholder:text-[12px] shadow-sm md:shadow-none",
+                                            filterInputClassName,
+                                            isAiMode ? (
+                                                "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
+                                            ) : (
+                                                "focus-visible:ring-0 focus-visible:border-primary/40"
+                                            )
+                                        )}
+                                        onKeyDown={(e) => {
+                                            if (e.key === 'Enter') {
+                                                handleSearchClick()
+                                            }
+                                        }}
+                                    />
+                                    {isAiMode && (
+                                        <div
+                                            role="status"
+                                            aria-live="polite"
+                                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                        >
+                                            AI
+                                        </div>
+                                    )}
+                                </div>
+
+                                {showAiSearch && onSearch && (
+                                    <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-indigo-100 bg-indigo-50/30">
+                                        <Tooltip>
+                                            <TooltipTrigger asChild>
+                                                <div className="flex items-center gap-3 cursor-help">
+                                                    <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
+                                                    <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
+                                                </div>
+                                            </TooltipTrigger>
+                                            <TooltipContent>
+                                                <p>Поиск по смыслу с использованием ИИ</p>
+                                            </TooltipContent>
+                                        </Tooltip>
+                                        <Switch
+                                            checked={isAiMode}
+                                            onCheckedChange={(checked) => {
+                                                setIsAiMode(checked)
+                                                if (searchValue.trim() && checked) {
+                                                    onSearch?.(searchValue)
+                                                }
+                                            }}
+                                            aria-label="Переключатель ИИ поиска"
+                                            className="select-none"
+                                        />
                                     </div>
                                 )}
                             </div>
-
-                            {showAiSearch && onSearch && (
-                                <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-indigo-100 bg-indigo-50/30">
-                                    <Tooltip>
-                                        <TooltipTrigger asChild>
-                                            <div className="flex items-center gap-3 cursor-help">
-                                                <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
-                                                <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
-                                            </div>
-                                        </TooltipTrigger>
-                                        <TooltipContent>
-                                            <p>Поиск по смыслу с использованием ИИ</p>
-                                        </TooltipContent>
-                                    </Tooltip>
-                                    <Switch
-                                        checked={isAiMode}
-                                        onCheckedChange={(checked) => {
-                                            setIsAiMode(checked)
-                                            if (searchValue.trim() && checked) {
-                                                onSearch?.(searchValue)
-                                            }
-                                        }}
-                                        aria-label="Переключатель ИИ поиска"
-                                        className="select-none"
-                                    />
-                                </div>
-                            )}
-                        </div>
+                        ) : null}
 
                         {/* Actions Group */}
                         {actions && (
                             <div
                                 className={cn(
-                                    "flex items-center gap-2 xl:w-auto xl:justify-end overflow-x-auto xl:pb-0 scrollbar-hide",
-                                    compactMobileToolbar ? "w-auto justify-end shrink-0" : "w-full justify-start"
+                                    "flex items-center gap-2 xl:justify-end overflow-x-auto xl:pb-0 scrollbar-hide",
+                                    hasFilterControls ? "xl:w-auto" : "xl:w-full",
+                                    compactMobileToolbar
+                                        ? "w-auto justify-end shrink-0"
+                                        : hasFilterControls
+                                            ? "w-full justify-start"
+                                            : "w-full justify-end"
                                 )}
                                 role="group"
                                 aria-label="Действия таблицы"
@@ -310,7 +324,8 @@ export function DataTable<TData, TValue>({
                 <div
                     className={cn(
                         "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
-                        isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20"
+                        isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20",
+                        tableContainerClassName,
                     )}
                     style={{ contain: 'layout style paint' }}
                 >
@@ -343,7 +358,7 @@ export function DataTable<TData, TValue>({
                         </div>
                     ) : rows.length === 0 ? (
                         <table
-                            style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
+                            style={{ width: '100%', minWidth: tableMinWidth, tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
                         >
                             <thead className="z-40">
                                 {table.getHeaderGroups().map((headerGroup) => (
@@ -425,7 +440,7 @@ export function DataTable<TData, TValue>({
                             style={{ height, width: '100%', willChange: 'transform' }}
                             data={rows}
                             context={{ flatHeaders }}
-                            components={VirtuosoTableComponents}
+                            components={virtuosoTableComponents}
                             overscan={virtuosoOverscan}
                             endReached={onEndReached}
                             fixedHeaderContent={() => (
