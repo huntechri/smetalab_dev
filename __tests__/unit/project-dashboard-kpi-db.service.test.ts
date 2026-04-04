@@ -23,6 +23,7 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
     it('loads all KPI totals from a single SQL statement', async () => {
         dbExecuteMock.mockResolvedValue([
             {
+                confirmedReceipts: '140000',
                 plannedWorks: '120000',
                 plannedMaterials: '45000',
                 actualWorks: '90000',
@@ -34,6 +35,7 @@ describe('ProjectDashboardKpiService SQL aggregation', () => {
 
         expect(dbExecuteMock).toHaveBeenCalledTimes(1);
         expect(result).toEqual({
+            confirmedReceipts: 140000,
             plannedWorks: 120000,
             plannedMaterials: 45000,
             actualWorks: 90000,

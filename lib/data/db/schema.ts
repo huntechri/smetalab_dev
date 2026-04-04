@@ -35,6 +35,8 @@ export const estimateRowKindEnum = pgEnum('estimate_row_kind', ['section', 'work
 export const globalPurchaseSourceEnum = pgEnum('global_purchase_source', ['manual', 'catalog']);
 export const estimateExecutionSourceEnum = pgEnum('estimate_execution_source', ['from_estimate', 'extra']);
 export const estimateExecutionStatusEnum = pgEnum('estimate_execution_status', ['not_started', 'in_progress', 'done']);
+export const projectReceiptTypeEnum = pgEnum('project_receipt_type', ['advance', 'stage_payment', 'partial_payment', 'final_payment', 'additional_payment', 'adjustment', 'refund']);
+export const projectReceiptStatusEnum = pgEnum('project_receipt_status', ['confirmed', 'pending', 'cancelled']);
 
 // ═══════════════════════════════════════════════════════════════
 // USERS
@@ -340,6 +342,29 @@ export const globalPurchases = pgTable('global_purchases', {
   index('global_purchases_tenant_supplier_date_idx').on(table.tenantId, table.supplierId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_material_id_idx').on(table.materialId).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_updated_at_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+]);
+
+export const projectReceipts = pgTable('project_receipts', {
+  id: uuid('id').default(sql`gen_random_uuid()`).primaryKey(),
+  tenantId: integer('tenant_id')
+    .notNull()
+    .references(() => teams.id),
+  projectId: uuid('project_id')
+    .notNull()
+    .references(() => projects.id),
+  receiptDate: date('receipt_date', { mode: 'string' }).notNull(),
+  amount: doublePrecision('amount').notNull().default(0),
+  type: projectReceiptTypeEnum('type').notNull().default('partial_payment'),
+  status: projectReceiptStatusEnum('status').notNull().default('confirmed'),
+  comment: text('comment').notNull().default(''),
+  source: text('source'),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+  deletedAt: timestamp('deleted_at'),
+}, (table) => [
+  index('project_receipts_tenant_project_date_idx').on(table.tenantId, table.projectId, table.receiptDate).where(sql`deleted_at IS NULL`),
+  index('project_receipts_tenant_project_status_idx').on(table.tenantId, table.projectId, table.status).where(sql`deleted_at IS NULL`),
+  index('project_receipts_tenant_updated_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
 ]);
 
 export const estimateProcurementCache = pgTable('estimate_procurement_cache', {
@@ -912,6 +937,7 @@ export const projectsRelations = relations(projects, ({ one, many }) => ({
     references: [counterparties.id],
   }),
   estimates: many(estimates),
+  receipts: many(projectReceipts),
 }));
 
 export const estimatesRelations = relations(estimates, ({ one, many }) => ({
@@ -980,6 +1006,17 @@ export const estimateRoomParamsRelations = relations(estimateRoomParams, ({ one 
   }),
 }));
 
+export const projectReceiptsRelations = relations(projectReceipts, ({ one }) => ({
+  tenant: one(teams, {
+    fields: [projectReceipts.tenantId],
+    references: [teams.id],
+  }),
+  project: one(projects, {
+    fields: [projectReceipts.projectId],
+    references: [projects.id],
+  }),
+}));
+
 // ═══════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════
@@ -1024,6 +1061,8 @@ export type MaterialSupplier = typeof materialSuppliers.$inferSelect;
 export type NewMaterialSupplier = typeof materialSuppliers.$inferInsert;
 export type Project = typeof projects.$inferSelect;
 export type NewProject = typeof projects.$inferInsert;
+export type ProjectReceipt = typeof projectReceipts.$inferSelect;
+export type NewProjectReceipt = typeof projectReceipts.$inferInsert;
 
 export type TeamDataWithMembers = Team & {
   teamMembers: (TeamMember & {

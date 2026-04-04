@@ -48,11 +48,11 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
     return (
         <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
             <KPICard
-                title="Доход"
+                title="Поступило"
                 value={formattedRevenue}
                 valueClassName="text-green-600 dark:text-green-400"
                 className="h-[72px] sm:h-[85px] md:h-[95px]"
-                tooltip="Работы по смете + материал по смете (план)"
+                tooltip="Сумма подтвержденных поступлений от заказчика"
             />
 
             <KPICard
@@ -68,7 +68,7 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
                 value={formattedProfit}
                 valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
                 className="h-[72px] sm:h-[85px] md:h-[95px]"
-                tooltip="Доход общ. - Расход общ."
+                tooltip="Поступления - факт работ - факт материалов"
             />
 
             <KPICard
@@ -81,4 +81,3 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
         </div>
     )
 }
-
