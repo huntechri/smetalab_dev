@@ -16,6 +16,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Textarea } from '@/shared/ui/textarea';
 import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/lib/services/project-receipts.service';
 import { projectReceiptsActionRepo } from '../repository/project-receipts.actions';
+import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const receiptTypeOptions: Array<{ value: ProjectReceiptRow['type']; label: string }> = [
   { value: 'advance', label: 'Аванс' },
@@ -66,16 +67,16 @@ const formatCurrency = (value: number) => new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 }).format(value);
 
-const statusBadgeVariant: Record<ProjectReceiptRow['status'], 'default' | 'secondary' | 'destructive' | 'outline'> = {
-  confirmed: 'default',
-  pending: 'secondary',
-  cancelled: 'outline',
-};
-
 type ProjectReceiptsSectionProps = {
   projectId: string;
   initialRows: ProjectReceiptRow[];
   initialAggregates: ProjectReceiptAggregates;
+};
+
+const receiptStatusBadgeTone: Record<ProjectReceiptRow['status'], string> = {
+  confirmed: projectStatusBadgeToneClassName.success,
+  pending: projectStatusBadgeToneClassName.warning,
+  cancelled: projectStatusBadgeToneClassName.neutral,
 };
 
 export function ProjectReceiptsSection({ projectId, initialRows, initialAggregates }: ProjectReceiptsSectionProps) {
@@ -167,8 +168,8 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
         <CardTitle>Фактические поступления</CardTitle>
         <div className="flex items-center gap-2">
-          <Badge variant="secondary">Платежей: {aggregates.confirmedCount}</Badge>
-          <Badge variant="outline">Подтверждено: {formatCurrency(aggregates.totalConfirmedReceipts)}</Badge>
+          <Badge variant="outline" className={projectBadgeClassName}>Платежей: {aggregates.confirmedCount}</Badge>
+          <Badge variant="outline" className={projectBadgeClassName}>Подтверждено: {formatCurrency(aggregates.totalConfirmedReceipts)}</Badge>
           <Button size="sm" onClick={onAddClick}>
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
@@ -196,7 +197,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                 <TableCell>{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
                 <TableCell className={row.amount < 0 ? 'text-red-600' : 'text-green-600'}>{formatCurrency(row.amount)}</TableCell>
                 <TableCell>
-                  <Badge variant={statusBadgeVariant[row.status]}>
+                  <Badge variant="outline" className={`${projectBadgeClassName} ${receiptStatusBadgeTone[row.status]}`}>
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
                   </Badge>
                 </TableCell>
