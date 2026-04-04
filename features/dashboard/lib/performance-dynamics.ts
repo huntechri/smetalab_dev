@@ -31,12 +31,14 @@ const endOfMonth = (date: Date) => new Date(date.getFullYear(), date.getMonth() 
 
 type DynamicsSeriesValues = Omit<HomePerformanceDynamicsPoint, 'date'>;
 
-const addValues = (target: DynamicsSeriesValues, source: DynamicsSeriesValues) => {
-    target.receiptsFact = normalizeMoney(target.receiptsFact + source.receiptsFact);
-    target.executionPlan = normalizeMoney(target.executionPlan + source.executionPlan);
-    target.executionFact = normalizeMoney(target.executionFact + source.executionFact);
-    target.procurementPlan = normalizeMoney(target.procurementPlan + source.procurementPlan);
-    target.procurementFact = normalizeMoney(target.procurementFact + source.procurementFact);
+const toSeriesNumber = (value: number | undefined) => (Number.isFinite(value) ? value : 0);
+
+const addValues = (target: DynamicsSeriesValues, source: Partial<DynamicsSeriesValues>) => {
+    target.receiptsFact = normalizeMoney(toSeriesNumber(target.receiptsFact) + toSeriesNumber(source.receiptsFact));
+    target.executionPlan = normalizeMoney(toSeriesNumber(target.executionPlan) + toSeriesNumber(source.executionPlan));
+    target.executionFact = normalizeMoney(toSeriesNumber(target.executionFact) + toSeriesNumber(source.executionFact));
+    target.procurementPlan = normalizeMoney(toSeriesNumber(target.procurementPlan) + toSeriesNumber(source.procurementPlan));
+    target.procurementFact = normalizeMoney(toSeriesNumber(target.procurementFact) + toSeriesNumber(source.procurementFact));
 };
 
 const applyCarryForward = (
@@ -47,11 +49,11 @@ const applyCarryForward = (
 
     return timeline.map((point) => {
         running = {
-            receiptsFact: normalizeMoney(running.receiptsFact + point.receiptsFact),
-            executionPlan: normalizeMoney(running.executionPlan + point.executionPlan),
-            executionFact: normalizeMoney(running.executionFact + point.executionFact),
-            procurementPlan: normalizeMoney(running.procurementPlan + point.procurementPlan),
-            procurementFact: normalizeMoney(running.procurementFact + point.procurementFact),
+            receiptsFact: normalizeMoney(toSeriesNumber(running.receiptsFact) + toSeriesNumber(point.receiptsFact)),
+            executionPlan: normalizeMoney(toSeriesNumber(running.executionPlan) + toSeriesNumber(point.executionPlan)),
+            executionFact: normalizeMoney(toSeriesNumber(running.executionFact) + toSeriesNumber(point.executionFact)),
+            procurementPlan: normalizeMoney(toSeriesNumber(running.procurementPlan) + toSeriesNumber(point.procurementPlan)),
+            procurementFact: normalizeMoney(toSeriesNumber(running.procurementFact) + toSeriesNumber(point.procurementFact)),
         };
 
         return {
