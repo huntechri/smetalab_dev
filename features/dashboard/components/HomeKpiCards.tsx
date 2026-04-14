@@ -1,6 +1,3 @@
-import { TrendingUp, Users, Activity } from "lucide-react";
-
-import { Badge } from "@/shared/ui/badge";
 import { KPICard } from "@/shared/ui/kpi-card";
 import { HomeDashboardKpi } from '../types';
 

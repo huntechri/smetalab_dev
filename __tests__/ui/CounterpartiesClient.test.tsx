@@ -1,4 +1,4 @@
-import { render, screen, fireEvent, waitFor, within, cleanup } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import { CounterpartiesClient } from '@/features/counterparties';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';

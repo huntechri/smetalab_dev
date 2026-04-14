@@ -2,19 +2,10 @@
 
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Loader2, Filter } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { TooltipProvider } from "@/shared/ui/tooltip";
-import { Button } from '@/shared/ui/button';
-import { cn } from '@/lib/utils';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/shared/ui/sheet";
 
 import { WorkRow } from '@/types/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';
@@ -34,11 +25,10 @@ import { useDataTableEditor } from '@/hooks/use-data-table-editor';
 
 interface WorksScreenProps {
     initialData: WorkRow[];
-    totalCount: number;
     tenantId: number;
 }
 
-export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenProps) {
+export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -105,7 +95,7 @@ export function WorksScreen({ initialData, totalCount, tenantId }: WorksScreenPr
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0 mb-2">
                 <div className="flex items-center gap-3">
-                    <WorksHeader isLoading={search.isAiSearching} totalCount={totalCount} />
+                    <WorksHeader isLoading={search.isAiSearching} />
                 </div>
             </div>
 

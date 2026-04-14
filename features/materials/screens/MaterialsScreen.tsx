@@ -14,16 +14,6 @@ import { MaterialsHeader } from '../components/MaterialsHeader';
 import { MaterialsToolbar } from '../components/MaterialsToolbar';
 import { MaterialsTableWrapper } from '../components/MaterialsTableWrapper';
 import { MaterialsSidebar } from '../components/MaterialsSidebar';
-import { cn } from '@/lib/utils';
-import { Filter } from 'lucide-react';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/shared/ui/sheet";
-
 // Internal Hooks
 import { useMaterialsActions } from '../hooks/useMaterialsActions';
 import { useMaterialsSearch } from '../hooks/useMaterialsSearch';
@@ -33,11 +23,10 @@ import { useDataTableEditor } from '@/hooks/use-data-table-editor';
 
 interface MaterialsScreenProps {
     initialData: MaterialRow[];
-    totalCount: number;
     tenantId: number;
 }
 
-export function MaterialsScreen({ initialData, totalCount, tenantId }: MaterialsScreenProps) {
+export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps) {
     const [mounted, setMounted] = useState(false);
     const [data, setData] = useState<MaterialRow[]>(initialData);
     const [showSidebar, setShowSidebar] = useState(false);
@@ -97,7 +86,7 @@ export function MaterialsScreen({ initialData, totalCount, tenantId }: Materials
 
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0 mb-2">
                 <div className="flex items-center gap-3">
-                    <MaterialsHeader isLoading={search.isAiSearching} totalCount={totalCount} />
+                    <MaterialsHeader isLoading={search.isAiSearching} />
                 </div>
             </div>
 

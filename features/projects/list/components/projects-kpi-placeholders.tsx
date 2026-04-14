@@ -2,7 +2,6 @@
 
 import { Building2, Activity, Wallet, BarChart3 } from 'lucide-react';
 import { KPICard } from '@/shared/ui/kpi-card';
-import { Badge } from '@/shared/ui/badge';
 import { ProjectListItem } from '../../shared/types';
 
 interface ProjectsStatsCardsProps {
