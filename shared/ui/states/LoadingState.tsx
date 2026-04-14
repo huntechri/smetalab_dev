@@ -1,5 +1,5 @@
-import { Loader2 } from 'lucide-react';
 import { StateShell } from './StateShell';
+import { LoadingIndicator } from '../loading-indicator';
 
 interface LoadingStateProps {
     title?: string;
@@ -16,7 +16,7 @@ export function LoadingState({
         <StateShell
             title={title}
             description={description}
-            icon={<Loader2 className="h-5 w-5 animate-spin" />}
+            icon={<LoadingIndicator variant="inline" size="sm" showLabel={false} />}
             className={className}
         />
     );

@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User } from '@/lib/data/db/schema';
+import type { AppUser } from '@/shared/types/session';
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const adminNavItems = [
@@ -57,7 +57,7 @@ const adminNavItems = [
     },
 ];
 
-export function AdminSidebar({ user }: { user: Pick<User, 'name' | 'email'> | null }) {
+export function AdminSidebar({ user }: { user: Pick<AppUser, 'name' | 'email'> | null }) {
     const pathname = usePathname();
 
     return (

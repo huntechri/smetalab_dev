@@ -1,28 +1,22 @@
 import { NewMaterial } from '@/lib/data/db/schema';
 import { FetchMoreMaterialsInput } from '@/lib/domain/materials/materials.contract';
 import { MaterialsService } from '@/lib/domain/materials/materials.service';
-import {
-  createMaterialUseCase,
-  deleteAllMaterialsUseCase,
-  deleteMaterialUseCase,
-  updateMaterialUseCase,
-} from '@/lib/domain/materials/use-cases';
 
 export class MaterialsCatalogService {
   static create(teamId: number, data: NewMaterial) {
-    return createMaterialUseCase(teamId, data);
+    return MaterialsService.create(teamId, data);
   }
 
   static update(teamId: number, id: string, data: Partial<NewMaterial>) {
-    return updateMaterialUseCase(teamId, id, data);
+    return MaterialsService.update(teamId, id, data);
   }
 
   static delete(teamId: number, id: string) {
-    return deleteMaterialUseCase(teamId, id);
+    return MaterialsService.delete(teamId, id);
   }
 
   static deleteAll(teamId: number) {
-    return deleteAllMaterialsUseCase(teamId);
+    return MaterialsService.deleteAll(teamId);
   }
 
   static fetchMore(teamId: number, options: FetchMoreMaterialsInput = {}) {

@@ -1,5 +1,5 @@
 import { getEstimateProcurementAction } from '@/app/actions/estimates/procurement';
-import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
+import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 
 export const estimateProcurementActionsRepo = {
     async list(estimateId: string): Promise<EstimateProcurementRow[]> {

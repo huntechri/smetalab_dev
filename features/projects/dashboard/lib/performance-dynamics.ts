@@ -1,4 +1,4 @@
-import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
+import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics';
 
 export type DynamicsRange = '1m' | '3m' | '12m';
 export type DynamicsMode = 'level' | 'flow';

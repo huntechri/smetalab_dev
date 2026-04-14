@@ -14,12 +14,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
-import { User } from '@/lib/data/db/schema';
+import type { AppUserWithPermissions } from '@/shared/types/session';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export function AdminUserMenu() {
-  const { data: user } = useSWR<User>('/api/user', fetcher);
+  const { data: user } = useSWR<AppUserWithPermissions>('/api/user', fetcher);
   const router = useRouter();
 
   async function handleSignOut() {

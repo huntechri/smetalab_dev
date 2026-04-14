@@ -2,7 +2,7 @@
 
 import { SWRConfig } from 'swr';
 import { use } from 'react';
-import { User, Team } from '@/lib/data/db/schema';
+import type { AppTeam, AppUser } from '@/shared/types/session';
 
 export function SWRWrapper({
     children,
@@ -10,8 +10,8 @@ export function SWRWrapper({
     teamPromise
 }: {
     children: React.ReactNode;
-    userPromise: Promise<User | null>;
-    teamPromise: Promise<Team | null>;
+    userPromise: Promise<AppUser | null>;
+    teamPromise: Promise<AppTeam | null>;
 }) {
     const user = use(userPromise);
     const team = use(teamPromise);

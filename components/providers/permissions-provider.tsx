@@ -1,17 +1,12 @@
 'use client';
 
 import React, { createContext, useContext, ReactNode } from 'react';
-import { Team, User } from '@/lib/data/db/schema';
-
-export interface PermissionEntry {
-    code: string;
-    level: 'read' | 'manage';
-}
+import type { AppTeam, AppUser, PermissionEntry } from '@/shared/types/session';
 
 interface UserContextType {
     permissions: PermissionEntry[];
-    user: User | null;
-    team: Team | null;
+    user: AppUser | null;
+    team: AppTeam | null;
     loading: boolean;
 }
 
@@ -24,8 +19,8 @@ export function UserProvider({
     children
 }: {
     permissions: PermissionEntry[];
-    user: User | null;
-    team: Team | null;
+    user: AppUser | null;
+    team: AppTeam | null;
     children: ReactNode;
 }) {
     return (
