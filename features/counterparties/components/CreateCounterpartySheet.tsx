@@ -31,7 +31,7 @@ import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { Separator } from "@/shared/ui/separator";
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { CounterpartyRow } from "@/types/counterparty-row";
+import { CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";
 import { counterpartyFormSchema, type CounterpartyFormValues } from "../schemas/counterparty-form.schema";

@@ -1,6 +1,6 @@
 "use client"
 
-import { WorkRow } from "@/types/work-row"
+import { WorkRow } from "@/shared/types/domain/work-row"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Label } from "@/shared/ui/label"

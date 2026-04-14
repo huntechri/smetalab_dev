@@ -3,7 +3,7 @@ import { and, desc, ilike, sql } from 'drizzle-orm';
 import { db } from './drizzle';
 import { materialSuppliers } from './schema';
 import { withActiveTenant } from './tenant';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 
 export async function getMaterialSuppliers(
   teamId: number,

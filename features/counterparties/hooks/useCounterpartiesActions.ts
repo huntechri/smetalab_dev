@@ -2,7 +2,7 @@
 
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { deleteCounterparty } from "@/app/actions/counterparties";
-import { CounterpartyRow } from "@/types/counterparty-row";
+import { CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 
 interface DeleteOptions {
   onOptimisticDelete?: () => void;

@@ -1,7 +1,7 @@
 "use client"
 
 import { updateMaterial, deleteMaterial } from "@/app/actions/materials"
-import { MaterialRow } from "@/types/material-row"
+import { MaterialRow } from "@/shared/types/domain/material-row"
 
 export function useMaterialsRowActions() {
     const handleRowUpdate = (id: string, data: Partial<MaterialRow>) => {

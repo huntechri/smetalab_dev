@@ -1,6 +1,6 @@
 "use client"
 
-import { MaterialRow } from "@/types/material-row"
+import { MaterialRow } from "@/shared/types/domain/material-row"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Label } from "@/shared/ui/label"

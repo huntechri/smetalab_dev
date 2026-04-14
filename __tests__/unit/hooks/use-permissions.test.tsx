@@ -1,6 +1,6 @@
 
 import { renderHook } from '@testing-library/react';
-import { usePermissions, PermissionEntry } from '@/hooks/use-permissions';
+import { usePermissions, PermissionEntry } from '@/shared/hooks/use-permissions';
 import { UserProvider } from '@/components/providers/permissions-provider';
 import { describe, it, expect, vi } from 'vitest';
 import React from 'react';

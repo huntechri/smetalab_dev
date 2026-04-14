@@ -4,7 +4,7 @@ import { z } from 'zod';
 import { safeAction } from '@/lib/actions/safe-action';
 import { success } from '@/lib/utils/result';
 import { getMaterialSuppliersPage } from '@/lib/data/db/material-suppliers-queries';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 
 const listMaterialSuppliersSchema = z.object({
   limit: z.number().int().min(1).max(200).optional(),

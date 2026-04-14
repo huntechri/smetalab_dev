@@ -1,0 +1,3899 @@
+{
+  "generatedAt": "2026-03-06T14:02:20.169Z",
+  "total": 180,
+  "changedFiles": 3,
+  "records": [
+    {
+      "filePath": "app/(admin)/dashboard/general/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "bg-orange-500 hover:bg-orange-600 text-white",
+      "tailwindUtilities": [
+        "bg-orange-500",
+        "hover:bg-orange-600",
+        "text-white"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "bg-orange-500 hover:bg-orange-600 text-white",
+      "tailwindUtilities": [
+        "bg-orange-500",
+        "hover:bg-orange-600",
+        "text-white"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className",
+        "disabled"
+      ],
+      "className": "bg-red-600 hover:bg-red-700",
+      "tailwindUtilities": [
+        "bg-red-600",
+        "hover:bg-red-700"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "app/(admin)/dashboard/tenants/[tenantId]/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "rounded-full",
+      "tailwindUtilities": [
+        "rounded-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/tenants/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "w-full text-xs h-9 rounded-xl border-gray-200 hover:bg-gray-50 hover:text-gray-900 group",
+      "tailwindUtilities": [
+        "w-full",
+        "text-xs",
+        "h-9",
+        "rounded-xl",
+        "border-gray-200",
+        "hover:bg-gray-50",
+        "hover:text-gray-900",
+        "group"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/(admin)/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "className"
+      ],
+      "className": "bg-orange-500 hover:bg-orange-600 text-white rounded-full text-lg px-8",
+      "tailwindUtilities": [
+        "bg-orange-500",
+        "hover:bg-orange-600",
+        "text-white",
+        "rounded-full",
+        "text-lg",
+        "px-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/(admin)/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className"
+      ],
+      "className": "text-lg rounded-full",
+      "tailwindUtilities": [
+        "text-lg",
+        "rounded-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/not-found.tsx",
+      "componentName": "not-found.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "max-w-48 mx-auto flex justify-center py-2 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500",
+      "tailwindUtilities": [
+        "max-w-48",
+        "mx-auto",
+        "flex",
+        "justify-center",
+        "py-2",
+        "px-4",
+        "border",
+        "border-gray-300",
+        "rounded-full",
+        "shadow-sm",
+        "text-sm",
+        "font-medium",
+        "text-gray-700",
+        "bg-white",
+        "hover:bg-gray-50",
+        "focus:outline-none",
+        "focus:ring-2",
+        "focus:ring-offset-2",
+        "focus:ring-orange-500"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "anchor-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black",
+      "tailwindUtilities": [
+        "sr-only",
+        "focus:not-sr-only",
+        "focus:fixed",
+        "focus:top-3",
+        "focus:left-3",
+        "focus:z-50",
+        "focus:rounded-full",
+        "focus:bg-white",
+        "focus:px-4",
+        "focus:py-2",
+        "focus:text-sm",
+        "focus:text-black"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "border border-transparent text-white/90 hover:border-white/30 hover:bg-white/12 hover:text-white focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "border",
+        "border-transparent",
+        "text-white/90",
+        "hover:border-white/30",
+        "hover:bg-white/12",
+        "hover:text-white",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "bg-white text-black transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "bg-white",
+        "text-black",
+        "transition-colors",
+        "hover:bg-white/85",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-3",
+        "py-2",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "w-full border-white/40 bg-[#0B0A0F] !text-white hover:bg-white/15 hover:!text-white focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "w-full",
+        "border-white/40",
+        "bg-[#0B0A0F]",
+        "!text-white",
+        "hover:bg-white/15",
+        "hover:!text-white",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "w-full bg-white text-black hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "w-full",
+        "bg-white",
+        "text-black",
+        "hover:bg-white/85",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "h-12 bg-[#FF6A3D] px-6 text-base text-black hover:bg-[#FF865F]",
+      "tailwindUtilities": [
+        "h-12",
+        "bg-[#FF6A3D]",
+        "px-6",
+        "text-base",
+        "text-black",
+        "hover:bg-[#FF865F]"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "h-12 border-white/50 bg-transparent px-6 text-base text-white hover:border-white/70 hover:bg-white/20 hover:text-white active:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "h-12",
+        "border-white/50",
+        "bg-transparent",
+        "px-6",
+        "text-base",
+        "text-white",
+        "hover:border-white/70",
+        "hover:bg-white/20",
+        "hover:text-white",
+        "active:bg-white/25",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "h-12 bg-white text-black hover:bg-white/90",
+      "tailwindUtilities": [
+        "h-12",
+        "bg-white",
+        "text-black",
+        "hover:bg-white/90"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "h-12 border-white/40 bg-[#0B0A0F] text-white hover:bg-[#15131B] hover:text-white active:bg-[#1C1A24] focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "h-12",
+        "border-white/40",
+        "bg-[#0B0A0F]",
+        "text-white",
+        "hover:bg-[#15131B]",
+        "hover:text-white",
+        "active:bg-[#1C1A24]",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-2",
+        "py-1",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-2",
+        "py-1",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "app/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "link-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
+      "tailwindUtilities": [
+        "rounded-md",
+        "px-2",
+        "py-1",
+        "transition-colors",
+        "hover:bg-white/10",
+        "hover:text-white",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-white/60"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "components/layout/user-menu.tsx",
+      "componentName": "user-menu.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "relative h-8 w-8 rounded-full",
+      "tailwindUtilities": [
+        "relative",
+        "h-8",
+        "w-8",
+        "rounded-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "components/layout/user-menu.tsx",
+      "componentName": "user-menu.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "relative h-8 w-8 rounded-full",
+      "tailwindUtilities": [
+        "relative",
+        "h-8",
+        "w-8",
+        "rounded-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/admin/components/AdminTerminal.tsx",
+      "componentName": "AdminTerminal.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "onClick",
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-8 w-8 text-gray-400 transition-colors hover:bg-transparent hover:text-white",
+      "tailwindUtilities": [
+        "h-8",
+        "w-8",
+        "text-gray-400",
+        "transition-colors",
+        "hover:bg-transparent",
+        "hover:text-white"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/admin/components/PricingSubmitButton.tsx",
+      "componentName": "PricingSubmitButton.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled",
+        "variant",
+        "className"
+      ],
+      "className": "w-full rounded-full",
+      "tailwindUtilities": [
+        "w-full",
+        "rounded-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "componentName": "admin-user-menu.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "asChild",
+        "className"
+      ],
+      "className": "rounded-full bg-orange-500 hover:bg-orange-600",
+      "tailwindUtilities": [
+        "rounded-full",
+        "bg-orange-500",
+        "hover:bg-orange-600"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "componentName": "admin-user-menu.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className"
+      ],
+      "className": "h-auto w-full justify-start px-2 py-1.5 font-normal",
+      "tailwindUtilities": [
+        "h-auto",
+        "w-full",
+        "justify-start",
+        "px-2",
+        "py-1.5",
+        "font-normal"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/admin/components/impersonate-button.tsx",
+      "componentName": "impersonate-button.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "size",
+        "variant",
+        "className",
+        "disabled"
+      ],
+      "className": "rounded-xl h-8 text-xs gap-1.5",
+      "tailwindUtilities": [
+        "rounded-xl",
+        "h-8",
+        "text-xs",
+        "gap-1.5"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/admin/components/stop-impersonation-button.tsx",
+      "componentName": "stop-impersonation-button.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "onClick",
+        "disabled",
+        "className"
+      ],
+      "className": "h-7 text-xs px-3",
+      "tailwindUtilities": [
+        "h-7",
+        "text-xs",
+        "px-3"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/auth/components/ForgotPasswordForm.tsx",
+      "componentName": "ForgotPasswordForm.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "w-full",
+      "tailwindUtilities": [
+        "w-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "anchor-button-like",
+      "propsUsed": [
+        "href",
+        "className"
+      ],
+      "className": "sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black",
+      "tailwindUtilities": [
+        "sr-only",
+        "focus:not-sr-only",
+        "focus:fixed",
+        "focus:top-3",
+        "focus:left-3",
+        "focus:z-50",
+        "focus:rounded-full",
+        "focus:bg-white",
+        "focus:px-4",
+        "focus:py-2",
+        "focus:text-sm",
+        "focus:text-black"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "className",
+        "aria-label"
+      ],
+      "className": "absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-sm text-white/70 hover:bg-transparent hover:text-white focus-visible:ring-white/60 focus-visible:ring-offset-[#14121A]",
+      "tailwindUtilities": [
+        "absolute",
+        "right-2",
+        "top-1/2",
+        "h-7",
+        "w-7",
+        "-translate-y-1/2",
+        "rounded-sm",
+        "text-white/70",
+        "hover:bg-transparent",
+        "hover:text-white",
+        "focus-visible:ring-white/60",
+        "focus-visible:ring-offset-[#14121A]"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "w-full bg-[#FF6A3D] text-black hover:bg-[#FF865F]",
+      "tailwindUtilities": [
+        "w-full",
+        "bg-[#FF6A3D]",
+        "text-black",
+        "hover:bg-[#FF865F]"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/auth/components/ResetPasswordForm.tsx",
+      "componentName": "ResetPasswordForm.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "w-full",
+      "tailwindUtilities": [
+        "w-full"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "h-10",
+      "tailwindUtilities": [
+        "h-10"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "data-testid",
+        "type",
+        "variant",
+        "className",
+        "onClick"
+      ],
+      "className": "h-8 w-full justify-between",
+      "tailwindUtilities": [
+        "h-8",
+        "w-full",
+        "justify-between"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "componentName": "MaterialCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "disabled",
+        "className",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/catalog/components/WorkCatalogCategories.client.tsx",
+      "componentName": "WorkCatalogCategories.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/WorkCatalogCategories.client.tsx",
+      "componentName": "WorkCatalogCategories.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "key",
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/WorkCatalogFilters.client.tsx",
+      "componentName": "WorkCatalogFilters.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "h-8 text-xs px-3",
+      "tailwindUtilities": [
+        "h-8",
+        "text-xs",
+        "px-3"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/catalog/components/WorkCatalogPicker.client.tsx",
+      "componentName": "WorkCatalogPicker.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "disabled",
+        "className",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className",
+        "onClick"
+      ],
+      "className": "flex-1 h-8 text-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "h-8",
+        "text-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "flex-1 h-8 text-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "h-8",
+        "text-xs"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/counterparties/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-7 w-7 p-0 md:h-8 md:w-8",
+      "tailwindUtilities": [
+        "h-7",
+        "w-7",
+        "p-0",
+        "md:h-8",
+        "md:w-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/counterparties/screens/CounterpartiesScreen.tsx",
+      "componentName": "CounterpartiesScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs",
+      "tailwindUtilities": [
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/counterparties/screens/CounterpartiesScreen.tsx",
+      "componentName": "CounterpartiesScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "className": "shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto",
+      "tailwindUtilities": [
+        "shrink-0",
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs",
+        "ml-auto"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
+      "componentName": "TeamWidgetSection.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "mt-1 h-8 w-full border-border/40 text-xs font-semibold",
+      "tailwindUtilities": [
+        "mt-1",
+        "h-8",
+        "w-full",
+        "border-border/40",
+        "text-xs",
+        "font-semibold"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "componentName": "GlobalPurchasesImportExportActions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "componentName": "GlobalPurchasesImportExportActions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesTable.client.tsx",
+      "componentName": "GlobalPurchasesTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "h-8 gap-1.5 w-full sm:w-[255px] justify-between font-mono tabular-nums text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "w-full",
+        "sm:w-[255px]",
+        "justify-between",
+        "font-mono",
+        "tabular-nums",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesTable.client.tsx",
+      "componentName": "GlobalPurchasesTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesTable.client.tsx",
+      "componentName": "GlobalPurchasesTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesTable.client.tsx",
+      "componentName": "GlobalPurchasesTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "componentName": "global-purchases-columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "disabled",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "componentName": "global-purchases-columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "disabled",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "componentName": "global-purchases-columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled",
+        "aria-label"
+      ],
+      "className": "text-muted-foreground hover:text-destructive transition-colors",
+      "tailwindUtilities": [
+        "text-muted-foreground",
+        "hover:text-destructive",
+        "transition-colors"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [
+        "destructive",
+        "ghost"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/guide/screens/GuideScreen.tsx",
+      "componentName": "GuideScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "asChild",
+        "variant",
+        "size"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className",
+        "onClick"
+      ],
+      "className": "flex-1 h-8 text-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "h-8",
+        "text-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "disabled"
+      ],
+      "className": "flex-1 h-8 text-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "h-8",
+        "text-xs"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/material-suppliers/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-7 w-7 p-0 md:h-8 md:w-8",
+      "tailwindUtilities": [
+        "h-7",
+        "w-7",
+        "p-0",
+        "md:h-8",
+        "md:w-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/material-suppliers/screens/MaterialSuppliersScreen.tsx",
+      "componentName": "MaterialSuppliersScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs",
+      "tailwindUtilities": [
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/material-suppliers/screens/MaterialSuppliersScreen.tsx",
+      "componentName": "MaterialSuppliersScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "className": "shrink-0 h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs ml-auto",
+      "tailwindUtilities": [
+        "shrink-0",
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs",
+        "ml-auto"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsToolbar.tsx",
+      "componentName": "MaterialsToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "flex-1 sm:flex-none text-xs md:text-sm",
+      "tailwindUtilities": [
+        "flex-1",
+        "sm:flex-none",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/MaterialsToolbar.tsx",
+      "componentName": "MaterialsToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "flex-1 sm:flex-none text-xs md:text-sm",
+      "tailwindUtilities": [
+        "flex-1",
+        "sm:flex-none",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/MaterialsToolbar.tsx",
+      "componentName": "MaterialsToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "className": "text-primary opacity-50 hover:opacity-100",
+      "tailwindUtilities": [
+        "text-primary",
+        "opacity-50",
+        "hover:opacity-100"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label",
+        "title"
+      ],
+      "className": "opacity-50 hover:opacity-100",
+      "tailwindUtilities": [
+        "opacity-50",
+        "hover:opacity-100"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/notifications/components/notification-bell.tsx",
+      "componentName": "notification-bell.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "disabled"
+      ],
+      "className": "relative",
+      "tailwindUtilities": [
+        "relative"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/notifications/components/notification-bell.tsx",
+      "componentName": "notification-bell.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "className": "relative",
+      "tailwindUtilities": [
+        "relative"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/notifications/components/notification-bell.tsx",
+      "componentName": "notification-bell.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "disabled"
+      ],
+      "className": "w-full text-sm pointer-events-none",
+      "tailwindUtilities": [
+        "w-full",
+        "text-sm",
+        "pointer-events-none"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/notifications/components/notification-item.tsx",
+      "componentName": "notification-item.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "onClick",
+        "className",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/patterns/screens/PatternsScreen.tsx",
+      "componentName": "PatternsScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/patterns/screens/PatternsScreen.tsx",
+      "componentName": "PatternsScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/patterns/screens/PatternsScreen.tsx",
+      "componentName": "PatternsScreen.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "componentName": "PermissionLevelControl.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "className",
+        "disabled",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "componentName": "PermissionLevelControl.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "className",
+        "disabled",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "componentName": "PermissionLevelControl.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "className",
+        "disabled",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "...attributes",
+        "...listeners",
+        "ref",
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "text-muted-foreground size-7 hover:bg-transparent cursor-move",
+      "tailwindUtilities": [
+        "text-muted-foreground",
+        "size-7",
+        "hover:bg-transparent",
+        "cursor-move"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "ghost"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "size"
+      ],
+      "className": "text-muted-foreground flex size-8 cursor-pointer",
+      "tailwindUtilities": [
+        "text-muted-foreground",
+        "flex",
+        "size-8",
+        "cursor-pointer"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "ghost"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "cursor-pointer",
+      "tailwindUtilities": [
+        "cursor-pointer"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className"
+      ],
+      "className": "cursor-pointer",
+      "tailwindUtilities": [
+        "cursor-pointer"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "size-8 rounded-md border-none shadow-none",
+      "tailwindUtilities": [
+        "size-8",
+        "rounded-md",
+        "border-none",
+        "shadow-none"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "size-8 rounded-md border-none shadow-none",
+      "tailwindUtilities": [
+        "size-8",
+        "rounded-md",
+        "border-none",
+        "shadow-none"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [
+        "outline"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "text-foreground w-fit px-0 text-left cursor-pointer hover:no-underline font-semibold h-auto py-0",
+      "tailwindUtilities": [
+        "text-foreground",
+        "w-fit",
+        "px-0",
+        "text-left",
+        "cursor-pointer",
+        "hover:no-underline",
+        "font-semibold",
+        "h-auto",
+        "py-0"
+      ],
+      "eventHandlers": [],
+      "variantHints": [
+        "link"
+      ],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "flex-1 font-semibold h-11",
+      "tailwindUtilities": [
+        "flex-1",
+        "font-semibold",
+        "h-11"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "flex-1 font-semibold h-11",
+      "tailwindUtilities": [
+        "flex-1",
+        "font-semibold",
+        "h-11"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectEstimatesSection.tsx",
+      "componentName": "ProjectEstimatesSection.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "asChild"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectEstimatesTable.tsx",
+      "componentName": "ProjectEstimatesTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "size",
+        "className"
+      ],
+      "className": "w-full sm:w-auto",
+      "tailwindUtilities": [
+        "w-full",
+        "sm:w-auto"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+      "componentName": "CreateEstimateDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+      "componentName": "CreateEstimateDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
+      "componentName": "EstimateHeader.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "onClick",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+      "componentName": "EstimatesListTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "className"
+      ],
+      "className": "inline-flex h-auto p-0 hover:bg-transparent",
+      "tailwindUtilities": [
+        "inline-flex",
+        "h-auto",
+        "p-0",
+        "hover:bg-transparent"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+      "componentName": "EstimatesListTable.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label",
+        "onClick"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label",
+        "onClick"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "h-8 gap-1.5 px-3",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-3"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick"
+      ],
+      "className": "h-8 gap-1.5 px-3",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-3"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "h-8 gap-1.5 px-3",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-3"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "disabled"
+      ],
+      "className": "h-8 gap-1.5 px-3",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-3"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "key",
+        "variant",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start h-auto py-2",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start",
+        "h-auto",
+        "py-2"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cells/EditableCell.tsx",
+      "componentName": "EditableCell.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "className",
+        "disabled",
+        "onClick"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "size-7 hover:bg-muted/80",
+      "tailwindUtilities": [
+        "size-7",
+        "hover:bg-muted/80"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "title",
+        "aria-label"
+      ],
+      "className": "size-8",
+      "tailwindUtilities": [
+        "size-8"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "title",
+        "aria-label"
+      ],
+      "className": "size-8",
+      "tailwindUtilities": [
+        "size-8"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "aria-label"
+      ],
+      "className": "size-8",
+      "tailwindUtilities": [
+        "size-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "componentName": "EstimateExecution.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
+      "componentName": "EstimateParams.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
+      "componentName": "EstimateParams.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "className",
+        "onClick",
+        "disabled",
+        "aria-label"
+      ],
+      "className": "h-8 gap-1.5 px-0 size-8 sm:size-auto sm:px-3 text-xs md:text-sm",
+      "tailwindUtilities": [
+        "h-8",
+        "gap-1.5",
+        "px-0",
+        "size-8",
+        "sm:size-auto",
+        "sm:px-3",
+        "text-xs",
+        "md:text-sm"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "role",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "asChild",
+        "size",
+        "variant",
+        "className"
+      ],
+      "className": "h-10 min-w-0 px-2 sm:h-8",
+      "tailwindUtilities": [
+        "h-10",
+        "min-w-0",
+        "px-2",
+        "sm:h-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "h-10 min-w-0 px-2 sm:h-8",
+      "tailwindUtilities": [
+        "h-10",
+        "min-w-0",
+        "px-2",
+        "sm:h-8"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "aria-label"
+      ],
+      "className": "h-10 px-2 sm:h-8",
+      "tailwindUtilities": [
+        "h-10",
+        "px-2",
+        "sm:h-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "asChild",
+        "size",
+        "variant",
+        "className"
+      ],
+      "className": "min-w-0",
+      "tailwindUtilities": [
+        "min-w-0"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "min-w-0",
+      "tailwindUtilities": [
+        "min-w-0"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/project-actions.tsx",
+      "componentName": "project-actions.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/projects/list/components/projects-toolbar.tsx",
+      "componentName": "projects-toolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "onClick",
+        "className"
+      ],
+      "className": "h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs",
+      "tailwindUtilities": [
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/projects-view-toggle.tsx",
+      "componentName": "projects-view-toggle.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/projects/list/components/projects-view-toggle.tsx",
+      "componentName": "projects-view-toggle.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "disabled",
+        "type",
+        "className"
+      ],
+      "className": "w-fit",
+      "tailwindUtilities": [
+        "w-fit"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "asChild"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "disabled",
+        "type",
+        "className"
+      ],
+      "className": "w-fit",
+      "tailwindUtilities": [
+        "w-fit"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
+      "componentName": "InviteTeamMemberCard.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "className": "w-full justify-between sm:w-40",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-between",
+        "sm:w-40"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
+      "componentName": "InviteTeamMemberCard.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled",
+        "className"
+      ],
+      "className": "w-full sm:w-auto",
+      "tailwindUtilities": [
+        "w-full",
+        "sm:w-auto"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/team/components/TeamMembersCard.tsx",
+      "componentName": "TeamMembersCard.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "key",
+        "type",
+        "variant",
+        "size",
+        "onClick",
+        "aria-pressed",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/team/components/TeamMembersCard.tsx",
+      "componentName": "TeamMembersCard.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "aria-label"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/works/components/UnitSelect.tsx",
+      "componentName": "UnitSelect.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "role",
+        "aria-expanded",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/UnitSelect.tsx",
+      "componentName": "UnitSelect.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "onClick"
+      ],
+      "className": "w-full justify-start text-[10px] h-7 px-1 text-primary hover:text-primary",
+      "tailwindUtilities": [
+        "w-full",
+        "justify-start",
+        "text-[10px]",
+        "h-7",
+        "px-1",
+        "text-primary",
+        "hover:text-primary"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "onClick",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled",
+        "className"
+      ],
+      "className": "h-9 px-8",
+      "tailwindUtilities": [
+        "h-9",
+        "px-8"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/WorksToolbar.tsx",
+      "componentName": "WorksToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "sm:flex-none",
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/WorksToolbar.tsx",
+      "componentName": "WorksToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "onClick",
+        "disabled"
+      ],
+      "className": "flex-1 sm:flex-none h-8 text-xs md:text-sm font-semibold tracking-tight transition-all active:scale-95 shadow-xs",
+      "tailwindUtilities": [
+        "flex-1",
+        "sm:flex-none",
+        "h-8",
+        "text-xs",
+        "md:text-sm",
+        "font-semibold",
+        "tracking-tight",
+        "transition-all",
+        "active:scale-95",
+        "shadow-xs"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/WorksToolbar.tsx",
+      "componentName": "WorksToolbar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "size",
+        "variant",
+        "className",
+        "onClick",
+        "aria-label",
+        "title"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "title",
+        "aria-label"
+      ],
+      "className": "text-primary opacity-50 hover:opacity-100",
+      "tailwindUtilities": [
+        "text-primary",
+        "opacity-50",
+        "hover:opacity-100"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "className",
+        "aria-label",
+        "title"
+      ],
+      "className": "opacity-50 hover:opacity-100 px-1 text-xs font-normal",
+      "tailwindUtilities": [
+        "opacity-50",
+        "hover:opacity-100",
+        "px-1",
+        "text-xs",
+        "font-normal"
+      ],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/alert-dialog.tsx",
+      "componentName": "alert-dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "asChild"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/alert-dialog.tsx",
+      "componentName": "alert-dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "asChild"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/array.tsx",
+      "componentName": "array.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "size",
+        "type",
+        "className",
+        "onClick",
+        "aria-label"
+      ],
+      "className": "hover:bg-zinc-300 hover:text-black focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 dark:bg-white dark:text-black dark:hover:bg-zinc-300 dark:hover:text-black dark:hover:ring-0 dark:hover:ring-offset-0 dark:focus-visible:ring-0 dark:focus-visible:ring-offset-0",
+      "tailwindUtilities": [
+        "hover:bg-zinc-300",
+        "hover:text-black",
+        "focus:ring-0",
+        "focus:ring-offset-0",
+        "focus-visible:ring-0",
+        "focus-visible:ring-offset-0",
+        "dark:bg-white",
+        "dark:text-black",
+        "dark:hover:bg-zinc-300",
+        "dark:hover:text-black",
+        "dark:hover:ring-0",
+        "dark:hover:ring-offset-0",
+        "dark:focus-visible:ring-0",
+        "dark:focus-visible:ring-offset-0"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/array.tsx",
+      "componentName": "array.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "variant",
+        "onClick",
+        "className"
+      ],
+      "className": "mt-4 flex items-center",
+      "tailwindUtilities": [
+        "mt-4",
+        "flex",
+        "items-center"
+      ],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "shared/ui/auto-form/index.tsx",
+      "componentName": "index.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "disabled",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/carousel.tsx",
+      "componentName": "carousel.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "data-slot",
+        "variant",
+        "size",
+        "className",
+        "disabled",
+        "onClick",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/carousel.tsx",
+      "componentName": "carousel.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "data-slot",
+        "variant",
+        "size",
+        "className",
+        "disabled",
+        "onClick",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/data-table.tsx",
+      "componentName": "data-table.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "onClick",
+        "onKeyDown",
+        "aria-label"
+      ],
+      "className": "flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm",
+      "tailwindUtilities": [
+        "flex",
+        "items-center",
+        "gap-2",
+        "select-none",
+        "w-full",
+        "text-left",
+        "cursor-pointer",
+        "hover:text-foreground",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-ring/60",
+        "rounded-sm"
+      ],
+      "eventHandlers": [
+        "onClick",
+        "onKeyDown"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/data-table.tsx",
+      "componentName": "data-table.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "type",
+        "className",
+        "onClick",
+        "onKeyDown",
+        "aria-label"
+      ],
+      "className": "flex items-center gap-2 select-none w-full text-left cursor-pointer hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm",
+      "tailwindUtilities": [
+        "flex",
+        "items-center",
+        "gap-2",
+        "select-none",
+        "w-full",
+        "text-left",
+        "cursor-pointer",
+        "hover:text-foreground",
+        "focus-visible:outline-none",
+        "focus-visible:ring-2",
+        "focus-visible:ring-ring/60",
+        "rounded-sm"
+      ],
+      "eventHandlers": [
+        "onClick",
+        "onKeyDown"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/date-picker.tsx",
+      "componentName": "date-picker.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    },
+    {
+      "filePath": "shared/ui/dialog.tsx",
+      "componentName": "dialog.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "variant"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": false
+    },
+    {
+      "filePath": "shared/ui/sidebar.tsx",
+      "componentName": "sidebar.tsx",
+      "kind": "component-button",
+      "propsUsed": [
+        "data-sidebar",
+        "data-slot",
+        "variant",
+        "size",
+        "className",
+        "onClick",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "eventHandlers": [
+        "onClick"
+      ],
+      "variantHints": [],
+      "hasInlineStyle": false,
+      "hasIcon": true
+    }
+  ]
+}

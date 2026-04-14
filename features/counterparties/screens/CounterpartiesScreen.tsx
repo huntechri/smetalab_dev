@@ -2,11 +2,11 @@
 
 import { useMemo, useState, useTransition, useEffect } from "react";
 
-import { useDebounce } from "@/hooks/use-debounce";
+import { useDebounce } from "@/shared/hooks/use-debounce";
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { fetchCounterpartiesPage } from "@/app/actions/counterparties";
-import { CounterpartyRow } from "@/types/counterparty-row";
+import { CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { columns } from "../components/columns";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";

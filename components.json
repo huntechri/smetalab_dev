@@ -15,7 +15,7 @@
     "utils": "@/lib/utils",
     "ui": "@/shared/ui",
     "lib": "@/lib",
-    "hooks": "@/hooks"
+    "hooks": "@/shared/hooks"
   },
   "registries": {
     "@ss-components": "https://shadcnstudio.com/r/components/{name}.json"

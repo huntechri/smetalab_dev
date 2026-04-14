@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react"
 import { describe, it, expect } from "vitest"
-import { useSidebarState } from "@/hooks/use-sidebar-state"
+import { useSidebarState } from "@/shared/hooks/use-sidebar-state"
 
 describe("useSidebarState", () => {
   it("sets cookie when toggling open state", () => {

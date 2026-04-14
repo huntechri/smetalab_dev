@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
-import { WorkRow } from '@/types/work-row';
+import { WorkRow } from '@/shared/types/domain/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';
 import { WorksDeleteDialog } from '../components/WorksDeleteDialog';
 import { WorksHeader } from '../components/WorksHeader';
@@ -16,7 +16,7 @@ import { WorksSidebar } from '../components/WorksSidebar';
 import { useWorksTable } from '../hooks/useWorksTable';
 import { useWorksActions } from '../hooks/useWorksActions';
 import { useWorksSearch } from '../hooks/useWorksSearch';
-import { useDataTableEditor } from '@/hooks/use-data-table-editor';
+import { useDataTableEditor } from '@/shared/hooks/use-data-table-editor';
 
 interface WorksScreenProps {
   initialData: WorkRow[];

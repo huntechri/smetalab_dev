@@ -38,7 +38,7 @@ vi.mock('swr', () => ({
   mutate: vi.fn(),
 }));
 
-vi.mock('@/hooks/use-permissions', () => ({
+vi.mock('@/shared/hooks/use-permissions', () => ({
   usePermissions: () => ({ hasPermission: () => true }),
 }));
 

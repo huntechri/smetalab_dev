@@ -16,7 +16,7 @@ import { signOut } from '@/app/(login)/actions';
 import { useRouter, usePathname } from 'next/navigation';
 
 import type { AppUser } from '@/shared/types/session';
-import { usePermissions } from '@/hooks/use-permissions';
+import { usePermissions } from '@/shared/hooks/use-permissions';
 import { useUserContext } from '@/components/providers/permissions-provider';
 
 
