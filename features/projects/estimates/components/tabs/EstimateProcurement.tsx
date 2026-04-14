@@ -8,7 +8,7 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { Download, MoreHorizontal } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
-import { EstimateProcurementRow } from '@/lib/services/estimate-procurement.service';
+import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTotals } from '../EstimateTotals';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { projectBadgeClassName } from '@/features/projects/shared/ui/project-badge-styles';

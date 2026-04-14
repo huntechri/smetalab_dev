@@ -6,7 +6,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { ProjectReceiptsSection } from '@/features/projects/dashboard/components/ProjectReceiptsSection';
 import { projectReceiptsActionRepo } from '@/features/projects/dashboard/repository/project-receipts.actions';
-import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/lib/services/project-receipts.service';
+import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 
 const emptyAggregates: ProjectReceiptAggregates = {
   totalConfirmedReceipts: 0,

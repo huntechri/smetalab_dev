@@ -5,7 +5,7 @@ import {
   getProjectReceiptsAction,
   updateProjectReceiptAction,
 } from '@/app/actions/project-receipts';
-import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/lib/services/project-receipts.service';
+import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 
 export type ProjectReceiptPatch = Partial<Pick<ProjectReceiptRow, 'date' | 'amount' | 'type' | 'status' | 'comment' | 'source'>>;
 

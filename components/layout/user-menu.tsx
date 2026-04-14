@@ -15,7 +15,7 @@ import {
 import { signOut } from '@/app/(login)/actions';
 import { useRouter, usePathname } from 'next/navigation';
 
-import { User as UserType } from '@/lib/data/db/schema';
+import type { AppUser } from '@/shared/types/session';
 import { usePermissions } from '@/hooks/use-permissions';
 import { useUserContext } from '@/components/providers/permissions-provider';
 
@@ -43,7 +43,7 @@ export function UserMenu() {
         router.refresh();
     }
 
-    const getUserInitials = (user: UserType | undefined | null) => {
+    const getUserInitials = (user: AppUser | undefined | null) => {
         if (!user) return '?';
         if (user.name) {
             return user.name

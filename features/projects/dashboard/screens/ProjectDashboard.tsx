@@ -5,7 +5,7 @@ import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service';
+import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics';
 import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
 
 type EstimateListItem = {

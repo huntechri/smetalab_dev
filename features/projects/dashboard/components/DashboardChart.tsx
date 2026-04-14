@@ -21,7 +21,7 @@ import {
 import { Button } from "@/shared/ui/button"
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu"
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs"
-import { PerformanceDynamicsPoint } from '@/lib/services/project-performance-dynamics.service'
+import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics'
 import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics'
 
 const chartConfig = {

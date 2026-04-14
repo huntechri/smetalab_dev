@@ -1,16 +1,14 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { WorksCatalogService } from '@/lib/services/works-catalog.service';
 import { WorksService } from '@/lib/domain/works/works.service';
-import {
-  createWorkUseCase,
-  deleteAllWorksUseCase,
-  deleteWorkUseCase,
-  insertWorkAfterUseCase,
-  updateWorkUseCase,
-} from '@/lib/domain/works/use-cases';
 
 vi.mock('@/lib/domain/works/works.service', () => ({
   WorksService: {
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    deleteAll: vi.fn(),
+    insertAfter: vi.fn(),
     getMany: vi.fn(),
     search: vi.fn(),
     reorder: vi.fn(),
@@ -18,25 +16,17 @@ vi.mock('@/lib/domain/works/works.service', () => ({
   },
 }));
 
-vi.mock('@/lib/domain/works/use-cases', () => ({
-  createWorkUseCase: vi.fn(),
-  updateWorkUseCase: vi.fn(),
-  deleteWorkUseCase: vi.fn(),
-  deleteAllWorksUseCase: vi.fn(),
-  insertWorkAfterUseCase: vi.fn(),
-}));
-
 describe('WorksCatalogService', () => {
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  it('delegates CRUD/insert operations to use-cases', async () => {
-    vi.mocked(createWorkUseCase).mockResolvedValue({ success: true, data: undefined });
-    vi.mocked(updateWorkUseCase).mockResolvedValue({ success: true, data: undefined });
-    vi.mocked(deleteWorkUseCase).mockResolvedValue({ success: true, data: undefined });
-    vi.mocked(deleteAllWorksUseCase).mockResolvedValue({ success: true, data: undefined });
-    vi.mocked(insertWorkAfterUseCase).mockResolvedValue({ success: true, data: undefined });
+  it('delegates CRUD/insert operations to domain service', async () => {
+    vi.mocked(WorksService.create).mockResolvedValue({ success: true, data: undefined });
+    vi.mocked(WorksService.update).mockResolvedValue({ success: true, data: undefined });
+    vi.mocked(WorksService.delete).mockResolvedValue({ success: true, data: undefined });
+    vi.mocked(WorksService.deleteAll).mockResolvedValue({ success: true, data: undefined });
+    vi.mocked(WorksService.insertAfter).mockResolvedValue({ success: true, data: undefined });
 
     await WorksCatalogService.create(1, { tenantId: 1, code: 'w-1', name: 'Работа', status: 'active' });
     await WorksCatalogService.update(1, 'id', { name: 'Обновлено' });
@@ -44,11 +34,11 @@ describe('WorksCatalogService', () => {
     await WorksCatalogService.deleteAll(1);
     await WorksCatalogService.insertAfter(1, null, { tenantId: 1, code: 'w-2', name: 'Работа 2', status: 'active' });
 
-    expect(createWorkUseCase).toHaveBeenCalled();
-    expect(updateWorkUseCase).toHaveBeenCalled();
-    expect(deleteWorkUseCase).toHaveBeenCalled();
-    expect(deleteAllWorksUseCase).toHaveBeenCalled();
-    expect(insertWorkAfterUseCase).toHaveBeenCalled();
+    expect(WorksService.create).toHaveBeenCalled();
+    expect(WorksService.update).toHaveBeenCalled();
+    expect(WorksService.delete).toHaveBeenCalled();
+    expect(WorksService.deleteAll).toHaveBeenCalled();
+    expect(WorksService.insertAfter).toHaveBeenCalled();
   });
 
   it('delegates read/search/maintenance operations to domain service', async () => {

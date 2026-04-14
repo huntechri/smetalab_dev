@@ -14,7 +14,7 @@ import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
 import { Textarea } from '@/shared/ui/textarea';
-import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/lib/services/project-receipts.service';
+import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 import { projectReceiptsActionRepo } from '../repository/project-receipts.actions';
 import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 

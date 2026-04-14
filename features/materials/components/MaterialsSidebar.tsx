@@ -15,7 +15,11 @@ interface MaterialsSidebarProps {
     categoryLv3?: string;
     categoryLv4?: string;
   };
-  setFilters: (filters: MaterialsSidebarProps['filters']) => void;
+  setFilters: (
+    filters:
+      | MaterialsSidebarProps['filters']
+      | ((prev: MaterialsSidebarProps['filters']) => MaterialsSidebarProps['filters'])
+  ) => void;
   className?: string;
   isMobile?: boolean;
 }

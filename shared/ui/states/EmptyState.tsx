@@ -1,15 +1,14 @@
 import { Inbox } from 'lucide-react';
-import { TableEmptyState } from '../table-empty-state';
+import { TableEmptyState, TableEmptyStateProps } from '../table-empty-state';
 
-interface EmptyStateProps {
+interface EmptyStateProps extends Omit<TableEmptyStateProps, 'icon' | 'title'> {
     title?: string;
-    description?: string;
-    action?: React.ReactNode;
-    className?: string;
+    icon?: TableEmptyStateProps['icon'];
 }
 
 export function EmptyState({
     title = 'Нет данных для отображения',
+    icon = Inbox,
     description,
     action,
     className,
@@ -19,7 +18,7 @@ export function EmptyState({
             title={title}
             description={description}
             action={action}
-            icon={Inbox}
+            icon={icon}
             className={className}
         />
     );
