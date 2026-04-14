@@ -1,14 +1,12 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "types": ["node"],
-    "moduleResolution": "node",
-    "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true,
-    "resolveJsonModule": true
+    "types": ["node", "@testing-library/jest-dom", "vitest/globals"],
+    "moduleResolution": "bundler"
   },
   "include": [
     "**/*.ts",
     "**/*.tsx"
-  ]
+  ],
+  "exclude": []
 }

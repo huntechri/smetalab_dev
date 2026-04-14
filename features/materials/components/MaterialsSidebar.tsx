@@ -15,7 +15,7 @@ interface MaterialsSidebarProps {
     categoryLv3?: string;
     categoryLv4?: string;
   };
-  setFilters: (filters: any) => void;
+  setFilters: (filters: MaterialsSidebarProps['filters']) => void;
   className?: string;
   isMobile?: boolean;
 }
@@ -151,7 +151,7 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
 
         {hasChildren && isExpanded && (
           <div className="flex flex-col gap-1 pl-4 ml-2 border-l border-border/60">
-            {node.children.map((child) => renderCategoryNode(child, (level + 1) as any, currentPath))}
+            {node.children.map((child) => renderCategoryNode(child, (level + 1) as 1 | 2 | 3 | 4, currentPath))}
           </div>
         )}
       </div>

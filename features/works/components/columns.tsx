@@ -12,12 +12,6 @@ import {
     DropdownMenuTrigger,
 } from "@/shared/ui/dropdown-menu"
 import { Input } from "@/shared/ui/input"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/shared/ui/tooltip"
 import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/types/work-row"
@@ -123,9 +117,8 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
 })
 RowActions.displayName = "RowActions"
 
-const IndexCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<WorkRow> }) => {
+const IndexCell = React.memo(({ row }: { row: Row<WorkRow> }) => {
     const isPlaceholder = row.original.isPlaceholder;
-    const meta = table.options.meta as TableMeta<WorkRow>
     const index = row.index + 1;
 
     return (

@@ -40,7 +40,7 @@ interface MaterialsToolbarProps {
         categoryLv3?: string;
         categoryLv4?: string;
     };
-    setFilters?: (filters: any) => void;
+    setFilters?: (filters: NonNullable<MaterialsToolbarProps['filters']> | ((prev: NonNullable<MaterialsToolbarProps['filters']>) => NonNullable<MaterialsToolbarProps['filters']>)) => void;
     showSidebar?: boolean;
     setShowSidebar?: (show: boolean) => void;
 }
