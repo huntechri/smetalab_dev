@@ -86,6 +86,11 @@
 - **UI-примитивы** (`shared/ui/**`)
   - Содержат только переиспользуемые shadcn/Radix примитивы и общие паттерны состояний (`shared/ui/states/**`).
   - Не должны тянуть бизнес-логику домена или запросы к БД.
+- **UI-дедупликация справочников** (`features/guide-catalog/**`, `features/directories/**`)
+  - Для `materials/works` используется единый shell-слой (`CatalogScreenShell`, `CatalogTableWrapper`, `CatalogToolbar`) с модульными адаптерами.
+  - Для `counterparties/material-suppliers` используется общий `DirectoryListScreen` + типизированные адаптеры.
+- **DTO и клиентские типы** (`shared/types/**`, `features/**/types/**`)
+  - Клиентские компоненты используют UI DTO-типы и не импортируют DB-типы напрямую из `lib/data/db/schema` или сервисные типы из `lib/services/**`.
 
 Текущая практическая схема для экранов workspace (`dashboard/works/materials/counterparties/projects`):
 1. `app/(workspace)/app/guide/**/page.tsx` загружает initial data на сервере.
@@ -150,9 +155,12 @@
 - `app/(workspace)/app/page.tsx`: Консолидированный home-дашборд по всем проектам команды (KPI + график "Динамика проекта").
 - `app/actions/`: Server Actions (обертки `safeAction` с проверкой ролей).
 - `lib/data/db/`: Схема Drizzle и миграции.
-- `lib/domain/`: **Ядро бизнес-логики**. Use-cases и сервисы предметной области.
+- `lib/domain/`: Контракты и доменные сервисы (в некоторых модулях остаются use-cases, в `materials/works` CRUD-оркестрация идёт через `lib/services/*-catalog.service.ts` → `lib/domain/*/*.service.ts`).
 - `lib/infrastructure/auth/`: Логика RBAC и контроля доступа.
 - `shared/ui/`: Библиотека Shadcn/UI (базовые блоки).
+- `shared/types/`: UI DTO-типы для client-слоя.
+- `features/guide-catalog/`: Единый каркас справочников `materials/works`.
+- `features/directories/`: Единый каркас списочных экранов справочников.
 - `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials.
 - В деталях сметы вкладка **«Выполнение»** хранит факт работ в отдельной таблице `estimate_execution_rows`, не изменяя плановые строки сметы; при отсутствии таблицы сервис один раз запускает `drizzle`-миграции программно и повторно проверяет структуру.
 
