@@ -1,6 +1,6 @@
 'use client';
 
-import { usePermissions } from '@/hooks/use-permissions';
+import { usePermissions } from '@/shared/hooks/use-permissions';
 import { InviteTeamMemberCard } from '../components/InviteTeamMemberCard';
 import { TeamHeaderCard } from '../components/TeamHeaderCard';
 import { TeamMembersCard } from '../components/TeamMembersCard';

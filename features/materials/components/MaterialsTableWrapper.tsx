@@ -6,7 +6,7 @@ import {
   CatalogTableWrapper,
 } from "@/features/guide-catalog";
 import { columns } from "./columns";
-import { MaterialRow } from "@/types/material-row";
+import { MaterialRow } from "@/shared/types/domain/material-row";
 
 interface MaterialsTableWrapperProps {
   data: MaterialRow[];

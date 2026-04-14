@@ -4,7 +4,7 @@ import { db } from './drizzle';
 import { materials } from './schema';
 import { getTeamForUser } from './user-team-queries';
 import { withActiveTenant } from './tenant';
-import { MaterialRow } from '@/types/material-row';
+import { MaterialRow } from '@/shared/types/domain/material-row';
 
 export async function getMaterials(limit?: number, search?: string, lastCode?: string) {
   const team = await getTeamForUser();

@@ -22,7 +22,7 @@ vi.mock('next/navigation', () => ({
   usePathname: () => '/app',
 }));
 
-vi.mock('@/hooks/use-permissions', () => ({
+vi.mock('@/shared/hooks/use-permissions', () => ({
   usePermissions: () => ({
     hasPermission: hasPermissionMock,
   }),

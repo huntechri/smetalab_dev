@@ -19,7 +19,7 @@ import { useAppToast } from '@/components/providers/use-app-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
 import { materialSupplierFormSchema, type MaterialSupplierFormValues } from '../schemas/material-supplier-form.schema';
 import { Loader2 } from 'lucide-react';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 
 interface CreateMaterialSupplierSheetProps {
   open: boolean;

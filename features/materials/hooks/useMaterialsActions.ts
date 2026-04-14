@@ -1,7 +1,7 @@
 import { useTransition, useRef } from 'react';
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { exportMaterials, deleteAllMaterials, createMaterial, importMaterials } from '@/app/actions/materials';
-import { MaterialRow } from '@/types/material-row';
+import { MaterialRow } from '@/shared/types/domain/material-row';
 import * as XLSX from 'xlsx';
 
 export function useMaterialsActions(data: MaterialRow[], setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>, tenantId: number) {

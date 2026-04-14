@@ -6,7 +6,7 @@ import {
   CatalogTableWrapper,
 } from "@/features/guide-catalog";
 import { columns } from "./columns";
-import { WorkRow } from "@/types/work-row";
+import { WorkRow } from "@/shared/types/domain/work-row";
 
 interface WorksTableWrapperProps {
   data: WorkRow[];

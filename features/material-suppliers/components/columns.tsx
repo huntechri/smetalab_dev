@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 import { TableMeta } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { Pencil, Trash, Settings } from 'lucide-react';

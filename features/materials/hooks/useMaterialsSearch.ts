@@ -1,6 +1,6 @@
 import { searchMaterials, fetchMoreMaterials } from '@/app/actions/materials';
-import { MaterialRow } from '@/types/material-row';
-import { useGuideTableSearch } from '@/hooks/use-guide-table-search';
+import { MaterialRow } from '@/shared/types/domain/material-row';
+import { useGuideTableSearch } from '@/shared/hooks/use-guide-table-search';
 
 export function useMaterialsSearch(
     initialData: MaterialRow[],

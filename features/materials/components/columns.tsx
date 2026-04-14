@@ -17,7 +17,7 @@ import {
     TooltipContent,
     TooltipTrigger,
 } from "@/shared/ui/tooltip"
-import { MaterialRow } from "@/types/material-row"
+import { MaterialRow } from "@/shared/types/domain/material-row"
 import { TableMeta } from "@/shared/ui/data-table"
 import { cva } from "class-variance-authority"
 

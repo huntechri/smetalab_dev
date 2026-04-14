@@ -6,7 +6,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
-import { MaterialRow } from '@/types/material-row';
+import { MaterialRow } from '@/shared/types/domain/material-row';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';
 import { MaterialsDeleteDialog } from '../components/MaterialsDeleteDialog';
 import { MaterialsHeader } from '../components/MaterialsHeader';
@@ -17,7 +17,7 @@ import { useMaterialsActions } from '../hooks/useMaterialsActions';
 import { useMaterialsSearch } from '../hooks/useMaterialsSearch';
 import { useMaterialsTable } from '../hooks/useMaterialsTable';
 import { useMaterialsRowActions } from '../hooks/useMaterialsRowActions';
-import { useDataTableEditor } from '@/hooks/use-data-table-editor';
+import { useDataTableEditor } from '@/shared/hooks/use-data-table-editor';
 
 interface MaterialsScreenProps {
   initialData: MaterialRow[];

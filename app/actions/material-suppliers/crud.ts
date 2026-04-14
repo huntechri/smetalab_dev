@@ -8,7 +8,7 @@ import {
 import { z } from 'zod';
 import { safeAction } from '@/lib/actions/safe-action';
 import { success, error } from '@/lib/utils/result';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 
 const materialSupplierSchema = z.object({
   name: z.string().min(1, 'Name is required'),

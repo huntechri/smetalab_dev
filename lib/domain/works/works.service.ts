@@ -3,7 +3,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { works, NewWork } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
 import { buildWorkContext } from '@/lib/ai/embedding-context';
-import { WorkRow } from '@/types/work-row';
+import { WorkRow } from '@/shared/types/domain/work-row';
 import { Result, success, error } from '@/lib/utils/result';
 import { workSchema } from '@/lib/validations/schemas';
 import { withActiveTenant } from '@/lib/data/db/queries';

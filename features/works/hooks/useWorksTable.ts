@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import { WorkRow } from '@/types/work-row';
+import { WorkRow } from '@/shared/types/domain/work-row';
 import { insertWorkAfter } from '@/app/actions/works';
 import { useAppToast } from '@/components/providers/use-app-toast';
 

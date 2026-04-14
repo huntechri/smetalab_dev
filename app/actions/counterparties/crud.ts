@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 import { safeAction } from '@/lib/actions/safe-action';
 import { success, error } from '@/lib/utils/result';
-import { CounterpartyRow } from '@/types/counterparty-row';
+import { CounterpartyRow } from '@/shared/types/domain/counterparty-row';
 
 const counterpartySchema = z.object({
     name: z.string().min(1, 'Name is required'),

@@ -6,7 +6,7 @@ import { works } from './schema';
 import { getTeamForUser } from './user-team-queries';
 import { withActiveTenant } from './tenant';
 import { ensureWorksCodeSortKeyColumn } from './schema-compat';
-import { WorkRow } from '@/types/work-row';
+import { WorkRow } from '@/shared/types/domain/work-row';
 
 export async function getWorks(limit?: number, lastSortOrder?: number) {
   await ensureWorksCodeSortKeyColumn();

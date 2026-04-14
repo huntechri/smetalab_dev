@@ -20,7 +20,7 @@ import {
 import { cn } from "@/lib/utils"
 import { Input } from "@/shared/ui/input"
 import { Switch } from "@/shared/ui/switch"
-import { useDataTableState } from "@/hooks/use-data-table-state"
+import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
 
 /* -------------------------------------------------------------------------- */

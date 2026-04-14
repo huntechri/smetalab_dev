@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 import { columns } from '../components/columns';
 import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplierSheet';
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';

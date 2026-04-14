@@ -1,7 +1,7 @@
 import { renderHook, act, waitFor } from "@testing-library/react"
 import { describe, it, expect, vi, beforeEach } from "vitest"
 import { useWorksActions } from "@/features/works/hooks/useWorksActions"
-import type { WorkRow } from "@/types/work-row"
+import type { WorkRow } from "@/shared/types/domain/work-row"
 import type { ChangeEvent, Dispatch, SetStateAction } from "react"
 
 const toastSpy = vi.fn()

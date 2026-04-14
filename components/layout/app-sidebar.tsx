@@ -16,7 +16,7 @@ import {
     Users,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
-import { usePermissions } from '@/hooks/use-permissions';
+import { usePermissions } from '@/shared/hooks/use-permissions';
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const mainNavItems = [

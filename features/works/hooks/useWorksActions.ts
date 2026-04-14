@@ -3,7 +3,7 @@
 import { useRef, useTransition } from "react"
 import * as XLSX from "xlsx"
 import { useAppToast } from "@/components/providers/use-app-toast"
-import { WorkRow } from "@/types/work-row"
+import { WorkRow } from "@/shared/types/domain/work-row"
 import {
     importWorks,
     exportWorks,

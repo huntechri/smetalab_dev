@@ -1,4 +1,4 @@
-import { MaterialRow } from '@/types/material-row';
+import { MaterialRow } from '@/shared/types/domain/material-row';
 
 export function useMaterialsTable(data: MaterialRow[], setData: React.Dispatch<React.SetStateAction<MaterialRow[]>>, tenantId: number) {
     const onInsertRequest = (afterId?: string) => {

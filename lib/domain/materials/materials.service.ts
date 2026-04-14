@@ -3,7 +3,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { materials, NewMaterial } from '@/lib/data/db/schema';
 import { generateEmbedding, generateEmbeddingsBatch } from '@/lib/ai/embeddings';
 import { buildMaterialContext, MaterialContextInput } from '@/lib/ai/embedding-context';
-import { MaterialRow } from '@/types/material-row';
+import { MaterialRow } from '@/shared/types/domain/material-row';
 import { MaterialCategoryNode } from './materials.contract';
 import { Result, success, error } from '@/lib/utils/result';
 import { materialSchema } from '@/lib/validations/schemas';

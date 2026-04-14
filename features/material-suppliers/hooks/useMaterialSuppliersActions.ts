@@ -2,7 +2,7 @@
 
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { deleteMaterialSupplier } from '@/app/actions/material-suppliers';
-import { MaterialSupplierRow } from '@/types/material-supplier-row';
+import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
 
 type DeleteCallbacks = {
   onOptimisticDelete: (id: string) => MaterialSupplierRow | null;

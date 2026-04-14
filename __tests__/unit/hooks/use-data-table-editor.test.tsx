@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react"
 import { describe, it, expect, vi, beforeEach } from "vitest"
-import { useDataTableEditor } from "@/hooks/use-data-table-editor"
+import { useDataTableEditor } from "@/shared/hooks/use-data-table-editor"
 import type { FormEvent } from "react"
 
 const toastSpy = vi.fn()

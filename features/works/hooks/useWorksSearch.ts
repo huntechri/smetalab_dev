@@ -1,7 +1,7 @@
 import { searchWorks } from '@/app/actions/works';
 import { fetchMoreWorks } from '@/app/actions/works/search';
-import { WorkRow } from '@/types/work-row';
-import { useGuideTableSearch } from '@/hooks/use-guide-table-search';
+import { WorkRow } from '@/shared/types/domain/work-row';
+import { useGuideTableSearch } from '@/shared/hooks/use-guide-table-search';
 
 export function useWorksSearch(
     initialData: WorkRow[],

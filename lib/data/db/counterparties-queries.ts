@@ -3,7 +3,7 @@ import { and, desc, ilike, sql } from 'drizzle-orm';
 import { db } from './drizzle';
 import { counterparties } from './schema';
 import { withActiveTenant } from './tenant';
-import { CounterpartyRow } from '@/types/counterparty-row';
+import { CounterpartyRow } from '@/shared/types/domain/counterparty-row';
 
 export async function getCounterparties(
   teamId: number,

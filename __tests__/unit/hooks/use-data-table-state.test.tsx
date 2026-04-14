@@ -1,6 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react"
 import { describe, it, expect } from "vitest"
-import { useDataTableState } from "@/hooks/use-data-table-state"
+import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import type { ColumnDef } from "@tanstack/react-table"
 
 interface RowData {

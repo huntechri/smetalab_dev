@@ -14,7 +14,7 @@ import {
 import { Input } from "@/shared/ui/input"
 import { cva } from "class-variance-authority"
 
-import { WorkRow } from "@/types/work-row"
+import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { TableMeta } from "@/shared/ui/data-table"
 
