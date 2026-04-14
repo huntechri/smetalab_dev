@@ -21,7 +21,7 @@ describe("migrate-buttons codemod", () => {
 
     expect(out.changed).toBe(true)
     expect(out.code).toContain('<Button type="button">Go</Button>')
-    expect(out.code).toContain('import { Button } from "@/components/ui/button"')
+    expect(out.code).toContain('import { Button } from "@/shared/ui/button"')
   })
 
   it("wraps styled link as asChild Button", () => {

@@ -142,27 +142,30 @@ function pushRecord(records: ButtonLikeRecord[], filePath: string, kind: ButtonL
 }
 
 export function ensureButtonImport(code: string): string {
+  let nextCode = code
   if (code.includes('from "@/components/ui/button"') || code.includes("from '@/components/ui/button'")) {
-    return code
+    nextCode = code
+      .replace('from "@/components/ui/button"', 'from "@/shared/ui/button"')
+      .replace("from '@/components/ui/button'", "from '@/shared/ui/button'")
   }
 
   const sharedImportRegex = /import\s+\{([^}]+)\}\s+from\s+["']@\/shared\/ui\/button["'];?/
-  const match = code.match(sharedImportRegex)
+  const match = nextCode.match(sharedImportRegex)
   if (match) {
     const names = match[1].split(",").map((n) => n.trim()).filter(Boolean)
     if (!names.includes("Button")) {
       const merged = [...new Set([...names, "Button"])].join(", ")
-      return code.replace(sharedImportRegex, `import { ${merged} } from "@/shared/ui/button"`)
+      return nextCode.replace(sharedImportRegex, `import { ${merged} } from "@/shared/ui/button"`)
     }
-    return code
+    return nextCode
   }
 
-  const importMatch = code.match(/import[\s\S]*?from\s+["'][^"']+["'];?\n/g)
-  const importLine = 'import { Button } from "@/components/ui/button"\n'
-  if (!importMatch || importMatch.length === 0) return importLine + code
+  const importMatch = nextCode.match(/import[\s\S]*?from\s+["'][^"']+["'];?\n/g)
+  const importLine = 'import { Button } from "@/shared/ui/button"\n'
+  if (!importMatch || importMatch.length === 0) return importLine + nextCode
   const last = importMatch[importMatch.length - 1]
-  const idx = code.indexOf(last) + last.length
-  return code.slice(0, idx) + importLine + code.slice(idx)
+  const idx = nextCode.indexOf(last) + last.length
+  return nextCode.slice(0, idx) + importLine + nextCode.slice(idx)
 }
 
 export function migrateCode(code: string, filePath = "file.tsx") {
@@ -227,10 +230,10 @@ function writeReports(records: ButtonLikeRecord[], changedCount: number) {
     )
   )
 
-  const canonical = fs.readFileSync(path.join(ROOT, "components/ui/button.tsx"), "utf8")
+  const canonical = fs.readFileSync(path.join(ROOT, "shared/ui/button.tsx"), "utf8")
   fs.writeFileSync(
     SPEC_REPORT_PATH,
-    `# Canonical Button Spec\n\nSource: components/ui/button.tsx\n\n\`\`\`tsx\n${canonical}\n\`\`\`\n`
+    `# Canonical Button Spec\n\nSource: shared/ui/button.tsx\n\n\`\`\`tsx\n${canonical}\n\`\`\`\n`
   )
 }
 
