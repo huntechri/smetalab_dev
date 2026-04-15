@@ -351,7 +351,7 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
       - name: Comment preview URL
-        uses: actions/github-script@v8
+        uses: actions/github-script@v9
         with:
           script: |
             const previewUrl = `${{ steps.deploy_preview.outputs.preview_url }}`;
