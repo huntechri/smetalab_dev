@@ -319,6 +319,8 @@ jobs:
         run: |
           set -ex
           BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          # `--git-branch` is supported by `vercel pull` (branch-specific env overrides),
+          # but not by `vercel build` / `vercel deploy` for the CLI version in CI.
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
           vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
 
