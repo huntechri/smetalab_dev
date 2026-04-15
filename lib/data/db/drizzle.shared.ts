@@ -4,13 +4,16 @@ import { drizzle, PostgresJsDatabase, PostgresJsQueryResultHKT } from 'drizzle-o
 import postgres from 'postgres';
 import * as schema from './schema';
 
-const connectionString = process.env.DATABASE_URL ?? process.env.TEST_DATABASE_URL;
+const connectionString =
+  process.env.DATABASE_URL ??
+  process.env.TEST_DATABASE_URL ??
+  process.env.POSTGRES_URL;
 
 if (!connectionString) {
   if (process.env.NODE_ENV === 'production') {
-    console.warn('⚠️  DATABASE_URL/TEST_DATABASE_URL are not set. Using mock DB client for build.');
+    console.warn('⚠️  DATABASE_URL/TEST_DATABASE_URL/POSTGRES_URL are not set. Using mock DB client for build.');
   } else {
-    throw new Error('DATABASE_URL/TEST_DATABASE_URL environment variables are not set');
+    throw new Error('DATABASE_URL/TEST_DATABASE_URL/POSTGRES_URL environment variables are not set');
   }
 }
 
@@ -29,7 +32,7 @@ const sslRequired = !isLocalConnection;
 // Helper to create a proxy that throws on access
 const createThrowingProxy = (name: string) => new Proxy({}, {
   get: () => {
-    throw new Error(`${name} is not initialized because DATABASE_URL/TEST_DATABASE_URL are missing.`);
+    throw new Error(`${name} is not initialized because DATABASE_URL/TEST_DATABASE_URL/POSTGRES_URL are missing.`);
   }
 });
 
