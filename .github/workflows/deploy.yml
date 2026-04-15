@@ -290,7 +290,7 @@ jobs:
         with:
           project_id: ${{ vars.NEON_PROJECT_ID || 'falling-fire-63341326' }}
           api_key: ${{ secrets.NEON_API_KEY }}
-          branch_name: preview/test-${{ github.event.pull_request.number || github.sha }}
+          branch: preview/test-${{ github.event.pull_request.number || github.sha }}
 
   deploy-preview:
     name: Deploy to Vercel Preview
