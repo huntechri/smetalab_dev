@@ -39,7 +39,7 @@ jobs:
       || github.event.action == 'reopened')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Get branch expiration date as an env variable (2 weeks from now)
         id: get_expiration_date
