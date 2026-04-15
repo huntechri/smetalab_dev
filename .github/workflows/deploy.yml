@@ -318,8 +318,9 @@ jobs:
         id: deploy_preview
         run: |
           set -ex
-          vercel pull --yes --environment preview --token=${{ secrets.VERCEL_TOKEN }}
-          vercel build --token=${{ secrets.VERCEL_TOKEN }}
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --target preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
 
           deploy_output=""
           deploy_exit_code=1
@@ -327,7 +328,7 @@ jobs:
 
           for attempt in 1 2 3; do
             set +e
-            deploy_output=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            deploy_output=$(vercel deploy --prebuilt --target preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
             deploy_exit_code=$?
             set -e
 
