@@ -75,7 +75,7 @@ describe('Email Sending Logic', () => {
         process.env.VERCEL_URL = originalVercelUrl;
 
         const callArgs = (resendInstance.emails.send as Mock).mock.calls.at(-1)?.[0];
-        expect(callArgs?.html).toContain('https://smetalabv3.vercel.app/invitations?inviteId=987');
+        expect(callArgs?.html).toContain('https://smetalab-dev.vercel.app/invitations?inviteId=987');
     });
 
 
@@ -102,7 +102,7 @@ describe('Email Sending Logic', () => {
         process.env.VERCEL_URL = originalVercelUrl;
 
         const callArgs = (resendInstance.emails.send as Mock).mock.calls.at(-1)?.[0];
-        expect(callArgs?.html).toContain('https://smetalabv3.vercel.app/invitations?inviteId=654');
+        expect(callArgs?.html).toContain('https://smetalab-dev.vercel.app/invitations?inviteId=654');
     });
 
     it('should fail early when RESEND_API_KEY is missing', async () => {
