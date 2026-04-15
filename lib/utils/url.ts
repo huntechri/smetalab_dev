@@ -1,5 +1,5 @@
 const DEFAULT_BASE_URL = 'http://localhost:3000';
-const DEFAULT_INVITATION_BASE_URL = 'https://smetalabv3.vercel.app';
+const DEFAULT_INVITATION_BASE_URL = 'https://smetalab-dev.vercel.app';
 
 function normalizeBaseUrl(url: string): string {
     return url.replace(/\/$/, '');

@@ -2,7 +2,7 @@
 
 Профессиональная SaaS-платформа на **Next.js**, с продвинутой мультиарендностью, гибридным AI-поиском и системой управления командой.
 
-**Репозиторий: [https://github.com/azap026/smetalabv3](https://github.com/azap026/smetalabv3)**
+**Репозиторий: [https://github.com/huntechri/smetalab_dev](https://github.com/huntechri/smetalab_dev)**
 
 ---
 

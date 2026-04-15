@@ -49,8 +49,8 @@ git push
 ## 📝 Первая настройка ПК2
 
 ```bash
-git clone https://github.com/azap026/smetalabv3.git
-cd smetalabv3
+git clone https://github.com/huntechri/smetalab_dev.git
+cd smetalab_dev
 pnpm install
 cp .env.example .env
 # Заполнить .env (те же данные что и на ПК1!)

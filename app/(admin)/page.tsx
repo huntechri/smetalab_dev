@@ -109,7 +109,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="mt-8 lg:mt-0 flex justify-center lg:justify-end">
-              <a href="https://github.com/azap026/smetalabv3" target="_blank">
+              <a href="https://github.com/huntechri/smetalab_dev" target="_blank">
                 <Button
                   size="lg"
                   variant="outline"
