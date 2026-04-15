@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
+import { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
@@ -77,6 +78,7 @@ interface EstimateDetailsShellProps {
     estimateId: string;
     rowsPromise: Promise<EstimateRow[]>;
     roomParamsPromise: Promise<EstimateRoomParam[]>;
+    procurementPromise: Promise<EstimateProcurementRow[]>;
     project: {
         id: string;
         name: string;
@@ -88,7 +90,7 @@ interface EstimateDetailsShellProps {
     };
 }
 
-export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
+export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, procurementPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
@@ -156,7 +158,13 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     )}
                 </TabsContent>
                 <TabsContent value="procurement" className="mt-2">
-                    {loadedTabs.has('procurement') ? <EstimateProcurement estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                    {loadedTabs.has('procurement') ? (
+                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                            <EstimateProcurement dataPromise={procurementPromise} />
+                        </Suspense>
+                    ) : (
+                        <Skeleton className="h-[520px] w-full" />
+                    )}
                 </TabsContent>
                 <TabsContent value="execution" className="mt-2">
                     {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
