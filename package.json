@@ -67,6 +67,7 @@
     "@types/xlsx": "^0.0.36",
     "@typescript-eslint/eslint-plugin": "^8.56.0",
     "@typescript-eslint/parser": "^8.56.0",
+    "@vercel/analytics": "^2.0.1",
     "@vercel/blob": "^2.2.0",
     "autoprefixer": "^10.4.24",
     "bcryptjs": "^3.0.3",

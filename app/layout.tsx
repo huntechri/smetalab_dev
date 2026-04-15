@@ -22,6 +22,7 @@ export const viewport: Viewport = {
 import { Suspense } from 'react';
 import { SWRWrapper } from '@/components/swr-wrapper';
 import { WebVitals } from '@/components/web-vitals';
+import { Analytics } from "@vercel/analytics/next"
 
 export default function RootLayout({
   children
@@ -43,6 +44,7 @@ export default function RootLayout({
           <SWRWrapper userPromise={userPromise} teamPromise={teamPromise}>
             {children}
             <Toaster />
+            <Analytics />
           </SWRWrapper>
         </Suspense>
       </body>
