@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { Toaster } from '@/shared/ui/sonner';
 import { Manrope } from 'next/font/google';
+import { Analytics } from '@vercel/analytics/next';
 
 const manrope = Manrope({
   subsets: ['latin', 'cyrillic'],
@@ -45,6 +46,7 @@ export default function RootLayout({
             <Toaster />
           </SWRWrapper>
         </Suspense>
+        <Analytics />
       </body>
     </html>
   );
