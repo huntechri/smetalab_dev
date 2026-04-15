@@ -161,7 +161,7 @@
 - `shared/types/`: UI DTO-типы для client-слоя.
 - `features/guide-catalog/`: Единый каркас справочников `materials/works`.
 - `features/directories/`: Единый каркас списочных экранов справочников.
-- `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials.
+- `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials. Включает аналитические вкладки **«Закупки»** (сводная ведомость материалов по всей смете) и **«Выполнение»** (факт работ).
 - В деталях сметы вкладка **«Выполнение»** хранит факт работ в отдельной таблице `estimate_execution_rows`, не изменяя плановые строки сметы; при отсутствии таблицы сервис один раз запускает `drizzle`-миграции программно и повторно проверяет структуру.
 
 ## 🛠 Технологии
