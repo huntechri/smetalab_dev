@@ -46,7 +46,6 @@ export function DirectoryListScreen<TData, TValue>({
     emptyDescription,
     filterColumn = 'name',
     filterPlaceholder = 'Поиск по названию...',
-    filterInputClassName,
     desktopHeight = '720px',
   } = adapter;
 
@@ -71,7 +70,6 @@ export function DirectoryListScreen<TData, TValue>({
         data={rows}
         height={tableHeight}
         className="text-[12px]"
-        filterInputClassName={filterInputClassName}
         filterColumn={filterColumn}
         filterPlaceholder={filterPlaceholder}
         onSearch={onSearch}

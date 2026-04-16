@@ -195,7 +195,6 @@ export function EstimatesListTable({
       data={rows}
       filterColumn={showSearch ? 'name' : undefined}
       filterPlaceholder={showSearch ? 'Поиск...' : undefined}
-      filterInputClassName={showSearch ? 'bg-white h-8 border-border rounded-[7.6px] font-medium text-[14px] leading-[20px] shadow-none focus-visible:border-primary/40 transition-all px-2 py-0 hover:bg-secondary/50 placeholder:text-[12px]' : undefined}
       height={height}
       showFilter={showSearch}
       tableMinWidth={tableMinWidth}

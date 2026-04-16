@@ -24,7 +24,6 @@ const materialSuppliersListAdapter: DirectoryListAdapter<MaterialSupplierRow> = 
   addButtonLabel: 'Добавить',
   emptyTitle: 'Список поставщиков пуст',
   emptyDescription: 'Добавьте первого поставщика для ведения базы материалов',
-  filterInputClassName: 'bg-transparent border border-[hsl(240_5.9%_90%_/_0.7)] rounded-[7.6px] shadow-none font-[Manrope] text-[14px] leading-[21px] font-medium placeholder:text-[14px] px-2 py-0 hover:bg-[hsl(240_4.7%_96%_/_0.82)]',
 };
 
 export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: MaterialSuppliersScreenProps) {

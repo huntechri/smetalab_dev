@@ -9,6 +9,5 @@ export interface DirectoryListAdapter<TData, TValue = unknown> {
   emptyDescription: string;
   filterColumn?: string;
   filterPlaceholder?: string;
-  filterInputClassName?: string;
   desktopHeight?: string;
 }

@@ -92,7 +92,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           <ChevronsUpDown className="size-3 opacity-60" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
+      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
           <CommandInput placeholder="Поиск поставщика..." />
           <CommandList>
@@ -163,7 +163,7 @@ const ProjectCell = React.memo(function ProjectCell({
           <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
+      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
           <CommandInput placeholder="Поиск объекта..." />
           <CommandList>

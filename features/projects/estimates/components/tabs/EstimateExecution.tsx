@@ -381,7 +381,6 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 data={rows}
                 filterColumn="name"
                 filterPlaceholder="Поиск..."
-                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
                 compactMobileToolbar
                 emptyState={
