@@ -16,6 +16,7 @@ import Link from 'next/link';
 import { ImpersonateButton } from '@/features/admin/components/impersonate-button';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
+import { getRoleBadgeClassName, getSubscriptionBadgeClassName } from '@/features/admin/lib/badge-tones';
 
 interface PageProps {
     params: Promise<{ tenantId: string }>;
@@ -44,10 +45,10 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                     <p className="text-sm text-muted-foreground">ID: {team.id} • Создан {format(team.createdAt, 'PPp', { locale: ru })}</p>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
-                    <Badge variant={team.subscriptionStatus === 'active' ? 'default' : 'secondary'} className="uppercase">
+                    <Badge variant="secondary" className={getSubscriptionBadgeClassName(team.subscriptionStatus)}>
                         {team.subscriptionStatus || 'free'}
                     </Badge>
-                    <Badge variant="outline" className="uppercase">
+                    <Badge variant="secondary" className="border-none bg-slate-500/12 text-slate-700 uppercase tracking-wide">
                         {team.planName || 'No Plan'}
                     </Badge>
                 </div>
@@ -115,7 +116,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                                             <p className="font-medium text-gray-900">{member.user.name || 'No name'}</p>
                                             <p className="text-xs text-muted-foreground">{member.user.email}</p>
                                         </div>
-                                        <Badge variant="secondary" className="text-[10px] uppercase ml-2">
+                                        <Badge variant="secondary" className={`ml-2 text-[10px] uppercase tracking-wide ${getRoleBadgeClassName(member.role)}`}>
                                             {member.role}
                                         </Badge>
                                     </div>

@@ -4,6 +4,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
+import { getSubscriptionBadgeClassName } from '@/features/admin/lib/badge-tones';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +15,7 @@ export default async function TenantsPage() {
         <section className="flex-1 p-4 lg:p-8 space-y-6">
             <div className="flex items-center justify-between">
                 <h1 className="text-xl font-bold tracking-tight text-gray-900">Управление тенантами</h1>
-                <Badge variant="outline" className="font-mono text-[10px] uppercase">
+                <Badge variant="secondary" className="border-none font-mono text-[10px] uppercase tracking-wide">
                     Total: {teams.length}
                 </Badge>
             </div>
@@ -28,9 +29,8 @@ export default async function TenantsPage() {
                                     <Building2 className="h-5 w-5" />
                                 </div>
                                 <Badge
-                                    variant={team.subscriptionStatus === 'active' ? 'default' : 'secondary'}
-                                    className={`text-[10px] px-2 py-0 h-5 font-bold uppercase ${team.subscriptionStatus === 'active' ? 'bg-green-500 hover:bg-green-600' : ''
-                                        }`}
+                                    variant="secondary"
+                                    className={getSubscriptionBadgeClassName(team.subscriptionStatus)}
                                 >
                                     {team.subscriptionStatus || 'free'}
                                 </Badge>

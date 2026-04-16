@@ -14,7 +14,7 @@ export function TodayFocusSection() {
         <section aria-labelledby="today-title" className="space-y-4 lg:col-span-3">
             <div className="flex items-center justify-between">
                 <h2 id="today-title" className="text-lg font-semibold tracking-tight">Фокус на сегодня</h2>
-                <Badge className="h-5 border-primary/20 bg-primary/5 text-[10px] text-primary">Смена #42</Badge>
+                <Badge className="h-5 border-none bg-primary/10 text-[10px] text-primary">Смена #42</Badge>
             </div>
 
             <Card className="glass-card overflow-hidden border-border/40 bg-background/50 shadow-sm backdrop-blur-md">
@@ -32,7 +32,7 @@ export function TodayFocusSection() {
                                         </div>
                                     </div>
                                 </div>
-                                <Badge variant="outline" className={cn('rounded border-0 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider', item.color)}>
+                                <Badge variant="outline" className={cn('rounded-full border-none px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider', item.color)}>
                                     {item.status}
                                 </Badge>
                             </div>

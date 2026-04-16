@@ -33,7 +33,7 @@ export function ActiveTeamIndicator() {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <Badge variant="secondary" className="text-[10px] sm:text-xs font-semibold bg-indigo-50 text-indigo-700 border-indigo-100 hover:bg-indigo-100/50 transition-colors max-w-[70px] sm:max-w-none truncate shrink-0">
+        <Badge variant="secondary" className="border-none text-[10px] sm:text-xs font-semibold bg-indigo-50 text-indigo-700 hover:bg-indigo-100/50 transition-colors max-w-[70px] sm:max-w-none truncate shrink-0">
           {team.name}
         </Badge>
       </TooltipTrigger>
