@@ -344,11 +344,23 @@ jobs:
           DATABASE_URL="$NEON_DB_URL" pnpm db:migrate
           DATABASE_URL="$NEON_DB_URL" pnpm db:seed:permissions
 
-          # Передаем переменные в build (для SSG/Static) и в deploy (для Serverless Runtime)
-          vercel build --target preview \
-            -b DATABASE_URL="$NEON_DB_URL" \
-            -b POSTGRES_URL="$NEON_DB_URL" \
-            --token=${{ secrets.VERCEL_TOKEN }}
+          # Патчим скачанный env-файл: vercel pull перезаписывает DATABASE_URL значением
+          # из настроек Vercel (vercel-dev ветка), поэтому принудительно подменяем его
+          # на URL ветки Neon, созданной специально для этого PR.
+          ENV_FILE=".vercel/.env.preview.local"
+          if [ -f "$ENV_FILE" ]; then
+            # Заменяем существующие строки DATABASE_URL и POSTGRES_URL
+            sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            sed -i "s|^POSTGRES_URL=.*|POSTGRES_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            # Если строк не было — добавляем
+            grep -q "^DATABASE_URL=" "$ENV_FILE" || echo "DATABASE_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+            grep -q "^POSTGRES_URL=" "$ENV_FILE" || echo "POSTGRES_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+          else
+            printf "DATABASE_URL=%s\nPOSTGRES_URL=%s\n" "$NEON_DB_URL" "$NEON_DB_URL" > "$ENV_FILE"
+          fi
+
+          # Передаем переменные в build (для SSG/Static) через .env файл
+          vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
 
           deploy_output=""
           deploy_exit_code=1
