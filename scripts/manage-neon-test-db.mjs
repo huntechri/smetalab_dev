@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-import { execSync } from 'node:child_process';
 
 /**
  * Helper to manage Neon branches for testing.

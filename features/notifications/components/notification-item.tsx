@@ -1,4 +1,5 @@
 import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
 import { cn } from '@/lib/utils';
 import { NotificationPayload } from '@/features/notifications/components/types';
 
@@ -58,7 +59,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
   }
 
   return (
-    <button
+    <Button variant="ghost"
       type="button"
       onClick={() => onMarkAsRead?.(notification.id)}
       className={cn(baseClasses, 'bg-muted/60 hover:bg-muted justify-start h-auto whitespace-normal')}
@@ -78,6 +79,6 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         </p>
         <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
       </div>
-    </button>
+    </Button>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { Bell } from 'lucide-react';
+import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import {
     Popover,
@@ -27,10 +28,10 @@ export function NotificationBell() {
 
     if (!mounted) {
         return (
-            <button type="button" className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
+            <Button type="button" variant="ghost" className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Уведомления</span>
-            </button>
+            </Button>
         );
     }
 
@@ -53,7 +54,7 @@ export function NotificationBell() {
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
-                <button
+                <Button variant="ghost"
                     type="button"
                     className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
@@ -67,7 +68,7 @@ export function NotificationBell() {
                             {unreadCount}
                         </Badge>
                     )}
-                </button>
+                </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
                 <div className="flex items-center justify-between border-b pb-2 mb-2">
@@ -86,9 +87,9 @@ export function NotificationBell() {
                     emptyDescription="Вы прочитали всё важное"
                 />
                 <div className="border-t pt-2 mt-2">
-                    <button type="button" className="w-full text-sm pointer-events-none border-none bg-transparent p-0 text-center" disabled>
+                    <Button type="button" variant="ghost" className="w-full text-sm pointer-events-none border-none bg-transparent p-0 text-center" disabled>
                         Показать все уведомления
-                    </button>
+                    </Button>
                 </div>
             </PopoverContent>
         </Popover>

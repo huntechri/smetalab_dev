@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
@@ -74,7 +74,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
+        <Button variant="ghost"
           type="button"
           className={cn('inline-flex h-7 max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
@@ -89,7 +89,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           )}
           {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
@@ -148,7 +148,7 @@ const ProjectCell = React.memo(function ProjectCell({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
+        <Button variant="ghost"
           type="button"
           className={cn('inline-flex h-7 w-full max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
@@ -159,7 +159,7 @@ const ProjectCell = React.memo(function ProjectCell({
           )}
           {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Без привязки</span>}
           <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
-        </button>
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
