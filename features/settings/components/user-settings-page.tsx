@@ -76,6 +76,14 @@ function roleLabel(role?: string | null) {
   return map[role] ?? role;
 }
 
+function permissionBadgeClassName(level: PermissionEntry['level']) {
+  if (level === 'manage') {
+    return 'border-none bg-emerald-500/12 text-emerald-700';
+  }
+
+  return 'border-none bg-blue-500/12 text-blue-700';
+}
+
 export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   const [accountState, accountAction, isAccountPending] = useActionState<
     AccountState,
@@ -236,9 +244,8 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     sortedPermissions.map((permission) => (
                       <Badge
                         key={permission.code}
-                        variant={
-                          permission.level === 'manage' ? 'default' : 'secondary'
-                        }
+                        variant="secondary"
+                        className={permissionBadgeClassName(permission.level)}
                       >
                         {permission.code}: {permission.level}
                       </Badge>

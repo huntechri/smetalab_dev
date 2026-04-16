@@ -1,5 +1,4 @@
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { NotificationPayload } from '@/features/notifications/components/types';
 
@@ -45,7 +44,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{notification.title}</p>
-            <Badge variant="outline" className="text-[10px] uppercase">
+            <Badge variant="secondary" className="border-none bg-slate-500/12 text-[10px] uppercase text-slate-700">
               Прочитано
             </Badge>
           </div>
@@ -59,9 +58,8 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
   }
 
   return (
-    <Button
+    <button
       type="button"
-      variant="ghost"
       onClick={() => onMarkAsRead?.(notification.id)}
       className={cn(baseClasses, 'bg-muted/60 hover:bg-muted justify-start h-auto whitespace-normal')}
       aria-label={`Пометить как прочитанное: ${notification.title}`}
@@ -71,7 +69,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold">{notification.title}</p>
-          <Badge variant="secondary" className="text-[10px] uppercase">
+          <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
             Новое
           </Badge>
         </div>
@@ -80,6 +78,6 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         </p>
         <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
       </div>
-    </Button>
+    </button>
   );
 }

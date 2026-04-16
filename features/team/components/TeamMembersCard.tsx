@@ -18,7 +18,7 @@ import { Label } from '@/shared/ui/label';
 import { SearchInput } from '@/shared/ui/search-input';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
+import { getMemberInitials, getRoleBadgeClassName, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
 
 interface TeamMembersCardProps {
@@ -111,7 +111,7 @@ export function TeamMembersCard({
                                 </div>
                             </div>
                             <div className="flex items-center justify-between gap-3 sm:justify-end">
-                                <Badge variant={getRoleBadgeVariant(member.role)}>{getRoleLabel(member.role)}</Badge>
+                                <Badge variant="secondary" className={getRoleBadgeClassName(member.role)}>{getRoleLabel(member.role)}</Badge>
                                 {canManageMembers && (
                                     <AlertDialog>
                                         <DropdownMenu>

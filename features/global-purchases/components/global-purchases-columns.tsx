@@ -74,10 +74,9 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn('h-7 px-2 gap-1 max-w-[220px] justify-start border border-transparent hover:border-border text-[12px]', !name && 'text-muted-foreground')}
+        <button
+          type="button"
+          className={cn('inline-flex h-7 max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
@@ -90,7 +89,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           )}
           {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
@@ -149,10 +148,9 @@ const ProjectCell = React.memo(function ProjectCell({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          size="sm"
-          className={cn('h-7 px-2 gap-1 w-full max-w-[220px] justify-start border border-transparent hover:border-border text-[12px]', !name && 'text-muted-foreground')}
+        <button
+          type="button"
+          className={cn('inline-flex h-7 w-full max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Выбрать объект"
         >
@@ -161,7 +159,7 @@ const ProjectCell = React.memo(function ProjectCell({
           )}
           {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Без привязки</span>}
           <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
-        </Button>
+        </button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
