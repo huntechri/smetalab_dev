@@ -323,6 +323,9 @@ jobs:
       - name: Enable Corepack
         run: corepack enable
 
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
 
