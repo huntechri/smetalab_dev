@@ -303,6 +303,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@v8
+
+      - name: Get Neon branch URL
+        id: get_neon_branch
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID || 'falling-fire-63341326' }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: preview/pr-${{ github.event.pull_request.number }}-${{ steps.branch_name.outputs.current_branch }}
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -310,6 +322,9 @@ jobs:
 
       - name: Enable Corepack
         run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
       - name: Install Vercel CLI
         run: npm install --global vercel@latest
@@ -322,6 +337,29 @@ jobs:
           # `--git-branch` is supported by `vercel pull` (branch-specific env overrides),
           # but not by `vercel build` / `vercel deploy` for the CLI version in CI.
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
+
+          NEON_DB_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}"
+          
+          # Обязательно накатываем миграции на эту ветку перед билдом, чтобы избежать гонки с neon_workflow.yml
+          DATABASE_URL="$NEON_DB_URL" pnpm db:migrate
+          DATABASE_URL="$NEON_DB_URL" pnpm db:seed:permissions
+
+          # Патчим скачанный env-файл: vercel pull перезаписывает DATABASE_URL значением
+          # из настроек Vercel (vercel-dev ветка), поэтому принудительно подменяем его
+          # на URL ветки Neon, созданной специально для этого PR.
+          ENV_FILE=".vercel/.env.preview.local"
+          if [ -f "$ENV_FILE" ]; then
+            # Заменяем существующие строки DATABASE_URL и POSTGRES_URL
+            sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            sed -i "s|^POSTGRES_URL=.*|POSTGRES_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            # Если строк не было — добавляем
+            grep -q "^DATABASE_URL=" "$ENV_FILE" || echo "DATABASE_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+            grep -q "^POSTGRES_URL=" "$ENV_FILE" || echo "POSTGRES_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+          else
+            printf "DATABASE_URL=%s\nPOSTGRES_URL=%s\n" "$NEON_DB_URL" "$NEON_DB_URL" > "$ENV_FILE"
+          fi
+
+          # Передаем переменные в build (для SSG/Static) через .env файл
           vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
 
           deploy_output=""
@@ -330,7 +368,10 @@ jobs:
 
           for attempt in 1 2 3; do
             set +e
-            deploy_output=$(vercel deploy --prebuilt --target preview --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            deploy_output=$(vercel deploy --prebuilt --target preview \
+              -e DATABASE_URL="$NEON_DB_URL" \
+              -e POSTGRES_URL="$NEON_DB_URL" \
+              --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
             deploy_exit_code=$?
             set -e
 
@@ -372,6 +413,8 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
+          POSTGRES_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
 
       - name: Comment preview URL
         uses: actions/github-script@v8
