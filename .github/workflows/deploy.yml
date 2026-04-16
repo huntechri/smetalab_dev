@@ -334,7 +334,25 @@ jobs:
           # `--git-branch` is supported by `vercel pull` (branch-specific env overrides),
           # but not by `vercel build` / `vercel deploy` for the CLI version in CI.
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
+
+          # Патчим скачанный env-файл: vercel pull перезаписывает DATABASE_URL значением
+          # из настроек Vercel (vercel-dev ветка), поэтому принудительно подменяем его
+          # на URL ветки Neon, созданной специально для этого PR.
+          NEON_DB_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}"
+          ENV_FILE=".vercel/.env.preview.local"
+          if [ -f "$ENV_FILE" ]; then
+            # Заменяем существующие строки DATABASE_URL и POSTGRES_URL
+            sed -i "s|^DATABASE_URL=.*|DATABASE_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            sed -i "s|^POSTGRES_URL=.*|POSTGRES_URL=${NEON_DB_URL}|" "$ENV_FILE"
+            # Если строк не было — добавляем
+            grep -q "^DATABASE_URL=" "$ENV_FILE" || echo "DATABASE_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+            grep -q "^POSTGRES_URL=" "$ENV_FILE" || echo "POSTGRES_URL=${NEON_DB_URL}" >> "$ENV_FILE"
+          else
+            printf "DATABASE_URL=%s\nPOSTGRES_URL=%s\n" "$NEON_DB_URL" "$NEON_DB_URL" > "$ENV_FILE"
+          fi
+
           vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
+
 
           deploy_output=""
           deploy_exit_code=1
