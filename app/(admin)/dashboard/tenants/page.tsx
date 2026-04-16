@@ -1,7 +1,7 @@
 import { getAllTeams } from '@/lib/data/db/admin-queries';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 

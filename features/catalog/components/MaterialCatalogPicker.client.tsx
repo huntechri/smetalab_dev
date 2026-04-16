@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Search, Sparkles } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Sparkles } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
+import { Button } from '@/components/ui/button';
+import { SearchInput } from '@/shared/ui/search-input';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { Switch } from '@/shared/ui/switch';
 import { cn } from '@/lib/utils';
@@ -145,24 +145,23 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden relative">
             <div className="p-3 sm:px-4 border-b bg-background shadow-sm z-10">
                 <div className="flex items-center gap-3">
-                    <div className="relative flex-1">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
-                            className={cn(
-                                'pl-9 h-9 text-sm bg-muted/30 focus-visible:ring-primary/20 transition-all border-none placeholder:text-sm',
-                                isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]',
-                            )}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                    event.preventDefault();
-                                    submitSearch();
-                                }
-                            }}
-                        />
-                    </div>
+                    <SearchInput
+                        placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
+                        className={cn(
+                            'w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0',
+                            isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]',
+                        )}
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onKeyDown={(event) => {
+                            if (event.key === 'Enter') {
+                                event.preventDefault();
+                                submitSearch();
+                            }
+                        }}
+                        loading={loading}
+                        autoLoading={!loading}
+                    />
                     <Button type="button" variant="outline" className="h-9 text-sm shadow-sm" onClick={submitSearch} disabled={loading}>
                         Поиск
                     </Button>

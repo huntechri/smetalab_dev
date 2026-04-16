@@ -5,7 +5,7 @@ import {
     flexRender,
     Row,
 } from "@tanstack/react-table"
-import { Search, Sparkles, Loader2 } from "lucide-react"
+import { Sparkles, Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { Skeleton } from "@/shared/ui/skeleton"
 import { memo, useState, useCallback, forwardRef, HTMLAttributes, useMemo } from "react"
@@ -18,7 +18,7 @@ import {
 } from "@/shared/ui/tooltip"
 
 import { cn } from "@/lib/utils"
-import { Input } from "@/shared/ui/input"
+import { SearchInput } from "@/shared/ui/search-input"
 import { Switch } from "@/shared/ui/switch"
 import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
@@ -44,7 +44,6 @@ interface DataTableProps<TData, TValue> {
     data: TData[]
     height?: string
     className?: string
-    filterInputClassName?: string
     filterColumn?: string
     filterPlaceholder?: string
     meta?: TableMeta<TData>
@@ -102,7 +101,6 @@ export function DataTable<TData, TValue>({
     data,
     height = "600px",
     className,
-    filterInputClassName,
     filterColumn,
     filterPlaceholder = "Поиск...",
     meta,
@@ -219,22 +217,14 @@ export function DataTable<TData, TValue>({
                                 compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
                             )}>
                                 <div className={cn(
-                                    "relative flex-1 transition-all duration-300",
-                                    compactMobileToolbar ? "min-w-0" : "min-w-[200px]",
-                                    isAiMode ? "xl:w-[350px]" : "xl:w-[280px]"
+                                    "relative transition-all duration-300 w-[min(20rem,calc(100vw-2rem))] max-w-full"
                                 )}>
-                                    {isSearching ? (
-                                        <Loader2 aria-hidden="true" className="absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 text-indigo-500 animate-spin" />
-                                    ) : (
-                                        <Search aria-hidden="true" className={cn(
-                                            "absolute left-3 h-4 w-4 top-1/2 -translate-y-1/2 transition-colors duration-200",
-                                            isAiMode ? "text-indigo-500" : "text-muted-foreground group-focus-within/search:text-primary"
-                                        )} />
-                                    )}
-                                    <Input
+                                    <SearchInput
                                         aria-label={filterPlaceholder}
                                         placeholder={isAiMode ? "Опишите, что нужно найти (ИИ)..." : filterPlaceholder}
                                         value={searchValue}
+                                        loading={Boolean(isSearching)}
+                                        autoLoading={!isSearching}
                                         onChange={(event) => {
                                             const val = event.target.value
                                             setSearchValue(val)
@@ -245,10 +235,9 @@ export function DataTable<TData, TValue>({
                                             }
                                         }}
                                         className={cn(
-                                            "pl-9 transition-all duration-300 w-full bg-background/50 backdrop-blur-sm h-9 text-[12px] placeholder:text-[12px] shadow-sm md:shadow-none",
-                                            filterInputClassName,
+                                            "transition-all duration-300 w-full",
                                             isAiMode ? (
-                                                "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] pr-16"
+                                                "border-indigo-400/50 focus-visible:ring-0 focus-visible:border-indigo-500 shadow-[0_0_15px_-5px_rgba(99,102,241,0.2)] !pr-16"
                                             ) : (
                                                 "focus-visible:ring-0 focus-visible:border-primary/40"
                                             )
@@ -263,7 +252,7 @@ export function DataTable<TData, TValue>({
                                         <div
                                             role="status"
                                             aria-live="polite"
-                                            className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                            className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
                                         >
                                             AI
                                         </div>

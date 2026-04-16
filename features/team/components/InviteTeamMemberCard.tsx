@@ -1,5 +1,5 @@
 import { TeamMessage, TeamRole } from '../types';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -52,7 +52,7 @@ export function InviteTeamMemberCard({
                         <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="standard" className="w-full justify-between sm:w-44 h-8 px-3 gap-1.5 shadow-none">
+                                <Button variant="default" className="w-full justify-between sm:w-44 h-8 px-3 gap-1.5 shadow-none">
                                     {getRoleLabel(role)}
                                     <Shield className="size-3.5 text-muted-foreground opacity-70" />
                                 </Button>
@@ -64,7 +64,7 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" variant="standard" disabled={isInviting} className="w-full sm:w-auto h-8 px-3 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-none">
+                    <Button type="submit" variant="default" disabled={isInviting} className="w-full sm:w-auto h-8 px-3 gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground shadow-none">
                         <Mail className="size-3.5" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>

@@ -1,4 +1,4 @@
-import { Input } from '@/shared/ui/input';
+import { SearchInput } from '@/shared/ui/search-input';
 
 type ProjectsSearchInputProps = {
     value: string;
@@ -7,11 +7,11 @@ type ProjectsSearchInputProps = {
 
 export function ProjectsSearchInput({ value, onChange }: ProjectsSearchInputProps) {
     return (
-        <Input
+        <SearchInput
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder="Поиск..."
-            className="w-full sm:w-[280px] lg:w-[320px] h-8 text-[14px] font-medium leading-[20px] transition-colors bg-white hover:bg-secondary border-border rounded-[7.6px] px-2 py-0 placeholder:text-[12px]"
+            className="w-[min(20rem,calc(100vw-2rem))]"
             aria-label="Поиск проектов"
         />
     );

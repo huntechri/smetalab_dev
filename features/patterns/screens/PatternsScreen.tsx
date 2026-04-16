@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Badge } from '@/shared/ui/badge';
@@ -85,7 +85,7 @@ export function PatternsScreen() {
             <CardContent className="space-y-3">
               {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
-                <Button variant="standard" size="sm" onClick={() => void openPreview(item.id)}>Превью</Button>
+                <Button variant="default" size="sm" onClick={() => void openPreview(item.id)}>Превью</Button>
                 <Button variant="destructive" size="sm" className="h-8 rounded-[7.6px] active:scale-95 shadow-none" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
             </CardContent>
@@ -108,7 +108,7 @@ export function PatternsScreen() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="standard" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
+            <Button variant="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
@@ -92,7 +92,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           <ChevronsUpDown className="size-3 opacity-60" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
+      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
           <CommandInput placeholder="Поиск поставщика..." />
           <CommandList>
@@ -163,7 +163,7 @@ const ProjectCell = React.memo(function ProjectCell({
           <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-72 p-0" align="start">
+      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
         <Command>
           <CommandInput placeholder="Поиск объекта..." />
           <CommandList>
@@ -201,9 +201,9 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="standard"
+            variant="destructive"
             size="icon-sm"
-            className="size-7 rounded-[6px] text-muted-foreground hover:text-destructive transition-colors shrink-0"
+            className="size-7 rounded-[6px] transition-colors shrink-0"
             onClick={() => setOpen(true)}
             disabled={disabled}
             aria-label="Удалить строку"

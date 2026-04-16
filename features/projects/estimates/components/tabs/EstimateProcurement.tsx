@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Download, MoreHorizontal } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
@@ -181,7 +181,6 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 data={rows}
                 filterColumn="materialName"
                 filterPlaceholder="Поиск..."
-                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 height="600px"
                 compactMobileToolbar
                 actions={(

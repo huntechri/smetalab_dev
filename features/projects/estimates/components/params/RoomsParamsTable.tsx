@@ -1,4 +1,4 @@
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/shared/ui/input';
 import {
     Table,
@@ -92,7 +92,7 @@ export function RoomsParamsTable({
                                 </TableCell>
                             ))}
                             <TableCell>
-                                <Button size="icon" variant="ghost" onClick={() => onRemove(row.id)} aria-label="Удалить помещение">
+                                <Button size="icon" variant="destructive" onClick={() => onRemove(row.id)} aria-label="Удалить помещение">
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </TableCell>

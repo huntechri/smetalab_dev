@@ -4,7 +4,7 @@ import * as React from "react"
 import { ColumnDef, Table } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Check, X, Plus } from "lucide-react"
 import Image from "next/image"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@/components/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,

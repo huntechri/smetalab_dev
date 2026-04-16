@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { catalogRepository } from '../repository';
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 
 interface Props {
     selectedCategory: string;

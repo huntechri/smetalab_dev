@@ -11,11 +11,11 @@ import {
 } from '@/shared/ui/alert-dialog';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
-import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { SearchInput } from '@/shared/ui/search-input';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
@@ -62,13 +62,12 @@ export function TeamMembersCard({
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
                             <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
-                            <Input
+                            <SearchInput
                                 id="search"
-                                type="search"
                                 placeholder="Имя или email"
                                 value={searchQuery}
                                 onChange={(event) => onSearchQueryChange(event.target.value)}
-                                className="h-8 w-full xl:w-64 rounded-[7.6px] bg-white border border-border shadow-none text-[14px] font-medium leading-[20px] transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
+                                className="w-[min(20rem,calc(100vw-2rem))]"
                             />
                         </div>
                         <div className="space-y-1.5">
@@ -78,7 +77,7 @@ export function TeamMembersCard({
                                     <Button
                                         key={item.value}
                                         type="button"
-                                        variant={roleFilter === item.value ? 'secondary' : 'standard'}
+                                        variant={roleFilter === item.value ? 'secondary' : 'default'}
                                         className={cn(
                                             "h-8 px-3 text-[14px] font-medium leading-[20px] shadow-none transition-all",
                                             roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
@@ -118,7 +117,7 @@ export function TeamMembersCard({
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
-                                                    variant="standard"
+                                                    variant="default"
                                                     size="icon-sm"
                                                     className="size-7 rounded-[6px] text-muted-foreground hover:text-foreground transition-all"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
