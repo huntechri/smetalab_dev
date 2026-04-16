@@ -334,7 +334,7 @@ jobs:
           # `--git-branch` is supported by `vercel pull` (branch-specific env overrides),
           # but not by `vercel build` / `vercel deploy` for the CLI version in CI.
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
-          vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }} --build-env DATABASE_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" --build-env POSTGRES_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}"
+          vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
 
           deploy_output=""
           deploy_exit_code=1
@@ -342,7 +342,7 @@ jobs:
 
           for attempt in 1 2 3; do
             set +e
-            deploy_output=$(vercel deploy --prebuilt --target preview --token=${{ secrets.VERCEL_TOKEN }} --env DATABASE_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" --env POSTGRES_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" 2>&1)
+            deploy_output=$(vercel deploy --prebuilt --target preview --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
             deploy_exit_code=$?
             set -e
 
@@ -384,6 +384,8 @@ jobs:
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          DATABASE_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
+          POSTGRES_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
 
       - name: Comment preview URL
         uses: actions/github-script@v8
