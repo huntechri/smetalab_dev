@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Edit, ExternalLink, Trash2 } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -36,14 +36,14 @@ export function ProjectActions({
         return (
             <AlertDialog>
                 <div className="grid shrink-0 grid-cols-3 gap-2">
-                    <Button asChild variant="standard" className={buttonClass}>
+                    <Button asChild variant="default" className={buttonClass}>
                         <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                             <ExternalLink className="size-4 sm:hidden" />
                             <span className="hidden sm:inline">Открыть</span>
                         </Link>
                     </Button>
                     <Button
-                        variant="standard"
+                        variant="default"
                         className={buttonClass}
                         onClick={() => onEdit(projectId)}
                         aria-label={`Изменить ${projectName}`}
@@ -52,7 +52,7 @@ export function ProjectActions({
                         <span className="hidden sm:inline">Изменить</span>
                     </Button>
                     <AlertDialogTrigger asChild>
-                    <Button variant="standard" className={buttonClass} aria-label={`Удалить ${projectName}`}>
+                    <Button variant="destructive" className={buttonClass} aria-label={`Удалить ${projectName}`}>
                             <Trash2 className="size-4 sm:hidden hover:text-destructive" />
                             <span className="hidden sm:inline hover:text-destructive">Удалить</span>
                         </Button>
@@ -76,14 +76,14 @@ export function ProjectActions({
 
     return (
         <div className="grid grid-cols-3 gap-2 pt-2">
-            <Button asChild variant="standard" className={buttonClass}>
+            <Button asChild variant="default" className={buttonClass}>
                 <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                     <ExternalLink className="size-4 sm:hidden" />
                     <span className="hidden sm:inline">Открыть</span>
                 </Link>
             </Button>
             <Button
-                variant="standard"
+                variant="default"
                 className={buttonClass}
                 onClick={() => onEdit(projectId)}
                 aria-label={`Изменить ${projectName}`}
@@ -93,7 +93,7 @@ export function ProjectActions({
             </Button>
             <AlertDialog>
                 <AlertDialogTrigger asChild>
-                    <Button variant="standard" className={buttonClass} aria-label={`Удалить ${projectName}`}>
+                    <Button variant="destructive" className={buttonClass} aria-label={`Удалить ${projectName}`}>
                         <Trash2 className="size-4 sm:hidden hover:text-destructive" />
                         <span className="hidden sm:inline hover:text-destructive">Удалить</span>
                     </Button>

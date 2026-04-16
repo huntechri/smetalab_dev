@@ -3,7 +3,7 @@
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
-import { Button } from "@/shared/ui/button"
+import { Button } from "@/components/ui/button"
 import { Badge } from "@/shared/ui/badge"
 import {
     DropdownMenu,

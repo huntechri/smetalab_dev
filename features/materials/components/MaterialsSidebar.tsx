@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/components/ui/button";
 import { Check, FilterX, Tag, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getMaterialCategoryTree } from '@/app/actions/materials/search';

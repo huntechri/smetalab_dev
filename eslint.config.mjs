@@ -54,7 +54,7 @@ export default [
                 "error",
                 {
                     selector: "JSXOpeningElement[name.name='button']",
-                    message: "Use shadcn Button from '@/shared/ui/button' instead of raw <button> in app code.",
+                    message: "Use shadcn Button from '@/components/ui/button' instead of raw <button> in app code.",
                 },
                 {
                     selector: "JSXOpeningElement[name.name='table']",
