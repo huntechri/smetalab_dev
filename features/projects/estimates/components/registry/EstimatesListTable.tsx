@@ -46,11 +46,14 @@ function EstimateStatusCell({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button type="button" variant="ghost" className="inline-flex h-auto p-0 hover:bg-transparent">
+        <button
+          type="button"
+          className="inline-flex h-auto cursor-pointer border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40 rounded-full"
+        >
           <Badge variant="outline" className={`${projectBadgeClassName} ${statusTone} min-w-[88px] cursor-pointer md:min-w-[100px]`}>
             {getEstimateStatusLabel(status)}
           </Badge>
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="min-w-[150px] p-1">
         {estimateStatusOrder.map((item) => (
