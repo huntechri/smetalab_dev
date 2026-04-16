@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { ProjectsSearchInput } from './projects-search-input';
 import { ProjectsSortSelect } from './projects-sort-select';
 import { ProjectsViewToggle } from './projects-view-toggle';
@@ -41,7 +41,7 @@ export function ProjectsToolbar({
             </div>
             <Button
                 onClick={onAddClick}
-                variant="standard"
+                variant="default"
                 className="h-8 w-full sm:w-auto"
             >
                 Создать проект

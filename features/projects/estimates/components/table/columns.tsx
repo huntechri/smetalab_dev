@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
@@ -183,7 +183,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         <>
                             <Button
                                 size="icon"
-                                variant="standard"
+                                variant="default"
                                 className="size-7 rounded-[6px]"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
@@ -193,7 +193,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                             <Button
                                 size="icon"
-                                variant="standard"
+                                variant="default"
                                 className="size-7 rounded-[6px]"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
@@ -205,7 +205,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="standard" className="size-7 rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
+                            <Button size="icon" variant="default" className="size-7 rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>

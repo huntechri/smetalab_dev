@@ -6,7 +6,7 @@ import { EstimateMeta, EstimateStatus } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -152,8 +152,8 @@ export function EstimatesListTable({
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
-                  variant="ghost"
-                  className="h-8 w-8 px-0 transition-colors bg-white hover:bg-red-50 hover:text-red-600 border border-border rounded-[7.6px] shadow-none"
+                  variant="destructive"
+                  className="h-8 w-8 px-0 rounded-[7.6px] shadow-none"
                   title="Удалить смету"
                 >
                   <Trash2 className="h-4 w-4" />

@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
@@ -166,7 +166,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, triggerVaria
                         Добавить доп. работу
                     </DropdownMenuItem>
                 ) : (
-                    <Button variant="standard" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
+                    <Button variant="default" title="Добавить дополнительную работу" className="h-8 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
                         <Plus className="h-4 w-4" />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>

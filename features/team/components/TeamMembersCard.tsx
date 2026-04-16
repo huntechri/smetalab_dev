@@ -11,7 +11,7 @@ import {
 } from '@/shared/ui/alert-dialog';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Input } from '@/shared/ui/input';
@@ -78,7 +78,7 @@ export function TeamMembersCard({
                                     <Button
                                         key={item.value}
                                         type="button"
-                                        variant={roleFilter === item.value ? 'secondary' : 'standard'}
+                                        variant={roleFilter === item.value ? 'secondary' : 'default'}
                                         className={cn(
                                             "h-8 px-3 text-[14px] font-medium leading-[20px] shadow-none transition-all",
                                             roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
@@ -118,7 +118,7 @@ export function TeamMembersCard({
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
-                                                    variant="standard"
+                                                    variant="default"
                                                     size="icon-sm"
                                                     className="size-7 rounded-[6px] text-muted-foreground hover:text-foreground transition-all"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}

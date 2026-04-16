@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download, FilePlus } from 'lucide-react';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
@@ -200,7 +200,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         action={
                             <div className="flex flex-wrap items-center justify-center gap-2">
                                 <Button
-                                    variant="standard"
+                                    variant="default"
                                     className="h-8 rounded-[7.6px] px-4 font-medium"
                                     onClick={() => void handleAddManualRow()}
                                     disabled={isAddingManual}
@@ -209,7 +209,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     Добавить вручную
                                 </Button>
                                 <Button
-                                    variant="standard"
+                                    variant="default"
                                     className="h-8 rounded-[7.6px] px-4 font-medium"
                                     onClick={() => setIsCatalogOpen(true)}
                                     disabled={isAddingCatalog}
@@ -231,7 +231,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
                                             <Button
-                                                variant="standard"
+                                                variant="default"
                                                 size="sm"
                                                 className={cn(
                                                     "h-8 w-8 lg:w-[200px] px-0 lg:px-3 justify-center lg:justify-between gap-0 lg:gap-1.5",
@@ -291,7 +291,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
-                                            <Button type="button" variant="standard" size="sm" className="h-8 w-8 lg:w-[255px] px-0 lg:px-3 justify-center lg:justify-between font-mono tabular-nums lg:gap-1.5">
+                                            <Button type="button" variant="default" size="sm" className="h-8 w-8 lg:w-[255px] px-0 lg:px-3 justify-center lg:justify-between font-mono tabular-nums lg:gap-1.5">
                                                 <CalendarDays className="size-4 opacity-70" />
                                                 <span className="flex-1 text-left sm:text-center text-[13px] font-medium tracking-tight hidden lg:inline">
                                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
@@ -329,7 +329,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="standard"
+                                        variant="default"
                                         size="sm"
                                         className="h-8 px-3 gap-1.5"
                                         onClick={() => void handleAddManualRow()}
@@ -347,7 +347,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="standard"
+                                        variant="default"
                                         size="sm"
                                         className="h-8 px-3 gap-1.5"
                                         onClick={() => setIsCatalogOpen(true)}
@@ -364,7 +364,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="sm:hidden ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="standard" size="icon" className="size-8 rounded-[7.6px] bg-background border border-border/70 hover:bg-secondary/80 transition-colors" aria-label="Действия по закупкам">
+                                    <Button variant="default" size="icon" className="size-8 rounded-[7.6px] bg-background border border-border/70 hover:bg-secondary/80 transition-colors" aria-label="Действия по закупкам">
                                         <MoreHorizontal className="size-4" />
                                     </Button>
                                 </DropdownMenuTrigger>

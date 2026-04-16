@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { useRef, useState } from 'react';
 import { cn } from '@/lib/utils';
 

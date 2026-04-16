@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Plus, FilePlus } from "lucide-react";
 
 import { DataTable } from "@/shared/ui/data-table";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/components/ui/button";
 import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import {
   CatalogEmptyStateConfig,
@@ -71,7 +71,7 @@ export function CatalogTableWrapper<TData, TValue>({
           icon={emptyState.icon ?? FilePlus}
           action={
             <Button
-              variant="standard"
+              variant="default"
               className="h-8 rounded-[7.6px] px-6 font-medium"
               onClick={() => tableActions.onInsertRequest()}
             >

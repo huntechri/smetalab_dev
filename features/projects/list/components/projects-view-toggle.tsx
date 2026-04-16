@@ -1,5 +1,5 @@
 import { LayoutGrid, List } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { ProjectViewMode } from '../../shared/types';
 
@@ -13,7 +13,7 @@ export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleP
         <div className="flex items-center gap-1.5 p-0.5">
             <Button
                 type="button"
-                variant="standard"
+                variant="default"
                 className={cn(
                     "h-8 w-9 px-0",
                     value === 'grid' && "bg-secondary"
@@ -25,7 +25,7 @@ export function ProjectsViewToggle({ value, onValueChange }: ProjectsViewToggleP
             </Button>
             <Button
                 type="button"
-                variant="standard"
+                variant="default"
                 className={cn(
                     "h-8 w-9 px-0",
                     value === 'list' && "bg-secondary"

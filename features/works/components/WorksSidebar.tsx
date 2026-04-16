@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { ScrollArea } from "@/shared/ui/scroll-area";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { Check, FilterX, Layers, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
