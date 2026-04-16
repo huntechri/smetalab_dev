@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Command as CommandPrimitive } from "cmdk"
-import { SearchIcon } from "lucide-react"
+import { LoaderCircleIcon, SearchIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import {
@@ -62,22 +62,66 @@ function CommandDialog({
 
 function CommandInput({
   className,
+  onValueChange,
+  value,
   ...props
 }: React.ComponentProps<typeof CommandPrimitive.Input>) {
+  const [internalValue, setInternalValue] = React.useState("")
+  const [isLoading, setIsLoading] = React.useState(false)
+
+  const isControlled = typeof value === "string"
+  const currentValue = isControlled ? value : internalValue
+
+  const handleValueChange = React.useCallback(
+    (nextValue: string) => {
+      if (!isControlled) {
+        setInternalValue(nextValue)
+      }
+
+      onValueChange?.(nextValue)
+    },
+    [isControlled, onValueChange]
+  )
+
+  React.useEffect(() => {
+    if (typeof currentValue !== "string" || currentValue.length === 0) {
+      setIsLoading(false)
+      return
+    }
+
+    setIsLoading(true)
+    const timer = window.setTimeout(() => {
+      setIsLoading(false)
+    }, 500)
+
+    return () => window.clearTimeout(timer)
+  }, [currentValue])
+
   return (
     <div
       data-slot="command-input-wrapper"
-      className="flex h-9 items-center gap-2 border-b px-3"
+      className="relative px-2 py-2"
     >
-      <SearchIcon className="size-4 shrink-0 opacity-50" />
+      <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-5 peer-disabled:opacity-50">
+        <SearchIcon className="size-4" />
+        <span className="sr-only">Search</span>
+      </div>
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "placeholder:text-muted-foreground flex h-9 w-full bg-transparent py-3 text-sm outline-hidden focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50",
-          className
+          className,
+          "peer file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-8 w-full min-w-0 rounded-md border bg-transparent !pl-9 !pr-9 py-1 text-sm transition-[color,box-shadow] outline-none file:inline-flex file:h-6 file:border-0 file:bg-transparent file:text-xs file:font-medium focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:border-primary/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none"
         )}
+        value={value}
+        onValueChange={handleValueChange}
         {...props}
       />
+      {isLoading && (
+        <div className="text-muted-foreground pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center pr-3 peer-disabled:opacity-50">
+          <LoaderCircleIcon className="size-4 animate-spin" />
+          <span className="sr-only">Loading</span>
+        </div>
+      )}
     </div>
   )
 }

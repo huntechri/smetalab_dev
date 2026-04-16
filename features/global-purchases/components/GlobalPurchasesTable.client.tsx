@@ -191,7 +191,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterColumn="materialName"
                 filterPlaceholder="Поиск..."
                 height="625px"
-                filterInputClassName="bg-white h-8 border border-border rounded-[7.6px] shadow-none text-[14px] font-medium leading-[20px] px-2 py-0 transition-all hover:bg-secondary/50 focus-visible:border-primary/40 placeholder:text-[12px]"
                 emptyState={
                     <TableEmptyState
                         title="Закупки не найдены"
@@ -252,7 +251,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     </TooltipTrigger>
                                     <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
                                 </Tooltip>
-                                <PopoverContent className="w-72 p-0" align="start">
+                                <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
                                     <Command>
                                         <CommandInput placeholder="Поиск объекта..." />
                                         <CommandList>

@@ -70,13 +70,12 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                     <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[180px] p-0" align="start">
+            <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
                 <Command>
                     <CommandInput
                         placeholder="Поиск или ввод..."
                         value={inputValue}
                         onValueChange={setInputValue}
-                        className="h-8 text-[12px]"
                     />
                     <CommandList className="max-h-[200px]">
                         <CommandEmpty>
