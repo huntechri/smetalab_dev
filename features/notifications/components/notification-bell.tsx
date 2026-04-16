@@ -1,7 +1,7 @@
 'use client';
 
 import { Bell } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import {
     Popover,

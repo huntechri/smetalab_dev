@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
@@ -61,7 +61,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 createInBodyAction={
                     <Button
                         onClick={() => setIsDialogOpen(true)}
-                        variant="standard"
+                        variant="default"
                         className="h-7 w-7 rounded-[7.6px] p-0"
                         aria-label="+ Создать смету"
                         title="Создать смету"
@@ -77,7 +77,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                         action={
                             <Button
                                 onClick={() => setIsDialogOpen(true)}
-                                variant="standard"
+                                variant="default"
                                 className="h-8 rounded-[7.6px] px-6"
                             >
                                 Создать смету

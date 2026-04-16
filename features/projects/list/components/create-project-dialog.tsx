@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -160,7 +160,7 @@ export function CreateProjectDialog({
                                             <PopoverTrigger asChild>
                                                 <FormControl>
                                                     <Button
-                                                        variant="standard"
+                                                        variant="default"
                                                         role="combobox"
                                                         className={cn(
                                                             'w-full justify-between font-medium h-8 px-2',
@@ -262,13 +262,13 @@ export function CreateProjectDialog({
                         <DialogFooter>
                             <Button
                                 type="button"
-                                variant="standard"
+                                variant="default"
                                 onClick={() => onOpenChange(false)}
                                 disabled={isSubmitting}
                             >
                                 Отменить
                             </Button>
-                            <Button type="submit" variant="standard" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" disabled={isSubmitting}>
+                            <Button type="submit" variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>

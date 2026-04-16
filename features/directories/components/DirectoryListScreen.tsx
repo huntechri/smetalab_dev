@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FilePlus, Loader2, Plus } from 'lucide-react';
 
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import type { DirectoryListAdapter } from '@/features/directories/types';
 
@@ -86,7 +86,7 @@ export function DirectoryListScreen<TData, TValue>({
             icon={FilePlus}
             action={
               <Button
-                variant="standard"
+                variant="default"
                 className="h-8 rounded-[7.6px] px-6 font-medium"
                 onClick={onCreate}
               >
@@ -100,7 +100,7 @@ export function DirectoryListScreen<TData, TValue>({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             {canLoadMore ? (
               <Button
-                variant="standard"
+                variant="default"
                 onClick={onLoadMore}
                 disabled={isLoadingMore}
               >
@@ -111,7 +111,7 @@ export function DirectoryListScreen<TData, TValue>({
             ) : null}
             <Button
               onClick={onCreate}
-              variant="standard"
+              variant="default"
               className="shrink-0 ml-auto"
               aria-label={addLabel}
             >

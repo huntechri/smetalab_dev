@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
@@ -201,9 +201,9 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="standard"
+            variant="destructive"
             size="icon-sm"
-            className="size-7 rounded-[6px] text-muted-foreground hover:text-destructive transition-colors shrink-0"
+            className="size-7 rounded-[6px] transition-colors shrink-0"
             onClick={() => setOpen(true)}
             disabled={disabled}
             aria-label="Удалить строку"

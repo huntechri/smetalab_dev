@@ -3,7 +3,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/shared/ui/accordion";
-import { Button } from "@/shared/ui/button";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/shared/ui/separator";
 import { Plus, Trash } from "lucide-react";
 import { useFieldArray, useForm } from "react-hook-form";

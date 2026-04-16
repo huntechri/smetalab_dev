@@ -5,7 +5,7 @@ import { resetPasswordWithToken } from '@/app/(login)/actions';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Label } from '@/shared/ui/label';
 import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@/components/ui/button';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
 
 export function ResetPasswordForm({ token }: { token: string }) {

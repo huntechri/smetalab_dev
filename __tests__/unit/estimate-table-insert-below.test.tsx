@@ -60,7 +60,7 @@ vi.mock('@/shared/ui/data-table', () => ({
   DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
 }));
 
-vi.mock('@/shared/ui/button', () => ({
+vi.mock('@/components/ui/button', () => ({
   Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
 }));
 

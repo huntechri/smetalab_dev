@@ -14,6 +14,7 @@ import {
     Wrench,
     Package,
     Users,
+    Beaker,
 } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { usePermissions } from '@/shared/hooks/use-permissions';
@@ -40,6 +41,11 @@ const mainNavItems = [
         title: 'Шаблоны',
         url: '/app/patterns',
         icon: Layers,
+    },
+    {
+        title: 'Демо',
+        url: '/app/demo',
+        icon: Beaker,
     },
     {
         title: 'Команда',
