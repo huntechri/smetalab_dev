@@ -303,6 +303,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Get branch name
+        id: branch_name
+        uses: tj-actions/branch-names@v8
+
+      - name: Get Neon branch URL
+        id: get_neon_branch
+        uses: neondatabase/create-branch-action@v5
+        with:
+          project_id: ${{ vars.NEON_PROJECT_ID || 'falling-fire-63341326' }}
+          api_key: ${{ secrets.NEON_API_KEY }}
+          branch_name: preview/pr-${{ github.event.pull_request.number }}-${{ steps.branch_name.outputs.current_branch }}
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -322,7 +334,7 @@ jobs:
           # `--git-branch` is supported by `vercel pull` (branch-specific env overrides),
           # but not by `vercel build` / `vercel deploy` for the CLI version in CI.
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token=${{ secrets.VERCEL_TOKEN }}
-          vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }}
+          vercel build --target preview --token=${{ secrets.VERCEL_TOKEN }} --build-env DATABASE_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" --build-env POSTGRES_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}"
 
           deploy_output=""
           deploy_exit_code=1
@@ -330,7 +342,7 @@ jobs:
 
           for attempt in 1 2 3; do
             set +e
-            deploy_output=$(vercel deploy --prebuilt --target preview --token=${{ secrets.VERCEL_TOKEN }} 2>&1)
+            deploy_output=$(vercel deploy --prebuilt --target preview --token=${{ secrets.VERCEL_TOKEN }} --env DATABASE_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" --env POSTGRES_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}" 2>&1)
             deploy_exit_code=$?
             set -e
 
