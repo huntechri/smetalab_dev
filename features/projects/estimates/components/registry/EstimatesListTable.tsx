@@ -50,7 +50,8 @@ function EstimateStatusCell({
         <Button
           type="button"
           variant="ghost"
-          className="inline-flex h-auto cursor-pointer border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40 rounded-full"
+          size="sm"
+          className="cursor-pointer rounded-full p-0 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-ring/40"
         >
           <Badge variant="outline" className={`${projectBadgeClassName} ${statusTone} min-w-[88px] cursor-pointer md:min-w-[100px]`}>
             {getEstimateStatusLabel(status)}
@@ -158,7 +159,8 @@ export function EstimatesListTable({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  className="w-9 px-0 rounded-[7.6px] shadow-sm"
+                  size="icon"
+                  className="rounded-[7.6px] shadow-sm"
                   title="Удалить смету"
                 >
                   <Trash2 className="h-4 w-4" />
