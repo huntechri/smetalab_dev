@@ -6,18 +6,16 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '@/shared/ui/empty';
-import { ProjectListItem, ProjectViewMode } from '../../shared/types';
+import { ProjectListItem } from '../../shared/types';
 import { ProjectCard } from './project-card';
-import { ProjectRow } from './project-row';
 
 type ProjectsListProps = {
     projects: ProjectListItem[];
-    viewMode: ProjectViewMode;
     onDelete: (projectId: string) => void;
     onEdit: (projectId: string) => void;
 };
 
-export function ProjectsList({ projects, viewMode, onDelete, onEdit }: ProjectsListProps) {
+export function ProjectsList({ projects, onDelete, onEdit }: ProjectsListProps) {
     if (projects.length === 0) {
         return (
             <Empty className="py-12">
@@ -34,18 +32,8 @@ export function ProjectsList({ projects, viewMode, onDelete, onEdit }: ProjectsL
         );
     }
 
-    if (viewMode === 'list') {
-        return (
-            <div className="flex flex-col gap-2">
-                {projects.map((project) => (
-                    <ProjectRow key={project.id} project={project} onDelete={onDelete} onEdit={onEdit} />
-                ))}
-            </div>
-        );
-    }
-
     return (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {projects.map((project) => (
                 <ProjectCard key={project.id} project={project} onDelete={onDelete} onEdit={onEdit} />
             ))}

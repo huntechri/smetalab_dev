@@ -2,8 +2,6 @@ import type { ProjectStatus } from '@/entities/project/model/status';
 
 export type { ProjectStatus };
 
-export type ProjectViewMode = 'grid' | 'list';
-
 export type ProjectSortOption =
     | 'name'
     | 'contractAmount'

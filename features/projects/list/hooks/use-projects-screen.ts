@@ -1,15 +1,14 @@
 'use client';
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { toast } from 'sonner';
 import { deleteProjectAction } from '@/app/actions/projects/delete';
 import { filterProjects } from '../../shared/utils/filter';
 import { sortProjects } from '../../shared/utils/sort';
-import { type ProjectListItem, type ProjectSortOption, type ProjectViewMode } from '../../shared/types';
+import { type ProjectListItem, type ProjectSortOption } from '../../shared/types';
 
 const DEFAULT_SORT: ProjectSortOption = 'name';
-const DEFAULT_VIEW: ProjectViewMode = 'grid';
 
 type UseProjectsScreenOptions = {
     projects: ProjectListItem[];
@@ -21,17 +20,26 @@ export function useProjectsScreen({ projects, onEditProjectSelect, onAddProject 
     const searchParams = useSearchParams();
     const router = useRouter();
     const pathname = usePathname();
+    const searchParamsString = searchParams.toString();
 
     const searchQuery = searchParams.get('q') ?? '';
     const sortOption = parseSortOption(searchParams.get('sort'));
-    const viewMode = parseViewMode(searchParams.get('view'));
 
     const visibleProjects = useMemo(() => {
         return sortProjects(filterProjects(projects, searchQuery), sortOption);
     }, [projects, searchQuery, sortOption]);
 
+    useEffect(() => {
+        if (!searchParams.has('view')) {
+            return;
+        }
+
+        const queryString = createQueryParams(searchParamsString, { view: '' });
+        router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    }, [pathname, router, searchParams, searchParamsString]);
+
     const updateQueryParams = (updates: Record<string, string>) => {
-        const queryString = createQueryParams(searchParams.toString(), updates);
+        const queryString = createQueryParams(searchParamsString, updates);
         router.replace(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
     };
 
@@ -65,7 +73,6 @@ export function useProjectsScreen({ projects, onEditProjectSelect, onAddProject 
     return {
         searchQuery,
         sortOption,
-        viewMode,
         visibleProjects,
         updateQueryParams,
         handleDeleteProject,
@@ -80,14 +87,6 @@ function parseSortOption(value: string | null): ProjectSortOption {
     }
 
     return DEFAULT_SORT;
-}
-
-function parseViewMode(value: string | null): ProjectViewMode {
-    if (value === 'grid' || value === 'list') {
-        return value;
-    }
-
-    return DEFAULT_VIEW;
 }
 
 export function createQueryParams(baseParams: string, updates: Record<string, string>) {
@@ -107,8 +106,4 @@ export function createQueryParams(baseParams: string, updates: Record<string, st
 
 export function getSortOption(value: string | null): ProjectSortOption {
     return parseSortOption(value);
-}
-
-export function getViewMode(value: string | null): ProjectViewMode {
-    return parseViewMode(value);
 }
