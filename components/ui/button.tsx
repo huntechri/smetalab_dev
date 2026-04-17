@@ -10,14 +10,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
-        primary: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
+        default: "bg-background text-foreground border border-border/70 shadow-sm hover:bg-secondary/80",
+        primary: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
-        outline: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
-        secondary: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
-        ghost: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
-        link: "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground",
+          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:bg-destructive/60 dark:focus-visible:ring-destructive/40",
+        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
+        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
+        ghost: "hover:bg-accent hover:text-accent-foreground",
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
@@ -26,7 +26,7 @@ const buttonVariants = cva(
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
         icon: "size-9",
         "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3",
-        "icon-sm": "size-8",
+        "icon-sm": "size-7",
         "icon-lg": "size-10",
       },
     },
@@ -63,15 +63,7 @@ function Button({
 }: ButtonProps) {
   const resolvedLoading = loading || isLoading
   const Comp = asChild ? Slot : "button"
-  const enforcedToneClassName =
-    variant === "destructive"
-      ? "bg-destructive text-destructive-foreground border border-destructive hover:bg-destructive/90 hover:text-destructive-foreground"
-      : "bg-white text-foreground border border-border hover:bg-secondary/80 hover:text-foreground"
-  const enforcedXsClassName = cn(
-    buttonVariants({ variant, size, className }),
-    "h-7 px-2 py-1 text-xs",
-    enforcedToneClassName
-  )
+  const buttonClassName = cn(buttonVariants({ variant, size, className }))
 
   if (asChild) {
     return (
@@ -79,7 +71,7 @@ function Button({
         data-slot="button"
         data-variant={variant}
         data-size={size}
-        className={enforcedXsClassName}
+        className={buttonClassName}
         {...props}
       >
         {children}
@@ -92,7 +84,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      className={enforcedXsClassName}
+      className={buttonClassName}
       disabled={disabled || resolvedLoading}
       aria-busy={resolvedLoading || undefined}
       {...props}

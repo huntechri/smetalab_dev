@@ -824,7 +824,8 @@ export function EstimateTable({
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <Button 
                   variant="default" 
-                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  size="xs"
+                  className="h-7 rounded-[7.6px] px-4 font-medium"
                   onClick={() => openCreateSectionDialog()}
                 >
                   <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -832,7 +833,8 @@ export function EstimateTable({
                 </Button>
                 <Button 
                   variant="default" 
-                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  size="xs"
+                  className="h-7 rounded-[7.6px] px-4 font-medium"
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
                   <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -840,7 +842,8 @@ export function EstimateTable({
                 </Button>
                 <Button 
                   variant="default" 
-                  className="h-8 rounded-[7.6px] px-4 font-medium"
+                  size="xs"
+                  className="h-7 rounded-[7.6px] px-4 font-medium"
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
                 >
@@ -859,8 +862,8 @@ export function EstimateTable({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="default"
-              size="sm"
-              className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
+              size="xs"
+              className="hidden sm:inline-flex h-7 gap-1.5 px-3 text-xs"
               aria-label="Режим расчета"
               onClick={() => {
                 setPendingInsertAfterWork(null);
@@ -874,8 +877,8 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="sm"
-              className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
+              size="xs"
+              className="hidden sm:inline-flex h-7 gap-1.5 px-3 text-xs"
               aria-label="Добавить раздел"
               onClick={() => openCreateSectionDialog()}
             >
@@ -886,8 +889,8 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="sm"
-              className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
+              size="xs"
+              className="hidden sm:inline-flex h-7 gap-1.5 px-3 text-xs"
               aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
             >
@@ -897,28 +900,28 @@ export function EstimateTable({
               </span>
             </Button>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" size="sm" className="h-8 gap-1.5 px-3" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="default" size="xs" className="h-7 gap-1.5 px-3" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs md:text-sm">Шаблон</span>
+                <span className="text-xs">Шаблон</span>
               </Button>
               <Button
                 variant="default"
-                size="sm"
-                className="h-8 gap-1.5 px-3"
+                size="xs"
+                className="h-7 gap-1.5 px-3"
                 onClick={openCoefficientDialog}
               >
                 <Percent className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs md:text-sm">Коэффициент</span>
+                <span className="text-xs">Коэффициент</span>
               </Button>
               <Button
                 variant="default"
-                size="sm"
-                className="h-8 gap-1.5 px-3"
+                size="xs"
+                className="h-7 gap-1.5 px-3"
                 onClick={() => void importEstimate()}
                 disabled={isImporting}
               >
                 <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
-                <span className="text-xs md:text-sm">
+                <span className="text-xs">
                   {isImporting ? "Импорт..." : "Импорт"}
                 </span>
               </Button>
@@ -926,12 +929,12 @@ export function EstimateTable({
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="default"
-                    size="sm"
-                    className="h-8 gap-1.5 px-3"
+                    size="xs"
+                    className="h-7 gap-1.5 px-3"
                     disabled={isExporting}
                   >
                     <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-xs md:text-sm">
+                    <span className="text-xs">
                       {isExporting ? "Экспорт..." : "Экспорт"}
                     </span>
                   </Button>
@@ -956,8 +959,8 @@ export function EstimateTable({
             </div>
             <Button
               variant="destructive"
-              size="sm"
-              className="hidden sm:inline-flex h-8 gap-1.5 px-3 text-xs md:text-sm"
+              size="xs"
+              className="hidden sm:inline-flex h-7 gap-1.5 px-3 text-xs"
               aria-label="Удалить смету"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
@@ -969,7 +972,7 @@ export function EstimateTable({
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" className="h-8 w-8 px-0" aria-label="Действия по смете">
+                  <Button variant="default" size="xs" className="h-7 w-7 px-0" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Действия по смете</span>
                   </Button>

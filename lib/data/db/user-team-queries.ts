@@ -79,7 +79,16 @@ export const getUser = cache(async () => {
 
   const user = await db
     .select({
-      user: users,
+      user: {
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        passwordHash: users.passwordHash,
+        platformRole: users.platformRole,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+        deletedAt: users.deletedAt,
+      },
       teamId: teamMembers.teamId,
       role: teamMembers.role,
     })
@@ -105,7 +114,16 @@ export const getUser = cache(async () => {
 export async function getUserWithTeam(userId: number) {
   const result = await db
     .select({
-      user: users,
+      user: {
+        id: users.id,
+        name: users.name,
+        email: users.email,
+        passwordHash: users.passwordHash,
+        platformRole: users.platformRole,
+        createdAt: users.createdAt,
+        updatedAt: users.updatedAt,
+        deletedAt: users.deletedAt,
+      },
       teamId: teamMembers.teamId,
     })
     .from(users)

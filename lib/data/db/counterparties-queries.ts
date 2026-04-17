@@ -18,7 +18,32 @@ export async function getCounterparties(
   }
 
   const data = await db
-    .select()
+    .select({
+      id: counterparties.id,
+      tenantId: counterparties.tenantId,
+      type: counterparties.type,
+      legalStatus: counterparties.legalStatus,
+      name: counterparties.name,
+      birthDate: counterparties.birthDate,
+      passportSeriesNumber: counterparties.passportSeriesNumber,
+      passportIssuedBy: counterparties.passportIssuedBy,
+      passportIssuedDate: counterparties.passportIssuedDate,
+      departmentCode: counterparties.departmentCode,
+      ogrn: counterparties.ogrn,
+      inn: counterparties.inn,
+      kpp: counterparties.kpp,
+      address: counterparties.address,
+      phone: counterparties.phone,
+      email: counterparties.email,
+      bankName: counterparties.bankName,
+      bankAccount: counterparties.bankAccount,
+      corrAccount: counterparties.corrAccount,
+      bankInn: counterparties.bankInn,
+      bankKpp: counterparties.bankKpp,
+      createdAt: counterparties.createdAt,
+      updatedAt: counterparties.updatedAt,
+      deletedAt: counterparties.deletedAt,
+    })
     .from(counterparties)
     .where(and(...filters))
     .orderBy(desc(counterparties.updatedAt))
