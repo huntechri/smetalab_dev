@@ -205,10 +205,10 @@ export function CreateMaterialSupplierSheet({
             </ScrollArea>
             <div className="px-4 py-3 sm:p-6 border-t bg-muted/20">
               <SheetFooter className="flex-row gap-2 sm:space-x-0 w-full">
-                <Button type="button" variant="outline" className="flex-1 h-8 text-xs" onClick={() => onOpenChange(false)}>Отмена</Button>
-                <Button type="submit" className="flex-1 h-8 text-xs" disabled={isPending}>
+                <Button type="button" size="sm" variant="outline" className="flex-1 text-xs" onClick={() => onOpenChange(false)}>Отмена</Button>
+                <Button type="submit" size="sm" className="flex-1 text-xs" disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {materialSupplier ? 'Сохранить' : 'Создать'}
+                  {materialSupplier ? "Сохранить" : "Создать"}
                 </Button>
               </SheetFooter>
             </div>

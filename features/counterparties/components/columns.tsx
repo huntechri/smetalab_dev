@@ -72,7 +72,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 <div className="text-right pr-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-7 w-7 p-0 md:h-8 md:w-8" aria-label="Открыть меню действий">
+                            <Button variant="ghost" size="icon-sm" aria-label="Открыть меню действий">
                                 <span className="sr-only">Открыть меню действий</span>
                                 <Settings className="h-4 w-4" />
                             </Button>

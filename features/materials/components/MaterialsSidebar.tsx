@@ -141,12 +141,12 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
           {hasChildren && (
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleExpand(currentPath);
               }}
-              className="size-7 shrink-0 opacity-60 hover:opacity-100"
+              className="shrink-0 opacity-60 hover:opacity-100"
             >
               {isExpanded ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
             </Button>
@@ -174,9 +174,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
         {hasFilters && (
           <Button 
             variant="ghost" 
-            size="sm" 
+            size="icon-sm" 
             onClick={resetFilters}
-            className="h-7 px-2 text-[11px] text-muted-foreground hover:text-destructive transition-colors"
+            className="w-auto px-2 text-[11px] text-muted-foreground hover:text-destructive transition-colors"
           >
             <FilterX className="size-3 mr-1" />
             Сбросить

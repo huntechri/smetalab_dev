@@ -162,7 +162,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         loading={loading}
                         autoLoading={!loading}
                     />
-                    <Button type="button" variant="outline" className="h-9 text-sm shadow-sm" onClick={submitSearch} disabled={loading}>
+                    <Button type="button" variant="outline" className="h-9 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95" onClick={submitSearch} disabled={loading}>
                         Поиск
                     </Button>
                     <div className="flex items-center gap-2 px-1">
@@ -186,7 +186,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     data-testid="material-categories-toggle"
                     type="button"
                     variant="outline"
-                    className="h-8 w-full justify-between"
+                    className="h-9 w-full justify-between font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                     onClick={() => setIsCategoryPanelOpen((prev) => !prev)}
                 >
                     <span className="truncate text-xs">Категории: {selectedCategoryLabel}</span>
@@ -339,7 +339,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     variant="outline"
                                                     disabled={isAdding || isAlreadyAdded}
                                                     className={cn(
-                                                        'h-8 w-8 sm:h-9 sm:w-9 rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
+                                                        'h-9 w-9 rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
                                                         isAlreadyAdded
                                                             ? 'bg-primary/5 text-primary border-primary/20 opacity-100 cursor-default shadow-none'
                                                             : 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md',

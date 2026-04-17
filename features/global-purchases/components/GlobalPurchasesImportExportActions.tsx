@@ -18,7 +18,7 @@ export function GlobalPurchasesImportExportActions({
   onImportClick,
   onFileChange,
 }: GlobalPurchasesImportExportActionsProps) {
-  const buttonClassName = 'h-8 px-3 gap-1.5 bg-white hover:bg-secondary border border-border rounded-[7.6px] text-[14px] font-medium leading-[20px] transition-all active:scale-95 shadow-none text-foreground justify-center';
+  const buttonClassName = 'h-9 px-3 gap-1.5 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm';
 
   return (
     <>
@@ -36,8 +36,7 @@ export function GlobalPurchasesImportExportActions({
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="secondary"
-            size="sm"
+            variant="outline"
             className={buttonClassName}
             onClick={() => void onExport()}
             aria-label="Экспорт закупок"
@@ -53,8 +52,7 @@ export function GlobalPurchasesImportExportActions({
         <TooltipTrigger asChild>
           <Button
             type="button"
-            variant="secondary"
-            size="sm"
+            variant="outline"
             className={buttonClassName}
             onClick={onImportClick}
             aria-label="Импорт закупок"

@@ -32,7 +32,7 @@ const buttonVariants = cva(
     },
     defaultVariants: {
       variant: "default",
-      size: "xs",
+      size: "default",
     },
   }
 )
@@ -50,7 +50,7 @@ type ButtonProps = React.ComponentProps<"button"> &
 function Button({
   className,
   variant = "default",
-  size = "xs",
+  size = "default",
   asChild = false,
   loading = false,
   isLoading = false,
