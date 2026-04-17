@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Upload, Download, Trash2, Loader2, Filter } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/ui/button";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -71,7 +71,7 @@ export function CatalogToolbar<TFilters>({
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="default" size="icon-sm" className="h-8 w-8 mr-1">
+            <Button variant="default" size="icon-sm" className="mr-1">
               <Filter className="h-4 w-4" />
             </Button>
           </SheetTrigger>
@@ -99,7 +99,7 @@ export function CatalogToolbar<TFilters>({
           variant="default"
           size="icon-sm"
           className={cn(
-            "h-8 w-8 mr-1 transition-all duration-200",
+            "mr-1 transition-all duration-200",
             showSidebar &&
               "bg-secondary text-secondary-foreground ring-1 ring-border/50"
           )}
@@ -166,8 +166,9 @@ export function CatalogToolbar<TFilters>({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
+                  size="xs"
                   className={cn(
-                    "flex-1 sm:flex-none h-8 rounded-[7.6px] px-2 sm:px-4 active:scale-95 shadow-none",
+                    "flex-1 sm:flex-none h-7 rounded-[7.6px] px-2 sm:px-4 active:scale-95 shadow-none",
                     isActionDisabled ? "pointer-events-none" : ""
                   )}
                   disabled={isActionDisabled}

@@ -92,7 +92,7 @@ export function RoomsParamsTable({
                                 </TableCell>
                             ))}
                             <TableCell>
-                                <Button size="icon" variant="destructive" onClick={() => onRemove(row.id)} aria-label="Удалить помещение">
+                                <Button size="icon-sm" variant="destructive" onClick={() => onRemove(row.id)} aria-label="Удалить помещение">
                                     <Trash2 className="h-4 w-4" />
                                 </Button>
                             </TableCell>
