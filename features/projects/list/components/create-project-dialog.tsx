@@ -161,9 +161,10 @@ export function CreateProjectDialog({
                                                 <FormControl>
                                                     <Button
                                                         variant="default"
+                                                        size="sm"
                                                         role="combobox"
                                                         className={cn(
-                                                            'w-full justify-between font-medium h-8 px-2',
+                                                            'w-full justify-between font-medium px-2',
                                                             !field.value && 'text-muted-foreground'
                                                         )}
                                                     >

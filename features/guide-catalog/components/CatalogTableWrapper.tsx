@@ -71,7 +71,7 @@ export function CatalogTableWrapper<TData, TValue>({
           action={
             <Button
               variant="default"
-              className="h-9 rounded-[7.6px] font-semibold tracking-tight shadow-sm transition-all active:scale-95"
+              className="rounded-[7.6px] font-semibold tracking-tight shadow-sm transition-all active:scale-95"
               onClick={() => tableActions.onInsertRequest()}
             >
               <Plus className="size-3.5 mr-2" />

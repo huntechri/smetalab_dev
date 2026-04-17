@@ -331,13 +331,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                             <div className="flex items-center shrink-0 ml-2">
                                                 <Button
                                                     size="icon"
-                                                    variant="outline"
+                                                    variant={isAlreadyAdded ? 'secondary' : 'outline'}
                                                     disabled={isAdding || isAlreadyAdded}
                                                     className={cn(
-                                                        'rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
+                                                        'rounded-full transition-all shrink-0 active:scale-95 shadow-sm',
                                                         isAlreadyAdded
-                                                            ? 'bg-primary/5 text-primary border-primary/20 opacity-100 cursor-default shadow-none'
-                                                            : 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md',
+                                                            ? 'opacity-100 cursor-default shadow-none'
+                                                            : 'hover:shadow-md',
                                                     )}
                                                     onClick={() => void addMaterial(material)}
                                                 >

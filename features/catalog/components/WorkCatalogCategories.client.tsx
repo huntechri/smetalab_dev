@@ -98,12 +98,12 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                 onPointerLeave={stopDragging}
             >
                 <Button
-                    variant={selectedCategory === 'all' ? 'default' : 'ghost'}
+                    variant={selectedCategory === 'all' ? 'primary' : 'ghost'}
                     className={cn(
                         "px-3 rounded-full font-medium transition-all shrink-0 pointer-events-auto",
                         selectedCategory === 'all'
-                            ? "bg-primary text-primary-foreground shadow-sm"
-                            : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                            ? "shadow-sm"
+                            : "text-muted-foreground"
                     )}
                     onClick={() => !isDragging && onCategoryChange('all')}
                 >
@@ -112,12 +112,12 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                 {categories.map((category) => (
                     <Button
                         key={category}
-                        variant={selectedCategory === category ? 'default' : 'ghost'}
+                        variant={selectedCategory === category ? 'primary' : 'ghost'}
                         className={cn(
                             "rounded-full font-medium transition-all shrink-0 pointer-events-auto",
                             selectedCategory === category
-                                ? "bg-primary text-primary-foreground shadow-sm"
-                                : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                                ? "shadow-sm"
+                                : "text-muted-foreground"
                         )}
                         onClick={() => !isDragging && onCategoryChange(category)}
                     >
