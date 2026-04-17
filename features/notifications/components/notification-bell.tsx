@@ -1,7 +1,7 @@
 'use client';
 
 import { Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import {
     Popover,
@@ -28,7 +28,7 @@ export function NotificationBell() {
 
     if (!mounted) {
         return (
-            <Button variant="ghost" size="icon" className="relative" disabled>
+            <Button type="button" variant="ghost" className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Уведомления</span>
             </Button>
@@ -54,10 +54,9 @@ export function NotificationBell() {
     return (
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className="relative"
+                <Button variant="ghost"
+                    type="button"
+                    className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
                 >
                     <Bell className="h-5 w-5" />
@@ -75,7 +74,7 @@ export function NotificationBell() {
                 <div className="flex items-center justify-between border-b pb-2 mb-2">
                     <h4 className="font-semibold">Уведомления</h4>
                     {unreadCount > 0 && (
-                        <Badge variant="secondary" className="text-[10px] uppercase">
+                        <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
                             {unreadCount} новых
                         </Badge>
                     )}
@@ -88,7 +87,7 @@ export function NotificationBell() {
                     emptyDescription="Вы прочитали всё важное"
                 />
                 <div className="border-t pt-2 mt-2">
-                    <Button variant="ghost" className="w-full text-sm pointer-events-none" disabled>
+                    <Button type="button" variant="ghost" className="w-full text-sm pointer-events-none border-none bg-transparent p-0 text-center" disabled>
                         Показать все уведомления
                     </Button>
                 </div>

@@ -158,14 +158,14 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
             {(phase || category || subcategory) && (
                 <div className="flex flex-wrap items-center gap-1 opacity-80 group-hover/row:opacity-100 transition-opacity">
                     {phase && (
-                        <Badge variant="outline" className="h-[16px] px-1.5 py-0 text-[10px] bg-blue-50/50 text-blue-700 border-blue-200/50 rounded-sm font-medium leading-[16px]">
+                        <Badge variant="outline" className="h-[16px] rounded-full border-none bg-blue-50/70 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-blue-700">
                             {phase}
                         </Badge>
                     )}
                     {category && (
                         <>
                             {phase && <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-[16px] px-1.5 py-0 text-[10px] bg-slate-50/50 text-slate-700 border-slate-200/50 rounded-sm font-medium leading-[16px]">
+                            <Badge variant="outline" className="h-[16px] rounded-full border-none bg-slate-100 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-slate-700">
                                 {category}
                             </Badge>
                         </>
@@ -173,7 +173,7 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
                     {subcategory && (
                         <>
                             {(phase || category) && <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-[16px] px-1.5 py-0 text-[10px] bg-indigo-50/50 text-indigo-700 border-indigo-200/50 rounded-sm font-medium leading-[16px]">
+                            <Badge variant="outline" className="h-[16px] rounded-full border-none bg-indigo-50/70 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-indigo-700">
                                 {subcategory}
                             </Badge>
                         </>

@@ -32,7 +32,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 contractor: "Подрядчик",
                 supplier: "Поставщик"
             };
-            return <Badge variant="outline" className="h-6 px-2 text-[12px]">{map[type] || type}</Badge>;
+            return <Badge variant="secondary" className="h-6 border-none bg-slate-500/10 px-2 text-[12px] text-slate-700">{map[type] || type}</Badge>;
         },
     },
     {

@@ -11,7 +11,7 @@ import { estimateProcurementActionsRepo } from '@/features/projects/estimates/re
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTotals } from '../EstimateTotals';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
-import { projectBadgeClassName } from '@/features/projects/shared/ui/project-badge-styles';
+import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -28,9 +28,9 @@ const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal t
 const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs';
 
 const deltaBadgeToneClassName = {
-    positive: 'bg-[hsl(142_76%_36%_/_0.12)] text-[hsl(142_72%_30%)]',
-    zero: 'bg-[hsl(38_92%_50%_/_0.14)] text-[hsl(24_95%_34%)]',
-    negative: 'bg-[hsl(0_84%_60%_/_0.12)] text-[hsl(0_72%_42%)]',
+    positive: projectStatusBadgeToneClassName.success,
+    zero: projectStatusBadgeToneClassName.neutral,
+    negative: projectStatusBadgeToneClassName.danger,
 } as const;
 
 const renderDeltaBadge = (value: number) => {
