@@ -822,28 +822,28 @@ export function EstimateTable({
             icon={FilePlus}
             action={
               <div className="flex flex-wrap items-center justify-center gap-2">
-                <Button 
-                  variant="default" 
-                  size="default" 
-                  className="font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium"
+                <Button
+                  variant="default"
+                  size="default"
+                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => openCreateSectionDialog()}
                 >
                   <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                   Создать раздел
                 </Button>
-                <Button 
-                  variant="default" 
-                  size="default" 
-                  className="font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium"
+                <Button
+                  variant="default"
+                  size="default"
+                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
                   <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                   Добавить работу
                 </Button>
-                <Button 
-                  variant="default" 
-                  size="default" 
-                  className="font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium"
+                <Button
+                  variant="default"
+                  size="default"
+                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
                 >
@@ -1240,7 +1240,8 @@ export function EstimateTable({
                 <Button
                   key={pattern.id}
                   variant={selectedPatternId === pattern.id ? "secondary" : "ghost"}
-                  className="w-full justify-start h-auto py-2"
+                  size="sm"
+                  className="h-auto w-full justify-start py-2"
                   onClick={() => void previewPattern(pattern.id)}
                 >
                   <div className="text-left">

@@ -1132,8 +1132,8 @@ Classes:
 File: features/projects/estimates/components/registry/EstimatesListTable.tsx
 Tag: <Button>
 Variant: ghost
-Size: default
-Classes: inline-flex h-auto cursor-pointer border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40 rounded-full
+Size: sm
+Classes: cursor-pointer rounded-full p-0 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-ring/40
 -------------------
 
 File: features/projects/estimates/components/registry/EstimatesListTable.tsx
@@ -1153,29 +1153,29 @@ Classes:
 File: features/projects/estimates/components/registry/EstimatesListTable.tsx
 Tag: <Button>
 Variant: destructive
-Size: default
-Classes: w-9 px-0 rounded-[7.6px] shadow-sm
+Size: icon
+Classes: rounded-[7.6px] shadow-sm
 -------------------
 
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
 Tag: <Button>
 Variant: default
 Size: default
-Classes: font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium
+Classes: rounded-[7.6px] font-semibold tracking-tight shadow-sm
 -------------------
 
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
 Tag: <Button>
 Variant: default
 Size: default
-Classes: font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium
+Classes: rounded-[7.6px] font-semibold tracking-tight shadow-sm
 -------------------
 
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
 Tag: <Button>
 Variant: default
 Size: default
-Classes: font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium
+Classes: rounded-[7.6px] font-semibold tracking-tight shadow-sm
 -------------------
 
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
@@ -1377,8 +1377,8 @@ Classes:
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
 Tag: <Button>
 Variant: selectedPatternId === pattern.id ? "secondary" : "ghost"
-Size: default
-Classes: w-full justify-start h-auto py-2
+Size: sm
+Classes: h-auto w-full justify-start py-2
 -------------------
 
 File: features/projects/estimates/components/table/EstimateTable.client.tsx
