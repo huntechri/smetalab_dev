@@ -194,8 +194,8 @@ Classes:
 File: features/admin/components/AdminTerminal.tsx
 Tag: <Button>
 Variant: ghost
-Size: icon
-Classes: h-8 w-8 text-gray-400 transition-colors hover:bg-transparent hover:text-white
+Size: icon-sm
+Classes: text-gray-400 hover:text-white
 -------------------
 
 File: features/admin/components/PricingSubmitButton.tsx
@@ -333,23 +333,23 @@ Classes: w-full justify-start
 
 File: features/catalog/components/MaterialCatalogPicker.client.tsx
 Tag: <Button>
-Variant: outline
+Variant: isAlreadyAdded ? 'secondary' : 'outline'
 Size: icon
-Classes: 'rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm', isAlreadyAdded ? 'bg-primary/5 text-primary border-primary/20 opacity-100 cursor-default shadow-none' : 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md',
+Classes: 'rounded-full transition-all shrink-0 active:scale-95 shadow-sm', isAlreadyAdded ? 'opacity-100 cursor-default shadow-none' : 'hover:shadow-md',
 -------------------
 
 File: features/catalog/components/WorkCatalogCategories.client.tsx
 Tag: <Button>
-Variant: selectedCategory === 'all' ? 'default' : 'ghost'
+Variant: selectedCategory === 'all' ? 'primary' : 'ghost'
 Size: default
-Classes: "px-3 rounded-full font-medium transition-all shrink-0 pointer-events-auto", selectedCategory === 'all' ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+Classes: "px-3 rounded-full font-medium transition-all shrink-0 pointer-events-auto", selectedCategory === 'all' ? "shadow-sm" : "text-muted-foreground"
 -------------------
 
 File: features/catalog/components/WorkCatalogCategories.client.tsx
 Tag: <Button>
-Variant: selectedCategory === category ? 'default' : 'ghost'
+Variant: selectedCategory === category ? 'primary' : 'ghost'
 Size: default
-Classes: "rounded-full font-medium transition-all shrink-0 pointer-events-auto", selectedCategory === category ? "bg-primary text-primary-foreground shadow-sm" : "text-muted-foreground hover:text-foreground hover:bg-muted"
+Classes: "rounded-full font-medium transition-all shrink-0 pointer-events-auto", selectedCategory === category ? "shadow-sm" : "text-muted-foreground"
 -------------------
 
 File: features/catalog/components/WorkCatalogFilters.client.tsx
@@ -608,7 +608,7 @@ File: features/guide-catalog/components/CatalogTableWrapper.tsx
 Tag: <Button>
 Variant: default
 Size: default
-Classes: h-9 rounded-[7.6px] font-semibold tracking-tight shadow-sm transition-all active:scale-95
+Classes: rounded-[7.6px] font-semibold tracking-tight shadow-sm transition-all active:scale-95
 -------------------
 
 File: features/guide-catalog/components/CatalogToolbar.tsx
@@ -1608,8 +1608,8 @@ Classes:
 File: features/projects/list/components/create-project-dialog.tsx
 Tag: <Button>
 Variant: default
-Size: default
-Classes: 'w-full justify-between font-medium h-8 px-2', !field.value && 'text-muted-foreground'
+Size: sm
+Classes: 'w-full justify-between font-medium px-2', !field.value && 'text-muted-foreground'
 -------------------
 
 File: features/projects/list/components/create-project-dialog.tsx
