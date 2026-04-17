@@ -35,7 +35,7 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: 
 const tableCellTextClassName = 'text-[12px]';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
-const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left h-auto py-1 items-start justify-start`;
+const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left min-h-7 h-auto py-1 items-start justify-start`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];

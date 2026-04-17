@@ -167,7 +167,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                 return <Input className="h-8 text-[12px] font-medium border-primary/20 bg-primary/2" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
             }
             return (
-                <div className="flex flex-col gap-0.5 py-1 min-w-0">
+                <div className="flex flex-col gap-0.5 py-1 min-w-0 min-h-7">
                     <span className="text-[12px] font-normal truncate" title={row.getValue("name")}>
                         {row.getValue("name")}
                     </span>
