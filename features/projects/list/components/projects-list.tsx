@@ -45,7 +45,7 @@ export function ProjectsList({ projects, viewMode, onDelete, onEdit }: ProjectsL
     }
 
     return (
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 items-start lg:grid-cols-4">
             {projects.map((project) => (
                 <ProjectCard key={project.id} project={project} onDelete={onDelete} onEdit={onEdit} />
             ))}
