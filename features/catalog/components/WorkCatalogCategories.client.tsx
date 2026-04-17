@@ -99,9 +99,8 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
             >
                 <Button
                     variant={selectedCategory === 'all' ? 'default' : 'ghost'}
-                    size="sm"
                     className={cn(
-                        "h-7 px-3 rounded-full text-[11px] font-medium transition-all shrink-0 pointer-events-auto",
+                        "px-3 rounded-full font-medium transition-all shrink-0 pointer-events-auto",
                         selectedCategory === 'all'
                             ? "bg-primary text-primary-foreground shadow-sm"
                             : "text-muted-foreground hover:text-foreground hover:bg-muted"
@@ -114,9 +113,8 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                     <Button
                         key={category}
                         variant={selectedCategory === category ? 'default' : 'ghost'}
-                        size="sm"
                         className={cn(
-                            "h-7 px-3 rounded-full text-[11px] font-medium transition-all shrink-0 pointer-events-auto",
+                            "rounded-full font-medium transition-all shrink-0 pointer-events-auto",
                             selectedCategory === category
                                 ? "bg-primary text-primary-foreground shadow-sm"
                                 : "text-muted-foreground hover:text-foreground hover:bg-muted"

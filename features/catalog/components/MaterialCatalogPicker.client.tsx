@@ -162,7 +162,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         loading={loading}
                         autoLoading={!loading}
                     />
-                    <Button type="button" variant="outline" className="h-9 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95" onClick={submitSearch} disabled={loading}>
+                    <Button type="button" variant="outline" className="font-semibold tracking-tight shadow-sm transition-all active:scale-95" onClick={submitSearch} disabled={loading}>
                         Поиск
                     </Button>
                     <div className="flex items-center gap-2 px-1">
@@ -186,10 +186,10 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     data-testid="material-categories-toggle"
                     type="button"
                     variant="outline"
-                    className="h-9 w-full justify-between font-semibold tracking-tight shadow-sm transition-all active:scale-95"
+                    className="w-full justify-between font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                     onClick={() => setIsCategoryPanelOpen((prev) => !prev)}
                 >
-                    <span className="truncate text-xs">Категории: {selectedCategoryLabel}</span>
+                    <span className="truncate">Категории: {selectedCategoryLabel}</span>
                     {isCategoryPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
                 </Button>
             </div>
@@ -205,7 +205,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         <div className="p-2 space-y-1">
                             <Button
                                 variant={selectedCategory.lv1 === null ? 'secondary' : 'ghost'}
-                                size="sm"
                                 className="w-full justify-start"
                                 onClick={() => applyCategorySelection(defaultCategorySelection)}
                             >
@@ -219,7 +218,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                     <div key={lv1} className="space-y-1">
                                         <Button
                                             variant={selectedCategory.lv1 === lv1 && selectedCategory.lv2 === null ? 'secondary' : 'ghost'}
-                                            size="sm"
                                             className="w-full justify-start"
                                             onClick={() => applyCategorySelection({ lv1, lv2: null, lv3: null, lv4: null })}
                                         >
@@ -230,7 +228,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                             <div key={`${lv1}-${lv2.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
                                                 <Button
                                                     variant={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null ? 'secondary' : 'ghost'}
-                                                    size="sm"
                                                     className="w-full justify-start"
                                                     onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: null, lv4: null })}
                                                 >
@@ -241,7 +238,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     <div key={`${lv1}-${lv2.name}-${lv3.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
                                                         <Button
                                                             variant={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null ? 'secondary' : 'ghost'}
-                                                            size="sm"
                                                             className="w-full justify-start"
                                                             onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: null })}
                                                         >
@@ -252,7 +248,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                             <div key={`${lv1}-${lv2.name}-${lv3.name}-${lv4.name}`} className="pl-3 border-l border-border/60 ml-2">
                                                                 <Button
                                                                     variant={selectedCategory.lv4 === lv4.name ? 'secondary' : 'ghost'}
-                                                                    size="sm"
                                                                     className="w-full justify-start"
                                                                     onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
                                                                 >
@@ -339,7 +334,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     variant="outline"
                                                     disabled={isAdding || isAlreadyAdded}
                                                     className={cn(
-                                                        'h-9 w-9 rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
+                                                        'rounded-full border-border/50 transition-all shrink-0 active:scale-95 shadow-sm',
                                                         isAlreadyAdded
                                                             ? 'bg-primary/5 text-primary border-primary/20 opacity-100 cursor-default shadow-none'
                                                             : 'hover:bg-primary hover:text-primary-foreground hover:border-primary hover:shadow-md',

@@ -199,8 +199,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         action={
                             <div className="flex flex-wrap items-center justify-center gap-2">
                                 <Button
-                                    variant="primary"
-                                    className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 px-4 text-xs md:text-sm"
+                                    variant="brand"
+                                    className="font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                                     onClick={() => void handleAddManualRow()}
                                     disabled={isAddingManual}
                                 >
@@ -208,8 +208,8 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     Добавить вручную
                                 </Button>
                                 <Button
-                                    variant="primary"
-                                    className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 px-4 text-xs md:text-sm"
+                                    variant="brand"
+                                    className="font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                                     onClick={() => setIsCatalogOpen(true)}
                                     disabled={isAddingCatalog}
                                 >
@@ -232,7 +232,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                             <Button
                                                 variant="outline"
                                                 className={cn(
-                                                    "h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 w-8 lg:w-[200px] px-0 lg:px-3 justify-center lg:justify-between gap-0 lg:gap-1.5 text-xs md:text-sm",
+                                                    "font-semibold tracking-tight shadow-sm transition-all active:scale-95 w-8 lg:w-[200px] px-0 lg:px-3 justify-center lg:justify-between gap-0 lg:gap-1.5",
                                                     !filterProjectId && "text-muted-foreground/80"
                                                 )}
                                             >
@@ -289,7 +289,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <Tooltip>
                                     <TooltipTrigger asChild>
                                         <PopoverTrigger asChild>
-                                            <Button type="button" variant="outline" className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 w-8 lg:w-[255px] px-0 lg:px-3 justify-center lg:justify-between font-mono tabular-nums lg:gap-1.5 text-xs md:text-sm">
+                                            <Button type="button" variant="outline" className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 w-8 lg:w-[255px] px-0 lg:px-3 justify-center lg:justify-between font-mono tabular-nums lg:gap-1.5">
                                                 <CalendarDays className="size-4 opacity-70" />
                                                 <span className="flex-1 text-left sm:text-center text-[13px] font-semibold tracking-tight hidden lg:inline">
                                                     {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
@@ -328,7 +328,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     <Button
                                         type="button"
                                         variant="default"
-                                        className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 px-3 gap-1.5 text-xs md:text-sm"
+                                        className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
                                         onClick={() => void handleAddManualRow()}
                                         disabled={isAddingManual}
                                         aria-label="Добавить строку вручную"
@@ -345,7 +345,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                     <Button
                                         type="button"
                                         variant="default"
-                                        className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 px-3 gap-1.5 text-xs md:text-sm"
+                                        className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
                                         onClick={() => setIsCatalogOpen(true)}
                                         disabled={isAddingCatalog}
                                         aria-label="Добавить из справочника"
@@ -360,7 +360,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="sm:hidden ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon" className="h-9 transition-all active:scale-95" aria-label="Действия по закупкам">
+                                    <Button variant="outline" size="icon" className="transition-all active:scale-95" aria-label="Действия по закупкам">
                                         <MoreHorizontal className="size-4" />
                                     </Button>
                                 </DropdownMenuTrigger>

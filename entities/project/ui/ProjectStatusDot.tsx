@@ -19,8 +19,8 @@ const STATUS_STYLES: Record<ProjectStatus, { dot: string; pulse: string }> = {
     pulse: 'bg-emerald-500/40',
   },
   planned: {
-    dot: 'bg-orange-500',
-    pulse: 'animate-pulse bg-orange-500/50',
+    dot: 'bg-brand',
+    pulse: 'animate-pulse bg-brand/50',
   },
   paused: {
     dot: 'bg-muted-foreground',

@@ -71,7 +71,7 @@ export function PermissionLevelControl({
               onClick={() => onSetLevel('manage')}
               className={`rounded-lg p-1.5 ${
                 currentLevel === 'manage'
-                  ? 'bg-orange-500 text-white shadow-sm hover:bg-orange-500'
+                  ? 'bg-brand text-white shadow-sm hover:bg-brand'
                   : 'text-zinc-400 hover:text-zinc-600'
               }`}
               disabled={isUpdating}

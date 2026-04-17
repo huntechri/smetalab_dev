@@ -85,7 +85,7 @@ export function DirectoryListScreen<TData, TValue>({
             action={
               <Button
                 variant="primary"
-                className="h-9 px-6 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm"
+                className="font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                 onClick={onCreate}
               >
                 <Plus className="size-3.5 mr-2" />
@@ -99,7 +99,7 @@ export function DirectoryListScreen<TData, TValue>({
             {canLoadMore ? (
               <Button
                 variant="outline"
-                className="h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm gap-1.5"
+                className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
                 onClick={onLoadMore}
                 disabled={isLoadingMore}
               >
@@ -111,7 +111,7 @@ export function DirectoryListScreen<TData, TValue>({
             <Button
               onClick={onCreate}
               variant="primary"
-              className="shrink-0 ml-auto h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm gap-1"
+              className="shrink-0 ml-auto font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1"
               aria-label={addLabel}
             >
               <Plus className="h-4 w-4 mr-1" />

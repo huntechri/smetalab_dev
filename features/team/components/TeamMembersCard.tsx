@@ -79,7 +79,7 @@ export function TeamMembersCard({
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}
                                         className={cn(
-                                            "h-9 px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95",
+                                            "px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95",
                                             roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
                                         )}
                                         onClick={() => onRoleFilterChange(item.value)}
@@ -119,7 +119,7 @@ export function TeamMembersCard({
                                                 <Button
                                                     variant="outline"
                                                     size="icon"
-                                                    className="h-9 transition-all active:scale-95 text-muted-foreground hover:text-foreground"
+                                                    className="transition-all active:scale-95 text-muted-foreground hover:text-foreground"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
                                                     <MoreHorizontal className="size-3.5" />
@@ -143,7 +143,7 @@ export function TeamMembersCard({
                                                 <AlertDialogCancel>Отмена</AlertDialogCancel>
                                                 <AlertDialogAction
                                                     variant="destructive"
-                                                    className="h-9 px-3 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm"
+                                                    className="px-3 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm"
                                                     onClick={() => onRemoveMember(member.id)}
                                                 >
                                                     Удалить

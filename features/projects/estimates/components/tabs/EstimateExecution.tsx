@@ -73,9 +73,9 @@ function ExecutionStatusCell({
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[150px] p-1">
-                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-orange-50 focus:text-orange-700">
+                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-brand/10 focus:text-brand">
                     <div className="flex items-center gap-2 w-full">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <div className="w-2 h-2 rounded-full bg-brand" />
                         <span className="text-xs font-medium">Подготовка</span>
                     </div>
                 </DropdownMenuItem>
