@@ -268,7 +268,7 @@ export function CreateProjectDialog({
                             >
                                 Отменить
                             </Button>
-                            <Button type="submit" variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" disabled={isSubmitting}>
+                            <Button type="submit" variant="brand" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>
