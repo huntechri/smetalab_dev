@@ -1125,7 +1125,7 @@ export function EstimateTable({
             <Button variant="default" onClick={() => setIsSectionDialogOpen(false)}>
               Отмена
             </Button>
-            <Button variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void createSection()}>Добавить</Button>
+            <Button variant="brand" onClick={() => void createSection()}>Добавить</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -1172,8 +1172,7 @@ export function EstimateTable({
                 Сбросить
               </Button>
               <Button
-                variant="default"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                variant="brand"
                 onClick={() => void applyCoefficient()}
                 disabled={isApplyingCoefficient}
               >
@@ -1214,7 +1213,7 @@ export function EstimateTable({
             <Button variant="default" onClick={() => setIsSavePatternOpen(false)}>
               Отмена
             </Button>
-            <Button variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void savePattern()} disabled={isPatternSaving}>
+            <Button variant="brand" onClick={() => void savePattern()} disabled={isPatternSaving}>
               {isPatternSaving ? "Сохранение..." : "Сохранить шаблон"}
             </Button>
           </DialogFooter>
@@ -1272,7 +1271,7 @@ export function EstimateTable({
             <Button variant="default" onClick={() => setIsApplyPatternOpen(false)}>
               Отмена
             </Button>
-            <Button variant="default" className="bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground" onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
+            <Button variant="brand" onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
               {isPatternApplying ? "Применение..." : "Применить шаблон"}
             </Button>
           </DialogFooter>
