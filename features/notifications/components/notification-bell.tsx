@@ -28,7 +28,7 @@ export function NotificationBell() {
 
     if (!mounted) {
         return (
-            <Button type="button" variant="ghost" className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
+            <Button type="button" variant="ghost" size="icon" className="relative inline-flex items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Уведомления</span>
             </Button>
@@ -55,8 +55,9 @@ export function NotificationBell() {
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button variant="ghost"
+                    size="icon"
                     type="button"
-                    className="relative inline-flex size-8 items-center justify-center rounded-full border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                    className="relative inline-flex items-center justify-center rounded-full border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
                 >
                     <Bell className="h-5 w-5" />

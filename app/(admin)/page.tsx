@@ -13,7 +13,7 @@ export default function HomePage() {
             <div className="text-center md:max-w-2xl mx-auto lg:col-span-6 lg:text-left">
               <h1 className="text-4xl font-bold text-gray-900 tracking-tight sm:text-5xl md:text-6xl">
                 Smart Engineering &
-                <span className="block text-orange-500">Management Platform</span>
+                <span className="block text-brand">Management Platform</span>
               </h1>
               <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
                 Smetalab provides advanced tools for professional project estimation,
@@ -22,8 +22,9 @@ export default function HomePage() {
               <div className="mt-8 max-w-lg mx-auto text-center lg:text-left lg:mx-0">
                 <Link href="/pricing">
                   <Button
-                    size="lg"
-                    className="bg-orange-500 hover:bg-orange-600 text-white rounded-full text-lg px-8"
+                    variant="brand"
+                    size="xl"
+                    className="rounded-full"
                   >
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -43,7 +44,7 @@ export default function HomePage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-brand text-white">
                   <Orbit className="h-6 w-6" />
                 </div>
                 <CardTitle className="mt-5 text-lg font-medium text-gray-900">
@@ -60,7 +61,7 @@ export default function HomePage() {
 
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-brand text-white">
                   <Database className="h-6 w-6" />
                 </div>
                 <CardTitle className="mt-5 text-lg font-medium text-gray-900">
@@ -77,7 +78,7 @@ export default function HomePage() {
 
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-orange-500 text-white">
+                <div className="flex items-center justify-center h-12 w-12 rounded-md bg-brand text-white">
                   <CreditCard className="h-6 w-6" />
                 </div>
                 <CardTitle className="mt-5 text-lg font-medium text-gray-900">

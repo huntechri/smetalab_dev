@@ -61,7 +61,7 @@ function EstimateStatusCell({
         {estimateStatusOrder.map((item) => (
           <DropdownMenuItem key={item} onClick={() => void onChange(item)} className="mb-0.5 h-8 cursor-pointer rounded-md">
             <div className="flex items-center gap-2 w-full">
-              <div className={`w-2 h-2 rounded-full ${item === 'approved' ? 'bg-emerald-500' : item === 'in_progress' ? 'bg-blue-500' : 'bg-orange-500'}`} />
+              <div className={`w-2 h-2 rounded-full ${item === 'approved' ? 'bg-emerald-500' : item === 'in_progress' ? 'bg-blue-500' : 'bg-brand'}`} />
               <span className="text-xs font-medium md:text-sm">{getEstimateStatusLabel(item)}</span>
             </div>
           </DropdownMenuItem>
@@ -158,7 +158,7 @@ export function EstimatesListTable({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  className="h-8 w-8 px-0 rounded-[7.6px] shadow-none"
+                  className="w-9 px-0 rounded-[7.6px] shadow-sm"
                   title="Удалить смету"
                 >
                   <Trash2 className="h-4 w-4" />
