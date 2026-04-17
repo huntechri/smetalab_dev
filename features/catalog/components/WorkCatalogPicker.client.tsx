@@ -113,11 +113,11 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
 
                                     <div className="flex items-center shrink-0 ml-1">
                                         <Button
-                                            size="icon"
+                                            size="icon-xs"
                                             variant="outline"
                                             disabled={addedWorkNames.has(work.name)}
                                             className={cn(
-                                                "h-7 w-7 rounded-full border-border/50 transition-all shrink-0 active:scale-90",
+                                                "rounded-full border-border/50 transition-all shrink-0 active:scale-90",
                                                 addedWorkNames.has(work.name)
                                                     ? "bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default"
                                                     : "hover:bg-primary hover:text-primary-foreground hover:border-primary"

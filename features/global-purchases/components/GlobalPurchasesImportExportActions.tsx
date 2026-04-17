@@ -18,7 +18,7 @@ export function GlobalPurchasesImportExportActions({
   onImportClick,
   onFileChange,
 }: GlobalPurchasesImportExportActionsProps) {
-  const buttonClassName = 'h-9 px-3 gap-1.5 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm';
+  const buttonClassName = 'gap-1.5 font-semibold tracking-tight shadow-sm transition-all active:scale-95';
 
   return (
     <>

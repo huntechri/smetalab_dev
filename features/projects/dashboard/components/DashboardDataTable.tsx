@@ -109,8 +109,8 @@ function DragHandle({ id }: { id: number }) {
             {...listeners}
             ref={setNodeRef}
             variant="ghost"
-            size="icon"
-            className="text-muted-foreground size-7 hover:bg-transparent cursor-move"
+            size="icon-xs"
+            className="text-muted-foreground hover:bg-transparent cursor-move"
         >
             <GripVertical className="text-muted-foreground size-3" />
             <span className="sr-only">Move</span>
@@ -258,7 +258,6 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                 <Select>
                     <SelectTrigger
                         className="w-40 cursor-pointer text-muted-foreground"
-                        size="sm"
                     >
                         <SelectValue placeholder="Assign reviewer..." />
                     </SelectTrigger>
@@ -280,8 +279,8 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                 <DropdownMenuTrigger asChild>
                     <Button
                         variant="ghost"
-                        className="text-muted-foreground flex size-8 cursor-pointer"
-                        size="icon"
+                        size="icon-sm"
+                        className="text-muted-foreground flex cursor-pointer"
                     >
                         <EllipsisVertical className="size-4" />
                         <span className="sr-only">Open menu</span>
@@ -393,7 +392,6 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                     <Select defaultValue="outline">
                         <SelectTrigger
                             className="flex w-fit sm:hidden cursor-pointer"
-                            size="sm"
                             id="view-selector"
                         >
                             <SelectValue placeholder="Select a view" />
@@ -424,7 +422,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                 <div className="flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" size="sm" className="cursor-pointer">
+                            <Button variant="outline" className="cursor-pointer">
                                 <Columns2 className="size-4" />
                                 <span className="hidden lg:inline">Customize Columns</span>
                                 <span className="lg:hidden">Columns</span>
@@ -455,7 +453,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" size="sm" className="cursor-pointer">
+                    <Button variant="outline" className="cursor-pointer">
                         <Plus className="size-4" />
                         <span className="hidden lg:inline">{addButtonLabel}</span>
                     </Button>
@@ -530,7 +528,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                 table.setPageSize(Number(value))
                             }}
                         >
-                            <SelectTrigger size="sm" className="w-16 h-8 border-none shadow-none tabular-nums font-semibold">
+                            <SelectTrigger className="w-16 border-none shadow-none tabular-nums font-semibold">
                                 <SelectValue placeholder={table.getState().pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
@@ -549,8 +547,8 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                     <div className="flex items-center gap-1">
                         <Button
                             variant="outline"
-                            size="icon"
-                            className="size-8 rounded-md border-none shadow-none"
+                            size="icon-sm"
+                            className="rounded-md border-none shadow-none"
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
                         >
@@ -558,8 +556,8 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                         </Button>
                         <Button
                             variant="outline"
-                            size="icon"
-                            className="size-8 rounded-md border-none shadow-none"
+                            size="icon-sm"
+                            className="rounded-md border-none shadow-none"
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
                         >
@@ -619,9 +617,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof taskSchema> }) {
                     </div>
                 </div>
                 <DrawerFooter className="mt-auto border-t p-6 gap-3 flex-row shrink-0">
-                    <Button className="flex-1 font-semibold h-11">Save changes</Button>
+                    <Button className="flex-1 font-semibold">Save changes</Button>
                     <DrawerClose asChild>
-                        <Button variant="outline" className="flex-1 font-semibold h-11">Close</Button>
+                        <Button variant="outline" className="flex-1 font-semibold">Close</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </DrawerContent>

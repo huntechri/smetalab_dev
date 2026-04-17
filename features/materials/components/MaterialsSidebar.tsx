@@ -126,10 +126,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
         <div className="flex items-center gap-1 group">
           <Button
             variant="ghost"
-            size="sm"
             onClick={() => handleCategorySelect(level, node.name, currentPath)}
             className={cn(
-              "min-h-[32px] h-auto py-1.5 flex-1 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
+              "h-auto py-1.5 flex-1 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
               isSelected ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
             )}
             title={node.name}
@@ -194,10 +193,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
             <div className="flex flex-col gap-1">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={() => handleCategorySelect(1, undefined)}
                 className={cn(
-                  "min-h-[32px] h-auto py-1.5 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
+                  "h-auto py-1.5 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
                   !hasFilters ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                 )}
               >

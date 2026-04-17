@@ -85,8 +85,8 @@ export function PatternsScreen() {
             <CardContent className="space-y-3">
               {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
-                <Button variant="default" size="sm" onClick={() => void openPreview(item.id)}>Превью</Button>
-                <Button variant="destructive" size="sm" className="h-8 rounded-[7.6px] active:scale-95 shadow-none" onClick={() => void removePattern(item.id)}>Удалить</Button>
+                <Button variant="default" onClick={() => void openPreview(item.id)}>Превью</Button>
+                <Button variant="destructive" className="active:scale-95 shadow-none" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
             </CardContent>
           </Card>

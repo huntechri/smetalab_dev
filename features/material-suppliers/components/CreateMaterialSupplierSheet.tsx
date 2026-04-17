@@ -199,14 +199,15 @@ export function CreateMaterialSupplierSheet({
 
                 <div className="grid grid-cols-2 gap-4">
                   <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel className="text-xs">Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel className="text-xs">Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel>Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
                 </div>
               </div>
             </ScrollArea>
             <div className="px-4 py-3 sm:p-6 border-t bg-muted/20">
-              <SheetFooter className="flex-row gap-2 sm:space-x-0 w-full">
-                <Button type="button" size="sm" variant="outline" className="flex-1 text-xs" onClick={() => onOpenChange(false)}>Отмена</Button>
-                <Button type="submit" size="sm" className="flex-1 text-xs" disabled={isPending}>
+              <SheetFooter className="flex-row gap-2 sm:space-x-0">
+                <Button type="button" variant="outline" className="flex-1" onClick={() => onOpenChange(false)}>Отмена</Button>
+                <Button type="submit" className="flex-1" disabled={isPending}>
                   {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {materialSupplier ? "Сохранить" : "Создать"}
                 </Button>

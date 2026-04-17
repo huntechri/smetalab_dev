@@ -50,9 +50,8 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
                 <TooltipTrigger asChild>
                     <PopoverTrigger asChild>
                         <Button
-                            variant="default"
-                            size="sm"
-                            className="h-8 w-full sm:w-[180px] lg:w-[220px] justify-between gap-2 px-3 font-medium shadow-none"
+                            variant="outline"
+                            className="flex w-full items-center justify-between gap-1 border-border/40 bg-background/50 text-[11px] font-semibold tracking-tight shadow-sm transition-all hover:bg-muted active:scale-95 sm:w-[180px] sm:text-xs"
                         >
                             <div className="flex items-center gap-2 truncate">
                                 <Filter data-icon="inline-start" className="opacity-60" />

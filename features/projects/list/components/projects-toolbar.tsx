@@ -36,8 +36,7 @@ export function ProjectsToolbar({
             <Button
                 onClick={onAddClick}
                 variant="default"
-                size="xs"
-                className="h-7 w-full sm:w-auto"
+                className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 w-full sm:w-auto"
             >
                 Создать проект
             </Button>
