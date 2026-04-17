@@ -1,7 +1,7 @@
 'use client';
 
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { Breadcrumb03 } from '@/components/shadcn-studio/breadcrumb/breadcrumb-03';
+import { Breadcrumb07 } from '@/components/shadcn-studio/breadcrumb/breadcrumb-07';
 import { SidebarTrigger } from '@/shared/ui/sidebar';
 import { Separator } from '@/shared/ui/separator';
 import { NotificationBell } from '@/features/notifications/components/notification-bell';
@@ -17,7 +17,7 @@ export function AppHeader() {
             <Separator orientation="vertical" className="hidden h-6 bg-border/40 sm:block" />
             <div className="flex-1 min-w-0">
                 {breadcrumbs.length > 0 && (
-                    <Breadcrumb03 items={breadcrumbs} />
+                    <Breadcrumb07 items={breadcrumbs} />
                 )}
             </div>
             <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 md:gap-4">

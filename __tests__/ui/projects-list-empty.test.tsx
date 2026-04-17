@@ -12,19 +12,14 @@ afterEach(() => {
 // Mock Lucide icons
 vi.mock('lucide-react', () => ({
     FolderKanban: (props: ComponentProps<'div'>) => <div data-testid="folder-kanban-icon" {...props} />,
-    LayoutGrid: () => <div />,
-    List: () => <div />,
     Edit: () => <div />,
     ExternalLink: () => <div />,
     Trash2: () => <div />,
 }));
 
-// Mock ProjectCard and ProjectRow
+// Mock ProjectCard
 vi.mock('@/features/projects/list/components/project-card', () => ({
     ProjectCard: () => <div data-testid="project-card" />,
-}));
-vi.mock('@/features/projects/list/components/project-row', () => ({
-    ProjectRow: () => <div data-testid="project-row" />,
 }));
 
 describe('ProjectsList', () => {
@@ -32,7 +27,6 @@ describe('ProjectsList', () => {
         render(
             <ProjectsList
                 projects={[]}
-                viewMode="grid"
                 onDelete={() => {}}
                 onEdit={() => {}}
             />
@@ -65,7 +59,6 @@ describe('ProjectsList', () => {
         render(
             <ProjectsList
                 projects={mockProjects}
-                viewMode="grid"
                 onDelete={() => {}}
                 onEdit={() => {}}
             />
