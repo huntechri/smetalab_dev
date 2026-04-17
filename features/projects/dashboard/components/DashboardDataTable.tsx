@@ -118,6 +118,37 @@ function DragHandle({ id }: { id: number }) {
     )
 }
 
+function getTaskStatusMeta(status: string) {
+    const normalizedStatus = status.trim().toLowerCase()
+
+    if (normalizedStatus === "done" || normalizedStatus === "готово") {
+        return {
+            label: "Готово",
+            className: "border-none bg-emerald-500/12 text-emerald-700",
+            icon: "done" as const,
+        }
+    }
+
+    if (
+        normalizedStatus === "in process" ||
+        normalizedStatus === "in progress" ||
+        normalizedStatus === "в работе" ||
+        normalizedStatus === "в процессе"
+    ) {
+        return {
+            label: "В работе",
+            className: "border-none bg-blue-500/12 text-blue-700",
+            icon: "progress" as const,
+        }
+    }
+
+    return {
+        label: status,
+        className: "border-none bg-slate-500/12 text-slate-700",
+        icon: "neutral" as const,
+    }
+}
+
 const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
     {
         id: "drag",
@@ -163,7 +194,7 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
         header: "Section Type",
         cell: ({ row }) => (
             <div className="w-40">
-                <Badge variant="outline" className="text-muted-foreground px-1.5 font-normal">
+                <Badge variant="secondary" className="border-none bg-slate-500/10 px-1.5 font-normal text-slate-700">
                     {row.original.type}
                 </Badge>
             </div>
@@ -172,23 +203,24 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
     {
         accessorKey: "status",
         header: "Status",
-        cell: ({ row }) => (
-            <div className="w-32">
-                <Badge variant="outline" className="text-muted-foreground px-1.5 font-normal gap-1.5 min-w-[100px] justify-start">
-                    {row.original.status === "Done" || row.original.status === "Готово" ? (
-                        <>
-                            <CircleCheckBig className="text-green-500 dark:text-green-400 size-3" />
-                            Done
-                        </>
-                    ) : (
-                        <>
+        cell: ({ row }) => {
+            const statusMeta = getTaskStatusMeta(row.original.status)
+
+            return (
+                <div className="w-32">
+                    <Badge variant="secondary" className={`gap-1.5 min-w-[100px] justify-start px-1.5 font-normal ${statusMeta.className}`}>
+                        {statusMeta.icon === "progress" ? (
                             <Loader className="size-3 animate-spin" />
-                            In Process
-                        </>
-                    )}
-                </Badge>
-            </div>
-        ),
+                        ) : statusMeta.icon === "done" ? (
+                            <CircleCheckBig className="size-3" />
+                        ) : (
+                            <span className="size-2 rounded-full bg-current/70" aria-hidden="true" />
+                        )}
+                        {statusMeta.label}
+                    </Badge>
+                </div>
+            )
+        },
     },
     {
         accessorKey: "target",

@@ -44,8 +44,8 @@ export function PermissionsMatrix() {
           {roles.map((role) => (
             <TableHead key={role} className="border-l border-gray-100 px-2 py-4 text-center">
               <Badge
-                variant="outline"
-                className="rounded-md border-gray-200 px-2 py-0.5 text-xs font-semibold"
+                variant="secondary"
+                className="border-none bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-700"
               >
                 {ROLE_LABELS[role]}
               </Badge>
