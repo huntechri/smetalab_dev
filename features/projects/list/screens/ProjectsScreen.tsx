@@ -26,7 +26,6 @@ export function ProjectsScreen({ initialProjects, counterparties }: ProjectsScre
     const {
         searchQuery,
         sortOption,
-        viewMode,
         visibleProjects,
         updateQueryParams,
         handleDeleteProject,
@@ -62,15 +61,12 @@ export function ProjectsScreen({ initialProjects, counterparties }: ProjectsScre
             <ProjectsToolbar
                 searchQuery={searchQuery}
                 sortOption={sortOption}
-                viewMode={viewMode}
                 onSearchQueryChange={(value) => updateQueryParams({ q: value })}
                 onSortOptionChange={(value) => updateQueryParams({ sort: value })}
-                onViewModeChange={(value) => updateQueryParams({ view: value })}
                 onAddClick={handleAddClick}
             />
             <ProjectsList
                 projects={visibleProjects}
-                viewMode={viewMode}
                 onDelete={onDelete}
                 onEdit={handleEditProject}
             />
