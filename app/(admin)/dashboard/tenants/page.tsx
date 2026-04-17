@@ -49,7 +49,7 @@ export default async function TenantsPage() {
                             </div>
 
                             <Link href={`/dashboard/tenants/${team.id}`}>
-                                <Button variant="outline" className="w-full text-xs h-9 rounded-xl border-gray-200 hover:bg-gray-50 hover:text-gray-900 group">
+                                <Button variant="outline" className="w-full text-xs font-semibold tracking-tight shadow-sm transition-all active:scale-95 rounded-xl border-gray-200 hover:bg-gray-50 hover:text-gray-900 group">
                                     Подробнее
                                     <ArrowRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                                 </Button>

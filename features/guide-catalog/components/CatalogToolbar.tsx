@@ -71,7 +71,7 @@ export function CatalogToolbar<TFilters>({
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="default" size="icon-sm" className="mr-1">
+            <Button variant="outline" size="icon" className="mr-1 h-9 transition-all active:scale-95">
               <Filter className="h-4 w-4" />
             </Button>
           </SheetTrigger>
@@ -96,10 +96,10 @@ export function CatalogToolbar<TFilters>({
 
       <div className="hidden lg:block">
         <Button
-          variant="default"
-          size="icon-sm"
+          variant="outline"
+          size="icon"
           className={cn(
-            "mr-1 transition-all duration-200",
+            "mr-1 h-9 transition-all active:scale-95 duration-200",
             showSidebar &&
               "bg-secondary text-secondary-foreground ring-1 ring-border/50"
           )}
@@ -117,8 +117,8 @@ export function CatalogToolbar<TFilters>({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="default"
-            className="flex-1 sm:flex-none"
+            variant="outline"
+            className="flex-1 sm:flex-none h-9 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
             onClick={onImportClick}
             disabled={isImporting}
           >
@@ -138,8 +138,8 @@ export function CatalogToolbar<TFilters>({
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="default"
-            className="flex-1 sm:flex-none"
+            variant="outline"
+            className="flex-1 sm:flex-none h-9 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
             onClick={onExport}
             disabled={isExporting}
           >
@@ -166,9 +166,8 @@ export function CatalogToolbar<TFilters>({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  size="xs"
                   className={cn(
-                    "flex-1 sm:flex-none h-7 rounded-[7.6px] px-2 sm:px-4 active:scale-95 shadow-none",
+                    "flex-1 sm:flex-none h-9 px-2 sm:px-4 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5",
                     isActionDisabled ? "pointer-events-none" : ""
                   )}
                   disabled={isActionDisabled}

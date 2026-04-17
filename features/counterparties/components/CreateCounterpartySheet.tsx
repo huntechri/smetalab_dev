@@ -513,12 +513,13 @@ export function CreateCounterpartySheet({
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    className="flex-1 h-8 text-xs"
+                                    size="sm"
+                                    className="flex-1 text-xs"
                                     onClick={() => onOpenChange(false)}
                                 >
                                     Отмена
                                 </Button>
-                                <Button type="submit" className="flex-1 h-8 text-xs" disabled={isPending}>
+                                <Button type="submit" size="sm" className="flex-1 text-xs" disabled={isPending}>
                                     {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                     {counterparty ? "Сохранить" : "Создать"}
                                 </Button>
