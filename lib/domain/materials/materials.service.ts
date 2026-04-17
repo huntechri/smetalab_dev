@@ -593,7 +593,18 @@ export class MaterialsService {
         try {
             const BATCH_SIZE = 50;
             const materialsWithoutEmbedding = await db
-                .select()
+                .select({
+                    id: materials.id,
+                    code: materials.code,
+                    name: materials.name,
+                    unit: materials.unit,
+                    vendor: materials.vendor,
+                    description: materials.description,
+                    categoryLv1: materials.categoryLv1,
+                    categoryLv2: materials.categoryLv2,
+                    categoryLv3: materials.categoryLv3,
+                    categoryLv4: materials.categoryLv4,
+                })
                 .from(materials)
                 .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId), isNull(materials.embedding)))
                 .limit(BATCH_SIZE);
@@ -650,7 +661,18 @@ export class MaterialsService {
         try {
             const BATCH_SIZE = 50;
             const materialsToReindex = await db
-                .select()
+                .select({
+                    id: materials.id,
+                    code: materials.code,
+                    name: materials.name,
+                    unit: materials.unit,
+                    vendor: materials.vendor,
+                    description: materials.description,
+                    categoryLv1: materials.categoryLv1,
+                    categoryLv2: materials.categoryLv2,
+                    categoryLv3: materials.categoryLv3,
+                    categoryLv4: materials.categoryLv4,
+                })
                 .from(materials)
                 .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)))
                 .orderBy(materials.id)

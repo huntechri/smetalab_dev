@@ -279,7 +279,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm" className="opacity-50 hover:opacity-100 px-1 text-[12px] font-normal" aria-label="Действия" title="Действия">
+                            <Button variant="ghost" size="xs" className="opacity-50 hover:opacity-100 px-1 text-[12px] font-normal" aria-label="Действия" title="Действия">
                                 Действия
                             </Button>
                         </DropdownMenuTrigger>

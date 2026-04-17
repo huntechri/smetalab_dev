@@ -18,7 +18,32 @@ export async function getMaterialSuppliers(
   }
 
   const data = await db
-    .select()
+    .select({
+      id: materialSuppliers.id,
+      tenantId: materialSuppliers.tenantId,
+      name: materialSuppliers.name,
+      color: materialSuppliers.color,
+      legalStatus: materialSuppliers.legalStatus,
+      birthDate: materialSuppliers.birthDate,
+      passportSeriesNumber: materialSuppliers.passportSeriesNumber,
+      passportIssuedBy: materialSuppliers.passportIssuedBy,
+      passportIssuedDate: materialSuppliers.passportIssuedDate,
+      departmentCode: materialSuppliers.departmentCode,
+      ogrn: materialSuppliers.ogrn,
+      inn: materialSuppliers.inn,
+      kpp: materialSuppliers.kpp,
+      address: materialSuppliers.address,
+      phone: materialSuppliers.phone,
+      email: materialSuppliers.email,
+      bankName: materialSuppliers.bankName,
+      bankAccount: materialSuppliers.bankAccount,
+      corrAccount: materialSuppliers.corrAccount,
+      bankInn: materialSuppliers.bankInn,
+      bankKpp: materialSuppliers.bankKpp,
+      createdAt: materialSuppliers.createdAt,
+      updatedAt: materialSuppliers.updatedAt,
+      deletedAt: materialSuppliers.deletedAt,
+    })
     .from(materialSuppliers)
     .where(and(...filters))
     .orderBy(desc(materialSuppliers.updatedAt))
