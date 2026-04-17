@@ -126,10 +126,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
         <div className="flex items-center gap-1 group">
           <Button
             variant="ghost"
-            size="sm"
             onClick={() => handleCategorySelect(level, node.name, currentPath)}
             className={cn(
-              "min-h-[32px] h-auto py-1.5 flex-1 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
+              "h-auto py-1.5 flex-1 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
               isSelected ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
             )}
             title={node.name}
@@ -141,12 +140,12 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
           {hasChildren && (
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleExpand(currentPath);
               }}
-              className="size-7 shrink-0 opacity-60 hover:opacity-100"
+              className="shrink-0 opacity-60 hover:opacity-100"
             >
               {isExpanded ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
             </Button>
@@ -174,9 +173,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
         {hasFilters && (
           <Button 
             variant="ghost" 
-            size="sm" 
+            size="icon-sm" 
             onClick={resetFilters}
-            className="h-7 px-2 text-[11px] text-muted-foreground hover:text-destructive transition-colors"
+            className="w-auto px-2 text-[11px] text-muted-foreground hover:text-destructive transition-colors"
           >
             <FilterX className="size-3 mr-1" />
             Сбросить
@@ -194,10 +193,9 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
             <div className="flex flex-col gap-1">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={() => handleCategorySelect(1, undefined)}
                 className={cn(
-                  "min-h-[32px] h-auto py-1.5 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
+                  "h-auto py-1.5 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
                   !hasFilters ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                 )}
               >

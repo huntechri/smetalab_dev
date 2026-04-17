@@ -49,7 +49,7 @@ export function WorksEditDialog({
                                 id="name"
                                 value={data.name || ""}
                                 onChange={(e) => onFieldChange("name", e.target.value)}
-                                className="sm:col-span-3 h-8 text-sm"
+                                className="sm:col-span-3 text-sm"
                                 required
                             />
                         </div>
@@ -69,7 +69,7 @@ export function WorksEditDialog({
                                 type="number"
                                 value={data.price || ""}
                                 onChange={(e) => onFieldChange("price", e.target.value)}
-                                className="sm:col-span-3 h-8 text-sm"
+                                className="sm:col-span-3 text-sm"
                                 required
                             />
                         </div>
@@ -79,7 +79,7 @@ export function WorksEditDialog({
                                 id="phase"
                                 value={data.phase || ""}
                                 onChange={(e) => onFieldChange("phase", e.target.value)}
-                                className="col-span-3 h-8 text-sm"
+                                className="col-span-3 text-sm"
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -88,7 +88,7 @@ export function WorksEditDialog({
                                 id="category"
                                 value={data.category || ""}
                                 onChange={(e) => onFieldChange("category", e.target.value)}
-                                className="col-span-3 h-8 text-sm"
+                                className="col-span-3 text-sm"
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -97,12 +97,12 @@ export function WorksEditDialog({
                                 id="subcategory"
                                 value={data.subcategory || ""}
                                 onChange={(e) => onFieldChange("subcategory", e.target.value)}
-                                className="col-span-3 h-8 text-sm"
+                                className="col-span-3 text-sm"
                             />
                         </div>
                         <DialogFooter>
                             <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
-                            <Button type="submit" disabled={isUpdating} className="h-9 px-8">
+                            <Button type="submit" disabled={isUpdating} className="px-8">
                                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Сохранить
                             </Button>

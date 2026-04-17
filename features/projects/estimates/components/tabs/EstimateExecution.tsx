@@ -73,9 +73,9 @@ function ExecutionStatusCell({
                 </div>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-[150px] p-1">
-                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-orange-50 focus:text-orange-700">
+                <DropdownMenuItem onClick={() => onStatusChange('not_started')} className="mb-0.5 h-8 cursor-pointer rounded-md focus:bg-brand/10 focus:text-brand">
                     <div className="flex items-center gap-2 w-full">
-                        <div className="w-2 h-2 rounded-full bg-orange-500" />
+                        <div className="w-2 h-2 rounded-full bg-brand" />
                         <span className="text-xs font-medium">Подготовка</span>
                     </div>
                 </DropdownMenuItem>
@@ -166,7 +166,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, triggerVaria
                         Добавить доп. работу
                     </DropdownMenuItem>
                 ) : (
-                    <Button variant="default" title="Добавить дополнительную работу" size="xs" className="h-7 gap-1.5 px-3" aria-label="Добавить дополнительную работу">
+                    <Button variant="primary" title="Добавить дополнительную работу" className="h-9 gap-1.5 px-3 text-xs font-semibold tracking-tight shadow-sm transition-all active:scale-95 md:text-sm" aria-label="Добавить дополнительную работу">
                         <Plus className="h-4 w-4" />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>
@@ -400,7 +400,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 actions={
                     <>
                         <div className="hidden items-center gap-2 sm:flex">
-                            <Button variant="outline" size="xs" className="h-7 gap-1.5" onClick={handleExport}>
+                            <Button variant="outline" className="h-9 gap-1.5 text-xs font-semibold tracking-tight shadow-sm transition-all active:scale-95 md:text-sm" onClick={handleExport}>
                                 <Download className="h-4 w-4" />
                                 Экспорт Excel
                             </Button>
@@ -413,7 +413,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon-sm" className="sm:hidden">
+                                <Button variant="outline" size="icon" className="h-9 transition-all active:scale-95 sm:hidden">
                                     <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>

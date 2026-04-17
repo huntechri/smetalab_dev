@@ -70,9 +70,8 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
         {hasFilters && (
           <Button 
             variant="ghost" 
-            size="sm" 
             onClick={resetFilters}
-            className="h-7 px-2 text-[11px] text-muted-foreground hover:text-destructive"
+            className="px-2 text-[11px] text-muted-foreground hover:text-destructive"
           >
             <FilterX className="size-3 mr-1" />
             Сбросить
@@ -91,10 +90,9 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
             <div className="flex flex-col gap-1">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={() => handlePhaseSelect(undefined)}
                 className={cn(
-                  "h-8 justify-start px-2 font-normal text-[13px] rounded-md",
+                  "justify-start px-2 font-normal text-[13px] rounded-md",
                   !filters.phase ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                 )}
               >
@@ -104,10 +102,9 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
                 <Button
                   key={p}
                   variant="ghost"
-                  size="sm"
                   onClick={() => handlePhaseSelect(p)}
                   className={cn(
-                    "h-8 justify-between px-2 font-normal text-[13px] rounded-md",
+                    "justify-between px-2 font-normal text-[13px] rounded-md",
                     filters.phase === p ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                   )}
                 >
@@ -132,10 +129,9 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
             <div className="flex flex-col gap-1">
               <Button
                 variant="ghost"
-                size="sm"
                 onClick={() => handleCategorySelect(undefined)}
                 className={cn(
-                  "h-8 justify-start px-2 font-normal text-[13px] rounded-md",
+                  "justify-start px-2 font-normal text-[13px] rounded-md",
                   !filters.category ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                 )}
               >
@@ -145,10 +141,9 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
                 <Button
                   key={c}
                   variant="ghost"
-                  size="sm"
                   onClick={() => handleCategorySelect(c)}
                   className={cn(
-                    "h-8 justify-between px-2 font-normal text-[13px] rounded-md",
+                    "justify-between px-2 font-normal text-[13px] rounded-md",
                     filters.category === c ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
                   )}
                 >
