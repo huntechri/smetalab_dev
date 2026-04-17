@@ -553,10 +553,13 @@ export class WorksService {
     static async reorder(teamId: number): Promise<Result<{ updatedCount: number }>> {
         try {
             const allWorks = await db
-                .select()
+                .select({
+                    id: works.id,
+                    sortOrder: works.sortOrder,
+                })
                 .from(works)
                 .where(withActiveTenant(works, teamId))
-                .orderBy(works.sortOrder); // Сортируем как есть сейчас
+                .orderBy(works.sortOrder); 
 
             if (allWorks.length === 0) return error('Нет данных');
 
@@ -583,7 +586,17 @@ export class WorksService {
         try {
             const BATCH_SIZE = 50;
             const recordsWithoutEmbedding = await db
-                .select()
+                .select({
+                    id: works.id,
+                    code: works.code,
+                    name: works.name,
+                    unit: works.unit,
+                    category: works.category,
+                    subcategory: works.subcategory,
+                    description: works.description,
+                    shortDescription: works.shortDescription,
+                    phase: works.phase,
+                })
                 .from(works)
                 .where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId), isNull(works.embedding)))
                 .limit(BATCH_SIZE);

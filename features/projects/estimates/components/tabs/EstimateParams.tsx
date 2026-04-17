@@ -59,11 +59,11 @@ export function EstimateParams({ estimateId, initialRows }: { estimateId: string
     return (
         <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-end gap-1.5 md:gap-2">
-                <Button variant="default" className="h-8 gap-1.5 px-3" onClick={addRoom} aria-label="Добавить помещение">
+                <Button variant="default" size="xs" className="h-7 gap-1.5 px-3" onClick={addRoom} aria-label="Добавить помещение">
                     <Plus className="h-4 w-4" />
                     <span className="hidden sm:inline">Добавить помещение</span>
                 </Button>
-                <Button variant="default" className="h-8 gap-1.5 px-3" onClick={onSave} disabled={isSaving || !hasRows} aria-label="Сохранить параметры">
+                <Button variant="default" size="xs" className="h-7 gap-1.5 px-3" onClick={onSave} disabled={isSaving || !hasRows} aria-label="Сохранить параметры">
                     <Save className="h-4 w-4" />
                     <span className="hidden sm:inline">{isSaving ? 'Сохранение...' : 'Сохранить'}</span>
                 </Button>

@@ -170,7 +170,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
         <div className="flex items-center gap-2">
           <Badge variant="outline" className={projectBadgeClassName}>Платежей: {aggregates.confirmedCount}</Badge>
           <Badge variant="outline" className={projectBadgeClassName}>Подтверждено: {formatCurrency(aggregates.totalConfirmedReceipts)}</Badge>
-          <Button size="sm" onClick={onAddClick}>
+          <Button size="xs" className="h-7" onClick={onAddClick}>
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
         </div>
@@ -205,7 +205,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon">
+                      <Button variant="ghost" size="icon-sm">
                         <MoreHorizontal className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
