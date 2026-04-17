@@ -1621,9 +1621,9 @@ Classes:
 
 File: features/projects/list/components/create-project-dialog.tsx
 Tag: <Button>
-Variant: default
+Variant: brand
 Size: default
-Classes: bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground
+Classes: 
 -------------------
 
 File: features/projects/list/components/project-actions.tsx
