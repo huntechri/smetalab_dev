@@ -414,7 +414,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                         <div className="sm:hidden">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon">
+                                    <Button variant="outline" size="icon-xs">
                                         <MoreHorizontal className="h-4 w-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
