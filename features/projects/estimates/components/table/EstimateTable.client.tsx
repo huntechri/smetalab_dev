@@ -856,128 +856,39 @@ export function EstimateTable({
         height="var(--table-height)"
         compactMobileToolbar
         actions={
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
-            <Button
-              variant="default"
-             
-              aria-label="Режим расчета"
-              onClick={() => {
-                setPendingInsertAfterWork(null);
-                setIsCalculationModeOpen(true);
-              }}
-            >
-              <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden sm:inline">
-                Режим расчета
-              </span>
-            </Button>
-            <Button
-              variant="default"
-             
-              aria-label="Добавить раздел"
-              onClick={() => openCreateSectionDialog()}
-            >
-              <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden sm:inline">
-                Раздел
-              </span>
-            </Button>
-            <Button
-              variant="default"
-             
-              aria-label="Сохранить смету"
-              onClick={() => setIsSavePatternOpen(true)}
-            >
-              <Save className="h-3.5 w-3.5 text-muted-foreground" />
-              <span className="hidden sm:inline">
-                Сохранить
-              </span>
-            </Button>
-            </div>
-            <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
-                <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Шаблон</span>
-              </Button>
-              <Button
-                variant="default"
-               
-                onClick={openCoefficientDialog}
-              >
-                <Percent className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Коэффициент</span>
-              </Button>
-              <Button
-                variant="default"
-               
-                onClick={() => void importEstimate()}
-                disabled={isImporting}
-              >
-                <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>
-                  {isImporting ? "Импорт..." : "Импорт"}
-                </span>
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button
-                    variant="default"
-                   
-                    disabled={isExporting}
-                  >
-                    <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span>
-                      {isExporting ? "Экспорт..." : "Экспорт"}
-                    </span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem
-                    className="gap-2"
-                    onClick={() => void exportEstimate("xlsx")}
-                  >
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в Excel (.xlsx)</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="gap-2"
-                    onClick={() => void exportEstimate("pdf")}
-                  >
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в PDF (.pdf)</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-            <div className="hidden sm:flex">
-              <Button
-                variant="destructive"
-               
-                aria-label="Удалить смету"
-                onClick={() => setIsDeleteDialogOpen(true)}
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">
-                  Удалить
-                </span>
-              </Button>
-            </div>
+          <div className="flex items-center gap-1">
+            {/* Mobile: all actions in one dropdown */}
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="default" size="icon-xs" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
-                    <span className="sr-only">Действия по смете</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="gap-2" onClick={() => {
-                    setPendingInsertAfterWork(null);
-                    setIsCalculationModeOpen(true);
-                  }}>
+                  <DropdownMenuItem className="gap-2" onClick={() => void importEstimate()} disabled={isImporting}>
+                    <FileUp className="h-4 w-4 text-muted-foreground" />
+                    <span>{isImporting ? "Импорт..." : "Импорт"}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("xlsx")} disabled={isExporting}>
+                    <FileDown className="h-4 w-4 text-muted-foreground" />
+                    <span>Экспорт в Excel</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("pdf")} disabled={isExporting}>
+                    <FileDown className="h-4 w-4 text-muted-foreground" />
+                    <span>Экспорт в PDF</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={() => { setPendingInsertAfterWork(null); setIsCalculationModeOpen(true); }}>
                     <Calculator className="h-4 w-4 text-muted-foreground" />
-                    <span>Режим расчета</span>
+                    <span>Режим расчёта</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={openCoefficientDialog}>
+                    <Percent className="h-4 w-4 text-muted-foreground" />
+                    <span>Коэффициент</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={() => setIsApplyPatternOpen(true)}>
+                    <FileStack className="h-4 w-4 text-muted-foreground" />
+                    <span>Шаблон</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="gap-2" onClick={() => openCreateSectionDialog()}>
                     <FolderTree className="h-4 w-4 text-muted-foreground" />
@@ -985,27 +896,7 @@ export function EstimateTable({
                   </DropdownMenuItem>
                   <DropdownMenuItem className="gap-2" onClick={() => setIsSavePatternOpen(true)}>
                     <Save className="h-4 w-4 text-muted-foreground" />
-                    <span>Сохранить</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => setIsApplyPatternOpen(true)}>
-                    <FileStack className="h-4 w-4 text-muted-foreground" />
-                    <span>Шаблон</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={openCoefficientDialog}>
-                    <Percent className="h-4 w-4 text-muted-foreground" />
-                    <span>Коэффициент</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" disabled={isImporting} onClick={() => void importEstimate()}>
-                    <FileUp className="h-4 w-4 text-muted-foreground" />
-                    <span>{isImporting ? "Импорт..." : "Импорт"}</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate("xlsx")}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в Excel</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate("pdf")}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в PDF</span>
+                    <span>Сохранить шаблон</span>
                   </DropdownMenuItem>
                   <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
                     <Trash2 className="h-4 w-4" />
@@ -1013,6 +904,69 @@ export function EstimateTable({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
+            </div>
+
+            {/* Desktop: grouped toolbar */}
+            <div className="hidden sm:flex items-center gap-1">
+              {/* Group 1: data exchange */}
+              <Button variant="default" onClick={() => void importEstimate()} disabled={isImporting}>
+                <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>{isImporting ? "Импорт..." : "Импорт"}</span>
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="default" disabled={isExporting}>
+                    <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span>{isExporting ? "Экспорт..." : "Экспорт"}</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("xlsx")}>
+                    <FileDown className="h-4 w-4 text-muted-foreground" />
+                    <span>Экспорт в Excel (.xlsx)</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("pdf")}>
+                    <FileDown className="h-4 w-4 text-muted-foreground" />
+                    <span>Экспорт в PDF (.pdf)</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <div className="w-px h-4 bg-border mx-0.5" />
+
+              {/* Group 2: calculations */}
+              <Button variant="default" onClick={() => { setPendingInsertAfterWork(null); setIsCalculationModeOpen(true); }}>
+                <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Расчёт</span>
+              </Button>
+              <Button variant="default" onClick={openCoefficientDialog}>
+                <Percent className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Коэфф.</span>
+              </Button>
+              <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
+                <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Шаблон</span>
+              </Button>
+
+              <div className="w-px h-4 bg-border mx-0.5" />
+
+              {/* Group 3: destructive */}
+              <Button variant="destructive" onClick={() => setIsDeleteDialogOpen(true)}>
+                <Trash2 className="h-3.5 w-3.5" />
+                <span>Удалить</span>
+              </Button>
+
+              <div className="w-px h-4 bg-border mx-0.5" />
+
+              {/* Group 4: create */}
+              <Button variant="default" onClick={() => openCreateSectionDialog()}>
+                <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Раздел</span>
+              </Button>
+              <Button variant="default" onClick={() => setIsSavePatternOpen(true)}>
+                <Save className="h-3.5 w-3.5 text-muted-foreground" />
+                <span>Сохранить</span>
+              </Button>
             </div>
           </div>
         }
