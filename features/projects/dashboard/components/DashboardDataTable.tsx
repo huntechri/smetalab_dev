@@ -256,7 +256,7 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
             return (
                 <Select>
                     <SelectTrigger
-                        className="w-40 cursor-pointer text-muted-foreground"
+                        className="w-40 cursor-pointer"
                    >
                         <SelectValue placeholder="Assign reviewer..." />
                     </SelectTrigger>

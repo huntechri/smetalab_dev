@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T11:23:15.665Z",
+  "generatedAt": "2026-04-18T11:34:33.147Z",
   "total": 138,
   "changedFiles": 0,
   "records": [
@@ -995,15 +995,14 @@
       "propsUsed": [
         "className"
       ],
-      "className": "w-40 cursor-pointer text-muted-foreground",
+      "className": "w-40 cursor-pointer",
       "tailwindUtilities": [
         "w-40",
-        "cursor-pointer",
-        "text-muted-foreground"
+        "cursor-pointer"
       ],
       "hasInlineStyle": false,
       "isHiddenInput": false,
-      "normalizedClassName": "w-40 cursor-pointer text-muted-foreground"
+      "normalizedClassName": "w-40 cursor-pointer"
     },
     {
       "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
@@ -1463,22 +1462,9 @@
         "onBlur",
         "onKeyDown"
       ],
-      "className": "h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80",
-      "tailwindUtilities": [
-        "h-7",
-        "px-1",
-        "text-inherit",
-        "font-inherit",
-        "border",
-        "border-muted-foreground/20",
-        "focus-visible:ring-0",
-        "focus-visible:ring-offset-0",
-        "shadow-sm",
-        "bg-muted/80"
-      ],
+      "tailwindUtilities": [],
       "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "text-inherit focus-visible:ring-0 focus-visible:ring-offset-0"
+      "isHiddenInput": false
     },
     {
       "filePath": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
@@ -1695,19 +1681,12 @@
         "placeholder",
         "value",
         "onChange",
-        "className",
         "required"
       ],
-      "className": "transition-all focus-visible:ring-1 focus-visible:ring-ring",
-      "tailwindUtilities": [
-        "transition-all",
-        "focus-visible:ring-1",
-        "focus-visible:ring-ring"
-      ],
+      "tailwindUtilities": [],
       "type": "email",
       "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "transition-all focus-visible:ring-1 focus-visible:ring-ring"
+      "isHiddenInput": false
     },
     {
       "filePath": "features/works/components/UnitSelect.tsx",
@@ -2028,12 +2007,9 @@
         "className",
         "...props"
       ],
-      "className": "bg-background h-8 w-full shadow-none",
+      "className": "w-full",
       "tailwindUtilities": [
-        "bg-background",
-        "h-8",
-        "w-full",
-        "shadow-none"
+        "w-full"
       ],
       "hasInlineStyle": false,
       "isHiddenInput": false,
