@@ -4,5 +4,6 @@ export const modules: ModuleMap = {
   "./components/mockups/toolbars/VariantA.tsx": () => import("../components/mockups/toolbars/VariantA.tsx"),
   "./components/mockups/toolbars/VariantB.tsx": () => import("../components/mockups/toolbars/VariantB.tsx"),
   "./components/mockups/toolbars/VariantC.tsx": () => import("../components/mockups/toolbars/VariantC.tsx"),
-  "./components/mockups/toolbars/VariantD.tsx": () => import("../components/mockups/toolbars/VariantD.tsx")
+  "./components/mockups/toolbars/VariantD.tsx": () => import("../components/mockups/toolbars/VariantD.tsx"),
+  "./components/mockups/toolbars/VariantE.tsx": () => import("../components/mockups/toolbars/VariantE.tsx")
 };
