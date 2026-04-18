@@ -32,3 +32,14 @@ outputType = "webview"
 [[ports]]
 localPort = 5000
 externalPort = 80
+
+[userenv]
+
+[userenv.shared]
+BASE_URL = "http://localhost:3000"
+NODE_OPTIONS = "--no-deprecation"
+BROWSERSLIST_IGNORE_OLD_DATA = "true"
+SENTRY_ORG = "smetalab"
+SENTRY_PROJECT = "smetalab-dev"
+EMAIL_FROM = "Smetalab <onboarding@smeta-lab.ru>"
+NEON_PROJECT_ID = "falling-fire-63341326"
