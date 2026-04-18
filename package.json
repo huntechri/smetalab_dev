@@ -27,7 +27,9 @@
     "db:sync": "npx tsx scripts/db-sync.ts",
     "db:migrate:prod": "npx tsx scripts/migrate.ts",
     "codemod:buttons": "npx tsx scripts/migrate-buttons.ts --write",
-    "codemod:buttons:report": "npx tsx scripts/migrate-buttons.ts --report"
+    "codemod:buttons:report": "npx tsx scripts/migrate-buttons.ts --report",
+    "codemod:inputs": "npx tsx scripts/migrate-inputs.ts --write",
+    "codemod:inputs:report": "npx tsx scripts/migrate-inputs.ts --report"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

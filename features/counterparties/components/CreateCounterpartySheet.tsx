@@ -192,12 +192,12 @@ export function CreateCounterpartySheet({
                                                 <FormItem>
                                                     <FormLabel className="text-xs">Наименование / ФИО</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="Введите название..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                        <Input placeholder="Введите название..." {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
-                                        />
+                                       />
 
                                         <div className="flex flex-row gap-3 sm:gap-6 items-start">
                                             <div className="flex-1 min-w-0">
@@ -212,7 +212,7 @@ export function CreateCounterpartySheet({
                                                                     onValueChange={field.onChange}
                                                                     defaultValue={field.value}
                                                                     className="flex flex-row items-center gap-2 sm:gap-4 h-8"
-                                                                >
+                                                               >
                                                                     <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
                                                                         <FormControl>
                                                                             <RadioGroupItem value="individual" className="h-3.5 w-3.5" />
@@ -234,7 +234,7 @@ export function CreateCounterpartySheet({
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
                                             </div>
                                             <div className="w-[120px] sm:w-48 shrink-0">
                                                 <FormField
@@ -245,7 +245,7 @@ export function CreateCounterpartySheet({
                                                             <FormLabel className="text-xs">Тип</FormLabel>
                                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                                 <FormControl>
-                                                                    <SelectTrigger className="h-8 text-xs px-2">
+                                                                    <SelectTrigger>
                                                                         <SelectValue placeholder="Тип" />
                                                                     </SelectTrigger>
                                                                 </FormControl>
@@ -258,7 +258,7 @@ export function CreateCounterpartySheet({
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
                                             </div>
                                         </div>
 
@@ -278,12 +278,12 @@ export function CreateCounterpartySheet({
                                                         <FormItem>
                                                             <FormLabel className="text-xs">Телефон</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="+7..." className="h-8 text-xs placeholder:text-xs px-2" {...field} />
+                                                                <Input placeholder="+7..." {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
 
                                                 <FormField
                                                     control={form.control}
@@ -292,12 +292,12 @@ export function CreateCounterpartySheet({
                                                         <FormItem>
                                                             <FormLabel className="text-xs">Email</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="example@mail.ru" className="h-8 text-xs placeholder:text-xs px-2" {...field} />
+                                                                <Input placeholder="example@mail.ru" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
                                             </div>
 
                                             <FormField
@@ -307,12 +307,12 @@ export function CreateCounterpartySheet({
                                                     <FormItem>
                                                         <FormLabel className="text-xs">Адрес</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="Город, улица, дом..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                            <Input placeholder="Город, улица, дом..." {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
-                                            />
+                                           />
                                         </div>
                                     </TabsContent>
 
@@ -331,12 +331,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">Дата рождения</FormLabel>
                                                                 <FormControl>
-                                                                    <Input type="date" className="h-8 text-xs" {...field} />
+                                                                    <Input type="date" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                     <FormField
                                                         control={form.control}
                                                         name="passportSeriesNumber"
@@ -344,12 +344,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">Серия и номер</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="0000 000000" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                    <Input placeholder="0000 000000" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                 </div>
                                                 <FormField
                                                     control={form.control}
@@ -358,12 +358,12 @@ export function CreateCounterpartySheet({
                                                         <FormItem>
                                                             <FormLabel className="text-xs">Кем выдан</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="УФМС..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                <Input placeholder="УФМС..." {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                     <FormField
                                                         control={form.control}
@@ -372,12 +372,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">Дата выдачи</FormLabel>
                                                                 <FormControl>
-                                                                    <Input type="date" className="h-8 text-xs" {...field} />
+                                                                    <Input type="date" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                     <FormField
                                                         control={form.control}
                                                         name="departmentCode"
@@ -385,12 +385,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">Код подразделения</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="000-000" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                    <Input placeholder="000-000" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                 </div>
                                             </div>
                                         ) : (
@@ -406,12 +406,12 @@ export function CreateCounterpartySheet({
                                                         <FormItem>
                                                             <FormLabel className="text-xs">ИНН</FormLabel>
                                                             <FormControl>
-                                                                <Input placeholder="ИНН" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                <Input placeholder="ИНН" {...field} />
                                                             </FormControl>
                                                             <FormMessage />
                                                         </FormItem>
                                                     )}
-                                                />
+                                               />
                                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                                     <FormField
                                                         control={form.control}
@@ -420,12 +420,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">КПП</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="КПП" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                    <Input placeholder="КПП" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                     <FormField
                                                         control={form.control}
                                                         name="ogrn"
@@ -433,12 +433,12 @@ export function CreateCounterpartySheet({
                                                             <FormItem>
                                                                 <FormLabel className="text-xs">ОГРН</FormLabel>
                                                                 <FormControl>
-                                                                    <Input placeholder="ОГРН" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                                    <Input placeholder="ОГРН" {...field} />
                                                                 </FormControl>
                                                                 <FormMessage />
                                                             </FormItem>
                                                         )}
-                                                    />
+                                                   />
                                                 </div>
                                             </div>
                                         )}
@@ -456,12 +456,12 @@ export function CreateCounterpartySheet({
                                                 <FormItem>
                                                     <FormLabel className="text-xs">Название банка</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="ПАО Сбербанк..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                        <Input placeholder="ПАО Сбербанк..." {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
-                                        />
+                                       />
                                         <FormField
                                             control={form.control}
                                             name="bankAccount"
@@ -469,12 +469,12 @@ export function CreateCounterpartySheet({
                                                 <FormItem>
                                                     <FormLabel className="text-xs">Расчетный счет</FormLabel>
                                                     <FormControl>
-                                                        <Input placeholder="407..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                        <Input placeholder="407..." {...field} />
                                                     </FormControl>
                                                     <FormMessage />
                                                 </FormItem>
                                             )}
-                                        />
+                                       />
                                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                             <FormField
                                                 control={form.control}
@@ -483,12 +483,12 @@ export function CreateCounterpartySheet({
                                                     <FormItem>
                                                         <FormLabel className="text-xs">Корр. счет</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="301..." className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                            <Input placeholder="301..." {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
-                                            />
+                                           />
                                             <FormField
                                                 control={form.control}
                                                 name="bankInn"
@@ -496,12 +496,12 @@ export function CreateCounterpartySheet({
                                                     <FormItem>
                                                         <FormLabel className="text-xs">ИНН Банка</FormLabel>
                                                         <FormControl>
-                                                            <Input placeholder="ИНН банка" className="h-8 text-xs placeholder:text-xs" {...field} />
+                                                            <Input placeholder="ИНН банка" {...field} />
                                                         </FormControl>
                                                         <FormMessage />
                                                     </FormItem>
                                                 )}
-                                            />
+                                           />
                                         </div>
                                     </TabsContent>
                                 </Tabs>
@@ -514,7 +514,7 @@ export function CreateCounterpartySheet({
                                     type="button"
                                     variant="outline"
                                     onClick={() => onOpenChange(false)}
-                                >
+                               >
                                     Отмена
                                 </Button>
                                 <Button type="submit" disabled={isPending}>

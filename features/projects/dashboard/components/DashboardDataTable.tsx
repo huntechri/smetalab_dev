@@ -110,7 +110,7 @@ function DragHandle({ id }: { id: number }) {
             ref={setNodeRef}
             variant="ghost"
             size="icon-xs"
-        >
+       >
             <GripVertical className="text-muted-foreground size-3" />
             <span className="sr-only">Move</span>
         </Button>
@@ -165,7 +165,7 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                     }
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                     aria-label="Select all"
-                />
+               />
             </div>
         ),
         cell: ({ row }) => (
@@ -174,7 +174,7 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                     checked={row.getIsSelected()}
                     onCheckedChange={(value) => row.toggleSelected(!!value)}
                     aria-label="Select row"
-                />
+               />
             </div>
         ),
         enableSorting: false,
@@ -256,8 +256,8 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
             return (
                 <Select>
                     <SelectTrigger
-                        className="w-40 cursor-pointer text-muted-foreground"
-                    >
+                        className="w-40 cursor-pointer"
+                   >
                         <SelectValue placeholder="Assign reviewer..." />
                     </SelectTrigger>
                     <SelectContent align="end">
@@ -279,7 +279,7 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                     <Button
                         variant="ghost"
                         size="icon-sm"
-                    >
+                   >
                         <EllipsisVertical className="size-4" />
                         <span className="sr-only">Open menu</span>
                     </Button>
@@ -311,7 +311,7 @@ function DraggableRow({ row }: { row: Row<z.infer<typeof taskSchema>> }) {
                 transform: CSS.Transform.toString(transform),
                 transition: transition,
             }}
-        >
+       >
             {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -391,7 +391,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                         <SelectTrigger
                             className="flex w-fit sm:hidden cursor-pointer"
                             id="view-selector"
-                        >
+                       >
                             <SelectValue placeholder="Select a view" />
                         </SelectTrigger>
                         <SelectContent>
@@ -444,7 +444,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                             onCheckedChange={(value) =>
                                                 column.toggleVisibility(!!value)
                                             }
-                                        >
+                                       >
                                             {column.id}
                                         </DropdownMenuCheckboxItem>
                                     )
@@ -465,7 +465,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                     onDragEnd={handleDragEnd}
                     sensors={sensors}
                     id={sortableId}
-                >
+               >
                     <Table>
                         <TableHeader className="bg-muted/30">
                             {table.getHeaderGroups().map((headerGroup) => (
@@ -475,7 +475,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                             key={header.id}
                                             colSpan={header.colSpan}
                                             className="h-11 text-xs font-semibold text-foreground whitespace-nowrap px-4"
-                                        >
+                                       >
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -492,7 +492,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                 <SortableContext
                                     items={dataIds}
                                     strategy={verticalListSortingStrategy}
-                                >
+                               >
                                     {table.getRowModel().rows.map((row) => (
                                         <DraggableRow key={row.id} row={row} />
                                     ))}
@@ -502,7 +502,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                     <TableCell
                                         colSpan={columns.length}
                                         className="h-24 text-center"
-                                    >
+                                   >
                                         No results.
                                     </TableCell>
                                 </TableRow>
@@ -525,8 +525,8 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                             onValueChange={(value) => {
                                 table.setPageSize(Number(value))
                             }}
-                        >
-                            <SelectTrigger className="w-16 border-none shadow-none tabular-nums font-semibold">
+                       >
+                            <SelectTrigger className="w-16 tabular-nums">
                                 <SelectValue placeholder={table.getState().pagination.pageSize} />
                             </SelectTrigger>
                             <SelectContent side="top">
@@ -548,7 +548,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                             size="icon-sm"
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
-                        >
+                       >
                             <ChevronLeft className="size-4" />
                         </Button>
                         <Button
@@ -556,7 +556,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                             size="icon-sm"
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
-                        >
+                       >
                             <ChevronRight className="size-4" />
                         </Button>
                     </div>
@@ -604,11 +604,11 @@ function TableCellViewer({ item }: { item: z.infer<typeof taskSchema> }) {
                     <div className="grid grid-cols-2 gap-4">
                         <div className="flex flex-col gap-2">
                             <Label className="text-muted-foreground font-semibold uppercase text-[10px] tracking-wider">Target</Label>
-                            <Input defaultValue={item.target} className="font-semibold" />
+                            <Input defaultValue={item.target} />
                         </div>
                         <div className="flex flex-col gap-2">
                             <Label className="text-muted-foreground font-semibold uppercase text-[10px] tracking-wider">Limit</Label>
-                            <Input defaultValue={item.limit} className="font-semibold" />
+                            <Input defaultValue={item.limit} />
                         </div>
                     </div>
                 </div>

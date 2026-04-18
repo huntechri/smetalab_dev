@@ -51,7 +51,7 @@ function SearchInput({
         type="search"
         value={value}
         className={cn(
-          "peer pl-9 pr-9 h-9 text-xs md:text-sm font-medium shadow-sm transition-all focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50",
+          "peer pl-9 pr-9",
           className
         )}
         {...props}
