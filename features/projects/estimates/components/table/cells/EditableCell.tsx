@@ -54,7 +54,6 @@ export function EditableCell({
             <Button
                 type="button"
                 variant="ghost"
-                className={cn('w-full min-w-0 hover:bg-muted/50 rounded-sm px-1 -mx-1 transition-colors min-h-5 text-inherit font-inherit font-semibold tracking-tight shadow-sm rounded-[7.6px] font-medium', alignmentClass, className)}
                 disabled={disabled}
                 onClick={() => {
                     wasClearedOnFocus.current = false;

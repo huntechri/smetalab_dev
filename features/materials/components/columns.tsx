@@ -53,7 +53,6 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                         <Button
                             size="icon-xs"
                             variant="ghost"
-                            className={insertButtonStyles({ tone: "success" })}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 meta.onSaveInsert?.(row.original.id);
@@ -72,7 +71,6 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                         <Button
                             size="icon-xs"
                             variant="ghost"
-                            className={insertButtonStyles({ tone: "danger" })}
                             onClick={(e) => {
                                 e.stopPropagation();
                                 meta.onCancelInsert?.();
@@ -97,7 +95,6 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                     <Button
                         variant="ghost"
                         size="icon-sm"
-                        className={actionButtonStyles({ tone: "primary" })}
                         onClick={(e) => {
                             e.stopPropagation();
                             meta.onInsertRequest?.(row.original.id);
@@ -117,7 +114,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 <Tooltip>
                     <TooltipTrigger asChild>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" className={actionButtonStyles()} aria-label="Действия">
+                            <Button variant="ghost" size="icon-sm" aria-label="Действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>
@@ -266,7 +263,6 @@ export const columns: ColumnDef<MaterialRow>[] = [
                             <Button
                                 variant="ghost"
                                 size="icon-sm"
-                                className="text-primary opacity-50 hover:opacity-100"
                                 onClick={() => meta.onInsertRequest?.()}
                                 aria-label="Добавить строку"
                                 title="Добавить строку"
@@ -280,7 +276,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                     </Tooltip>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" className="opacity-50 hover:opacity-100" aria-label="Дополнительные действия" title="Дополнительные действия">
+                            <Button variant="ghost" size="icon-sm" aria-label="Дополнительные действия" title="Дополнительные действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
                         </DropdownMenuTrigger>

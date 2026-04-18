@@ -36,7 +36,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
         <section className="flex-1 p-4 lg:p-8 space-y-6">
             <div className="flex items-center gap-4">
                 <Link href="/dashboard/tenants">
-                    <Button variant="ghost" size="icon" className="rounded-full">
+                    <Button variant="ghost" size="icon">
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                 </Link>

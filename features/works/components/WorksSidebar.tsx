@@ -71,7 +71,6 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
           <Button 
             variant="ghost" 
             onClick={resetFilters}
-            className="px-2 text-[11px] text-muted-foreground hover:text-destructive"
           >
             <FilterX className="size-3 mr-1" />
             Сбросить
@@ -91,10 +90,6 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
               <Button
                 variant="ghost"
                 onClick={() => handlePhaseSelect(undefined)}
-                className={cn(
-                  "justify-start px-2 font-normal text-[13px] rounded-md",
-                  !filters.phase ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-                )}
               >
                 Все этапы
               </Button>
@@ -103,10 +98,6 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
                   key={p}
                   variant="ghost"
                   onClick={() => handlePhaseSelect(p)}
-                  className={cn(
-                    "justify-between px-2 font-normal text-[13px] rounded-md",
-                    filters.phase === p ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-                  )}
                 >
                   <span className="truncate">{p}</span>
                   {filters.phase === p && <Check className="size-3 shrink-0 ml-2" />}
@@ -130,10 +121,6 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
               <Button
                 variant="ghost"
                 onClick={() => handleCategorySelect(undefined)}
-                className={cn(
-                  "justify-start px-2 font-normal text-[13px] rounded-md",
-                  !filters.category ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-                )}
               >
                 Все категории
               </Button>
@@ -142,10 +129,6 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
                   key={c}
                   variant="ghost"
                   onClick={() => handleCategorySelect(c)}
-                  className={cn(
-                    "justify-between px-2 font-normal text-[13px] rounded-md",
-                    filters.category === c ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-                  )}
                 >
                   <span className="truncate">{c}</span>
                   {filters.category === c && <Check className="size-3 shrink-0 ml-2" />}

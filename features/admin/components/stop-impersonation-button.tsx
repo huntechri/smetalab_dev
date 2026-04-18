@@ -29,7 +29,6 @@ export function StopImpersonationButton() {
             variant="destructive"
             onClick={handleStop}
             disabled={isPending}
-            className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs px-3"
         >
             <LogOut className="mr-2 h-3 w-3" />
             Выйти

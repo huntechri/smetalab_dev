@@ -61,7 +61,6 @@ export function WorkCatalogFilters({
                             type="button"
                             variant="outline"
                             size="sm"
-                            className="px-3"
                             onClick={onSearchSubmit}
                             disabled={isSearching}
                         >

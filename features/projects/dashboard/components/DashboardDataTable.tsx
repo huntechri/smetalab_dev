@@ -110,7 +110,6 @@ function DragHandle({ id }: { id: number }) {
             ref={setNodeRef}
             variant="ghost"
             size="icon-xs"
-            className="text-muted-foreground hover:bg-transparent cursor-move"
         >
             <GripVertical className="text-muted-foreground size-3" />
             <span className="sr-only">Move</span>
@@ -280,7 +279,6 @@ const columns: ColumnDef<z.infer<typeof taskSchema>>[] = [
                     <Button
                         variant="ghost"
                         size="icon-sm"
-                        className="text-muted-foreground flex cursor-pointer"
                     >
                         <EllipsisVertical className="size-4" />
                         <span className="sr-only">Open menu</span>
@@ -422,7 +420,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                 <div className="flex items-center gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className="cursor-pointer">
+                            <Button variant="outline">
                                 <Columns2 className="size-4" />
                                 <span className="hidden lg:inline">Customize Columns</span>
                                 <span className="lg:hidden">Columns</span>
@@ -453,7 +451,7 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                                 })}
                         </DropdownMenuContent>
                     </DropdownMenu>
-                    <Button variant="outline" className="cursor-pointer">
+                    <Button variant="outline">
                         <Plus className="size-4" />
                         <span className="hidden lg:inline">{addButtonLabel}</span>
                     </Button>
@@ -548,7 +546,6 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                         <Button
                             variant="outline"
                             size="icon-sm"
-                            className="rounded-md border-none shadow-none"
                             onClick={() => table.previousPage()}
                             disabled={!table.getCanPreviousPage()}
                         >
@@ -557,7 +554,6 @@ export function DashboardDataTable({ addButtonLabel = 'Add Section' }: Dashboard
                         <Button
                             variant="outline"
                             size="icon-sm"
-                            className="rounded-md border-none shadow-none"
                             onClick={() => table.nextPage()}
                             disabled={!table.getCanNextPage()}
                         >
@@ -576,7 +572,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof taskSchema> }) {
     return (
         <Drawer direction={isMobile ? "bottom" : "right"}>
             <DrawerTrigger asChild>
-                <Button variant="link" className="text-foreground w-fit px-0 text-left cursor-pointer hover:no-underline font-semibold h-auto py-0">
+                <Button variant="link">
                     {item.header}
                 </Button>
             </DrawerTrigger>
@@ -617,9 +613,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof taskSchema> }) {
                     </div>
                 </div>
                 <DrawerFooter className="mt-auto border-t p-6 gap-3 flex-row shrink-0">
-                    <Button className="flex-1 font-semibold">Save changes</Button>
+                    <Button>Save changes</Button>
                     <DrawerClose asChild>
-                        <Button variant="outline" className="flex-1 font-semibold">Close</Button>
+                        <Button variant="outline">Close</Button>
                     </DrawerClose>
                 </DrawerFooter>
             </DrawerContent>

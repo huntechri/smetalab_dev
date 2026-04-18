@@ -34,7 +34,7 @@ export function AdminUserMenu() {
         <Link href="/pricing" className="text-sm font-medium text-gray-700 hover:text-gray-900">
           Pricing
         </Link>
-        <Button asChild variant="brand" className="rounded-full">
+        <Button asChild variant="brand">
           <Link href="/sign-up">Sign Up</Link>
         </Button>
       </>
@@ -67,7 +67,7 @@ export function AdminUserMenu() {
           </Link>
         </DropdownMenuItem>
         <form action={handleSignOut} className="w-full">
-          <Button type="submit" variant="ghost" className="h-auto w-full justify-start px-2 py-1.5 font-normal">
+          <Button type="submit" variant="ghost">
             <LogOut className="mr-2 h-4 w-4" />
             <span>Sign out</span>
           </Button>

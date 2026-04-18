@@ -168,7 +168,6 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     variant="ghost"
                     size="icon"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-2 top-1/2 h-7 w-7 -translate-y-1/2 rounded-sm text-white/70 hover:bg-transparent hover:text-white focus-visible:ring-white/60 focus-visible:ring-offset-[#14121A]"
                     aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
                   >
                     {showPassword ? (
@@ -206,7 +205,6 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <Button
                 type="submit"
                 variant="brand"
-                className="w-full"
                 disabled={pending}
               >
                 {pending ? (

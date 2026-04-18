@@ -62,7 +62,6 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
     <Button variant="ghost"
       type="button"
       onClick={() => onMarkAsRead?.(notification.id)}
-      className={cn(baseClasses, 'bg-muted/60 hover:bg-muted justify-start h-auto whitespace-normal')}
       aria-label={`Пометить как прочитанное: ${notification.title}`}
       title="Нажмите, чтобы отметить как прочитанное"
     >

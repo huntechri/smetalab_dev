@@ -71,7 +71,7 @@ export function CatalogToolbar<TFilters>({
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="mr-1 transition-all active:scale-95">
+            <Button variant="outline" size="icon">
               <Filter className="h-4 w-4" />
             </Button>
           </SheetTrigger>
@@ -98,11 +98,6 @@ export function CatalogToolbar<TFilters>({
         <Button
           variant="outline"
           size="icon"
-          className={cn(
-            "mr-1 transition-all active:scale-95 duration-200",
-            showSidebar &&
-              "bg-secondary text-secondary-foreground ring-1 ring-border/50"
-          )}
           onClick={() => setShowSidebar?.(!showSidebar)}
         >
           <Filter
@@ -118,7 +113,6 @@ export function CatalogToolbar<TFilters>({
         <TooltipTrigger asChild>
           <Button
             variant="outline"
-            className="flex-1 sm:flex-none text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
             onClick={onImportClick}
             disabled={isImporting}
           >
@@ -139,7 +133,6 @@ export function CatalogToolbar<TFilters>({
         <TooltipTrigger asChild>
           <Button
             variant="outline"
-            className="flex-1 sm:flex-none text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
             onClick={onExport}
             disabled={isExporting}
           >
@@ -166,10 +159,6 @@ export function CatalogToolbar<TFilters>({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  className={cn(
-                    "flex-1 sm:flex-none px-2 sm:px-4 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5",
-                    isActionDisabled ? "pointer-events-none" : ""
-                  )}
                   disabled={isActionDisabled}
                 >
                   {isDeletingAll ? (
