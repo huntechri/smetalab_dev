@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-04-18T10:55:07.291Z",
+  "generatedAt": "2026-04-18T11:23:15.665Z",
   "total": 138,
   "changedFiles": 0,
   "records": [
@@ -1463,9 +1463,22 @@
         "onBlur",
         "onKeyDown"
       ],
-      "tailwindUtilities": [],
+      "className": "h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80",
+      "tailwindUtilities": [
+        "h-7",
+        "px-1",
+        "text-inherit",
+        "font-inherit",
+        "border",
+        "border-muted-foreground/20",
+        "focus-visible:ring-0",
+        "focus-visible:ring-offset-0",
+        "shadow-sm",
+        "bg-muted/80"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "text-inherit focus-visible:ring-0 focus-visible:ring-offset-0"
     },
     {
       "filePath": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
@@ -1901,9 +1914,19 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent",
+      "tailwindUtilities": [
+        "flex-1",
+        "rounded-none",
+        "border-0",
+        "bg-transparent",
+        "shadow-none",
+        "focus-visible:ring-0",
+        "dark:bg-transparent"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "flex-1 focus-visible:ring-0 dark:bg-transparent"
     },
     {
       "filePath": "shared/ui/input-group.tsx",
@@ -1914,9 +1937,21 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent",
+      "tailwindUtilities": [
+        "flex-1",
+        "resize-none",
+        "rounded-none",
+        "border-0",
+        "bg-transparent",
+        "py-3",
+        "shadow-none",
+        "focus-visible:ring-0",
+        "dark:bg-transparent"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "flex-1 resize-none focus-visible:ring-0 dark:bg-transparent"
     },
     {
       "filePath": "shared/ui/input.tsx",
@@ -1928,9 +1963,39 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none file:inline-flex file:h-5 file:border-0 file:bg-transparent file:text-xs file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
+      "tailwindUtilities": [
+        "file:text-foreground",
+        "placeholder:text-muted-foreground",
+        "selection:bg-primary",
+        "selection:text-primary-foreground",
+        "dark:bg-input/30",
+        "border-input",
+        "h-9",
+        "w-full",
+        "min-w-0",
+        "rounded-md",
+        "border",
+        "bg-transparent",
+        "px-3",
+        "py-1",
+        "text-sm",
+        "shadow-sm",
+        "transition-[color,box-shadow]",
+        "outline-none",
+        "file:inline-flex",
+        "file:h-5",
+        "file:border-0",
+        "file:bg-transparent",
+        "file:text-xs",
+        "file:font-medium",
+        "disabled:pointer-events-none",
+        "disabled:cursor-not-allowed",
+        "disabled:opacity-50"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none file:inline-flex file:h-5 file:border-0 file:bg-transparent file:text-xs file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50"
     },
     {
       "filePath": "shared/ui/search-input.tsx",
@@ -1942,10 +2007,16 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "peer pl-9 pr-9",
+      "tailwindUtilities": [
+        "peer",
+        "pl-9",
+        "pr-9"
+      ],
       "type": "search",
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "peer pl-9 pr-9"
     },
     {
       "filePath": "shared/ui/sidebar.tsx",
@@ -1957,9 +2028,16 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "bg-background h-8 w-full shadow-none",
+      "tailwindUtilities": [
+        "bg-background",
+        "h-8",
+        "w-full",
+        "shadow-none"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "w-full"
     },
     {
       "filePath": "shared/ui/switch.tsx",
@@ -1992,9 +2070,37 @@
         "className",
         "...props"
       ],
-      "tailwindUtilities": [],
+      "className": "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/25 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[1.5px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+      "tailwindUtilities": [
+        "border-input",
+        "placeholder:text-muted-foreground",
+        "focus-visible:border-ring",
+        "focus-visible:ring-ring/25",
+        "aria-invalid:ring-destructive/20",
+        "dark:aria-invalid:ring-destructive/40",
+        "aria-invalid:border-destructive",
+        "dark:bg-input/30",
+        "flex",
+        "field-sizing-content",
+        "min-h-16",
+        "w-full",
+        "rounded-md",
+        "border",
+        "bg-transparent",
+        "px-3",
+        "py-2",
+        "text-base",
+        "shadow-xs",
+        "transition-[color,box-shadow]",
+        "outline-none",
+        "focus-visible:ring-[1.5px]",
+        "disabled:cursor-not-allowed",
+        "disabled:opacity-50",
+        "md:text-sm"
+      ],
       "hasInlineStyle": false,
-      "isHiddenInput": false
+      "isHiddenInput": false,
+      "normalizedClassName": "border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/25 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[1.5px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
     }
   ]
 }
