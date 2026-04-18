@@ -398,19 +398,8 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                    />
                 }
                 actions={
-                    <>
-                        <div className="hidden items-center gap-2 sm:flex">
-                            <Button variant="outline" onClick={handleExport}>
-                                <Download className="h-4 w-4" />
-                                Экспорт Excel
-                            </Button>
-                            <AddExtraWorkSheet
-                                estimateId={estimateId}
-                                onCreated={(row) => setRows((prev) => [...prev, row])}
-                                addedWorkNames={addedWorkNames}
-                           />
-                        </div>
-
+                    <div className="flex items-center gap-1">
+                        {/* Mobile: dropdown */}
                         <div className="sm:hidden">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
@@ -432,7 +421,21 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                 </DropdownMenuContent>
                             </DropdownMenu>
                         </div>
-                    </>
+
+                        {/* Desktop: grouped toolbar */}
+                        <div className="hidden sm:flex items-center gap-1">
+                            <Button variant="outline" onClick={handleExport}>
+                                <Download className="h-4 w-4" />
+                                Экспорт Excel
+                            </Button>
+                            <div className="w-px h-4 bg-border mx-0.5" />
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                           />
+                        </div>
+                    </div>
                 }
            />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
