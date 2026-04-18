@@ -731,7 +731,7 @@ Inline style: no
 File: features/projects/estimates/components/table/cells/EditableCell.tsx
 Kind: component-input
 Type: default
-Classes: 
+Classes: h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80
 Inline style: no
 -------------------
 
@@ -934,35 +934,35 @@ Inline style: no
 File: shared/ui/input-group.tsx
 Kind: component-input
 Type: default
-Classes: 
+Classes: flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent
 Inline style: no
 -------------------
 
 File: shared/ui/input-group.tsx
 Kind: component-textarea
 Type: default
-Classes: 
+Classes: flex-1 resize-none rounded-none border-0 bg-transparent py-3 shadow-none focus-visible:ring-0 dark:bg-transparent
 Inline style: no
 -------------------
 
 File: shared/ui/input.tsx
 Kind: html-input
 Type: default
-Classes: 
+Classes: file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-[color,box-shadow] outline-none file:inline-flex file:h-5 file:border-0 file:bg-transparent file:text-xs file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50
 Inline style: no
 -------------------
 
 File: shared/ui/search-input.tsx
 Kind: component-input
 Type: search
-Classes: 
+Classes: peer pl-9 pr-9
 Inline style: no
 -------------------
 
 File: shared/ui/sidebar.tsx
 Kind: component-input
 Type: default
-Classes: 
+Classes: bg-background h-8 w-full shadow-none
 Inline style: no
 -------------------
 
@@ -976,6 +976,6 @@ Inline style: no
 File: shared/ui/textarea.tsx
 Kind: html-textarea
 Type: default
-Classes: 
+Classes: border-input placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-ring/25 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:bg-input/30 flex field-sizing-content min-h-16 w-full rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[1.5px] disabled:cursor-not-allowed disabled:opacity-50 md:text-sm
 Inline style: no
 -------------------

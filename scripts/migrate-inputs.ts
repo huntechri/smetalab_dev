@@ -97,6 +97,22 @@ function getStringLikeAttribute(attr?: ts.JsxAttribute): string | undefined {
   return undefined
 }
 
+function getClassNameForAudit(attr?: ts.JsxAttribute): string | undefined {
+  const direct = getStringLikeAttribute(attr)
+  if (direct) return direct
+  if (!attr?.initializer) return undefined
+  if (!ts.isJsxExpression(attr.initializer) || !attr.initializer.expression) return undefined
+
+  const expr = attr.initializer.expression
+  if (!ts.isCallExpression(expr)) return undefined
+  if (expr.arguments.length === 0) return undefined
+  if (!ts.isIdentifier(expr.expression) || expr.expression.text !== "cn") return undefined
+
+  const firstArg = expr.arguments[0]
+  if (ts.isStringLiteral(firstArg) || ts.isNoSubstitutionTemplateLiteral(firstArg)) return firstArg.text
+  return undefined
+}
+
 function getTailwindUtilities(className?: string): string[] {
   if (!className) return []
   return className.split(/\s+/).filter(Boolean)
@@ -135,7 +151,7 @@ function getKind(tagName: string): FieldKind | null {
 }
 
 function pushRecord(records: FieldRecord[], filePath: string, kind: FieldKind, attrs: ts.JsxAttributes) {
-  const className = getStringLikeAttribute(getJsxAttribute(attrs, "className"))
+  const className = getClassNameForAudit(getJsxAttribute(attrs, "className"))
   const type = getStringLikeAttribute(getJsxAttribute(attrs, "type"))
   const normalizedKind = kind === "html-input" && type === "hidden" ? "html-hidden-input" : kind
   records.push({
