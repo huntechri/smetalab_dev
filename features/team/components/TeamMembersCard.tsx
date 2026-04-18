@@ -115,7 +115,7 @@ export function TeamMembersCard({
                                             <DropdownMenuTrigger asChild>
                                                 <Button
                                                     variant="outline"
-                                                    size="icon"
+                                                    size="icon-xs"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
                                                     <MoreHorizontal className="size-3.5" />

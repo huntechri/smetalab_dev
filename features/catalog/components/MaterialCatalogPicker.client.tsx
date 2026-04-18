@@ -323,7 +323,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                             </div>
                                             <div className="flex items-center shrink-0 ml-2">
                                                 <Button
-                                                    size="icon"
+                                                    size="icon-xs"
                                                     variant={isAlreadyAdded ? 'secondary' : 'outline'}
                                                     disabled={isAdding || isAlreadyAdded}
                                                     onClick={() => void addMaterial(material)}

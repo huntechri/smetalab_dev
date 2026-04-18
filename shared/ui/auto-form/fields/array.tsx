@@ -84,7 +84,7 @@ export default function AutoFormArray({
               <div className="my-4 flex justify-end">
                 <Button
                   variant="secondary"
-                  size="icon"
+                  size="icon-xs"
                   type="button"
                   onClick={() => remove(index)}
                   aria-label="Удалить элемент"

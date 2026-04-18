@@ -43,7 +43,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div className="flex items-center gap-1">
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size="icon-xs"
                             onClick={() => actions.onToggleExpand(item.id)}
                             aria-label={expanded ? 'Свернуть работу' : 'Развернуть работу'}
                         >

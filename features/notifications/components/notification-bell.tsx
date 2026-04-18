@@ -28,7 +28,7 @@ export function NotificationBell() {
 
     if (!mounted) {
         return (
-            <Button type="button" variant="ghost" size="icon" disabled>
+            <Button type="button" variant="ghost" size="icon-xs" disabled>
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Уведомления</span>
             </Button>
@@ -55,7 +55,7 @@ export function NotificationBell() {
         <Popover open={isOpen} onOpenChange={setIsOpen}>
             <PopoverTrigger asChild>
                 <Button variant="ghost"
-                    size="icon"
+                    size="icon-xs"
                     type="button"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
                 >
