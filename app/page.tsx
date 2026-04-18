@@ -36,7 +36,7 @@ export default function LandingPage() {
                             <Button variant="ghost">Войти</Button>
                         </Link>
                         <Link href="/sign-up">
-                            <Button size="default">Запросить демо</Button>
+                            <Button>Запросить демо</Button>
                         </Link>
                     </div>
                     <details className="group md:hidden">
