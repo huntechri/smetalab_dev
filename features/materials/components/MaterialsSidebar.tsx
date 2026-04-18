@@ -127,10 +127,6 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
           <Button
             variant="ghost"
             onClick={() => handleCategorySelect(level, node.name, currentPath)}
-            className={cn(
-              "h-auto py-1.5 flex-1 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
-              isSelected ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-            )}
             title={node.name}
           >
             <span className="block whitespace-normal break-words">{node.name}</span>
@@ -145,7 +141,6 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
                 e.stopPropagation();
                 toggleExpand(currentPath);
               }}
-              className="shrink-0 opacity-60 hover:opacity-100"
             >
               {isExpanded ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
             </Button>
@@ -175,7 +170,6 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
             variant="ghost" 
             size="icon-sm" 
             onClick={resetFilters}
-            className="w-auto px-2 text-[11px] text-muted-foreground hover:text-destructive transition-colors"
           >
             <FilterX className="size-3 mr-1" />
             Сбросить
@@ -194,10 +188,6 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
               <Button
                 variant="ghost"
                 onClick={() => handleCategorySelect(1, undefined)}
-                className={cn(
-                  "h-auto py-1.5 justify-start px-2 font-normal text-[13px] rounded-md leading-tight text-left whitespace-normal",
-                  !hasFilters ? "bg-secondary text-secondary-foreground font-medium" : "text-muted-foreground hover:bg-secondary/50"
-                )}
               >
                 <span className="block whitespace-normal break-words">Все материалы</span>
               </Button>

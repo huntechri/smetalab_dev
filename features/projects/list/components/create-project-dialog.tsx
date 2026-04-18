@@ -163,10 +163,6 @@ export function CreateProjectDialog({
                                                         variant="default"
                                                         size="sm"
                                                         role="combobox"
-                                                        className={cn(
-                                                            'w-full justify-between font-medium px-2',
-                                                            !field.value && 'text-muted-foreground'
-                                                        )}
                                                     >
                                                         {field.value
                                                             ? counterparties.find((c) => c.id === field.value)?.name

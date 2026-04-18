@@ -99,12 +99,6 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
             >
                 <Button
                     variant={selectedCategory === 'all' ? 'primary' : 'ghost'}
-                    className={cn(
-                        "px-3 rounded-full font-medium transition-all shrink-0 pointer-events-auto",
-                        selectedCategory === 'all'
-                            ? "shadow-sm"
-                            : "text-muted-foreground"
-                    )}
                     onClick={() => !isDragging && onCategoryChange('all')}
                 >
                     {allLabel}
@@ -113,12 +107,6 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                     <Button
                         key={category}
                         variant={selectedCategory === category ? 'primary' : 'ghost'}
-                        className={cn(
-                            "rounded-full font-medium transition-all shrink-0 pointer-events-auto",
-                            selectedCategory === category
-                                ? "shadow-sm"
-                                : "text-muted-foreground"
-                        )}
                         onClick={() => !isDragging && onCategoryChange(category)}
                     >
                         {category}

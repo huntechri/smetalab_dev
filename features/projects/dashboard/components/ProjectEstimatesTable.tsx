@@ -63,7 +63,6 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                         onClick={() => setIsDialogOpen(true)}
                         variant="default"
                         size="icon"
-                        className="rounded-[7.6px] shadow-sm"
                         aria-label="+ Создать смету"
                         title="Создать смету"
                     >
@@ -79,7 +78,6 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                             <Button
                                 onClick={() => setIsDialogOpen(true)}
                                 variant="default"
-                                className="rounded-[7.6px] px-6 shadow-sm"
                             >
                                 Создать смету
                             </Button>

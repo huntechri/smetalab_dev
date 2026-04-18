@@ -167,7 +167,6 @@ export function DashboardChart({ data }: DashboardChartProps) {
                             <DropdownMenuTrigger asChild>
                                 <Button
                                     variant="outline"
-                                    className="gap-2 shadow-sm"
                                     aria-label="Выбрать серии графика"
                                 >
                                     <SlidersHorizontal className="size-4" aria-hidden="true" />

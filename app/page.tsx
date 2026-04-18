@@ -33,10 +33,10 @@ export default function LandingPage() {
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
                         <Link href="/sign-in">
-                            <Button variant="ghost" className="border border-transparent text-white/90 hover:border-white/30 hover:bg-white/12 hover:text-white focus-visible:ring-2 focus-visible:ring-white/60">Войти</Button>
+                            <Button variant="ghost">Войти</Button>
                         </Link>
                         <Link href="/sign-up">
-                            <Button size="default" className="bg-white text-black transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
+                            <Button size="default">Запросить демо</Button>
                         </Link>
                     </div>
                     <details className="group md:hidden">
@@ -54,13 +54,12 @@ export default function LandingPage() {
                                     <Link href="/sign-in">
                                         <Button
                                             variant="outline"
-                                            className="w-full border-white/40 bg-[#0B0A0F] !text-white hover:bg-white/15 hover:!text-white focus-visible:ring-2 focus-visible:ring-white/60"
                                         >
                                             Войти
                                         </Button>
                                     </Link>
                                     <Link href="/sign-up">
-                                        <Button className="w-full bg-white text-black hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
+                                        <Button>Запросить демо</Button>
                                     </Link>
                                 </div>
                             </div>
@@ -96,7 +95,7 @@ export default function LandingPage() {
                                         Запустить пилот
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
-                                    <Button variant="outline" size="xl" className="border-white/50 bg-transparent text-white hover:border-white/70 hover:bg-white/20 hover:text-white active:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/60">
+                                    <Button variant="outline" size="xl">
                                         Сценарий внедрения
                                     </Button>
                                 </div>
@@ -229,8 +228,7 @@ export default function LandingPage() {
                                         <li>Отчёты заказчику</li>
                                     </ul>
                                     <Button 
-                                        variant={plan.accent ? "brand" : "outline"} 
-                                        className={`mt-8 w-full ${!plan.accent ? 'bg-white/10 text-white hover:bg-white/25 active:bg-white/30 border-transparent' : ''}`}
+                                        variant={plan.accent ? "brand" : "outline"}
                                     >
                                         {plan.action}
                                     </Button>
@@ -250,8 +248,8 @@ export default function LandingPage() {
                                     <p className="text-white/80">Покажем вашу картину объекта за 30 минут и составим план внедрения.</p>
                                 </div>
                                 <div className="flex flex-col gap-4">
-                                    <Button size="xl" className="bg-white text-black hover:bg-white/90">Запросить презентацию</Button>
-                                    <Button variant="outline" size="xl" className="border-white/40 bg-[#0B0A0F] text-white hover:bg-[#15131B] hover:text-white active:bg-[#1C1A24] focus-visible:ring-2 focus-visible:ring-white/60">Назначить встречу</Button>
+                                    <Button size="xl">Запросить презентацию</Button>
+                                    <Button variant="outline" size="xl">Назначить встречу</Button>
                                 </div>
                             </div>
                         </div>

@@ -12,7 +12,6 @@ export function PricingSubmitButton() {
       type="submit"
       disabled={pending}
       variant="outline"
-      className="w-full rounded-full"
     >
       {pending ? (
         <>

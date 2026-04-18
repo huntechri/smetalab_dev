@@ -27,11 +27,6 @@ export function PermissionLevelControl({
               variant="ghost"
               size="icon-xs"
               onClick={() => onSetLevel('none')}
-              className={`rounded-lg p-1.5 ${
-                currentLevel === 'none'
-                  ? 'bg-white text-zinc-900 shadow-sm hover:bg-white'
-                  : 'text-zinc-400 hover:text-zinc-600'
-              }`}
               disabled={isUpdating}
               aria-label={`Отключить ${permissionName} для роли ${roleLabel}`}
             >
@@ -48,11 +43,6 @@ export function PermissionLevelControl({
               variant="ghost"
               size="icon-xs"
               onClick={() => onSetLevel('read')}
-              className={`rounded-lg p-1.5 ${
-                currentLevel === 'read'
-                  ? 'bg-blue-500 text-white shadow-sm hover:bg-blue-500'
-                  : 'text-zinc-400 hover:text-zinc-600'
-              }`}
               disabled={isUpdating}
               aria-label={`Включить чтение ${permissionName} для роли ${roleLabel}`}
             >
@@ -69,11 +59,6 @@ export function PermissionLevelControl({
               variant="ghost"
               size="icon-xs"
               onClick={() => onSetLevel('manage')}
-              className={`rounded-lg p-1.5 ${
-                currentLevel === 'manage'
-                  ? 'bg-brand text-white shadow-sm hover:bg-brand'
-                  : 'text-zinc-400 hover:text-zinc-600'
-              }`}
               disabled={isUpdating}
               aria-label={`Включить полный доступ ${permissionName} для роли ${roleLabel}`}
             >

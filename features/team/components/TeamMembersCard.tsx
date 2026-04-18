@@ -78,10 +78,6 @@ export function TeamMembersCard({
                                         key={item.value}
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}
-                                        className={cn(
-                                            "px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95",
-                                            roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
-                                        )}
                                         onClick={() => onRoleFilterChange(item.value)}
                                         aria-pressed={roleFilter === item.value}
                                         aria-label={`Фильтр: ${item.label}`}
@@ -119,7 +115,6 @@ export function TeamMembersCard({
                                                 <Button
                                                     variant="outline"
                                                     size="icon"
-                                                    className="transition-all active:scale-95 text-muted-foreground hover:text-foreground"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
                                                     <MoreHorizontal className="size-3.5" />

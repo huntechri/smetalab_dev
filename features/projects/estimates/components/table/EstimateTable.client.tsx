@@ -825,7 +825,6 @@ export function EstimateTable({
                 <Button
                   variant="default"
                   size="default"
-                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => openCreateSectionDialog()}
                 >
                   <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -834,7 +833,6 @@ export function EstimateTable({
                 <Button
                   variant="default"
                   size="default"
-                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
                   <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -843,7 +841,6 @@ export function EstimateTable({
                 <Button
                   variant="default"
                   size="default"
-                  className="rounded-[7.6px] font-semibold tracking-tight shadow-sm"
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
                 >
@@ -862,7 +859,7 @@ export function EstimateTable({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="default"
-              size="default" className="font-semibold tracking-tight shadow-sm hidden sm:inline-flex gap-1.5"
+              size="default"
               aria-label="Режим расчета"
               onClick={() => {
                 setPendingInsertAfterWork(null);
@@ -876,7 +873,7 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="default" className="font-semibold tracking-tight shadow-sm hidden sm:inline-flex gap-1.5"
+              size="default"
               aria-label="Добавить раздел"
               onClick={() => openCreateSectionDialog()}
             >
@@ -887,7 +884,7 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="default" className="font-semibold tracking-tight shadow-sm hidden sm:inline-flex gap-1.5"
+              size="default"
               aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
             >
@@ -897,13 +894,13 @@ export function EstimateTable({
               </span>
             </Button>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" size="default" className="font-semibold tracking-tight shadow-sm gap-1.5" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="default" size="default" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Шаблон</span>
               </Button>
               <Button
                 variant="default"
-                size="default" className="font-semibold tracking-tight shadow-sm gap-1.5"
+                size="default"
                 onClick={openCoefficientDialog}
               >
                 <Percent className="h-3.5 w-3.5 text-muted-foreground" />
@@ -911,7 +908,7 @@ export function EstimateTable({
               </Button>
               <Button
                 variant="default"
-                size="default" className="font-semibold tracking-tight shadow-sm gap-1.5"
+                size="default"
                 onClick={() => void importEstimate()}
                 disabled={isImporting}
               >
@@ -924,7 +921,7 @@ export function EstimateTable({
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="default"
-                    size="default" className="font-semibold tracking-tight shadow-sm gap-1.5"
+                    size="default"
                     disabled={isExporting}
                   >
                     <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -953,7 +950,7 @@ export function EstimateTable({
             </div>
             <Button
               variant="destructive"
-              size="default" className="font-semibold tracking-tight shadow-sm hidden sm:inline-flex gap-1.5"
+              size="default"
               aria-label="Удалить смету"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
@@ -1241,7 +1238,6 @@ export function EstimateTable({
                   key={pattern.id}
                   variant={selectedPatternId === pattern.id ? "secondary" : "ghost"}
                   size="sm"
-                  className="h-auto w-full justify-start py-2"
                   onClick={() => void previewPattern(pattern.id)}
                 >
                   <div className="text-left">

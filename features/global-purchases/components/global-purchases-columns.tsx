@@ -77,7 +77,6 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
         <Button variant="ghost"
           size="xs"
           type="button"
-          className={cn('inline-flex max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
@@ -152,7 +151,6 @@ const ProjectCell = React.memo(function ProjectCell({
         <Button variant="ghost"
           size="xs"
           type="button"
-          className={cn('inline-flex w-full max-w-[220px] items-center justify-start gap-1 rounded-full border-none bg-transparent px-2 text-[12px] outline-none focus-visible:ring-2 focus-visible:ring-ring/40', !name && 'text-muted-foreground')}
           disabled={disabled}
           aria-label="Выбрать объект"
         >
@@ -203,7 +201,6 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
             type="button"
             variant="destructive"
             size="icon-xs"
-            className="rounded-[6px] transition-colors shrink-0"
             onClick={() => setOpen(true)}
             disabled={disabled}
             aria-label="Удалить строку"

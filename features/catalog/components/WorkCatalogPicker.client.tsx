@@ -116,12 +116,6 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                             size="icon-xs"
                                             variant="outline"
                                             disabled={addedWorkNames.has(work.name)}
-                                            className={cn(
-                                                "rounded-full border-border/50 transition-all shrink-0 active:scale-90",
-                                                addedWorkNames.has(work.name)
-                                                    ? "bg-primary/10 text-primary border-primary/20 opacity-100 cursor-default"
-                                                    : "hover:bg-primary hover:text-primary-foreground hover:border-primary"
-                                            )}
                                             onClick={(e) => {
                                                 e.stopPropagation();
                                                 onAddWork(work);
