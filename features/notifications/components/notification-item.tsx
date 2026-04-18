@@ -66,7 +66,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       aria-label={`Пометить как прочитанное: ${notification.title}`}
       title="Нажмите, чтобы отметить как прочитанное"
     >
-      <div className="mt-1 h-2 w-2 rounded-full bg-orange-500 shrink-0" aria-hidden="true" />
+      <div className="mt-1 h-2 w-2 rounded-full bg-brand shrink-0" aria-hidden="true" />
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold">{notification.title}</p>

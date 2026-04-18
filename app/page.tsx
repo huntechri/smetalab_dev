@@ -36,7 +36,7 @@ export default function LandingPage() {
                             <Button variant="ghost" className="border border-transparent text-white/90 hover:border-white/30 hover:bg-white/12 hover:text-white focus-visible:ring-2 focus-visible:ring-white/60">Войти</Button>
                         </Link>
                         <Link href="/sign-up">
-                            <Button className="bg-white text-black transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
+                            <Button size="default" className="bg-white text-black transition-colors hover:bg-white/85 focus-visible:ring-2 focus-visible:ring-white/60">Запросить демо</Button>
                         </Link>
                     </div>
                     <details className="group md:hidden">
@@ -92,11 +92,11 @@ export default function LandingPage() {
                                     Все проекты — в одной операционной панели.
                                 </p>
                                 <div className="flex flex-col gap-4 sm:flex-row">
-                                    <Button className="h-12 bg-[#FF6A3D] px-6 text-base text-black hover:bg-[#FF865F]">
+                                    <Button variant="brand" size="xl">
                                         Запустить пилот
                                         <ArrowRight className="ml-2 h-5 w-5" />
                                     </Button>
-                                    <Button variant="outline" className="h-12 border-white/50 bg-transparent px-6 text-base text-white hover:border-white/70 hover:bg-white/20 hover:text-white active:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/60">
+                                    <Button variant="outline" size="xl" className="border-white/50 bg-transparent text-white hover:border-white/70 hover:bg-white/20 hover:text-white active:bg-white/25 focus-visible:ring-2 focus-visible:ring-white/60">
                                         Сценарий внедрения
                                     </Button>
                                 </div>
@@ -228,7 +228,10 @@ export default function LandingPage() {
                                         <li>Контроль закупок</li>
                                         <li>Отчёты заказчику</li>
                                     </ul>
-                                    <Button className={`mt-8 w-full ${plan.accent ? 'bg-[#FF6A3D] text-black hover:bg-[#FF865F]' : 'bg-white/10 text-white hover:bg-white/25 active:bg-white/30'}`}>
+                                    <Button 
+                                        variant={plan.accent ? "brand" : "outline"} 
+                                        className={`mt-8 w-full ${!plan.accent ? 'bg-white/10 text-white hover:bg-white/25 active:bg-white/30 border-transparent' : ''}`}
+                                    >
                                         {plan.action}
                                     </Button>
                                 </div>
@@ -247,8 +250,8 @@ export default function LandingPage() {
                                     <p className="text-white/80">Покажем вашу картину объекта за 30 минут и составим план внедрения.</p>
                                 </div>
                                 <div className="flex flex-col gap-4">
-                                    <Button className="h-12 bg-white text-black hover:bg-white/90">Запросить презентацию</Button>
-                                    <Button variant="outline" className="h-12 border-white/40 bg-[#0B0A0F] text-white hover:bg-[#15131B] hover:text-white active:bg-[#1C1A24] focus-visible:ring-2 focus-visible:ring-white/60">Назначить встречу</Button>
+                                    <Button size="xl" className="bg-white text-black hover:bg-white/90">Запросить презентацию</Button>
+                                    <Button variant="outline" size="xl" className="border-white/40 bg-[#0B0A0F] text-white hover:bg-[#15131B] hover:text-white active:bg-[#1C1A24] focus-visible:ring-2 focus-visible:ring-white/60">Назначить встречу</Button>
                                 </div>
                             </div>
                         </div>

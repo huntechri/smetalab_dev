@@ -45,8 +45,8 @@ export function AdminTerminal() {
             type="button"
             onClick={copyToClipboard}
             variant="ghost"
-            size="icon"
-            className="h-8 w-8 text-gray-400 transition-colors hover:bg-transparent hover:text-white"
+            size="icon-sm"
+            className="text-gray-400 hover:text-white"
             aria-label="Copy to clipboard"
           >
             {copied ? (

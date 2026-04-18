@@ -33,7 +33,7 @@ export function TeamWidgetSection() {
                             </div>
                         </div>
                     ))}
-                    <Button variant="outline" className="mt-2 h-9 w-full border-border/40 text-xs font-semibold hover:bg-muted/20">
+                    <Button variant="outline" className="mt-2 w-full border-border/40 font-semibold tracking-tight shadow-sm transition-all active:scale-95 hover:bg-muted/20">
                         Участники
                     </Button>
                 </CardContent>

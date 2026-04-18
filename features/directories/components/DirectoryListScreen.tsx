@@ -84,8 +84,8 @@ export function DirectoryListScreen<TData, TValue>({
             icon={FilePlus}
             action={
               <Button
-                variant="default"
-                className="h-8 rounded-[7.6px] px-6 font-medium"
+                variant="primary"
+                className="font-semibold tracking-tight shadow-sm transition-all active:scale-95"
                 onClick={onCreate}
               >
                 <Plus className="size-3.5 mr-2" />
@@ -98,7 +98,8 @@ export function DirectoryListScreen<TData, TValue>({
           <div className="flex items-center gap-2 w-full sm:w-auto">
             {canLoadMore ? (
               <Button
-                variant="default"
+                variant="outline"
+                className="font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1.5"
                 onClick={onLoadMore}
                 disabled={isLoadingMore}
               >
@@ -109,8 +110,8 @@ export function DirectoryListScreen<TData, TValue>({
             ) : null}
             <Button
               onClick={onCreate}
-              variant="default"
-              className="shrink-0 ml-auto"
+              variant="primary"
+              className="shrink-0 ml-auto font-semibold tracking-tight shadow-sm transition-all active:scale-95 gap-1"
               aria-label={addLabel}
             >
               <Plus className="h-4 w-4 mr-1" />

@@ -50,7 +50,8 @@ function EstimateStatusCell({
         <Button
           type="button"
           variant="ghost"
-          className="inline-flex h-auto cursor-pointer border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40 rounded-full"
+          size="sm"
+          className="cursor-pointer rounded-full p-0 hover:bg-transparent focus-visible:ring-2 focus-visible:ring-ring/40"
         >
           <Badge variant="outline" className={`${projectBadgeClassName} ${statusTone} min-w-[88px] cursor-pointer md:min-w-[100px]`}>
             {getEstimateStatusLabel(status)}
@@ -61,7 +62,7 @@ function EstimateStatusCell({
         {estimateStatusOrder.map((item) => (
           <DropdownMenuItem key={item} onClick={() => void onChange(item)} className="mb-0.5 h-8 cursor-pointer rounded-md">
             <div className="flex items-center gap-2 w-full">
-              <div className={`w-2 h-2 rounded-full ${item === 'approved' ? 'bg-emerald-500' : item === 'in_progress' ? 'bg-blue-500' : 'bg-orange-500'}`} />
+              <div className={`w-2 h-2 rounded-full ${item === 'approved' ? 'bg-emerald-500' : item === 'in_progress' ? 'bg-blue-500' : 'bg-brand'}`} />
               <span className="text-xs font-medium md:text-sm">{getEstimateStatusLabel(item)}</span>
             </div>
           </DropdownMenuItem>
@@ -158,7 +159,8 @@ export function EstimatesListTable({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  className="h-8 w-8 px-0 rounded-[7.6px] shadow-none"
+                  size="icon"
+                  className="rounded-[7.6px] shadow-sm"
                   title="Удалить смету"
                 >
                   <Trash2 className="h-4 w-4" />

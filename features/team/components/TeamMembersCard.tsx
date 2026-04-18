@@ -77,9 +77,9 @@ export function TeamMembersCard({
                                     <Button
                                         key={item.value}
                                         type="button"
-                                        variant={roleFilter === item.value ? 'secondary' : 'default'}
+                                        variant={roleFilter === item.value ? 'secondary' : 'outline'}
                                         className={cn(
-                                            "h-8 px-3 text-[14px] font-medium leading-[20px] shadow-none transition-all",
+                                            "px-3 text-xs md:text-sm font-semibold tracking-tight shadow-sm transition-all active:scale-95",
                                             roleFilter === item.value ? "bg-secondary border-border" : "bg-white"
                                         )}
                                         onClick={() => onRoleFilterChange(item.value)}
@@ -117,9 +117,9 @@ export function TeamMembersCard({
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button
-                                                    variant="default"
-                                                    size="icon-sm"
-                                                    className="size-7 rounded-[6px] text-muted-foreground hover:text-foreground transition-all"
+                                                    variant="outline"
+                                                    size="icon"
+                                                    className="transition-all active:scale-95 text-muted-foreground hover:text-foreground"
                                                     aria-label={`Действия для ${member.user.name || member.user.email}`}
                                                 >
                                                     <MoreHorizontal className="size-3.5" />
@@ -143,7 +143,7 @@ export function TeamMembersCard({
                                                 <AlertDialogCancel>Отмена</AlertDialogCancel>
                                                 <AlertDialogAction
                                                     variant="destructive"
-                                                    className="h-8 px-3 rounded-[7.6px]"
+                                                    className="px-3 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm"
                                                     onClick={() => onRemoveMember(member.id)}
                                                 >
                                                     Удалить

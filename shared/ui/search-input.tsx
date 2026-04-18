@@ -51,8 +51,8 @@ function SearchInput({
         type="search"
         value={value}
         className={cn(
-          className,
-          "peer file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input !h-7 !w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0 rounded-[7.6px] border bg-transparent !pl-9 !pr-9 py-1 !text-[12px] leading-[16px] transition-colors outline-none file:inline-flex file:h-5 file:border-0 file:bg-transparent file:text-[12px] file:font-medium focus:outline-none focus:ring-0 focus:shadow-none focus-visible:outline-none focus-visible:ring-0 focus-visible:shadow-none focus-visible:border-primary/40 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 placeholder:!text-[12px] [&::-webkit-search-cancel-button]:appearance-none [&::-webkit-search-decoration]:appearance-none [&::-webkit-search-results-button]:appearance-none [&::-webkit-search-results-decoration]:appearance-none"
+          "peer pl-9 pr-9 h-9 text-xs md:text-sm font-medium shadow-sm transition-all focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50",
+          className
         )}
         {...props}
       />
