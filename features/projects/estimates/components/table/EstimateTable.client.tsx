@@ -6,16 +6,11 @@ import { DataTable } from "@/shared/ui/data-table";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import {
   Calculator,
-  Save,
-  FileStack,
-  Percent,
-  FileUp,
-  FileDown,
-  Trash2,
-  MoreHorizontal,
   FolderTree,
   FilePlus,
+  FileUp,
 } from "lucide-react";
+import { EstimateUnifiedToolbar } from "../EstimateUnifiedToolbar";
 import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { Badge } from "@/shared/ui/badge";
 import {
@@ -24,12 +19,6 @@ import {
   SheetDescription,
   SheetTitle,
 } from "@/shared/ui/sheet";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -856,119 +845,22 @@ export function EstimateTable({
         height="var(--table-height)"
         compactMobileToolbar
         actions={
-          <div className="flex items-center gap-1">
-            {/* Mobile: all actions in one dropdown */}
-            <div className="sm:hidden">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="default" size="icon-xs" aria-label="Действия по смете">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="gap-2" onClick={() => void importEstimate()} disabled={isImporting}>
-                    <FileUp className="h-4 w-4 text-muted-foreground" />
-                    <span>{isImporting ? "Импорт..." : "Импорт"}</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("xlsx")} disabled={isExporting}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в Excel</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("pdf")} disabled={isExporting}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в PDF</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => { setPendingInsertAfterWork(null); setIsCalculationModeOpen(true); }}>
-                    <Calculator className="h-4 w-4 text-muted-foreground" />
-                    <span>Режим расчёта</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={openCoefficientDialog}>
-                    <Percent className="h-4 w-4 text-muted-foreground" />
-                    <span>Коэффициент</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => setIsApplyPatternOpen(true)}>
-                    <FileStack className="h-4 w-4 text-muted-foreground" />
-                    <span>Шаблон</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => openCreateSectionDialog()}>
-                    <FolderTree className="h-4 w-4 text-muted-foreground" />
-                    <span>Раздел</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => setIsSavePatternOpen(true)}>
-                    <Save className="h-4 w-4 text-muted-foreground" />
-                    <span>Сохранить шаблон</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
-                    <Trash2 className="h-4 w-4" />
-                    <span>Удалить смету</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* Desktop: grouped toolbar */}
-            <div className="hidden sm:flex items-center gap-1">
-              {/* Group 1: data exchange */}
-              <Button variant="default" onClick={() => void importEstimate()} disabled={isImporting}>
-                <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>{isImporting ? "Импорт..." : "Импорт"}</span>
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="default" disabled={isExporting}>
-                    <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span>{isExporting ? "Экспорт..." : "Экспорт"}</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("xlsx")}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в Excel (.xlsx)</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="gap-2" onClick={() => void exportEstimate("pdf")}>
-                    <FileDown className="h-4 w-4 text-muted-foreground" />
-                    <span>Экспорт в PDF (.pdf)</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-
-              <div className="w-px h-4 bg-border mx-0.5" />
-
-              {/* Group 2: calculations */}
-              <Button variant="default" onClick={() => { setPendingInsertAfterWork(null); setIsCalculationModeOpen(true); }}>
-                <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Расчёт</span>
-              </Button>
-              <Button variant="default" onClick={openCoefficientDialog}>
-                <Percent className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Коэфф.</span>
-              </Button>
-              <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
-                <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Шаблон</span>
-              </Button>
-
-              <div className="w-px h-4 bg-border mx-0.5" />
-
-              {/* Group 3: destructive */}
-              <Button variant="destructive" onClick={() => setIsDeleteDialogOpen(true)}>
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>Удалить</span>
-              </Button>
-
-              <div className="w-px h-4 bg-border mx-0.5" />
-
-              {/* Group 4: create */}
-              <Button variant="default" onClick={() => openCreateSectionDialog()}>
-                <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Раздел</span>
-              </Button>
-              <Button variant="default" onClick={() => setIsSavePatternOpen(true)}>
-                <Save className="h-3.5 w-3.5 text-muted-foreground" />
-                <span>Сохранить</span>
-              </Button>
-            </div>
-          </div>
+          <EstimateUnifiedToolbar
+            onImport={() => void importEstimate()}
+            isImporting={isImporting}
+            onExportXlsx={() => void exportEstimate("xlsx")}
+            onExportPdf={() => void exportEstimate("pdf")}
+            isExporting={isExporting}
+            onCoefficient={openCoefficientDialog}
+            onApplyPattern={() => setIsApplyPatternOpen(true)}
+            onSavePattern={() => setIsSavePatternOpen(true)}
+            onDelete={() => setIsDeleteDialogOpen(true)}
+            onAddSection={() => openCreateSectionDialog()}
+            onAddItem={() => {
+              setPendingInsertAfterWork(null);
+              setIsCalculationModeOpen(true);
+            }}
+          />
         }
       />
       <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border/60 bg-background/95 px-1 pt-1">
