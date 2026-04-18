@@ -26,7 +26,7 @@ const inputVariants = cva(
     },
     defaultVariants: {
       variant: "default",
-      size: "default",
+      size: "xs",
     },
   }
 )
