@@ -11,15 +11,15 @@ describe('LandingPage', () => {
         expect(capabilitiesLinks[0]).toHaveClass('focus-visible:ring-2');
 
         const signInButtons = screen.getAllByRole('button', { name: 'Войти' });
-        expect(signInButtons[0]).toHaveClass('hover:border-white/30');
-        expect(signInButtons[0]).toHaveClass('hover:bg-white/12');
+        expect(signInButtons[0]).toHaveAttribute('data-variant', 'ghost');
+        expect(signInButtons[0]).not.toHaveAttribute('data-size');
 
         const mobileSignInButton = signInButtons[1];
-        expect(mobileSignInButton).toHaveClass('w-full');
-        expect(mobileSignInButton).toHaveClass('!text-white');
+        expect(mobileSignInButton).toHaveAttribute('data-variant', 'outline');
+        expect(mobileSignInButton).not.toHaveAttribute('data-size');
 
         const scenarioButton = screen.getByRole('button', { name: 'Сценарий внедрения' });
-        expect(scenarioButton).toHaveClass('hover:border-white/70');
-        expect(scenarioButton).toHaveClass('hover:bg-white/20');
+        expect(scenarioButton).toHaveAttribute('data-variant', 'outline');
+        expect(scenarioButton).toHaveAttribute('data-size', 'xl');
     });
 });

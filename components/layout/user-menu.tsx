@@ -60,7 +60,7 @@ export function UserMenu() {
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" className="relative rounded-full">
+                    <Button variant="ghost" size="icon-sm">
                         <Avatar className="h-8 w-8">
                             <AvatarFallback>?</AvatarFallback>
                         </Avatar>
@@ -79,7 +79,7 @@ export function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon-sm" className="relative rounded-full">
+                <Button variant="ghost" size="icon-sm">
                     <Avatar className="h-8 w-8">
                         <AvatarImage src="" alt={user.name || user.email} />
                         <AvatarFallback>{getUserInitials(user)}</AvatarFallback>

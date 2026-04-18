@@ -51,7 +51,6 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
                     <PopoverTrigger asChild>
                         <Button
                             variant="outline"
-                            className="flex w-full items-center justify-between gap-1 border-border/40 bg-background/50 text-[11px] font-semibold tracking-tight shadow-sm transition-all hover:bg-muted active:scale-95 sm:w-[180px] sm:text-xs"
                         >
                             <div className="flex items-center gap-2 truncate">
                                 <Filter data-icon="inline-start" className="opacity-60" />

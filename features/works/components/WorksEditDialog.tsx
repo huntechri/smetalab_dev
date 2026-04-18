@@ -102,7 +102,7 @@ export function WorksEditDialog({
                         </div>
                         <DialogFooter>
                             <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
-                            <Button type="submit" disabled={isUpdating} className="px-8">
+                            <Button type="submit" disabled={isUpdating}>
                                 {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Сохранить
                             </Button>

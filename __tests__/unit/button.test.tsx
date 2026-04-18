@@ -8,10 +8,11 @@ describe('Button Component', () => {
     expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
-  it('applies standard styles', () => {
-    render(<Button className="custom-class">Test</Button>);
+  it('applies canonical base styles', () => {
+    render(<Button>Test</Button>);
     const button = screen.getByText('Test');
-    expect(button).toHaveClass('custom-class');
+    expect(button).toHaveClass('inline-flex');
+    expect(button).toHaveClass('h-9');
   });
 
   it('sets variant and size data attributes', () => {

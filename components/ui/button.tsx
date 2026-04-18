@@ -39,7 +39,7 @@ const buttonVariants = cva(
   }
 )
 
-type ButtonProps = React.ComponentProps<"button"> &
+type ButtonProps = Omit<React.ComponentProps<"button">, "className"> &
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean
     loading?: boolean
@@ -50,7 +50,6 @@ type ButtonProps = React.ComponentProps<"button"> &
   }
 
 function Button({
-  className,
   variant,
   size,
   asChild = false,
@@ -65,7 +64,7 @@ function Button({
 }: ButtonProps) {
   const resolvedLoading = loading || isLoading
   const Comp = asChild ? Slot : "button"
-  const buttonClassName = cn(buttonVariants({ variant, size, className }))
+  const buttonClassName = cn(buttonVariants({ variant, size }))
 
   if (asChild) {
     return (
