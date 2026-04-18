@@ -5,6 +5,7 @@ const nextConfig: NextConfig = {
   typescript: {
     tsconfigPath: './tsconfig.json',
   },
+  allowedDevOrigins: ['*.replit.dev', '*.picard.replit.dev', '*.repl.co'],
   experimental: {
     serverActions: {
       bodySizeLimit: '200mb',
@@ -56,7 +57,7 @@ const nextConfig: NextConfig = {
               "img-src 'self' data: https:",
               "font-src 'self'",
               "worker-src 'self' blob:",
-              "connect-src 'self' https://api.stripe.com https://api.openai.com wss:",
+              "connect-src 'self' https://api.stripe.com https://api.openai.com wss: https://*.replit.dev https://*.picard.replit.dev https://*.repl.co",
               "frame-src https://js.stripe.com https://checkout.stripe.com",
               "object-src 'none'",
               "base-uri 'self'",
