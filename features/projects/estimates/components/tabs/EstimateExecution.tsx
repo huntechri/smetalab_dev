@@ -411,25 +411,27 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                            />
                         </div>
 
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="min-w-[220px]">
-                                <DropdownMenuItem onClick={handleExport}>
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Экспорт Excel
-                                </DropdownMenuItem>
-                                <AddExtraWorkSheet
-                                    estimateId={estimateId}
-                                    onCreated={(row) => setRows((prev) => [...prev, row])}
-                                    addedWorkNames={addedWorkNames}
-                                    triggerVariant="menu-item"
-                               />
-                            </DropdownMenuContent>
-                        </DropdownMenu>
+                        <div className="sm:hidden">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="icon">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="min-w-[220px]">
+                                    <DropdownMenuItem onClick={handleExport}>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        Экспорт Excel
+                                    </DropdownMenuItem>
+                                    <AddExtraWorkSheet
+                                        estimateId={estimateId}
+                                        onCreated={(row) => setRows((prev) => [...prev, row])}
+                                        addedWorkNames={addedWorkNames}
+                                        triggerVariant="menu-item"
+                                   />
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
                     </>
                 }
            />

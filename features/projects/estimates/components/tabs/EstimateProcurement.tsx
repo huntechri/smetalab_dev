@@ -6,11 +6,10 @@ import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { DataTable } from '@/shared/ui/data-table';
 import { Button } from '@/components/ui/button';
-import { Download, MoreHorizontal } from 'lucide-react';
+import { Download } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTotals } from '../EstimateTotals';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -184,26 +183,10 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 height="600px"
                 compactMobileToolbar
                 actions={(
-                    <>
-                        <Button variant="outline" onClick={handleExport}>
-                            <Download className="h-4 w-4" />
-                            Экспорт Excel
-                        </Button>
-
-                        <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon">
-                                    <MoreHorizontal className="h-4 w-4" />
-                                </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={handleExport}>
-                                    <Download className="mr-2 h-4 w-4" />
-                                    Экспорт Excel
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </>
+                    <Button variant="outline" onClick={handleExport}>
+                        <Download className="h-4 w-4" />
+                        Экспорт Excel
+                    </Button>
                 )}
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
