@@ -148,7 +148,7 @@ export function CreateMaterialSupplierSheet({
                       <FormItem>
                         <FormLabel className="text-xs">Цвет метки</FormLabel>
                         <FormControl>
-                          <Input type="color" value={field.value} onChange={field.onChange} className="w-14 cursor-pointer" />
+                          <div className="w-14"><Input type="color" value={field.value} onChange={field.onChange} /></div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

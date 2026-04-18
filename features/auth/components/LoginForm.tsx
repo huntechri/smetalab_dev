@@ -137,16 +137,12 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   required
                   maxLength={50}
                   placeholder="name@company.ru"
-                  className={`${!!inviteId && mode === 'signup'
-                    ? 'bg-gray-100 cursor-not-allowed'
-                    : ''
-                    }`}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">Пароль</Label>
-                <div className="relative">
+                <div className="relative [&_input]:pr-10">
                   <Input
                     id="password"
                     name="password"
@@ -161,7 +157,6 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     placeholder="Минимум 8 символов"
                     aria-describedby="password-hint"
                     aria-invalid={!!state?.error}
-                    className="pr-10"
                   />
                   <Button
                     type="button"

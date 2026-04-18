@@ -129,7 +129,7 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="tabular-nums"
+            numeric
        />
     );
 }

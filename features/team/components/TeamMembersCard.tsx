@@ -62,13 +62,14 @@ export function TeamMembersCard({
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
                             <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
-                            <SearchInput
-                                id="search"
-                                placeholder="Имя или email"
-                                value={searchQuery}
-                                onChange={(event) => onSearchQueryChange(event.target.value)}
-                                className="w-[min(20rem,calc(100vw-2rem))]"
-                            />
+                            <div className="w-[min(20rem,calc(100vw-2rem))]">
+                                <SearchInput
+                                    id="search"
+                                    placeholder="Имя или email"
+                                    value={searchQuery}
+                                    onChange={(event) => onSearchQueryChange(event.target.value)}
+                                />
+                            </div>
                         </div>
                         <div className="space-y-1.5">
                             <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
