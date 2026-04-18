@@ -202,8 +202,8 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
           <Button
             type="button"
             variant="destructive"
-            size="icon-sm"
-            className="size-7 rounded-[6px] transition-colors shrink-0"
+            size="icon-xs"
+            className="rounded-[6px] transition-colors shrink-0"
             onClick={() => setOpen(true)}
             disabled={disabled}
             aria-label="Удалить строку"
