@@ -126,17 +126,11 @@ function InputGroupText({ className, ...props }: React.ComponentProps<"span">) {
   )
 }
 
-function InputGroupInput({
-  className,
-  ...props
-}: React.ComponentProps<"input">) {
+function InputGroupInput(props: Omit<React.ComponentProps<typeof Input>, "variant">) {
   return (
     <Input
       data-slot="input-group-control"
-      className={cn(
-        "flex-1 rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent",
-        className
-      )}
+      variant="ghost"
       {...props}
     />
   )

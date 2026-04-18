@@ -44,18 +44,17 @@ export function WorkCatalogFilters({
         <div className="flex flex-col shrink-0 bg-background/95 backdrop-blur-sm z-20">
             <div className="p-4 border-b">
                 <div className="flex items-center gap-3">
-                    <SearchInput
-                        placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
-                        className={cn(
-                            'w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0',
-                            isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]'
-                        )}
-                        value={searchQuery}
-                        onChange={(e) => onSearchChange(e.target.value)}
-                        onKeyDown={handleSearchKeyDown}
-                        loading={Boolean(isSearching)}
-                        autoLoading={!isSearching}
-                    />
+                    <div className="w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0">
+                        <SearchInput
+                            placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
+                            highlighted={isAiMode}
+                            value={searchQuery}
+                            onChange={(e) => onSearchChange(e.target.value)}
+                            onKeyDown={handleSearchKeyDown}
+                            loading={Boolean(isSearching)}
+                            autoLoading={!isSearching}
+                        />
+                    </div>
                     {onSearchSubmit && (
                         <Button
                             type="button"

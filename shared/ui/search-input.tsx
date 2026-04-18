@@ -9,13 +9,14 @@ import { Input } from "@/shared/ui/input"
 type SearchInputProps = Omit<React.ComponentProps<typeof Input>, "type"> & {
   loading?: boolean
   autoLoading?: boolean
+  highlighted?: boolean
 }
 
 function SearchInput({
-  className,
   value,
   loading = false,
   autoLoading = true,
+  highlighted = false,
   ...props
 }: SearchInputProps) {
   const [isAutoLoading, setIsAutoLoading] = React.useState(false)
@@ -42,18 +43,17 @@ function SearchInput({
   const showLoader = loading || (autoLoading && isAutoLoading)
 
   return (
-    <div className="relative">
-      <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-5 peer-disabled:opacity-50">
+    <div className={cn(
+      "relative [&_input]:pl-9 [&_input]:pr-9",
+      highlighted && "ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)] rounded-md"
+    )}>
+      <div className="text-muted-foreground pointer-events-none absolute inset-y-0 left-0 flex items-center justify-center pl-3 peer-disabled:opacity-50">
         <SearchIcon className="size-4" />
         <span className="sr-only">Search</span>
       </div>
       <Input
         type="search"
         value={value}
-        className={cn(
-          "peer pl-9 pr-9",
-          className
-        )}
         {...props}
       />
       {showLoader && (
