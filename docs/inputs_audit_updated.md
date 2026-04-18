@@ -514,7 +514,7 @@ Inline style: no
 File: features/projects/dashboard/components/DashboardDataTable.tsx
 Kind: component-select-trigger
 Type: default
-Classes: w-40 cursor-pointer text-muted-foreground
+Classes: w-40 cursor-pointer
 Inline style: no
 -------------------
 
@@ -731,7 +731,7 @@ Inline style: no
 File: features/projects/estimates/components/table/cells/EditableCell.tsx
 Kind: component-input
 Type: default
-Classes: h-7 px-1 text-inherit font-inherit border border-muted-foreground/20 focus-visible:ring-0 focus-visible:ring-offset-0 shadow-sm bg-muted/80
+Classes: 
 Inline style: no
 -------------------
 
@@ -836,7 +836,7 @@ Inline style: no
 File: features/team/components/InviteTeamMemberCard.tsx
 Kind: component-input
 Type: email
-Classes: transition-all focus-visible:ring-1 focus-visible:ring-ring
+Classes: 
 Inline style: no
 -------------------
 
@@ -962,7 +962,7 @@ Inline style: no
 File: shared/ui/sidebar.tsx
 Kind: component-input
 Type: default
-Classes: bg-background h-8 w-full shadow-none
+Classes: w-full
 Inline style: no
 -------------------
 

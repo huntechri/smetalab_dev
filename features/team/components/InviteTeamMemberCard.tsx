@@ -44,7 +44,6 @@ export function InviteTeamMemberCard({
                             placeholder="colleague@company.com"
                             value={email}
                             onChange={(event) => onEmailChange(event.target.value)}
-                            className="transition-all focus-visible:ring-1 focus-visible:ring-ring"
                             required
                        />
                     </div>
