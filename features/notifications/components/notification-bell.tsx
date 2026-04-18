@@ -28,7 +28,7 @@ export function NotificationBell() {
 
     if (!mounted) {
         return (
-            <Button type="button" variant="ghost" size="icon" className="relative inline-flex items-center justify-center rounded-full border-none bg-transparent p-0" disabled>
+            <Button type="button" variant="ghost" size="icon" disabled>
                 <Bell className="h-5 w-5" />
                 <span className="sr-only">Уведомления</span>
             </Button>
@@ -57,7 +57,6 @@ export function NotificationBell() {
                 <Button variant="ghost"
                     size="icon"
                     type="button"
-                    className="relative inline-flex items-center justify-center rounded-full border-none bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
                 >
                     <Bell className="h-5 w-5" />
@@ -88,7 +87,7 @@ export function NotificationBell() {
                     emptyDescription="Вы прочитали всё важное"
                 />
                 <div className="border-t pt-2 mt-2">
-                    <Button type="button" variant="ghost" className="w-full text-sm pointer-events-none border-none bg-transparent p-0 text-center" disabled>
+                    <Button type="button" variant="ghost" disabled>
                         Показать все уведомления
                     </Button>
                 </div>

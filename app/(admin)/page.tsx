@@ -24,7 +24,6 @@ export default function HomePage() {
                   <Button
                     variant="brand"
                     size="xl"
-                    className="rounded-full"
                   >
                     Get Started
                     <ArrowRight className="ml-2 h-5 w-5" />
@@ -114,7 +113,6 @@ export default function HomePage() {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="text-lg rounded-full"
                 >
                   View the code
                   <ArrowRight className="ml-3 h-6 w-6" />

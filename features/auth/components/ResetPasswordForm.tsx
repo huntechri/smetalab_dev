@@ -25,7 +25,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             <div className="space-y-2"><Label htmlFor="confirmPassword">Подтверждение пароля</Label><Input id="confirmPassword" name="confirmPassword" type="password" required minLength={8} maxLength={100} /></div>
             {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
             {state?.success && <p className="text-sm text-green-600">{state.success}</p>}
-            <Button type="submit" className="w-full" disabled={pending || !token}>{pending ? 'Сохраняем...' : 'Обновить пароль'}</Button>
+            <Button type="submit" disabled={pending || !token}>{pending ? 'Сохраняем...' : 'Обновить пароль'}</Button>
             <Link href="/sign-in" className="block text-center text-sm text-muted-foreground hover:underline">Перейти ко входу</Link>
           </form>
         </CardContent>

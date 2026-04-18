@@ -185,14 +185,14 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 compactMobileToolbar
                 actions={(
                     <>
-                        <Button variant="outline" className="hidden gap-1.5 text-xs font-semibold tracking-tight shadow-sm transition-all active:scale-95 sm:inline-flex md:text-sm" onClick={handleExport}>
+                        <Button variant="outline" onClick={handleExport}>
                             <Download className="h-4 w-4" />
                             Экспорт Excel
                         </Button>
 
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline" size="icon" className="transition-all active:scale-95 sm:hidden">
+                                <Button variant="outline" size="icon">
                                     <MoreHorizontal className="h-4 w-4" />
                                 </Button>
                             </DropdownMenuTrigger>

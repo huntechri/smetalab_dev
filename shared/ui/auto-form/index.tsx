@@ -28,7 +28,7 @@ export function AutoFormSubmit({
   disabled?: boolean;
 }) {
   return (
-    <Button type="submit" disabled={disabled} className={className}>
+    <Button type="submit" disabled={disabled}>
       {children ?? "Submit"}
     </Button>
   );

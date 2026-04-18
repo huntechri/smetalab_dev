@@ -58,7 +58,6 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 <Button
                     size="icon"
                     variant="ghost"
-                    className={insertButtonStyles({ tone: "success" }) + " shadow-sm"}
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
                     aria-label="Сохранить строку"
                     title="Сохранить строку"
@@ -68,7 +67,6 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 <Button
                     size="icon"
                     variant="ghost"
-                    className={insertButtonStyles({ tone: "danger" }) + " shadow-sm"}
                     onClick={() => meta.onCancelInsert?.()}
                     aria-label="Отменить вставку"
                     title="Отменить вставку"
@@ -84,7 +82,6 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
             <Button
                 variant="ghost"
                 size="icon"
-                className={actionButtonStyles({ tone: "primary" }) + " text-primary shadow-sm"}
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
                 title="Вставить строку ниже"
@@ -94,7 +91,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
 
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="shadow-sm" aria-label="Действия" title="Действия">
+                    <Button variant="ghost" size="icon" aria-label="Действия" title="Действия">
                         <Settings className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -270,7 +267,6 @@ export const columns: ColumnDef<WorkRow>[] = [
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="text-primary opacity-50 hover:opacity-100 shadow-sm"
                         onClick={() => meta.onInsertRequest?.()}
                         title="Добавить строку"
                         aria-label="Добавить строку"
@@ -279,7 +275,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="opacity-70 hover:opacity-100 px-2 text-[12px] font-semibold tracking-tight shadow-sm" aria-label="Действия" title="Действия">
+                            <Button variant="ghost" aria-label="Действия" title="Действия">
                                 Действия
                             </Button>
                         </DropdownMenuTrigger>

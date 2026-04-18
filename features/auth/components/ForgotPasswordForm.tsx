@@ -26,7 +26,7 @@ export function ForgotPasswordForm() {
             </div>
             {state?.error && <p className="text-sm text-red-500">{state.error}</p>}
             {state?.success && <p className="text-sm text-green-600">{state.success}</p>}
-            <Button type="submit" className="w-full" disabled={pending}>{pending ? 'Отправка...' : 'Отправить ссылку'}</Button>
+            <Button type="submit" disabled={pending}>{pending ? 'Отправка...' : 'Отправить ссылку'}</Button>
             <Link href="/sign-in" className="block text-center text-sm text-muted-foreground hover:underline">Вернуться ко входу</Link>
           </form>
         </CardContent>

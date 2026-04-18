@@ -162,7 +162,6 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                 <Button
                   disabled={isAccountPending}
                   type="submit"
-                  className="w-fit"
                 >
                   {isAccountPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -310,7 +309,6 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                 <Button
                   disabled={isPasswordPending}
                   type="submit"
-                  className="w-fit"
                 >
                   {isPasswordPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
