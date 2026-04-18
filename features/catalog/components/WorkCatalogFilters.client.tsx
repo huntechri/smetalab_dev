@@ -60,7 +60,8 @@ export function WorkCatalogFilters({
                         <Button
                             type="button"
                             variant="outline"
-                            className="h-8 text-xs px-3"
+                            size="sm"
+                            className="px-3"
                             onClick={onSearchSubmit}
                             disabled={isSearching}
                         >

@@ -56,24 +56,24 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         return (
             <div className="flex gap-1 justify-end pr-2">
                 <Button
-                    size="icon-xs"
+                    size="icon"
                     variant="ghost"
-                    className={insertButtonStyles({ tone: "success" })}
+                    className={insertButtonStyles({ tone: "success" }) + " shadow-sm"}
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
                     aria-label="Сохранить строку"
                     title="Сохранить строку"
                 >
-                    <Check className="h-3 w-3" />
+                    <Check className="h-4 w-4" />
                 </Button>
                 <Button
-                    size="icon-xs"
+                    size="icon"
                     variant="ghost"
-                    className={insertButtonStyles({ tone: "danger" })}
+                    className={insertButtonStyles({ tone: "danger" }) + " shadow-sm"}
                     onClick={() => meta.onCancelInsert?.()}
                     aria-label="Отменить вставку"
                     title="Отменить вставку"
                 >
-                    <X className="h-3 w-3" />
+                    <X className="h-4 w-4" />
                 </Button>
             </div>
         )
@@ -83,8 +83,8 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         <div className="flex items-center justify-end md:pr-4 gap-1">
             <Button
                 variant="ghost"
-                size="icon-sm"
-                className={actionButtonStyles({ tone: "primary" })}
+                size="icon"
+                className={actionButtonStyles({ tone: "primary" }) + " text-primary shadow-sm"}
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
                 title="Вставить строку ниже"
@@ -94,7 +94,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
 
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon-sm" className={actionButtonStyles()} aria-label="Действия" title="Действия">
+                    <Button variant="ghost" size="icon" className="shadow-sm" aria-label="Действия" title="Действия">
                         <Settings className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -140,7 +140,7 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
         return (
             <Input
                 placeholder="Наименование работы..."
-                className="h-8 text-[12px] bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
+                className="h-9 text-[12px] bg-transparent border shadow-sm"
                 autoFocus
                 value={row.original.name || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })}
@@ -210,7 +210,7 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
             <Input
                 type="number"
                 placeholder="Цена"
-                className="h-8 text-[12px] text-center bg-transparent border-none shadow-none focus-visible:ring-0 px-0"
+                className="h-9 text-[12px] text-center bg-transparent border shadow-sm"
                 value={row.original.price || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })}
             />
@@ -269,8 +269,8 @@ export const columns: ColumnDef<WorkRow>[] = [
                 <div className="flex justify-end pr-6 items-center gap-1">
                     <Button
                         variant="ghost"
-                        size="icon-sm"
-                        className="text-primary opacity-50 hover:opacity-100"
+                        size="icon"
+                        className="text-primary opacity-50 hover:opacity-100 shadow-sm"
                         onClick={() => meta.onInsertRequest?.()}
                         title="Добавить строку"
                         aria-label="Добавить строку"
@@ -279,7 +279,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                     </Button>
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="xs" className="opacity-50 hover:opacity-100 px-1 text-[12px] font-normal" aria-label="Действия" title="Действия">
+                            <Button variant="ghost" className="opacity-70 hover:opacity-100 px-2 text-[12px] font-semibold tracking-tight shadow-sm" aria-label="Действия" title="Действия">
                                 Действия
                             </Button>
                         </DropdownMenuTrigger>
