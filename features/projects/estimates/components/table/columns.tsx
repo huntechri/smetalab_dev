@@ -182,9 +182,9 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     {item.kind === 'work' ? (
                         <>
                             <Button
-                                size="icon"
+                                size="icon-xs"
                                 variant="default"
-                                className="size-7 rounded-[6px]"
+                                className="rounded-[6px]"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
                                 aria-label="Добавить материал"
@@ -192,9 +192,9 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 <Wrench className="size-3.5 text-muted-foreground" />
                             </Button>
                             <Button
-                                size="icon"
+                                size="icon-xs"
                                 variant="default"
-                                className="size-7 rounded-[6px]"
+                                className="rounded-[6px]"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
                                 aria-label="Добавить работу ниже"
@@ -205,7 +205,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon" variant="default" className="size-7 rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
+                            <Button size="icon-xs" variant="default" className="rounded-[6px] focus-visible:ring-0 focus:ring-0" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>
