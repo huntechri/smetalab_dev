@@ -5,8 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/components/ui/button';
-import { Download } from 'lucide-react';
+import { EstimateUnifiedToolbar } from '../EstimateUnifiedToolbar';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTotals } from '../EstimateTotals';
@@ -182,12 +181,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 filterPlaceholder="Поиск..."
                 height="600px"
                 compactMobileToolbar
-                actions={(
-                    <Button variant="outline" onClick={handleExport}>
-                        <Download className="h-4 w-4" />
-                        Экспорт Excel
-                    </Button>
-                )}
+                actions={<EstimateUnifiedToolbar onExportXlsx={handleExport} />}
             />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
