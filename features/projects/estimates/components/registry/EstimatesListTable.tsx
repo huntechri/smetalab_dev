@@ -158,7 +158,7 @@ export function EstimatesListTable({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
-                  size="icon"
+                  size="icon-xs"
                   title="Удалить смету"
                 >
                   <Trash2 className="h-4 w-4" />

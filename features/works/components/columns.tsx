@@ -56,7 +56,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         return (
             <div className="flex gap-1 justify-end pr-2">
                 <Button
-                    size="icon"
+                    size="icon-xs"
                     variant="ghost"
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
                     aria-label="Сохранить строку"
@@ -65,7 +65,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                     <Check className="h-4 w-4" />
                 </Button>
                 <Button
-                    size="icon"
+                    size="icon-xs"
                     variant="ghost"
                     onClick={() => meta.onCancelInsert?.()}
                     aria-label="Отменить вставку"
@@ -81,7 +81,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
         <div className="flex items-center justify-end md:pr-4 gap-1">
             <Button
                 variant="ghost"
-                size="icon"
+                size="icon-xs"
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
                 title="Вставить строку ниже"
@@ -91,7 +91,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
 
             <DropdownMenu modal={false}>
                 <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" aria-label="Действия" title="Действия">
+                    <Button variant="ghost" size="icon-xs" aria-label="Действия" title="Действия">
                         <Settings className="h-4 w-4" />
                     </Button>
                 </DropdownMenuTrigger>
@@ -266,7 +266,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                 <div className="flex justify-end pr-6 items-center gap-1">
                     <Button
                         variant="ghost"
-                        size="icon"
+                        size="icon-xs"
                         onClick={() => meta.onInsertRequest?.()}
                         title="Добавить строку"
                         aria-label="Добавить строку"

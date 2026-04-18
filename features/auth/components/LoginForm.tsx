@@ -161,7 +161,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   <Button
                     type="button"
                     variant="ghost"
-                    size="icon"
+                    size="icon-xs"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
                   >
