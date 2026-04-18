@@ -49,7 +49,7 @@ export function WorksEditDialog({
                                 id="name"
                                 value={data.name || ""}
                                 onChange={(e) => onFieldChange("name", e.target.value)}
-                                className="sm:col-span-3 text-sm"
+                                className="sm:col-span-3"
                                 required
                             />
                         </div>
@@ -69,7 +69,7 @@ export function WorksEditDialog({
                                 type="number"
                                 value={data.price || ""}
                                 onChange={(e) => onFieldChange("price", e.target.value)}
-                                className="sm:col-span-3 text-sm"
+                                className="sm:col-span-3"
                                 required
                             />
                         </div>
@@ -79,7 +79,7 @@ export function WorksEditDialog({
                                 id="phase"
                                 value={data.phase || ""}
                                 onChange={(e) => onFieldChange("phase", e.target.value)}
-                                className="col-span-3 text-sm"
+                                className="col-span-3"
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -88,7 +88,7 @@ export function WorksEditDialog({
                                 id="category"
                                 value={data.category || ""}
                                 onChange={(e) => onFieldChange("category", e.target.value)}
-                                className="col-span-3 text-sm"
+                                className="col-span-3"
                             />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
@@ -97,7 +97,7 @@ export function WorksEditDialog({
                                 id="subcategory"
                                 value={data.subcategory || ""}
                                 onChange={(e) => onFieldChange("subcategory", e.target.value)}
-                                className="col-span-3 text-sm"
+                                className="col-span-3"
                             />
                         </div>
                         <DialogFooter>
