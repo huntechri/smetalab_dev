@@ -16,7 +16,7 @@ const inputVariants = cva(
       size: {
         default: "h-9 py-1 file:h-5",
         sm: "h-8 py-1 text-xs file:h-4",
-        xs: "h-7 py-0.5 text-xs file:h-4",
+        xs: "h-7 px-2 py-0.5 text-xs file:h-4",
       },
       textAlign: {
         left: "text-left",
