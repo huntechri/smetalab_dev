@@ -44,9 +44,9 @@ export function InviteTeamMemberCard({
                             placeholder="colleague@company.com"
                             value={email}
                             onChange={(event) => onEmailChange(event.target.value)}
-                            className="h-9 shadow-sm transition-all focus-visible:ring-1 focus-visible:ring-ring"
+                            className="transition-all focus-visible:ring-1 focus-visible:ring-ring"
                             required
-                        />
+                       />
                     </div>
                     <div className="space-y-1.5 shrink-0">
                         <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
@@ -75,7 +75,7 @@ export function InviteTeamMemberCard({
                         className={`mt-3 text-sm ${message.type === 'error' ? 'text-destructive' : 'text-emerald-700'}`}
                         aria-live="polite"
                         aria-atomic="true"
-                    >
+                   >
                         {parsedMessage ? (
                             <>
                                 {parsedMessage.textPart}
@@ -85,7 +85,7 @@ export function InviteTeamMemberCard({
                                     className="underline underline-offset-4 hover:text-blue-700"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                >
+                               >
                                     Перейти
                                 </a>
                                 <span className="text-muted-foreground">)</span>

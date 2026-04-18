@@ -58,7 +58,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                                 meta.onSaveInsert?.(row.original.id);
                             }}
                             aria-label="Сохранить строку"
-                        >
+                       >
                             <Check className="h-3 w-3" />
                         </Button>
                     </TooltipTrigger>
@@ -76,7 +76,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                                 meta.onCancelInsert?.();
                             }}
                             aria-label="Отменить вставку"
-                        >
+                       >
                             <X className="h-3 w-3" />
                         </Button>
                     </TooltipTrigger>
@@ -101,7 +101,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                         }}
                         aria-label="Добавить строку ниже"
                         title="Добавить строку ниже"
-                    >
+                   >
                         <Plus className="h-4 w-4" />
                     </Button>
                 </TooltipTrigger>
@@ -130,7 +130,7 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                     <DropdownMenuItem
                         className="text-destructive focus:text-destructive"
                         onClick={() => meta.setDeletingRow?.(row.original)}
-                    >
+                   >
                         <Trash className="mr-2 h-4 w-4" /> Удалить
                     </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -148,7 +148,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] font-medium border-primary/20 bg-primary/2" placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
+                return <Input  placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
             }
             return <div className="font-medium text-[12px] px-2 text-muted-foreground">{row.getValue("code")}</div>
         }
@@ -161,7 +161,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] font-medium border-primary/20 bg-primary/2" placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
+                return <Input  placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
             }
             return (
                 <div className="flex flex-col gap-0.5 py-1 min-w-0 min-h-7">
@@ -185,7 +185,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] border-primary/20" placeholder="URL..." value={row.original.imageUrl || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl: e.target.value })} />
+                return <Input  placeholder="URL..." value={row.original.imageUrl || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl: e.target.value })} />
             }
             const imageUrl = row.original.imageLocalUrl ?? row.original.imageUrl
             if (!imageUrl) return <div className="w-[25px] h-[25px] bg-muted/30 rounded flex items-center justify-center text-[10px] text-muted-foreground/50">N/A</div>
@@ -198,7 +198,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                         sizes="25px"
                         className="object-cover"
                         loading="lazy"
-                    />
+                   />
                 </div>
             )
         }
@@ -211,7 +211,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] text-center border-primary/20 bg-primary/2" placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
+                return <Input  placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
             }
             return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
         }
@@ -224,7 +224,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] text-center font-bold border-primary/20 bg-primary/2" type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
+                return <Input  type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
             }
             const price = parseFloat(row.getValue("price"))
             const formatted = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", minimumFractionDigits: 0 }).format(price || 0)
@@ -239,12 +239,12 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input className="h-8 text-[12px] border-primary/20" placeholder="Кат1..." value={row.original.categoryLv1 || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1: e.target.value })} />
+                return <Input  placeholder="Кат1..." value={row.original.categoryLv1 || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1: e.target.value })} />
             }
             const cats = [row.original.categoryLv1, row.original.categoryLv2, row.original.categoryLv3, row.original.categoryLv4].filter(Boolean)
             return (
                 <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] font-medium text-muted-foreground whitespace-normal break-words leading-tight" title={cats.join(' > ')}>
+                    <span className="text-[10px] font-medium text-muted-foreground whitespace-normal break-words leading-tight" title={cats.join('> ')}>
                         {cats.join(' / ') || '—'}
                     </span>
                 </div>
@@ -266,7 +266,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                                 onClick={() => meta.onInsertRequest?.()}
                                 aria-label="Добавить строку"
                                 title="Добавить строку"
-                            >
+                           >
                                 <Plus className="h-4 w-4" />
                             </Button>
                         </TooltipTrigger>

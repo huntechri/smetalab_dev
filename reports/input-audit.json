@@ -1,0 +1,2000 @@
+{
+  "generatedAt": "2026-04-18T10:55:07.291Z",
+  "total": 138,
+  "changedFiles": 0,
+  "records": [
+    {
+      "filePath": "app/(admin)/dashboard/general/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "placeholder",
+        "defaultValue",
+        "required"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/general/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "placeholder",
+        "defaultValue",
+        "required"
+      ],
+      "tailwindUtilities": [],
+      "type": "email",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "autoComplete",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "autoComplete",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/dashboard/security/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "app/(admin)/pricing/page.tsx",
+      "componentName": "page.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/admin/components/impersonate-button.tsx",
+      "componentName": "impersonate-button.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/auth/components/ForgotPasswordForm.tsx",
+      "componentName": "ForgotPasswordForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "autoComplete"
+      ],
+      "tailwindUtilities": [],
+      "type": "email",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "autoComplete",
+        "defaultValue",
+        "readOnly",
+        "aria-readonly",
+        "aria-invalid",
+        "required",
+        "maxLength",
+        "placeholder",
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "type": "email",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "autoComplete",
+        "defaultValue",
+        "required",
+        "minLength",
+        "maxLength",
+        "placeholder",
+        "aria-describedby",
+        "aria-invalid",
+        "className"
+      ],
+      "className": "pr-10",
+      "tailwindUtilities": [
+        "pr-10"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "pr-10"
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "componentName": "LoginForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "maxLength",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "type": "text",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/auth/components/ResetPasswordForm.tsx",
+      "componentName": "ResetPasswordForm.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "name",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
+      "filePath": "features/auth/components/ResetPasswordForm.tsx",
+      "componentName": "ResetPasswordForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/auth/components/ResetPasswordForm.tsx",
+      "componentName": "ResetPasswordForm.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "onValueChange",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "type": "date",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "type": "date",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "componentName": "CreateCounterpartySheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "componentName": "GlobalPurchasesImportExportActions.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "ref",
+        "type",
+        "accept",
+        "className",
+        "aria-label",
+        "title",
+        "onChange"
+      ],
+      "className": "hidden",
+      "tailwindUtilities": [
+        "hidden"
+      ],
+      "type": "file",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "hidden"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesTable.client.tsx",
+      "componentName": "GlobalPurchasesTable.client.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "componentName": "global-purchases-columns.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "componentName": "global-purchases-columns.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/guide-catalog/components/CatalogScreenShell.tsx",
+      "componentName": "CatalogScreenShell.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "type",
+        "ref",
+        "onChange",
+        "className",
+        "accept",
+        "aria-label",
+        "title"
+      ],
+      "className": "hidden",
+      "tailwindUtilities": [
+        "hidden"
+      ],
+      "type": "file",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "hidden"
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "value",
+        "onChange",
+        "className"
+      ],
+      "className": "w-14 cursor-pointer",
+      "tailwindUtilities": [
+        "w-14",
+        "cursor-pointer"
+      ],
+      "type": "color",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-14 cursor-pointer"
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "componentName": "CreateMaterialSupplierSheet.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/MaterialsEditDialog.tsx",
+      "componentName": "MaterialsEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/materials/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select",
+      "propsUsed": [],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "w-40 cursor-pointer text-muted-foreground",
+      "tailwindUtilities": [
+        "w-40",
+        "cursor-pointer",
+        "text-muted-foreground"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-40 cursor-pointer text-muted-foreground"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [
+        "className",
+        "id"
+      ],
+      "className": "flex w-fit sm:hidden cursor-pointer",
+      "tailwindUtilities": [
+        "flex",
+        "w-fit",
+        "sm:hidden",
+        "cursor-pointer"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "flex w-fit sm:hidden cursor-pointer"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "value",
+        "onValueChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [
+        "className"
+      ],
+      "className": "w-16 tabular-nums",
+      "tailwindUtilities": [
+        "w-16",
+        "tabular-nums"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-16 tabular-nums"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
+      "componentName": "DashboardDataTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "type": "date",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "value",
+        "onValueChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "value",
+        "onValueChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "componentName": "ProjectReceiptsSection.tsx",
+      "kind": "component-textarea",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+      "componentName": "CreateEstimateDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "autoFocus",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "inputMode",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "inputMode",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "value",
+        "onChange"
+      ],
+      "className": "min-w-[180px]",
+      "tailwindUtilities": [
+        "min-w-[180px]"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "min-w-[180px]"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "componentName": "RoomsParamsTable.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "className",
+        "type",
+        "value",
+        "onChange"
+      ],
+      "className": "w-24",
+      "tailwindUtilities": [
+        "w-24"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "w-24"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTable.client.tsx",
+      "componentName": "EstimateTable.client.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cells/EditableCell.tsx",
+      "componentName": "EditableCell.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "aria-label",
+        "autoFocus",
+        "className",
+        "value",
+        "type",
+        "onChange",
+        "onFocus",
+        "onBlur",
+        "onKeyDown"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "componentName": "EstimateExecution.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "value",
+        "onChange",
+        "onBlur",
+        "className"
+      ],
+      "className": "tabular-nums",
+      "tailwindUtilities": [
+        "tabular-nums"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "tabular-nums"
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "componentName": "create-project-dialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "...field",
+        "value"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/projects/list/components/projects-sort-select.tsx",
+      "componentName": "projects-sort-select.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "defaultValue",
+        "required"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "defaultValue",
+        "type",
+        "required"
+      ],
+      "tailwindUtilities": [],
+      "type": "email",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "disabled",
+        "readOnly"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "readOnly",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "readOnly",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "readOnly",
+        "disabled"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "componentName": "user-settings-page.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "name",
+        "type",
+        "required",
+        "minLength",
+        "maxLength",
+        "defaultValue"
+      ],
+      "tailwindUtilities": [],
+      "type": "password",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
+      "componentName": "InviteTeamMemberCard.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "type",
+        "placeholder",
+        "value",
+        "onChange",
+        "className",
+        "required"
+      ],
+      "className": "transition-all focus-visible:ring-1 focus-visible:ring-ring",
+      "tailwindUtilities": [
+        "transition-all",
+        "focus-visible:ring-1",
+        "focus-visible:ring-ring"
+      ],
+      "type": "email",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "transition-all focus-visible:ring-1 focus-visible:ring-ring"
+    },
+    {
+      "filePath": "features/works/components/UnitSelect.tsx",
+      "componentName": "UnitSelect.tsx",
+      "kind": "component-command-input",
+      "propsUsed": [
+        "placeholder",
+        "value",
+        "onValueChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "className",
+        "required"
+      ],
+      "className": "sm:col-span-3",
+      "tailwindUtilities": [
+        "sm:col-span-3"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "sm:col-span-3"
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "type",
+        "value",
+        "onChange",
+        "className",
+        "required"
+      ],
+      "className": "sm:col-span-3",
+      "tailwindUtilities": [
+        "sm:col-span-3"
+      ],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "sm:col-span-3"
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "className"
+      ],
+      "className": "col-span-3",
+      "tailwindUtilities": [
+        "col-span-3"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "col-span-3"
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "className"
+      ],
+      "className": "col-span-3",
+      "tailwindUtilities": [
+        "col-span-3"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "col-span-3"
+    },
+    {
+      "filePath": "features/works/components/WorksEditDialog.tsx",
+      "componentName": "WorksEditDialog.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "id",
+        "value",
+        "onChange",
+        "className"
+      ],
+      "className": "col-span-3",
+      "tailwindUtilities": [
+        "col-span-3"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "col-span-3"
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "placeholder",
+        "autoFocus",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "features/works/components/columns.tsx",
+      "componentName": "columns.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "placeholder",
+        "value",
+        "onChange"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/enum.tsx",
+      "componentName": "enum.tsx",
+      "kind": "component-select",
+      "propsUsed": [
+        "onValueChange",
+        "value",
+        "...fieldProps"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/enum.tsx",
+      "componentName": "enum.tsx",
+      "kind": "component-select-trigger",
+      "propsUsed": [
+        "className"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/input.tsx",
+      "componentName": "input.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "...fieldPropsWithoutShowLabel"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/number.tsx",
+      "componentName": "number.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "...fieldPropsWithoutShowLabel"
+      ],
+      "tailwindUtilities": [],
+      "type": "number",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/auto-form/fields/textarea.tsx",
+      "componentName": "textarea.tsx",
+      "kind": "component-textarea",
+      "propsUsed": [
+        "...fieldPropsWithoutShowLabel"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/input-group.tsx",
+      "componentName": "input-group.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "data-slot",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/input-group.tsx",
+      "componentName": "input-group.tsx",
+      "kind": "component-textarea",
+      "propsUsed": [
+        "data-slot",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/input.tsx",
+      "componentName": "input.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "type",
+        "data-slot",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/search-input.tsx",
+      "componentName": "search-input.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "type",
+        "value",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "type": "search",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/sidebar.tsx",
+      "componentName": "sidebar.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "data-slot",
+        "data-sidebar",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/switch.tsx",
+      "componentName": "switch.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "type",
+        "className",
+        "checked",
+        "onChange",
+        "ref",
+        "...props"
+      ],
+      "className": "peer sr-only",
+      "tailwindUtilities": [
+        "peer",
+        "sr-only"
+      ],
+      "type": "checkbox",
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "peer sr-only"
+    },
+    {
+      "filePath": "shared/ui/textarea.tsx",
+      "componentName": "textarea.tsx",
+      "kind": "html-textarea",
+      "propsUsed": [
+        "data-slot",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    }
+  ]
+}

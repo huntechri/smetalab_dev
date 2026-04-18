@@ -129,8 +129,8 @@ function NumberEditCell({
 
                 void onSave(row.id, { [field]: nextValue });
             }}
-            className="h-8 text-right tabular-nums text-xs font-normal"
-        />
+            className="tabular-nums"
+       />
     );
 }
 
@@ -184,7 +184,7 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, triggerVaria
                     <WorkCatalogPicker
                         onAddWork={(work) => void addWorkFromCatalog(work)}
                         addedWorkNames={addedWorkNames}
-                    />
+                   />
                 </div>
             </SheetContent>
         </Sheet>
@@ -348,7 +348,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 <ExecutionStatusCell
                     currentStatus={row.original.status}
                     onStatusChange={(status) => void patchRow(row.original.id, { status })}
-                />
+               />
             ),
             size: 180,
         },
@@ -393,9 +393,9 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                 estimateId={estimateId}
                                 onCreated={(row) => setRows((prev) => [...prev, row])}
                                 addedWorkNames={addedWorkNames}
-                            />
+                           />
                         }
-                    />
+                   />
                 }
                 actions={
                     <>
@@ -408,7 +408,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                 estimateId={estimateId}
                                 onCreated={(row) => setRows((prev) => [...prev, row])}
                                 addedWorkNames={addedWorkNames}
-                            />
+                           />
                         </div>
 
                         <DropdownMenu>
@@ -427,12 +427,12 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                     onCreated={(row) => setRows((prev) => [...prev, row])}
                                     addedWorkNames={addedWorkNames}
                                     triggerVariant="menu-item"
-                                />
+                               />
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </>
                 }
-            />
+           />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
             </div>

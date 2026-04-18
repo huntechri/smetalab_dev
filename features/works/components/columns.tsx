@@ -61,7 +61,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                     onClick={() => meta.onSaveInsert?.(row.original.id)}
                     aria-label="Сохранить строку"
                     title="Сохранить строку"
-                >
+               >
                     <Check className="h-4 w-4" />
                 </Button>
                 <Button
@@ -70,7 +70,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                     onClick={() => meta.onCancelInsert?.()}
                     aria-label="Отменить вставку"
                     title="Отменить вставку"
-                >
+               >
                     <X className="h-4 w-4" />
                 </Button>
             </div>
@@ -85,7 +85,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 onClick={() => meta?.onInsertRequest?.(row.original.id)}
                 aria-label="Вставить строку ниже"
                 title="Вставить строку ниже"
-            >
+           >
                 <Plus className="h-4 w-4" />
             </Button>
 
@@ -103,7 +103,7 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                     <DropdownMenuItem
                         className="text-destructive focus:text-destructive"
                         onClick={() => meta.setDeletingRow?.(row.original)}
-                    >
+                   >
                         <Trash className="mr-2 h-4 w-4" />
                         Удалить
                     </DropdownMenuItem>
@@ -137,11 +137,11 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
         return (
             <Input
                 placeholder="Наименование работы..."
-                className="h-9 text-[12px] bg-transparent border shadow-sm"
+                
                 autoFocus
                 value={row.original.name || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })}
-            />
+           />
         )
     }
 
@@ -191,7 +191,7 @@ const UnitCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
             <UnitSelect
                 value={row.original.unit || ""}
                 onChange={(val: string) => meta.updatePlaceholderRow?.(row.original.id, { unit: val })}
-            />
+           />
         )
     }
     return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
@@ -207,10 +207,10 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
             <Input
                 type="number"
                 placeholder="Цена"
-                className="h-9 text-[12px] text-center bg-transparent border shadow-sm"
+                
                 value={row.original.price || ""}
                 onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })}
-            />
+           />
         )
     }
 
@@ -270,7 +270,7 @@ export const columns: ColumnDef<WorkRow>[] = [
                         onClick={() => meta.onInsertRequest?.()}
                         title="Добавить строку"
                         aria-label="Добавить строку"
-                    >
+                   >
                         <Plus className="h-4 w-4" />
                     </Button>
                     <DropdownMenu modal={false}>
