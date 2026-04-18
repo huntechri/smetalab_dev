@@ -1,13 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
+// Sentry instrumentation disabled for Replit compatibility — re-enable and configure SENTRY_AUTH_TOKEN / NEXT_PUBLIC_SENTRY_DSN to restore error tracking
+export async function register() {}
 
-export async function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    await import("./sentry.server.config");
-  }
-
-  if (process.env.NEXT_RUNTIME === "edge") {
-    await import("./sentry.edge.config");
-  }
-}
-
-export const onRequestError = Sentry.captureRequestError;
