@@ -134,11 +134,11 @@ export function CreateMaterialSupplierSheet({
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="text-xs">Наименование</FormLabel>
-                      <FormControl><Input placeholder="Наименование..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl>
+                      <FormControl><Input placeholder="Наименование..." {...field} /></FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+               />
 
                 <div className="grid grid-cols-2 gap-4">
                   <FormField
@@ -148,12 +148,12 @@ export function CreateMaterialSupplierSheet({
                       <FormItem>
                         <FormLabel className="text-xs">Цвет метки</FormLabel>
                         <FormControl>
-                          <Input type="color" value={field.value} onChange={field.onChange} className="h-8 w-14 p-1 rounded-md cursor-pointer" />
+                          <Input type="color" value={field.value} onChange={field.onChange} className="w-14 cursor-pointer" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                 />
 
                   <FormField
                     control={form.control}
@@ -176,29 +176,29 @@ export function CreateMaterialSupplierSheet({
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                 />
                 </div>
 
                 {legalStatus === 'company' ? (
                   <>
                     <div className="grid grid-cols-2 gap-4">
-                      <FormField control={form.control} name="inn" render={({ field }) => <FormItem><FormLabel className="text-xs">ИНН</FormLabel><FormControl><Input placeholder="ИНН..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><FormLabel className="text-xs">КПП</FormLabel><FormControl><Input placeholder="КПП..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="inn" render={({ field }) => <FormItem><FormLabel className="text-xs">ИНН</FormLabel><FormControl><Input placeholder="ИНН..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><FormLabel className="text-xs">КПП</FormLabel><FormControl><Input placeholder="КПП..." {...field} /></FormControl><FormMessage /></FormItem>} />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
-                      <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><FormLabel className="text-xs">ОГРН</FormLabel><FormControl><Input placeholder="ОГРН..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
-                      <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><FormLabel className="text-xs">ОГРН</FormLabel><FormControl><Input placeholder="ОГРН..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                      <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
                     </div>
                   </>
                 ) : (
                   <div className="grid grid-cols-2 gap-4">
-                    <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><FormLabel className="text-xs">Паспорт</FormLabel><FormControl><Input placeholder="0000 000000" {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
-                    <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                    <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><FormLabel className="text-xs">Паспорт</FormLabel><FormControl><Input placeholder="0000 000000" {...field} /></FormControl><FormMessage /></FormItem>} />
+                    <FormField control={form.control} name="phone" render={({ field }) => <FormItem><FormLabel className="text-xs">Телефон</FormLabel><FormControl><Input placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
                   </div>
                 )}
 
                 <div className="grid grid-cols-2 gap-4">
-                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel className="text-xs">Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} className="h-8 text-xs placeholder:text-xs" /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel className="text-xs">Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
                   <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
                   <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel>Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
                 </div>
