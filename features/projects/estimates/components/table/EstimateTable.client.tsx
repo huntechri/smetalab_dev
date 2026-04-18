@@ -824,7 +824,7 @@ export function EstimateTable({
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <Button
                   variant="default"
-                  size="default"
+                 
                   onClick={() => openCreateSectionDialog()}
                 >
                   <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -832,7 +832,7 @@ export function EstimateTable({
                 </Button>
                 <Button
                   variant="default"
-                  size="default"
+                 
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
                   <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
@@ -840,7 +840,7 @@ export function EstimateTable({
                 </Button>
                 <Button
                   variant="default"
-                  size="default"
+                 
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
                 >
@@ -859,7 +859,7 @@ export function EstimateTable({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="default"
-              size="default"
+             
               aria-label="Режим расчета"
               onClick={() => {
                 setPendingInsertAfterWork(null);
@@ -873,7 +873,7 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="default"
+             
               aria-label="Добавить раздел"
               onClick={() => openCreateSectionDialog()}
             >
@@ -884,7 +884,7 @@ export function EstimateTable({
             </Button>
             <Button
               variant="default"
-              size="default"
+             
               aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
             >
@@ -894,13 +894,13 @@ export function EstimateTable({
               </span>
             </Button>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" size="default" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Шаблон</span>
               </Button>
               <Button
                 variant="default"
-                size="default"
+               
                 onClick={openCoefficientDialog}
               >
                 <Percent className="h-3.5 w-3.5 text-muted-foreground" />
@@ -908,7 +908,7 @@ export function EstimateTable({
               </Button>
               <Button
                 variant="default"
-                size="default"
+               
                 onClick={() => void importEstimate()}
                 disabled={isImporting}
               >
@@ -921,7 +921,7 @@ export function EstimateTable({
                 <DropdownMenuTrigger asChild>
                   <Button
                     variant="default"
-                    size="default"
+                   
                     disabled={isExporting}
                   >
                     <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -950,7 +950,7 @@ export function EstimateTable({
             </div>
             <Button
               variant="destructive"
-              size="default"
+             
               aria-label="Удалить смету"
               onClick={() => setIsDeleteDialogOpen(true)}
             >
