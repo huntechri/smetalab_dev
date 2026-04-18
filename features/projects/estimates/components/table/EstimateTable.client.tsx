@@ -857,6 +857,7 @@ export function EstimateTable({
         compactMobileToolbar
         actions={
           <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
             <Button
               variant="default"
              
@@ -893,6 +894,7 @@ export function EstimateTable({
                 Сохранить
               </span>
             </Button>
+            </div>
             <div className="hidden lg:flex items-center gap-1.5">
               <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
@@ -948,17 +950,19 @@ export function EstimateTable({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Button
-              variant="destructive"
-             
-              aria-label="Удалить смету"
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">
-                Удалить
-              </span>
-            </Button>
+            <div className="hidden sm:flex">
+              <Button
+                variant="destructive"
+               
+                aria-label="Удалить смету"
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">
+                  Удалить
+                </span>
+              </Button>
+            </div>
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -1002,6 +1006,10 @@ export function EstimateTable({
                   <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate("pdf")}>
                     <FileDown className="h-4 w-4 text-muted-foreground" />
                     <span>Экспорт в PDF</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
+                    <Trash2 className="h-4 w-4" />
+                    <span>Удалить смету</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
