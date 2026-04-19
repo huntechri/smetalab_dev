@@ -34,17 +34,11 @@ vi.mock('@/features/global-purchases/components/global-purchases-columns', () =>
     getGlobalPurchasesColumns: () => [],
 }));
 
-vi.mock('@/shared/ui/data-table', () => ({
+vi.mock('@repo/ui', () => ({
     DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
-}));
-
-vi.mock('@/shared/ui/popover', () => ({
     Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     PopoverTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-
-vi.mock('@/shared/ui/calendar', () => ({
     Calendar: () => <div>calendar</div>,
 }));
 

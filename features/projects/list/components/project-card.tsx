@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Building2, CalendarRange, CircleDollarSign, MapPin } from 'lucide-react';
 import { getProjectStatusLabel } from '@/entities/project/model/status';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
-import { Badge } from '@/shared/ui/badge';
+import { Badge } from '@repo/ui';
 import {
     Card,
     CardContent,
@@ -10,8 +10,8 @@ import {
     CardFooter,
     CardHeader,
     CardTitle,
-} from '@/shared/ui/card';
-import { Separator } from '@/shared/ui/separator';
+} from '@repo/ui';
+import { Separator } from '@repo/ui';
 import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
 import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';

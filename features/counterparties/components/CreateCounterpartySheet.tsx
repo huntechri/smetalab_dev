@@ -9,8 +9,8 @@ import {
     SheetHeader,
     SheetTitle,
     SheetFooter,
-} from "@/shared/ui/sheet";
-import { Button } from '@/shared/ui/button';
+} from "@repo/ui";
+import { Button } from '@repo/ui';
 import {
     Form,
     FormControl,
@@ -18,19 +18,19 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from "@/shared/ui/form";
-import { Input } from "@/shared/ui/input";
+} from "@repo/ui";
+import { Input } from "@repo/ui";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/shared/ui/select";
-import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/tabs";
-import { Separator } from "@/shared/ui/separator";
-import { ScrollArea } from "@/shared/ui/scroll-area";
+} from "@repo/ui";
+import { RadioGroup, RadioGroupItem } from "@repo/ui";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@repo/ui";
+import { Separator } from "@repo/ui";
+import { ScrollArea } from "@repo/ui";
 import { CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { createCounterparty, updateCounterparty } from "@/app/actions/counterparties";

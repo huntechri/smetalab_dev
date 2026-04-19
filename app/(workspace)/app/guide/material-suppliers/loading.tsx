@@ -1,4 +1,4 @@
-import { LoadingState } from '@/shared/ui/states';
+import { LoadingState } from '@repo/ui';
 
 export default function Loading() {
     return (

@@ -2,8 +2,8 @@
 
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { Breadcrumb07 } from '@/components/shadcn-studio/breadcrumb/breadcrumb-07';
-import { SidebarTrigger } from '@/shared/ui/sidebar';
-import { Separator } from '@/shared/ui/separator';
+import { SidebarTrigger } from '@repo/ui';
+import { Separator } from '@repo/ui';
 import { NotificationBell } from '@/features/notifications/components/notification-bell';
 import { UserMenu } from '@/components/layout/user-menu';
 import { ActiveTeamIndicator } from '@/components/layout/active-team-indicator';

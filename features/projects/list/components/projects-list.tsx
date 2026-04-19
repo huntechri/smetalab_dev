@@ -5,7 +5,7 @@ import {
     EmptyHeader,
     EmptyMedia,
     EmptyTitle,
-} from '@/shared/ui/empty';
+} from '@repo/ui';
 import { ProjectListItem } from '../../shared/types';
 import { ProjectCard } from './project-card';
 

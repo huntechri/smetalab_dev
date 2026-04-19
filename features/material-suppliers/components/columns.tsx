@@ -3,8 +3,8 @@
 import * as React from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { MaterialSupplierRow } from '@/shared/types/domain/material-supplier-row';
-import { TableMeta } from '@/shared/ui/data-table';
-import { Button } from '@/shared/ui/button';
+import { TableMeta } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { Pencil, Trash, Settings } from 'lucide-react';
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+} from '@repo/ui';
 
 export const columns: ColumnDef<MaterialSupplierRow>[] = [
   {

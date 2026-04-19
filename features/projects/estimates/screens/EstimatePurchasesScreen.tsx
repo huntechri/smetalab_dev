@@ -1,4 +1,4 @@
-import { EmptyState } from '@/shared/ui/states';
+import { EmptyState } from '@repo/ui';
 
 export function EstimatePurchasesScreen() {
     return (

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { Skeleton } from '@/shared/ui/skeleton';
+import { Skeleton } from '@repo/ui';
 import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
 import { MaterialRow } from '@/shared/types/domain/material-row';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';

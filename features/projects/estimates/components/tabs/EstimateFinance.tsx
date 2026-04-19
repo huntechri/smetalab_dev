@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 
-import { Skeleton } from '@/shared/ui/skeleton';
+import { Skeleton } from '@repo/ui';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { ProjectReceiptsSection } from '@/features/projects/dashboard/components/ProjectReceiptsSection';
 import { projectReceiptsActionRepo } from '@/features/projects/dashboard/repository/project-receipts.actions';

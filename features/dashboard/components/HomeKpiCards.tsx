@@ -1,4 +1,4 @@
-import { KPICard } from "@/shared/ui/kpi-card";
+import { KPICard } from "@repo/ui";
 import { HomeDashboardKpi } from '../types';
 
 type HomeKpiCardsProps = {

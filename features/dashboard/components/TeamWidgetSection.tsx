@@ -1,6 +1,6 @@
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
-import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
+import { Avatar, AvatarFallback } from '@repo/ui';
+import { Button } from '@repo/ui';
+import { Card, CardContent } from '@repo/ui';
 import { cn } from '@/lib/utils';
 
 const members = [

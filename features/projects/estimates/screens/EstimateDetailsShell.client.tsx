@@ -3,11 +3,11 @@
 import { Suspense, use, useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
 import { EstimateTable } from '../components/table/EstimateTable.client';
-import { Skeleton } from '@/shared/ui/skeleton';
+import { Skeleton } from '@repo/ui';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'finance', 'docs']);

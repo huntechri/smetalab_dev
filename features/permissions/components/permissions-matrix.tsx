@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@/shared/ui/badge';
-import { Skeleton } from '@/shared/ui/skeleton';
+import { Badge } from '@repo/ui';
+import { Skeleton } from '@repo/ui';
 import {
   Table,
   TableBody,
@@ -9,8 +9,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/shared/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+} from '@repo/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui';
 import { Building2, Settings2, Users } from 'lucide-react';
 import { PermissionLevelControl } from './PermissionLevelControl';
 import { Permission, usePermissionsMatrix } from '@/features/permissions/hooks/usePermissionsMatrix';

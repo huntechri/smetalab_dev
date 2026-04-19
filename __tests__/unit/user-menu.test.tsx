@@ -41,7 +41,7 @@ vi.mock('@/app/(login)/actions', () => ({
   signOut: vi.fn(),
 }));
 
-vi.mock('@/shared/ui/dropdown-menu', () => ({
+vi.mock('@repo/ui', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,

@@ -8,14 +8,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/shared/ui/alert-dialog';
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+} from '@repo/ui';
+import { Avatar, AvatarFallback } from '@repo/ui';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
 
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
-import { Label } from '@/shared/ui/label';
-import { SearchInput } from '@/shared/ui/search-input';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
+import { Label } from '@repo/ui';
+import { SearchInput } from '@repo/ui';
 import { MoreHorizontal, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getMemberInitials, getRoleBadgeClassName, getRoleLabel } from '../lib/team-utils';

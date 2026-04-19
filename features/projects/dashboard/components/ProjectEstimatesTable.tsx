@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
-import { TableEmptyState } from '@/shared/ui/table-empty-state';
+import { TableEmptyState } from '@repo/ui';
 import { FilePlus, Plus } from 'lucide-react';
 
 type EstimateListItem = {

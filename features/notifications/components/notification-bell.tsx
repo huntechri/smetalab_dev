@@ -1,13 +1,13 @@
 'use client';
 
 import { Bell } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
-import { Badge } from '@/shared/ui/badge';
+import { Button } from '@repo/ui';
+import { Badge } from '@repo/ui';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/shared/ui/popover';
+} from '@repo/ui';
 import useSWR, { mutate } from 'swr';
 import { useState, useEffect } from 'react';
 import { NotificationsList } from '@/features/notifications/components/notifications-list';
