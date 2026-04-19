@@ -160,6 +160,17 @@ describe('EditableCell', () => {
         expect(button).toMatchSnapshot();
     });
 
+    it('pencil icon is absent in edit mode', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Test' }));
+
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
+        expect(container.querySelector('svg')).toBeNull();
+    });
+
     it('disabled cell does not open input when clicked', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
