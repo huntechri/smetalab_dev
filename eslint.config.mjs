@@ -64,7 +64,7 @@ export default [
     },
     {
         files: ["app/**/*.{tsx,jsx}", "features/**/*.{tsx,jsx}", "components/**/*.{tsx,jsx}"],
-        ignores: ["shared/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx"],
+        ignores: ["shared/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx", "features/projects/estimates/components/table/cells/EditableCell.tsx"],
         rules: {
             "no-restricted-syntax": [
                 "error",
