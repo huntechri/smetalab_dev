@@ -12,6 +12,63 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect Source Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for source file changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            # "src" is true when any file that affects the Next.js build changes.
+            # Non-source files (docs, markdown, test snapshots, etc.) are excluded
+            # so that the build, lint, and type-check jobs are skipped on doc-only pushes.
+            src:
+              # Next.js app directory
+              - 'app/**'
+              # UI component library
+              - 'components/**'
+              # Domain entities
+              - 'entities/**'
+              # Feature modules
+              - 'features/**'
+              # Shared utilities and helpers
+              - 'lib/**'
+              - 'shared/**'
+              # Monorepo packages
+              - 'packages/**'
+              # Root-level TypeScript/JavaScript source files
+              - '*.ts'
+              - '*.tsx'
+              - '*.js'
+              - '*.mjs'
+              - '*.mts'
+              # Build configuration files
+              - 'next.config.*'
+              - 'tsconfig*.json'
+              - 'tailwind.config.*'
+              - 'postcss.config.*'
+              - 'eslint.config.*'
+              - 'drizzle.config.*'
+              - 'vitest.config.*'
+              - 'playwright.config.*'
+              # Dependency manifests
+              - 'pnpm-lock.yaml'
+              - 'package.json'
+              - 'packages/*/package.json'
+              - 'pnpm-workspace.yaml'
+              # This workflow itself
+              - '.github/workflows/ci.yml'
+              - '.github/actions/**'
+
   install:
     name: Install Dependencies
     runs-on: ubuntu-latest
@@ -60,7 +117,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: install
+    needs: [install, changes]
+    if: needs.changes.outputs.src == 'true'
 
     steps:
       - name: Checkout repository
@@ -192,11 +250,24 @@ jobs:
     steps:
       - name: Check all jobs succeeded
         run: |
-          if [[ "${{ needs.build.result }}" != "success" || \
-                "${{ needs.lint.result }}" != "success" || \
-                "${{ needs.type-check.result }}" != "success" || \
-                "${{ needs.test.result }}" != "success" || \
-                "${{ needs.validate-codeowners.result }}" != "success" ]]; then
+          # build, lint, and type-check may be legitimately skipped when only
+          # non-source files changed (see the "changes" job for the path filters).
+          # All other jobs must always succeed.
+          BUILD_OK="${{ needs.build.result }}"
+          LINT_OK="${{ needs.lint.result }}"
+          TYPE_OK="${{ needs.type-check.result }}"
+          TEST_OK="${{ needs.test.result }}"
+          CODEOWNERS_OK="${{ needs.validate-codeowners.result }}"
+
+          FAILED=false
+
+          [[ "$BUILD_OK" == "success" || "$BUILD_OK" == "skipped" ]] || { echo "build: $BUILD_OK"; FAILED=true; }
+          [[ "$LINT_OK" == "success" || "$LINT_OK" == "skipped" ]] || { echo "lint: $LINT_OK"; FAILED=true; }
+          [[ "$TYPE_OK" == "success" || "$TYPE_OK" == "skipped" ]] || { echo "type-check: $TYPE_OK"; FAILED=true; }
+          [[ "$TEST_OK" == "success" ]] || { echo "test: $TEST_OK"; FAILED=true; }
+          [[ "$CODEOWNERS_OK" == "success" ]] || { echo "validate-codeowners: $CODEOWNERS_OK"; FAILED=true; }
+
+          if [[ "$FAILED" == "true" ]]; then
             echo "One or more required checks failed."
             exit 1
           fi
