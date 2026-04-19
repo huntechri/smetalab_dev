@@ -1,0 +1,218 @@
+name: Scheduled Branch Protection Check
+
+# Periodically verifies that branch protection rules are still active.
+# If a ruleset is disabled or deleted through the GitHub UI, this workflow
+# catches the regression and opens a GitHub issue to alert the team.
+#
+# Triggers:
+#   schedule       — daily at 08:00 UTC
+#   workflow_dispatch — manual run for ad-hoc checks
+#
+# Required secrets:
+#   BRANCH_PROTECTION_TOKEN — a PAT or fine-grained token with:
+#       - "repo" scope  (read repo-level rulesets)
+#       - "admin:org" scope  (read org-level rulesets)
+#     Falls back to GITHUB_TOKEN for the repo check when the secret is absent,
+#     but the org check requires an explicit token with admin:org scope.
+#
+# The workflow opens a single GitHub issue titled
+# "Branch protection regression detected" when checks fail, and avoids
+# duplicate issues by searching for an existing open issue with the same title
+# before creating a new one.
+
+on:
+  schedule:
+    - cron: "0 8 * * *"
+  workflow_dispatch:
+
+jobs:
+  verify-repo-protection:
+    name: Verify repo branch protection
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      repo_passed: ${{ steps.verify.outputs.passed }}
+      repo_summary: ${{ steps.verify.outputs.summary }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify repo-level branch protection
+        id: verify
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN || secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          chmod +x ./scripts/verify-branch-protection.sh
+          if OUTPUT=$(./scripts/verify-branch-protection.sh "${OWNER}/${REPO}" 2>&1); then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "summary=Repo branch protection check passed." >> "$GITHUB_OUTPUT"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            # Truncate to avoid exceeding GitHub output size limits
+            SUMMARY=$(echo "$OUTPUT" | tail -40)
+            {
+              echo "summary<<EOF"
+              echo "$SUMMARY"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "$OUTPUT"
+            exit 0  # Do not fail the step; failure is handled by the alert job
+          fi
+
+  verify-org-protection:
+    name: Verify org branch protection
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    outputs:
+      org_passed: ${{ steps.verify.outputs.passed }}
+      org_summary: ${{ steps.verify.outputs.summary }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify org-level branch protection
+        id: verify
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+          ORG: ${{ github.repository_owner }}
+        run: |
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "summary=BRANCH_PROTECTION_TOKEN secret is not configured; org-level check skipped." >> "$GITHUB_OUTPUT"
+            echo "::notice::BRANCH_PROTECTION_TOKEN is not set — org-level branch protection check skipped. Set the secret with admin:org scope to enable this check."
+            exit 0
+          fi
+          chmod +x ./scripts/verify-org-branch-protection.sh
+          if OUTPUT=$(./scripts/verify-org-branch-protection.sh "${ORG}" 2>&1); then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "summary=Org branch protection check passed." >> "$GITHUB_OUTPUT"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            SUMMARY=$(echo "$OUTPUT" | tail -40)
+            {
+              echo "summary<<EOF"
+              echo "$SUMMARY"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "$OUTPUT"
+            exit 0
+          fi
+
+  alert-on-failure:
+    name: Open issue if checks failed
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [verify-repo-protection, verify-org-protection]
+    if: >
+      needs.verify-repo-protection.outputs.repo_passed == 'false' ||
+      needs.verify-org-protection.outputs.org_passed == 'false'
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Build issue body
+        id: build-body
+        env:
+          REPO_PASSED: ${{ needs.verify-repo-protection.outputs.repo_passed }}
+          REPO_SUMMARY: ${{ needs.verify-repo-protection.outputs.repo_summary }}
+          ORG_PASSED: ${{ needs.verify-org-protection.outputs.org_passed }}
+          ORG_SUMMARY: ${{ needs.verify-org-protection.outputs.org_summary }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "body<<EOF"
+            echo "## Branch protection regression detected"
+            echo ""
+            echo "The scheduled branch protection check found one or more failures."
+            echo "**Workflow run:** ${RUN_URL}"
+            echo ""
+            if [ "$REPO_PASSED" = "false" ]; then
+              echo "### Repo-level check FAILED"
+              echo ""
+              echo '```'
+              echo "${REPO_SUMMARY}"
+              echo '```'
+              echo ""
+            fi
+            if [ "$ORG_PASSED" = "false" ]; then
+              echo "### Org-level check FAILED"
+              echo ""
+              echo '```'
+              echo "${ORG_SUMMARY}"
+              echo '```'
+              echo ""
+            fi
+            echo "### Remediation"
+            echo ""
+            echo "- Re-run \`scripts/setup-branch-protection.sh\` to restore repo-level rulesets."
+            echo "- Re-run \`scripts/setup-org-branch-protection.sh\` to restore org-level rulesets."
+            echo "- Trigger **Setup Branch Protection** or **Verify Org Branch Protection**"
+            echo "  workflows manually from the Actions tab once remediation is complete."
+            echo ""
+            echo "_This issue was opened automatically by the Scheduled Branch Protection Check workflow._"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check for existing open alert issue
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          ISSUE_NUMBER=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --search "Branch protection regression detected in:title" \
+            --json number \
+            --jq '.[0].number // ""')
+          echo "issue_number=${ISSUE_NUMBER}" >> "$GITHUB_OUTPUT"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            echo "An open alert issue already exists: #${ISSUE_NUMBER}"
+          else
+            echo "No existing open alert issue found; a new one will be created."
+          fi
+
+      - name: Create alert issue
+        if: steps.existing.outputs.issue_number == ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          BODY: ${{ steps.build-body.outputs.body }}
+        run: |
+          gh issue create \
+            --repo "$REPO" \
+            --title "Branch protection regression detected" \
+            --label "security,ci" \
+            --body "$BODY" || \
+          gh issue create \
+            --repo "$REPO" \
+            --title "Branch protection regression detected" \
+            --body "$BODY"
+
+      - name: Add comment to existing alert issue
+        if: steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ steps.existing.outputs.issue_number }}
+          BODY: ${{ steps.build-body.outputs.body }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" \
+            --repo "$REPO" \
+            --body "$BODY"
+
+      - name: Fail the workflow to surface regression in Actions UI
+        run: |
+          echo "Branch protection regression detected. See the alert issue for details." >&2
+          exit 1
