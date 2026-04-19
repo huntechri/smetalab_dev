@@ -52,3 +52,7 @@ SENTRY_PROJECT = "smetalab-dev"
 EMAIL_FROM = "Smetalab <onboarding@smeta-lab.ru>"
 NEON_PROJECT_ID = "falling-fire-63341326"
 DATABASE_URL = "postgresql://neondb_owner:npg_K91uBGXnbfDO@ep-muddy-cell-al0m0ni1-pooler.c-3.eu-central-1.aws.neon.tech/neondb?channel_binding=require&sslmode=require"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 120000
