@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download, FilePlus } from 'lucide-react';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
@@ -352,7 +352,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="sm:hidden ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon" aria-label="Действия по закупкам">
+                                    <Button variant="outline" size="icon-xs" aria-label="Действия по закупкам">
                                         <MoreHorizontal className="size-4" />
                                     </Button>
                                 </DropdownMenuTrigger>

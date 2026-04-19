@@ -71,7 +71,7 @@ export function CatalogToolbar<TFilters>({
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon-xs">
               <Filter className="h-4 w-4" />
             </Button>
           </SheetTrigger>
@@ -97,7 +97,7 @@ export function CatalogToolbar<TFilters>({
       <div className="hidden lg:block">
         <Button
           variant="outline"
-          size="icon"
+          size="icon-xs"
           onClick={() => setShowSidebar?.(!showSidebar)}
         >
           <Filter

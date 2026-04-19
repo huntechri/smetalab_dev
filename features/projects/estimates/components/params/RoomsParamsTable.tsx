@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import {
     Table,
@@ -61,16 +61,16 @@ export function RoomsParamsTable({
                     {rows.map((row, rowIndex) => (
                         <TableRow key={row.id}>
                             <TableCell>{rowIndex + 1}</TableCell>
-                            <TableCell><Input className="min-w-[180px]" value={row.name} onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.perimeter} onChange={(event) => onChangeCell(row.id, 'perimeter', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.height} onChange={(event) => onChangeCell(row.id, 'height', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.floorArea} onChange={(event) => onChangeCell(row.id, 'floorArea', event.target.value)} /></TableCell>
+                            <TableCell><div className="min-w-[180px]"><Input value={row.name} onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.perimeter} onChange={(event) => onChangeCell(row.id, 'perimeter', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.height} onChange={(event) => onChangeCell(row.id, 'height', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.floorArea} onChange={(event) => onChangeCell(row.id, 'floorArea', event.target.value)} /></div></TableCell>
                             <TableCell><div className="h-8 w-24 rounded border bg-muted/30 px-2 flex items-center">{format2(calcWallsArea(row))}</div></TableCell>
                             <TableCell><div className="h-8 w-24 rounded border bg-muted/30 px-2 flex items-center">{format2(calcSlopes(row))}</div></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.ceilingArea} onChange={(event) => onChangeCell(row.id, 'ceilingArea', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.ceilingSlopes} onChange={(event) => onChangeCell(row.id, 'ceilingSlopes', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.doorsCount} onChange={(event) => onChangeCell(row.id, 'doorsCount', event.target.value)} /></TableCell>
-                            <TableCell><Input className="w-24" type="number" value={row.wallSegments} onChange={(event) => onChangeCell(row.id, 'wallSegments', event.target.value)} /></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.ceilingArea} onChange={(event) => onChangeCell(row.id, 'ceilingArea', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.ceilingSlopes} onChange={(event) => onChangeCell(row.id, 'ceilingSlopes', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.doorsCount} onChange={(event) => onChangeCell(row.id, 'doorsCount', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="w-24"><Input type="number" value={row.wallSegments} onChange={(event) => onChangeCell(row.id, 'wallSegments', event.target.value)} /></div></TableCell>
                             {row.windows.map((window, index) => (
                                 <TableCell key={`w-${row.id}-${index}`}>
                                     <OpeningInput

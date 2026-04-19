@@ -10,7 +10,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/shared/ui/sheet';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
@@ -148,7 +148,7 @@ export function CreateMaterialSupplierSheet({
                       <FormItem>
                         <FormLabel className="text-xs">Цвет метки</FormLabel>
                         <FormControl>
-                          <Input type="color" value={field.value} onChange={field.onChange} className="w-14 cursor-pointer" />
+                          <div className="w-14"><Input type="color" value={field.value} onChange={field.onChange} /></div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

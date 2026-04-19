@@ -1,9 +1,8 @@
 'use client';
 
 import { Input } from '@/shared/ui/input';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { useRef, useState } from 'react';
-import { cn } from '@/lib/utils';
 
 export function EditableCell({
     value,
@@ -15,12 +14,10 @@ export function EditableCell({
     cancelOnEmpty = false,
     displayValue,
     ariaLabel,
-    className,
 }: {
     value: string | number;
     displayValue?: string;
     ariaLabel?: string;
-    className?: string;
     onCommit: (value: string) => Promise<void>;
     type?: 'text' | 'number' | 'date';
     disabled?: boolean;
@@ -47,8 +44,6 @@ export function EditableCell({
         setEditing(false);
     };
 
-    const alignmentClass = align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left';
-
     if (!editing) {
         return (
             <Button
@@ -70,10 +65,8 @@ export function EditableCell({
         <Input
             aria-label={ariaLabel}
             autoFocus
-            className={cn(
-                alignmentClass,
-                className,
-            )}
+            textAlign={align}
+            numeric={type === 'number'}
             value={draft}
             type={type}
             onChange={(event) => setDraft(event.target.value)}

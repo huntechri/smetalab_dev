@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
-import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
+import { EditableCell } from '@/features/projects/estimates';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import {
   AlertDialog,
@@ -34,8 +34,6 @@ const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
 const tableCellTextClassName = 'text-[12px]';
 const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
-const editableCellTextClassName = `${tableCellTextClassName} font-normal truncate`;
-const materialEditableCellTextClassName = `${tableCellTextClassName} font-normal whitespace-normal break-words text-left min-h-7 h-auto py-1 items-start justify-start`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -283,8 +281,7 @@ export function getGlobalPurchasesColumns({
               displayValue={displayValue}
               disabled={isPending}
               ariaLabel="Дата закупки"
-              className={editableCellTextClassName}
-              onCommit={async (value) => {
+                onCommit={async (value) => {
                 try {
                   await onPatchAction(row.original.id, { purchaseDate: value });
                 } catch (_error) {
@@ -307,7 +304,6 @@ export function getGlobalPurchasesColumns({
             value={row.original.materialName}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Наименование материала"
-            className={materialEditableCellTextClassName}
             onCommit={async (value) => {
               try {
                 await onPatchAction(row.original.id, { materialName: value });
@@ -330,7 +326,6 @@ export function getGlobalPurchasesColumns({
             value={row.original.unit}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Единица измерения"
-            className={editableCellTextClassName}
             onCommit={async (value) => {
               try {
                 await onPatchAction(row.original.id, { unit: value });

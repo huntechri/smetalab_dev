@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Sparkles } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { SearchInput } from '@/shared/ui/search-input';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { Switch } from '@/shared/ui/switch';
@@ -145,23 +145,22 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden relative">
             <div className="p-3 sm:px-4 border-b bg-background shadow-sm z-10">
                 <div className="flex items-center gap-3">
-                    <SearchInput
-                        placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
-                        className={cn(
-                            'w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0',
-                            isAiMode && 'ring-1 ring-primary/20 shadow-[0_0_15px_-3px_rgba(var(--primary),0.1)]',
-                        )}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyDown={(event) => {
-                            if (event.key === 'Enter') {
-                                event.preventDefault();
-                                submitSearch();
-                            }
-                        }}
-                        loading={loading}
-                        autoLoading={!loading}
-                    />
+                    <div className="w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0">
+                        <SearchInput
+                            placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
+                            highlighted={isAiMode}
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            onKeyDown={(event) => {
+                                if (event.key === 'Enter') {
+                                    event.preventDefault();
+                                    submitSearch();
+                                }
+                            }}
+                            loading={loading}
+                            autoLoading={!loading}
+                        />
+                    </div>
                     <Button type="button" variant="outline" onClick={submitSearch} disabled={loading}>
                         Поиск
                     </Button>
@@ -324,7 +323,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                             </div>
                                             <div className="flex items-center shrink-0 ml-2">
                                                 <Button
-                                                    size="icon"
+                                                    size="icon-xs"
                                                     variant={isAlreadyAdded ? 'secondary' : 'outline'}
                                                     disabled={isAdding || isAlreadyAdded}
                                                     onClick={() => void addMaterial(material)}

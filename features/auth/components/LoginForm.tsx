@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useActionState, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import {
   Card,
   CardContent,
@@ -137,16 +137,12 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   required
                   maxLength={50}
                   placeholder="name@company.ru"
-                  className={`${!!inviteId && mode === 'signup'
-                    ? 'bg-gray-100 cursor-not-allowed'
-                    : ''
-                    }`}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="password">Пароль</Label>
-                <div className="relative">
+                <div className="relative [&_input]:pr-10">
                   <Input
                     id="password"
                     name="password"
@@ -161,12 +157,11 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     placeholder="Минимум 8 символов"
                     aria-describedby="password-hint"
                     aria-invalid={!!state?.error}
-                    className="pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
-                    size="icon"
+                    size="icon-xs"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
                   >

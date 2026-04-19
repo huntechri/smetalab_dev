@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
@@ -43,7 +43,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div className="flex items-center gap-1">
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size="icon-xs"
                             onClick={() => actions.onToggleExpand(item.id)}
                             aria-label={expanded ? 'Свернуть работу' : 'Развернуть работу'}
                         >

@@ -4,7 +4,7 @@ import * as React from 'react';
 import { FilePlus, Loader2, Plus } from 'lucide-react';
 
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import type { DirectoryListAdapter } from '@/features/directories/types';
 

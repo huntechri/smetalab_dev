@@ -2,7 +2,7 @@ import { getTeamDetails } from '@/lib/data/db/admin-queries';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import {
     Users,
@@ -36,7 +36,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
         <section className="flex-1 p-4 lg:p-8 space-y-6">
             <div className="flex items-center gap-4">
                 <Link href="/dashboard/tenants">
-                    <Button variant="ghost" size="icon">
+                    <Button variant="ghost" size="icon-xs">
                         <ArrowLeft className="h-5 w-5" />
                     </Button>
                 </Link>
