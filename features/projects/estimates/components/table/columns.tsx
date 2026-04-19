@@ -67,20 +67,22 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: 'Наименование',
         cell: ({ row }) => {
             const item = row.original;
-            return (
-                <div className={item.kind === 'material' ? 'pl-8' : item.kind === 'work' ? 'pl-3' : ''}>
-                    <div
-                        className={
-                            item.kind === 'section'
-                                ? 'text-[11px] font-bold uppercase tracking-widest truncate'
-                                : item.kind === 'work'
-                                  ? 'text-[12px] font-normal truncate'
-                                  : 'text-[12px] italic text-muted-foreground'
-                        }
-                        title={item.name}
-                    >
+            if (item.kind === 'section') {
+                return (
+                    <div className="text-[11px] font-bold uppercase tracking-widest truncate" title={item.name}>
                         {item.name}
                     </div>
+                );
+            }
+            return (
+                <div className={item.kind === 'material' ? 'pl-8' : 'pl-3'}>
+                    <EditableCell
+                        type="text"
+                        value={item.name}
+                        onCommit={(value) => actions.onPatch(item.id, 'name', value)}
+                        ariaLabel={`Наименование: ${item.name}`}
+                        className={item.kind === 'material' ? 'text-[12px] italic text-muted-foreground' : 'text-[12px] font-normal'}
+                    />
                 </div>
             );
         },
