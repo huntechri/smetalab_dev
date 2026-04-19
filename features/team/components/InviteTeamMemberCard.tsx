@@ -1,9 +1,9 @@
 import { TeamMessage, TeamRole } from '../types';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { Input } from '@repo/ui';
+import { Label } from '@repo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
 import { Mail, Shield } from 'lucide-react';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
 

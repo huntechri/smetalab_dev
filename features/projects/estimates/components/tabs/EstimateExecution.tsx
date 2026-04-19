@@ -3,23 +3,23 @@
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
-import { DataTable } from '@/shared/ui/data-table';
-import { Input } from '@/shared/ui/input';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
+import { DataTable } from '@repo/ui';
+import { Input } from '@repo/ui';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
 import { MoreHorizontal, Plus, FilePlus, Download } from 'lucide-react';
-import { TableEmptyState } from '@/shared/ui/table-empty-state';
+import { TableEmptyState } from '@repo/ui';
 
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
-import { Skeleton } from '@/shared/ui/skeleton';
+} from '@repo/ui';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@repo/ui';
+import { Skeleton } from '@repo/ui';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '../../types/execution.dto';

@@ -1,9 +1,9 @@
 'use client';
 
-import { Card, CardContent } from '@/shared/ui/card';
+import { Card, CardContent } from '@repo/ui';
 import { EstimateMeta } from '../types/dto';
 import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEstimateMutations } from '../hooks/use-estimate-mutations';
@@ -17,7 +17,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "@/shared/ui/alert-dialog";
+} from "@repo/ui";
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     const router = useRouter();

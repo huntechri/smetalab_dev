@@ -1,5 +1,5 @@
-import { Badge } from '@/shared/ui/badge';
-import { Card, CardContent } from '@/shared/ui/card';
+import { Badge } from '@repo/ui';
+import { Card, CardContent } from '@repo/ui';
 import { cn } from '@/lib/utils';
 import { Clock } from 'lucide-react';
 

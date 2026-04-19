@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ProjectEstimatesSection } from '@/features/projects/dashboard/components/ProjectEstimatesSection';
 
-vi.mock('@/shared/ui/data-table', () => ({
+vi.mock('@repo/ui', () => ({
     DataTable: ({
         columns,
         data,

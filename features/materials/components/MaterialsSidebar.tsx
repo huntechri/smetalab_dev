@@ -1,8 +1,8 @@
 'use client';
 
 import * as React from 'react';
-import { ScrollArea } from "@/shared/ui/scroll-area";
-import { Button } from '@/shared/ui/button';
+import { ScrollArea } from "@repo/ui";
+import { Button } from '@repo/ui';
 import { Check, FilterX, Tag, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getMaterialCategoryTree } from '@/app/actions/materials/search';

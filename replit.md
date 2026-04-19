@@ -48,9 +48,11 @@ pnpm db:seed
 - `entities/` — Domain entity types
 - `packages/` — pnpm workspace packages shared across the monorepo
   - `packages/utils` (`@repo/utils`) — Framework-agnostic utilities: `cn`, `Result` types, `slug` helpers
+  - `packages/ui` (`@repo/ui`) — Shared UI component library (re-exports all shadcn/ui components from `shared/ui/`)
 - `scripts/` — DB migration, seeding, and dev utilities
 
 ## Monorepo / Workspace Packages
 The project uses a pnpm workspace (`pnpm-workspace.yaml`) with `packages/*` and `apps/*` globs.
-- `@repo/utils` — First shared package; contains `cn`, `success/error` result helpers, and slug generators.
+- `@repo/utils` — Shared utilities: `cn`, `success/error` result helpers, and slug generators.
   `lib/utils.ts`, `lib/utils/result.ts`, and `lib/utils/slug.ts` now re-export from this package for backward compatibility.
+- `@repo/ui` — Shared UI component library. Re-exports all ~60 shadcn/ui components from `shared/ui/` through a single barrel export at `packages/ui/src/index.ts`. All app files import UI primitives from `@repo/ui` instead of `@/shared/ui/*`.

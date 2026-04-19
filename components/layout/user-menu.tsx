@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { LogOut, Settings, Users, Shield } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -11,7 +11,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+} from '@repo/ui';
 import { signOut } from '@/app/(login)/actions';
 import { useRouter, usePathname } from 'next/navigation';
 

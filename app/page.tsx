@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 import {
     ArrowRight,
     Building2,

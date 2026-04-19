@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Badge } from '@/shared/ui/badge';
+import { Badge } from '@repo/ui';
 import { estimateBadgeClassName } from './estimate-badge-styles';
 import { projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 

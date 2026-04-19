@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/shared/ui/input';
+import { Input } from '@repo/ui';
 import { cn } from '@/lib/utils';
 import { Pencil } from 'lucide-react';
 import { useRef, useState } from 'react';

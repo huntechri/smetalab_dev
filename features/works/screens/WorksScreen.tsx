@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 
-import { Skeleton } from '@/shared/ui/skeleton';
+import { Skeleton } from '@repo/ui';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
 import { WorkRow } from '@/shared/types/domain/work-row';

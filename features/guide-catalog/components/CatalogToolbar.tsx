@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Upload, Download, Trash2, Loader2, Filter } from "lucide-react";
 
-import { Button } from "@/shared/ui/button";
+import { Button } from "@repo/ui";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -13,15 +13,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/shared/ui/alert-dialog";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
+} from "@repo/ui";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/ui";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/shared/ui/sheet";
+} from "@repo/ui";
 import {
   CatalogFiltersUpdater,
   CatalogSidebarProps,

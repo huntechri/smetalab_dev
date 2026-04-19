@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui'
 
 import { getProjectStatusLabel, type ProjectStatus } from '@/entities/project/model/status'
 

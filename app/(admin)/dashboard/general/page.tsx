@@ -1,10 +1,10 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Label } from '@/shared/ui/label';
+import { Button } from '@repo/ui';
+import { Input } from '@repo/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
+import { Label } from '@repo/ui';
 import { Loader2 } from 'lucide-react';
 import { updateAccount } from '@/app/(login)/actions';
 import type { AppUserWithPermissions } from '@/shared/types/session';

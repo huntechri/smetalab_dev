@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Copy, Check } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 
 export function AdminTerminal() {
   const [terminalStep, setTerminalStep] = useState(0);

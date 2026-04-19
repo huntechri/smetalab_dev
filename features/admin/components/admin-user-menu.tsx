@@ -6,14 +6,14 @@ import useSWR, { mutate } from 'swr';
 import { Home, LogOut } from 'lucide-react';
 
 import { signOut } from '@/app/(login)/actions';
-import { Button } from '@/shared/ui/button';
-import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
+import { Button } from '@repo/ui';
+import { Avatar, AvatarFallback } from '@repo/ui';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+} from '@repo/ui';
 import type { AppUserWithPermissions } from '@/shared/types/session';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());

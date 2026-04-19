@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Input } from '@/shared/ui/input';
+import { Input } from '@repo/ui';
 import { expect, test } from 'vitest';
 
 test('Input component renders and accepts user input', async () => {
