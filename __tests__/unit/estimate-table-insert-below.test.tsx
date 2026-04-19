@@ -75,6 +75,8 @@ vi.mock('@repo/ui', () => ({
   DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
   Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
+  TableEmptyState: () => <div>empty</div>,
+  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
 }));
 
 vi.mock('@/components/ui/button', () => ({

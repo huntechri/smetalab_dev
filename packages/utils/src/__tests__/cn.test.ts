@@ -19,7 +19,8 @@ describe('cn', () => {
   });
 
   it('handles conditional classes via arrays', () => {
-    expect(cn(['foo', false && 'bar'])).toBe('foo');
+    const condition = false;
+    expect(cn(['foo', condition && 'bar'])).toBe('foo');
   });
 
   it('deduplicates conflicting Tailwind classes, keeping the last one', () => {
