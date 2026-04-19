@@ -216,3 +216,61 @@ jobs:
         run: |
           echo "Branch protection regression detected. See the alert issue for details." >&2
           exit 1
+
+  close-issue-on-success:
+    name: Close alert issue if protection is restored
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    needs: [verify-repo-protection, verify-org-protection]
+    if: >
+      needs.verify-repo-protection.outputs.repo_passed == 'true' &&
+      needs.verify-org-protection.outputs.org_passed == 'true'
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Search for open alert issue
+        id: existing
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          ISSUE_NUMBER=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --search "Branch protection regression detected in:title" \
+            --json number \
+            --jq '.[0].number // ""')
+          echo "issue_number=${ISSUE_NUMBER}" >> "$GITHUB_OUTPUT"
+          if [ -n "$ISSUE_NUMBER" ]; then
+            echo "Found open alert issue #${ISSUE_NUMBER} — will close it."
+          else
+            echo "No open alert issue found; nothing to close."
+          fi
+
+      - name: Comment and close alert issue
+        if: steps.existing.outputs.issue_number != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ steps.existing.outputs.issue_number }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" \
+            --repo "$REPO" \
+            --body "## Branch protection verified
+
+All scheduled branch protection checks passed in the latest run.
+
+**Workflow run:** ${RUN_URL}
+
+Both repo-level and org-level rules are present and correctly enforced. Closing this issue automatically.
+
+_This comment was added automatically by the Scheduled Branch Protection Check workflow._"
+
+          gh issue close "$ISSUE_NUMBER" \
+            --repo "$REPO" \
+            --reason "completed"
+
+          echo "Closed alert issue #${ISSUE_NUMBER} — branch protection has been restored."
