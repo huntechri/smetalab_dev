@@ -47,6 +47,22 @@ export default [
         },
     },
     {
+        files: ["app/**/*.{ts,tsx,js,jsx}", "features/**/*.{ts,tsx,js,jsx}", "entities/**/*.{ts,tsx,js,jsx}"],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: [
+                        {
+                            group: ["@/components/ui/*"],
+                            message: "Import from '@/shared/ui/*' instead of '@/components/ui/*'.",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
         files: ["app/**/*.{tsx,jsx}", "features/**/*.{tsx,jsx}", "components/**/*.{tsx,jsx}"],
         ignores: ["shared/ui/**/*", "__tests__/**/*", "app/(login)/login.tsx", "app/(admin)/terminal.tsx"],
         rules: {
@@ -54,7 +70,7 @@ export default [
                 "error",
                 {
                     selector: "JSXOpeningElement[name.name='button']",
-                    message: "Use shadcn Button from '@/components/ui/button' instead of raw <button> in app code.",
+                    message: "Use shadcn Button from '@/shared/ui/button' instead of raw <button> in app code.",
                 },
                 {
                     selector: "JSXOpeningElement[name.name='table']",
