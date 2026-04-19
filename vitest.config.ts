@@ -20,6 +20,7 @@ export default defineConfig({
             '__tests__/api/**/*.{test,spec}.{ts,tsx}',
             '__tests__/performance/**/*.{test,spec}.{ts,tsx}',
             '__tests__/rbac_perf.test.ts',
+            'packages/**/__tests__/**/*.{test,spec}.{ts,tsx}',
         ],
         exclude: [
             'node_modules/**/*',
