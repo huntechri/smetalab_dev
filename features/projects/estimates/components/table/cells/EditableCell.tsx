@@ -63,7 +63,7 @@ export function EditableCell({
                 }}
             >
                 {displayValue ?? String(value)}
-                <Pencil className="ml-auto shrink-0 size-3 opacity-0 group-hover:opacity-40 transition-opacity" />
+                <Pencil className="ml-auto shrink-0 size-3 opacity-0 group-hover:opacity-40 group-focus-visible:opacity-40 transition-opacity" />
             </button>
         );
     }
