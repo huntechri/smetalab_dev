@@ -5,6 +5,10 @@ import path from 'path';
 export default defineConfig({
     plugins: [react()],
     test: {
+        reporters: ['default', 'junit'],
+        outputFile: {
+            junit: 'test-results/junit.xml',
+        },
         environment: 'jsdom',
         alias: {
             '@': path.resolve(__dirname, './'),
