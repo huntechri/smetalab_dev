@@ -181,6 +181,16 @@ describe('EditableCell', () => {
         expect(pencilIcon).toHaveClass('opacity-0');
     });
 
+    it('pencil icon carries transition-opacity in display mode', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(pencilIcon).toHaveClass('transition-opacity');
+    });
+
     it('pencil icon is absent in edit mode', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
