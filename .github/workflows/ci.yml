@@ -36,7 +36,6 @@ jobs:
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
       - name: Cache pnpm store
-        id: cache-pnpm
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -44,8 +43,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
-        if: steps.cache-pnpm.outputs.cache-hit != 'true'
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
   lint:
@@ -72,7 +78,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store
+      - name: Restore pnpm store (fallback)
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -80,7 +86,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Restore node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Run ESLint
@@ -110,7 +124,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store
+      - name: Restore pnpm store (fallback)
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -118,7 +132,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Restore node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Run type-check
@@ -151,7 +173,7 @@ jobs:
         id: pnpm-cache
         run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
 
-      - name: Restore pnpm store
+      - name: Restore pnpm store (fallback)
         uses: actions/cache@v4
         with:
           path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
@@ -159,7 +181,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pnpm-store-
 
+      - name: Restore node_modules
+        id: cache-node-modules
+        uses: actions/cache@v4
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
       - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile --prefer-offline
 
       - name: Run tests
