@@ -14,6 +14,7 @@ export function EditableCell({
     cancelOnEmpty = false,
     displayValue,
     ariaLabel,
+    className,
 }: {
     value: string | number;
     displayValue?: string;
@@ -24,6 +25,7 @@ export function EditableCell({
     align?: 'left' | 'right' | 'center';
     clearOnFocus?: boolean;
     cancelOnEmpty?: boolean;
+    className?: string;
 }) {
     const [editing, setEditing] = useState(false);
     const [draft, setDraft] = useState(String(value));
@@ -50,6 +52,7 @@ export function EditableCell({
                 type="button"
                 variant="ghost"
                 disabled={disabled}
+                className={className}
                 onClick={() => {
                     wasClearedOnFocus.current = false;
                     setDraft(String(value));
@@ -65,6 +68,7 @@ export function EditableCell({
         <Input
             aria-label={ariaLabel}
             autoFocus
+            className={className}
             textAlign={align}
             numeric={type === 'number'}
             value={draft}
