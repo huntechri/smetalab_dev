@@ -44,6 +44,13 @@ pnpm db:seed
 - `app/` — Next.js App Router pages and API routes
 - `components/` — Shared UI components (shadcn/ui based)
 - `features/` — Feature-level modules
-- `lib/` — Shared utilities, DB client, auth helpers
+- `lib/` — Shared utilities, DB client, auth helpers (re-export from workspace packages where moved)
 - `entities/` — Domain entity types
+- `packages/` — pnpm workspace packages shared across the monorepo
+  - `packages/utils` (`@repo/utils`) — Framework-agnostic utilities: `cn`, `Result` types, `slug` helpers
 - `scripts/` — DB migration, seeding, and dev utilities
+
+## Monorepo / Workspace Packages
+The project uses a pnpm workspace (`pnpm-workspace.yaml`) with `packages/*` and `apps/*` globs.
+- `@repo/utils` — First shared package; contains `cn`, `success/error` result helpers, and slug generators.
+  `lib/utils.ts`, `lib/utils/result.ts`, and `lib/utils/slug.ts` now re-export from this package for backward compatibility.
