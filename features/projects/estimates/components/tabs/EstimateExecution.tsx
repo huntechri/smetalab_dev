@@ -9,10 +9,16 @@ import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
-import { Plus, FilePlus } from 'lucide-react';
+import { MoreHorizontal, Plus, FilePlus, Download } from 'lucide-react';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/shared/ui/sheet';
-import { EstimateUnifiedToolbar } from '../EstimateUnifiedToolbar';
+
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/shared/ui/dropdown-menu';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/shared/ui/sheet';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { estimateExecutionActionsRepo } from '../../repository/execution.actions';
@@ -128,30 +134,44 @@ function NumberEditCell({
     );
 }
 
-function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, open, onOpenChange }: {
+function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, triggerVariant = 'button' }: {
     estimateId: string;
     onCreated: (row: EstimateExecutionRow) => void;
     addedWorkNames: Set<string>;
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
+    triggerVariant?: 'button' | 'menu-item';
 }) {
+    const [open, setOpen] = useState(false);
     const { toast } = useAppToast();
     const router = useRouter();
 
     const addWorkFromCatalog = async (catalogWork: CatalogWork) => {
         try {
             const created = await estimateExecutionActionsRepo.addExtraWork(estimateId, buildExtraWorkFromCatalog(catalogWork));
+
             onCreated(created);
-            router.refresh();
+            router.refresh(); // Update dashboard KPI
             toast({ title: 'Работа добавлена во вкладку «Выполнение»', description: created.name });
-            onOpenChange(false);
+            setOpen(false);
         } catch (error) {
             toast({ variant: 'destructive', title: 'Ошибка', description: error instanceof Error ? error.message : 'Не удалось добавить работу из справочника.' });
         }
     };
 
     return (
-        <Sheet open={open} onOpenChange={onOpenChange}>
+        <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger asChild>
+                {triggerVariant === 'menu-item' ? (
+                    <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
+                        <Plus className="mr-2 h-4 w-4" />
+                        Добавить доп. работу
+                    </DropdownMenuItem>
+                ) : (
+                    <Button variant="primary" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
+                        <Plus className="h-4 w-4" />
+                        <span className="hidden sm:inline">Добавить доп. работу</span>
+                    </Button>
+                )}
+            </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md">
                 <SheetHeader>
                     <SheetTitle>Справочник работ</SheetTitle>
@@ -159,11 +179,12 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, open, onOpen
                         Выберите работу из справочника. Позиция будет добавлена только во вкладку «Выполнение».
                     </SheetDescription>
                 </SheetHeader>
+
                 <div className="mt-6 h-[calc(100vh-140px)] overflow-hidden">
                     <WorkCatalogPicker
                         onAddWork={(work) => void addWorkFromCatalog(work)}
                         addedWorkNames={addedWorkNames}
-                    />
+                   />
                 </div>
             </SheetContent>
         </Sheet>
@@ -173,7 +194,6 @@ function AddExtraWorkSheet({ estimateId, onCreated, addedWorkNames, open, onOpen
 export function EstimateExecution({ estimateId }: { estimateId: string }) {
     const [rows, setRows] = useState<EstimateExecutionRow[]>([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [addExtraWorkOpen, setAddExtraWorkOpen] = useState(false);
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const requestVersionRef = useRef<Record<string, number>>({});
     const { toast } = useAppToast();
@@ -356,13 +376,6 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
 
     return (
         <div className="space-y-2">
-            <AddExtraWorkSheet
-                estimateId={estimateId}
-                onCreated={(row) => setRows((prev) => [...prev, row])}
-                addedWorkNames={addedWorkNames}
-                open={addExtraWorkOpen}
-                onOpenChange={setAddExtraWorkOpen}
-            />
             <DataTable
                 columns={columns}
                 data={rows}
@@ -376,20 +389,52 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                         description="Для начала работы добавьте позиции во вкладку «Смета» или создайте дополнительную работу"
                         icon={FilePlus}
                         action={
-                            <Button variant="default" onClick={() => setAddExtraWorkOpen(true)}>
-                                <Plus className="h-4 w-4" />
-                                Добавить доп. работу
-                            </Button>
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                           />
                         }
-                    />
+                   />
                 }
                 actions={
-                    <EstimateUnifiedToolbar
-                        onExportXlsx={handleExport}
-                        onAddItem={() => setAddExtraWorkOpen(true)}
-                    />
+                    <>
+                        <div className="hidden items-center gap-2 sm:flex">
+                            <Button variant="outline" onClick={handleExport}>
+                                <Download className="h-4 w-4" />
+                                Экспорт Excel
+                            </Button>
+                            <AddExtraWorkSheet
+                                estimateId={estimateId}
+                                onCreated={(row) => setRows((prev) => [...prev, row])}
+                                addedWorkNames={addedWorkNames}
+                           />
+                        </div>
+
+                        <div className="sm:hidden">
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button variant="outline" size="icon-xs">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent align="end" className="min-w-[220px]">
+                                    <DropdownMenuItem onClick={handleExport}>
+                                        <Download className="mr-2 h-4 w-4" />
+                                        Экспорт Excel
+                                    </DropdownMenuItem>
+                                    <AddExtraWorkSheet
+                                        estimateId={estimateId}
+                                        onCreated={(row) => setRows((prev) => [...prev, row])}
+                                        addedWorkNames={addedWorkNames}
+                                        triggerVariant="menu-item"
+                                   />
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </>
                 }
-            />
+           />
             <div className="flex justify-end border-t border-border/60 bg-background/95 px-1 pt-1">
                 <EstimateTotals planned={totals.planned} actual={totals.actual} />
             </div>
