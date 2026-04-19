@@ -1,0 +1,46 @@
+name: Setup pnpm environment
+description: Checkout, install pnpm + Node, and restore cached node_modules
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: 10.28.0
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Get pnpm store path
+      id: pnpm-cache
+      shell: bash
+      run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+    - name: Restore pnpm store (fallback)
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          ${{ runner.os }}-pnpm-store-
+
+    - name: Restore node_modules
+      id: cache-node-modules
+      uses: actions/cache@v4
+      with:
+        path: |
+          node_modules
+          packages/*/node_modules
+          apps/*/node_modules
+        key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+
+    - name: Install dependencies
+      if: steps.cache-node-modules.outputs.cache-hit != 'true'
+      shell: bash
+      run: pnpm install --frozen-lockfile --prefer-offline
