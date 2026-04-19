@@ -108,6 +108,28 @@ describe('Estimate table columns – editable cell aria-labels', () => {
         expect(button).toHaveAttribute('aria-label', `Расход: ${materialRow.name}`);
     });
 
+    it('qty column button announces "Количество" and the material row name', () => {
+        const qtyColumn = findColumn('qty');
+        const ctx = makeCellContext(materialRow);
+        const CellContent = () => <>{(qtyColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
+        render(<CellContent />);
+
+        const button = screen.getByRole('button', { name: `Количество: ${materialRow.name}` });
+        expect(button).toBeInTheDocument();
+        expect(button).toHaveAttribute('aria-label', `Количество: ${materialRow.name}`);
+    });
+
+    it('price column button announces "Цена" and the material row name', () => {
+        const priceColumn = findColumn('price');
+        const ctx = makeCellContext(materialRow);
+        const CellContent = () => <>{(priceColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
+        render(<CellContent />);
+
+        const button = screen.getByRole('button', { name: `Цена: ${materialRow.name}` });
+        expect(button).toBeInTheDocument();
+        expect(button).toHaveAttribute('aria-label', `Цена: ${materialRow.name}`);
+    });
+
     it('qty column renders no button for section rows', () => {
         const sectionRow: VisibleEstimateRow = {
             id: 's-1',
