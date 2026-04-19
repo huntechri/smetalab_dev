@@ -4,9 +4,32 @@ name: Scheduled Branch Protection Check
 # If a ruleset is disabled or deleted through the GitHub UI, this workflow
 # catches the regression and opens a GitHub issue to alert the team.
 #
+# ─── Configuring the check frequency ────────────────────────────────────────
+# The workflow trigger runs every hour. An early gate job reads the repository
+# variable BRANCH_PROTECTION_CHECK_CRON and only lets the checks proceed when
+# the current UTC time matches that cron expression.
+#
+# To change how often the check runs, set the repository variable
+# BRANCH_PROTECTION_CHECK_CRON in:
+#   Settings → Secrets and variables → Actions → Variables → New repository variable
+#
+# Common values
+#   (unset)       — falls back to the default: "0 8 * * *"  (daily at 08:00 UTC)
+#   0 8 * * *     — daily at 08:00 UTC            (default)
+#   0 * * * *     — every hour                    (high-security environments)
+#   0 8 * * 1     — weekly, Monday at 08:00 UTC   (low-activity organisations)
+#   0 8 1 * *     — monthly, 1st of the month at 08:00 UTC
+#
+# The value must be a valid 5-field cron expression (minute hour day month weekday).
+# GitHub Actions cron syntax reference:
+#   https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule
+# ─────────────────────────────────────────────────────────────────────────────
+#
 # Triggers:
-#   schedule       — daily at 08:00 UTC
-#   workflow_dispatch — manual run for ad-hoc checks
+#   schedule          — every hour at :00 UTC; the check-schedule gate decides
+#                       whether the checks actually run based on the configured
+#                       BRANCH_PROTECTION_CHECK_CRON variable
+#   workflow_dispatch — manual run (skips the schedule gate and always runs)
 #
 # Required secrets:
 #   BRANCH_PROTECTION_TOKEN — a PAT or fine-grained token with:
@@ -22,14 +45,99 @@ name: Scheduled Branch Protection Check
 
 on:
   schedule:
-    - cron: "0 8 * * *"
+    # Runs every hour so that any BRANCH_PROTECTION_CHECK_CRON value (including
+    # hourly) can be honoured without editing this file.
+    # The check-schedule job gates actual execution according to the variable.
+    - cron: "0 * * * *"
   workflow_dispatch:
 
 jobs:
+  # ── Schedule gate ──────────────────────────────────────────────────────────
+  # Reads the BRANCH_PROTECTION_CHECK_CRON repository variable and decides
+  # whether this particular hourly trigger should proceed.
+  #
+  # workflow_dispatch runs always skip this gate (should_run is forced to true).
+  check-schedule:
+    name: Check configured schedule
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    permissions:
+      contents: none
+    outputs:
+      should_run: ${{ steps.gate.outputs.should_run }}
+
+    steps:
+      - name: Evaluate schedule gate
+        id: gate
+        env:
+          # Default: daily at 08:00 UTC — same behaviour as the original hard-coded schedule.
+          # Override by setting the BRANCH_PROTECTION_CHECK_CRON repository variable.
+          CONFIGURED_CRON: ${{ vars.BRANCH_PROTECTION_CHECK_CRON || '0 8 * * *' }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          # Manual dispatches always run regardless of the configured schedule.
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            echo "Manual dispatch — skipping schedule gate."
+            echo "should_run=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "Configured cron: ${CONFIGURED_CRON}"
+
+          # Install croniter for reliable cron evaluation.
+          pip install --quiet croniter
+
+          python3 - <<'PYEOF'
+          import os
+          from datetime import datetime, timezone, timedelta
+          from croniter import croniter
+
+          cron_expr = os.environ["CONFIGURED_CRON"].strip()
+          now = datetime.now(timezone.utc).replace(second=0, microsecond=0)
+
+          # The trigger fires once per hour.  To account for the scheduler jitter
+          # that is common in GitHub Actions (jobs often start several minutes
+          # after the nominal cron boundary), we look back 61 minutes — slightly
+          # more than the trigger period.  croniter.get_next is exclusive of its
+          # start_time, so the extra minute ensures that a match occurring exactly
+          # 60 minutes ago (extreme-delay edge case) is still captured.  If the
+          # configured cron expression had any scheduled occurrence inside
+          # [now-61min, now], this run should proceed.
+          window_start = now - timedelta(minutes=61)
+
+          fallback = False
+          try:
+              itr = croniter(cron_expr, start_time=window_start)
+              next_in_window = itr.get_next(datetime)
+          except Exception as e:
+              print(f"::error::Invalid BRANCH_PROTECTION_CHECK_CRON value '{cron_expr}': {e}")
+              print("Falling back to default schedule '0 8 * * *'.")
+              itr = croniter("0 8 * * *", start_time=window_start)
+              next_in_window = itr.get_next(datetime)
+              fallback = True
+
+          should_run = next_in_window <= now
+
+          expr_used = "0 8 * * * (fallback)" if fallback else cron_expr
+          print(f"Configured cron  : {expr_used}")
+          print(f"Lookback window  : {window_start.strftime('%H:%M')}–{now.strftime('%H:%M')} UTC")
+          print(f"Next match at/after window start: {next_in_window.strftime('%Y-%m-%d %H:%M')} UTC")
+          if should_run:
+              print("Match found within window — proceeding with checks.")
+          else:
+              print("No match within window — skipping this run.")
+
+          with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+              fh.write(f"should_run={'true' if should_run else 'false'}\n")
+          PYEOF
+
+  # ── Repo-level check ───────────────────────────────────────────────────────
   verify-repo-protection:
     name: Verify repo branch protection
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: [check-schedule]
+    if: needs.check-schedule.outputs.should_run == 'true'
     permissions:
       contents: read
       issues: write
@@ -65,10 +173,13 @@ jobs:
             exit 0  # Do not fail the step; failure is handled by the alert job
           fi
 
+  # ── Org-level check ────────────────────────────────────────────────────────
   verify-org-protection:
     name: Verify org branch protection
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    needs: [check-schedule]
+    if: needs.check-schedule.outputs.should_run == 'true'
     permissions:
       contents: read
       issues: write
@@ -108,6 +219,7 @@ jobs:
             exit 0
           fi
 
+  # ── Alert ──────────────────────────────────────────────────────────────────
   alert-on-failure:
     name: Open issue if checks failed
     runs-on: ubuntu-latest
@@ -217,6 +329,7 @@ jobs:
           echo "Branch protection regression detected. See the alert issue for details." >&2
           exit 1
 
+  # ── Auto-close ─────────────────────────────────────────────────────────────
   close-issue-on-success:
     name: Close alert issue if protection is restored
     runs-on: ubuntu-latest
