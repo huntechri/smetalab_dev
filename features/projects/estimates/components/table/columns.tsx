@@ -71,6 +71,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                 return (
                     <EditableCell
                         type="text"
+                        cancelOnEmpty
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Раздел: ${item.name}`}
@@ -83,6 +84,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                 <div className={item.kind === 'material' ? 'pl-8' : 'pl-3'}>
                     <EditableCell
                         type="text"
+                        cancelOnEmpty
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Наименование: ${item.name}`}
