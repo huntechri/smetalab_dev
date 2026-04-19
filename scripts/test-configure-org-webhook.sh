@@ -13,6 +13,7 @@
 #   T05 — missing dependency  (curl absent from PATH → exit 1)
 #   T06 — bad webhook URL     (non-https URL → exit 1)
 #   T07 — empty org name      (no org supplied → exit 1)
+#   T08 — fine-grained PAT    (no x-oauth-scopes header → exit 0, warn)
 #
 # Usage:
 #   ./scripts/test-configure-org-webhook.sh
@@ -84,7 +85,9 @@ SCENARIO="${MOCK_SCENARIO:-201}"
 # HEAD-like: return response headers including OAuth scopes
 if $HEAD_ONLY; then
   echo "HTTP/2 200"
-  echo "x-oauth-scopes: admin:org_hook, read:org"
+  if [[ "${MOCK_SCENARIO:-}" != "empty-scopes" ]]; then
+    echo "x-oauth-scopes: admin:org_hook, read:org"
+  fi
   echo ""
   exit 0
 fi
@@ -98,7 +101,7 @@ fi
 # POST /orgs/.../hooks — webhook registration
 if [[ "$URL" == */hooks ]]; then
   case "$SCENARIO" in
-    201)
+    201|empty-scopes)
       BODY='{"id":99999,"active":true,"events":["repository"],"config":{"url":"https://example.com/hook","content_type":"json","insecure_ssl":"0"}}'
       HTTP_CODE="201"
       ;;
@@ -275,6 +278,12 @@ else
   echo "       exit=${exit_t07}"
   echo "$output_t07" | tail -5 | sed 's/^/         /'
 fi
+
+# T08 — Fine-grained PAT (empty x-oauth-scopes header) → exits 0, emits warning
+header "T08 — Fine-grained PAT (empty scopes header)"
+run_test T08 "exits 0 and warns about unverifiable fine-grained token scopes" 0 \
+  "fine-grained|org_hooks|cannot be scope-verified|Could not verify" \
+  MOCK_SCENARIO=empty-scopes
 
 # ── Summary ───────────────────────────────────────────────────────────────────
 
