@@ -10,8 +10,14 @@ describe('Button Component', () => {
 
   it('applies canonical base styles', () => {
     render(<Button>Test</Button>);
-    const button = screen.getByText('Test');
+    const button = screen.getByRole('button', { name: 'Test' });
     expect(button).toHaveClass('inline-flex');
+    expect(button).toHaveClass('h-7');
+  });
+
+  it('applies h-9 when size="default"', () => {
+    render(<Button size="default">Test</Button>);
+    const button = screen.getByRole('button', { name: 'Test' });
     expect(button).toHaveClass('h-9');
   });
 
