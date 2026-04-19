@@ -113,7 +113,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
             <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
-                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} />}
+                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} ariaLabel={`Количество: ${row.original.name}`} />}
             </div>
         )
     },
@@ -123,7 +123,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
             <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
-                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} />}
+                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} ariaLabel={`Цена: ${row.original.name}`} />}
             </div>
         )
     },
@@ -165,6 +165,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         cancelOnEmpty
                         value={row.original.expense}
                         onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)}
+                        ariaLabel={`Расход: ${row.original.name}`}
                     />
                 </div>
             );
