@@ -1,7 +1,7 @@
 "use client"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
-import { Button } from "@/components/ui/button"
+import { Button } from '@/shared/ui/button'
 import { Input } from "@/shared/ui/input"
 import { Label } from "@/shared/ui/label"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
@@ -45,60 +45,39 @@ export function WorksEditDialog({
                     <form onSubmit={onSubmit} className="grid gap-4 py-4">
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
                             <Label htmlFor="name" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Название</Label>
-                            <Input
-                                id="name"
-                                value={data.name || ""}
-                                onChange={(e) => onFieldChange("name", e.target.value)}
-                                className="sm:col-span-3"
-                                required
-                            />
+                            <div className="sm:col-span-3">
+                                <Input id="name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} required />
+                            </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
                             <Label htmlFor="unit" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Ед. изм.</Label>
                             <div className="sm:col-span-3">
-                                <UnitSelect
-                                    value={data.unit || ""}
-                                    onChange={(val) => onFieldChange("unit", val)}
-                                />
+                                <UnitSelect value={data.unit || ""} onChange={(val) => onFieldChange("unit", val)} />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
                             <Label htmlFor="price" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Цена</Label>
-                            <Input
-                                id="price"
-                                type="number"
-                                value={data.price || ""}
-                                onChange={(e) => onFieldChange("price", e.target.value)}
-                                className="sm:col-span-3"
-                                required
-                            />
+                            <div className="sm:col-span-3">
+                                <Input id="price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} required />
+                            </div>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="phase" className="text-right">Этап</Label>
-                            <Input
-                                id="phase"
-                                value={data.phase || ""}
-                                onChange={(e) => onFieldChange("phase", e.target.value)}
-                                className="col-span-3"
-                            />
+                            <div className="col-span-3">
+                                <Input id="phase" value={data.phase || ""} onChange={(e) => onFieldChange("phase", e.target.value)} />
+                            </div>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="category" className="text-right">Категория</Label>
-                            <Input
-                                id="category"
-                                value={data.category || ""}
-                                onChange={(e) => onFieldChange("category", e.target.value)}
-                                className="col-span-3"
-                            />
+                            <div className="col-span-3">
+                                <Input id="category" value={data.category || ""} onChange={(e) => onFieldChange("category", e.target.value)} />
+                            </div>
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="subcategory" className="text-right">Подкатегория</Label>
-                            <Input
-                                id="subcategory"
-                                value={data.subcategory || ""}
-                                onChange={(e) => onFieldChange("subcategory", e.target.value)}
-                                className="col-span-3"
-                            />
+                            <div className="col-span-3">
+                                <Input id="subcategory" value={data.subcategory || ""} onChange={(e) => onFieldChange("subcategory", e.target.value)} />
+                            </div>
                         </div>
                         <DialogFooter>
                             <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>

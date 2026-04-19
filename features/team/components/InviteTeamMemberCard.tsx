@@ -1,5 +1,5 @@
 import { TeamMessage, TeamRole } from '../types';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';

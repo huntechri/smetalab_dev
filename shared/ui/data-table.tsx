@@ -217,7 +217,8 @@ export function DataTable<TData, TValue>({
                                 compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
                             )}>
                                 <div className={cn(
-                                    "relative transition-all duration-300 w-[min(20rem,calc(100vw-2rem))] max-w-full"
+                                    "relative transition-all duration-300 w-[min(20rem,calc(100vw-2rem))] max-w-full",
+                                    isAiMode && "[&_input]:pr-16"
                                 )}>
                                     <SearchInput
                                         aria-label={filterPlaceholder}
@@ -225,6 +226,7 @@ export function DataTable<TData, TValue>({
                                         value={searchValue}
                                         loading={Boolean(isSearching)}
                                         autoLoading={!isSearching}
+                                        highlighted={isAiMode}
                                         onChange={(event) => {
                                             const val = event.target.value
                                             setSearchValue(val)
@@ -234,10 +236,6 @@ export function DataTable<TData, TValue>({
                                                 onSearch?.("")
                                             }
                                         }}
-                                        className={cn(
-                                            "w-full",
-                                            isAiMode && "!pr-16"
-                                        )}
                                         onKeyDown={(e) => {
                                             if (e.key === 'Enter') {
                                                 handleSearchClick()
