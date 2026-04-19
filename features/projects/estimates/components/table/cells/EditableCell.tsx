@@ -2,6 +2,7 @@
 
 import { Input } from '@/shared/ui/input';
 import { cn } from '@/lib/utils';
+import { Pencil } from 'lucide-react';
 import { useRef, useState } from 'react';
 
 export function EditableCell({
@@ -52,7 +53,7 @@ export function EditableCell({
                 type="button"
                 disabled={disabled}
                 className={cn(
-                    'inline-flex w-full items-center rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                    'group inline-flex w-full items-center gap-1 rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
                     className,
                 )}
                 onClick={() => {
@@ -62,6 +63,7 @@ export function EditableCell({
                 }}
             >
                 {displayValue ?? String(value)}
+                <Pencil className="ml-auto shrink-0 size-3 opacity-0 group-hover:opacity-40 transition-opacity" />
             </button>
         );
     }
