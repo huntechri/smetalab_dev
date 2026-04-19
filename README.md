@@ -381,6 +381,29 @@ bash scripts/test-configure-org-webhook.sh
 
 Все 7 тестов должны завершиться с пометкой `PASS`.  Если тест падает, значит изменение в скрипте нарушило поведение соответствующего сценария.
 
+**Просмотр и удаление существующих webhooks:**
+
+Скрипт `scripts/list-org-webhooks.sh` позволяет администраторам просматривать и удалять org-webhooks без изменения кода.
+
+Вывести список всех webhooks с их ID, URL, статусом и датой создания:
+
+```bash
+./scripts/list-org-webhooks.sh [org-name]
+```
+
+Удалить конкретный webhook по ID (ID берётся из вывода команды выше):
+
+```bash
+./scripts/list-org-webhooks.sh [org-name] --delete <hook-id>
+```
+
+Как и `configure-org-webhook.sh`, скрипт поддерживает переменные окружения для работы без интерактивных запросов:
+
+```bash
+GH_TOKEN=ghp_xxx ORG=my-org ./scripts/list-org-webhooks.sh
+GH_TOKEN=ghp_xxx ORG=my-org ./scripts/list-org-webhooks.sh --delete 12345678
+```
+
 **Рекомендуемая схема (полная):**
 
 1. Создайте **GitHub App** с разрешением `Contents: Read & Write` и подпиской на событие **`installation.repositories_added`** (или org webhook `repository → created`).
