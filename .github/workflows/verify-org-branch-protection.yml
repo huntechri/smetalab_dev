@@ -9,6 +9,12 @@ name: Verify Org Branch Protection
 #
 # Trigger options:
 #
+#   schedule           — daily at 06:00 UTC so silent configuration drift
+#                        (e.g. someone disabling the ruleset through the UI)
+#                        is caught automatically without waiting for a code push.
+#                        When the scheduled run fails, a GitHub issue is opened
+#                        to alert the team.
+#
 #   workflow_dispatch  — manual run from Actions → Verify Org Branch Protection
 #                        → Run workflow.  Provide the org name when prompted.
 #
@@ -21,6 +27,9 @@ name: Verify Org Branch Protection
 #                             "admin:org" scope for the target organization.
 
 on:
+  schedule:
+    # Daily at 06:00 UTC
+    - cron: "0 6 * * *"
   workflow_dispatch:
     inputs:
       org:
@@ -41,6 +50,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: read
+      issues: write
 
     steps:
       - name: Checkout repository
@@ -69,3 +79,52 @@ jobs:
         run: |
           chmod +x ./scripts/verify-org-branch-protection.sh
           ./scripts/verify-org-branch-protection.sh "${{ steps.resolve-org.outputs.org }}"
+
+      - name: Open GitHub issue on scheduled failure
+        # Only fires on scheduled runs that fail, so push/manual failures use
+        # normal CI red-build visibility rather than creating noisy issues.
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          ORG: ${{ steps.resolve-org.outputs.org }}
+        run: |
+          TITLE="[Alert] Org branch protection drift detected ($(date -u +%Y-%m-%d))"
+          BODY="The scheduled verification of the \`org-main-protection\` ruleset for the **${ORG}** organization failed, which means the ruleset may be missing, disabled, or misconfigured.
+
+          **Action required:** review the org ruleset in the GitHub UI and re-run \`scripts/setup-org-branch-protection.sh\` if needed.
+
+          - Workflow run: ${RUN_URL}
+          - Detected at: $(date -u '+%Y-%m-%d %H:%M UTC')"
+
+          # Ensure the label exists; create it if it doesn't (idempotent).
+          if ! gh label list --repo "$REPO" --json name --jq '.[].name' | grep -qx "branch-protection"; then
+            gh label create "branch-protection" \
+              --repo "$REPO" \
+              --color "B60205" \
+              --description "Branch protection configuration alerts" \
+              || echo "Label creation skipped (may already exist)."
+          fi
+
+          # Avoid duplicate open issues by searching the title text.
+          EXISTING=$(gh issue list \
+            --repo "$REPO" \
+            --state open \
+            --search "in:title Org branch protection drift detected" \
+            --json number \
+            --jq 'length')
+
+          if [ "$EXISTING" -eq 0 ]; then
+            gh issue create \
+              --repo "$REPO" \
+              --title "$TITLE" \
+              --body "$BODY" \
+              --label "branch-protection" \
+            || gh issue create \
+              --repo "$REPO" \
+              --title "$TITLE" \
+              --body "$BODY"
+          else
+            echo "An open branch-protection alert issue already exists; skipping duplicate creation."
+          fi
