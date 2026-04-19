@@ -299,6 +299,67 @@ gh auth login
 
 ---
 
+### Автоматическая защита при форке: org-level vs repo-level rulesets
+
+> **Рекомендуемая стратегия:**
+> - **Организации на GitHub Team/Enterprise** → используйте **Способ 4** (org-level ruleset). Защита применяется ко всем репозиториям автоматически — никаких действий после форка не нужно.
+> - **Индивидуальные аккаунты / бесплатный план** → используйте **Способы 1–3** (repo-level, вручную) или **Способ 5** (GitHub App webhook) для автоматизации.
+
+#### Разница между org-level и repo-level rulesets
+
+| | Repo-level ruleset | Org-level ruleset |
+|---|---|---|
+| **Область действия** | Один конкретный репозиторий | Все репозитории организации (включая будущие форки) |
+| **Где настраивается** | Settings → Rules → Rulesets репозитория | Organization Settings → Rules → Rulesets |
+| **API endpoint** | `POST /repos/{owner}/{repo}/rulesets` | `POST /orgs/{org}/rulesets` |
+| **Форки** | Требует ручной настройки в каждом новом форке | Применяется автоматически ко всем форкам |
+| **Подходит для** | Индивидуальных репозиториев | Организаций, где нужна единая политика |
+
+**Repo-level** (текущий способ — `.github/rulesets/main-protection.json`) требует, чтобы владелец нового форка вручную запустил скрипт или workflow. Это описано выше в Способах 1–3.
+
+**Org-level** (файл `.github/rulesets/org-main-protection.json`) настраивается один раз на уровне организации и автоматически покрывает все существующие и будущие репозитории — никаких ручных действий после форка не требуется.
+
+#### Способ 4 — org-level ruleset (нулевое касание для форков)
+
+Требования: токен с правом **`admin:org`** (не `administration:write`, как для repo-level).
+
+```bash
+# Применить org-level ruleset ко всей организации
+./scripts/setup-org-branch-protection.sh my-org-name
+
+# Или авто-определить организацию из git remote:
+./scripts/setup-org-branch-protection.sh
+```
+
+Скрипт вызывает `POST /orgs/{org}/rulesets` и создаёт (или обновляет) правило **`org-main-protection`**, которое покрывает ветки `main`/`master` во ВСЕХ репозиториях организации. Конфигурация: `.github/rulesets/org-main-protection.json`.
+
+> **Важно:** org-level rulesets требуют GitHub Team или Enterprise plan. На бесплатных личных аккаунтах используйте repo-level (Способы 1–3).
+
+#### Способ 5 — автоматический webhook при создании репозитория (через GitHub App)
+
+Этот способ — резервный вариант для окружений, где org-level rulesets недоступны (например, бесплатный план), или там, где нужно применять защиту к форкам вне организации.
+
+> **Важно:** GitHub Organization Webhooks **не могут** напрямую вызывать GitHub REST API `/repos/{org}/{repo}/dispatches`, так как сами webhook-запросы не проходят аутентификацию как API-клиенты. Для этого паттерна **обязательно нужен** промежуточный аутентифицированный агент — GitHub App или внешний сервис.
+
+**Рекомендуемая схема:**
+
+1. Создайте **GitHub App** с разрешением `Contents: Read & Write` и подпиской на событие **`installation.repositories_added`** (или org webhook `repository → created`).
+2. GitHub App получает webhook от GitHub при создании/форке репозитория.
+3. App аутентифицируется как installation и вызывает:
+   ```
+   POST /repos/<org>/<this-repo>/dispatches
+   {
+     "event_type": "repository_created",
+     "client_payload": { "repository": "owner/new-repo-name" }
+   }
+   ```
+4. Workflow `.github/workflows/auto-branch-protection.yml` ловит событие и применяет защиту через `scripts/setup-branch-protection.sh`.
+5. В секретах репозитория добавьте `BRANCH_PROTECTION_TOKEN` — токен с правом `administration:write` на целевой репозиторий.
+
+**Примечание о стратегии:** workflow применяет repo-level защиту к конкретному указанному репозиторию — это намеренно, поскольку данный способ предназначен для случаев, когда org-level ruleset недоступен.
+
+---
+
 ## ⚠️ Важные Правила
 
 1. **Никакой локальной БД**: Все изменения вносятся прямо в облачную базу Neon.
