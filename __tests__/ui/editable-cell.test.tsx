@@ -160,6 +160,37 @@ describe('EditableCell', () => {
         expect(button).toMatchSnapshot();
     });
 
+    it('pencil icon carries keyboard-focus and hover visibility classes', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(pencilIcon).toHaveClass('group-focus-visible:opacity-40');
+        expect(pencilIcon).toHaveClass('group-hover:opacity-40');
+    });
+
+    it('pencil icon starts hidden via opacity-0 in display mode', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(pencilIcon).toHaveClass('opacity-0');
+    });
+
+    it('pencil icon carries transition-opacity in display mode', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(pencilIcon).toHaveClass('transition-opacity');
+    });
+
     it('pencil icon is absent in edit mode', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
@@ -211,6 +242,21 @@ describe('EditableCell', () => {
         expect(button).toHaveClass('hover:underline-offset-2');
     });
 
+    it('display button carries aria-label from ariaLabel prop before any click', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                value="42"
+                onCommit={onCommit}
+                ariaLabel="Item quantity"
+            />,
+        );
+
+        const button = screen.getByRole('button', { name: 'Item quantity' });
+        expect(button).toHaveAttribute('aria-label', 'Item quantity');
+    });
+
     it('input receives the ariaLabel prop as aria-label when in edit mode', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
@@ -222,7 +268,7 @@ describe('EditableCell', () => {
             />,
         );
 
-        await userEvent.click(screen.getByRole('button', { name: 'Description' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Edit item description' }));
 
         const input = screen.getByRole('textbox');
         expect(input).toHaveAttribute('aria-label', 'Edit item description');

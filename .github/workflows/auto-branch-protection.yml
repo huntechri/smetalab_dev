@@ -1,0 +1,85 @@
+name: Auto Apply Branch Protection
+
+# Applies branch protection to a specific repo when triggered by an
+# authenticated GitHub App (or manually via workflow_dispatch).
+#
+# Use case: fallback for environments where org-level rulesets are unavailable
+# (free GitHub plan). For organizations on Team/Enterprise, the org-level
+# ruleset approach (setup-org-branch-protection.sh) is preferred because it
+# covers all repos automatically without per-repo steps.
+#
+# Trigger options:
+#
+# Option A — repository_dispatch (via GitHub App — REQUIRED intermediary)
+# ────────────────────────────────────────────────────────────────────────
+# GitHub organization webhooks CANNOT directly call GitHub's REST API —
+# they are unauthenticated HTTP requests and are not accepted by
+# /repos/{owner}/{repo}/dispatches. An authenticated intermediary is required.
+#
+# Recommended flow:
+#   1. Create a GitHub App subscribed to `installation.repositories_added`
+#      (or org webhook `repository → created`).
+#   2. The App authenticates as an installation and calls:
+#        POST /repos/<org>/<this-repo>/dispatches
+#        { "event_type": "repository_created",
+#          "client_payload": { "repository": "owner/new-repo-name" } }
+#   3. This workflow fires and applies repo-level protection to the new repo.
+#
+# Option B — workflow_dispatch (manual one-off)
+# ─────────────────────────────────────────────
+# Trigger manually from Actions → Auto Apply Branch Protection → Run workflow.
+
+on:
+  repository_dispatch:
+    types: [repository_created]
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: "Target repository in owner/repo format"
+        required: true
+        type: string
+
+jobs:
+  apply-protection:
+    name: Apply Branch Protection to New Repository
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout scripts
+        uses: actions/checkout@v4
+
+      - name: Resolve target repository
+        id: resolve
+        run: |
+          if [ "${{ github.event_name }}" = "repository_dispatch" ]; then
+            REPO="${{ github.event.client_payload.repository }}"
+          else
+            REPO="${{ inputs.repository }}"
+          fi
+
+          if [ -z "$REPO" ]; then
+            echo "Error: no target repository provided." >&2
+            exit 1
+          fi
+
+          echo "repo=${REPO}" >> "$GITHUB_OUTPUT"
+          echo "Target repository: ${REPO}"
+
+      - name: Apply main-protection ruleset
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+          TARGET_REPO: ${{ steps.resolve.outputs.repo }}
+        run: |
+          chmod +x ./scripts/setup-branch-protection.sh
+          ./scripts/setup-branch-protection.sh "$TARGET_REPO"
+
+      - name: Verify branch protection is enforced
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+          TARGET_REPO: ${{ steps.resolve.outputs.repo }}
+        run: |
+          set -euo pipefail
+          chmod +x ./scripts/verify-branch-protection.sh
+          ./scripts/verify-branch-protection.sh "$TARGET_REPO"

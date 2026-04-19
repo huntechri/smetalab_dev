@@ -47,55 +47,56 @@ jobs:
         id: cache-node-modules
         uses: actions/cache@v4
         with:
-          path: node_modules
+          path: |
+            node_modules
+            packages/*/node_modules
+            apps/*/node_modules
           key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: install
+
+    steps:
+      - name: Setup environment
+        uses: ./.github/actions/setup
+
+      - name: Cache Next.js build output
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
+
+      - name: Build
+        run: pnpm build
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: install
+    needs: build
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Get pnpm store path
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm store (fallback)
+      - name: Restore Next.js build cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Restore node_modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: pnpm install --frozen-lockfile --prefer-offline
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
 
       - name: Run ESLint
         run: pnpm lint
@@ -104,44 +105,20 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: install
+    needs: build
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Setup environment
+        uses: ./.github/actions/setup
 
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Get pnpm store path
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm store (fallback)
+      - name: Restore Next.js build cache
         uses: actions/cache@v4
         with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Restore node_modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: pnpm install --frozen-lockfile --prefer-offline
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
 
       - name: Run type-check
         run: pnpm type-check
@@ -156,41 +133,8 @@ jobs:
       checks: write
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.0
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - name: Get pnpm store path
-        id: pnpm-cache
-        run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
-
-      - name: Restore pnpm store (fallback)
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Restore node_modules
-        id: cache-node-modules
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
-
-      - name: Install dependencies
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: pnpm install --frozen-lockfile --prefer-offline
+      - name: Setup environment
+        uses: ./.github/actions/setup
 
       - name: Run tests
         run: pnpm test
@@ -215,13 +159,14 @@ jobs:
   ci:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test]
+    needs: [build, lint, type-check, test]
     if: always()
 
     steps:
       - name: Check all jobs succeeded
         run: |
-          if [[ "${{ needs.lint.result }}" != "success" || \
+          if [[ "${{ needs.build.result }}" != "success" || \
+                "${{ needs.lint.result }}" != "success" || \
                 "${{ needs.type-check.result }}" != "success" || \
                 "${{ needs.test.result }}" != "success" ]]; then
             echo "One or more required checks failed."
