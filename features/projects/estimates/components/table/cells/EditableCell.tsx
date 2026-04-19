@@ -53,7 +53,7 @@ export function EditableCell({
                 type="button"
                 disabled={disabled}
                 className={cn(
-                    'group inline-flex w-full items-center gap-1 rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
+                    'group inline-flex w-full items-center gap-1 rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:underline focus-visible:decoration-dashed focus-visible:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
                     className,
                 )}
                 onClick={() => {
