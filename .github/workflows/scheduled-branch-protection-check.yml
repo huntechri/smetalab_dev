@@ -38,6 +38,12 @@ name: Scheduled Branch Protection Check
 #     Falls back to GITHUB_TOKEN for the repo check when the secret is absent,
 #     but the org check requires an explicit token with admin:org scope.
 #
+# Optional secrets:
+#   SLACK_WEBHOOK_URL — an Incoming Webhook URL for a Slack channel.
+#     When set, a Slack message is posted on failure with links to the alert
+#     issue and the failing Actions run. If the secret is absent the step is
+#     silently skipped so the workflow still works for repos without Slack.
+#
 # The workflow opens a single GitHub issue titled
 # "Branch protection regression detected" when checks fail, and avoids
 # duplicate issues by searching for an existing open issue with the same title
@@ -296,21 +302,23 @@ jobs:
           fi
 
       - name: Create alert issue
+        id: create-issue
         if: steps.existing.outputs.issue_number == ''
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
           BODY: ${{ steps.build-body.outputs.body }}
         run: |
-          gh issue create \
+          ISSUE_URL=$(gh issue create \
             --repo "$REPO" \
             --title "Branch protection regression detected" \
             --label "security,ci" \
-            --body "$BODY" || \
-          gh issue create \
+            --body "$BODY") || \
+          ISSUE_URL=$(gh issue create \
             --repo "$REPO" \
             --title "Branch protection regression detected" \
-            --body "$BODY"
+            --body "$BODY")
+          echo "issue_url=${ISSUE_URL}" >> "$GITHUB_OUTPUT"
 
       - name: Add comment to existing alert issue
         if: steps.existing.outputs.issue_number != ''
@@ -323,6 +331,44 @@ jobs:
           gh issue comment "$ISSUE_NUMBER" \
             --repo "$REPO" \
             --body "$BODY"
+
+      - name: Resolve issue URL for Slack notification
+        id: issue-url
+        env:
+          EXISTING_NUMBER: ${{ steps.existing.outputs.issue_number }}
+          CREATED_URL: ${{ steps.create-issue.outputs.issue_url }}
+          SERVER_URL: ${{ github.server_url }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -n "$CREATED_URL" ]; then
+            echo "issue_url=${CREATED_URL}" >> "$GITHUB_OUTPUT"
+          elif [ -n "$EXISTING_NUMBER" ]; then
+            echo "issue_url=${SERVER_URL}/${REPO}/issues/${EXISTING_NUMBER}" >> "$GITHUB_OUTPUT"
+          else
+            echo "issue_url=${SERVER_URL}/${REPO}/issues" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Notify Slack
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ISSUE_URL: ${{ steps.issue-url.outputs.issue_url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          REPO: ${{ github.repository }}
+        run: |
+          if [ -z "${SLACK_WEBHOOK_URL:-}" ]; then
+            echo "SLACK_WEBHOOK_URL is not set — skipping Slack notification."
+            exit 0
+          fi
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
+            -X POST "$SLACK_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"text\": \":warning: *Branch protection regression detected* in \`${REPO}\`\nOne or more branch protection rules are missing or misconfigured.\n\u2022 *Alert issue:* ${ISSUE_URL}\n\u2022 *Workflow run:* ${RUN_URL}\"
+            }")
+          echo "Slack webhook response status: ${HTTP_STATUS}"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::warning::Slack notification failed with HTTP status ${HTTP_STATUS}."
+          fi
 
       - name: Fail the workflow to surface regression in Actions UI
         run: |
