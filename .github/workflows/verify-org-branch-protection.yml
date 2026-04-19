@@ -1,0 +1,68 @@
+name: Verify Org Branch Protection
+
+# Asserts that the "org-main-protection" ruleset has been applied correctly to
+# the GitHub organization and is actively enforced.
+#
+# Run this workflow after executing scripts/setup-org-branch-protection.sh to
+# confirm the ruleset was created with the expected configuration.  The job
+# fails if the ruleset is missing, disabled, or lacks the required rules.
+#
+# Trigger options:
+#
+#   workflow_dispatch  — manual run from Actions → Verify Org Branch Protection
+#                        → Run workflow.  Provide the org name when prompted.
+#
+#   push               — automatic check when setup-org-branch-protection.sh or
+#                        the org ruleset definition is modified so that
+#                        configuration drift is caught in CI.
+#
+# Required secret:
+#   BRANCH_PROTECTION_TOKEN — a classic PAT or fine-grained token with the
+#                             "admin:org" scope for the target organization.
+
+on:
+  workflow_dispatch:
+    inputs:
+      org:
+        description: "GitHub organization name (leave blank to auto-detect from remote)"
+        required: false
+        type: string
+  push:
+    branches: ["main", "master"]
+    paths:
+      - "scripts/setup-org-branch-protection.sh"
+      - "scripts/verify-org-branch-protection.sh"
+      - ".github/rulesets/org-main-protection.json"
+
+jobs:
+  verify-org-ruleset:
+    name: Verify org-main-protection Ruleset
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve organization name
+        id: resolve-org
+        env:
+          INPUT_ORG: ${{ inputs.org }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ -n "$INPUT_ORG" ]; then
+            ORG="$INPUT_ORG"
+          else
+            ORG="$REPO_OWNER"
+          fi
+          echo "org=${ORG}" >> "$GITHUB_OUTPUT"
+          echo "Checking org-level branch protection for organization: ${ORG}"
+
+      - name: Verify org-main-protection ruleset
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+        run: |
+          chmod +x ./scripts/verify-org-branch-protection.sh
+          ./scripts/verify-org-branch-protection.sh "${{ steps.resolve-org.outputs.org }}"

@@ -1,0 +1,72 @@
+name: Setup Org Branch Protection
+
+# Applies the "org-main-protection" ruleset to the GitHub organization and
+# immediately verifies the result, ensuring protection is active before the
+# workflow exits.
+#
+# This workflow wraps scripts/setup-org-branch-protection.sh so admins can
+# run the setup directly from the GitHub Actions UI without a local environment,
+# and so CI can confirm the ruleset is correctly applied after every change to
+# the setup script or the ruleset JSON.
+#
+# Trigger options:
+#
+#   workflow_dispatch  — manual run from Actions → Setup Org Branch Protection
+#                        → Run workflow.  Provide the org name when prompted.
+#
+# Note: org ruleset apply is intentionally manual-only.  Applying on every push
+# would mutate a live org policy on each merge, which may be undesirable.
+# Use verify-org-branch-protection.yml for push-triggered verification without
+# re-applying the setup.
+#
+# Required secret:
+#   BRANCH_PROTECTION_TOKEN — a classic PAT or fine-grained token with the
+#                             "admin:org" scope for the target organization.
+
+on:
+  workflow_dispatch:
+    inputs:
+      org:
+        description: "GitHub organization name (leave blank to auto-detect from remote)"
+        required: false
+        type: string
+
+jobs:
+  setup-and-verify:
+    name: Apply and Verify org-main-protection Ruleset
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Resolve organization name
+        id: resolve-org
+        env:
+          INPUT_ORG: ${{ inputs.org }}
+          REPO_OWNER: ${{ github.repository_owner }}
+        run: |
+          if [ -n "$INPUT_ORG" ]; then
+            ORG="$INPUT_ORG"
+          else
+            ORG="$REPO_OWNER"
+          fi
+          echo "org=${ORG}" >> "$GITHUB_OUTPUT"
+          echo "Target organization: ${ORG}"
+
+      - name: Apply org-main-protection ruleset
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+        run: |
+          chmod +x ./scripts/setup-org-branch-protection.sh
+          ./scripts/setup-org-branch-protection.sh "${{ steps.resolve-org.outputs.org }}"
+
+      - name: Verify org-main-protection ruleset
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+        run: |
+          chmod +x ./scripts/verify-org-branch-protection.sh
+          ./scripts/verify-org-branch-protection.sh "${{ steps.resolve-org.outputs.org }}"
