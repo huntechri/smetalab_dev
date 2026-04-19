@@ -52,7 +52,7 @@ export function EditableCell({
                 type="button"
                 disabled={disabled}
                 className={cn(
-                    'inline-flex w-full items-center rounded-sm hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',
+                    'inline-flex w-full items-center rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
                     className,
                 )}
                 onClick={() => {
