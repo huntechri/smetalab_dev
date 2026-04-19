@@ -47,6 +47,7 @@ type ButtonProps = Omit<React.ComponentProps<"button">, "className"> &
     loadingText?: string
     iconLeft?: React.ReactNode
     iconRight?: React.ReactNode
+    className?: string
   }
 
 function Button({
@@ -60,11 +61,12 @@ function Button({
   children,
   iconLeft,
   iconRight,
+  className,
   ...props
 }: ButtonProps) {
   const resolvedLoading = loading || isLoading
   const Comp = asChild ? Slot : "button"
-  const buttonClassName = cn(buttonVariants({ variant, size }))
+  const buttonClassName = cn(buttonVariants({ variant, size }), className)
 
   if (asChild) {
     return (

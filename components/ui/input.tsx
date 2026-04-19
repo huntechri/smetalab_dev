@@ -34,9 +34,10 @@ const inputVariants = cva(
 type InputProps = Omit<React.ComponentProps<"input">, "className"> &
   VariantProps<typeof inputVariants> & {
     numeric?: boolean
+    className?: string
   }
 
-function Input({ type, variant, size, textAlign, numeric, ...props }: InputProps) {
+function Input({ type, variant, size, textAlign, numeric, className, ...props }: InputProps) {
   return (
     <input
       type={type}
@@ -44,7 +45,8 @@ function Input({ type, variant, size, textAlign, numeric, ...props }: InputProps
       className={cn(
         inputVariants({ variant, size, textAlign }),
         (numeric || type === "number") && "tabular-nums",
-        type === "color" && "cursor-pointer p-1"
+        type === "color" && "cursor-pointer p-1",
+        className
       )}
       {...props}
     />
