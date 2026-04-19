@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/shared/ui/button';
 import { DataTable } from "@/shared/ui/data-table";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import {

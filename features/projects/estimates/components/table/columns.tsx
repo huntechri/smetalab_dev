@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import {
     Dialog,
     DialogContent,

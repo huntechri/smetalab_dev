@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';

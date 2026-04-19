@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useActionState, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import {
   Card,
   CardContent,

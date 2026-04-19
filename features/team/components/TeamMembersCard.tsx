@@ -11,7 +11,7 @@ import {
 } from '@/shared/ui/alert-dialog';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Label } from '@/shared/ui/label';

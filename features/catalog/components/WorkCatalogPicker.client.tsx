@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { cn } from '@/lib/utils';
 import { catalogRepository } from '../repository';

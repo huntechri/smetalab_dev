@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { DataTable } from '@/shared/ui/data-table';
 import { Input } from '@/shared/ui/input';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';

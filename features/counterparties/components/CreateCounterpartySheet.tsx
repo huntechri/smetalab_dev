@@ -10,7 +10,7 @@ import {
     SheetTitle,
     SheetFooter,
 } from "@/shared/ui/sheet";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/shared/ui/button';
 import {
     Form,
     FormControl,
