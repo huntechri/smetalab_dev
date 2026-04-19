@@ -74,3 +74,12 @@ jobs:
         run: |
           chmod +x ./scripts/setup-branch-protection.sh
           ./scripts/setup-branch-protection.sh "$TARGET_REPO"
+
+      - name: Verify branch protection is enforced
+        env:
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
+          TARGET_REPO: ${{ steps.resolve.outputs.repo }}
+        run: |
+          set -euo pipefail
+          chmod +x ./scripts/verify-branch-protection.sh
+          ./scripts/verify-branch-protection.sh "$TARGET_REPO"

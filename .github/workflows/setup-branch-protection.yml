@@ -20,6 +20,9 @@ jobs:
       administration: write
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Add 'All Checks Passed' as required status check on ${{ inputs.branch }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -100,9 +103,43 @@ jobs:
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
-          echo "Verifying required_status_checks on '${BRANCH}':"
-          gh api \
+          set -euo pipefail
+
+          echo "Verifying required_status_checks on '${BRANCH}' via legacy branch-protection API..."
+          PROTECTION=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
             /repos/${OWNER}/${REPO}/branches/${BRANCH}/protection/required_status_checks \
-            | jq .
+            2>/dev/null || echo "{}")
+
+          echo "$PROTECTION" | jq .
+
+          # Assert that "All Checks Passed" appears in the contexts list.
+          ALL_CHECKS=$(echo "$PROTECTION" \
+            | jq -r '.contexts // [] | map(select(. == "All Checks Passed")) | length')
+
+          if [ "$ALL_CHECKS" -lt 1 ]; then
+            echo "" >&2
+            echo "VERIFICATION FAILED: 'All Checks Passed' is not listed as a" >&2
+            echo "required status check on branch '${BRANCH}'." >&2
+            echo "The apply step may have silently failed or been skipped." >&2
+            exit 1
+          fi
+
+          echo ""
+          echo "VERIFICATION PASSED: 'All Checks Passed' is required on '${BRANCH}'."
+
+      - name: Verify rulesets API (main-protection ruleset)
+        # Advisory: this workflow applies protection via the legacy branch-protection API.
+        # If no repo-level ruleset exists yet (only legacy protection is configured),
+        # this step will warn rather than fail.  Run setup-branch-protection.sh first
+        # to create the ruleset, at which point this step will assert it fully.
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          set -euo pipefail
+          chmod +x ./scripts/verify-branch-protection.sh
+          ./scripts/verify-branch-protection.sh "${OWNER}/${REPO}"
