@@ -150,6 +150,11 @@ if [ -n "$SCOPES" ]; then
     warn "Regenerate the token at https://github.com/settings/tokens/new"
     warn "and enable the 'admin:org_hook' scope, then retry."
   fi
+else
+  warn "Could not verify token scopes — this is expected for fine-grained PATs,"
+  warn "which do not expose an x-oauth-scopes header."
+  warn "Please ensure the token has the 'org_hooks: write' permission before continuing."
+  warn "You can review token permissions at https://github.com/settings/tokens"
 fi
 
 # ── Step 3: Webhook payload URL ───────────────────────────────────────────────
