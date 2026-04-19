@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
 import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Sparkles } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { SearchInput } from '@/shared/ui/search-input';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { Switch } from '@/shared/ui/switch';

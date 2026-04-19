@@ -2,7 +2,7 @@
 
 import type { ChangeEvent, RefObject } from 'react';
 import { Download, Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 interface GlobalPurchasesImportExportActionsProps {

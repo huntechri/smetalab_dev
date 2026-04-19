@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
-import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
+import { EditableCell } from '@/features/projects/estimates';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import {
   AlertDialog,

@@ -1,7 +1,5 @@
 import { cookies } from 'next/headers';
-import { db } from '@/lib/data/db/drizzle';
-import { impersonationSessions } from '@/lib/data/db/schema';
-import { and, eq, isNull } from 'drizzle-orm';
+import { getImpersonationBannerData } from '@/lib/services/impersonation.service';
 import { StopImpersonationButton } from './stop-impersonation-button';
 import { AlertTriangle } from 'lucide-react';
 
@@ -11,17 +9,9 @@ export async function ImpersonationBanner() {
 
     if (!sessionToken) return null;
 
-    const session = await db.query.impersonationSessions.findFirst({
-        where: and(
-            eq(impersonationSessions.sessionToken, sessionToken),
-            isNull(impersonationSessions.endedAt)
-        ),
-        with: {
-            targetTeam: true
-        }
-    });
+    const data = await getImpersonationBannerData(sessionToken);
 
-    if (!session || !session.targetTeam) return null;
+    if (!data) return null;
 
     return (
         <div className="bg-amber-100 border-b border-amber-200 px-4 py-2 flex items-center justify-between text-sm text-amber-900 sticky top-0 z-50">
@@ -31,7 +21,7 @@ export async function ImpersonationBanner() {
                     Режим имперсонации:
                 </span>
                 <span>
-                    Вы работаете в рабочем пространстве команды <strong>{session.targetTeam.name}</strong>
+                    Вы работаете в рабочем пространстве команды <strong>{data.teamName}</strong>
                 </span>
             </div>
             <div className="flex items-center gap-4">

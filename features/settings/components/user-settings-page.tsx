@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { updateAccount, updatePassword } from '@/app/(login)/actions';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import {
   Card,
   CardContent,

@@ -18,7 +18,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/shared/ui/chart";
-import { Button } from "@/components/ui/button";
+import { Button } from '@/shared/ui/button';
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics';

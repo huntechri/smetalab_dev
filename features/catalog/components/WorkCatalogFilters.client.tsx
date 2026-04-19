@@ -5,7 +5,7 @@ import { Sparkles } from 'lucide-react';
 import { SearchInput } from '@/shared/ui/search-input';
 import { WorkCatalogCategories } from './WorkCatalogCategories.client';
 import { Switch } from '@/shared/ui/switch';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { cn } from '@/lib/utils';
 
 interface Props {

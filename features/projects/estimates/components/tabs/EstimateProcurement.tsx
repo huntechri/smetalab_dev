@@ -5,7 +5,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Download } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
