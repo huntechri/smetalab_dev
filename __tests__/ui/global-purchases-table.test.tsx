@@ -41,6 +41,21 @@ vi.mock('@repo/ui', () => ({
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     Calendar: () => <div>calendar</div>,
     TableEmptyState: () => <div>empty</div>,
+    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+    Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    Command: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    CommandEmpty: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    CommandGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    CommandInput: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+    CommandItem: ({ children, onSelect }: { children: React.ReactNode; onSelect?: () => void }) => <div onClick={onSelect}>{children}</div>,
+    CommandList: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DropdownMenuItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
