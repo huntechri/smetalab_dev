@@ -67,4 +67,95 @@ describe('EditableCell', () => {
         const input = screen.getByRole('textbox');
         expect(input).toHaveValue('Работа');
     });
+
+    it('applies caller className to the display button', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Test" onCommit={onCommit} className="my-custom-class" />);
+
+        const button = screen.getByRole('button', { name: 'Test' });
+        expect(button).toHaveClass('my-custom-class');
+    });
+
+    it('click switches from display mode to input', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Hello" onCommit={onCommit} />);
+
+        expect(screen.getByRole('button', { name: 'Hello' })).toBeInTheDocument();
+
+        await userEvent.click(screen.getByRole('button', { name: 'Hello' }));
+
+        expect(screen.queryByRole('button')).not.toBeInTheDocument();
+        expect(screen.getByRole('textbox')).toBeInTheDocument();
+    });
+
+    it('commits value on Enter and returns to display mode', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Original" onCommit={onCommit} />);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Original' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'Updated{Enter}');
+
+        await waitFor(() => {
+            expect(onCommit).toHaveBeenCalledWith('Updated');
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+            expect(screen.getByRole('button')).toBeInTheDocument();
+        });
+    });
+
+    it('commits value on blur and returns to display mode', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Original" onCommit={onCommit} />);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Original' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'Blurred');
+        fireEvent.blur(input);
+
+        await waitFor(() => {
+            expect(onCommit).toHaveBeenCalledWith('Blurred');
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+            expect(screen.getByRole('button')).toBeInTheDocument();
+        });
+    });
+
+    it('cancels edit on Escape and restores original value', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Original" onCommit={onCommit} />);
+
+        await userEvent.click(screen.getByRole('button', { name: 'Original' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'Changed');
+        await userEvent.keyboard('{Escape}');
+
+        await waitFor(() => {
+            expect(onCommit).not.toHaveBeenCalled();
+            expect(screen.getByRole('button', { name: 'Original' })).toBeInTheDocument();
+        });
+    });
+
+    it('disabled cell does not open input when clicked', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Locked" onCommit={onCommit} disabled />);
+
+        const button = screen.getByRole('button', { name: 'Locked' });
+        expect(button).toBeDisabled();
+
+        await userEvent.click(button, { pointerEventsCheck: 0 });
+
+        expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+        expect(onCommit).not.toHaveBeenCalled();
+    });
 });
