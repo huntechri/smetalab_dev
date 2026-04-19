@@ -57,11 +57,33 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: install
+
+    steps:
+      - name: Setup environment
+        uses: ./.github/actions/setup
+
+      - name: Cache Next.js build output
+        uses: actions/cache@v4
+        with:
+          path: .next/cache
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-
+
+      - name: Build
+        run: pnpm build
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: install
+    needs: build
 
     steps:
       - name: Setup environment
@@ -71,10 +93,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .next/cache
-          key: ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-lint-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-nextjs-lint-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-nextjs-
 
       - name: Run ESLint
@@ -84,7 +105,7 @@ jobs:
     name: Type Check
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    needs: install
+    needs: build
 
     steps:
       - name: Setup environment
@@ -94,10 +115,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: .next/cache
-          key: ${{ runner.os }}-nextjs-typecheck-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx') }}
           restore-keys: |
-            ${{ runner.os }}-nextjs-typecheck-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            ${{ runner.os }}-nextjs-typecheck-
+            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
             ${{ runner.os }}-nextjs-
 
       - name: Run type-check
@@ -139,13 +159,14 @@ jobs:
   ci:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [lint, type-check, test]
+    needs: [build, lint, type-check, test]
     if: always()
 
     steps:
       - name: Check all jobs succeeded
         run: |
-          if [[ "${{ needs.lint.result }}" != "success" || \
+          if [[ "${{ needs.build.result }}" != "success" || \
+                "${{ needs.lint.result }}" != "success" || \
                 "${{ needs.type-check.result }}" != "success" || \
                 "${{ needs.test.result }}" != "success" ]]; then
             echo "One or more required checks failed."
