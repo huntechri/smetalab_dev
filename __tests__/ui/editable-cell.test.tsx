@@ -229,6 +229,15 @@ describe('EditableCell', () => {
         expect(button).toHaveClass('focus-visible:underline-offset-2');
     });
 
+    it('display button carries the group class so pencil hover animation works', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const button = screen.getByRole('button', { name: 'Test' });
+        expect(button).toHaveClass('group');
+    });
+
     it('display button carries all hover Tailwind classes for mouse users', () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
