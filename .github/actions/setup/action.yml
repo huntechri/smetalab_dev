@@ -1,12 +1,9 @@
 name: Setup pnpm environment
-description: Checkout, install pnpm + Node, and restore cached node_modules
+description: Install pnpm + Node, and restore cached node_modules (caller must checkout first)
 
 runs:
   using: composite
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
     - name: Set up pnpm
       uses: pnpm/action-setup@v4
       with:
