@@ -145,6 +145,21 @@ describe('EditableCell', () => {
         });
     });
 
+    it('renders a pencil icon inside the display button in non-editing state', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const button = screen.getByRole('button', { name: 'Test' });
+        expect(button).toBeInTheDocument();
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(button.contains(pencilIcon)).toBe(true);
+
+        expect(button).toMatchSnapshot();
+    });
+
     it('disabled cell does not open input when clicked', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
