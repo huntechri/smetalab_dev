@@ -40,6 +40,7 @@ vi.mock('@repo/ui', () => ({
     PopoverTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     Calendar: () => <div>calendar</div>,
+    TableEmptyState: () => <div>empty</div>,
 }));
 
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({

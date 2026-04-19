@@ -50,6 +50,9 @@ vi.mock('@repo/ui', () => ({
   ),
   DropdownMenuLabel: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
+  Avatar: ({ children }: { children: ReactNode }) => <div>{children}</div>,
+  AvatarFallback: ({ children }: { children: ReactNode }) => <span>{children}</span>,
+  AvatarImage: ({ src, alt }: { src?: string; alt?: string }) => <img src={src} alt={alt} />,
 }));
 
 describe('UserMenu', () => {
