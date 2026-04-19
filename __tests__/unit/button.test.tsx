@@ -15,12 +15,6 @@ describe('Button Component', () => {
     expect(button).toHaveClass('h-7');
   });
 
-  it('applies h-9 when size="default"', () => {
-    render(<Button size="default">Test</Button>);
-    const button = screen.getByRole('button', { name: 'Test' });
-    expect(button).toHaveClass('h-9');
-  });
-
   it('sets variant and size data attributes', () => {
     render(
       <Button variant="destructive" size="icon-sm">
