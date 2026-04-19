@@ -160,6 +160,17 @@ describe('EditableCell', () => {
         expect(button).toMatchSnapshot();
     });
 
+    it('pencil icon carries keyboard-focus and hover visibility classes', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const pencilIcon = container.querySelector('svg');
+        expect(pencilIcon).not.toBeNull();
+        expect(pencilIcon).toHaveClass('group-focus-visible:opacity-40');
+        expect(pencilIcon).toHaveClass('group-hover:opacity-40');
+    });
+
     it('pencil icon is absent in edit mode', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
