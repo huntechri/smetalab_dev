@@ -61,6 +61,9 @@ jobs:
           echo "Checking org-level branch protection for organization: ${ORG}"
 
       - name: Verify org-main-protection ruleset
+        # Asserts all required rules including the pull_request review requirement
+        # (required_approving_review_count >= 1). Enforcement logic lives in
+        # scripts/verify-org-branch-protection.sh; a non-zero exit fails this step.
         env:
           GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
         run: |
