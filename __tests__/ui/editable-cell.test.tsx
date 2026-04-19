@@ -184,4 +184,47 @@ describe('EditableCell', () => {
         expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
         expect(onCommit).not.toHaveBeenCalled();
     });
+
+    it('display button carries all focus-visible Tailwind classes for keyboard users', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Cell" onCommit={onCommit} />);
+
+        const button = screen.getByRole('button', { name: 'Cell' });
+        expect(button).toHaveClass('focus-visible:bg-accent');
+        expect(button).toHaveClass('focus-visible:text-accent-foreground');
+        expect(button).toHaveClass('focus-visible:underline');
+        expect(button).toHaveClass('focus-visible:decoration-dashed');
+        expect(button).toHaveClass('focus-visible:underline-offset-2');
+    });
+
+    it('display button carries all hover Tailwind classes for mouse users', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Cell" onCommit={onCommit} />);
+
+        const button = screen.getByRole('button', { name: 'Cell' });
+        expect(button).toHaveClass('hover:bg-accent');
+        expect(button).toHaveClass('hover:text-accent-foreground');
+        expect(button).toHaveClass('hover:underline');
+        expect(button).toHaveClass('hover:decoration-dashed');
+        expect(button).toHaveClass('hover:underline-offset-2');
+    });
+
+    it('input receives the ariaLabel prop as aria-label when in edit mode', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                value="Description"
+                onCommit={onCommit}
+                ariaLabel="Edit item description"
+            />,
+        );
+
+        await userEvent.click(screen.getByRole('button', { name: 'Description' }));
+
+        const input = screen.getByRole('textbox');
+        expect(input).toHaveAttribute('aria-label', 'Edit item description');
+    });
 });
