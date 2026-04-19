@@ -113,3 +113,4 @@ fi
 echo ""
 echo "Done. 'All Checks Passed' is now required and at least 1 approving review must be given before merging into main/master."
 echo "     Stale approvals are automatically dismissed when new commits are pushed to a PR."
+echo "     The person who pushed the last commit cannot approve the PR (require_last_push_approval=true)."
