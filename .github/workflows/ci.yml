@@ -241,6 +241,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: bash .github/scripts/validate-codeowners.sh .github/CODEOWNERS
 
+  test-webhook-script:
+    name: Test Webhook Script
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run webhook script tests
+        run: bash scripts/test-configure-org-webhook.sh
+
   notify-build-failure:
     name: Notify Build Failure
     runs-on: ubuntu-latest
@@ -273,7 +287,7 @@ jobs:
   ci:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [build, lint, type-check, test, validate-codeowners]
+    needs: [build, lint, type-check, test, validate-codeowners, test-webhook-script]
     if: always()
 
     steps:
@@ -287,6 +301,7 @@ jobs:
           TYPE_OK="${{ needs.type-check.result }}"
           TEST_OK="${{ needs.test.result }}"
           CODEOWNERS_OK="${{ needs.validate-codeowners.result }}"
+          WEBHOOK_SCRIPT_OK="${{ needs.test-webhook-script.result }}"
 
           FAILED=false
 
@@ -295,6 +310,7 @@ jobs:
           [[ "$TYPE_OK" == "success" || "$TYPE_OK" == "skipped" ]] || { echo "type-check: $TYPE_OK"; FAILED=true; }
           [[ "$TEST_OK" == "success" ]] || { echo "test: $TEST_OK"; FAILED=true; }
           [[ "$CODEOWNERS_OK" == "success" ]] || { echo "validate-codeowners: $CODEOWNERS_OK"; FAILED=true; }
+          [[ "$WEBHOOK_SCRIPT_OK" == "success" ]] || { echo "test-webhook-script: $WEBHOOK_SCRIPT_OK"; FAILED=true; }
 
           if [[ "$FAILED" == "true" ]]; then
             echo "One or more required checks failed."
