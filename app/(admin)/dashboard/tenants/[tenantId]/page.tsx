@@ -2,7 +2,7 @@ import { getTeamDetails } from '@/lib/data/db/admin-queries';
 import { notFound } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/shared/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import {
     Users,
