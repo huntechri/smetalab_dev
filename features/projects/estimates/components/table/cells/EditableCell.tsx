@@ -1,7 +1,7 @@
 'use client';
 
 import { Input } from '@/shared/ui/input';
-import { Button } from '@/shared/ui/button';
+import { cn } from '@/lib/utils';
 import { useRef, useState } from 'react';
 
 export function EditableCell({
@@ -48,11 +48,13 @@ export function EditableCell({
 
     if (!editing) {
         return (
-            <Button
+            <button
                 type="button"
-                variant="ghost"
                 disabled={disabled}
-                className={className}
+                className={cn(
+                    'inline-flex w-full items-center rounded-sm hover:bg-accent hover:text-accent-foreground disabled:pointer-events-none disabled:opacity-50',
+                    className,
+                )}
                 onClick={() => {
                     wasClearedOnFocus.current = false;
                     setDraft(String(value));
@@ -60,7 +62,7 @@ export function EditableCell({
                 }}
             >
                 {displayValue ?? String(value)}
-            </Button>
+            </button>
         );
     }
 
