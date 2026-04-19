@@ -69,9 +69,14 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             const item = row.original;
             if (item.kind === 'section') {
                 return (
-                    <div className="text-[11px] font-bold uppercase tracking-widest truncate" title={item.name}>
-                        {item.name}
-                    </div>
+                    <EditableCell
+                        type="text"
+                        value={item.name}
+                        onCommit={(value) => actions.onPatch(item.id, 'name', value)}
+                        ariaLabel={`Раздел: ${item.name}`}
+                        title={item.name}
+                        className="text-[11px] font-bold uppercase tracking-widest truncate"
+                    />
                 );
             }
             return (
