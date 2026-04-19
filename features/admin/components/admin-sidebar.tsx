@@ -8,7 +8,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from '@/shared/ui/sidebar';
+} from '@repo/ui';
 import {
     LayoutDashboard,
     Users,

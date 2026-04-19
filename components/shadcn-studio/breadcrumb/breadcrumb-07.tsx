@@ -11,13 +11,13 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/shared/ui/breadcrumb';
+} from '@repo/ui';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+} from '@repo/ui';
 
 type Breadcrumb07Props = {
     items: BreadcrumbEntry[];

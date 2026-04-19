@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@repo/ui';
+import { Button } from '@repo/ui';
 
 const guideLinks = [
     { href: '/app/guide/works', title: 'Работы', description: 'Справочник работ и базовые нормы.' },

@@ -9,7 +9,7 @@ import {
     CardContent,
     CardHeader,
     CardTitle,
-} from "@/shared/ui/card";
+} from "@repo/ui";
 import {
     type ChartConfig,
     ChartContainer,
@@ -17,10 +17,10 @@ import {
     ChartLegendContent,
     ChartTooltip,
     ChartTooltipContent,
-} from "@/shared/ui/chart";
-import { Button } from '@/shared/ui/button';
-import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/shared/ui/dropdown-menu";
-import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+} from "@repo/ui";
+import { Button } from '@repo/ui';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@repo/ui";
+import { Tabs, TabsList, TabsTrigger } from "@repo/ui";
 import { buildDynamicsFlowTimeline, buildDynamicsTimeline, DynamicsMode, DynamicsRange, hasActivityInTimeline } from '../lib/performance-dynamics';
 import { HomePerformanceDynamicsPoint } from '../types';
 

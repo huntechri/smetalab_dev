@@ -1,0 +1,37 @@
+# CODEOWNERS — defines who must review changes to sensitive areas of the codebase.
+# GitHub automatically requests a review from the listed owner(s) when a PR
+# touches a matching path. Combined with `require_code_owner_review: true` in
+# `.github/rulesets/main-protection.json`, no PR can be merged without approval
+# from the domain expert for that area.
+#
+# Syntax: <pattern>  <owner> [<owner2> ...]
+# Owners must be GitHub usernames (@username) or team slugs (@org/team-slug).
+# More specific patterns override less specific ones listed above them.
+# Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# ── Infrastructure layer (auth, email, notifications, payments) ──────────────
+/lib/infrastructure/  @huntechri
+
+# ── Authentication ───────────────────────────────────────────────────────────
+# Security-critical path — requires explicit owner approval on every change.
+/lib/infrastructure/auth/  @huntechri
+
+# ── Payments / billing ───────────────────────────────────────────────────────
+/lib/infrastructure/payments/  @huntechri
+
+# ── Database schema ──────────────────────────────────────────────────────────
+# Schema changes are irreversible without a migration.
+/lib/data/db/schema.ts  @huntechri
+
+# ── Drizzle migrations and config ────────────────────────────────────────────
+/drizzle/  @huntechri
+/drizzle.config.mts  @huntechri
+/drizzle.config.test.mts  @huntechri
+
+# ── Server actions ───────────────────────────────────────────────────────────
+/app/actions/  @huntechri
+
+# ── GitHub configuration (CI, branch protection, CODEOWNERS) ─────────────────
+/.github/  @huntechri
+/.github/rulesets/  @huntechri
+/.github/workflows/  @huntechri

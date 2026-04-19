@@ -56,37 +56,30 @@ vi.mock('next/navigation', () => ({
   useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock('@/shared/ui/data-table', () => ({
+vi.mock('@repo/ui', () => ({
   DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
-}));
-
-vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
-}));
-
-vi.mock('@/shared/ui/badge', () => ({ Badge: ({ children }: { children: React.ReactNode }) => <div>{children}</div> }));
-vi.mock('@/shared/ui/sheet', () => ({
+  Badge: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   Sheet: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SheetContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SheetDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SheetTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-vi.mock('@/shared/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-}));
-vi.mock('@/shared/ui/dialog', () => ({
   Dialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DialogDescription: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DialogFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   DialogTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+  Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
+  Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
 }));
-vi.mock('@/shared/ui/input', () => ({ Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} /> }));
-vi.mock('@/shared/ui/label', () => ({ Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label> }));
+
+vi.mock('@/components/ui/button', () => ({
+  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+}));
 
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
   MaterialCatalogDialog: () => null,

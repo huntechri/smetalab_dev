@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/shared/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { Button } from '@repo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@repo/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
@@ -69,15 +69,22 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             const item = row.original;
             if (item.kind === 'section') {
                 return (
-                    <div className="text-[11px] font-bold uppercase tracking-widest truncate" title={item.name}>
-                        {item.name}
-                    </div>
+                    <EditableCell
+                        type="text"
+                        cancelOnEmpty
+                        value={item.name}
+                        onCommit={(value) => actions.onPatch(item.id, 'name', value)}
+                        ariaLabel={`Раздел: ${item.name}`}
+                        title={item.name}
+                        className="text-[11px] font-bold uppercase tracking-widest truncate"
+                    />
                 );
             }
             return (
                 <div className={item.kind === 'material' ? 'pl-8' : 'pl-3'}>
                     <EditableCell
                         type="text"
+                        cancelOnEmpty
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Наименование: ${item.name}`}

@@ -1,19 +1,19 @@
 'use client';
 
-import { DataTable } from '@/shared/ui/data-table';
+import { DataTable } from '@repo/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { EstimateMeta, EstimateStatus } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu';
+} from '@repo/ui';
 import { Trash2 } from 'lucide-react';
 import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
@@ -28,7 +28,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/shared/ui/alert-dialog';
+} from '@repo/ui';
 
 function EstimateStatusCell({
   status,

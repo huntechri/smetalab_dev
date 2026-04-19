@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 import {
     Dialog,
     DialogContent,
@@ -15,7 +15,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/shared/ui/dialog';
+} from '@repo/ui';
 import {
     Form,
     FormControl,
@@ -23,13 +23,13 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@/shared/ui/form';
-import { Input } from '@/shared/ui/input';
+} from '@repo/ui';
+import { Input } from '@repo/ui';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@/shared/ui/popover';
+} from '@repo/ui';
 import {
     Command,
     CommandEmpty,
@@ -37,8 +37,8 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from '@/shared/ui/command';
-import { DatePicker } from '@/shared/ui/date-picker';
+} from '@repo/ui';
+import { DatePicker } from '@repo/ui';
 
 import { createProjectSchema, type CreateProjectInput } from '../../shared/schemas/create-project.schema';
 import { createProjectAction } from '@/app/actions/projects/create';

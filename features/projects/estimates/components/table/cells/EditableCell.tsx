@@ -1,6 +1,6 @@
 'use client';
 
-import { Input } from '@/shared/ui/input';
+import { Input } from '@repo/ui';
 import { cn } from '@/lib/utils';
 import { Pencil } from 'lucide-react';
 import { useRef, useState } from 'react';
@@ -15,11 +15,13 @@ export function EditableCell({
     cancelOnEmpty = false,
     displayValue,
     ariaLabel,
+    title,
     className,
 }: {
     value: string | number;
     displayValue?: string;
     ariaLabel?: string;
+    title?: string;
     onCommit: (value: string) => Promise<void>;
     type?: 'text' | 'number' | 'date';
     disabled?: boolean;
@@ -53,6 +55,7 @@ export function EditableCell({
                 type="button"
                 disabled={disabled}
                 aria-label={ariaLabel}
+                title={title}
                 className={cn(
                     'group inline-flex w-full items-center gap-1 rounded-sm cursor-text hover:bg-accent hover:text-accent-foreground hover:underline hover:decoration-dashed hover:underline-offset-2 focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:underline focus-visible:decoration-dashed focus-visible:underline-offset-2 disabled:pointer-events-none disabled:opacity-50',
                     className,

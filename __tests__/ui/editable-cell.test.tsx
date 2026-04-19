@@ -229,6 +229,15 @@ describe('EditableCell', () => {
         expect(button).toHaveClass('focus-visible:underline-offset-2');
     });
 
+    it('display button carries the group class so pencil hover animation works', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(<EditableCell value="Test" onCommit={onCommit} />);
+
+        const button = screen.getByRole('button', { name: 'Test' });
+        expect(button).toHaveClass('group');
+    });
+
     it('display button carries all hover Tailwind classes for mouse users', () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
@@ -272,5 +281,85 @@ describe('EditableCell', () => {
 
         const input = screen.getByRole('textbox');
         expect(input).toHaveAttribute('aria-label', 'Edit item description');
+    });
+});
+
+describe('EditableCell — name field inline editing', () => {
+    it('commits new name when user types and presses Enter', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                type="text"
+                cancelOnEmpty
+                value="Монтаж трубопровода"
+                onCommit={onCommit}
+                ariaLabel="Наименование: Монтаж трубопровода"
+            />,
+        );
+
+        await userEvent.click(screen.getByRole('button', { name: 'Наименование: Монтаж трубопровода' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'Монтаж стояков{Enter}');
+
+        await waitFor(() => {
+            expect(onCommit).toHaveBeenCalledOnce();
+            expect(onCommit).toHaveBeenCalledWith('Монтаж стояков');
+            expect(screen.queryByRole('textbox')).not.toBeInTheDocument();
+            expect(screen.getByRole('button')).toBeInTheDocument();
+        });
+    });
+
+    it('restores original name when user presses Escape', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                type="text"
+                cancelOnEmpty
+                value="Укладка плитки"
+                onCommit={onCommit}
+                ariaLabel="Наименование: Укладка плитки"
+            />,
+        );
+
+        await userEvent.click(screen.getByRole('button', { name: 'Наименование: Укладка плитки' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        await userEvent.type(input, 'Новое название');
+        await userEvent.keyboard('{Escape}');
+
+        await waitFor(() => {
+            expect(onCommit).not.toHaveBeenCalled();
+            expect(screen.getByRole('button', { name: 'Наименование: Укладка плитки' })).toBeInTheDocument();
+        });
+    });
+
+    it('does not commit when user clears the name and submits an empty string', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                type="text"
+                cancelOnEmpty
+                value="Штукатурка стен"
+                onCommit={onCommit}
+                ariaLabel="Наименование: Штукатурка стен"
+            />,
+        );
+
+        await userEvent.click(screen.getByRole('button', { name: 'Наименование: Штукатурка стен' }));
+
+        const input = screen.getByRole('textbox');
+        await userEvent.clear(input);
+        fireEvent.blur(input);
+
+        await waitFor(() => {
+            expect(onCommit).not.toHaveBeenCalled();
+            expect(screen.getByRole('button', { name: 'Наименование: Штукатурка стен' })).toBeInTheDocument();
+        });
     });
 });

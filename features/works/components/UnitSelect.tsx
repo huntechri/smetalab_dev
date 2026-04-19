@@ -4,7 +4,7 @@ import * as React from "react"
 import { Check, ChevronsUpDown, Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { Button } from '@/shared/ui/button'
+import { Button } from '@repo/ui'
 import {
     Command,
     CommandEmpty,
@@ -12,12 +12,12 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from "@/shared/ui/command"
+} from "@repo/ui"
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/shared/ui/popover"
+} from "@repo/ui"
 import { getUniqueUnits } from "@/app/actions/works"
 
 interface UnitSelectProps {

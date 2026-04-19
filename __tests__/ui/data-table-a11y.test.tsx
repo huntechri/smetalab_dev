@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import type { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/shared/ui/data-table';
+import { DataTable } from '@repo/ui';
 
 vi.mock('react-virtuoso', async () => {
     const mock = await import('../__mocks__/react-virtuoso');

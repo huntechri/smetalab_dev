@@ -69,6 +69,79 @@ const materialRow: VisibleEstimateRow = {
     depth: 2,
 };
 
+const sectionRow: VisibleEstimateRow = {
+    id: 's-1',
+    kind: 'section',
+    code: 'I',
+    name: 'Раздел 1',
+    unit: '',
+    qty: 0,
+    price: 0,
+    sum: 0,
+    expense: 0,
+    order: 0,
+    depth: 0,
+};
+
+describe('Estimate table columns – actions cell aria-labels', () => {
+    const columns = getEstimateColumns(mockActions);
+
+    const actionsColumn = columns.find((c) => (c as ColumnDef<VisibleEstimateRow> & { id?: string }).id === 'actions')!;
+
+    function renderActionsCell(row: VisibleEstimateRow) {
+        const ctx = makeCellContext(row);
+        const CellContent = () => <>{(actionsColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
+        render(<CellContent />);
+    }
+
+    it('work row exposes "Добавить материал" button with correct aria-label', () => {
+        renderActionsCell(workRow);
+        const btn = screen.getByRole('button', { name: 'Добавить материал' });
+        expect(btn).toBeInTheDocument();
+        expect(btn).toHaveAttribute('aria-label', 'Добавить материал');
+    });
+
+    it('work row exposes "Добавить работу ниже" button with correct aria-label', () => {
+        renderActionsCell(workRow);
+        const btn = screen.getByRole('button', { name: 'Добавить работу ниже' });
+        expect(btn).toBeInTheDocument();
+        expect(btn).toHaveAttribute('aria-label', 'Добавить работу ниже');
+    });
+
+    it('work row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
+        renderActionsCell(workRow);
+        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
+        expect(btn).toBeInTheDocument();
+        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
+    });
+
+    it('material row does not expose "Добавить материал" or "Добавить работу ниже" buttons', () => {
+        renderActionsCell(materialRow);
+        expect(screen.queryByRole('button', { name: 'Добавить материал' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Добавить работу ниже' })).not.toBeInTheDocument();
+    });
+
+    it('material row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
+        renderActionsCell(materialRow);
+        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
+        expect(btn).toBeInTheDocument();
+        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
+    });
+
+    it('section row does not expose "Добавить материал" or "Добавить работу ниже" buttons', () => {
+        renderActionsCell(sectionRow);
+        expect(screen.queryByRole('button', { name: 'Добавить материал' })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: 'Добавить работу ниже' })).not.toBeInTheDocument();
+    });
+
+    it('section row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
+        renderActionsCell(sectionRow);
+        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
+        expect(btn).toBeInTheDocument();
+        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
+    });
+});
+
 describe('Estimate table columns – editable cell aria-labels', () => {
     const columns = getEstimateColumns(mockActions);
 
@@ -131,19 +204,6 @@ describe('Estimate table columns – editable cell aria-labels', () => {
     });
 
     it('qty column renders no button for section rows', () => {
-        const sectionRow: VisibleEstimateRow = {
-            id: 's-1',
-            kind: 'section',
-            code: 'I',
-            name: 'Раздел 1',
-            unit: '',
-            qty: 0,
-            price: 0,
-            sum: 0,
-            expense: 0,
-            order: 0,
-            depth: 0,
-        };
         const qtyColumn = findColumn('qty');
         const ctx = makeCellContext(sectionRow);
         const CellContent = () => <>{(qtyColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;

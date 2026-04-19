@@ -1,7 +1,7 @@
 import { getAllTeams } from '@/lib/data/db/admin-queries';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { getSubscriptionBadgeClassName } from '@/features/admin/lib/badge-tones';

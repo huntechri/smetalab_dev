@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button } from '@/shared/ui/button';
-import { DataTable } from "@/shared/ui/data-table";
+import { Button } from '@repo/ui';
+import { DataTable } from "@repo/ui";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import {
   Calculator,
@@ -16,20 +16,20 @@ import {
   FolderTree,
   FilePlus,
 } from "lucide-react";
-import { TableEmptyState } from "@/shared/ui/table-empty-state";
-import { Badge } from "@/shared/ui/badge";
+import { TableEmptyState } from "@repo/ui";
+import { Badge } from "@repo/ui";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@/shared/ui/sheet";
+} from "@repo/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu";
+} from "@repo/ui";
 import {
   Dialog,
   DialogContent,
@@ -37,9 +37,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+} from "@repo/ui";
+import { Input } from "@repo/ui";
+import { Label } from "@repo/ui";
 import { useRouter } from "next/navigation";
 import { useEstimateMutations } from "../../hooks/use-estimate-mutations";
 import { estimatesActionRepo } from "../../repository/estimates.actions";

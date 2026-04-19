@@ -1,5 +1,5 @@
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
 import { cn } from '@/lib/utils';
 import { NotificationPayload } from '@/features/notifications/components/types';
 

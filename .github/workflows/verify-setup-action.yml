@@ -1,0 +1,70 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: Verify Setup Action
+
+on:
+  push:
+    branches: ["main", "master"]
+    paths:
+      - ".github/actions/setup/**"
+      - ".github/workflows/verify-setup-action.yml"
+  pull_request:
+    branches: ["main", "master"]
+    paths:
+      - ".github/actions/setup/**"
+      - ".github/workflows/verify-setup-action.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke-test:
+    name: Smoke-test composite setup action
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run composite setup action
+        uses: ./.github/actions/setup
+
+      - name: Verify Node.js is available
+        run: |
+          node_version=$(node --version)
+          echo "Node.js version: $node_version"
+          if [ -z "$node_version" ]; then
+            echo "ERROR: node is not available after setup"
+            exit 1
+          fi
+
+      - name: Verify pnpm is available
+        run: |
+          pnpm_version=$(pnpm --version)
+          echo "pnpm version: $pnpm_version"
+          if [ -z "$pnpm_version" ]; then
+            echo "ERROR: pnpm is not available after setup"
+            exit 1
+          fi
+
+      - name: Verify node_modules exist
+        run: |
+          if [ ! -d "node_modules" ]; then
+            echo "ERROR: root node_modules directory is missing after setup"
+            exit 1
+          fi
+          echo "node_modules present at root"
+
+      - name: Verify pnpm can list workspaces
+        run: pnpm list --recursive --depth 0
+
+      - name: Run lint via setup-provided environment
+        run: pnpm lint
+
+      - name: Run type-check via setup-provided environment
+        run: pnpm type-check
+
+      - name: Run tests via setup-provided environment
+        run: pnpm test

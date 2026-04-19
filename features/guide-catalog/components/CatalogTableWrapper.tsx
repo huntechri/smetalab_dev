@@ -2,9 +2,9 @@ import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Plus, FilePlus } from "lucide-react";
 
-import { DataTable } from "@/shared/ui/data-table";
-import { Button } from "@/shared/ui/button";
-import { TableEmptyState } from "@/shared/ui/table-empty-state";
+import { DataTable } from "@repo/ui";
+import { Button } from "@repo/ui";
+import { TableEmptyState } from "@repo/ui";
 import {
   CatalogEmptyStateConfig,
   CatalogTableActions,

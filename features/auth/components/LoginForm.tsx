@@ -3,16 +3,16 @@
 import Link from 'next/link';
 import { useActionState, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Button } from '@/shared/ui/button';
+import { Button } from '@repo/ui';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+} from '@repo/ui';
+import { Input } from '@repo/ui';
+import { Label } from '@repo/ui';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/app/(login)/actions';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';

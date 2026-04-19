@@ -13,20 +13,20 @@ import {
   UserCircle2,
 } from 'lucide-react';
 import { updateAccount, updatePassword } from '@/app/(login)/actions';
-import { Badge } from '@/shared/ui/badge';
-import { Button } from '@/shared/ui/button';
+import { Badge } from '@repo/ui';
+import { Button } from '@repo/ui';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/shared/ui/card';
-import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
-import { Separator } from '@/shared/ui/separator';
-import { Switch } from '@/shared/ui/switch';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+} from '@repo/ui';
+import { Input } from '@repo/ui';
+import { Label } from '@repo/ui';
+import { Separator } from '@repo/ui';
+import { Switch } from '@repo/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
 type PermissionEntry = { code: string; level: 'read' | 'manage' };

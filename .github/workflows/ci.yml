@@ -12,6 +12,63 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect Source Changes
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      src: ${{ steps.filter.outputs.src }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for source file changes
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            # "src" is true when any file that affects the Next.js build changes.
+            # Non-source files (docs, markdown, test snapshots, etc.) are excluded
+            # so that the build, lint, and type-check jobs are skipped on doc-only pushes.
+            src:
+              # Next.js app directory
+              - 'app/**'
+              # UI component library
+              - 'components/**'
+              # Domain entities
+              - 'entities/**'
+              # Feature modules
+              - 'features/**'
+              # Shared utilities and helpers
+              - 'lib/**'
+              - 'shared/**'
+              # Monorepo packages
+              - 'packages/**'
+              # Root-level TypeScript/JavaScript source files
+              - '*.ts'
+              - '*.tsx'
+              - '*.js'
+              - '*.mjs'
+              - '*.mts'
+              # Build configuration files
+              - 'next.config.*'
+              - 'tsconfig*.json'
+              - 'tailwind.config.*'
+              - 'postcss.config.*'
+              - 'eslint.config.*'
+              - 'drizzle.config.*'
+              - 'vitest.config.*'
+              - 'playwright.config.*'
+              # Dependency manifests
+              - 'pnpm-lock.yaml'
+              - 'package.json'
+              - 'packages/*/package.json'
+              - 'pnpm-workspace.yaml'
+              # This workflow itself
+              - '.github/workflows/ci.yml'
+              - '.github/actions/**'
+
   install:
     name: Install Dependencies
     runs-on: ubuntu-latest
@@ -23,13 +80,12 @@ jobs:
 
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
-        with:
-          version: 10.28.0
 
       - name: Set up Node.js
+        id: setup-node
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: .node-version
 
       - name: Get pnpm store path
         id: pnpm-cache
@@ -51,7 +107,7 @@ jobs:
             node_modules
             packages/*/node_modules
             apps/*/node_modules
-          key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Install dependencies
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -61,7 +117,8 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: install
+    needs: [install, changes]
+    if: needs.changes.outputs.src == 'true'
 
     steps:
       - name: Checkout repository
@@ -168,19 +225,94 @@ jobs:
           path: test-results/junit.xml
           retention-days: 30
 
+  validate-codeowners:
+    name: Validate CODEOWNERS
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate CODEOWNERS syntax and owners
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: bash .github/scripts/validate-codeowners.sh .github/CODEOWNERS
+
+  test-webhook-script:
+    name: Test Webhook Script
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run webhook script tests
+        run: bash scripts/test-configure-org-webhook.sh
+
+  notify-build-failure:
+    name: Notify Build Failure
+    runs-on: ubuntu-latest
+    needs: [build]
+    if: failure() && needs.build.result == 'failure'
+    permissions:
+      contents: read
+
+    steps:
+      - name: Send Slack notification
+        uses: slackapi/slack-github-action@v1.27.0
+        with:
+          payload: |
+            {
+              "text": ":x: *Build failed* on `${{ github.repository }}`",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":x: *Build failed* on `${{ github.repository }}`\n*Branch:* `${{ github.ref_name }}`\n*Commit:* <${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}|`${{ github.sha }}`> by ${{ github.actor }}\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View failing run>"
+                  }
+                }
+              ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
   ci:
     name: All Checks Passed
     runs-on: ubuntu-latest
-    needs: [build, lint, type-check, test]
+    needs: [build, lint, type-check, test, validate-codeowners, test-webhook-script]
     if: always()
 
     steps:
       - name: Check all jobs succeeded
         run: |
-          if [[ "${{ needs.build.result }}" != "success" || \
-                "${{ needs.lint.result }}" != "success" || \
-                "${{ needs.type-check.result }}" != "success" || \
-                "${{ needs.test.result }}" != "success" ]]; then
+          # build, lint, and type-check may be legitimately skipped when only
+          # non-source files changed (see the "changes" job for the path filters).
+          # All other jobs must always succeed.
+          BUILD_OK="${{ needs.build.result }}"
+          LINT_OK="${{ needs.lint.result }}"
+          TYPE_OK="${{ needs.type-check.result }}"
+          TEST_OK="${{ needs.test.result }}"
+          CODEOWNERS_OK="${{ needs.validate-codeowners.result }}"
+          WEBHOOK_SCRIPT_OK="${{ needs.test-webhook-script.result }}"
+
+          FAILED=false
+
+          [[ "$BUILD_OK" == "success" || "$BUILD_OK" == "skipped" ]] || { echo "build: $BUILD_OK"; FAILED=true; }
+          [[ "$LINT_OK" == "success" || "$LINT_OK" == "skipped" ]] || { echo "lint: $LINT_OK"; FAILED=true; }
+          [[ "$TYPE_OK" == "success" || "$TYPE_OK" == "skipped" ]] || { echo "type-check: $TYPE_OK"; FAILED=true; }
+          [[ "$TEST_OK" == "success" ]] || { echo "test: $TEST_OK"; FAILED=true; }
+          [[ "$CODEOWNERS_OK" == "success" ]] || { echo "validate-codeowners: $CODEOWNERS_OK"; FAILED=true; }
+          [[ "$WEBHOOK_SCRIPT_OK" == "success" ]] || { echo "test-webhook-script: $WEBHOOK_SCRIPT_OK"; FAILED=true; }
+
+          if [[ "$FAILED" == "true" ]]; then
             echo "One or more required checks failed."
             exit 1
           fi

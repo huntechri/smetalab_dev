@@ -6,13 +6,12 @@ runs:
   steps:
     - name: Set up pnpm
       uses: pnpm/action-setup@v4
-      with:
-        version: 10.28.0
 
     - name: Set up Node.js
+      id: setup-node
       uses: actions/setup-node@v4
       with:
-        node-version: 20
+        node-version-file: .node-version
 
     - name: Get pnpm store path
       id: pnpm-cache
@@ -35,7 +34,7 @@ runs:
           node_modules
           packages/*/node_modules
           apps/*/node_modules
-        key: ${{ runner.os }}-node20-node-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
+        key: ${{ runner.os }}-node-${{ steps.setup-node.outputs.node-version }}-modules-${{ hashFiles('**/pnpm-lock.yaml') }}
 
     - name: Install dependencies
       if: steps.cache-node-modules.outputs.cache-hit != 'true'

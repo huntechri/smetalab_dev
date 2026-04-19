@@ -1,4 +1,4 @@
-import { SearchInput } from '@/shared/ui/search-input';
+import { SearchInput } from '@repo/ui';
 
 type ProjectsSearchInputProps = {
     value: string;

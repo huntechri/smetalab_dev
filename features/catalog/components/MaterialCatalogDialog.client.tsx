@@ -1,6 +1,6 @@
 'use client';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@repo/ui';
 import { CatalogMaterial } from '../types/dto';
 import { MaterialCatalogPicker } from './MaterialCatalogPicker.client';
 

@@ -3,20 +3,20 @@
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
-import { Button } from '@/shared/ui/button'
-import { Badge } from "@/shared/ui/badge"
+import { Button } from '@repo/ui'
+import { Badge } from "@repo/ui"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu"
-import { Input } from "@/shared/ui/input"
+} from "@repo/ui"
+import { Input } from "@repo/ui"
 import { cva } from "class-variance-authority"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
-import { TableMeta } from "@/shared/ui/data-table"
+import { TableMeta } from "@repo/ui"
 
 interface RowActionsProps {
     row: { original: WorkRow };
