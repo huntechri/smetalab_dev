@@ -345,11 +345,34 @@ gh auth login
 
 > **Важно:** GitHub Organization Webhooks **не могут** напрямую вызывать GitHub REST API `/repos/{org}/{repo}/dispatches`, так как сами webhook-запросы не проходят аутентификацию как API-клиенты. Для этого паттерна **обязательно нужен** промежуточный аутентифицированный агент — GitHub App или внешний сервис.
 
-**Рекомендуемая схема:**
+**Быстрый старт (без редактирования кода):**
+
+Используйте готовый интерактивный скрипт, который зарегистрирует org-webhook за вас:
+
+```bash
+./scripts/configure-org-webhook.sh [org-name]
+```
+
+Скрипт:
+- проверяет наличие зависимостей (`curl`, `jq`)
+- запрашивает имя организации, токен (`admin:org_hook`), URL вашего GitHub App и webhook-secret
+- создаёт (или сообщает о существующем) org-webhook через GitHub API
+- выводит инструкции по следующим шагам
+
+Нужные переменные можно передать через окружение, чтобы пропустить интерактивные промпты:
+```bash
+GH_TOKEN=ghp_xxx \
+WEBHOOK_URL=https://your-app.example.com/github/webhook \
+WEBHOOK_SECRET=your-secret \
+./scripts/configure-org-webhook.sh my-org
+```
+
+**Рекомендуемая схема (полная):**
 
 1. Создайте **GitHub App** с разрешением `Contents: Read & Write` и подпиской на событие **`installation.repositories_added`** (или org webhook `repository → created`).
-2. GitHub App получает webhook от GitHub при создании/форке репозитория.
-3. App аутентифицируется как installation и вызывает:
+2. Запустите `./scripts/configure-org-webhook.sh` — он зарегистрирует org-webhook, указывающий на URL вашего App.
+3. GitHub App получает webhook от GitHub при создании/форке репозитория.
+4. App аутентифицируется как installation и вызывает:
    ```
    POST /repos/<org>/<this-repo>/dispatches
    {
@@ -357,8 +380,8 @@ gh auth login
      "client_payload": { "repository": "owner/new-repo-name" }
    }
    ```
-4. Workflow `.github/workflows/auto-branch-protection.yml` ловит событие и применяет защиту через `scripts/setup-branch-protection.sh`.
-5. В секретах репозитория добавьте `BRANCH_PROTECTION_TOKEN` — токен с правом `administration:write` на целевой репозиторий.
+5. Workflow `.github/workflows/auto-branch-protection.yml` ловит событие и применяет защиту через `scripts/setup-branch-protection.sh`.
+6. В секретах репозитория добавьте `BRANCH_PROTECTION_TOKEN` — токен с правом `administration:write` на целевой репозиторий.
 
 **Примечание о стратегии:** workflow применяет repo-level защиту к конкретному указанному репозиторию — это намеренно, поскольку данный способ предназначен для случаев, когда org-level ruleset недоступен.
 
