@@ -210,4 +210,21 @@ describe('EditableCell', () => {
         expect(button).toHaveClass('hover:decoration-dashed');
         expect(button).toHaveClass('hover:underline-offset-2');
     });
+
+    it('input receives the ariaLabel prop as aria-label when in edit mode', async () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                value="Description"
+                onCommit={onCommit}
+                ariaLabel="Edit item description"
+            />,
+        );
+
+        await userEvent.click(screen.getByRole('button', { name: 'Description' }));
+
+        const input = screen.getByRole('textbox');
+        expect(input).toHaveAttribute('aria-label', 'Edit item description');
+    });
 });
