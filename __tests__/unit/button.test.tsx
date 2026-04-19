@@ -10,9 +10,9 @@ describe('Button Component', () => {
 
   it('applies canonical base styles', () => {
     render(<Button>Test</Button>);
-    const button = screen.getByText('Test');
+    const button = screen.getByRole('button', { name: 'Test' });
     expect(button).toHaveClass('inline-flex');
-    expect(button).toHaveClass('h-9');
+    expect(button).toHaveClass('h-7');
   });
 
   it('sets variant and size data attributes', () => {
