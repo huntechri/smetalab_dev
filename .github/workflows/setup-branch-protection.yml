@@ -1,0 +1,108 @@
+name: Setup Branch Protection
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to protect"
+        required: true
+        default: "main"
+        type: choice
+        options:
+          - main
+          - master
+
+jobs:
+  apply-branch-protection:
+    name: Apply Branch Protection Rule
+    runs-on: ubuntu-latest
+    permissions:
+      administration: write
+
+    steps:
+      - name: Add 'All Checks Passed' as required status check on ${{ inputs.branch }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ inputs.branch }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          set -euo pipefail
+
+          API_BASE="/repos/${OWNER}/${REPO}/branches/${BRANCH}/protection"
+
+          echo "Step 1: Check whether branch protection exists on '${BRANCH}'..."
+          HTTP_STATUS=$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            --silent --include \
+            "${API_BASE}" 2>/dev/null | head -1 | awk '{print $2}' || echo "404")
+
+          if [ "$HTTP_STATUS" = "404" ]; then
+            # No protection exists yet — create a minimal rule via PUT.
+            echo "No existing protection found. Creating initial branch protection rule..."
+            gh api \
+              --method PUT \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "${API_BASE}" \
+              --input - <<'EOF'
+          {
+            "required_status_checks": {
+              "strict": true,
+              "contexts": ["All Checks Passed"]
+            },
+            "enforce_admins": false,
+            "required_pull_request_reviews": null,
+            "restrictions": null
+          }
+          EOF
+          else
+            # Protection already exists — use the targeted PATCH endpoint that only
+            # updates required_status_checks, leaving all other settings untouched.
+            echo "Existing protection found. Fetching current required status checks..."
+            CURRENT=$(gh api \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "${API_BASE}/required_status_checks" 2>/dev/null || echo "{}")
+
+            # Merge existing contexts with "All Checks Passed" (deduplicated).
+            CONTEXTS=$(echo "$CURRENT" | jq -c \
+              '(.contexts // []) | map(select(. != "All Checks Passed")) + ["All Checks Passed"]')
+            STRICT=$(echo "$CURRENT" | jq -r '.strict // true')
+
+            PAYLOAD=$(jq -cn \
+              --argjson contexts "$CONTEXTS" \
+              --argjson strict   "$STRICT" \
+              '{ strict: $strict, contexts: $contexts }')
+
+            echo "--- Payload preview ---"
+            echo "$PAYLOAD" | jq .
+            echo "-----------------------"
+
+            echo "Patching required_status_checks only (other protections unchanged)..."
+            echo "$PAYLOAD" | gh api \
+              --method PATCH \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "${API_BASE}/required_status_checks" \
+              --input -
+          fi
+
+          echo ""
+          echo "'All Checks Passed' is now a required status check on '${BRANCH}'."
+          echo "PRs that fail lint, type-check, or tests cannot be merged."
+
+      - name: Verify required status checks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ inputs.branch }}
+          OWNER: ${{ github.repository_owner }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          echo "Verifying required_status_checks on '${BRANCH}':"
+          gh api \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            /repos/${OWNER}/${REPO}/branches/${BRANCH}/protection/required_status_checks \
+            | jq .
