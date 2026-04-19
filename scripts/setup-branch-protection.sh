@@ -111,4 +111,4 @@ else
 fi
 
 echo ""
-echo "Done. 'All Checks Passed' is now required before merging into main/master."
+echo "Done. 'All Checks Passed' is now required and at least 1 approving review must be given before merging into main/master."
