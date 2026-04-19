@@ -222,6 +222,21 @@ describe('EditableCell', () => {
         expect(button).toHaveClass('hover:underline-offset-2');
     });
 
+    it('display button carries aria-label from ariaLabel prop before any click', () => {
+        const onCommit = vi.fn().mockResolvedValue(undefined);
+
+        render(
+            <EditableCell
+                value="42"
+                onCommit={onCommit}
+                ariaLabel="Item quantity"
+            />,
+        );
+
+        const button = screen.getByRole('button', { name: 'Item quantity' });
+        expect(button).toHaveAttribute('aria-label', 'Item quantity');
+    });
+
     it('input receives the ariaLabel prop as aria-label when in edit mode', async () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
@@ -233,7 +248,7 @@ describe('EditableCell', () => {
             />,
         );
 
-        await userEvent.click(screen.getByRole('button', { name: 'Description' }));
+        await userEvent.click(screen.getByRole('button', { name: 'Edit item description' }));
 
         const input = screen.getByRole('textbox');
         expect(input).toHaveAttribute('aria-label', 'Edit item description');
