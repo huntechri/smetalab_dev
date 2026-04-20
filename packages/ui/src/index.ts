@@ -1,6 +1,7 @@
 export * from "../../../shared/ui/accordion";
 export * from "../../../shared/ui/alert-dialog";
 export * from "../../../shared/ui/alert";
+export * from "../../../shared/ui/action-menu";
 export * from "../../../shared/ui/aspect-ratio";
 export * from "../../../shared/ui/auto-form/index";
 export * from "../../../shared/ui/avatar";

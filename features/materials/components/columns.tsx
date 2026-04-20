@@ -19,28 +19,7 @@ import {
 } from "@repo/ui"
 import { MaterialRow } from "@/shared/types/domain/material-row"
 import { TableMeta } from "@repo/ui"
-import { cva } from "class-variance-authority"
-
-const actionButtonStyles = cva("", {
-    variants: {
-        tone: {
-            primary: "text-primary opacity-40 hover:opacity-100 transition-opacity",
-            muted: "opacity-40 hover:opacity-100",
-        },
-    },
-    defaultVariants: {
-        tone: "muted",
-    },
-})
-
-const insertButtonStyles = cva("", {
-    variants: {
-        tone: {
-            success: "text-green-600 hover:text-green-700 hover:bg-green-50 shadow-sm border border-transparent hover:border-green-100",
-            danger: "text-destructive hover:bg-destructive/5",
-        },
-    },
-})
+import { ActionMenu } from "@repo/ui"
 
 const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, table: Table<MaterialRow> }) => {
     const meta = table.options.meta as TableMeta<MaterialRow>
@@ -110,31 +89,27 @@ const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, ta
                 </TooltipContent>
             </Tooltip>
 
-            <DropdownMenu>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" aria-label="Действия">
-                                <Settings className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Действия</p>
-                    </TooltipContent>
-                </Tooltip>
-                <DropdownMenuContent align="end" className="w-56 overflow-y-auto max-h-[80vh]">
-                    <DropdownMenuItem onClick={() => meta.setEditingRow?.(row.original)}>
-                        <Pencil className="mr-2 h-4 w-4" /> Изменить
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
-                        onClick={() => meta.setDeletingRow?.(row.original)}
-                   >
-                        <Trash className="mr-2 h-4 w-4" /> Удалить
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+            <ActionMenu
+                ariaLabel="Действия"
+                trigger={
+                    <Button variant="ghost" size="icon-sm" aria-label="Действия" title="Действия">
+                        <Settings className="h-4 w-4" />
+                    </Button>
+                }
+                items={[
+                    {
+                        label: "Изменить",
+                        icon: <Pencil className="h-4 w-4" />,
+                        onClick: () => meta.setEditingRow?.(row.original),
+                    },
+                    {
+                        label: "Удалить",
+                        icon: <Trash className="h-4 w-4" />,
+                        variant: "destructive",
+                        onClick: () => meta.setDeletingRow?.(row.original),
+                    },
+                ]}
+            />
         </div>
     )
 }

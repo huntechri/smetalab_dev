@@ -12,7 +12,7 @@ import {
     DropdownMenuTrigger,
 } from "@repo/ui"
 import { Input } from "@repo/ui"
-import { cva } from "class-variance-authority"
+import { ActionMenu } from "@repo/ui"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
@@ -22,29 +22,6 @@ interface RowActionsProps {
     row: { original: WorkRow };
     table: Table<WorkRow>;
 }
-
-const actionButtonStyles = cva("", {
-    variants: {
-        tone: {
-            primary: "text-primary",
-            muted: "",
-        },
-    },
-    defaultVariants: {
-        tone: "muted",
-    },
-})
-
-const insertButtonStyles = cva("", {
-    variants: {
-        tone: {
-            success: "text-green-600 hover:text-green-700",
-            danger: "text-destructive",
-        },
-    },
-})
-
-
 
 const RowActions = React.memo(({ row, table }: RowActionsProps) => {
     const meta = table.options.meta as TableMeta<WorkRow> & {
@@ -89,26 +66,28 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => {
                 <Plus className="h-4 w-4" />
             </Button>
 
-            <DropdownMenu modal={false}>
-                <DropdownMenuTrigger asChild>
+            <ActionMenu
+                ariaLabel="Действия"
+                modal={false}
+                trigger={
                     <Button variant="ghost" size="icon-xs" aria-label="Действия" title="Действия">
                         <Settings className="h-4 w-4" />
                     </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-40">
-                    <DropdownMenuItem onClick={() => meta.setEditingRow?.(row.original)}>
-                        <Pencil className="mr-2 h-4 w-4" />
-                        Изменить
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                        className="text-destructive focus:text-destructive"
-                        onClick={() => meta.setDeletingRow?.(row.original)}
-                   >
-                        <Trash className="mr-2 h-4 w-4" />
-                        Удалить
-                    </DropdownMenuItem>
-                </DropdownMenuContent>
-            </DropdownMenu>
+                }
+                items={[
+                    {
+                        label: "Изменить",
+                        icon: <Pencil className="h-4 w-4" />,
+                        onClick: () => meta.setEditingRow?.(row.original),
+                    },
+                    {
+                        label: "Удалить",
+                        icon: <Trash className="h-4 w-4" />,
+                        variant: "destructive",
+                        onClick: () => meta.setDeletingRow?.(row.original),
+                    },
+                ]}
+            />
         </div>
     )
 })
