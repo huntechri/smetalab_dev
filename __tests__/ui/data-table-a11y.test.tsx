@@ -1,6 +1,7 @@
 import React from 'react';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
+import userEvent from '@testing-library/user-event';
 import type { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@repo/ui';
 
@@ -23,7 +24,7 @@ const columns: ColumnDef<TestRow>[] = [
 ];
 
 describe('DataTable a11y interactions', () => {
-    it('renders semantic sortable header button and toggles sort from keyboard', () => {
+    it('renders semantic sortable header button and toggles sort from keyboard', async () => {
         render(
             <DataTable
                 columns={columns}
@@ -43,10 +44,11 @@ describe('DataTable a11y interactions', () => {
         const headerCell = sortButton.closest('th');
         expect(headerCell).toHaveAttribute('aria-sort', 'none');
 
-        fireEvent.keyDown(sortButton, { key: 'Enter' });
+        sortButton.focus();
+        await userEvent.keyboard('{Enter}');
         expect(headerCell).toHaveAttribute('aria-sort', 'ascending');
 
-        fireEvent.keyDown(sortButton, { key: 'Enter' });
+        await userEvent.keyboard('{Enter}');
         expect(headerCell).toHaveAttribute('aria-sort', 'descending');
     });
 });
