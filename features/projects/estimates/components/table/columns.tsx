@@ -1,7 +1,7 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { Button } from '@repo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@repo/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
@@ -43,7 +43,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     <div className="flex items-center gap-1">
                         <Button
                             variant="ghost"
-                            size="icon"
+                            size="icon-xs"
                             onClick={() => actions.onToggleExpand(item.id)}
                             aria-label={expanded ? 'Свернуть работу' : 'Развернуть работу'}
                         >
@@ -67,20 +67,29 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: 'Наименование',
         cell: ({ row }) => {
             const item = row.original;
-            return (
-                <div className={item.kind === 'material' ? 'pl-8' : item.kind === 'work' ? 'pl-3' : ''}>
-                    <div
-                        className={
-                            item.kind === 'section'
-                                ? 'text-[11px] font-bold uppercase tracking-widest truncate'
-                                : item.kind === 'work'
-                                  ? 'text-[12px] font-normal truncate'
-                                  : 'text-[12px] italic text-muted-foreground'
-                        }
+            if (item.kind === 'section') {
+                return (
+                    <EditableCell
+                        type="text"
+                        cancelOnEmpty
+                        value={item.name}
+                        onCommit={(value) => actions.onPatch(item.id, 'name', value)}
+                        ariaLabel={`Раздел: ${item.name}`}
                         title={item.name}
-                    >
-                        {item.name}
-                    </div>
+                        className="text-[11px] font-bold uppercase tracking-widest truncate"
+                    />
+                );
+            }
+            return (
+                <div className={item.kind === 'material' ? 'pl-8' : 'pl-3'}>
+                    <EditableCell
+                        type="text"
+                        cancelOnEmpty
+                        value={item.name}
+                        onCommit={(value) => actions.onPatch(item.id, 'name', value)}
+                        ariaLabel={`Наименование: ${item.name}`}
+                        className={item.kind === 'material' ? 'text-[12px] italic text-muted-foreground' : 'text-[12px] font-normal'}
+                    />
                 </div>
             );
         },
@@ -113,7 +122,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
             <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
-                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} />}
+                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} ariaLabel={`Количество: ${row.original.name}`} />}
             </div>
         )
     },
@@ -123,7 +132,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
             <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
-                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} />}
+                {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} ariaLabel={`Цена: ${row.original.name}`} />}
             </div>
         )
     },
@@ -165,6 +174,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         cancelOnEmpty
                         value={row.original.expense}
                         onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)}
+                        ariaLabel={`Расход: ${row.original.name}`}
                     />
                 </div>
             );
@@ -182,7 +192,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         <>
                             <Button
                                 size="icon-xs"
-                                variant="default"
+                                variant="ghost"
                                 onClick={() => actions.onOpenMaterialCatalog(item.id, item.name)}
                                 title="Добавить материал"
                                 aria-label="Добавить материал"
@@ -191,7 +201,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                             <Button
                                 size="icon-xs"
-                                variant="default"
+                                variant="ghost"
                                 onClick={() => actions.onInsertWorkAfter(item.id, item.name)}
                                 title="Добавить работу ниже"
                                 aria-label="Добавить работу ниже"
@@ -202,7 +212,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                     ) : null}
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button size="icon-xs" variant="default" aria-label="Действия с строкой">
+                            <Button size="icon-xs" variant="ghost" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
                         </DropdownMenuTrigger>

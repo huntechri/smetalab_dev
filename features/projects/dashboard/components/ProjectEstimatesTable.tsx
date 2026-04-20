@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@repo/ui';
 import { EstimatesListTable } from '@/features/projects/estimates/components/registry/EstimatesListTable';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
-import { TableEmptyState } from '@/shared/ui/table-empty-state';
+import { TableEmptyState } from '@repo/ui';
 import { FilePlus, Plus } from 'lucide-react';
 
 type EstimateListItem = {
@@ -61,8 +61,8 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 createInBodyAction={
                     <Button
                         onClick={() => setIsDialogOpen(true)}
-                        variant="default"
-                        size="icon"
+                        variant="outline"
+                        size="icon-xs"
                         aria-label="+ Создать смету"
                         title="Создать смету"
                     >
@@ -77,7 +77,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                         action={
                             <Button
                                 onClick={() => setIsDialogOpen(true)}
-                                variant="default"
+                                variant="brand"
                             >
                                 Создать смету
                             </Button>

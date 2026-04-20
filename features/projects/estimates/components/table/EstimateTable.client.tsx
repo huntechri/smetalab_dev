@@ -1127,7 +1127,7 @@ export function EstimateTable({
             />
           </div>
           <DialogFooter>
-            <Button variant="default" onClick={() => setIsSectionDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
               Отмена
             </Button>
             <Button variant="brand" onClick={() => void createSection()}>Добавить</Button>
@@ -1162,7 +1162,7 @@ export function EstimateTable({
           </div>
           <DialogFooter className="gap-2 sm:justify-between">
             <Button
-              variant="default"
+              variant="outline"
               onClick={() => setIsCoefficientDialogOpen(false)}
               disabled={isApplyingCoefficient}
             >
@@ -1170,7 +1170,7 @@ export function EstimateTable({
             </Button>
             <div className="flex items-center gap-2">
               <Button
-                variant="default"
+                variant="outline"
                 onClick={() => void resetCoefficient()}
                 disabled={isApplyingCoefficient || coefPercent === 0}
               >
@@ -1215,7 +1215,7 @@ export function EstimateTable({
             />
           </div>
           <DialogFooter>
-            <Button variant="default" onClick={() => setIsSavePatternOpen(false)}>
+            <Button variant="outline" onClick={() => setIsSavePatternOpen(false)}>
               Отмена
             </Button>
             <Button variant="brand" onClick={() => void savePattern()} disabled={isPatternSaving}>
@@ -1273,7 +1273,7 @@ export function EstimateTable({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="default" onClick={() => setIsApplyPatternOpen(false)}>
+            <Button variant="outline" onClick={() => setIsApplyPatternOpen(false)}>
               Отмена
             </Button>
             <Button variant="brand" onClick={() => void applyPattern()} disabled={isPatternApplying || !selectedPatternId}>
@@ -1293,7 +1293,7 @@ export function EstimateTable({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="default" onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeleting}>
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)} disabled={isDeleting}>
               Отмена
             </Button>
             <Button 
