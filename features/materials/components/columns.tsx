@@ -21,18 +21,6 @@ import { MaterialRow } from "@/shared/types/domain/material-row"
 import { TableMeta } from "@repo/ui"
 import { cva } from "class-variance-authority"
 
-const actionButtonStyles = cva("", {
-    variants: {
-        tone: {
-            primary: "text-primary opacity-40 hover:opacity-100 transition-opacity",
-            muted: "opacity-40 hover:opacity-100",
-        },
-    },
-    defaultVariants: {
-        tone: "muted",
-    },
-})
-
 const insertButtonStyles = cva("", {
     variants: {
         tone: {
