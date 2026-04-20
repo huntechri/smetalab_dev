@@ -70,7 +70,7 @@ export function CatalogTableWrapper<TData, TValue>({
           icon={emptyState.icon ?? FilePlus}
           action={
             <Button
-              variant="default"
+              variant="outline"
               onClick={() => tableActions.onInsertRequest()}
             >
               <Plus className="size-3.5 mr-2" />

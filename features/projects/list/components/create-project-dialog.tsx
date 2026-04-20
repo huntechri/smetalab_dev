@@ -160,7 +160,7 @@ export function CreateProjectDialog({
                                             <PopoverTrigger asChild>
                                                 <FormControl>
                                                     <Button
-                                                        variant="default"
+                                                        variant="outline"
                                                         size="sm"
                                                         role="combobox"
                                                     >
@@ -259,7 +259,7 @@ export function CreateProjectDialog({
                         <DialogFooter>
                             <Button
                                 type="button"
-                                variant="default"
+                                variant="outline"
                                 onClick={() => onOpenChange(false)}
                                 disabled={isSubmitting}
                             >

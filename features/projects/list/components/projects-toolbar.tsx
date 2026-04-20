@@ -35,7 +35,7 @@ export function ProjectsToolbar({
             </div>
             <Button
                 onClick={onAddClick}
-                variant="default"
+                variant="brand"
             >
                 Создать проект
             </Button>

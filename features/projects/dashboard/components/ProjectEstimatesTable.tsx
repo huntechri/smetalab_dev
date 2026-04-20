@@ -61,7 +61,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                 createInBodyAction={
                     <Button
                         onClick={() => setIsDialogOpen(true)}
-                        variant="default"
+                        variant="outline"
                         size="icon-xs"
                         aria-label="+ Создать смету"
                         title="Создать смету"
@@ -77,7 +77,7 @@ export function ProjectEstimatesTable({ projectId, projectSlug, initialEstimates
                         action={
                             <Button
                                 onClick={() => setIsDialogOpen(true)}
-                                variant="default"
+                                variant="brand"
                             >
                                 Создать смету
                             </Button>
