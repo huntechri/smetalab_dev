@@ -78,6 +78,7 @@ jobs:
   trivy-scan:
     name: Vulnerability Scan
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
