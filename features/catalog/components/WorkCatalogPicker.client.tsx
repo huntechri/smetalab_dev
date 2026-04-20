@@ -4,7 +4,6 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { cn } from '@/lib/utils';
 import { catalogRepository } from '../repository';
 import { CatalogWork } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
