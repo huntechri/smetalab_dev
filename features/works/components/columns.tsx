@@ -35,15 +35,6 @@ const actionButtonStyles = cva("", {
     },
 })
 
-const insertButtonStyles = cva("", {
-    variants: {
-        tone: {
-            success: "text-green-600 hover:text-green-700",
-            danger: "text-destructive",
-        },
-    },
-})
-
 
 
 const RowActions = React.memo(({ row, table }: RowActionsProps) => {
