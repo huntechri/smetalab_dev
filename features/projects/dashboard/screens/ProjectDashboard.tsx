@@ -55,16 +55,16 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
 
                     <div
                         className={canShowDynamicsChart
-                            ? 'grid grid-cols-1 gap-4 2xl:grid-cols-[792px_792px] 2xl:items-start 2xl:justify-between'
+                            ? 'grid grid-cols-1 gap-4 xl:grid-cols-[2fr_minmax(320px,1fr)] xl:items-start'
                             : 'grid grid-cols-1'}
                     >
                         {canShowDynamicsChart ? (
-                            <div className="min-w-0">
+                            <div className="min-w-0 overflow-hidden">
                                 <DashboardChart data={performanceDynamics} />
                             </div>
                         ) : null}
 
-                        <div className="min-w-0">
+                        <div className="min-w-0 overflow-hidden">
                             <ProjectEstimatesTable
                                 projectId={project.id}
                                 projectSlug={project.slug}
