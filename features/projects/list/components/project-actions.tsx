@@ -30,8 +30,6 @@ export function ProjectActions({
     onEdit,
     density = 'default',
 }: ProjectActionsProps) {
-    const buttonClass = "min-w-0 px-2 gap-[6px]";
-
     if (density === 'compact') {
         return (
             <AlertDialog>
