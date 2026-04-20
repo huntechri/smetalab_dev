@@ -42,6 +42,9 @@ vi.mock('@/app/(login)/actions', () => ({
 }));
 
 vi.mock('@repo/ui', () => ({
+  Button: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (
+    <button type="button" onClick={onClick}>{children}</button>
+  ),
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
