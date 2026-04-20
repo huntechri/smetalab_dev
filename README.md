@@ -291,10 +291,8 @@ gh auth login
 #### Способ 2 — GitHub Actions workflow (без локального окружения)
 
 1. Перейдите в **Actions → Setup Branch Protection** в репозитории.
-2. Нажмите **Run workflow**, выберите ветку (`main` или `master`) и запустите.
-3. Workflow применит защиту через классический Branch Protection API, добавив **`All Checks Passed`** как required status check.
-
-> **Важно:** Способ 2 использует классический Branch Protection API и настраивает только требование прохождения CI-статуса. Он **не применяет правило обязательного ревью** (`required_approving_review_count: 1`). Для полной защиты (CI + ревью) используйте **Способ 1** (скрипт) или **Способ 3** (UI), которые работают через Rulesets API и применяют весь файл `.github/rulesets/main-protection.json`.
+2. Нажмите **Run workflow** и запустите.
+3. Workflow применит полный Ruleset **`main-protection`** через GitHub Rulesets API, прочитав файл `.github/rulesets/main-protection.json`. Ruleset уже содержит условия для веток `main` и `master`, поэтому выбирать ветку вручную не нужно. При повторном запуске существующий ruleset будет обновлён, а не создан заново.
 
 > Файл workflow: `.github/workflows/setup-branch-protection.yml`
 
