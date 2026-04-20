@@ -46,5 +46,6 @@
 - `features/works`
 - `features/counterparties`
 - `features/projects` (including `dashboard` submodule)
+- `features/settings`
 
 These expose stable entrypoints with `index.ts` barrels.
