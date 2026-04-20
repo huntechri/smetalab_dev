@@ -517,7 +517,7 @@ export class EstimateRowsService {
 
             const created = await db.transaction(async (tx) => {
                 const payload = parsed.data;
-                let nextOrder = 100;
+                let nextOrder: number;
 
                 if (payload.insertBeforeRowId) {
                     // Вставить ДО указанной строки — берём её order как позицию вставки
