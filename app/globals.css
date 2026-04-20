@@ -39,6 +39,8 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
   --control-height: var(--control-height);
 }
 
@@ -74,6 +76,8 @@
     --chart-5: hsl(27 87% 67%);
     --radius: 0.5rem;
     --control-height: 2.25rem;
+    --brand: hsl(14 100% 62%);
+    --brand-foreground: hsl(0 0% 100%);
     --sidebar: hsl(240 6.7% 97.3%);
     --sidebar-foreground: hsl(240 5.3% 26.1%);
     --sidebar-primary: hsl(24 100% 50%);

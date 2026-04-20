@@ -8,6 +8,7 @@ import { Button } from '@repo/ui';
 import { Badge } from '@repo/ui';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import { formatCurrency } from '@/lib/shared/formatters';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
@@ -73,12 +74,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const displayedTotalsAmount = useMemo(() =>
         displayedRows.reduce((acc, row) => acc + row.amount, 0),
         [displayedRows]);
-
-    const currencyFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', {
-        style: 'currency',
-        currency: 'RUB',
-        maximumFractionDigits: 2
-    }), []);
 
     const columns = useMemo(() => getGlobalPurchasesColumns({
         projectOptions,
@@ -382,7 +377,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
 
             <div className="flex flex-wrap justify-end gap-2 px-1 -mb-[14px]">
                 <Badge variant="secondary" className="bg-blue-500/5 text-blue-700/80 border-none px-2 py-0.5 h-6 text-[10px] font-bold uppercase tracking-wider tabular-nums">
-                    Итого закупки: {currencyFormatter.format(displayedTotalsAmount)}
+                    Итого закупки: {formatCurrency(displayedTotalsAmount)}
                 </Badge>
             </div>
 

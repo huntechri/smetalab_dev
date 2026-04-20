@@ -16,7 +16,7 @@ import Link from 'next/link';
 import { ImpersonateButton } from '@/features/admin/components/impersonate-button';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { getRoleBadgeClassName, getSubscriptionBadgeClassName } from '@/features/admin/lib/badge-tones';
+import { getRoleBadgeVariant, getSubscriptionBadgeVariant } from '@/features/admin/lib/badge-tones';
 
 interface PageProps {
     params: Promise<{ tenantId: string }>;
@@ -45,10 +45,10 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                     <p className="text-sm text-muted-foreground">ID: {team.id} • Создан {format(team.createdAt, 'PPp', { locale: ru })}</p>
                 </div>
                 <div className="ml-auto flex items-center gap-2">
-                    <Badge variant="secondary" className={getSubscriptionBadgeClassName(team.subscriptionStatus)}>
+                    <Badge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)} size="xs">
                         {team.subscriptionStatus || 'free'}
                     </Badge>
-                    <Badge variant="secondary" className="border-none bg-slate-500/12 text-slate-700 uppercase tracking-wide">
+                    <Badge variant="neutral" size="xs">
                         {team.planName || 'No Plan'}
                     </Badge>
                 </div>
@@ -116,7 +116,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                                             <p className="font-medium text-gray-900">{member.user.name || 'No name'}</p>
                                             <p className="text-xs text-muted-foreground">{member.user.email}</p>
                                         </div>
-                                        <Badge variant="secondary" className={`ml-2 text-[10px] uppercase tracking-wide ${getRoleBadgeClassName(member.role)}`}>
+                                        <Badge variant={getRoleBadgeVariant(member.role)} size="xs" className="ml-2">
                                             {member.role}
                                         </Badge>
                                     </div>

@@ -59,3 +59,6 @@ export * from "../../../shared/ui/textarea";
 export * from "../../../shared/ui/toggle-group";
 export * from "../../../shared/ui/toggle";
 export * from "../../../shared/ui/tooltip";
+export * from "../../../shared/ui/cells/money-cell";
+export * from "../../../shared/ui/cells/image-cell";
+export * from "../../../shared/ui/cells/editable-cell";

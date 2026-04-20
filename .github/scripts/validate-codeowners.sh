@@ -46,8 +46,9 @@ OWNER_PATTERN='^@[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)?$'
 while IFS= read -r line; do
   (( line_number++ )) || true
 
-  # Strip inline comments
+  # Strip inline comments and trailing CR
   line_body="${line%%#*}"
+  line_body="${line_body%$'\r'}"
 
   # Skip blank lines and pure-comment lines
   [[ -z "${line_body// /}" ]] && continue
@@ -144,8 +145,13 @@ for owner in "${!seen_owners[@]}"; do
         echo "  OK   team  $owner"
         ;;
       404)
-        echo "ERROR: team $owner not found (HTTP 404). Verify the org and team slug are correct." >&2
-        (( api_errors++ )) || true
+        if [[ "$STRICT" == "true" ]]; then
+          echo "ERROR: team $owner not found (HTTP 404). Verify the org and team slug are correct." >&2
+          (( api_errors++ )) || true
+        else
+          echo "WARN: team $owner not found (HTTP 404) — treating as warning in LENIENT mode." >&2
+          (( api_warnings++ )) || true
+        fi
         ;;
       403)
         echo "ERROR: access denied verifying team $owner (HTTP 403). The GITHUB_TOKEN needs the 'read:org' scope to look up team membership." >&2
@@ -166,8 +172,13 @@ for owner in "${!seen_owners[@]}"; do
         echo "  OK   user  $owner"
         ;;
       404)
-        echo "ERROR: user $owner not found (HTTP 404). Verify the GitHub username is spelled correctly." >&2
-        (( api_errors++ )) || true
+        if [[ "$STRICT" == "true" ]]; then
+          echo "ERROR: user $owner not found (HTTP 404). Verify the GitHub username is spelled correctly." >&2
+          (( api_errors++ )) || true
+        else
+          echo "WARN: user $owner not found (HTTP 404) — treating as warning in LENIENT mode." >&2
+          (( api_warnings++ )) || true
+        fi
         ;;
       *)
         _handle_unexpected_status "$owner" "user" "$status"

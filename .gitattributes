@@ -1,0 +1,13 @@
+# Preserve LF for shell scripts to ensure they run in CI
+*.sh text eol=lf
+
+# Global default to LF for all text files
+* text=auto eol=lf
+
+# Specific binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary

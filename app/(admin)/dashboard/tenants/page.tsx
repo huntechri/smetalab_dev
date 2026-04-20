@@ -4,7 +4,7 @@ import { Badge } from '@repo/ui';
 import { Button } from '@repo/ui';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { getSubscriptionBadgeClassName } from '@/features/admin/lib/badge-tones';
+import { getSubscriptionBadgeVariant } from '@/features/admin/lib/badge-tones';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,8 +29,8 @@ export default async function TenantsPage() {
                                     <Building2 className="h-5 w-5" />
                                 </div>
                                 <Badge
-                                    variant="secondary"
-                                    className={getSubscriptionBadgeClassName(team.subscriptionStatus)}
+                                    variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}
+                                    size="xs"
                                 >
                                     {team.subscriptionStatus || 'free'}
                                 </Badge>

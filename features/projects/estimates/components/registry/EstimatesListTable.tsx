@@ -17,7 +17,6 @@ import {
 import { Trash2 } from 'lucide-react';
 import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
-import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,12 +36,12 @@ function EstimateStatusCell({
   status: EstimateStatus;
   onChange: (next: EstimateStatus) => Promise<void>;
 }) {
-  const statusTone =
+  const variant =
     status === 'approved'
-      ? projectStatusBadgeToneClassName.success
+      ? 'success'
       : status === 'in_progress'
-        ? projectStatusBadgeToneClassName.info
-        : projectStatusBadgeToneClassName.warning;
+        ? 'info'
+        : 'warning';
 
   return (
     <DropdownMenu>
@@ -52,7 +51,7 @@ function EstimateStatusCell({
           variant="ghost"
           size="sm"
         >
-          <Badge variant="outline" className={`${projectBadgeClassName} ${statusTone} min-w-[88px] cursor-pointer md:min-w-[100px]`}>
+          <Badge variant={variant} size="xs" className="min-w-[88px] cursor-pointer md:min-w-[100px]">
             {getEstimateStatusLabel(status)}
           </Badge>
         </Button>

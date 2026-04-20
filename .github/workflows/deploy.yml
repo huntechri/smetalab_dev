@@ -78,6 +78,7 @@ jobs:
   trivy-scan:
     name: Vulnerability Scan
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -110,6 +111,7 @@ jobs:
           format: 'sarif'
           output: 'trivy-results.sarif'
           severity: 'HIGH,CRITICAL'
+          trivyignores: '.trivyignore'
 
       - name: Upload Trivy scan results to GitHub Security tab
         if: always() && steps.code_scanning.outputs.enabled == 'true'

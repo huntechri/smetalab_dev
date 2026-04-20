@@ -1,9 +1,24 @@
 'use client';
 
-import { Button, Input } from '@repo/ui';
-import { cn } from '@/lib/utils';
-import { Pencil } from 'lucide-react';
-import { useRef, useState } from 'react';
+import * as React from "react"
+import { Pencil } from "lucide-react"
+import { cn } from "@/lib/utils"
+import { Button } from "../button"
+import { Input } from "../input"
+
+interface EditableCellProps {
+    value: string | number;
+    displayValue?: string;
+    ariaLabel?: string;
+    title?: string;
+    onCommit: (value: string) => Promise<void>;
+    type?: 'text' | 'number' | 'date';
+    disabled?: boolean;
+    align?: 'left' | 'right' | 'center';
+    clearOnFocus?: boolean;
+    cancelOnEmpty?: boolean;
+    className?: string;
+}
 
 export function EditableCell({
     value,
@@ -17,22 +32,10 @@ export function EditableCell({
     ariaLabel,
     title,
     className,
-}: {
-    value: string | number;
-    displayValue?: string;
-    ariaLabel?: string;
-    title?: string;
-    onCommit: (value: string) => Promise<void>;
-    type?: 'text' | 'number' | 'date';
-    disabled?: boolean;
-    align?: 'left' | 'right' | 'center';
-    clearOnFocus?: boolean;
-    cancelOnEmpty?: boolean;
-    className?: string;
-}) {
-    const [editing, setEditing] = useState(false);
-    const [draft, setDraft] = useState(String(value));
-    const wasClearedOnFocus = useRef(false);
+}: EditableCellProps) {
+    const [editing, setEditing] = React.useState(false);
+    const [draft, setDraft] = React.useState(String(value));
+    const wasClearedOnFocus = React.useRef(false);
 
     const cancel = () => {
         setDraft(String(value));

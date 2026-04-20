@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
-import { cn } from '@/lib/utils';
+import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
 import { CatalogWork } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
@@ -21,7 +21,6 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
     const [works, setWorks] = useState<CatalogWork[]>([]);
     const [loading, setLoading] = useState(true);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
-    const priceFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }), []);
 
     useEffect(() => {
         let isCancelled = false;
@@ -104,7 +103,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
                                                 <span className="text-[12px] font-medium text-foreground">
-                                                    {priceFormatter.format(work.price)} ₽
+                                                    {formatPrice(work.price)} ₽
                                                 </span>
                                                 <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>
                                             </div>

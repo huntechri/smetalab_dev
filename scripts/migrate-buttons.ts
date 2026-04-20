@@ -143,22 +143,22 @@ function pushRecord(records: ButtonLikeRecord[], filePath: string, kind: ButtonL
 
 export function ensureButtonImport(code: string): string {
   const nextCode = code
-    .replace('from "@/shared/ui/button"', 'from "@/components/ui/button"')
-    .replace("from '@/shared/ui/button'", "from '@/components/ui/button'")
+    .replace('from "@/components/ui/button"', 'from "@/shared/ui/button"')
+    .replace("from '@/components/ui/button'", "from '@/shared/ui/button'")
 
-  const buttonImportRegex = /import\s+\{([^}]+)\}\s+from\s+["']@\/components\/ui\/button["'];?/
+  const buttonImportRegex = /import\s+\{([^}]+)\}\s+from\s+["']@\/shared\/ui\/button["'];?/
   const match = nextCode.match(buttonImportRegex)
   if (match) {
     const names = match[1].split(",").map((n) => n.trim()).filter(Boolean)
     if (!names.includes("Button")) {
       const merged = [...new Set([...names, "Button"])].join(", ")
-      return nextCode.replace(buttonImportRegex, `import { ${merged} } from "@/components/ui/button"`)
+      return nextCode.replace(buttonImportRegex, `import { ${merged} } from "@/shared/ui/button"`)
     }
     return nextCode
   }
 
   const importMatch = nextCode.match(/import[\s\S]*?from\s+["'][^"']+["'];?\n/g)
-  const importLine = 'import { Button } from "@/components/ui/button"\n'
+  const importLine = 'import { Button } from "@/shared/ui/button"\n'
   if (!importMatch || importMatch.length === 0) return importLine + nextCode
   const last = importMatch[importMatch.length - 1]
   const idx = nextCode.indexOf(last) + last.length

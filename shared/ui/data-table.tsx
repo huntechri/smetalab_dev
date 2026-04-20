@@ -1,28 +1,22 @@
 "use client"
 
+import * as React from "react"
 import {
     ColumnDef,
     flexRender,
     Row,
 } from "@tanstack/react-table"
-import { Sparkles, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { TableVirtuoso, TableComponents } from "react-virtuoso"
-import { Skeleton } from "@/shared/ui/skeleton"
-import { memo, useState, useCallback, forwardRef, HTMLAttributes, useMemo } from "react"
-
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@/shared/ui/tooltip"
+import { TooltipProvider } from "@/shared/ui/tooltip"
 
 import { cn } from "@/lib/utils"
-import { SearchInput } from "@/shared/ui/search-input"
-import { Switch } from "@/shared/ui/switch"
 import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
-import { Badge } from "@/shared/ui/badge"
+
+import { DataTableRow } from "./data-table/data-table-row"
+import { DataTableToolbar } from "./data-table/data-table-toolbar"
+import { DataTableSkeleton } from "./data-table/data-table-skeleton"
 
 /* -------------------------------------------------------------------------- */
 /*                               DataTable                                    */
@@ -67,36 +61,6 @@ interface DataTableProps<TData, TValue> {
     tableContainerClassName?: string;
 }
 
-const DataTableRow = memo(<TData,>({ row, className }: { row: Row<TData>, className?: string }) => {
-    return (
-        <>
-            {row.getVisibleCells().map((cell) => (
-                <td
-                    key={cell.id}
-                    className={cn(
-                        "px-3 py-1.5 md:px-4 md:py-2 align-middle border-b transition-colors",
-                        className
-                    )}
-                    style={{ width: cell.column.getSize() }}
-                >
-                    <div className="w-full text-[12px] leading-tight">
-                        {flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                        )}
-                    </div>
-                </td>
-            ))}
-        </>
-    );
-}, (prev, next) => {
-    // Only re-render if the actual row data or selected state changes
-    return prev.row.original === next.row.original &&
-        prev.row.getIsSelected() === next.row.getIsSelected() &&
-        prev.className === next.className;
-});
-DataTableRow.displayName = "DataTableRow";
-
 export function DataTable<TData, TValue>({
     columns,
     data,
@@ -123,7 +87,7 @@ export function DataTable<TData, TValue>({
     tableMinWidth = '800px',
     tableContainerClassName,
 }: DataTableProps<TData, TValue>) {
-    const [internalAiMode, setInternalAiMode] = useState(false)
+    const [internalAiMode, setInternalAiMode] = React.useState(false)
     const hasFilterControls = Boolean(showFilter && filterColumn)
 
     const isAiMode = externalAiMode ?? internalAiMode;
@@ -145,14 +109,8 @@ export function DataTable<TData, TValue>({
         meta,
     })
 
-    const handleSearchClick = useCallback(() => {
-        if (searchValue.trim()) {
-            onSearch?.(searchValue)
-        }
-    }, [searchValue, onSearch]);
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const virtuosoTableComponents = useMemo<TableComponents<Row<any>, { flatHeaders: unknown[] }>>(
+    const virtuosoTableComponents = React.useMemo<TableComponents<Row<any>, { flatHeaders: unknown[] }>>(
         () => ({
             Table: ({ children, style, ...props }) => (
                 <table
@@ -169,7 +127,7 @@ export function DataTable<TData, TValue>({
                     {children}
                 </table>
             ),
-            TableHead: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
+            TableHead: React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
                 <thead {...props} ref={ref} className="z-40" />
             )),
             TableRow: ({ style, ...props }) => (
@@ -179,15 +137,14 @@ export function DataTable<TData, TValue>({
                     className="border-b last:border-0 hover:bg-muted/60 transition-colors group/row cursor-default animate-in fade-in slide-in-from-left-1 duration-300"
                 />
             ),
-            TableBody: forwardRef<HTMLTableSectionElement, HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
+            TableBody: React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
                 <tbody {...props} ref={ref} />
             )),
         }),
         [tableMinWidth]
     );
 
-
-    const virtuosoOverscan = useMemo(() => {
+    const virtuosoOverscan = React.useMemo(() => {
         const parsedHeight = Number.parseInt(height, 10);
         if (Number.isFinite(parsedHeight) && parsedHeight > 0) {
             return Math.min(400, Math.max(200, Math.round(parsedHeight * 0.5)));
@@ -200,112 +157,81 @@ export function DataTable<TData, TValue>({
         return 300;
     }, [height]);
 
+    const renderHeaderContent = () => (
+        <>
+            {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
+                    {headerGroup.headers.map((header) => {
+                        const isSortable = header.column.getCanSort()
+                        const sortDirection = header.column.getIsSorted()
+                        const ariaSort = (isSortable
+                            ? sortDirection === "asc"
+                                ? "ascending"
+                                : sortDirection === "desc"
+                                    ? "descending"
+                                    : "none"
+                            : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
+
+                        return (
+                            <th
+                                key={header.id}
+                                colSpan={header.colSpan}
+                                className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
+                                style={{ width: header.getSize() }}
+                                aria-sort={ariaSort}
+                            >
+                                {header.isPlaceholder ? null : (
+                                    isSortable ? (
+                                        <button
+                                            type="button"
+                                            className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+                                            onClick={header.column.getToggleSortingHandler()}
+                                            aria-label="Сортировать столбец"
+                                        >
+                                            <div className="truncate flex-1 text-xs">
+                                                {flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                            </div>
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
+                                            <div className="truncate flex-1 text-xs">
+                                                {flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                            </div>
+                                        </div>
+                                    )
+                                )}
+                            </th>
+                        )
+                    })}
+                </tr>
+            ))}
+        </>
+    )
+
     return (
         <TooltipProvider>
             <div className={cn("space-y-4", className)}>
-                {/* Search Filter */}
-                {(actions || hasFilterControls) && (
-                    <div className={cn(
-                        "justify-between px-1 md:px-0",
-                        compactMobileToolbar
-                            ? "flex items-center gap-2 xl:flex-row xl:items-center"
-                            : "flex flex-col gap-3 xl:flex-row xl:items-center"
-                    )}>
-                        {/* Search Input & AI Toggle Group */}
-                        {hasFilterControls ? (
-                            <div className={cn(
-                                "flex items-center gap-2 shrink-0",
-                                compactMobileToolbar ? "w-full min-w-0 flex-1" : "w-full xl:w-auto"
-                            )}>
-                                <div className={cn(
-                                    "relative transition-all duration-300 w-[min(20rem,calc(100vw-2rem))] max-w-full",
-                                    isAiMode && "[&_input]:pr-16"
-                                )}>
-                                    <SearchInput
-                                        aria-label={filterPlaceholder}
-                                        placeholder={isAiMode ? "Опишите, что нужно найти (ИИ)..." : filterPlaceholder}
-                                        value={searchValue}
-                                        loading={Boolean(isSearching)}
-                                        autoLoading={!isSearching}
-                                        highlighted={isAiMode}
-                                        onChange={(event) => {
-                                            const val = event.target.value
-                                            setSearchValue(val)
-                                            onSearchValueChange?.(val)
+                <DataTableToolbar
+                    actions={actions}
+                    filterPlaceholder={filterPlaceholder}
+                    hasFilterControls={hasFilterControls}
+                    isAiMode={isAiMode}
+                    isSearching={isSearching}
+                    onSearch={onSearch}
+                    onSearchValueChange={onSearchValueChange}
+                    searchValue={searchValue}
+                    setIsAiMode={setIsAiMode}
+                    setSearchValue={setSearchValue}
+                    showAiSearch={showAiSearch}
+                    compactMobileToolbar={compactMobileToolbar}
+                />
 
-                                            if (val === "") {
-                                                onSearch?.("")
-                                            }
-                                        }}
-                                        onKeyDown={(e) => {
-                                            if (e.key === 'Enter') {
-                                                handleSearchClick()
-                                            }
-                                        }}
-                                    />
-                                    {isAiMode && (
-                                        <Badge
-                                            role="status"
-                                            aria-live="polite"
-                                            variant="default"
-                                            className="absolute right-10 top-1/2 -translate-y-1/2 animate-in fade-in zoom-in duration-300"
-                                        >
-                                            AI
-                                        </Badge>
-                                    )}
-                                </div>
-
-                                {showAiSearch && onSearch && (
-                                    <div className="flex shrink-0 items-center gap-2 px-2 h-7 rounded-md border border-border bg-muted/30">
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <div className="flex items-center gap-3 cursor-help">
-                                                    <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-foreground" : "text-muted-foreground")} />
-                                                    <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
-                                                </div>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Поиск по смыслу с использованием ИИ</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                        <Switch
-                                            checked={isAiMode}
-                                            onCheckedChange={(checked) => {
-                                                setIsAiMode(checked)
-                                                if (searchValue.trim() && checked) {
-                                                    onSearch?.(searchValue)
-                                                }
-                                            }}
-                                            aria-label="Переключатель ИИ поиска"
-                                            className="select-none"
-                                        />
-                                    </div>
-                                )}
-                            </div>
-                        ) : null}
-
-                        {/* Actions Group */}
-                        {actions && (
-                            <div
-                                className={cn(
-                                    "flex items-center gap-2 xl:justify-end overflow-x-auto xl:pb-0 scrollbar-hide",
-                                    hasFilterControls ? "xl:w-auto" : "xl:w-full",
-                                    compactMobileToolbar
-                                        ? "w-auto justify-end shrink-0"
-                                        : hasFilterControls
-                                            ? "w-full justify-start"
-                                            : "w-full justify-end"
-                                )}
-                                role="group"
-                                aria-label="Действия таблицы"
-                            >
-                                {actions}
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                {/* Virtualized Table Container */}
                 <div
                     className={cn(
                         "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
@@ -330,79 +256,15 @@ export function DataTable<TData, TValue>({
                     {isAiMode && (
                         <div className="absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2 pointer-events-none" />
                     )}
+
                     {isLoading || (isSearching && rows.length === 0) ? (
-                        <div className="p-4 space-y-4">
-                            {[...Array(5)].map((_, i) => (
-                                <div key={i} className="flex items-center space-x-4">
-                                    <Skeleton className="h-10 w-12 rounded-lg" />
-                                    <Skeleton className="h-10 flex-1 rounded-lg" />
-                                    <Skeleton className="h-10 w-24 rounded-lg" />
-                                    <Skeleton className="h-10 w-32 rounded-lg" />
-                                </div>
-                            ))}
-                        </div>
+                        <DataTableSkeleton />
                     ) : rows.length === 0 ? (
                         <table
                             style={{ width: '100%', minWidth: tableMinWidth, tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
                         >
                             <thead className="z-40">
-                                {table.getHeaderGroups().map((headerGroup) => (
-                                    <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
-                                        {headerGroup.headers.map((header) => {
-                                            const isSortable = header.column.getCanSort()
-                                            const sortDirection = header.column.getIsSorted()
-                                            const ariaSort = (isSortable
-                                                ? sortDirection === "asc"
-                                                    ? "ascending"
-                                                    : sortDirection === "desc"
-                                                        ? "descending"
-                                                        : "none"
-                                                : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
-
-                                            return (
-                                                <th
-                                                    key={header.id}
-                                                    className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
-                                                    style={{ width: `${header.getSize()}px` }}
-                                                    aria-sort={ariaSort}
-                                                >
-                                                    {header.isPlaceholder ? null : (
-                                                        isSortable ? (
-                                                            <button
-                                                                type="button"
-                                                                className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
-                                                                onClick={header.column.getToggleSortingHandler()}
-                                                                onKeyDown={(e) => {
-                                                                    if (e.key === 'Enter' || e.key === ' ') {
-                                                                        e.preventDefault();
-                                                                        header.column.getToggleSortingHandler()?.(e);
-                                                                    }
-                                                                }}
-                                                                aria-label="Сортировать столбец"
-                                                            >
-                                                                <div className="truncate flex-1 text-xs">
-                                                                    {flexRender(
-                                                                        header.column.columnDef.header,
-                                                                        header.getContext()
-                                                                    )}
-                                                                </div>
-                                                            </button>
-                                                        ) : (
-                                                            <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                <div className="truncate flex-1 text-xs">
-                                                                    {flexRender(
-                                                                        header.column.columnDef.header,
-                                                                        header.getContext()
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        )
-                                                    )}
-                                                </th>
-                                            )
-                                        })}
-                                    </tr>
-                                ))}
+                                {renderHeaderContent()}
                             </thead>
                             <tbody>
                                 <tr>
@@ -428,68 +290,7 @@ export function DataTable<TData, TValue>({
                             components={virtuosoTableComponents}
                             overscan={virtuosoOverscan}
                             endReached={onEndReached}
-                            fixedHeaderContent={() => (
-                                <>
-                                    {table.getHeaderGroups().map((headerGroup) => (
-                                        <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
-                                            {headerGroup.headers.map((header) => {
-                                                const isSortable = header.column.getCanSort()
-                                                const sortDirection = header.column.getIsSorted()
-                                                const ariaSort = (isSortable
-                                                    ? sortDirection === "asc"
-                                                        ? "ascending"
-                                                        : sortDirection === "desc"
-                                                            ? "descending"
-                                                            : "none"
-                                                    : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
-
-                                                return (
-                                                    <th
-                                                        key={header.id}
-                                                        colSpan={header.colSpan}
-                                                        className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
-                                                        style={{ width: header.getSize() }}
-                                                        aria-sort={ariaSort}
-                                                    >
-                                                        {header.isPlaceholder ? null : (
-                                                            isSortable ? (
-                                                                <button
-                                                                    type="button"
-                                                                    className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
-                                                                    onClick={header.column.getToggleSortingHandler()}
-                                                                    onKeyDown={(e) => {
-                                                                        if (e.key === 'Enter' || e.key === ' ') {
-                                                                            e.preventDefault();
-                                                                            header.column.getToggleSortingHandler()?.(e);
-                                                                        }
-                                                                    }}
-                                                                    aria-label="Сортировать столбец"
-                                                                >
-                                                                    <div className="truncate flex-1 text-xs">
-                                                                        {flexRender(
-                                                                            header.column.columnDef.header,
-                                                                            header.getContext()
-                                                                        )}
-                                                                    </div>
-                                                                </button>
-                                                            ) : (
-                                                                <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                                                    <div className="truncate flex-1 text-xs">
-                                                                        {flexRender(
-                                                                            header.column.columnDef.header,
-                                                                            header.getContext()
-                                                                        )}
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        )}
-                                                    </th>
-                                                )
-                                            })}
-                                        </tr>
-                                    ))}
-                                </>
-                            )}
+                            fixedHeaderContent={renderHeaderContent}
                             itemContent={(_index, row: Row<TData>) => (
                                 <DataTableRow 
                                     row={row} 
@@ -499,9 +300,6 @@ export function DataTable<TData, TValue>({
                         />
                     )}
                 </div>
-
-
-
             </div>
         </TooltipProvider>
     );

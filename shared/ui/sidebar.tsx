@@ -8,7 +8,7 @@ import { PanelLeftIcon } from "lucide-react"
 import { useIsMobile } from "@/shared/hooks/use-mobile"
 import { useSidebarState } from "@/shared/hooks/use-sidebar-state"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
 import { Separator } from "@/shared/ui/separator"
 import {

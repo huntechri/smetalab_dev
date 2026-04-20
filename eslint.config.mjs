@@ -31,7 +31,12 @@ export default [
     {
         files: ["shared/ui/**/*.{ts,tsx,js,jsx}"],
         rules: {
-            "no-restricted-imports": ["error", { patterns: ["@/app/*", "@/features/*", "@/lib/domain/*", "@/lib/data/*"] }],
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: ["@/app/*", "@/features/*", "@/lib/domain/*", "@/lib/data/*", "@/components/ui/*"],
+                },
+            ],
         },
     },
     {
@@ -58,6 +63,19 @@ export default [
                             message: "Import from '@/shared/ui/*' instead of '@/components/ui/*'.",
                         },
                     ],
+                },
+            ],
+        },
+    },
+    {
+        files: ["app/**/page.tsx"],
+        ignores: ["app/api-docs/page.tsx"],
+        rules: {
+            "no-restricted-syntax": [
+                "error",
+                {
+                    selector: "Program > ExpressionStatement > Literal[value='use client']",
+                    message: "App route pages must stay server-side thin wrappers. Move client UI composition to features/**.",
                 },
             ],
         },

@@ -2,3 +2,8 @@
 # Trivy references fixed versions that are not published on npm.
 CVE-2023-30533
 CVE-2024-22363
+
+# CVE-2025-59471: Next.js DoS in Image Optimizer
+# Using canary build (15.6.0-canary.61) - no stable fix release yet.
+# Risk is low (DoS only, no RCE). Review when upgrading to stable Next.js.
+CVE-2025-59471

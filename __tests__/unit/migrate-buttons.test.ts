@@ -9,10 +9,10 @@ describe("migrate-buttons codemod", () => {
     expect(parseArgs(["--report"])).toEqual({ write: false, report: true })
   })
 
-  it("merges Button into components/ui/button import", () => {
-    const input = 'import { buttonVariants } from "@/components/ui/button"\nconst a = 1\n'
+  it("merges Button into shared/ui/button import", () => {
+    const input = 'import { buttonVariants } from "@/shared/ui/button"\nconst a = 1\n'
     const out = ensureButtonImport(input)
-    expect(out).toContain('import { buttonVariants, Button } from "@/components/ui/button"')
+    expect(out).toContain('import { buttonVariants, Button } from "@/shared/ui/button"')
   })
 
   it("replaces raw button with Button and adds import", () => {
@@ -21,7 +21,7 @@ describe("migrate-buttons codemod", () => {
 
     expect(out.changed).toBe(true)
     expect(out.code).toContain('<Button type="button">Go</Button>')
-    expect(out.code).toContain('import { Button } from "@/components/ui/button"')
+    expect(out.code).toContain('import { Button } from "@/shared/ui/button"')
   })
 
   it("wraps styled link as asChild Button", () => {

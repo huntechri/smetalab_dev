@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { getTeamForUser, getUser } from '@/lib/data/db/queries';
 import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
-import { UserSettingsPage } from '@/features/settings/components/user-settings-page';
+import { UserSettingsPage } from '@/features/settings';
 
 export default async function SettingsPage() {
   const user = await getUser();
