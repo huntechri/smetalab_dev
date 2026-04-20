@@ -28,9 +28,10 @@ describe('team utils', () => {
     it('returns role labels and badge variants', () => {
         expect(getRoleLabel('admin')).toBe('Администратор');
         expect(getRoleLabel('manager')).toBe('Менеджер');
-        expect(getRoleBadgeVariant('admin')).toBe('default');
-        expect(getRoleBadgeVariant('estimator')).toBe('secondary');
-        expect(getRoleBadgeVariant('unknown')).toBe('outline');
+        expect(getRoleBadgeVariant('admin')).toBe('info');
+        expect(getRoleBadgeVariant('estimator')).toBe('warning');
+        expect(getRoleBadgeVariant('manager')).toBe('paused');
+        expect(getRoleBadgeVariant('unknown')).toBe('neutral');
     });
 
     it('builds initials from name or email', () => {
