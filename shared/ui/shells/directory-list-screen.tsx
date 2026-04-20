@@ -5,6 +5,7 @@ import { FilePlus, Loader2, Plus } from 'lucide-react';
 import type { ColumnDef } from '@tanstack/react-table';
 
 import { DataTable } from '@/shared/ui/data-table';
+import type { DataTableProps } from '@/shared/ui/data-table';
 import type { TableMeta } from '@/shared/ui/data-table';
 import { Button } from '@/shared/ui/button';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
@@ -40,18 +41,25 @@ interface DirectoryListScreenProps<TData, TValue> {
   onDelete: (row: TData) => void;
 }
 
-interface DataTableExtraProps<TData> {
-  showAiSearch?: boolean;
-  isAiMode?: boolean;
-  onAiModeChange?: (value: boolean) => void;
-  loadingMore?: boolean;
-  isLoading?: boolean;
-  getRowClassName?: (row: TData) => string;
-  compactMobileToolbar?: boolean;
-  showFilter?: boolean;
-  tableMinWidth?: string | number;
-  tableContainerClassName?: string;
-}
+type DataTableShellForwardProps<TData, TValue> = Partial<
+  Omit<
+    DataTableProps<TData, TValue>,
+    | 'columns'
+    | 'data'
+    | 'height'
+    | 'className'
+    | 'filterColumn'
+    | 'filterPlaceholder'
+    | 'onSearch'
+    | 'isSearching'
+    | 'externalSearchValue'
+    | 'onSearchValueChange'
+    | 'onEndReached'
+    | 'emptyState'
+    | 'actions'
+    | 'meta'
+  >
+>;
 
 interface DataTableShellProps<TData, TValue> {
   srTitle?: string;
@@ -70,7 +78,7 @@ interface DataTableShellProps<TData, TValue> {
   emptyState?: React.ReactNode;
   actions?: React.ReactNode;
   meta?: TableMeta<TData>;
-  dataTableProps?: DataTableExtraProps<TData>;
+  dataTableProps?: DataTableShellForwardProps<TData, TValue>;
 }
 
 function useResponsiveTableHeight(desktopHeight: string, mobileHeight: string) {

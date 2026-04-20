@@ -3,11 +3,11 @@
 import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { CounterpartyRow } from "@/shared/types/domain/counterparty-row"
-import { TableMeta } from "@repo/ui"
-import { Button } from '@repo/ui'
+import { TableMeta } from "@/shared/ui/data-table"
+import { Button } from "@/shared/ui/button"
 import { Pencil, Trash, Settings } from "lucide-react"
-import { Badge } from "@repo/ui"
-import { ActionMenu } from "@repo/ui"
+import { Badge } from "@/shared/ui/badge"
+import { ActionMenu } from "@/shared/ui/action-menu"
 
 export const columns: ColumnDef<CounterpartyRow>[] = [
     {

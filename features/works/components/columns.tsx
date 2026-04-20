@@ -3,20 +3,14 @@
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
-import { Button } from '@repo/ui'
-import { Badge } from "@repo/ui"
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@repo/ui"
-import { Input } from "@repo/ui"
-import { ActionMenu } from "@repo/ui"
+import { Button } from "@/shared/ui/button"
+import { Badge } from "@/shared/ui/badge"
+import { Input } from "@/shared/ui/input"
+import { ActionMenu } from "@/shared/ui/action-menu"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
-import { TableMeta } from "@repo/ui"
+import { TableMeta } from "@/shared/ui/data-table"
 
 interface RowActionsProps {
     row: { original: WorkRow };
@@ -252,18 +246,21 @@ export const columns: ColumnDef<WorkRow>[] = [
                    >
                         <Plus className="h-4 w-4" />
                     </Button>
-                    <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
+                    <ActionMenu
+                        ariaLabel="Действия"
+                        modal={false}
+                        trigger={
                             <Button variant="ghost" aria-label="Действия" title="Действия">
                                 Действия
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => meta.onReorder?.()}>
-                                Сбросить сортировку
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        }
+                        items={[
+                            {
+                                label: "Сбросить сортировку",
+                                onClick: () => meta.onReorder?.(),
+                            },
+                        ]}
+                    />
                 </div>
             )
         },

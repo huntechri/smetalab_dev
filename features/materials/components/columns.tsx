@@ -4,22 +4,16 @@ import * as React from "react"
 import { ColumnDef, Table } from "@tanstack/react-table"
 import { Pencil, Settings, Trash, Check, X, Plus } from "lucide-react"
 import Image from "next/image"
-import { Button } from '@repo/ui'
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from "@repo/ui"
-import { Input } from "@repo/ui"
+import { Button } from "@/shared/ui/button"
+import { Input } from "@/shared/ui/input"
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from "@repo/ui"
+} from "@/shared/ui/tooltip"
 import { MaterialRow } from "@/shared/types/domain/material-row"
-import { TableMeta } from "@repo/ui"
-import { ActionMenu } from "@repo/ui"
+import { TableMeta } from "@/shared/ui/data-table"
+import { ActionMenu } from "@/shared/ui/action-menu"
 
 const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, table: Table<MaterialRow> }) => {
     const meta = table.options.meta as TableMeta<MaterialRow>
@@ -249,18 +243,21 @@ export const columns: ColumnDef<MaterialRow>[] = [
                             <p>Добавить строку</p>
                         </TooltipContent>
                     </Tooltip>
-                    <DropdownMenu modal={false}>
-                        <DropdownMenuTrigger asChild>
+                    <ActionMenu
+                        ariaLabel="Дополнительные действия"
+                        modal={false}
+                        trigger={
                             <Button variant="ghost" size="icon-sm" aria-label="Дополнительные действия" title="Дополнительные действия">
                                 <Settings className="h-4 w-4" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => meta.onReorder?.()}>
-                                Сбросить сортировку
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        }
+                        items={[
+                            {
+                                label: "Сбросить сортировку",
+                                onClick: () => meta.onReorder?.(),
+                            },
+                        ]}
+                    />
                 </div>
             )
         },
