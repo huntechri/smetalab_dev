@@ -55,7 +55,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
 
                     <div
                         className={canShowDynamicsChart
-                            ? 'grid grid-cols-1 gap-4 xl:grid-cols-[2fr_minmax(320px,1fr)] xl:items-start'
+                            ? 'grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-start'
                             : 'grid grid-cols-1'}
                     >
                         {canShowDynamicsChart ? (
