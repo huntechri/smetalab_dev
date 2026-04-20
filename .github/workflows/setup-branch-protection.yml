@@ -2,19 +2,10 @@ name: Setup Branch Protection
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: "Branch to protect"
-        required: true
-        default: "main"
-        type: choice
-        options:
-          - main
-          - master
 
 jobs:
   apply-branch-protection:
-    name: Apply Branch Protection Rule
+    name: Apply Branch Protection Ruleset
     runs-on: ubuntu-latest
     permissions:
       administration: write
@@ -23,118 +14,60 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Add 'All Checks Passed' as required status check on ${{ inputs.branch }}
+      - name: Apply full main-protection ruleset via Rulesets API
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ inputs.branch }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
 
-          API_BASE="/repos/${OWNER}/${REPO}/branches/${BRANCH}/protection"
+          RULESET_FILE=".github/rulesets/main-protection.json"
+          API_BASE="/repos/${OWNER}/${REPO}/rulesets"
 
-          echo "Step 1: Check whether branch protection exists on '${BRANCH}'..."
-          HTTP_STATUS=$(gh api \
+          echo "Repository : ${OWNER}/${REPO}"
+          echo "Ruleset    : ${RULESET_FILE}"
+          echo ""
+
+          echo "Step 1: Check for an existing 'main-protection' ruleset..."
+          EXISTING_ID=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            --silent --include \
-            "${API_BASE}" 2>/dev/null | head -1 | awk '{print $2}' || echo "404")
+            "${API_BASE}" \
+            | jq -r '.[] | select(.name == "main-protection") | .id' 2>/dev/null || true)
 
-          if [ "$HTTP_STATUS" = "404" ]; then
-            # No protection exists yet — create a minimal rule via PUT.
-            echo "No existing protection found. Creating initial branch protection rule..."
-            gh api \
+          PAYLOAD=$(cat "$RULESET_FILE")
+
+          if [ -n "$EXISTING_ID" ]; then
+            echo "Found existing ruleset id=${EXISTING_ID}. Updating..."
+            echo "$PAYLOAD" | gh api \
               --method PUT \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              "${API_BASE}" \
-              --input - <<'EOF'
-          {
-            "required_status_checks": {
-              "strict": true,
-              "contexts": ["All Checks Passed"]
-            },
-            "enforce_admins": false,
-            "required_pull_request_reviews": null,
-            "restrictions": null
-          }
-          EOF
+              "${API_BASE}/${EXISTING_ID}" \
+              --input - \
+              | jq '{id, name, enforcement, target}'
           else
-            # Protection already exists — use the targeted PATCH endpoint that only
-            # updates required_status_checks, leaving all other settings untouched.
-            echo "Existing protection found. Fetching current required status checks..."
-            CURRENT=$(gh api \
-              -H "Accept: application/vnd.github+json" \
-              -H "X-GitHub-Api-Version: 2022-11-28" \
-              "${API_BASE}/required_status_checks" 2>/dev/null || echo "{}")
-
-            # Merge existing contexts with "All Checks Passed" (deduplicated).
-            CONTEXTS=$(echo "$CURRENT" | jq -c \
-              '(.contexts // []) | map(select(. != "All Checks Passed")) + ["All Checks Passed"]')
-            STRICT=$(echo "$CURRENT" | jq -r '.strict // true')
-
-            PAYLOAD=$(jq -cn \
-              --argjson contexts "$CONTEXTS" \
-              --argjson strict   "$STRICT" \
-              '{ strict: $strict, contexts: $contexts }')
-
-            echo "--- Payload preview ---"
-            echo "$PAYLOAD" | jq .
-            echo "-----------------------"
-
-            echo "Patching required_status_checks only (other protections unchanged)..."
+            echo "No existing ruleset found. Creating..."
             echo "$PAYLOAD" | gh api \
-              --method PATCH \
+              --method POST \
               -H "Accept: application/vnd.github+json" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              "${API_BASE}/required_status_checks" \
-              --input -
+              "${API_BASE}" \
+              --input - \
+              | jq '{id, name, enforcement, target}'
           fi
 
           echo ""
-          echo "'All Checks Passed' is now a required status check on '${BRANCH}'."
-          echo "PRs that fail lint, type-check, or tests cannot be merged."
+          echo "Done. Full 'main-protection' ruleset has been applied:"
+          echo "  - At least 1 approving review required before merging."
+          echo "  - Stale approvals dismissed when new commits are pushed."
+          echo "  - The person who pushed the last commit cannot self-approve."
+          echo "  - Code owner review required."
+          echo "  - 'All Checks Passed' CI status check required."
+          echo "  - Deletion and force-push blocked on main/master."
 
-      - name: Verify required status checks
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: ${{ inputs.branch }}
-          OWNER: ${{ github.repository_owner }}
-          REPO: ${{ github.event.repository.name }}
-        run: |
-          set -euo pipefail
-
-          echo "Verifying required_status_checks on '${BRANCH}' via legacy branch-protection API..."
-          PROTECTION=$(gh api \
-            -H "Accept: application/vnd.github+json" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${OWNER}/${REPO}/branches/${BRANCH}/protection/required_status_checks \
-            2>/dev/null || echo "{}")
-
-          echo "$PROTECTION" | jq .
-
-          # Assert that "All Checks Passed" appears in the contexts list.
-          ALL_CHECKS=$(echo "$PROTECTION" \
-            | jq -r '.contexts // [] | map(select(. == "All Checks Passed")) | length')
-
-          if [ "$ALL_CHECKS" -lt 1 ]; then
-            echo "" >&2
-            echo "VERIFICATION FAILED: 'All Checks Passed' is not listed as a" >&2
-            echo "required status check on branch '${BRANCH}'." >&2
-            echo "The apply step may have silently failed or been skipped." >&2
-            exit 1
-          fi
-
-          echo ""
-          echo "VERIFICATION PASSED: 'All Checks Passed' is required on '${BRANCH}'."
-
-      - name: Verify rulesets API (main-protection ruleset)
-        # Advisory: this workflow applies protection via the legacy branch-protection API.
-        # If no repo-level ruleset exists yet (only legacy protection is configured),
-        # this step will warn rather than fail.  Run setup-branch-protection.sh first
-        # to create the ruleset, at which point this step will assert it fully.
-        continue-on-error: true
+      - name: Verify ruleset was applied
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OWNER: ${{ github.repository_owner }}
