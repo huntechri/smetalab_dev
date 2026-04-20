@@ -2,13 +2,6 @@ import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { Toaster } from '@repo/ui';
-import { Manrope } from 'next/font/google';
-
-const manrope = Manrope({
-  subsets: ['latin', 'cyrillic'],
-  variable: '--font-manrope',
-  display: 'swap',
-});
 
 export const metadata: Metadata = {
   title: 'Smetalab - Smart Engineering & Management',
@@ -34,7 +27,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} font-sans`}
+      className="font-sans"
       suppressHydrationWarning
     >
       <body className="min-h-dvh bg-gray-50 dark:bg-gray-950 text-black dark:text-white antialiased">
