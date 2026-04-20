@@ -5,7 +5,7 @@ import { Button } from '@repo/ui';
 import { Badge } from '@repo/ui';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
-import { EditableCell } from '@/features/projects/estimates';
+import { EditableCell } from '@repo/ui';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui';
 import {
   AlertDialog,
@@ -281,7 +281,7 @@ export function getGlobalPurchasesColumns({
               displayValue={displayValue}
               disabled={isPending}
               ariaLabel="Дата закупки"
-                onCommit={async (value) => {
+                onCommit={async (value: string) => {
                 try {
                   await onPatchAction(row.original.id, { purchaseDate: value });
                 } catch (_error) {
@@ -304,7 +304,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.materialName}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Наименование материала"
-            onCommit={async (value) => {
+            onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { materialName: value });
               } catch (_error) {
@@ -326,7 +326,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.unit}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Единица измерения"
-            onCommit={async (value) => {
+            onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { unit: value });
               } catch (_error) {
@@ -353,7 +353,7 @@ export function getGlobalPurchasesColumns({
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Количество"
             className={tableCellTextClassName}
-            onCommit={async (value) => {
+            onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { qty: Number(value) });
               } catch (_error) {
@@ -380,7 +380,7 @@ export function getGlobalPurchasesColumns({
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Цена"
             className={cn(tableCellTextClassName, 'font-bold tracking-tight')}
-            onCommit={async (value) => {
+            onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { price: Number(value) });
               } catch (_error) {

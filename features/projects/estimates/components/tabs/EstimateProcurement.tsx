@@ -10,7 +10,6 @@ import { Download } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTotals } from '../EstimateTotals';
-import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -26,22 +25,16 @@ const tableCellTextClassName = 'text-xs';
 const tableQtyCellTextClassName = 'text-right tabular-nums text-xs font-normal text-muted-foreground';
 const tablePriceCellTextClassName = 'text-right tabular-nums font-bold tracking-tight text-xs';
 
-const deltaBadgeToneClassName = {
-    positive: projectStatusBadgeToneClassName.success,
-    zero: projectStatusBadgeToneClassName.neutral,
-    negative: projectStatusBadgeToneClassName.danger,
-} as const;
-
 const renderDeltaBadge = (value: number) => {
     if (value === 0) {
-        return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.zero}`}>0</Badge>;
+        return <Badge variant="neutral" size="xs">0</Badge>;
     }
 
     if (value > 0) {
-        return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.positive}`}>+{numberFormatter.format(value)}</Badge>;
+        return <Badge variant="success" size="xs">+{numberFormatter.format(value)}</Badge>;
     }
 
-    return <Badge variant="outline" className={`${projectBadgeClassName} ${deltaBadgeToneClassName.negative}`}>{numberFormatter.format(value)}</Badge>;
+    return <Badge variant="danger" size="xs">{numberFormatter.format(value)}</Badge>;
 };
 
 const columns: ColumnDef<EstimateProcurementRow>[] = [

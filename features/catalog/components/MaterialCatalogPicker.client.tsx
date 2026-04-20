@@ -9,6 +9,7 @@ import { SearchInput } from '@repo/ui';
 import { ScrollArea } from '@repo/ui';
 import { Switch } from '@repo/ui';
 import { cn } from '@/lib/utils';
+import { formatPrice, formatUnit } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
 import { CatalogMaterial } from '../types/dto';
 import { buildMaterialCategoryTree, filterMaterialsByCategoryPath, MaterialCategorySelection } from '../lib/material-category-tree';
@@ -314,10 +315,12 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        <span className="text-[12px] font-medium text-foreground">
-                                                            {priceFormatter.format(material.price)} ₽
+                                                        <span className="text-[11px] font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
+                                                            {formatPrice(material.price)} ₽
                                                         </span>
-                                                        <span className="text-[10px] text-muted-foreground leading-none">/ {material.unit}</span>
+                                                        <span className="text-[10px] text-muted-foreground/60 font-medium">
+                                                            {formatUnit(material.unit)}
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>

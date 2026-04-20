@@ -12,7 +12,6 @@ import {
 } from '@repo/ui';
 import { parseDecimalInput, toDecimalInput } from '@/features/projects/estimates/lib/decimal-input';
 import { EstimateExecutionRow, EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
-import { projectBadgeClassName, projectStatusBadgeToneClassName } from '@/features/projects/shared/ui/project-badge-styles';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -35,22 +34,19 @@ interface GetEstimateExecutionColumnsParams {
 }
 
 function getStatusDisplay(status: EstimateExecutionStatus) {
-    const base = `${projectBadgeClassName} min-w-[88px] cursor-pointer`;
-    const tone = status === 'done'
-        ? projectStatusBadgeToneClassName.success
+    const variant = status === 'done'
+        ? 'success'
         : status === 'in_progress'
-            ? projectStatusBadgeToneClassName.info
-            : projectStatusBadgeToneClassName.warning;
+            ? 'info'
+            : 'warning';
 
-    if (status === 'done') {
-        return <Badge variant="outline" className={`${base} ${tone}`}>Выполнено</Badge>;
-    }
+    const label = status === 'done' 
+        ? 'Выполнено' 
+        : status === 'in_progress' 
+            ? 'В процессе' 
+            : 'Подготовка';
 
-    if (status === 'in_progress') {
-        return <Badge variant="outline" className={`${base} ${tone}`}>В процессе</Badge>;
-    }
-
-    return <Badge variant="outline" className={`${base} ${tone}`}>Подготовка</Badge>;
+    return <Badge variant={variant} size="xs" className="min-w-[88px] cursor-pointer">{label}</Badge>;
 }
 
 function ExecutionStatusCell({
@@ -147,7 +143,7 @@ export function getEstimateExecutionColumns({
                 <div className="space-y-1">
                     <div className="text-xs font-normal truncate" title={row.original.name}>{row.original.name}</div>
                     {row.original.source === 'extra' ? (
-                        <Badge variant="outline" className={projectBadgeClassName}>
+                        <Badge variant="outline" size="xs">
                             Доп. работа
                         </Badge>
                     ) : null}

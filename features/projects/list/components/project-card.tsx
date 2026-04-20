@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Building2, CalendarRange, CircleDollarSign, MapPin } from 'lucide-react';
 import { getProjectStatusLabel } from '@/entities/project/model/status';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
-import { Badge } from '@repo/ui';
+import { Badge, Progress } from '@repo/ui';
 import {
     Card,
     CardContent,
@@ -91,19 +91,12 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         <p className="text-xs text-muted-foreground">Прогресс проекта</p>
                         <span className="text-sm font-semibold text-foreground">{project.progress}%</span>
                     </div>
-                    <div
-                        role="progressbar"
-                        aria-valuenow={project.progress}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
+                    <Progress
+                        value={project.progress}
                         aria-label={`Progress for ${project.name}`}
-                        className="h-2 w-full overflow-hidden rounded-full bg-muted/70"
-                    >
-                        <div
-                            className="h-full"
-                            style={{ width: `${project.progress}%`, backgroundImage: getProgressGradient(project.progress) }}
-                        />
-                    </div>
+                        className="h-2 bg-muted/70"
+                        indicatorStyle={{ backgroundImage: getProgressGradient(project.progress) }}
+                    />
                 </div>
             </CardContent>
             <CardFooter className="mt-auto border-t px-4 pt-4 pb-4">

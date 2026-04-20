@@ -1,24 +1,7 @@
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@repo/ui';
-import { Avatar, AvatarFallback } from '@repo/ui';
-import { Badge } from '@repo/ui';
-import { Button } from '@repo/ui';
-
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
-import { Label } from '@repo/ui';
-import { SearchInput } from '@repo/ui';
-import { MoreHorizontal, Trash2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { getMemberInitials, getRoleBadgeClassName, getRoleLabel } from '../lib/team-utils';
+import { Avatar, AvatarFallback, Badge, Button, Label, SearchInput } from '@repo/ui';
+import { ActionMenu } from '@/shared/ui/action-menu';
+import { Trash2 } from 'lucide-react';
+import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
 
 interface TeamMembersCardProps {
@@ -108,45 +91,23 @@ export function TeamMembersCard({
                                 </div>
                             </div>
                             <div className="flex items-center justify-between gap-3 sm:justify-end">
-                                <Badge variant="secondary" className={getRoleBadgeClassName(member.role)}>{getRoleLabel(member.role)}</Badge>
+                                <Badge variant={getRoleBadgeVariant(member.role)} size="xs">{getRoleLabel(member.role)}</Badge>
                                 {canManageMembers && (
-                                    <AlertDialog>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    size="icon-xs"
-                                                    aria-label={`Действия для ${member.user.name || member.user.email}`}
-                                                >
-                                                    <MoreHorizontal className="size-3.5" />
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent align="end">
-                                                <AlertDialogTrigger asChild>
-                                                    <DropdownMenuItem className="text-destructive">
-                                                        <Trash2 className="mr-2 h-4 w-4" />
-                                                        Удалить
-                                                    </DropdownMenuItem>
-                                                </AlertDialogTrigger>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Удалить участника?</AlertDialogTitle>
-                                                <AlertDialogDescription>Доступ будет отозван.</AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>Отмена</AlertDialogCancel>
-                                                <AlertDialogAction
-                                                    variant="destructive"
-                                                    className="px-3 font-semibold tracking-tight shadow-sm transition-all active:scale-95 text-xs md:text-sm"
-                                                    onClick={() => onRemoveMember(member.id)}
-                                                >
-                                                    Удалить
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
+                                    <ActionMenu
+                                        ariaLabel={`Действия для ${member.user.name || member.user.email}`}
+                                        items={[
+                                            {
+                                                label: 'Удалить',
+                                                icon: <Trash2 className="size-4" />,
+                                                variant: 'destructive',
+                                                requiresConfirmation: true,
+                                                confirmTitle: 'Удалить участника?',
+                                                confirmDescription: 'Доступ будет отозван.',
+                                                confirmLabel: 'Удалить',
+                                                onClick: () => onRemoveMember(member.id),
+                                            },
+                                        ]}
+                                    />
                                 )}
                             </div>
                         </div>

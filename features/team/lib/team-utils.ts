@@ -27,29 +27,16 @@ export function getRoleLabel(role: string): string {
     }
 }
 
-export function getRoleBadgeVariant(role: string): 'default' | 'secondary' | 'outline' {
+export function getRoleBadgeVariant(role: string): "info" | "warning" | "paused" | "neutral" {
     switch (role) {
         case 'admin':
-            return 'default';
+            return 'info';
         case 'estimator':
-            return 'secondary';
+            return 'warning';
         case 'manager':
-            return 'outline';
+            return 'paused';
         default:
-            return 'outline';
-    }
-}
-
-export function getRoleBadgeClassName(role: string): string {
-    switch (role) {
-        case 'admin':
-            return 'border-none bg-blue-500/12 text-blue-700';
-        case 'estimator':
-            return 'border-none bg-amber-500/15 text-amber-700';
-        case 'manager':
-            return 'border-none bg-violet-500/12 text-violet-700';
-        default:
-            return 'border-none bg-slate-500/12 text-slate-700';
+            return 'neutral';
     }
 }
 
