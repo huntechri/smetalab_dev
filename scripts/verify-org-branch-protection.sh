@@ -130,6 +130,39 @@ else
   else
     assert_fail "'pull_request' rule found but required_approving_review_count=0 — PRs can merge without review."
   fi
+
+  # ── Check: require_code_owner_review ───────────────────────────────────────
+  CODE_OWNER_REVIEW=$(echo "$PR_RULE" \
+    | jq -r '.parameters.require_code_owner_review // false' \
+    2>/dev/null || echo "false")
+
+  if [ "$CODE_OWNER_REVIEW" = "true" ]; then
+    assert_pass "require_code_owner_review is true — CODEOWNERS team review is enforced."
+  else
+    assert_fail "require_code_owner_review is NOT true — domain-team review is not enforced."
+  fi
+
+  # ── Check: dismiss_stale_reviews_on_push ───────────────────────────────────
+  DISMISS_STALE=$(echo "$PR_RULE" \
+    | jq -r '.parameters.dismiss_stale_reviews_on_push // false' \
+    2>/dev/null || echo "false")
+
+  if [ "$DISMISS_STALE" = "true" ]; then
+    assert_pass "dismiss_stale_reviews_on_push is true — approvals are invalidated on new pushes."
+  else
+    assert_fail "dismiss_stale_reviews_on_push is NOT true — stale approvals may allow unsafe merges."
+  fi
+
+  # ── Check: require_last_push_approval ──────────────────────────────────────
+  LAST_PUSH=$(echo "$PR_RULE" \
+    | jq -r '.parameters.require_last_push_approval // false' \
+    2>/dev/null || echo "false")
+
+  if [ "$LAST_PUSH" = "true" ]; then
+    assert_pass "require_last_push_approval is true — the last pusher cannot approve their own changes."
+  else
+    assert_fail "require_last_push_approval is NOT true — the last pusher could self-approve."
+  fi
 fi
 
 # ── Check 4: required_status_checks rule is present ──────────────────────────
