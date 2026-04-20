@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { LogOut, Settings, Users, Shield } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui';
-import { Button } from '@/components/ui/button';
+import { Button } from '@repo/ui';
 import {
     DropdownMenu,
     DropdownMenuContent,
