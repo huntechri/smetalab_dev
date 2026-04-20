@@ -236,6 +236,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Test CODEOWNERS validation script
+        run: bash .github/scripts/validate-codeowners.test.sh
+
       - name: Validate CODEOWNERS syntax and owners
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
