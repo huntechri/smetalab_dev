@@ -22,6 +22,7 @@ import { SearchInput } from "@/shared/ui/search-input"
 import { Switch } from "@/shared/ui/switch"
 import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
+import { Badge } from "@/shared/ui/badge"
 
 /* -------------------------------------------------------------------------- */
 /*                               DataTable                                    */
@@ -243,22 +244,23 @@ export function DataTable<TData, TValue>({
                                         }}
                                     />
                                     {isAiMode && (
-                                        <div
+                                        <Badge
                                             role="status"
                                             aria-live="polite"
-                                            className="absolute right-10 top-1/2 -translate-y-1/2 flex items-center bg-linear-to-r from-indigo-500 to-purple-500 text-white px-2 py-0.5 rounded-full text-[12px] font-bold shadow-lg shadow-indigo-500/20 animate-in fade-in zoom-in duration-300"
+                                            variant="default"
+                                            className="absolute right-10 top-1/2 -translate-y-1/2 animate-in fade-in zoom-in duration-300"
                                         >
                                             AI
-                                        </div>
+                                        </Badge>
                                     )}
                                 </div>
 
                                 {showAiSearch && onSearch && (
-                                    <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-indigo-100 bg-indigo-50/30">
+                                    <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-border bg-muted/30">
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <div className="flex items-center gap-3 cursor-help">
-                                                    <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-indigo-600" : "text-muted-foreground")} />
+                                                    <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-foreground" : "text-muted-foreground")} />
                                                     <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                                 </div>
                                             </TooltipTrigger>
