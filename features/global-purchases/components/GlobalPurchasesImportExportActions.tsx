@@ -37,6 +37,7 @@ export function GlobalPurchasesImportExportActions({
           <Button
             type="button"
             variant="outline"
+            className={buttonClassName}
             onClick={() => void onExport()}
             aria-label="Экспорт закупок"
           >
@@ -52,6 +53,7 @@ export function GlobalPurchasesImportExportActions({
           <Button
             type="button"
             variant="outline"
+            className={buttonClassName}
             onClick={onImportClick}
             aria-label="Импорт закупок"
           >
