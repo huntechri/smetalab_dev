@@ -58,7 +58,7 @@ export function EditableCell({
                 aria-label={ariaLabel}
                 title={title}
                 className={cn(
-                    'group w-full justify-start rounded-sm cursor-text hover:underline hover:decoration-dashed hover:underline-offset-2 focus-visible:underline focus-visible:decoration-dashed focus-visible:underline-offset-2',
+                    'group w-full justify-start rounded-sm cursor-text hover:underline hover:decoration-dashed hover:underline-offset-2 focus-visible:bg-accent focus-visible:text-accent-foreground focus-visible:underline focus-visible:decoration-dashed focus-visible:underline-offset-2',
                     className,
                 )}
                 onClick={() => {
