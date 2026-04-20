@@ -46,8 +46,9 @@ OWNER_PATTERN='^@[A-Za-z0-9_.-]+(/[A-Za-z0-9_.-]+)?$'
 while IFS= read -r line; do
   (( line_number++ )) || true
 
-  # Strip inline comments
+  # Strip inline comments and trailing CR
   line_body="${line%%#*}"
+  line_body="${line_body%$'\r'}"
 
   # Skip blank lines and pure-comment lines
   [[ -z "${line_body// /}" ]] && continue
