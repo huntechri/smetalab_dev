@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/shared/ui/data-table";
+import { Button } from '@repo/ui';
+import { DataTable } from "@repo/ui";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import {
   Calculator,
@@ -16,20 +16,20 @@ import {
   FolderTree,
   FilePlus,
 } from "lucide-react";
-import { TableEmptyState } from "@/shared/ui/table-empty-state";
-import { Badge } from "@/shared/ui/badge";
+import { TableEmptyState } from "@repo/ui";
+import { Badge } from "@repo/ui";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@/shared/ui/sheet";
+} from "@repo/ui";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/shared/ui/dropdown-menu";
+} from "@repo/ui";
 import {
   Dialog,
   DialogContent,
@@ -37,9 +37,9 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/shared/ui/dialog";
-import { Input } from "@/shared/ui/input";
-import { Label } from "@/shared/ui/label";
+} from "@repo/ui";
+import { Input } from "@repo/ui";
+import { Label } from "@repo/ui";
 import { useRouter } from "next/navigation";
 import { useEstimateMutations } from "../../hooks/use-estimate-mutations";
 import { estimatesActionRepo } from "../../repository/estimates.actions";
@@ -823,24 +823,24 @@ export function EstimateTable({
             action={
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <Button
-                  variant="default"
-                  size="default"
+                  variant="outline"
+                 
                   onClick={() => openCreateSectionDialog()}
                 >
                   <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                   Создать раздел
                 </Button>
                 <Button
-                  variant="default"
-                  size="default"
+                  variant="outline"
+                 
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
                   <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
                   Добавить работу
                 </Button>
                 <Button
-                  variant="default"
-                  size="default"
+                  variant="outline"
+                 
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
                 >
@@ -857,9 +857,10 @@ export function EstimateTable({
         compactMobileToolbar
         actions={
           <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
             <Button
-              variant="default"
-              size="default"
+              variant="outline"
+             
               aria-label="Режим расчета"
               onClick={() => {
                 setPendingInsertAfterWork(null);
@@ -872,8 +873,8 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="default"
-              size="default"
+              variant="outline"
+             
               aria-label="Добавить раздел"
               onClick={() => openCreateSectionDialog()}
             >
@@ -883,8 +884,8 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="default"
-              size="default"
+              variant="outline"
+             
               aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
             >
@@ -893,22 +894,23 @@ export function EstimateTable({
                 Сохранить
               </span>
             </Button>
+            </div>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" size="default" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="outline" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Шаблон</span>
               </Button>
               <Button
-                variant="default"
-                size="default"
+                variant="outline"
+               
                 onClick={openCoefficientDialog}
               >
                 <Percent className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Коэффициент</span>
               </Button>
               <Button
-                variant="default"
-                size="default"
+                variant="outline"
+               
                 onClick={() => void importEstimate()}
                 disabled={isImporting}
               >
@@ -920,8 +922,8 @@ export function EstimateTable({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant="default"
-                    size="default"
+                    variant="outline"
+                   
                     disabled={isExporting}
                   >
                     <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
@@ -948,21 +950,23 @@ export function EstimateTable({
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <Button
-              variant="destructive"
-              size="default"
-              aria-label="Удалить смету"
-              onClick={() => setIsDeleteDialogOpen(true)}
-            >
-              <Trash2 className="h-3.5 w-3.5" />
-              <span className="hidden sm:inline">
-                Удалить
-              </span>
-            </Button>
+            <div className="hidden sm:flex">
+              <Button
+                variant="destructive"
+               
+                aria-label="Удалить смету"
+                onClick={() => setIsDeleteDialogOpen(true)}
+              >
+                <Trash2 className="h-3.5 w-3.5" />
+                <span className="hidden sm:inline">
+                  Удалить
+                </span>
+              </Button>
+            </div>
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" size="icon-xs" aria-label="Действия по смете">
+                  <Button variant="outline" size="icon-xs" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Действия по смете</span>
                   </Button>
@@ -1002,6 +1006,10 @@ export function EstimateTable({
                   <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={() => void exportEstimate("pdf")}>
                     <FileDown className="h-4 w-4 text-muted-foreground" />
                     <span>Экспорт в PDF</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="gap-2 text-destructive focus:text-destructive" onClick={() => setIsDeleteDialogOpen(true)}>
+                    <Trash2 className="h-4 w-4" />
+                    <span>Удалить смету</span>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
