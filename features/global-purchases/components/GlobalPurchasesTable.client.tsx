@@ -321,7 +321,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="default"
+                                        variant="outline"
                                         onClick={() => void handleAddManualRow()}
                                         disabled={isAddingManual}
                                         aria-label="Добавить строку вручную"
@@ -337,7 +337,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="default"
+                                        variant="outline"
                                         onClick={() => setIsCatalogOpen(true)}
                                         disabled={isAddingCatalog}
                                         aria-label="Добавить из справочника"

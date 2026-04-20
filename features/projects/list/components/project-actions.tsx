@@ -36,14 +36,14 @@ export function ProjectActions({
         return (
             <AlertDialog>
                 <div className="grid shrink-0 grid-cols-3 gap-2">
-                    <Button asChild variant="default">
+                    <Button asChild variant="outline">
                         <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                             <ExternalLink className="size-4 sm:hidden" />
                             <span className="hidden sm:inline">Открыть</span>
                         </Link>
                     </Button>
                     <Button
-                        variant="default"
+                        variant="outline"
                         onClick={() => onEdit(projectId)}
                         aria-label={`Изменить ${projectName}`}
                     >
@@ -75,14 +75,14 @@ export function ProjectActions({
 
     return (
         <div className="grid grid-cols-3 gap-2 pt-2">
-            <Button asChild variant="default">
+            <Button asChild variant="outline">
                 <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                     <ExternalLink className="size-4 sm:hidden" />
                     <span className="hidden sm:inline">Открыть</span>
                 </Link>
             </Button>
             <Button
-                variant="default"
+                variant="outline"
                 onClick={() => onEdit(projectId)}
                 aria-label={`Изменить ${projectName}`}
             >
