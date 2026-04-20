@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
-import { Badge } from '@/shared/ui/badge';
+import { Button } from '@repo/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/ui';
+import { Badge } from '@repo/ui';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { estimatePatternsActionRepo, EstimatePatternListItem, EstimatePatternPreviewRow } from '@/features/projects/estimates/repository/patterns.actions';
+import { estimatePatternsActionRepo, type EstimatePatternListItem, type EstimatePatternPreviewRow } from '@/features/projects/estimates';
 
 export function PatternsScreen() {
   useBreadcrumbs([
@@ -85,7 +85,7 @@ export function PatternsScreen() {
             <CardContent className="space-y-3">
               {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
-                <Button variant="default" onClick={() => void openPreview(item.id)}>Превью</Button>
+                <Button variant="outline" onClick={() => void openPreview(item.id)}>Превью</Button>
                 <Button variant="destructive" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
             </CardContent>
@@ -108,7 +108,7 @@ export function PatternsScreen() {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
+            <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

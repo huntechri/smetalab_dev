@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Plus, BookOpen, CalendarDays, Check, ChevronsUpDown, Filter, MoreHorizontal, Upload, Download, FilePlus } from 'lucide-react';
-import { TableEmptyState } from '@/shared/ui/table-empty-state';
-import { DataTable } from '@/shared/ui/data-table';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/shared/ui/badge';
+import { TableEmptyState } from '@repo/ui';
+import { DataTable } from '@repo/ui';
+import { Button } from '@repo/ui';
+import { Badge } from '@repo/ui';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { useAppToast } from '@/components/providers/use-app-toast';
@@ -13,17 +13,17 @@ import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Calendar } from '@/shared/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui';
+import { Calendar } from '@repo/ui';
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
 import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/shared/ui/command';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@repo/ui';
 import { cn } from '@/lib/utils';
 import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
 import { GlobalPurchasesImportExportActions } from './GlobalPurchasesImportExportActions';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -321,7 +321,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="default"
+                                        variant="outline"
                                         onClick={() => void handleAddManualRow()}
                                         disabled={isAddingManual}
                                         aria-label="Добавить строку вручную"
@@ -337,7 +337,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                                 <TooltipTrigger asChild>
                                     <Button
                                         type="button"
-                                        variant="default"
+                                        variant="outline"
                                         onClick={() => setIsCatalogOpen(true)}
                                         disabled={isAddingCatalog}
                                         aria-label="Добавить из справочника"
@@ -352,7 +352,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                         <div className="sm:hidden ml-auto">
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" size="icon" aria-label="Действия по закупкам">
+                                    <Button variant="outline" size="icon-xs" aria-label="Действия по закупкам">
                                         <MoreHorizontal className="size-4" />
                                     </Button>
                                 </DropdownMenuTrigger>
