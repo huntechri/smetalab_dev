@@ -1,4 +1,4 @@
-import { EditableCell } from '@/features/projects/estimates/components/table/cells/EditableCell';
+import { EditableCell } from '@repo/ui';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
