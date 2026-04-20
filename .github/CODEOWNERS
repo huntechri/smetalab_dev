@@ -1,37 +1,39 @@
 # CODEOWNERS — defines who must review changes to sensitive areas of the codebase.
 # GitHub automatically requests a review from the listed owner(s) when a PR
 # touches a matching path. Combined with `require_code_owner_review: true` in
-# `.github/rulesets/main-protection.json`, no PR can be merged without approval
-# from the domain expert for that area.
+# `.github/rulesets/org-main-protection.json`, no PR can be merged without approval
+# from the domain team for that area.
 #
 # Syntax: <pattern>  <owner> [<owner2> ...]
-# Owners must be GitHub usernames (@username) or team slugs (@org/team-slug).
+# Owners are GitHub org team slugs (@smetalab/team-slug).
 # More specific patterns override less specific ones listed above them.
+# Teams must exist in the smetalab GitHub Organization before these rules apply.
+# Run scripts/create-org-teams.sh to create all required teams.
 # Docs: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
 
 # ── Infrastructure layer (auth, email, notifications, payments) ──────────────
-/lib/infrastructure/  @huntechri
+/lib/infrastructure/  @smetalab/platform
 
 # ── Authentication ───────────────────────────────────────────────────────────
-# Security-critical path — requires explicit owner approval on every change.
-/lib/infrastructure/auth/  @huntechri
+# Security-critical path — requires explicit security team approval on every change.
+/lib/infrastructure/auth/  @smetalab/security
 
 # ── Payments / billing ───────────────────────────────────────────────────────
-/lib/infrastructure/payments/  @huntechri
+/lib/infrastructure/payments/  @smetalab/payments
 
 # ── Database schema ──────────────────────────────────────────────────────────
 # Schema changes are irreversible without a migration.
-/lib/data/db/schema.ts  @huntechri
+/lib/data/db/schema.ts  @smetalab/platform
 
 # ── Drizzle migrations and config ────────────────────────────────────────────
-/drizzle/  @huntechri
-/drizzle.config.mts  @huntechri
-/drizzle.config.test.mts  @huntechri
+/drizzle/  @smetalab/platform
+/drizzle.config.mts  @smetalab/platform
+/drizzle.config.test.mts  @smetalab/platform
 
 # ── Server actions ───────────────────────────────────────────────────────────
-/app/actions/  @huntechri
+/app/actions/  @smetalab/platform
 
 # ── GitHub configuration (CI, branch protection, CODEOWNERS) ─────────────────
-/.github/  @huntechri
-/.github/rulesets/  @huntechri
-/.github/workflows/  @huntechri
+/.github/  @smetalab/admins
+/.github/rulesets/  @smetalab/admins
+/.github/workflows/  @smetalab/admins
