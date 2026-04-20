@@ -256,7 +256,7 @@ export function DataTable<TData, TValue>({
                                 </div>
 
                                 {showAiSearch && onSearch && (
-                                    <div className="flex shrink-0 items-center gap-2 px-2 h-9 rounded-lg border border-border bg-muted/30">
+                                    <div className="flex shrink-0 items-center gap-2 px-2 h-7 rounded-md border border-border bg-muted/30">
                                         <Tooltip>
                                             <TooltipTrigger asChild>
                                                 <div className="flex items-center gap-3 cursor-help">

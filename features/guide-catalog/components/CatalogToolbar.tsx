@@ -113,15 +113,12 @@ export function CatalogToolbar<TFilters>({
         <TooltipTrigger asChild>
           <Button
             variant="outline"
+            size="xs"
             onClick={onImportClick}
-            disabled={isImporting}
+            loading={isImporting}
+            iconLeft={<Upload />}
           >
-            {isImporting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Upload className="mr-2 h-4 w-4" />
-            )}
-            <span className="inline">Импорт</span>
+            Импорт
           </Button>
         </TooltipTrigger>
         <TooltipContent>
@@ -133,15 +130,12 @@ export function CatalogToolbar<TFilters>({
         <TooltipTrigger asChild>
           <Button
             variant="outline"
+            size="xs"
             onClick={onExport}
-            disabled={isExporting}
+            loading={isExporting}
+            iconLeft={<Download />}
           >
-            {isExporting ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Download className="mr-2 h-4 w-4" />
-            )}
-            <span className="inline">Экспорт</span>
+            Экспорт
           </Button>
         </TooltipTrigger>
         <TooltipContent>
@@ -159,13 +153,11 @@ export function CatalogToolbar<TFilters>({
               <AlertDialogTrigger asChild>
                 <Button
                   variant="destructive"
+                  size="xs"
                   disabled={isActionDisabled}
+                  loading={isDeletingAll}
+                  iconLeft={<Trash2 />}
                 >
-                  {isDeletingAll ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <Trash2 className="h-4 w-4 sm:mr-2" />
-                  )}
                   <span className="hidden sm:inline">Удалить всё</span>
                 </Button>
               </AlertDialogTrigger>
