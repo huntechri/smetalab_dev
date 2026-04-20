@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Upload, Download, Trash2, Loader2, Filter } from "lucide-react";
+import { Upload, Download, Trash2, Filter } from "lucide-react";
 
 import { Button } from "@repo/ui";
 import { cn } from "@/lib/utils";
