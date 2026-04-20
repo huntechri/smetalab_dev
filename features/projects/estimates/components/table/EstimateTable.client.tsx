@@ -823,7 +823,7 @@ export function EstimateTable({
             action={
               <div className="flex flex-wrap items-center justify-center gap-2">
                 <Button
-                  variant="default"
+                  variant="outline"
                  
                   onClick={() => openCreateSectionDialog()}
                 >
@@ -831,7 +831,7 @@ export function EstimateTable({
                   Создать раздел
                 </Button>
                 <Button
-                  variant="default"
+                  variant="outline"
                  
                   onClick={() => setIsCalculationModeOpen(true)}
                 >
@@ -839,7 +839,7 @@ export function EstimateTable({
                   Добавить работу
                 </Button>
                 <Button
-                  variant="default"
+                  variant="outline"
                  
                   onClick={() => void importEstimate()}
                   disabled={isImporting}
@@ -859,7 +859,7 @@ export function EstimateTable({
           <div className="flex items-center gap-1.5 sm:gap-2">
             <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
             <Button
-              variant="default"
+              variant="outline"
              
               aria-label="Режим расчета"
               onClick={() => {
@@ -873,7 +873,7 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="default"
+              variant="outline"
              
               aria-label="Добавить раздел"
               onClick={() => openCreateSectionDialog()}
@@ -884,7 +884,7 @@ export function EstimateTable({
               </span>
             </Button>
             <Button
-              variant="default"
+              variant="outline"
              
               aria-label="Сохранить смету"
               onClick={() => setIsSavePatternOpen(true)}
@@ -896,12 +896,12 @@ export function EstimateTable({
             </Button>
             </div>
             <div className="hidden lg:flex items-center gap-1.5">
-              <Button variant="default" onClick={() => setIsApplyPatternOpen(true)}>
+              <Button variant="outline" onClick={() => setIsApplyPatternOpen(true)}>
                 <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
                 <span>Шаблон</span>
               </Button>
               <Button
-                variant="default"
+                variant="outline"
                
                 onClick={openCoefficientDialog}
               >
@@ -909,7 +909,7 @@ export function EstimateTable({
                 <span>Коэффициент</span>
               </Button>
               <Button
-                variant="default"
+                variant="outline"
                
                 onClick={() => void importEstimate()}
                 disabled={isImporting}
@@ -922,7 +922,7 @@ export function EstimateTable({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
-                    variant="default"
+                    variant="outline"
                    
                     disabled={isExporting}
                   >
@@ -966,7 +966,7 @@ export function EstimateTable({
             <div className="sm:hidden">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" size="icon-xs" aria-label="Действия по смете">
+                  <Button variant="outline" size="icon-xs" aria-label="Действия по смете">
                     <MoreHorizontal className="h-4 w-4" />
                     <span className="sr-only">Действия по смете</span>
                   </Button>
