@@ -174,6 +174,8 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 filterColumn="materialName"
                 filterPlaceholder="Поиск..."
                 height="600px"
+                tableMinWidth="100%"
+                tableContainerClassName="overflow-x-hidden md:overflow-x-auto"
                 compactMobileToolbar
                 actions={(
                     <Button variant="outline" onClick={handleExport}>

@@ -45,6 +45,8 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                 filterColumn="name"
                 filterPlaceholder="Поиск..."
                 height="600px"
+                tableMinWidth="100%"
+                tableContainerClassName="overflow-x-hidden md:overflow-x-auto"
                 compactMobileToolbar
                 emptyState={
                     <TableEmptyState

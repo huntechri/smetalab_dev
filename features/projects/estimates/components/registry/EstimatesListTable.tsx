@@ -88,10 +88,10 @@ export function EstimatesListTable({
   actions,
   emptyState,
   showSearch = true,
-  tableMinWidth = '800px',
+  tableMinWidth = '100%',
   createInBodyAction,
   height = '450px',
-  tableContainerClassName,
+  tableContainerClassName = 'overflow-x-hidden md:overflow-x-auto',
 }: EstimatesListTableProps) {
   const [rows, setRows] = useState<EstimateMeta[]>(estimates);
   const { updateEstimateStatus, deleteEstimate } = useEstimateMutations();

@@ -117,6 +117,8 @@ export function EstimateTable({
         filterColumn="name"
         filterPlaceholder="Поиск..."
         height="var(--table-height)"
+        tableMinWidth="100%"
+        tableContainerClassName="overflow-x-hidden md:overflow-x-auto"
         compactMobileToolbar
         actions={
           <EstimateTableToolbar
