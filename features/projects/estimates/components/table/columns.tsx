@@ -1,7 +1,10 @@
 'use client';
 
-import { Button } from '@repo/ui';
-import { EditableCell, ImageCell, MoneyCell, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { EditableCell } from '@/shared/ui/cells/editable-cell';
+import { ImageCell } from '@/shared/ui/cells/image-cell';
+import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';

@@ -1,12 +1,12 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@repo/ui';
-import { Badge } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
-import { EditableCell } from '@repo/ui';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui';
+import { EditableCell } from '@/shared/ui/cells/editable-cell';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -16,9 +16,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@repo/ui';
+} from '@/shared/ui/alert-dialog';
 import { parseIsoDateSafe } from '../lib/date';
-import { Popover, PopoverContent, PopoverTrigger } from '@repo/ui';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import {
   Command,
   CommandEmpty,
@@ -26,7 +26,7 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@repo/ui';
+} from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '../types/dto';
 
