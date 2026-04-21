@@ -19,6 +19,15 @@ export function useDirectorySheetState<TItem>() {
     setEditingItem(null);
   }, []);
 
+  const onSheetOpenChange = useCallback((open: boolean) => {
+    if (!open) {
+      closeSheet();
+      return;
+    }
+
+    setIsSheetOpen(true);
+  }, [closeSheet]);
+
   return {
     isSheetOpen,
     setIsSheetOpen,
@@ -27,5 +36,6 @@ export function useDirectorySheetState<TItem>() {
     openCreateSheet,
     openEditSheet,
     closeSheet,
+    onSheetOpenChange,
   };
 }

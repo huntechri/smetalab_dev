@@ -33,11 +33,11 @@ const materialSuppliersListAdapter: DirectoryListAdapter<MaterialSupplierRow> = 
 export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: MaterialSuppliersScreenProps) {
   const {
     isSheetOpen,
-    setIsSheetOpen,
     editingItem: editingSupplier,
     openCreateSheet,
     openEditSheet,
     closeSheet,
+    onSheetOpenChange,
   } = useDirectorySheetState<MaterialSupplierRow>();
   const [suppliers, setSuppliers] = useState<MaterialSupplierRow[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
@@ -139,7 +139,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
 
       <CreateMaterialSupplierSheet
         open={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
+        onOpenChange={onSheetOpenChange}
         materialSupplier={editingSupplier}
         tenantId={tenantId}
         onSaved={(supplier) => {

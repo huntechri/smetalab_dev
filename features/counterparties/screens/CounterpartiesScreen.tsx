@@ -36,11 +36,11 @@ const counterpartiesListAdapter: DirectoryListAdapter<CounterpartyRow> = {
 export function CounterpartiesScreen({ initialData, totalCount, tenantId }: CounterpartiesScreenProps) {
   const {
     isSheetOpen,
-    setIsSheetOpen,
     editingItem: editingCounterparty,
     openCreateSheet,
     openEditSheet,
     closeSheet,
+    onSheetOpenChange,
   } = useDirectorySheetState<CounterpartyRow>();
   const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
   const [rowsCount, setRowsCount] = useState(totalCount);
@@ -156,7 +156,7 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
 
       <CreateCounterpartySheet
         open={isSheetOpen}
-        onOpenChange={setIsSheetOpen}
+        onOpenChange={onSheetOpenChange}
         counterparty={editingCounterparty}
         tenantId={tenantId}
         onSaved={onSaved}
