@@ -29,7 +29,7 @@ vi.mock('@repo/ui', () => ({
   SidebarGroupContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarGroupLabel: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarMenuButton: ({ children, isActive, ...props }: { children: React.ReactNode; isActive?: boolean }) => (
+  SidebarMenuButton: ({ children, isActive, asChild: _asChild, ...props }: { children: React.ReactNode; isActive?: boolean; asChild?: boolean }) => (
     <button data-active={isActive} {...props}>{children}</button>
   ),
   SidebarMenuItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

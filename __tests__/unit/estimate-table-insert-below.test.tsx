@@ -3,6 +3,14 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EstimateTable } from '@/features/projects/estimates/components/table/EstimateTable.client';
 import type { EstimateRow } from '@/features/projects/estimates/types/dto';
 
+const { MockButton } = vi.hoisted(() => ({
+  MockButton: ({
+    children,
+    asChild: _asChild,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
+}));
+
 const addWorkMock = vi.fn();
 const listRowsMock = vi.fn();
 const toastMock = vi.fn();
@@ -76,11 +84,11 @@ vi.mock('@repo/ui', () => ({
   Input: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
   Label: ({ children }: { children: React.ReactNode }) => <label>{children}</label>,
   TableEmptyState: () => <div>empty</div>,
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+  Button: MockButton,
 }));
 
 vi.mock('@/shared/ui/button', () => ({
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+  Button: MockButton,
 }));
 
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({

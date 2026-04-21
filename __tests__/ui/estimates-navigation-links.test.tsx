@@ -3,6 +3,14 @@ import { render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ProjectEstimatesSection } from '@/features/projects/dashboard/components/ProjectEstimatesSection';
 
+const { MockButton } = vi.hoisted(() => ({
+    MockButton: ({
+        children,
+        asChild: _asChild,
+        ...props
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
+}));
+
 vi.mock('@repo/ui', () => ({
     DataTable: ({
         columns,
@@ -26,7 +34,7 @@ vi.mock('@repo/ui', () => ({
     CardDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
     CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CardTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    Button: MockButton,
 }));
 
 vi.mock('next/navigation', () => ({

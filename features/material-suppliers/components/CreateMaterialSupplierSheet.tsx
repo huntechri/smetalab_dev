@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -124,6 +125,9 @@ export function CreateMaterialSupplierSheet({
           <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1 min-h-0 overflow-hidden">
             <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
               <SheetTitle className="text-base sm:text-lg">{materialSupplier ? 'Редактировать поставщика' : 'Создать поставщика'}</SheetTitle>
+              <SheetDescription className="text-xs sm:text-sm">
+                Укажите данные поставщика и сохраните карточку.
+              </SheetDescription>
             </SheetHeader>
 
             <ScrollArea className="flex-1 min-h-0">
