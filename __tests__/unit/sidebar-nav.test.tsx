@@ -4,15 +4,8 @@ import { Home } from 'lucide-react';
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const prefetchSpy = vi.fn();
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    prefetch: prefetchSpy,
-  }),
-}));
-
-vi.mock('next/link', () => ({
-  default: ({
+const { MockNextLink } = vi.hoisted(() => ({
+  MockNextLink: ({
     href,
     children,
     prefetch: _prefetch,
@@ -24,12 +17,22 @@ vi.mock('next/link', () => ({
   ),
 }));
 
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    prefetch: prefetchSpy,
+  }),
+}));
+
+vi.mock('next/link', () => ({
+  default: MockNextLink,
+}));
+
 vi.mock('@repo/ui', () => ({
   SidebarGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarGroupContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarGroupLabel: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  SidebarMenuButton: ({ children, isActive, ...props }: { children: React.ReactNode; isActive?: boolean }) => (
+  SidebarMenuButton: ({ children, isActive, asChild: _asChild, ...props }: { children: React.ReactNode; isActive?: boolean; asChild?: boolean }) => (
     <button data-active={isActive} {...props}>{children}</button>
   ),
   SidebarMenuItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,

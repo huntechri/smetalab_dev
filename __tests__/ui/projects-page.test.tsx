@@ -4,11 +4,19 @@ import { expect, test, vi } from 'vitest';
 import Page from '@/app/(workspace)/app/projects/page';
 
 let mockedSearchParams = '';
+const { MockNextLink } = vi.hoisted(() => ({
+    MockNextLink: ({
+        href,
+        children,
+        prefetch: _prefetch,
+        ...props
+    }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string; children: React.ReactNode; prefetch?: boolean }) => (
+        <a href={href} {...props}>{children}</a>
+    ),
+}));
 
 vi.mock('next/link', () => ({
-    default: ({ children, href }: { children: React.ReactNode; href: string }) => (
-        <a href={href}>{children}</a>
-    ),
+    default: MockNextLink,
 }));
 
 vi.mock('next/navigation', () => ({

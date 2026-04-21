@@ -3,6 +3,14 @@ import { GlobalPurchasesTable } from '@/features/global-purchases/components/Glo
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 
+const { MockButton } = vi.hoisted(() => ({
+    MockButton: ({
+        children,
+        asChild: _asChild,
+        ...props
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
+}));
+
 const addManualRowMock = vi.fn();
 const addCatalogRowMock = vi.fn();
 const copyToNextDayMock = vi.fn();
@@ -43,7 +51,7 @@ vi.mock('@/shared/ui/table-empty-state', () => ({
 }));
 
 vi.mock('@/shared/ui/button', () => ({
-    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    Button: MockButton,
 }));
 
 vi.mock('@/shared/ui/badge', () => ({

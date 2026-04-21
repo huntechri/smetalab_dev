@@ -7,6 +7,7 @@ import {
   ScrollArea,
   Sheet,
   SheetContent,
+  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -51,6 +52,9 @@ export function CreateCounterpartySheet({
       <SheetContent className="w-full sm:max-w-[540px] max-h-dvh flex flex-col p-0">
         <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
           <SheetTitle className="text-base sm:text-lg">{modeTitle}</SheetTitle>
+          <SheetDescription className="text-xs sm:text-sm">
+            Заполните данные контрагента и сохраните изменения.
+          </SheetDescription>
         </SheetHeader>
 
         <Form {...form}>

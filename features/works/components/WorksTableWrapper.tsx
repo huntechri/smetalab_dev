@@ -1,4 +1,4 @@
-import * as React from "react";
+import type { ReactNode } from "react";
 
 import {
   CatalogTableAdapter,
@@ -18,7 +18,7 @@ interface WorksTableWrapperProps {
   onAiModeChange: (val: boolean) => void;
   onSearchValueChange: (val: string) => void;
   onEndReached?: () => void;
-  actions?: React.ReactNode;
+  actions?: ReactNode;
   tableActions: CatalogTableActions<WorkRow>;
 }
 
