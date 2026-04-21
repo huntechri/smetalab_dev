@@ -120,5 +120,26 @@ export default [
             ],
         },
     },
+
+    {
+        files: ["features/counterparties/screens/**/*.{ts,tsx}", "features/material-suppliers/screens/**/*.{ts,tsx}"],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    paths: [
+                        {
+                            name: "@/shared/ui/data-table",
+                            message: "Use DirectoryListScreen from '@/features/directories' in directory screens.",
+                        },
+                        {
+                            name: "@/shared/ui/shells/data-table-shell",
+                            message: "Use feature wrapper DirectoryListScreen instead of consuming DataTableShell in directory screens.",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
     { ignores: ["node_modules/**", ".next/**", ".vercel/**", "drizzle/**", "bin/**", "test-results/**"] },
 ];
