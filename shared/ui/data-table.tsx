@@ -60,6 +60,7 @@ export interface DataTableProps<TData, TValue> {
     tableMinWidth?: string | number;
     tableContainerClassName?: string;
     enableVirtualization?: boolean;
+    mobileOptimized?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -88,8 +89,10 @@ export function DataTable<TData, TValue>({
     tableMinWidth = '800px',
     tableContainerClassName,
     enableVirtualization = false,
+    mobileOptimized = false,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = React.useState(false)
+    const [isMobileViewport, setIsMobileViewport] = React.useState(false)
     const hasFilterControls = Boolean(showFilter && filterColumn)
 
     const isAiMode = externalAiMode ?? internalAiMode;
@@ -179,7 +182,7 @@ export function DataTable<TData, TValue>({
                                 key={header.id}
                                 colSpan={header.colSpan}
                                 className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
-                                style={{ width: header.getSize() }}
+                                style={shouldUseMobileOptimizedLayout ? undefined : { width: header.getSize() }}
                                 aria-sort={ariaSort}
                             >
                                 {header.isPlaceholder ? null : (
@@ -190,7 +193,7 @@ export function DataTable<TData, TValue>({
                                             onClick={header.column.getToggleSortingHandler()}
                                             aria-label="Сортировать столбец"
                                         >
-                                            <div className="truncate flex-1 text-xs">
+                                            <div className={cn("flex-1 text-xs", shouldUseMobileOptimizedLayout ? "whitespace-normal break-words" : "truncate")}>
                                                 {flexRender(
                                                     header.column.columnDef.header,
                                                     header.getContext()
@@ -199,7 +202,7 @@ export function DataTable<TData, TValue>({
                                         </button>
                                     ) : (
                                         <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                            <div className="truncate flex-1 text-xs">
+                                            <div className={cn("flex-1 text-xs", shouldUseMobileOptimizedLayout ? "whitespace-normal break-words" : "truncate")}>
                                                 {flexRender(
                                                     header.column.columnDef.header,
                                                     header.getContext()
@@ -217,6 +220,23 @@ export function DataTable<TData, TValue>({
     )
 
     const shouldVirtualize = enableVirtualization;
+    const shouldUseMobileOptimizedLayout = mobileOptimized && isMobileViewport;
+    const effectiveTableMinWidth = shouldUseMobileOptimizedLayout ? '100%' : tableMinWidth;
+
+    React.useEffect(() => {
+        if (!mobileOptimized) {
+            return;
+        }
+        if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+            return;
+        }
+
+        const mediaQuery = window.matchMedia('(max-width: 767px)');
+        const update = () => setIsMobileViewport(mediaQuery.matches);
+        update();
+        mediaQuery.addEventListener('change', update);
+        return () => mediaQuery.removeEventListener('change', update);
+    }, [mobileOptimized]);
 
     return (
         <TooltipProvider>
@@ -239,6 +259,7 @@ export function DataTable<TData, TValue>({
                 <div
                     className={cn(
                         "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
+                        shouldUseMobileOptimizedLayout && "overflow-x-hidden",
                         isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20",
                         tableContainerClassName,
                     )}
@@ -265,7 +286,7 @@ export function DataTable<TData, TValue>({
                         <DataTableSkeleton />
                     ) : rows.length === 0 ? (
                         <table
-                            style={{ width: '100%', minWidth: tableMinWidth, tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
+                            style={{ width: '100%', minWidth: effectiveTableMinWidth, tableLayout: shouldUseMobileOptimizedLayout ? 'auto' : 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
                         >
                             <thead className="z-40">
                                 {renderHeaderContent()}
@@ -298,14 +319,15 @@ export function DataTable<TData, TValue>({
                             itemContent={(_index, row: Row<TData>) => (
                                 <DataTableRow 
                                     row={row} 
-                                    className={getRowClassName?.(row.original)} 
+                                    className={getRowClassName?.(row.original)}
+                                    disableColumnWidth={shouldUseMobileOptimizedLayout}
                                 />
                             )}
                         />
                     ) : (
                         <div style={{ height, width: '100%', overflowY: 'auto' }}>
                             <table
-                                style={{ width: '100%', minWidth: tableMinWidth, tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
+                                style={{ width: '100%', minWidth: effectiveTableMinWidth, tableLayout: shouldUseMobileOptimizedLayout ? 'auto' : 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
                             >
                                 <thead className="z-40 sticky top-0 bg-background">
                                     {renderHeaderContent()}
@@ -319,6 +341,7 @@ export function DataTable<TData, TValue>({
                                             <DataTableRow
                                                 row={row}
                                                 className={getRowClassName?.(row.original)}
+                                                disableColumnWidth={shouldUseMobileOptimizedLayout}
                                             />
                                         </tr>
                                     ))}

@@ -7,11 +7,13 @@ import { cn } from "@/lib/utils"
 interface DataTableRowProps<TData> {
     row: Row<TData>
     className?: string
+    disableColumnWidth?: boolean
 }
 
 export const DataTableRow = React.memo(<TData,>({ 
     row, 
-    className 
+    className,
+    disableColumnWidth = false,
 }: DataTableRowProps<TData>) => {
     return (
         <>
@@ -19,10 +21,10 @@ export const DataTableRow = React.memo(<TData,>({
                 <td
                     key={cell.id}
                     className={cn(
-                        "px-3 py-1.5 md:px-4 md:py-2 align-middle border-b transition-colors",
+                        "px-3 py-1.5 md:px-4 md:py-2 align-middle border-b transition-colors whitespace-normal break-words",
                         className
                     )}
-                    style={{ width: cell.column.getSize() }}
+                    style={disableColumnWidth ? undefined : { width: cell.column.getSize() }}
                 >
                     <div className="w-full text-[12px] leading-tight">
                         {flexRender(
@@ -37,7 +39,8 @@ export const DataTableRow = React.memo(<TData,>({
 }, (prev, next) => {
     return prev.row.original === next.row.original &&
         prev.row.getIsSelected() === next.row.getIsSelected() &&
-        prev.className === next.className;
+        prev.className === next.className &&
+        prev.disableColumnWidth === next.disableColumnWidth;
 });
 
 DataTableRow.displayName = "DataTableRow";

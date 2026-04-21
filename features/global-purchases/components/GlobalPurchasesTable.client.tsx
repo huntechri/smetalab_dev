@@ -170,8 +170,7 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
                 filterColumn="materialName"
                 filterPlaceholder="Поиск..."
                 height="625px"
-                tableMinWidth="100%"
-                tableContainerClassName="overflow-x-hidden md:overflow-x-auto"
+                mobileOptimized
                 emptyState={
                     <TableEmptyState
                         title="Закупки не найдены"
