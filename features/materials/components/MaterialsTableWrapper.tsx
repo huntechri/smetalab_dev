@@ -49,6 +49,7 @@ export function MaterialsTableWrapper({
     <CatalogFeatureTableWrapper
       adapter={materialsTableAdapter}
       data={data}
+      enableVirtualization={true}
       isAiMode={isAiMode}
       isSearching={isSearching}
       loadingMore={loadingMore}

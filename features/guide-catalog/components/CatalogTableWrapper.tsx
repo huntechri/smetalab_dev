@@ -25,6 +25,7 @@ interface CatalogTableWrapperProps<TData, TValue> {
   actions?: React.ReactNode;
   tableActions: CatalogTableActions<TData>;
   emptyState: CatalogEmptyStateConfig;
+  enableVirtualization?: boolean;
 }
 
 export function CatalogTableWrapper<TData, TValue>({
@@ -42,6 +43,7 @@ export function CatalogTableWrapper<TData, TValue>({
   actions,
   tableActions,
   emptyState,
+  enableVirtualization = false,
 }: CatalogTableWrapperProps<TData, TValue>) {
   return (
     <DataTableShell
@@ -79,6 +81,7 @@ export function CatalogTableWrapper<TData, TValue>({
         isAiMode,
         onAiModeChange,
         loadingMore,
+        enableVirtualization,
       }}
       meta={{
         onInsertRequest: tableActions.onInsertRequest,

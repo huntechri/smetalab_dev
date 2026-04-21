@@ -59,6 +59,7 @@ export interface DataTableProps<TData, TValue> {
     showFilter?: boolean;
     tableMinWidth?: string | number;
     tableContainerClassName?: string;
+    enableVirtualization?: boolean;
 }
 
 export function DataTable<TData, TValue>({
@@ -86,6 +87,7 @@ export function DataTable<TData, TValue>({
     showFilter = true,
     tableMinWidth = '800px',
     tableContainerClassName,
+    enableVirtualization = false,
 }: DataTableProps<TData, TValue>) {
     const [internalAiMode, setInternalAiMode] = React.useState(false)
     const hasFilterControls = Boolean(showFilter && filterColumn)
@@ -214,6 +216,8 @@ export function DataTable<TData, TValue>({
         </>
     )
 
+    const shouldVirtualize = enableVirtualization;
+
     return (
         <TooltipProvider>
             <div className={cn("space-y-4", className)}>
@@ -282,7 +286,7 @@ export function DataTable<TData, TValue>({
                                 </tr>
                             </tbody>
                         </table>
-                    ) : (
+                    ) : shouldVirtualize ? (
                         <TableVirtuoso
                             style={{ height, width: '100%', willChange: 'transform' }}
                             data={rows}
@@ -298,6 +302,29 @@ export function DataTable<TData, TValue>({
                                 />
                             )}
                         />
+                    ) : (
+                        <div style={{ height, width: '100%', overflowY: 'auto' }}>
+                            <table
+                                style={{ width: '100%', minWidth: tableMinWidth, tableLayout: 'fixed', borderCollapse: 'separate', borderSpacing: 0 }}
+                            >
+                                <thead className="z-40 sticky top-0 bg-background">
+                                    {renderHeaderContent()}
+                                </thead>
+                                <tbody>
+                                    {rows.map((row) => (
+                                        <tr
+                                            key={row.id}
+                                            className="border-b last:border-0 hover:bg-muted/60 transition-colors group/row cursor-default"
+                                        >
+                                            <DataTableRow
+                                                row={row}
+                                                className={getRowClassName?.(row.original)}
+                                            />
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     )}
                 </div>
             </div>

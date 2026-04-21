@@ -51,4 +51,21 @@ describe('DataTable a11y interactions', () => {
         await userEvent.keyboard('{Enter}');
         expect(headerCell).toHaveAttribute('aria-sort', 'descending');
     });
+
+    it('renders non-virtual table body when virtualization is explicitly disabled', () => {
+        render(
+            <DataTable
+                columns={columns}
+                data={[
+                    { id: '1', name: 'Альфа' },
+                    { id: '2', name: 'Бета' },
+                ]}
+                enableVirtualization={false}
+            />
+        );
+
+        expect(screen.queryByTestId('virtuoso-scroller')).not.toBeInTheDocument();
+        expect(screen.getAllByText('Альфа').length).toBeGreaterThan(0);
+        expect(screen.getAllByText('Бета').length).toBeGreaterThan(0);
+    });
 });

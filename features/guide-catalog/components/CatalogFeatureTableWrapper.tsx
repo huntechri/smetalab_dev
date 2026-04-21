@@ -19,6 +19,7 @@ interface CatalogFeatureTableWrapperProps<TData, TValue = unknown> {
   onEndReached?: () => void;
   actions?: ReactNode;
   tableActions: CatalogTableActions<TData>;
+  enableVirtualization?: boolean;
 }
 
 export function CatalogFeatureTableWrapper<TData, TValue = unknown>({
@@ -34,6 +35,7 @@ export function CatalogFeatureTableWrapper<TData, TValue = unknown>({
   onEndReached,
   actions,
   tableActions,
+  enableVirtualization = false,
 }: CatalogFeatureTableWrapperProps<TData, TValue>) {
   return (
     <CatalogTableWrapper
@@ -51,6 +53,7 @@ export function CatalogFeatureTableWrapper<TData, TValue = unknown>({
       actions={actions}
       tableActions={tableActions}
       emptyState={adapter.emptyState}
+      enableVirtualization={enableVirtualization}
     />
   );
 }

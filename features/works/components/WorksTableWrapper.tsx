@@ -49,6 +49,7 @@ export function WorksTableWrapper({
     <CatalogFeatureTableWrapper
       adapter={worksTableAdapter}
       data={data}
+      enableVirtualization={true}
       isAiMode={isAiMode}
       isSearching={isSearching}
       loadingMore={loadingMore}
