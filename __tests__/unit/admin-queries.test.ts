@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getAllTeams } from '@/lib/data/db/admin-queries';
 import { getUser } from '@/lib/data/db/queries';
 import type { User } from '@/lib/data/db/schema';
@@ -12,8 +12,15 @@ vi.mock('@/lib/data/db/queries', () => ({
 }));
 
 describe('admin-queries access guard', () => {
+  let warnSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
     vi.resetAllMocks();
+    warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => {
+    warnSpy.mockRestore();
   });
 
   it('rejects when user is unauthenticated', async () => {
@@ -33,6 +40,7 @@ describe('admin-queries access guard', () => {
     vi.mocked(getUser).mockResolvedValue(asGetUserResult({ platformRole: 'support' }));
 
     await expect(getAllTeams()).resolves.toEqual([]);
+    expect(warnSpy).toHaveBeenCalled();
 
     process.env.DATABASE_URL = previousDatabaseUrl;
   });

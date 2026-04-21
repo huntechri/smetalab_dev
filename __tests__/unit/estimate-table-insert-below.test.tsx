@@ -43,7 +43,7 @@ vi.mock('@/features/projects/estimates/repository/patterns.actions', () => ({
 vi.mock('@/features/projects/estimates/components/table/columns', () => ({
   getEstimateColumns: (options: { onInsertWorkAfter: (workId: string, workName: string) => void }) => {
     capturedOnInsertWorkAfter = options.onInsertWorkAfter;
-    return [];
+    return [{ id: 'name', accessorKey: 'name' }];
   },
 }));
 
