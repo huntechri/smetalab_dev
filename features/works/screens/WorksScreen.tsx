@@ -1,11 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useEffect } from 'react';
 
-import { Skeleton } from '@repo/ui';
-import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
+import {
+  CatalogScreenFallback,
+  CatalogScreenShell,
+  type CatalogScreenAdapter,
+  useCatalogEditFieldChange,
+  useCatalogScreenViewState,
+} from '@/features/guide-catalog';
 import { WorkRow } from '@/shared/types/domain/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';
 import { WorksDeleteDialog } from '../components/WorksDeleteDialog';
@@ -32,12 +36,13 @@ const worksScreenAdapter: CatalogScreenAdapter = {
 };
 
 export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
-  const [mounted, setMounted] = useState(false);
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { mounted, showSidebar, setShowSidebar } = useCatalogScreenViewState({
+    breadcrumbs: [
+      { label: 'Главная', href: '/app' },
+      { label: 'Справочники' },
+      { label: 'Работы' },
+    ],
+  });
 
   const {
     data,
@@ -56,31 +61,14 @@ export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
     onRowDelete: actions.handleRowDelete,
   });
 
-  useBreadcrumbs([
-    { label: 'Главная', href: '/app' },
-    { label: 'Справочники' },
-    { label: 'Работы' },
-  ]);
-
   useEffect(() => {
     setData(initialData);
   }, [initialData, setData]);
 
-  const handleEditFieldChange = useCallback((field: string, val: unknown) => {
-    editor.setEditFormData((prev) => {
-      if (!prev) return prev;
-      return { ...prev, [field]: val };
-    });
-  }, [editor.setEditFormData]);
+  const handleEditFieldChange = useCatalogEditFieldChange(editor.setEditFormData);
 
   if (!mounted) {
-    return (
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-[420px] w-full" />
-      </div>
-    );
+    return <CatalogScreenFallback />;
   }
 
   return (
