@@ -34,8 +34,8 @@ if (typeof window !== 'undefined' && typeof window.HTMLElement !== 'undefined' &
 }
 
 // Force load .env.test if present, then .env as fallback
-config({ path: path.resolve(process.cwd(), '.env.test') });
-config();
+config({ path: path.resolve(process.cwd(), '.env.test'), quiet: true });
+config({ quiet: true });
 
 expect.extend(matchers);
 

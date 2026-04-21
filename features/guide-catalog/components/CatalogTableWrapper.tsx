@@ -4,7 +4,7 @@ import { Plus, FilePlus } from "lucide-react";
 
 import { Button } from "@/shared/ui/button";
 import { TableEmptyState } from "@/shared/ui/table-empty-state";
-import { DataTableShell } from "@/shared/ui/shells/directory-list-screen";
+import { DataTableShell } from "@/shared/ui/shells/data-table-shell";
 import {
   CatalogEmptyStateConfig,
   CatalogTableActions,
