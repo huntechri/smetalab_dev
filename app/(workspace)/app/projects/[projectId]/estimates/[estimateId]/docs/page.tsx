@@ -1,4 +1,4 @@
-import { EstimateDocsScreen } from '@/features/projects/estimates/screens/EstimateDocsScreen';
+import { EstimateDocsScreen } from '@/features/projects';
 
 export default function EstimateDocsPage() {
     return <EstimateDocsScreen />;

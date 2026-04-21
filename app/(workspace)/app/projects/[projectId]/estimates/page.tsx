@@ -1,4 +1,4 @@
-import { EstimatesRegistryScreen } from '@/features/projects/estimates/screens/EstimatesRegistryScreen';
+import { EstimatesRegistryScreen } from '@/features/projects';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';

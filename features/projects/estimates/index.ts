@@ -1,5 +1,6 @@
 export * from './repository';
 export * from './types/dto';
+export type { EstimateRoomParam, EstimateRoomParamDraft } from './types/room-params.dto';
 export { EstimatesRegistryScreen } from './screens/EstimatesRegistryScreen';
 export { EstimateDetailsShell } from './screens/EstimateDetailsShell.client';
 export { EstimateHeader } from './components/EstimateHeader';
