@@ -4,15 +4,8 @@ import { Home } from 'lucide-react';
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
 
 const prefetchSpy = vi.fn();
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({
-    prefetch: prefetchSpy,
-  }),
-}));
-
-vi.mock('next/link', () => ({
-  default: ({
+const { MockNextLink } = vi.hoisted(() => ({
+  MockNextLink: ({
     href,
     children,
     prefetch: _prefetch,
@@ -22,6 +15,16 @@ vi.mock('next/link', () => ({
       {children}
     </a>
   ),
+}));
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    prefetch: prefetchSpy,
+  }),
+}));
+
+vi.mock('next/link', () => ({
+  default: MockNextLink,
 }));
 
 vi.mock('@repo/ui', () => ({

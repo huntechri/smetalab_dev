@@ -6,12 +6,19 @@ import type { ReactNode } from 'react';
 
 const pushMock = vi.fn();
 
-const { contextState, hasPermissionMock } = vi.hoisted(() => ({
+const { contextState, hasPermissionMock, MockButton } = vi.hoisted(() => ({
   contextState: {
     user: null as User | null,
     loading: false,
   },
   hasPermissionMock: vi.fn(() => false),
+  MockButton: ({
+    children,
+    asChild: _asChild,
+    ...props
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & { children?: ReactNode; asChild?: boolean }) => (
+    <button type="button" {...props}>{children}</button>
+  ),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -42,20 +49,15 @@ vi.mock('@/app/(login)/actions', () => ({
 }));
 
 vi.mock('@repo/ui', () => ({
-  Button: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (
-    <button type="button" onClick={onClick}>{children}</button>
-  ),
+  Button: MockButton,
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (
-    <button type="button" onClick={onClick}>{children}</button>
-  ),
+  DropdownMenuItem: MockButton,
   DropdownMenuLabel: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
   Avatar: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   AvatarFallback: ({ children }: { children: ReactNode }) => <span>{children}</span>,
-  AvatarImage: ({ src, alt }: { src?: string; alt?: string }) => <img src={src} alt={alt} />,
 }));
 
 describe('UserMenu', () => {
