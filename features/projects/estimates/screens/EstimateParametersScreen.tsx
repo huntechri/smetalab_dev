@@ -1,8 +1,8 @@
-import { EmptyState } from '@repo/ui';
+import { EstimateSectionPlaceholderScreen } from './EstimateSectionPlaceholderScreen';
 
 export function EstimateParametersScreen() {
     return (
-        <EmptyState
+        <EstimateSectionPlaceholderScreen
             title="Параметры сметы"
             description="Раздел параметров вынесен в feature-слой и будет расширен функционально."
         />

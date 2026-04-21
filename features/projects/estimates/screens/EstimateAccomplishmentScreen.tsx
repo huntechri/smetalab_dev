@@ -1,8 +1,8 @@
-import { EmptyState } from '@repo/ui';
+import { EstimateSectionPlaceholderScreen } from './EstimateSectionPlaceholderScreen';
 
 export function EstimateAccomplishmentScreen() {
     return (
-        <EmptyState
+        <EstimateSectionPlaceholderScreen
             title="Выполнение сметы"
             description="Раздел выполнения вынесен в feature-слой и будет реализован отдельной итерацией."
         />

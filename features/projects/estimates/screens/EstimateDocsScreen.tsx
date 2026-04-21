@@ -1,8 +1,8 @@
-import { EmptyState } from '@repo/ui';
+import { EstimateSectionPlaceholderScreen } from './EstimateSectionPlaceholderScreen';
 
 export function EstimateDocsScreen() {
     return (
-        <EmptyState
+        <EstimateSectionPlaceholderScreen
             title="Документы сметы"
             description="Раздел документов будет доступен в следующем этапе."
         />
