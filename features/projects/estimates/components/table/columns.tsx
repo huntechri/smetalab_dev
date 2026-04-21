@@ -4,7 +4,7 @@ import { Button } from '@/shared/ui/button';
 import { EditableCell } from '@/shared/ui/cells/editable-cell';
 import { ImageCell } from '@/shared/ui/cells/image-cell';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { ActionMenu } from '@/shared/ui/action-menu';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
@@ -210,43 +210,47 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             </Button>
                         </>
                     ) : null}
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
+                    <ActionMenu
+                        trigger={
                             <Button size="icon-xs" variant="ghost" aria-label="Действия с строкой">
                                 <Settings className="size-3.5 text-muted-foreground" />
                             </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            {item.kind !== 'material' && (
-                                <>
-                                    <DropdownMenuItem onClick={() => actions.onRequestCreateSectionBefore(item.id)}>
-                                        <FolderUp className="mr-2 size-4" />
-                                        Добавить раздел выше
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem onClick={() => actions.onRequestCreateSection(item.id)}>
-                                        <FolderTree className="mr-2 size-4" />
-                                        Добавить раздел ниже
-                                    </DropdownMenuItem>
-                                </>
-                            )}
-                            
-                            {(item.kind === 'work' || item.kind === 'material') && (
-                                <>
-                                    {item.kind === 'work' && <DropdownMenuSeparator />}
-                                    <DropdownMenuItem onClick={() => item.kind === 'work' ? actions.onReplaceWork(item.id, item.name) : actions.onReplaceMaterial(item.id, item.name)}>
-                                        <RefreshCw className="mr-2 size-4" />
-                                        Изменить / заменить
-                                    </DropdownMenuItem>
-                                </>
-                            )}
-
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive focus:text-destructive focus:bg-destructive/10" onClick={() => void actions.onRemoveRow(item.id)}>
-                                <Trash2 className="mr-2 size-4" />
-                                {item.kind === 'section' ? 'Удалить раздел' : 'Удалить'}
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
+                        }
+                        items={[
+                            ...(item.kind !== 'material'
+                                ? [
+                                      {
+                                          label: 'Добавить раздел выше',
+                                          icon: <FolderUp className="size-4" />,
+                                          onClick: () => actions.onRequestCreateSectionBefore(item.id),
+                                      },
+                                      {
+                                          label: 'Добавить раздел ниже',
+                                          icon: <FolderTree className="size-4" />,
+                                          onClick: () => actions.onRequestCreateSection(item.id),
+                                      },
+                                  ]
+                                : []),
+                            ...(item.kind === 'work' || item.kind === 'material'
+                                ? [
+                                      {
+                                          label: 'Изменить / заменить',
+                                          icon: <RefreshCw className="size-4" />,
+                                          onClick: () =>
+                                              item.kind === 'work'
+                                                  ? actions.onReplaceWork(item.id, item.name)
+                                                  : actions.onReplaceMaterial(item.id, item.name),
+                                      },
+                                  ]
+                                : []),
+                            {
+                                label: item.kind === 'section' ? 'Удалить раздел' : 'Удалить',
+                                icon: <Trash2 className="size-4" />,
+                                variant: 'destructive',
+                                onClick: () => void actions.onRemoveRow(item.id),
+                            },
+                        ]}
+                    />
                 </div>
             );
         },
