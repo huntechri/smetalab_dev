@@ -3,7 +3,7 @@ import * as React from "react";
 import {
   CatalogTableAdapter,
   CatalogTableActions,
-  CatalogTableWrapper,
+  CatalogFeatureTableWrapper,
 } from "@/features/guide-catalog";
 import { columns } from "./columns";
 import { WorkRow } from "@/shared/types/domain/work-row";
@@ -46,8 +46,8 @@ export function WorksTableWrapper({
   tableActions,
 }: WorksTableWrapperProps) {
   return (
-    <CatalogTableWrapper
-      columns={worksTableAdapter.columns}
+    <CatalogFeatureTableWrapper
+      adapter={worksTableAdapter}
       data={data}
       isAiMode={isAiMode}
       isSearching={isSearching}
@@ -57,10 +57,8 @@ export function WorksTableWrapper({
       onAiModeChange={onAiModeChange}
       onSearchValueChange={onSearchValueChange}
       onEndReached={onEndReached}
-      filterPlaceholder={worksTableAdapter.filterPlaceholder}
       actions={actions}
       tableActions={tableActions}
-      emptyState={worksTableAdapter.emptyState}
     />
   );
 }
