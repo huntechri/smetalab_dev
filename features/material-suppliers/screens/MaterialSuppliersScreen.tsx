@@ -7,7 +7,11 @@ import { CreateMaterialSupplierSheet } from '../components/CreateMaterialSupplie
 import { useMaterialSuppliersActions } from '../hooks/useMaterialSuppliersActions';
 import { listMaterialSuppliers } from '@/app/actions/material-suppliers';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { DirectoryListScreen, type DirectoryListAdapter } from '@/features/directories';
+import {
+  DirectoryListScreen,
+  type DirectoryListAdapter,
+  useDirectorySheetState,
+} from '@/features/directories';
 
 const PAGE_SIZE = 100;
 
@@ -27,8 +31,14 @@ const materialSuppliersListAdapter: DirectoryListAdapter<MaterialSupplierRow> = 
 };
 
 export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: MaterialSuppliersScreenProps) {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [editingSupplier, setEditingSupplier] = useState<MaterialSupplierRow | null>(null);
+  const {
+    isSheetOpen,
+    setIsSheetOpen,
+    editingItem: editingSupplier,
+    openCreateSheet,
+    openEditSheet,
+    closeSheet,
+  } = useDirectorySheetState<MaterialSupplierRow>();
   const [suppliers, setSuppliers] = useState<MaterialSupplierRow[]>(initialData);
   const [searchTerm, setSearchTerm] = useState('');
   const [activeSearch, setActiveSearch] = useState('');
@@ -93,11 +103,6 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
     await loadPage({ reset: true, query: normalized });
   }, [loadPage]);
 
-  const openCreateSheet = () => {
-    setEditingSupplier(null);
-    setIsSheetOpen(true);
-  };
-
   return (
     <div className="space-y-2">
       <DirectoryListScreen
@@ -113,10 +118,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
           void loadPage();
         }}
         onCreate={openCreateSheet}
-        onEdit={(supplier) => {
-          setEditingSupplier(supplier);
-          setIsSheetOpen(true);
-        }}
+        onEdit={openEditSheet}
         onDelete={(supplier) => {
           void handleDelete(supplier, {
             onOptimisticDelete: (id) => {
@@ -142,8 +144,7 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         tenantId={tenantId}
         onSaved={(supplier) => {
           applySupplierToList(supplier);
-          setIsSheetOpen(false);
-          setEditingSupplier(null);
+          closeSheet();
         }}
       />
     </div>

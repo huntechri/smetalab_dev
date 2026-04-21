@@ -10,7 +10,11 @@ import { CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { columns } from "../components/columns";
 import { CreateCounterpartySheet } from "../components/CreateCounterpartySheet";
 import { useCounterpartiesActions } from "../hooks/useCounterpartiesActions";
-import { DirectoryListScreen, type DirectoryListAdapter } from "@/features/directories";
+import {
+  DirectoryListScreen,
+  type DirectoryListAdapter,
+  useDirectorySheetState,
+} from "@/features/directories";
 
 const PAGE_SIZE = 50;
 
@@ -30,8 +34,14 @@ const counterpartiesListAdapter: DirectoryListAdapter<CounterpartyRow> = {
 };
 
 export function CounterpartiesScreen({ initialData, totalCount, tenantId }: CounterpartiesScreenProps) {
-  const [isSheetOpen, setIsSheetOpen] = useState(false);
-  const [editingCounterparty, setEditingCounterparty] = useState<CounterpartyRow | null>(null);
+  const {
+    isSheetOpen,
+    setIsSheetOpen,
+    editingItem: editingCounterparty,
+    openCreateSheet,
+    openEditSheet,
+    closeSheet,
+  } = useDirectorySheetState<CounterpartyRow>();
   const [rows, setRows] = useState<CounterpartyRow[]>(initialData);
   const [rowsCount, setRowsCount] = useState(totalCount);
 
@@ -69,21 +79,10 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
     });
   }, [debouncedSearchTerm, initialData.length, rows.length, toast]);
 
-  const handleCreate = () => {
-    setEditingCounterparty(null);
-    setIsSheetOpen(true);
-  };
-
-  const handleEdit = (counterparty: CounterpartyRow) => {
-    setEditingCounterparty(counterparty);
-    setIsSheetOpen(true);
-  };
-
   const { handleDelete } = useCounterpartiesActions();
 
   const onSaved = (saved: CounterpartyRow, mode: 'create' | 'update') => {
-    setIsSheetOpen(false);
-    setEditingCounterparty(null);
+    closeSheet();
 
     if (mode === 'create') {
       setRows((prev) => [saved, ...prev]);
@@ -150,8 +149,8 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
         canLoadMore={canLoadMore}
         isLoadingMore={isLoadingMore}
         onLoadMore={handleLoadMore}
-        onCreate={handleCreate}
-        onEdit={handleEdit}
+        onCreate={openCreateSheet}
+        onEdit={openEditSheet}
         onDelete={onDelete}
       />
 
