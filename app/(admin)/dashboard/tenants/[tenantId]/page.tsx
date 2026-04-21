@@ -13,10 +13,10 @@ import {
     Clock
 } from 'lucide-react';
 import Link from 'next/link';
-import { ImpersonateButton } from '@/features/admin/components/impersonate-button';
+import { ImpersonateButton } from '@/features/admin';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { getRoleBadgeVariant, getSubscriptionBadgeVariant } from '@/features/admin/lib/badge-tones';
+import { getRoleBadgeVariant, getSubscriptionBadgeVariant } from '@/features/admin';
 
 interface PageProps {
     params: Promise<{ tenantId: string }>;

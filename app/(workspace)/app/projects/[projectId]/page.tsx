@@ -1,11 +1,11 @@
-import { ProjectDashboard } from '@/features/projects/dashboard/screens/ProjectDashboard';
+import { ProjectDashboard } from '@/features/projects';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
 import { ProjectDashboardKpiService, buildProjectDashboardKpiViewModel } from '@/lib/services/project-dashboard-kpi.service';
 import { redirect, notFound } from 'next/navigation';
-import { ProjectListItem, ProjectStatus } from '@/features/projects/shared/types';
+import type { ProjectListItem, ProjectStatus } from '@/features/projects';
 
 type PageProps = {
     params: Promise<{ projectId: string }>;

@@ -1,1 +1,1 @@
-export { Login } from '@/features/auth/components/LoginForm';
+export { Login } from '@/features/auth';
