@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@repo/ui';
-import { AdminSidebar } from '@/features/admin/components/admin-sidebar';
+import { AdminSidebar } from '@/features/admin';
 import { getUser } from '@/lib/data/db/queries';
 import { UserProvider } from '@/components/providers/permissions-provider';
 import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';

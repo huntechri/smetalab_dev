@@ -1,7 +1,7 @@
 import { Button } from '@repo/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
 import { ArrowRight, CreditCard, Database, Orbit } from 'lucide-react';
-import { AdminTerminal } from '@/features/admin/components/AdminTerminal';
+import { AdminTerminal } from '@/features/admin';
 import Link from 'next/link';
 
 export default function HomePage() {

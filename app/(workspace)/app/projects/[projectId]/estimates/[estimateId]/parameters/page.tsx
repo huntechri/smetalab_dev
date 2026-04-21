@@ -1,4 +1,4 @@
-import { EstimateParametersScreen } from '@/features/projects/estimates/screens/EstimateParametersScreen';
+import { EstimateParametersScreen } from '@/features/projects';
 
 export default function EstimateParametersPage() {
     return <EstimateParametersScreen />;

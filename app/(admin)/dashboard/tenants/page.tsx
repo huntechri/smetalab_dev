@@ -4,7 +4,7 @@ import { Badge } from '@repo/ui';
 import { Button } from '@repo/ui';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { getSubscriptionBadgeVariant } from '@/features/admin/lib/badge-tones';
+import { getSubscriptionBadgeVariant } from '@/features/admin';
 
 export const dynamic = 'force-dynamic';
 

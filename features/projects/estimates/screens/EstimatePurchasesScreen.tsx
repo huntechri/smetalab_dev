@@ -1,8 +1,8 @@
-import { EmptyState } from '@repo/ui';
+import { EstimateSectionPlaceholderScreen } from './EstimateSectionPlaceholderScreen';
 
 export function EstimatePurchasesScreen() {
     return (
-        <EmptyState
+        <EstimateSectionPlaceholderScreen
             title="Закупки по смете"
             description="Раздел закупок вынесен в feature-слой и ожидает реализацию сценариев."
         />

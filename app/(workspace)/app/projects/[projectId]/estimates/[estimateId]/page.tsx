@@ -1,12 +1,12 @@
-import { EstimateDetailsShell } from '@/features/projects/estimates/screens/EstimateDetailsShell.client';
+import { EstimateDetailsShell } from '@/features/projects';
 import { getEstimateBySlug } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { notFound, redirect } from 'next/navigation';
-import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { EstimateRow } from '@/features/projects';
 import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
 import { EstimateRoomParamsService } from '@/lib/services/estimate-room-params.service';
-import { EstimateRoomParam } from '@/features/projects/estimates/types/room-params.dto';
+import type { EstimateRoomParam } from '@/features/projects';
 
 type PageProps = {
     params: Promise<{ projectId: string; estimateId: string }>;

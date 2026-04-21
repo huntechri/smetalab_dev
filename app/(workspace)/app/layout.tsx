@@ -5,7 +5,7 @@ import { getUser, getTeamForUser } from '@/lib/data/db/queries';
 import { getUserPermissions } from '@/lib/infrastructure/auth/rbac';
 import { UserProvider } from '@/components/providers/permissions-provider';
 import { BreadcrumbProvider } from '@/components/providers/breadcrumb-provider';
-import { ImpersonationBanner } from '@/features/admin/components/impersonation-banner';
+import { ImpersonationBanner } from '@/features/admin';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
     const user = await getUser();

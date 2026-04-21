@@ -3,7 +3,7 @@ import { GlobalPurchasesScreen } from '@/features/global-purchases';
 import { getMaterialSuppliers, getTeamForUser } from '@/lib/data/db/queries';
 import { getProjects } from '@/lib/data/projects/repo';
 import { GlobalPurchasesService } from '@/lib/services/global-purchases.service';
-import { getTodayIsoLocal } from '@/features/global-purchases/lib/date';
+import { getTodayIsoLocal } from '@/features/global-purchases';
 
 export default async function GlobalPurchasesPage() {
   const team = await getTeamForUser();

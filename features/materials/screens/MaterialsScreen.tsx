@@ -1,11 +1,15 @@
 'use client';
 
 import * as React from 'react';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 
-import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { Skeleton } from '@repo/ui';
-import { CatalogScreenShell, type CatalogScreenAdapter } from '@/features/guide-catalog';
+import {
+  CatalogScreenFallback,
+  CatalogScreenShell,
+  type CatalogScreenAdapter,
+  useCatalogEditFieldChange,
+  useCatalogScreenViewState,
+} from '@/features/guide-catalog';
 import { MaterialRow } from '@/shared/types/domain/material-row';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';
 import { MaterialsDeleteDialog } from '../components/MaterialsDeleteDialog';
@@ -32,13 +36,14 @@ const materialsScreenAdapter: CatalogScreenAdapter = {
 };
 
 export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps) {
-  const [mounted, setMounted] = useState(false);
   const [data, setData] = useState<MaterialRow[]>(initialData);
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const { mounted, showSidebar, setShowSidebar } = useCatalogScreenViewState({
+    breadcrumbs: [
+      { label: 'Главная', href: '/app' },
+      { label: 'Справочники' },
+      { label: 'Материалы' },
+    ],
+  });
 
   useEffect(() => {
     setData(initialData);
@@ -53,27 +58,10 @@ export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps)
     onRowDelete: rowActions.handleRowDelete,
   });
 
-  useBreadcrumbs([
-    { label: 'Главная', href: '/app' },
-    { label: 'Справочники' },
-    { label: 'Материалы' },
-  ]);
-
-  const handleEditFieldChange = useCallback((field: string, val: unknown) => {
-    editor.setEditFormData((prev) => {
-      if (!prev) return prev;
-      return { ...prev, [field]: val };
-    });
-  }, [editor.setEditFormData]);
+  const handleEditFieldChange = useCatalogEditFieldChange(editor.setEditFormData);
 
   if (!mounted) {
-    return (
-      <div className="space-y-2">
-        <Skeleton className="h-8 w-48" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-[420px] w-full" />
-      </div>
-    );
+    return <CatalogScreenFallback />;
   }
 
   return (

@@ -1,4 +1,4 @@
-import { EstimateAccomplishmentScreen } from '@/features/projects/estimates/screens/EstimateAccomplishmentScreen';
+import { EstimateAccomplishmentScreen } from '@/features/projects';
 
 export default function EstimateAccomplishmentPage() {
     return <EstimateAccomplishmentScreen />;

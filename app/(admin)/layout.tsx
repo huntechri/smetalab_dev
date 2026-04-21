@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { CircleIcon } from 'lucide-react';
 
-import { AdminUserMenu } from '@/features/admin/components/admin-user-menu';
+import { AdminUserMenu } from '@/features/admin';
 
 function Header() {
   return (

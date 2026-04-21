@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createEstimateSchema } from '@/features/projects/estimates/schemas/create-estimate.schema';
+import { createEstimateSchema } from '@/features/projects';
 import { createEstimateUseCase } from '@/lib/domain/estimates/use-cases';
 import { getTeamForUser } from '@/lib/data/db/queries';
 import { NewEstimate } from '@/lib/data/db/schema';
