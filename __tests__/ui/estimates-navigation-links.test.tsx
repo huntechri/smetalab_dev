@@ -26,7 +26,11 @@ vi.mock('@repo/ui', () => ({
     CardDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
     CardHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CardTitle: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    Button: ({
+        children,
+        asChild: _asChild,
+        ...props
+    }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
 }));
 
 vi.mock('next/navigation', () => ({
