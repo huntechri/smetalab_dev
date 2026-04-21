@@ -2,7 +2,7 @@
 
 import { safeAction } from '@/lib/actions/safe-action';
 import { EstimateRoomParamsService } from '@/lib/services/estimate-room-params.service';
-import { RoomParamSaveInput } from '@/features/projects/estimates/schemas/room-params.schema';
+import type { RoomParamSaveInput } from '@/features/projects';
 
 export const getEstimateRoomParamsAction = safeAction(
     async ({ team }, estimateId: string) => EstimateRoomParamsService.list(team.id, estimateId),
