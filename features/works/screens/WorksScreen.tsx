@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { useEffect } from 'react';
 
 import {
@@ -60,6 +59,16 @@ export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
     onRowUpdate: actions.handleRowUpdate,
     onRowDelete: actions.handleRowDelete,
   });
+  const handleEditDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      editor.setEditingRow(null);
+    }
+  };
+  const handleDeleteDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      editor.setDeletingRow(null);
+    }
+  };
 
   useEffect(() => {
     setData(initialData);
@@ -127,7 +136,7 @@ export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
         open={!!editor.editingRow}
         data={editor.editFormData}
         isUpdating={editor.isUpdating}
-        onOpenChange={(open) => !open && editor.setEditingRow(null)}
+        onOpenChange={handleEditDialogOpenChange}
         onFieldChange={handleEditFieldChange}
         onSubmit={editor.handleUpdate}
         onCancel={() => editor.setEditingRow(null)}
@@ -137,7 +146,7 @@ export function WorksScreen({ initialData, tenantId }: WorksScreenProps) {
         open={!!editor.deletingRow}
         isDeleting={editor.isDeleting}
         name={editor.deletingRow?.name}
-        onOpenChange={(open) => !open && editor.setDeletingRow(null)}
+        onOpenChange={handleDeleteDialogOpenChange}
         onConfirm={() => editor.handleDelete()}
       />
     </>

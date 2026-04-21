@@ -1,6 +1,5 @@
 'use client';
 
-import * as React from 'react';
 import { useState, useEffect } from 'react';
 
 import {
@@ -57,6 +56,16 @@ export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps)
     onRowUpdate: rowActions.handleRowUpdate,
     onRowDelete: rowActions.handleRowDelete,
   });
+  const handleEditDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      editor.setEditingRow(null);
+    }
+  };
+  const handleDeleteDialogOpenChange = (open: boolean) => {
+    if (!open) {
+      editor.setDeletingRow(null);
+    }
+  };
 
   const handleEditFieldChange = useCatalogEditFieldChange(editor.setEditFormData);
 
@@ -118,7 +127,7 @@ export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps)
         open={!!editor.editingRow}
         data={editor.editFormData}
         isUpdating={editor.isUpdating}
-        onOpenChange={(open) => !open && editor.setEditingRow(null)}
+        onOpenChange={handleEditDialogOpenChange}
         onFieldChange={handleEditFieldChange}
         onSubmit={editor.handleUpdate}
         onCancel={() => editor.setEditingRow(null)}
@@ -128,7 +137,7 @@ export function MaterialsScreen({ initialData, tenantId }: MaterialsScreenProps)
         open={!!editor.deletingRow}
         isDeleting={editor.isDeleting}
         name={editor.deletingRow?.name}
-        onOpenChange={(open) => !open && editor.setDeletingRow(null)}
+        onOpenChange={handleDeleteDialogOpenChange}
         onConfirm={() => editor.handleDelete()}
       />
     </>

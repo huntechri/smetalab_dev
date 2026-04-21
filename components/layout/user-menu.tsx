@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { LogOut, Settings, Users, Shield } from 'lucide-react';
-import { Avatar, AvatarFallback, AvatarImage } from '@repo/ui';
+import { Avatar, AvatarFallback } from '@repo/ui';
 import { Button } from '@repo/ui';
 import {
     DropdownMenu,
@@ -79,12 +79,11 @@ export function UserMenu() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon-sm">
-                    <Avatar className="h-8 w-8">
-                        <AvatarImage src="" alt={user.name || user.email} />
-                        <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
-                    </Avatar>
-                </Button>
+                    <Button variant="ghost" size="icon-sm">
+                        <Avatar className="h-8 w-8">
+                            <AvatarFallback>{getUserInitials(user)}</AvatarFallback>
+                        </Avatar>
+                    </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
