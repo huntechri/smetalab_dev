@@ -2,9 +2,9 @@ import * as React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Plus, FilePlus } from "lucide-react";
 
-import { DataTable } from "@repo/ui";
-import { Button } from "@repo/ui";
-import { TableEmptyState } from "@repo/ui";
+import { Button } from "@/shared/ui/button";
+import { TableEmptyState } from "@/shared/ui/table-empty-state";
+import { DataTableShell } from "@/shared/ui/shells/directory-list-screen";
 import {
   CatalogEmptyStateConfig,
   CatalogTableActions,
@@ -43,23 +43,12 @@ export function CatalogTableWrapper<TData, TValue>({
   tableActions,
   emptyState,
 }: CatalogTableWrapperProps<TData, TValue>) {
-  const [tableHeight, setTableHeight] = React.useState("720px");
-
-  React.useEffect(() => {
-    const updateHeight = () => {
-      setTableHeight(window.innerWidth < 768 ? "400px" : "720px");
-    };
-
-    updateHeight();
-    window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
-  }, []);
-
   return (
-    <DataTable
+    <DataTableShell
       columns={columns}
       data={data}
-      height={tableHeight}
+      desktopHeight="720px"
+      mobileHeight="400px"
       className="text-[12px]"
       filterColumn="name"
       filterPlaceholder={filterPlaceholder}
@@ -79,16 +68,18 @@ export function CatalogTableWrapper<TData, TValue>({
           }
         />
       }
-      showAiSearch
       onSearch={onSearch}
-      isAiMode={isAiMode}
-      onAiModeChange={onAiModeChange}
       isSearching={isSearching}
-      loadingMore={loadingMore}
       externalSearchValue={searchTerm}
       onSearchValueChange={onSearchValueChange}
       onEndReached={onEndReached}
       actions={actions}
+      dataTableProps={{
+        showAiSearch: true,
+        isAiMode,
+        onAiModeChange,
+        loadingMore,
+      }}
       meta={{
         onInsertRequest: tableActions.onInsertRequest,
         onCancelInsert: tableActions.onCancelInsert,

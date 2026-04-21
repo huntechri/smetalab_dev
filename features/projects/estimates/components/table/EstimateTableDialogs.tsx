@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@repo/ui";
+import { Button } from "@/shared/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -8,15 +8,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@repo/ui";
-import { Input } from "@repo/ui";
-import { Label } from "@repo/ui";
+} from "@/shared/ui/dialog";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetTitle,
-} from "@repo/ui";
+} from "@/shared/ui/sheet";
 import { WorkCatalogPicker } from "@/features/catalog/components/WorkCatalogPicker.client";
 import { MaterialCatalogDialog } from "@/features/catalog/components/MaterialCatalogDialog.client";
 import {

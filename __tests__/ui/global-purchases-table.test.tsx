@@ -34,27 +34,55 @@ vi.mock('@/features/global-purchases/components/global-purchases-columns', () =>
     getGlobalPurchasesColumns: () => [],
 }));
 
-vi.mock('@repo/ui', () => ({
-    DataTable: ({ actions }: { actions?: React.ReactNode }) => <div>{actions}</div>,
+vi.mock('@/shared/ui/data-table', () => ({
+    DataTable: ({ actions, emptyState }: { actions?: React.ReactNode; emptyState?: React.ReactNode }) => <div>{actions}{emptyState}</div>,
+}));
+
+vi.mock('@/shared/ui/table-empty-state', () => ({
+    TableEmptyState: ({ action }: { action?: React.ReactNode }) => <div>{action}</div>,
+}));
+
+vi.mock('@/shared/ui/button', () => ({
+    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+}));
+
+vi.mock('@/shared/ui/badge', () => ({
+    Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+}));
+
+vi.mock('@/shared/ui/popover', () => ({
     Popover: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     PopoverTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     PopoverContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
+vi.mock('@/shared/ui/calendar', () => ({
     Calendar: () => <div>calendar</div>,
-    TableEmptyState: () => <div>empty</div>,
-    Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
-    Badge: ({ children }: { children: React.ReactNode }) => <span>{children}</span>,
+}));
+
+vi.mock('@/shared/ui/tooltip', () => ({
     Tooltip: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     TooltipTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
     TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
+vi.mock('@/shared/ui/command', () => ({
     Command: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CommandEmpty: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CommandGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CommandInput: (props: React.InputHTMLAttributes<HTMLInputElement>) => <input {...props} />,
     CommandItem: ({ children, onSelect }: { children: React.ReactNode; onSelect?: () => void }) => <div onClick={onSelect}>{children}</div>,
     CommandList: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+}));
+
+vi.mock('@/shared/ui/dropdown-menu', () => ({
     DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-    DropdownMenuItem: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    DropdownMenuItem: ({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) => (
+        <button type="button" onClick={onClick}>
+            {children}
+        </button>
+    ),
     DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
@@ -87,8 +115,8 @@ describe('GlobalPurchasesTable', () => {
 
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
-        fireEvent.click(screen.getByRole('button', { name: /Добавить строку вручную|Строка вручную/i }));
-        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника|Из справочника/i })); // Click "Из справочника" to open dialog
+        fireEvent.click(screen.getByRole('button', { name: /Добавить строку вручную/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника/i })); // Click "Из справочника" to open dialog
         fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i })); // Click mock dialog select
 
         await waitFor(() => {

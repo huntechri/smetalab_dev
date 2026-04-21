@@ -2,8 +2,8 @@
 
 import type { ChangeEvent, RefObject } from 'react';
 import { Download, Upload } from 'lucide-react';
-import { Button } from '@repo/ui';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 interface GlobalPurchasesImportExportActionsProps {
   importInputRef: RefObject<HTMLInputElement | null>;
@@ -18,8 +18,6 @@ export function GlobalPurchasesImportExportActions({
   onImportClick,
   onFileChange,
 }: GlobalPurchasesImportExportActionsProps) {
-  const buttonClassName = 'gap-1.5 font-semibold tracking-tight shadow-sm transition-all active:scale-95';
-
   return (
     <>
       <input

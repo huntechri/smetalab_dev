@@ -17,7 +17,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/lib/utils';
@@ -51,6 +50,11 @@ interface ActionMenuProps {
    */
   align?: 'start' | 'end' | 'center';
   /**
+   * Whether the menu should be modal (Radix DropdownMenu behavior).
+   * Defaults to true for backward compatibility.
+   */
+  modal?: boolean;
+  /**
    * Optional custom aria-label for the trigger
    */
   ariaLabel?: string;
@@ -65,6 +69,7 @@ export function ActionMenu({
   trigger,
   align = 'end',
   ariaLabel = 'Действия',
+  modal = true,
 }: ActionMenuProps) {
   // We only support one confirmation dialog at a time (standard for menus)
   const [activeConfirmItem, setActiveConfirmItem] = React.useState<ActionMenuItem | null>(
@@ -73,7 +78,7 @@ export function ActionMenu({
 
   return (
     <>
-      <DropdownMenu>
+      <DropdownMenu modal={modal}>
         <DropdownMenuTrigger asChild>
           {trigger || (
             <Button
@@ -98,25 +103,23 @@ export function ActionMenu({
 
             if (item.requiresConfirmation) {
               return (
-                <AlertDialogTrigger
+                <DropdownMenuItem
                   key={index}
-                  asChild
-                  onClick={() => setActiveConfirmItem(item)}
+                  onSelect={() => {
+                    queueMicrotask(() => setActiveConfirmItem(item));
+                  }}
+                  disabled={item.disabled}
+                  className={cn(isDestructive && 'text-destructive focus:text-destructive')}
                 >
-                  <DropdownMenuItem
-                    disabled={item.disabled}
-                    className={cn(isDestructive && 'text-destructive focus:text-destructive')}
-                  >
-                    {ItemContent}
-                  </DropdownMenuItem>
-                </AlertDialogTrigger>
+                  {ItemContent}
+                </DropdownMenuItem>
               );
             }
 
             return (
               <DropdownMenuItem
                 key={index}
-                onClick={item.onClick}
+                onSelect={item.onClick}
                 disabled={item.disabled}
                 className={cn(isDestructive && 'text-destructive focus:text-destructive')}
               >
