@@ -820,7 +820,6 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="outline"
                                 size="xs"
-                                className="sm:h-8 sm:px-3 sm:text-xs"
                                 onClick={() => props.onOpenMaterialCatalog(work.id, work.name)}
                               >
                                 + Материал
@@ -828,7 +827,6 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="outline"
                                 size="xs"
-                                className="sm:h-8 sm:px-3 sm:text-xs"
                                 onClick={() => props.onInsertWorkAfter(work.id, work.name)}
                               >
                                 + Работа
@@ -836,7 +834,6 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="destructive"
                                 size="xs"
-                                className="sm:h-8 sm:px-3 sm:text-xs"
                                 onClick={() => void props.onRemoveRow(work.id)}
                               >
                                 Удалить
