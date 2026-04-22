@@ -809,41 +809,39 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                                     </div>
                                   ))}
                                 </div>
-
-                                <div className="mt-2 grid grid-cols-3 gap-1.5 sm:mt-2.5 sm:max-w-[400px] sm:gap-2">
-                                  <Button
-                                    variant="primary"
-                                    size="xs"
-                                    className="sm:h-8 sm:px-3 sm:text-xs"
-                                    onClick={() =>
-                                      void props.onPatch(work.id, "name", String(work.name))
-                                    }
-                                  >
-                                    Сохранить
-                                  </Button>
-                                  <Button
-                                    variant="outline"
-                                    size="xs"
-                                    className="sm:h-8 sm:px-3 sm:text-xs"
-                                    onClick={() => props.onOpenMaterialCatalog(work.id, work.name)}
-                                  >
-                                    Ресурс
-                                  </Button>
-                                  <Button
-                                    variant="destructive"
-                                    size="xs"
-                                    className="sm:h-8 sm:px-3 sm:text-xs"
-                                    onClick={() => void props.onRemoveRow(work.id)}
-                                  >
-                                    Удалить
-                                  </Button>
-                                </div>
                               </>
                             ) : (
                               <div className="rounded-md border border-dashed border-slate-200 bg-white p-3 text-center text-xs text-slate-500">
                                 У работы пока нет материалов.
                               </div>
                             )}
+
+                            <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:max-w-[400px] sm:gap-2">
+                              <Button
+                                variant="outline"
+                                size="xs"
+                                className="sm:h-8 sm:px-3 sm:text-xs"
+                                onClick={() => props.onOpenMaterialCatalog(work.id, work.name)}
+                              >
+                                + Материал
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="xs"
+                                className="sm:h-8 sm:px-3 sm:text-xs"
+                                onClick={() => props.onInsertWorkAfter(work.id, work.name)}
+                              >
+                                + Работа
+                              </Button>
+                              <Button
+                                variant="destructive"
+                                size="xs"
+                                className="sm:h-8 sm:px-3 sm:text-xs"
+                                onClick={() => void props.onRemoveRow(work.id)}
+                              >
+                                Удалить
+                              </Button>
+                            </div>
                           </div>
                         ) : null}
                       </div>

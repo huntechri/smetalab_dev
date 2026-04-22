@@ -421,37 +421,55 @@ export class EstimateRowsService {
                 }
 
                 const existingRows = await tx
-                    .select({ id: estimateRows.id, order: estimateRows.order, kind: estimateRows.kind, name: estimateRows.name })
+                    .select({ 
+                        id: estimateRows.id, 
+                        order: estimateRows.order, 
+                        kind: estimateRows.kind, 
+                        name: estimateRows.name,
+                        parentWorkId: estimateRows.parentWorkId 
+                    })
                     .from(estimateRows)
-                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)));
+                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId)))
+                    .orderBy(estimateRows.order);
 
-                const normalizedWorkName = normalizeName(payload.name);
-                const duplicateWorkExists = existingRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName);
-
-                if (duplicateWorkExists) {
-                    throw new Error('DUPLICATE_WORK_NAME');
-                }
-
-                const maxOrder = existingRows.reduce((max, row) => Math.max(max, row.order), 0);
-                const workRows = existingRows
-                    .filter((row) => row.kind === 'work')
-                    .sort((left, right) => left.order - right.order);
-
-                let nextOrder = maxOrder + 100;
-
-                const anchorWork = workRows.find((row) => row.id === payload.insertAfterWorkId);
-                if (!anchorWork) {
+                const anchorWork = existingRows.find((row) => row.id === payload.insertAfterWorkId);
+                if (!anchorWork || anchorWork.kind !== 'work') {
                     throw new Error('INSERT_ANCHOR_NOT_FOUND');
                 }
 
-                const nextWork = workRows.find((row) => row.order > anchorWork.order);
-                if (nextWork) {
-                    nextOrder = nextWork.order;
+                const normalizedWorkName = normalizeName(payload.name);
+                if (existingRows.some((row) => row.kind === 'work' && normalizeName(row.name) === normalizedWorkName)) {
+                    throw new Error('DUPLICATE_WORK_NAME');
+                }
 
+                // Находим "границу" — саму работу или её последний материал
+                const anchorAndMaterials = existingRows.filter(
+                    (row) => row.id === anchorWork.id || row.parentWorkId === anchorWork.id
+                );
+                const boundaryOrder = Math.max(...anchorAndMaterials.map(r => r.order));
+
+                // Ищем следующую строку ЛЮБОГО типа (работу или раздел), которая идет после границы
+                const nextRow = existingRows.find((row) => row.order > boundaryOrder);
+                
+                let nextOrder: number;
+                if (nextRow) {
+                    nextOrder = nextRow.order;
+                    // Сдвигаем все строки начиная с этой позиции
                     await tx
                         .update(estimateRows)
                         .set({ order: sql`${estimateRows.order} + 100` })
-                        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${nextOrder}`));
+                        .where(
+                            and(
+                                eq(estimateRows.estimateId, estimateId), 
+                                withActiveTenant(estimateRows, teamId), 
+                                sql`${estimateRows.order} >= ${nextOrder}`
+                            )
+                        );
+                } else {
+                    const maxOrder = existingRows.length > 0 
+                        ? Math.max(...existingRows.map(r => r.order)) 
+                        : 0;
+                    nextOrder = maxOrder + 100;
                 }
 
                 const [inserted] = await tx
