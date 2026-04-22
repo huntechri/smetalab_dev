@@ -733,59 +733,70 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                                             />
                                           </div>
 
-                                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] text-slate-500 sm:mt-0.5 sm:text-[10px]">
-                                            <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 sm:h-7 sm:w-7">
-                                              {material.imageUrl ? (
-                                                <Image
-                                                  src={material.imageUrl}
-                                                  alt={material.name}
-                                                  width={28}
-                                                  height={28}
-                                                  className="h-full w-full object-cover"
-                                                  unoptimized
+                                          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[10px] text-slate-500 sm:mt-0.5">
+                                            {/* Group 1: Identity */}
+                                            <div className="flex items-center gap-1.5 shrink-0">
+                                              <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 sm:h-7 sm:w-7">
+                                                {material.imageUrl ? (
+                                                  <Image
+                                                    src={material.imageUrl}
+                                                    alt={material.name}
+                                                    width={28}
+                                                    height={28}
+                                                    className="h-full w-full object-cover"
+                                                    unoptimized
+                                                  />
+                                                ) : (
+                                                  <span className="text-[11px] font-medium text-slate-400 sm:text-[12px]">
+                                                    —
+                                                  </span>
+                                                )}
+                                              </div>
+                                              <Badge
+                                                variant="outline"
+                                                className="h-4 shrink-0 border-slate-200 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]"
+                                              >
+                                                {material.unit}
+                                              </Badge>
+                                            </div>
+
+                                            {/* Group 2: Quantities (Qty + Expense) */}
+                                            <div className="flex items-center gap-1 shrink-0">
+                                              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-slate-300 bg-slate-50 px-1 py-0 text-[10px] text-slate-600 sm:h-5 sm:px-1.5">
+                                                <span className="opacity-70">Кол:</span>
+                                                <InlineNumberCell
+                                                  value={material.qty}
+                                                  onCommit={(value) =>
+                                                    props.onPatch(material.id, "qty", value)
+                                                  }
+                                                  ariaLabel={`Количество: ${material.name}`}
+                                                  className={MATERIAL_QTY_CLASS}
                                                 />
-                                              ) : (
-                                                <span className="text-[11px] font-medium text-slate-400 sm:text-[12px]">
-                                                  —
-                                                </span>
-                                              )}
+                                              </div>
+                                              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-blue-200 bg-blue-50 px-1 py-0 text-[10px] text-blue-600 sm:h-5 sm:px-1.5">
+                                                <span className="opacity-70">Расх:</span>
+                                                <InlineNumberCell
+                                                  value={material.expense}
+                                                  onCommit={(value) =>
+                                                    props.onPatch(material.id, "expense", value)
+                                                  }
+                                                  ariaLabel={`Расход: ${material.name}`}
+                                                  className={MATERIAL_EXPENSE_CLASS}
+                                                />
+                                              </div>
                                             </div>
-                                            <Badge
-                                              variant="outline"
-                                              className="h-3.5 border-slate-200 bg-white px-1.5 py-0 text-[9px] leading-none text-slate-600 sm:h-4 sm:text-[10px]"
-                                            >
-                                              {material.unit}
-                                            </Badge>
-                                            <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[10px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
-                                              <span>Кол-во</span>
-                                              <InlineNumberCell
-                                                value={material.qty}
-                                                onCommit={(value) =>
-                                                  props.onPatch(material.id, "qty", value)
-                                                }
-                                                ariaLabel={`Количество: ${material.name}`}
-                                                className={MATERIAL_QTY_CLASS}
-                                              />
-                                            </div>
-                                            <span className="tabular-nums">
-                                              {INTEGER_FORMATTER.format(material.price)} руб/ед
-                                            </span>
-                                            <Badge
-                                              variant="success"
-                                              className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[11px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
-                                            >
-                                              <MoneyCell value={material.sum} />
-                                            </Badge>
-                                            <div className="inline-flex h-4 items-center gap-1 rounded-full border border-blue-200 bg-blue-50 px-1.5 py-0 text-[10px] text-blue-600 sm:h-5 sm:px-2 sm:text-[10px]">
-                                              <span>Расход</span>
-                                              <InlineNumberCell
-                                                value={material.expense}
-                                                onCommit={(value) =>
-                                                  props.onPatch(material.id, "expense", value)
-                                                }
-                                                ariaLabel={`Расход: ${material.name}`}
-                                                className={MATERIAL_EXPENSE_CLASS}
-                                              />
+
+                                            {/* Group 3: Financials (Price + Sum) */}
+                                            <div className="flex items-center gap-1.5 shrink-0 ml-auto sm:ml-0">
+                                              <span className="tabular-nums">
+                                                {INTEGER_FORMATTER.format(material.price)} ₽/ед
+                                              </span>
+                                              <Badge
+                                                variant="success"
+                                                className="h-4 border border-green-200 bg-green-100 px-1.5 py-0 text-[10px] font-bold leading-none text-green-600 sm:h-5 sm:px-2 sm:text-[10px]"
+                                              >
+                                                <MoneyCell value={material.sum} />
+                                              </Badge>
                                             </div>
                                           </div>
                                         </div>
@@ -820,6 +831,7 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="outline"
                                 size="xs"
+                                aria-label="Добавить материал"
                                 onClick={() => props.onOpenMaterialCatalog(work.id, work.name)}
                               >
                                 + Материал
@@ -827,6 +839,7 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="outline"
                                 size="xs"
+                                aria-label="Добавить работу ниже"
                                 onClick={() => props.onInsertWorkAfter(work.id, work.name)}
                               >
                                 + Работа
@@ -834,6 +847,7 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
                               <Button
                                 variant="destructive"
                                 size="xs"
+                                aria-label="Удалить работу"
                                 onClick={() => void props.onRemoveRow(work.id)}
                               >
                                 Удалить

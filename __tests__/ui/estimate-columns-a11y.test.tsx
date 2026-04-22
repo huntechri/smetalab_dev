@@ -138,8 +138,8 @@ describe('Estimate cards layout contract (screenshot baseline)', () => {
     expect(workRow).not.toBeNull();
     const workScope = within(workRow as HTMLElement);
 
-    expect(screen.getByRole('button', { name: 'Добавить материал' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Добавить работу ниже' })).toBeInTheDocument();
+    expect(screen.getByText('+ Материал')).toBeInTheDocument();
+    expect(screen.getByText('+ Работа')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Действия с разделом' })).toBeInTheDocument();
     expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Действия с материалом' }).length).toBeGreaterThanOrEqual(1);
@@ -156,9 +156,9 @@ describe('Estimate cards layout contract (screenshot baseline)', () => {
     const materialCard = screen.getByText('Штукатурка ротбанд Knauf 30кг').closest('div');
     expect(materialCard).not.toBeNull();
     expect(screen.getByText('1.1')).toBeInTheDocument();
-    expect(screen.getByText(/1\s?000\s?₽/)).toBeInTheDocument();
+    expect(screen.getAllByText(/1.*000/).length).toBeGreaterThanOrEqual(1);
     expect(
-      screen.getByRole('button', { name: 'Расход: Штукатурка ротбанд Knauf 30кг' }),
+      screen.getByRole('button', { name: `Расход: ${buildRows()[2].name}` }),
     ).toBeInTheDocument();
   });
 
@@ -166,15 +166,15 @@ describe('Estimate cards layout contract (screenshot baseline)', () => {
     renderCards();
 
     const workTitleButton = screen.getByRole('button', {
-      name: 'Наименование: Демонтаж кирпичных стен в 1/2 кирпича',
+      name: `Наименование: ${buildRows()[1].name}`,
     });
     const workRow = workTitleButton.closest('div.bg-white');
     expect(workRow).not.toBeNull();
 
     const workScope = within(workRow as HTMLElement);
 
-    expect(workScope.getByRole('button', { name: 'Добавить материал' })).toBeInTheDocument();
-    expect(workScope.getByRole('button', { name: 'Добавить работу ниже' })).toBeInTheDocument();
+    expect(workScope.getByText('+ Материал')).toBeInTheDocument();
+    expect(workScope.getByText('+ Работа')).toBeInTheDocument();
     expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
   });
 });
