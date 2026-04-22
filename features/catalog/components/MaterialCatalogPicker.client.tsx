@@ -33,7 +33,8 @@ const defaultCategorySelection: MaterialCategorySelection = {
 };
 
 const sortRu = (a: string, b: string) => a.localeCompare(b, 'ru');
-const CATEGORY_BROWSE_LIMIT = 5000;
+const INITIAL_BROWSE_LIMIT = 300;
+const CATEGORY_BROWSE_LIMIT = 1200;
 const QUERY_SEARCH_LIMIT = 500;
 
 export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new Set(), allowDuplicateSelection = false }: MaterialCatalogPickerProps) {
@@ -72,7 +73,12 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
             setLoading(true);
             try {
                 const hasQuery = searchCriteria.query.trim().length > 0;
-                const limit = hasQuery ? QUERY_SEARCH_LIMIT : CATEGORY_BROWSE_LIMIT;
+                const hasSelectedCategory = selectedCategory.lv1 !== null;
+                const limit = hasQuery
+                    ? QUERY_SEARCH_LIMIT
+                    : hasSelectedCategory
+                      ? CATEGORY_BROWSE_LIMIT
+                      : INITIAL_BROWSE_LIMIT;
                 const results = await catalogRepository.searchMaterials(
                     searchCriteria.query,
                     selectedCategory.lv1 ?? 'all',
@@ -130,7 +136,6 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
     );
 
     const filteredMaterials = useMemo(() => filterMaterialsByCategoryPath(materials, selectedCategory), [materials, selectedCategory]);
-    const priceFormatter = useMemo(() => new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 0 }), []);
     const selectedCategoryLabel = useMemo(() => {
         const labels = [selectedCategory.lv1, selectedCategory.lv2, selectedCategory.lv3, selectedCategory.lv4].filter(Boolean);
         return labels.length > 0 ? labels.join(' / ') : 'Все категории';

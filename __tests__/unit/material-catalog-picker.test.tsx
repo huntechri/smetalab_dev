@@ -37,7 +37,7 @@ describe('MaterialCatalogPicker', () => {
         render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false, 5000);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false, 300);
         });
 
         const input = screen.getByPlaceholderText('Поиск по названию или коду...');
