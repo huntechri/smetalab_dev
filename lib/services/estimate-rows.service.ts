@@ -108,6 +108,33 @@ const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
 };
 
 const normalizeName = (value: string) => value.trim().toLocaleLowerCase();
+const ORDER_SHIFT_STEP_WORK = 100;
+const ORDER_SHIFT_STEP_ROW = 1;
+
+type InsertOrderResolution = {
+    order: number;
+    shouldShiftTail: boolean;
+};
+
+const resolveInsertOrder = (
+    boundaryOrder: number,
+    nextRowOrder: number | null,
+    fallbackStep: number,
+): InsertOrderResolution => {
+    if (nextRowOrder === null) {
+        return { order: boundaryOrder + fallbackStep, shouldShiftTail: false };
+    }
+
+    const gap = nextRowOrder - boundaryOrder;
+    if (gap > 1) {
+        return {
+            order: boundaryOrder + Math.floor(gap / 2),
+            shouldShiftTail: false,
+        };
+    }
+
+    return { order: nextRowOrder, shouldShiftTail: true };
+};
 
 const renumberEstimateCodes = async (
     tx: typeof db,
@@ -450,26 +477,25 @@ export class EstimateRowsService {
 
                 // Ищем следующую строку ЛЮБОГО типа (работу или раздел), которая идет после границы
                 const nextRow = existingRows.find((row) => row.order > boundaryOrder);
-                
-                let nextOrder: number;
-                if (nextRow) {
-                    nextOrder = nextRow.order;
-                    // Сдвигаем все строки начиная с этой позиции
+                const orderResolution = resolveInsertOrder(
+                    boundaryOrder,
+                    nextRow?.order ?? null,
+                    ORDER_SHIFT_STEP_WORK,
+                );
+                const nextOrder = orderResolution.order;
+
+                if (orderResolution.shouldShiftTail) {
+                    // Сдвигаем все строки начиная с этой позиции, только если нет свободного gap
                     await tx
                         .update(estimateRows)
-                        .set({ order: sql`${estimateRows.order} + 100` })
+                        .set({ order: sql`${estimateRows.order} + ${ORDER_SHIFT_STEP_WORK}` })
                         .where(
                             and(
-                                eq(estimateRows.estimateId, estimateId), 
-                                withActiveTenant(estimateRows, teamId), 
-                                sql`${estimateRows.order} >= ${nextOrder}`
-                            )
+                                eq(estimateRows.estimateId, estimateId),
+                                withActiveTenant(estimateRows, teamId),
+                                sql`${estimateRows.order} >= ${nextOrder}`,
+                            ),
                         );
-                } else {
-                    const maxOrder = existingRows.length > 0 
-                        ? Math.max(...existingRows.map(r => r.order)) 
-                        : 0;
-                    nextOrder = maxOrder + 100;
                 }
 
                 const [inserted] = await tx
@@ -677,12 +703,33 @@ export class EstimateRowsService {
                     throw new Error('DUPLICATE_MATERIAL_NAME');
                 }
 
-                const order = children.length > 0 ? children[children.length - 1].order + 1 : parent.order + 1;
+                const boundaryOrder = children.length > 0 ? children[children.length - 1].order : parent.order;
+                const [nextRow] = await tx
+                    .select({ order: estimateRows.order })
+                    .from(estimateRows)
+                    .where(
+                        and(
+                            eq(estimateRows.estimateId, estimateId),
+                            withActiveTenant(estimateRows, teamId),
+                            sql`${estimateRows.order} > ${boundaryOrder}`,
+                        ),
+                    )
+                    .orderBy(estimateRows.order)
+                    .limit(1);
 
-                await tx
-                    .update(estimateRows)
-                    .set({ order: sql`${estimateRows.order} + 1` })
-                    .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${order}`));
+                const orderResolution = resolveInsertOrder(
+                    boundaryOrder,
+                    nextRow?.order ?? null,
+                    ORDER_SHIFT_STEP_ROW,
+                );
+                const order = orderResolution.order;
+
+                if (orderResolution.shouldShiftTail) {
+                    await tx
+                        .update(estimateRows)
+                        .set({ order: sql`${estimateRows.order} + ${ORDER_SHIFT_STEP_ROW}` })
+                        .where(and(eq(estimateRows.estimateId, estimateId), withActiveTenant(estimateRows, teamId), sql`${estimateRows.order} >= ${order}`));
+                }
 
                 const expenseValue = payload.expense || (parent.qty > 0 ? payload.qty / parent.qty : 0);
                 const roundedExpense = Math.round(expenseValue * 1000000) / 1000000;
@@ -945,4 +992,5 @@ export class EstimateRowsService {
 export const EstimateRowsMaintenance = {
     recalculateEstimateTotal,
     renumberEstimateCodes,
+    resolveInsertOrder,
 };

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@repo/ui';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
@@ -41,7 +41,8 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
             }
         };
 
-        const timer = setTimeout(fetchData, 300);
+        const isInitialBrowseLoad = searchQuery.trim().length === 0 && selectedCategory === 'all' && !isAiMode;
+        const timer = setTimeout(fetchData, isInitialBrowseLoad ? 0 : 300);
         return () => {
             isCancelled = true;
             clearTimeout(timer);

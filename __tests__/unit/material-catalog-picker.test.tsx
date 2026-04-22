@@ -37,7 +37,7 @@ describe('MaterialCatalogPicker', () => {
         render(<MaterialCatalogPicker onAddMaterial={vi.fn()} />);
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false, 300);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenCalledWith('', 'all', false, 120);
         });
 
         const input = screen.getByPlaceholderText('Поиск по названию или коду...');
@@ -45,7 +45,7 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', false, 500);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', false, 300);
         });
 
         fireEvent.click(screen.getByRole('checkbox'));
@@ -57,7 +57,7 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(screen.getByPlaceholderText('Опишите, что нужно найти...'), { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', true, 500);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка knauf', 'all', true, 300);
         });
     });
 
@@ -70,14 +70,14 @@ describe('MaterialCatalogPicker', () => {
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка', 'all', false, 500);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('штукатурка', 'all', false, 300);
         });
 
         fireEvent.change(input, { target: { value: 'шпаклевка' } });
         fireEvent.keyDown(input, { key: 'Enter' });
 
         await waitFor(() => {
-            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false, 500);
+            expect(catalogRepositoryMocks.searchMaterials).toHaveBeenLastCalledWith('шпаклевка', 'all', false, 300);
         });
     });
 
