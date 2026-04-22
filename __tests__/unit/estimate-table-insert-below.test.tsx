@@ -146,8 +146,8 @@ describe('EstimateTable insert-below flow', () => {
       />,
     );
 
-    const insertBelowButton = await screen.findByRole('button', { name: 'Добавить работу ниже' });
-    fireEvent.click(insertBelowButton);
+    const insertBelowButtons = await screen.findAllByRole('button', { name: 'Добавить работу ниже' });
+    fireEvent.click(insertBelowButtons[0]);
 
     const addButtons = await screen.findAllByRole('button', { name: 'add-work' });
     fireEvent.click(addButtons[0]);
