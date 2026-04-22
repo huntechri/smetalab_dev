@@ -14,7 +14,6 @@ const { MockButton } = vi.hoisted(() => ({
 const addWorkMock = vi.fn();
 const listRowsMock = vi.fn();
 const toastMock = vi.fn();
-let capturedOnInsertWorkAfter: ((workId: string, workName: string) => void) | null = null;
 
 vi.mock('@/features/projects/estimates/repository/estimates.actions', () => ({
   estimatesActionRepo: {
@@ -37,13 +36,6 @@ vi.mock('@/features/projects/estimates/repository/patterns.actions', () => ({
     apply: vi.fn(),
     preview: vi.fn(),
     remove: vi.fn(),
-  },
-}));
-
-vi.mock('@/features/projects/estimates/components/table/columns', () => ({
-  getEstimateColumns: (options: { onInsertWorkAfter: (workId: string, workName: string) => void }) => {
-    capturedOnInsertWorkAfter = options.onInsertWorkAfter;
-    return [{ id: 'name', accessorKey: 'name' }];
   },
 }));
 
@@ -108,11 +100,22 @@ describe('EstimateTable insert-below flow', () => {
     addWorkMock.mockReset();
     listRowsMock.mockReset();
     toastMock.mockReset();
-    capturedOnInsertWorkAfter = null;
   });
 
   it('chains insertAfterWorkId for multi-add from catalog in insert-below mode', async () => {
     const initialRows: EstimateRow[] = [
+      {
+        id: 'section-1',
+        kind: 'section',
+        code: '1',
+        name: 'Раздел 1',
+        unit: '',
+        qty: 0,
+        price: 0,
+        sum: 0,
+        expense: 0,
+        order: 1,
+      },
       {
         id: 'work-1',
         kind: 'work',
@@ -124,7 +127,7 @@ describe('EstimateTable insert-below flow', () => {
         basePrice: 100,
         sum: 100,
         expense: 0,
-        order: 100,
+        order: 2,
       },
     ];
 
@@ -133,14 +136,18 @@ describe('EstimateTable insert-below flow', () => {
       .mockResolvedValueOnce({ ...initialRows[0], id: 'work-2', code: '2', order: 200, name: 'Каталожная работа' })
       .mockResolvedValueOnce({ ...initialRows[0], id: 'work-3', code: '3', order: 300, name: 'Каталожная работа 2' });
 
-    render(<EstimateTable estimateId="estimate-1" initialRows={initialRows} initialCoefPercent={0} />);
+    render(
+      <EstimateTable
+        estimateId="estimate-1"
+        initialRows={initialRows}
+        initialCoefPercent={0}
+        projectSlug="project-1"
+        estimateName="Тестовая смета"
+      />,
+    );
 
-    await waitFor(() => {
-      expect(capturedOnInsertWorkAfter).not.toBeNull();
-    });
-
-    capturedOnInsertWorkAfter?.('work-1', 'Работа 1');
-    await new Promise((resolve) => setTimeout(resolve, 50));
+    const insertBelowButtons = await screen.findAllByRole('button', { name: 'Добавить работу ниже' });
+    fireEvent.click(insertBelowButtons[0]);
 
     const addButtons = await screen.findAllByRole('button', { name: 'add-work' });
     fireEvent.click(addButtons[0]);

@@ -40,7 +40,16 @@ export function useEstimateRowsDataCatalogSection({
         },
       );
 
-      state._setRows((prev) => [...prev, created]);
+      state._setRows((prev) => {
+        // Мимикрируем серверный сдвиг order для материалов (+1)
+        const shifted = prev.map((row) => {
+          if (row.order >= created.order) {
+            return { ...row, order: row.order + 1 };
+          }
+          return row;
+        });
+        return [...shifted, created];
+      });
       state._setExpandedWorkIds((prev) => new Set([...prev, activeWorkForMaterial.id]));
       toast({ title: "Материал добавлен", description: material.name });
     } catch {
@@ -130,11 +139,20 @@ export function useEstimateRowsDataCatalogSection({
       });
 
       state._setRows((prev) => {
-        if (prev.some((row) => row.id === created.id)) {
-          return prev;
+        // Мимикрируем серверный сдвиг order для работ (+100)
+        // Это предотвращает "прыжки" строк до того, как завершится reloadRows
+        const shifted = prev.map((row) => {
+          if (row.order >= created.order) {
+            return { ...row, order: row.order + 100 };
+          }
+          return row;
+        });
+
+        if (shifted.some((row) => row.id === created.id)) {
+          return shifted;
         }
 
-        return [...prev, created].sort((left, right) => left.order - right.order);
+        return [...shifted, created];
       });
 
       state._setExpandedWorkIds((prev) => new Set([...prev, created.id]));
@@ -178,7 +196,16 @@ export function useEstimateRowsDataCatalogSection({
         insertBeforeRowId: state.sectionInsertBeforeRowId,
       });
 
-      state._setRows((prev) => [...prev, created].sort((left, right) => left.order - right.order));
+      state._setRows((prev) => {
+        // Мимикрируем серверный сдвиг order для разделов (+1)
+        const shifted = prev.map((row) => {
+          if (row.order >= created.order) {
+            return { ...row, order: row.order + 1 };
+          }
+          return row;
+        });
+        return [...shifted, created];
+      });
       state.setIsSectionDialogOpen(false);
       state._setSectionInsertAfterRowId(undefined);
       state._setSectionInsertBeforeRowId(undefined);

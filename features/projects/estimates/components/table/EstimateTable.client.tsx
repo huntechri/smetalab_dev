@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Button } from "@/shared/ui/button";
-import { DataTable } from "@/shared/ui/data-table";
+import { DataTableToolbar } from "@/shared/ui/data-table/data-table-toolbar";
 import {
   Calculator,
   FilePlus,
@@ -13,11 +13,11 @@ import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { useRouter } from "next/navigation";
 import { useEstimateMutations } from "../../hooks/use-estimate-mutations";
 import { EstimateRow } from "../../types/dto";
-import { getEstimateColumns } from "./columns";
 import { EstimateTableDialogs } from "./EstimateTableDialogs";
 import { useEstimateTableController } from "../../hooks/use-estimate-table-controller";
 import { EstimateTableToolbar } from "./EstimateTableToolbar";
 import { EstimateTableSummary } from "./EstimateTableSummary";
+import { EstimateCardsTable } from "./EstimateCardsTable";
 
 export function EstimateTable({
   estimateId,
@@ -36,6 +36,8 @@ export function EstimateTable({
   const { deleteEstimate } = useEstimateMutations();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [isAiMode, setIsAiMode] = useState(false);
 
   const model = useEstimateTableController({
     estimateId,
@@ -65,59 +67,37 @@ export function EstimateTable({
     setIsDeleteDialogOpen(false);
   };
 
+  const emptyState = (
+    <TableEmptyState
+      title="Смета еще не заполнена"
+      description="Добавьте разделы, работы и материалы или импортируйте готовую смету из Excel"
+      icon={FilePlus}
+      action={
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <Button variant="outline" onClick={() => model.openCreateSectionDialog()}>
+            <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            Создать раздел
+          </Button>
+          <Button variant="outline" onClick={model.openCalculationMode}>
+            <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            Добавить работу
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => void model.importEstimate()}
+            disabled={model.isImporting}
+          >
+            <FileUp className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            Импорт из Excel
+          </Button>
+        </div>
+      }
+    />
+  );
+
   return (
     <div className="space-y-2 [--table-height:600px]">
-      <DataTable
-        columns={getEstimateColumns({
-          expandedWorkIds: model.expandedWorkIds,
-          onToggleExpand: model.toggleWorkExpand,
-          onPatch: model.patch,
-          onOpenMaterialCatalog: model.openMaterialCatalog,
-          onInsertWorkAfter: model.insertWorkAfter,
-          onReplaceWork: model.openWorkReplaceDialog,
-          onReplaceMaterial: model.openMaterialReplaceDialog,
-          onRequestCreateSectionBefore: model.openCreateSectionDialogBefore,
-          onRequestCreateSection: model.openCreateSectionDialog,
-          onRemoveRow: model.removeRow,
-          sectionTotalsById: model.sectionTotalsById,
-        })}
-        data={model.visibleRows}
-        getRowClassName={(row) =>
-          row.kind === "section"
-            ? "bg-slate-50/80 border-y border-slate-200/60 font-bold text-slate-900"
-            : ""
-        }
-        emptyState={
-          <TableEmptyState
-            title="Смета еще не заполнена"
-            description="Добавьте разделы, работы и материалы или импортируйте готовую смету из Excel"
-            icon={FilePlus}
-            action={
-              <div className="flex flex-wrap items-center justify-center gap-2">
-                <Button variant="outline" onClick={() => model.openCreateSectionDialog()}>
-                  <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Создать раздел
-                </Button>
-                <Button variant="outline" onClick={model.openCalculationMode}>
-                  <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Добавить работу
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => void model.importEstimate()}
-                  disabled={model.isImporting}
-                >
-                  <FileUp className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
-                  Импорт из Excel
-                </Button>
-              </div>
-            }
-          />
-        }
-        filterColumn="name"
-        filterPlaceholder="Поиск..."
-        height="var(--table-height)"
-        compactMobileToolbar
+      <DataTableToolbar
         actions={
           <EstimateTableToolbar
             isImporting={model.isImporting}
@@ -133,7 +113,36 @@ export function EstimateTable({
             onOpenDeleteDialog={() => setIsDeleteDialogOpen(true)}
           />
         }
+        filterPlaceholder="Поиск..."
+        hasFilterControls={model.rows.length > 0}
+        isAiMode={isAiMode}
+        setIsAiMode={setIsAiMode}
+        searchValue={searchValue}
+        setSearchValue={setSearchValue}
+        compactMobileToolbar
       />
+
+      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+        {model.rows.length === 0 ? (
+          <div className="px-3 py-8">{emptyState}</div>
+        ) : (
+          <EstimateCardsTable
+            rows={model.rows}
+            expandedWorkIds={model.expandedWorkIds}
+            sectionTotalsById={model.sectionTotalsById}
+            searchValue={searchValue}
+            onToggleExpand={model.toggleWorkExpand}
+            onPatch={model.patch}
+            onOpenMaterialCatalog={model.openMaterialCatalog}
+            onInsertWorkAfter={model.insertWorkAfter}
+            onReplaceWork={model.openWorkReplaceDialog}
+            onReplaceMaterial={model.openMaterialReplaceDialog}
+            onRequestCreateSectionBefore={model.openCreateSectionDialogBefore}
+            onRequestCreateSection={model.openCreateSectionDialog}
+            onRemoveRow={model.removeRow}
+          />
+        )}
+      </div>
 
       <EstimateTableSummary
         worksTotal={currencyFormatter.format(model.totals.works)}

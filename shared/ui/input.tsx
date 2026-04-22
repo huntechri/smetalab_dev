@@ -31,7 +31,7 @@ const inputVariants = cva(
   }
 )
 
-type InputProps = Omit<React.ComponentProps<"input">, "className"> &
+type InputProps = Omit<React.ComponentProps<"input">, "className" | "size"> &
   VariantProps<typeof inputVariants> & {
     numeric?: boolean
     className?: string

@@ -79,7 +79,7 @@ function DesktopSecondaryActions({
   | 'onExportPdf'
 >) {
   return (
-    <div className="hidden lg:flex items-center gap-1.5">
+    <div className="hidden xl:flex items-center gap-1.5">
       <Button variant="outline" onClick={onOpenApplyPattern}>
         <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
         <span>Шаблон</span>
@@ -128,7 +128,7 @@ function MobileOverflowActions({
   onOpenDeleteDialog,
 }: EstimateTableToolbarProps) {
   return (
-    <div className="sm:hidden">
+    <div className="xl:hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" size="icon-xs" aria-label="Действия по смете">
@@ -196,7 +196,7 @@ export function EstimateTableToolbar(props: EstimateTableToolbarProps) {
         onExportXlsx={props.onExportXlsx}
         onExportPdf={props.onExportPdf}
       />
-      <div className="hidden sm:flex">
+      <div className="hidden xl:flex">
         <Button variant="destructive" aria-label="Удалить смету" onClick={props.onOpenDeleteDialog}>
           <Trash2 className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Удалить</span>

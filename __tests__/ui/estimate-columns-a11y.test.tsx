@@ -1,223 +1,243 @@
-import React from 'react';
-import { cleanup, render, screen } from '@testing-library/react';
+import { cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { getEstimateColumns } from '@/features/projects/estimates/components/table/columns';
-import type { VisibleEstimateRow } from '@/features/projects/estimates/lib/rows-visible';
-import type { CellContext, ColumnDef } from '@tanstack/react-table';
+import { EstimateCardsTable } from '@/features/projects/estimates/components/table/EstimateCardsTable';
+import type { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { SectionTotals } from '@/features/projects/estimates/lib/section-totals';
+
+const noopPatch = vi.fn().mockResolvedValue(undefined);
+const noopRemove = vi.fn().mockResolvedValue(undefined);
 
 afterEach(() => {
-    cleanup();
+  cleanup();
 });
 
-function makeCellContext(row: VisibleEstimateRow): CellContext<VisibleEstimateRow, unknown> {
-    const mockRow = {
-        original: row,
-        getValue: (key: string) => row[key as keyof VisibleEstimateRow],
-        getIsExpanded: () => false,
-        subRows: [],
-    };
-    return {
-        row: mockRow as unknown as CellContext<VisibleEstimateRow, unknown>['row'],
-        getValue: () => undefined,
-        renderValue: () => undefined,
-        table: {} as CellContext<VisibleEstimateRow, unknown>['table'],
-        column: {} as CellContext<VisibleEstimateRow, unknown>['column'],
-        cell: {} as CellContext<VisibleEstimateRow, unknown>['cell'],
-    };
+function buildRows(): EstimateRow[] {
+  return [
+    {
+      id: 'section-12',
+      kind: 'section',
+      code: 'РАЗДЕЛ 12',
+      name: 'Демонтажные работы',
+      unit: '',
+      qty: 0,
+      price: 0,
+      sum: 0,
+      expense: 0,
+      order: 10,
+    },
+    {
+      id: 'work-1',
+      kind: 'work',
+      code: 'РАБОТА · 1',
+      name: 'Демонтаж кирпичных стен в 1/2 кирпича',
+      unit: 'м2',
+      qty: 100,
+      price: 340,
+      sum: 34000,
+      expense: 0,
+      order: 11,
+    },
+    {
+      id: 'material-1',
+      kind: 'material',
+      parentWorkId: 'work-1',
+      code: '1.1',
+      name: 'Штукатурка ротбанд Knauf 30кг',
+      unit: 'Мш',
+      qty: 1,
+      price: 1000,
+      sum: 1000,
+      expense: 0.1,
+      order: 12,
+    },
+    {
+      id: 'material-2',
+      kind: 'material',
+      parentWorkId: 'work-1',
+      code: '1.2',
+      name: 'Грунтовка Ceresit CT17 10л',
+      unit: 'Шт',
+      qty: 4,
+      price: 800,
+      sum: 3200,
+      expense: 0.1,
+      order: 13,
+    },
+    {
+      id: 'material-3',
+      kind: 'material',
+      parentWorkId: 'work-1',
+      code: '1.3',
+      name: 'Профиль CD 60×27×3000',
+      unit: 'Шт',
+      qty: 20,
+      price: 95,
+      sum: 1900,
+      expense: 0.1,
+      order: 14,
+    },
+  ];
 }
 
-const mockActions = {
-    expandedWorkIds: new Set<string>(),
-    onToggleExpand: vi.fn(),
-    onPatch: vi.fn().mockResolvedValue(undefined),
-    onOpenMaterialCatalog: vi.fn(),
-    onInsertWorkAfter: vi.fn(),
-    onRequestCreateSection: vi.fn(),
-    onRequestCreateSectionBefore: vi.fn(),
-    onReplaceMaterial: vi.fn(),
-    onReplaceWork: vi.fn(),
-    onRemoveRow: vi.fn().mockResolvedValue(undefined),
-    sectionTotalsById: new Map(),
-};
+function renderCards() {
+  const sectionTotalsById = new Map<string, SectionTotals>([
+    ['section-12', { works: 68300, materials: 4200, total: 72500 }],
+  ]);
 
-const workRow: VisibleEstimateRow = {
-    id: 'w-1',
-    kind: 'work',
-    code: '1',
-    name: 'Монтаж перегородок',
-    unit: 'м2',
-    qty: 40,
-    price: 1200,
-    sum: 48000,
-    expense: 0,
-    order: 100,
-    depth: 1,
-};
+  return render(
+    <EstimateCardsTable
+      rows={buildRows()}
+      expandedWorkIds={new Set(['work-1'])}
+      sectionTotalsById={sectionTotalsById}
+      searchValue=""
+      onToggleExpand={vi.fn()}
+      onPatch={noopPatch}
+      onOpenMaterialCatalog={vi.fn()}
+      onInsertWorkAfter={vi.fn()}
+      onRequestCreateSection={vi.fn()}
+      onRequestCreateSectionBefore={vi.fn()}
+      onReplaceMaterial={vi.fn()}
+      onReplaceWork={vi.fn()}
+      onRemoveRow={noopRemove}
+    />,
+  );
+}
 
-const materialRow: VisibleEstimateRow = {
-    id: 'm-1',
-    kind: 'material',
-    parentWorkId: 'w-1',
-    code: '1.1',
-    name: 'ГКЛ лист 12.5мм',
-    unit: 'лист',
-    qty: 52,
-    price: 520,
-    sum: 27040,
-    expense: 3,
-    order: 101,
-    depth: 2,
-};
+describe('Estimate cards layout contract (screenshot baseline)', () => {
+  it('renders section/work/material hierarchy with desktop visual tokens from the approved screenshot', () => {
+    renderCards();
 
-const sectionRow: VisibleEstimateRow = {
-    id: 's-1',
-    kind: 'section',
-    code: 'I',
-    name: 'Раздел 1',
-    unit: '',
-    qty: 0,
-    price: 0,
-    sum: 0,
-    expense: 0,
-    order: 0,
-    depth: 0,
-};
+    const sectionChip = screen.getByText('РАЗДЕЛ 12').closest('[data-slot="badge"]');
+    expect(sectionChip).toHaveAttribute('data-size', 'xs');
 
-describe('Estimate table columns – actions cell aria-labels', () => {
-    const columns = getEstimateColumns(mockActions);
+    expect(screen.getByText('Демонтажные работы')).toBeInTheDocument();
 
-    const actionsColumn = columns.find((c) => (c as ColumnDef<VisibleEstimateRow> & { id?: string }).id === 'actions')!;
+    expect(screen.getAllByText('Работы').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Материалы').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText(/68\s?300\s?₽/)).toBeInTheDocument();
+    expect(screen.getByText(/4\s?200\s?₽/)).toBeInTheDocument();
 
-    function renderActionsCell(row: VisibleEstimateRow) {
-        const ctx = makeCellContext(row);
-        const CellContent = () => <>{(actionsColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-    }
+    const workCode = screen.getByText('РАБОТА · 1');
+    expect(workCode).toHaveClass('uppercase');
+    expect(workCode).toHaveClass('text-slate-500');
+    expect(screen.getByText('Демонтаж кирпичных стен в 1/2 кирпича')).toBeInTheDocument();
+    expect(screen.getByText('м2')).toBeInTheDocument();
+    expect(screen.getByText(/34\s?000\s?₽/)).toBeInTheDocument();
 
-    it('work row exposes "Добавить материал" button with correct aria-label', () => {
-        renderActionsCell(workRow);
-        const btn = screen.getByRole('button', { name: 'Добавить материал' });
-        expect(btn).toBeInTheDocument();
-        expect(btn).toHaveAttribute('aria-label', 'Добавить материал');
+    expect(
+      screen.getByRole('button', { name: 'Количество: Демонтаж кирпичных стен в 1/2 кирпича' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Цена: Демонтаж кирпичных стен в 1/2 кирпича' }),
+    ).toBeInTheDocument();
+
+    const workTitleButton = screen.getByRole('button', {
+      name: 'Наименование: Демонтаж кирпичных стен в 1/2 кирпича',
     });
+    const workRow = workTitleButton.closest('div.bg-white');
+    expect(workRow).not.toBeNull();
+    const workScope = within(workRow as HTMLElement);
 
-    it('work row exposes "Добавить работу ниже" button with correct aria-label', () => {
-        renderActionsCell(workRow);
-        const btn = screen.getByRole('button', { name: 'Добавить работу ниже' });
-        expect(btn).toBeInTheDocument();
-        expect(btn).toHaveAttribute('aria-label', 'Добавить работу ниже');
-    });
+    expect(screen.getByText('+ Материал')).toBeInTheDocument();
+    expect(screen.getByText('+ Работа')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Действия с разделом' })).toBeInTheDocument();
+    expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { name: 'Действия с материалом' }).length).toBeGreaterThanOrEqual(1);
 
-    it('work row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
-        renderActionsCell(workRow);
-        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
-        expect(btn).toBeInTheDocument();
-        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
-    });
+    const materialsHeading = workScope.getByText('Материалы', { selector: 'p' });
+    expect(materialsHeading).toHaveClass('uppercase');
+    expect(materialsHeading).toHaveClass('tracking-[0.08em]');
 
-    it('material row does not expose "Добавить материал" or "Добавить работу ниже" buttons', () => {
-        renderActionsCell(materialRow);
-        expect(screen.queryByRole('button', { name: 'Добавить материал' })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Добавить работу ниже' })).not.toBeInTheDocument();
-    });
+    const materialsGrid = materialsHeading.nextElementSibling as HTMLElement;
+    expect(materialsGrid).toHaveClass('grid');
+    expect(materialsGrid).toHaveClass('md:grid-cols-2');
+    expect(materialsGrid).toHaveClass('xl:grid-cols-3');
 
-    it('material row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
-        renderActionsCell(materialRow);
-        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
-        expect(btn).toBeInTheDocument();
-        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
-    });
+    const materialCard = screen.getByText('Штукатурка ротбанд Knauf 30кг').closest('div');
+    expect(materialCard).not.toBeNull();
+    expect(screen.getByText('1.1')).toBeInTheDocument();
+    expect(screen.getAllByText(/1.*000/).length).toBeGreaterThanOrEqual(1);
+    expect(
+      screen.getByRole('button', { name: `Расход: ${buildRows()[2].name}` }),
+    ).toBeInTheDocument();
+  });
 
-    it('section row does not expose "Добавить материал" or "Добавить работу ниже" buttons', () => {
-        renderActionsCell(sectionRow);
-        expect(screen.queryByRole('button', { name: 'Добавить материал' })).not.toBeInTheDocument();
-        expect(screen.queryByRole('button', { name: 'Добавить работу ниже' })).not.toBeInTheDocument();
-    });
+  it('keeps action triad contract for work row controls from screenshot (tools + row menu)', () => {
+    renderCards();
 
-    it('section row exposes "Действия с строкой" dropdown trigger with correct aria-label', () => {
-        renderActionsCell(sectionRow);
-        const btn = screen.getByRole('button', { name: 'Действия с строкой' });
-        expect(btn).toBeInTheDocument();
-        expect(btn).toHaveAttribute('aria-label', 'Действия с строкой');
+    const workTitleButton = screen.getByRole('button', {
+      name: `Наименование: ${buildRows()[1].name}`,
     });
+    const workRow = workTitleButton.closest('div.bg-white');
+    expect(workRow).not.toBeNull();
+
+    const workScope = within(workRow as HTMLElement);
+
+    expect(workScope.getByText('+ Материал')).toBeInTheDocument();
+    expect(workScope.getByText('+ Работа')).toBeInTheDocument();
+    expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
+  });
 });
 
-describe('Estimate table columns – editable cell aria-labels', () => {
-    const columns = getEstimateColumns(mockActions);
+describe('Estimate cards mobile UI kit contract (CSS tokens)', () => {
+  it('keeps cards stack rhythm and section card shell close to the provided mobile kit', () => {
+    const { container } = renderCards();
 
-    const findColumn = (key: string) =>
-        columns.find((c) => (c as ColumnDef<VisibleEstimateRow> & { accessorKey?: string }).accessorKey === key)!;
+    const cardsStack = container.querySelector('.space-y-2');
+    expect(cardsStack).not.toBeNull();
+    expect(cardsStack).toHaveClass('space-y-2');
 
-    it('qty column button announces "Количество" and the row name', () => {
-        const qtyColumn = findColumn('qty');
-        const ctx = makeCellContext(workRow);
-        const CellContent = () => <>{(qtyColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
+    const sectionCard = screen.getByText('Демонтажные работы').closest('div.rounded-xl');
+    expect(sectionCard).not.toBeNull();
 
-        const button = screen.getByRole('button', { name: `Количество: ${workRow.name}` });
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveAttribute('aria-label', `Количество: ${workRow.name}`);
+    // UI-kit card shell: rounded-xl + soft shadow + white surface + light border.
+    expect(sectionCard).toHaveClass('rounded-xl');
+    expect(sectionCard).toHaveClass('border');
+    expect(sectionCard).toHaveClass('shadow-sm');
+    expect(sectionCard).toHaveClass('bg-white');
+  });
+
+  it('preserves compact typography markers and semantic shadcn badges for section/work numbering', () => {
+    renderCards();
+
+    const sectionChip = screen.getByText('РАЗДЕЛ 12').closest('[data-slot="badge"]');
+    expect(sectionChip).toHaveAttribute('data-size', 'xs');
+    expect(sectionChip).toHaveAttribute('data-variant', 'outline');
+
+    const workCode = screen.getByText('РАБОТА · 1');
+    expect(workCode).toHaveClass('uppercase');
+    expect(workCode).toHaveClass('text-slate-500');
+
+    const workTitleButton = screen.getByRole('button', {
+      name: 'Наименование: Демонтаж кирпичных стен в 1/2 кирпича',
     });
-
-    it('price column button announces "Цена" and the row name', () => {
-        const priceColumn = findColumn('price');
-        const ctx = makeCellContext(workRow);
-        const CellContent = () => <>{(priceColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-
-        const button = screen.getByRole('button', { name: `Цена: ${workRow.name}` });
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveAttribute('aria-label', `Цена: ${workRow.name}`);
+    const workRow = workTitleButton.closest('div.bg-white');
+    expect(workRow).not.toBeNull();
+    const materialsLabel = within(workRow as HTMLElement).getByText('Материалы', {
+      selector: 'p',
     });
+    expect(materialsLabel).toHaveClass('uppercase');
+    expect(materialsLabel).toHaveClass('tracking-[0.08em]');
+    expect(materialsLabel).toHaveClass('text-slate-400');
+  });
 
-    it('expense column button announces "Расход" and the row name for material rows', () => {
-        const expenseColumn = findColumn('expense');
-        const ctx = makeCellContext(materialRow);
-        const CellContent = () => <>{(expenseColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
+  it('uses pill-style action controls for work metrics and expense editing, matching kit intent', () => {
+    renderCards();
 
-        const button = screen.getByRole('button', { name: `Расход: ${materialRow.name}` });
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveAttribute('aria-label', `Расход: ${materialRow.name}`);
+    const qtyButton = screen.getByRole('button', {
+      name: 'Количество: Демонтаж кирпичных стен в 1/2 кирпича',
     });
+    const qtyPill = qtyButton.closest('div');
+    expect(qtyPill).not.toBeNull();
+    expect(qtyPill).toHaveClass('rounded-full');
+    expect(qtyPill).toHaveClass('border');
 
-    it('qty column button announces "Количество" and the material row name', () => {
-        const qtyColumn = findColumn('qty');
-        const ctx = makeCellContext(materialRow);
-        const CellContent = () => <>{(qtyColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-
-        const button = screen.getByRole('button', { name: `Количество: ${materialRow.name}` });
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveAttribute('aria-label', `Количество: ${materialRow.name}`);
+    const expenseButton = screen.getByRole('button', {
+      name: 'Расход: Штукатурка ротбанд Knauf 30кг',
     });
-
-    it('price column button announces "Цена" and the material row name', () => {
-        const priceColumn = findColumn('price');
-        const ctx = makeCellContext(materialRow);
-        const CellContent = () => <>{(priceColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-
-        const button = screen.getByRole('button', { name: `Цена: ${materialRow.name}` });
-        expect(button).toBeInTheDocument();
-        expect(button).toHaveAttribute('aria-label', `Цена: ${materialRow.name}`);
-    });
-
-    it('qty column renders no button for section rows', () => {
-        const qtyColumn = findColumn('qty');
-        const ctx = makeCellContext(sectionRow);
-        const CellContent = () => <>{(qtyColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-
-        expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    });
-
-    it('expense column renders no button for work rows', () => {
-        const expenseColumn = findColumn('expense');
-        const ctx = makeCellContext(workRow);
-        const CellContent = () => <>{(expenseColumn.cell as (ctx: typeof ctx) => React.ReactNode)(ctx)}</>;
-        render(<CellContent />);
-
-        expect(screen.queryByRole('button')).not.toBeInTheDocument();
-    });
+    const expensePill = expenseButton.closest('div');
+    expect(expensePill).not.toBeNull();
+    expect(expensePill).toHaveClass('rounded-full');
+    expect(expensePill).toHaveClass('border');
+  });
 });
