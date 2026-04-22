@@ -203,9 +203,9 @@ export class WorksService {
 
             if (!work) return error('Запись не найдена');
 
-            await db.delete(works).where(and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
-
-
+            await db.update(works)
+                .set({ deletedAt: new Date() })
+                .where(and(eq(works.id, id), eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
 
             return success(undefined, 'Запись успешно удалена');
         } catch (e) {
@@ -216,7 +216,9 @@ export class WorksService {
 
     static async deleteAll(teamId: number): Promise<Result<void>> {
         try {
-            await db.delete(works).where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
+            await db.update(works)
+                .set({ deletedAt: new Date() })
+                .where(and(eq(works.tenantId, teamId), withActiveTenant(works, teamId)));
             return success(undefined, 'Справочник успешно очищен');
         } catch (e) {
             console.error('deleteAllWorks error:', e);

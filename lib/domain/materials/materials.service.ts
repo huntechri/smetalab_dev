@@ -210,7 +210,9 @@ export class MaterialsService {
 
     static async delete(teamId: number, id: string): Promise<Result<void>> {
         try {
-            await db.delete(materials).where(and(eq(materials.id, id), eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
+            await db.update(materials)
+                .set({ deletedAt: new Date() })
+                .where(and(eq(materials.id, id), eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
             return success(undefined, 'Успешно удалено');
         } catch (e) {
             console.error('deleteMaterial error:', e);
@@ -220,7 +222,9 @@ export class MaterialsService {
 
     static async deleteAll(teamId: number): Promise<Result<void>> {
         try {
-            await db.delete(materials).where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
+            await db.update(materials)
+                .set({ deletedAt: new Date() })
+                .where(and(eq(materials.tenantId, teamId), withActiveTenant(materials, teamId)));
             return success(undefined, 'Справочник очищен');
         } catch (e) {
             console.error('deleteAllMaterials error:', e);
