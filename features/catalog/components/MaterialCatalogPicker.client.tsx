@@ -33,9 +33,9 @@ const defaultCategorySelection: MaterialCategorySelection = {
 };
 
 const sortRu = (a: string, b: string) => a.localeCompare(b, 'ru');
-const INITIAL_BROWSE_LIMIT = 300;
-const CATEGORY_BROWSE_LIMIT = 1200;
-const QUERY_SEARCH_LIMIT = 500;
+const INITIAL_BROWSE_LIMIT = 120;
+const CATEGORY_BROWSE_LIMIT = 400;
+const QUERY_SEARCH_LIMIT = 300;
 
 export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new Set(), allowDuplicateSelection = false }: MaterialCatalogPickerProps) {
     const [searchQuery, setSearchQuery] = useState('');

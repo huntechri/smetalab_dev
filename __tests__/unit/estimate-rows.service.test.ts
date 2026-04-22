@@ -220,7 +220,7 @@ describe('EstimateRowsService duplicate protection', () => {
         expect(result.success).toBe(true);
         expect(tx.insert).toHaveBeenCalledTimes(1);
         expect(tx.query.estimateRows.findFirst).toHaveBeenCalled();
-        expect(tx.update).toHaveBeenCalled();
+        expect(tx.update).toHaveBeenCalledTimes(0);
     });
 
 
