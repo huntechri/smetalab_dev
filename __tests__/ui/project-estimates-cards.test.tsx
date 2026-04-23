@@ -4,10 +4,13 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ProjectEstimatesCards } from '@/features/projects/dashboard/components/ProjectEstimatesCards';
 import type { EstimateMeta } from '@/features/projects/estimates/types/dto';
 
-vi.mock('@repo/ui', () => ({
+vi.mock('@/shared/ui/badge', () => ({
   Badge: ({ children, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (
     <span {...props}>{children}</span>
   ),
+}));
+
+vi.mock('@/shared/ui/button', () => ({
   Button: ({
     children,
     asChild: _asChild,
@@ -15,6 +18,9 @@ vi.mock('@repo/ui', () => ({
   }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => (
     <button {...props}>{children}</button>
   ),
+}));
+
+vi.mock('@/shared/ui/table-empty-state', () => ({
   TableEmptyState: ({
     title,
     description,
@@ -30,6 +36,9 @@ vi.mock('@repo/ui', () => ({
       {action}
     </div>
   ),
+}));
+
+vi.mock('@/shared/ui/alert-dialog', () => ({
   AlertDialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   AlertDialogAction: ({
     children,
@@ -42,16 +51,6 @@ vi.mock('@repo/ui', () => ({
   AlertDialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   AlertDialogTitle: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2>,
   AlertDialogTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
-  DropdownMenu: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
-  DropdownMenuItem: ({
-    children,
-    onClick,
-  }: {
-    children: React.ReactNode;
-    onClick?: () => void;
-  }) => <button onClick={onClick}>{children}</button>,
-  DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
 const estimates: EstimateMeta[] = [

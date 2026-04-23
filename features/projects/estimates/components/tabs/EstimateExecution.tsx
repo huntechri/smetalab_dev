@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
@@ -13,8 +13,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
-import { parseDecimalInput, toDecimalInput } from '@/features/projects/estimates/lib/decimal-input';
-import { EstimateExecutionRow, EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
+import { parseDecimalInput } from '@/features/projects/estimates/lib/decimal-input';
+import { EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
 import { useEstimateExecutionController } from '../../hooks/use-estimate-execution-controller';
 import { EstimateTotals } from '../EstimateTotals';
 import { EstimateExecutionTableActions } from './execution/EstimateExecutionTableActions';

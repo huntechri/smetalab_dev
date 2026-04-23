@@ -2,7 +2,9 @@
 
 import Link from 'next/link';
 import { CalendarDays, FilePlus, Plus, Trash2 } from 'lucide-react';
-import { Badge, Button, TableEmptyState } from '@repo/ui';
+import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
+import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +15,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/alert-dialog';
 import { EstimateStatusMenu } from '@/features/projects/estimates/components/registry/EstimateStatusMenu';
 import type { EstimateMeta, EstimateStatus } from '@/features/projects/estimates/types/dto';
 
