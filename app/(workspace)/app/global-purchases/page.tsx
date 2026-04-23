@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
 import { GlobalPurchasesScreen } from '@/features/global-purchases';
 import { getMaterialSuppliers, getTeamForUser } from '@/lib/data/db/queries';
 import { getProjects } from '@/lib/data/projects/repo';

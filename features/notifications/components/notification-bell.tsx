@@ -14,11 +14,13 @@ import { NotificationsList } from '@/features/notifications/components/notificat
 import { NotificationPayload } from '@/features/notifications/components/types';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
+export const getNotificationsSWRKey = (isOpen: boolean): string | null => (isOpen ? '/api/notifications' : null);
 
 export function NotificationBell() {
     const [mounted, setMounted] = useState(false);
-    const { data: notifications, isLoading } = useSWR<NotificationPayload[]>('/api/notifications', fetcher);
     const [isOpen, setIsOpen] = useState(false);
+    const notificationsKey = getNotificationsSWRKey(isOpen);
+    const { data: notifications, isLoading } = useSWR<NotificationPayload[]>(notificationsKey, fetcher);
 
     useEffect(() => {
         setMounted(true);
