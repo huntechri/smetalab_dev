@@ -2,20 +2,11 @@
 
 import { DataTable } from '@repo/ui';
 import { ColumnDef } from '@tanstack/react-table';
-import { EstimateMeta, EstimateStatus } from '../../types/dto';
+import { EstimateMeta } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { Badge } from '@repo/ui';
 import { Button } from '@repo/ui';
-
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@repo/ui';
 import { Trash2 } from 'lucide-react';
-import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
 import {
   AlertDialog,
@@ -28,47 +19,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@repo/ui';
-
-function EstimateStatusCell({
-  status,
-  onChange,
-}: {
-  status: EstimateStatus;
-  onChange: (next: EstimateStatus) => Promise<void>;
-}) {
-  const variant =
-    status === 'approved'
-      ? 'success'
-      : status === 'in_progress'
-        ? 'info'
-        : 'warning';
-
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-        >
-          <Badge variant={variant} size="xs" className="min-w-[88px] cursor-pointer md:min-w-[100px]">
-            {getEstimateStatusLabel(status)}
-          </Badge>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[150px] p-1">
-        {estimateStatusOrder.map((item) => (
-          <DropdownMenuItem key={item} onClick={() => void onChange(item)} className="mb-0.5 h-8 cursor-pointer rounded-md">
-            <div className="flex items-center gap-2 w-full">
-              <div className={`w-2 h-2 rounded-full ${item === 'approved' ? 'bg-emerald-500' : item === 'in_progress' ? 'bg-blue-500' : 'bg-brand'}`} />
-              <span className="text-xs font-medium md:text-sm">{getEstimateStatusLabel(item)}</span>
-            </div>
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
+import { EstimateStatusMenu } from './EstimateStatusMenu';
 
 type EstimatesListTableProps = {
   estimates: EstimateMeta[];
@@ -125,7 +76,7 @@ export function EstimatesListTable({
       header: 'Статус',
       size: 130,
       cell: ({ row }) => (
-        <EstimateStatusCell
+        <EstimateStatusMenu
           status={row.original.status}
           onChange={async (nextStatus) => {
             await updateEstimateStatus({

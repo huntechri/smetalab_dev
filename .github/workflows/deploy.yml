@@ -192,7 +192,6 @@ jobs:
     name: Integration Tests (optional)
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
-    continue-on-error: true
     env:
       ALLOW_TEST_DB_CLEANUP: "true"
       AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
@@ -284,7 +283,18 @@ jobs:
           pnpm db:seed
 
       - name: Run integration tests
+        id: run_integration_tests
+        continue-on-error: true
         run: pnpm test:integration:force
+
+      - name: Report integration test status
+        if: always()
+        run: |
+          if [ "${{ steps.run_integration_tests.outcome }}" = "failure" ]; then
+            echo "::warning::Optional integration tests failed. See this job logs for details."
+          else
+            echo "Optional integration tests passed."
+          fi
 
       - name: Delete Neon branch
         if: always()

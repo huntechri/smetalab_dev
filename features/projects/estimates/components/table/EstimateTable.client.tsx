@@ -96,53 +96,59 @@ export function EstimateTable({
   );
 
   return (
-    <div className="space-y-2 [--table-height:600px]">
-      <DataTableToolbar
-        actions={
-          <EstimateTableToolbar
-            isImporting={model.isImporting}
-            isExporting={model.isExporting}
-            onOpenCalculationMode={model.openCalculationMode}
-            onOpenCreateSectionDialog={() => model.openCreateSectionDialog()}
-            onOpenSavePattern={() => model.setIsSavePatternOpen(true)}
-            onOpenApplyPattern={() => model.setIsApplyPatternOpen(true)}
-            onOpenCoefficientDialog={model.openCoefficientDialog}
-            onImportEstimate={() => void model.importEstimate()}
-            onExportXlsx={() => void model.exportEstimate("xlsx")}
-            onExportPdf={() => void model.exportEstimate("pdf")}
-            onOpenDeleteDialog={() => setIsDeleteDialogOpen(true)}
-          />
-        }
-        filterPlaceholder="Поиск..."
-        hasFilterControls={model.rows.length > 0}
-        isAiMode={isAiMode}
-        setIsAiMode={setIsAiMode}
-        searchValue={searchValue}
-        setSearchValue={setSearchValue}
-        compactMobileToolbar
-      />
-
-      <div className="overflow-hidden rounded-2xl border border-border/40 bg-card/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
-        {model.rows.length === 0 ? (
-          <div className="px-3 py-8">{emptyState}</div>
-        ) : (
-          <EstimateCardsTable
-            rows={model.rows}
-            expandedWorkIds={model.expandedWorkIds}
-            sectionTotalsById={model.sectionTotalsById}
+    <div className="space-y-1.5 sm:space-y-2 [--table-height:calc(100vh-250px)] sm:[--table-height:calc(100vh-280px)]">
+      <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+        {/* Тулбар внутри контейнера */}
+        <div className="p-1.5 sm:p-2 pb-0">
+          <DataTableToolbar
+            actions={
+              <EstimateTableToolbar
+                isImporting={model.isImporting}
+                isExporting={model.isExporting}
+                onOpenCalculationMode={model.openCalculationMode}
+                onOpenCreateSectionDialog={() => model.openCreateSectionDialog()}
+                onOpenSavePattern={() => model.setIsSavePatternOpen(true)}
+                onOpenApplyPattern={() => model.setIsApplyPatternOpen(true)}
+                onOpenCoefficientDialog={model.openCoefficientDialog}
+                onImportEstimate={() => void model.importEstimate()}
+                onExportXlsx={() => void model.exportEstimate("xlsx")}
+                onExportPdf={() => void model.exportEstimate("pdf")}
+                onOpenDeleteDialog={() => setIsDeleteDialogOpen(true)}
+              />
+            }
+            filterPlaceholder="Поиск..."
+            hasFilterControls={model.rows.length > 0}
+            isAiMode={isAiMode}
+            setIsAiMode={setIsAiMode}
             searchValue={searchValue}
-            onToggleExpand={model.toggleWorkExpand}
-            onPatch={model.patch}
-            onOpenMaterialCatalog={model.openMaterialCatalog}
-            onInsertWorkAfter={model.insertWorkAfter}
-            onReplaceWork={model.openWorkReplaceDialog}
-            onReplaceMaterial={model.openMaterialReplaceDialog}
-            onRequestCreateSectionBefore={model.openCreateSectionDialogBefore}
-            onRequestCreateSection={model.openCreateSectionDialog}
-            onRemoveRow={model.removeRow}
+            setSearchValue={setSearchValue}
+            compactMobileToolbar
           />
-        )}
-      </div>
+        </div>
+
+        {/* Прокручиваемая область карточек */}
+        <div className="max-h-[var(--table-height)] overflow-y-auto bg-white px-1.5 pb-1.5 pt-1.5 sm:px-4 sm:pt-2">
+          {model.rows.length === 0 ? (
+            <div className="px-3 py-8">{emptyState}</div>
+          ) : (
+            <EstimateCardsTable
+              rows={model.rows}
+              expandedWorkIds={model.expandedWorkIds}
+              sectionTotalsById={model.sectionTotalsById}
+              searchValue={searchValue}
+              onToggleExpand={model.toggleWorkExpand}
+              onPatch={model.patch}
+              onOpenMaterialCatalog={model.openMaterialCatalog}
+              onInsertWorkAfter={model.insertWorkAfter}
+              onReplaceWork={model.openWorkReplaceDialog}
+              onReplaceMaterial={model.openMaterialReplaceDialog}
+              onRequestCreateSectionBefore={model.openCreateSectionDialogBefore}
+              onRequestCreateSection={model.openCreateSectionDialog}
+              onRemoveRow={model.removeRow}
+            />
+          )}
+        </div>
+      </section>
 
       <EstimateTableSummary
         worksTotal={currencyFormatter.format(model.totals.works)}
