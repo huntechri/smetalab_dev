@@ -212,6 +212,7 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_rows_estimate_tenant_deleted_order_idx').on(table.estimateId, table.tenantId, table.deletedAt, table.order),
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_rows_tenant_estimate_kind_updated_idx').on(table.tenantId, table.estimateId, table.kind, table.updatedAt.desc()).where(sql`kind = 'material'`),
   index('estimate_rows_tenant_estimate_kind_match_key_idx').on(table.tenantId, table.estimateId, table.kind, table.matchKey).where(sql`deleted_at IS NULL AND kind = 'material'`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_material_id_idx').on(table.materialId),
@@ -309,6 +310,7 @@ export const estimateExecutionRows = pgTable('estimate_execution_rows', {
 }, (table) => [
   uniqueIndex('estimate_execution_rows_estimate_row_unique').on(table.estimateId, table.estimateRowId).where(sql`estimate_row_id IS NOT NULL AND deleted_at IS NULL`),
   index('estimate_execution_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
+  index('estimate_execution_rows_tenant_estimate_order_idx').on(table.tenantId, table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_execution_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_execution_rows_estimate_status_idx').on(table.estimateId, table.status).where(sql`deleted_at IS NULL`),
 ]);
@@ -337,6 +339,7 @@ export const globalPurchases = pgTable('global_purchases', {
   deletedAt: timestamp('deleted_at'),
 }, (table) => [
   index('global_purchases_tenant_purchase_date_order_idx').on(table.tenantId, table.purchaseDate, table.order).where(sql`deleted_at IS NULL`),
+  index('global_purchases_tenant_project_updated_idx').on(table.tenantId, table.projectId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_project_match_key_purchase_date_idx').on(table.tenantId, table.projectId, table.matchKey, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_project_date_idx').on(table.tenantId, table.projectId, table.purchaseDate).where(sql`deleted_at IS NULL`),
   index('global_purchases_tenant_supplier_date_idx').on(table.tenantId, table.supplierId, table.purchaseDate).where(sql`deleted_at IS NULL`),

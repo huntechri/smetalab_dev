@@ -38,26 +38,57 @@ const checkExecutionTableExists = async () => {
 };
 
 let migrationAttempted = false;
+let executionStorageReadyPromise: Promise<boolean> | null = null;
 
 const ensureExecutionStorageReady = async () => {
-    const exists = await checkExecutionTableExists();
-    if (exists) {
-        return true;
-    }
-
-    if (!migrationAttempted) {
-        migrationAttempted = true;
-
-        try {
-            await migrate(db, {
-                migrationsFolder: path.join(process.cwd(), 'lib/data/db/migrations'),
-            });
-        } catch (migrationError) {
-            console.error('EstimateExecutionService.autoMigrate error:', migrationError);
+    if (process.env.NODE_ENV === 'test') {
+        const exists = await checkExecutionTableExists();
+        if (exists) {
+            return true;
         }
+
+        if (!migrationAttempted) {
+            migrationAttempted = true;
+
+            try {
+                await migrate(db, {
+                    migrationsFolder: path.join(process.cwd(), 'lib/data/db/migrations'),
+                });
+            } catch (migrationError) {
+                console.error('EstimateExecutionService.autoMigrate error:', migrationError);
+            }
+        }
+
+        return checkExecutionTableExists();
     }
 
-    return checkExecutionTableExists();
+    if (!executionStorageReadyPromise) {
+        executionStorageReadyPromise = (async () => {
+            const exists = await checkExecutionTableExists();
+            if (exists) {
+                return true;
+            }
+
+            if (!migrationAttempted) {
+                migrationAttempted = true;
+
+                try {
+                    await migrate(db, {
+                        migrationsFolder: path.join(process.cwd(), 'lib/data/db/migrations'),
+                    });
+                } catch (migrationError) {
+                    console.error('EstimateExecutionService.autoMigrate error:', migrationError);
+                }
+            }
+
+            return checkExecutionTableExists();
+        })().catch((error) => {
+            executionStorageReadyPromise = null;
+            throw error;
+        });
+    }
+
+    return executionStorageReadyPromise;
 };
 
 const estimateExecutionRowSelect = {
@@ -273,7 +304,11 @@ export class EstimateExecutionService {
                 return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
-            await this.syncEstimateIfStale(teamId, estimateId);
+            const currentVersion = estimate.executionSyncVersion ?? 0;
+            const syncedVersion = estimate.executionSyncedVersion ?? 0;
+            if (syncedVersion < currentVersion) {
+                await this.syncEstimateIfStale(teamId, estimateId);
+            }
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
