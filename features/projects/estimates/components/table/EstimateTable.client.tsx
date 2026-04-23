@@ -97,7 +97,7 @@ export function EstimateTable({
 
   return (
     <div className="space-y-1.5 sm:space-y-2 [--table-height:calc(100vh-250px)] sm:[--table-height:calc(100vh-280px)]">
-      <section className="flex h-[var(--table-height)] flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+      <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
         {/* Тулбар внутри контейнера */}
         <div className="p-1.5 sm:p-2 pb-0">
           <DataTableToolbar
@@ -127,7 +127,7 @@ export function EstimateTable({
         </div>
 
         {/* Прокручиваемая область карточек */}
-        <div className="flex-1 overflow-y-auto bg-white px-1.5 pb-1.5 pt-1.5 sm:px-4 sm:pt-2">
+        <div className="max-h-[var(--table-height)] overflow-y-auto bg-white px-1.5 pb-1.5 pt-1.5 sm:px-4 sm:pt-2">
           {model.rows.length === 0 ? (
             <div className="px-3 py-8">{emptyState}</div>
           ) : (
