@@ -148,8 +148,8 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     };
 
     return (
-        <div className="space-y-1.5 sm:space-y-2 [--procurement-height:calc(100vh-320px)] sm:[--procurement-height:calc(100vh-280px)]">
-            <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+        <div className="space-y-1.5 sm:space-y-2 [--procurement-height:calc(100vh-250px)] sm:[--procurement-height:calc(100vh-280px)]">
+            <section className="flex h-[var(--procurement-height)] flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
                 {/* Фиксированная верхняя панель (поиск и экспорт) */}
                 <div className="p-1.5 sm:p-3 pb-0">
                     <div className="mb-2 sm:mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -177,7 +177,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                 </div>
 
                 {/* Прокручиваемая область карточек */}
-                <div className="max-h-[var(--procurement-height)] overflow-y-auto px-1.5 pb-1.5 sm:px-3 sm:pb-3">
+                <div className="flex-1 overflow-y-auto px-1.5 pb-1.5 sm:px-3 sm:pb-3">
                     {filteredRows.length > 0 ? (
                         <div className="space-y-2">
                             {filteredRows.map((row) => (
