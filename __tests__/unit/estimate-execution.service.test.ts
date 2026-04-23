@@ -83,7 +83,7 @@ describe('EstimateExecutionService sync behavior', () => {
         const result = await EstimateExecutionService.list(1, 'est-1');
 
         expect(result.success).toBe(true);
-        expect(dbMock.transaction).toHaveBeenCalledTimes(1);
+        expect(dbMock.transaction).not.toHaveBeenCalled();
         expect(dbMock.update).not.toHaveBeenCalled();
         expect(progressRefreshMock).not.toHaveBeenCalled();
     });

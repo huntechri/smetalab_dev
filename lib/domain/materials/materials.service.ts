@@ -39,8 +39,6 @@ export class MaterialsService {
         categoryLv4?: string
     ): Promise<Result<MaterialRow[]>> {
         try {
-            await ensureMaterialsSortOrderColumn();
-
             const filters = [withActiveTenant(materials, teamId), eq(materials.status, 'active')];
 
 
