@@ -443,77 +443,80 @@ const toDateOrNull = (value: unknown): Date | null => {
 
 export class EstimateProcurementService {
     private static async shouldRefreshCache(teamId: number, estimateId: string, projectId: string) {
-        const [cacheState] = await db
-            .select({
-                maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})`,
-                rowsCount: sql<number>`COUNT(*)::int`,
-            })
-            .from(estimateProcurementCache)
-            .where(
-                and(
-                    eq(estimateProcurementCache.estimateId, estimateId),
-                    withActiveTenant(estimateProcurementCache, teamId),
-                ),
-            );
-
-        const cacheSplitRows = await db.execute(sql<{ has_name_split: boolean }>`
-            SELECT EXISTS (
-                SELECT 1
-                FROM ${estimateProcurementCache} AS e
-                JOIN ${estimateProcurementCache} AS f
-                  ON e.tenant_id = f.tenant_id
-                 AND e.estimate_id = f.estimate_id
-                 AND lower(trim(e.material_name)) = lower(trim(f.material_name))
-                 AND e.id <> f.id
-                WHERE e.tenant_id = ${teamId}
-                  AND e.estimate_id = ${estimateId}
-                  AND e.deleted_at IS NULL
-                  AND f.deleted_at IS NULL
-                  AND e.source = 'estimate'
-                  AND f.source = 'fact_only'
-                  AND e.planned_qty > 0
-                  AND e.actual_qty = 0
-                  AND f.actual_qty > 0
-            ) AS has_name_split
-        `);
-        const cacheSplitState = cacheSplitRows[0];
-
-        const [planState, factState] = await Promise.all([
+        const [cacheStateRows, latestSourceRows] = await Promise.all([
             db
-                // BUG-FIX: intentionally include soft-deleted rows (no deletedAt IS NULL filter)
-                // so that deleting a single material row still moves MAX(updatedAt) forward
-                // and invalidates the procurement cache correctly.
-                .select({ maxUpdatedAt: sql<Date | null>`MAX(${estimateRows.updatedAt})` })
-                .from(estimateRows)
+                .select({
+                    maxRefreshedAt: sql<Date | null>`MAX(${estimateProcurementCache.refreshedAt})`,
+                    rowsCount: sql<number>`COUNT(*)::int`,
+                })
+                .from(estimateProcurementCache)
                 .where(
                     and(
-                        eq(estimateRows.estimateId, estimateId),
-                        eq(estimateRows.kind, 'material'),
-                        eq(estimateRows.tenantId, teamId),
+                        eq(estimateProcurementCache.estimateId, estimateId),
+                        withActiveTenant(estimateProcurementCache, teamId),
                     ),
                 ),
-            db
-                .select({ maxUpdatedAt: sql<Date | null>`MAX(${globalPurchases.updatedAt})` })
-                .from(globalPurchases)
-                .where(
-                    and(
-                        eq(globalPurchases.projectId, projectId),
-                        withActiveTenant(globalPurchases, teamId),
+            db.execute(sql<{ latest_source_at: Date | null }>`
+                SELECT GREATEST(
+                    (
+                        -- BUG-FIX: intentionally include soft-deleted rows (no deleted_at IS NULL filter)
+                        -- so that deleting a single material row still moves MAX(updated_at) forward
+                        -- and invalidates the procurement cache correctly.
+                        SELECT MAX(${estimateRows.updatedAt})
+                        FROM ${estimateRows}
+                        WHERE ${estimateRows.tenantId} = ${teamId}
+                          AND ${estimateRows.estimateId} = ${estimateId}
+                          AND ${estimateRows.kind} = 'material'
                     ),
-                ),
+                    (
+                        SELECT MAX(${globalPurchases.updatedAt})
+                        FROM ${globalPurchases}
+                        WHERE ${globalPurchases.tenantId} = ${teamId}
+                          AND ${globalPurchases.projectId} = ${projectId}
+                          AND ${globalPurchases.deletedAt} IS NULL
+                    )
+                ) AS latest_source_at
+            `),
         ]);
 
-        const latestSourceAt = [planState[0]?.maxUpdatedAt, factState[0]?.maxUpdatedAt]
-            .map((value) => toDateOrNull(value))
-            .filter((value): value is Date => value instanceof Date)
-            .sort((a, b) => b.getTime() - a.getTime())[0] ?? null;
+        const cacheState = cacheStateRows[0];
+        const cacheHasRows = Number(cacheState?.rowsCount ?? 0) > 0;
 
-        if (cacheSplitState?.has_name_split) {
-            return true;
+        if (cacheHasRows) {
+            const cacheSplitRows = await db.execute(sql<{ has_name_split: boolean }>`
+                SELECT EXISTS (
+                    SELECT 1
+                    FROM ${estimateProcurementCache} AS e
+                    JOIN ${estimateProcurementCache} AS f
+                      ON e.tenant_id = f.tenant_id
+                     AND e.estimate_id = f.estimate_id
+                     AND lower(trim(e.material_name)) = lower(trim(f.material_name))
+                     AND e.id <> f.id
+                    WHERE e.tenant_id = ${teamId}
+                      AND e.estimate_id = ${estimateId}
+                      AND e.deleted_at IS NULL
+                      AND f.deleted_at IS NULL
+                      AND e.source = 'estimate'
+                      AND f.source = 'fact_only'
+                      AND e.planned_qty > 0
+                      AND e.actual_qty = 0
+                      AND f.actual_qty > 0
+                ) AS has_name_split
+            `);
+
+            if (cacheSplitRows[0]?.has_name_split) {
+                return true;
+            }
+        }
+
+        const latestSourceAt = toDateOrNull(latestSourceRows[0]?.latest_source_at);
+
+        if (!cacheHasRows && !latestSourceAt) {
+            return false;
         }
 
         return shouldRefreshProcurementCache({
-            cacheHasRows: Number(cacheState?.rowsCount ?? 0) > 0,
+            cacheHasRows,
             maxRefreshedAt: toDateOrNull(cacheState?.maxRefreshedAt),
             latestSourceAt,
         });
@@ -655,12 +658,13 @@ export class EstimateProcurementService {
                         eq(estimateProcurementCache.estimateId, estimateId),
                         withActiveTenant(estimateProcurementCache, teamId),
                     ),
+                )
+                .orderBy(
+                    sql`CASE WHEN ${estimateProcurementCache.source} = 'estimate' THEN 0 ELSE 1 END`,
+                    estimateProcurementCache.materialName,
                 );
 
-            return success(cacheRows.sort((a, b) => {
-                if (a.source !== b.source) return a.source === 'estimate' ? -1 : 1;
-                return a.materialName.localeCompare(b.materialName, 'ru-RU');
-            }));
+            return success(cacheRows);
         } catch (serviceError) {
             console.error('EstimateProcurementService.list error:', serviceError);
             return error('Ошибка загрузки закупок сметы');
