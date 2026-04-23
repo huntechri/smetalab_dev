@@ -77,7 +77,8 @@ describe('EstimateProcurement cards', () => {
     render(<EstimateProcurement estimateId="estimate-1" />);
 
     await waitFor(() => expect(repoMocks.list).toHaveBeenCalledWith('estimate-1'));
-    fireEvent.click(screen.getByRole('button', { name: /Экспорт Excel/i }));
+    const exportButton = await screen.findByRole('button', { name: /Экспорт Excel/i });
+    fireEvent.click(exportButton);
 
     expect(openSpy).toHaveBeenCalledWith(
       '/api/estimates/estimate-1/export/procurement',
