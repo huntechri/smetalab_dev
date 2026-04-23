@@ -2,10 +2,11 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Badge } from '@repo/ui';
-import { Skeleton } from '@repo/ui';
-import { Button } from '@repo/ui';
-import { Input } from '@repo/ui';
+import { Badge } from '@/shared/ui/badge';
+import { Skeleton } from '@/shared/ui/skeleton';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
+import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { Download, PackageSearch, Search } from 'lucide-react';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
@@ -21,10 +22,10 @@ const numberFormatter = new Intl.NumberFormat('ru-RU', {
     maximumFractionDigits: 2,
 });
 const renderDeltaBadge = (value: number, label: string, formatter: Intl.NumberFormat) => {
-    const baseClass = "h-4 sm:h-5 px-1 sm:px-1.5 text-[10px] sm:text-[11px] font-bold normal-case leading-none border";
+    const baseClass = "h-4 sm:h-5 px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-bold normal-case leading-none border shadow-none";
     
     let toneClass = "border-slate-300 bg-slate-50 text-slate-600";
-    if (value > 0) toneClass = "border-green-200 bg-green-100 text-green-600";
+    if (value > 0) toneClass = "border-green-200 bg-green-50 text-green-600";
     if (value < 0) toneClass = "border-rose-200 bg-rose-50 text-rose-600";
 
     return (
@@ -43,21 +44,20 @@ function ProcurementValue({
     tone = 'neutral',
 }: {
     label: string;
-    value: string;
+    value: string | number | React.ReactNode;
     tone?: 'neutral' | 'success' | 'info';
 }) {
-    // Map tone to specific border/bg/text combinations from EstimateMaterialCard
     const toneClasses = {
-        neutral: 'border-slate-300 bg-slate-50 text-slate-600',
+        neutral: 'border-slate-200 bg-slate-50 text-slate-600',
         info: 'border-blue-200 bg-blue-50 text-blue-600',
-        success: 'border-green-200 bg-green-100 text-green-600',
+        success: 'border-green-200 bg-green-50 text-green-600',
     };
 
     return (
         <Badge 
             variant="outline" 
             className={cn(
-                "h-4 sm:h-5 px-1 sm:px-1.5 text-[10px] sm:text-[11px] font-semibold normal-case leading-none tracking-tight border",
+                "h-4 sm:h-5 px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-semibold normal-case leading-none tracking-tight border shadow-none",
                 toneClasses[tone]
             )}
         >
@@ -149,18 +149,18 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
 
     return (
         <div className="space-y-1.5 sm:space-y-2 [--procurement-height:calc(100vh-250px)] sm:[--procurement-height:calc(100vh-280px)]">
-            <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+            <section className="flex flex-col rounded-lg border border-border bg-card text-card-foreground shadow-none">
                 {/* Фиксированная верхняя панель (поиск и экспорт) */}
                 <div className="p-1.5 sm:p-3 pb-0">
                     <div className="mb-2 sm:mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                         <div className="relative min-w-0 flex-1">
-                            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-[#71717a]" aria-hidden="true" />
+                            <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" aria-hidden="true" />
                             <Input
                                 value={searchValue}
                                 onChange={(event) => setSearchValue(event.target.value)}
                                 placeholder="Поиск..."
                                 size="xs"
-                                className="rounded-md border-[#e4e4e7] bg-white pl-8"
+                                className="rounded-md border-border bg-background pl-8"
                                 aria-label="Поиск закупок"
                             />
                         </div>
@@ -183,21 +183,21 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                             {filteredRows.map((row) => (
                                 <article
                                     key={`${row.materialName}-${row.unit}-${row.source}`}
-                                    className="overflow-hidden rounded-md border border-[#e4e4e7] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
+                                    className="overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
                                 >
                                     <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1fr_1fr] lg:gap-6">
                                         {/* Раздел 1: Основная информация */}
                                         <div className="flex flex-col justify-center min-w-0">
                                             <div className="flex items-start gap-1.5">
                                                 <span 
-                                                    className="min-w-0 flex-1 text-[10px] font-semibold leading-tight text-slate-800 sm:text-[11px]" 
+                                                    className="min-w-0 flex-1 text-[9px] font-semibold leading-tight text-slate-800 sm:text-[10px]" 
                                                     title={row.materialName}
                                                 >
                                                     {row.materialName}
                                                 </span>
                                                 <Badge
                                                     variant="outline"
-                                                    className="h-4 shrink-0 border-slate-200 bg-white px-1 py-0 text-[10px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[11px] font-bold normal-case"
+                                                    className="h-4 shrink-0 border-slate-200 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px] font-bold normal-case"
                                                 >
                                                     {row.unit}
                                                 </Badge>
@@ -206,7 +206,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                                                 <div className="mt-1.5">
                                                     <Badge
                                                         variant="warning"
-                                                        className="h-4 sm:h-5 px-1.5 text-[10px] sm:text-[11px] font-bold normal-case leading-none"
+                                                        className="h-4 sm:h-5 px-1.5 text-[9px] sm:text-[10px] font-bold normal-case leading-none"
                                                     >
                                                         Только факт
                                                     </Badge>
@@ -218,35 +218,35 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                                         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:contents">
                                             {/* Раздел 2: План */}
                                             <div className="space-y-2.5">
-                                                <div className="flex items-center gap-2 border-b border-blue-50 pb-1.5">
+                                                <div className="flex items-center gap-2 border-b border-blue-100/50 pb-1.5 dark:border-blue-900/30">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.5)]" />
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600/90 sm:text-[11px]">План</span>
+                                                    <span className="text-[9px] font-bold uppercase tracking-widest text-blue-600 sm:text-[10px]">План</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     <ProcurementValue label="Кол-во" value={numberFormatter.format(row.plannedQty)} />
                                                     <ProcurementValue label="Цена" value={moneyFormatter.format(row.plannedPrice)} />
-                                                    <ProcurementValue label="Итого" value={moneyFormatter.format(row.plannedAmount)} tone="info" />
+                                                    <ProcurementValue label="Итого" value={<MoneyCell value={row.plannedAmount} />} tone="info" />
                                                 </div>
                                             </div>
 
                                             {/* Раздел 3: Факт */}
                                             <div className="space-y-2.5">
-                                                <div className="flex items-center gap-2 border-b border-green-50 pb-1.5">
+                                                <div className="flex items-center gap-2 border-b border-green-100/50 pb-1.5 dark:border-green-900/30">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.5)]" />
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-green-600/90 sm:text-[11px]">Факт</span>
+                                                    <span className="text-[9px] font-bold uppercase tracking-widest text-green-600 sm:text-[10px]">Факт</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     <ProcurementValue label="Кол-во" value={numberFormatter.format(row.actualQty)} />
                                                     <ProcurementValue label="Цена" value={moneyFormatter.format(row.actualAvgPrice)} />
-                                                    <ProcurementValue label="Итого" value={moneyFormatter.format(row.actualAmount)} tone="success" />
+                                                    <ProcurementValue label="Итого" value={<MoneyCell value={row.actualAmount} />} tone="success" />
                                                 </div>
                                             </div>
 
                                             {/* Раздел 4: Отклонение */}
                                             <div className="col-span-2 sm:col-span-1 space-y-2.5">
-                                                <div className="flex items-center gap-2 border-b border-orange-50 pb-1.5">
+                                                <div className="flex items-center gap-2 border-b border-orange-100/50 pb-1.5 dark:border-orange-900/30">
                                                     <div className="h-1.5 w-1.5 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.5)]" />
-                                                    <span className="text-[10px] font-bold uppercase tracking-widest text-orange-600/90 sm:text-[11px]">Откл.</span>
+                                                    <span className="text-[9px] font-bold uppercase tracking-widest text-orange-600 sm:text-[10px]">Откл.</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2">
                                                     {renderDeltaBadge(row.qtyDelta, "Кол-во", numberFormatter)}
@@ -259,7 +259,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
                             ))}
                         </div>
                     ) : (
-                        <div className="flex min-h-[220px] flex-col items-center justify-center rounded-md border border-dashed border-[#e4e4e7] bg-[#fafafa] p-4 text-center text-sm text-[#71717a]">
+                        <div className="flex min-h-[220px] flex-col items-center justify-center rounded-md border border-dashed border-border bg-muted/30 p-4 text-center text-sm text-muted-foreground">
                             <PackageSearch className="mb-2 size-6" aria-hidden="true" />
                             По вашему запросу ничего не найдено.
                         </div>
