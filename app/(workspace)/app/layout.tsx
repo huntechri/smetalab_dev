@@ -8,8 +8,7 @@ import { BreadcrumbProvider } from '@/components/providers/breadcrumb-provider';
 import { ImpersonationBanner } from '@/features/admin';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-    const user = await getUser();
-    const team = await getTeamForUser();
+    const [user, team] = await Promise.all([getUser(), getTeamForUser()]);
 
     // Convert to simple PermissionEntry array
     const permissionsInfo = user ? await getUserPermissions(user, team?.id || null) : [];

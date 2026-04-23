@@ -1,4 +1,5 @@
 import { and, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -27,7 +28,7 @@ export class HomePerformanceDynamicsService {
         return maybeCause?.code === '42P01';
     }
 
-    static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
+    private static async hasVisibleEstimatesByTeamIdUncached(teamId: number): Promise<boolean> {
         const [estimate] = await db
             .select({ id: estimates.id })
             .from(estimates)
@@ -46,7 +47,7 @@ export class HomePerformanceDynamicsService {
         return Boolean(estimate);
     }
 
-    static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
+    private static async listByTeamIdUncached(teamId: number): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
         const periodEnd = endOfMonth(today);
         const startDate = new Date(periodEnd.getFullYear(), periodEnd.getMonth() - 11, 1);
@@ -189,5 +190,27 @@ export class HomePerformanceDynamicsService {
             procurementPlanRows,
             procurementFactRows,
         );
+    }
+
+    static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
+        return unstable_cache(
+            () => this.hasVisibleEstimatesByTeamIdUncached(teamId),
+            [`home-dynamics-visible-estimates-${teamId}`],
+            {
+                revalidate: 120,
+                tags: ['home-dynamics-visible-estimates', `home-dynamics-visible-estimates-${teamId}`],
+            },
+        )();
+    }
+
+    static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
+        return unstable_cache(
+            () => this.listByTeamIdUncached(teamId),
+            [`home-performance-dynamics-${teamId}`],
+            {
+                revalidate: 120,
+                tags: ['home-performance-dynamics', `home-performance-dynamics-${teamId}`],
+            },
+        )();
     }
 }

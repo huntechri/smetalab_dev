@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
@@ -144,7 +145,7 @@ export class HomeDashboardKpiService {
         `;
     }
 
-    static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
+    private static async getByTeamIdUncached(teamId: number): Promise<HomeDashboardKpiViewModel> {
         let financeRows: Array<Partial<HomeDashboardKpiFinance>>;
 
         try {
@@ -178,5 +179,16 @@ export class HomeDashboardKpiService {
             progress: Number(projectsSummary?.avgProgress ?? 0),
             remainingDays: calculateDaysRemaining(nearestEndDate),
         };
+    }
+
+    static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
+        return unstable_cache(
+            () => this.getByTeamIdUncached(teamId),
+            [`home-dashboard-kpi-${teamId}`],
+            {
+                revalidate: 120,
+                tags: ['home-dashboard-kpi', `home-dashboard-kpi-${teamId}`],
+            },
+        )();
     }
 }
