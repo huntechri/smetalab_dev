@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { addEstimatePurchasesMutatedListener, addEstimateRowsMutatedListener } from '@/features/projects/estimates/lib/estimate-client-events';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 
@@ -15,16 +16,21 @@ export function useEstimateProcurementController({ estimateId, initialRows }: Us
   const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const loadRows = useCallback(async () => {
+  const loadRows = useCallback(async (silent = false) => {
     try {
-      setIsLoading(true);
+      if (!silent) {
+        setIsLoading(true);
+      }
+
       setErrorMessage(null);
       const data = await estimateProcurementActionsRepo.list(estimateId);
       setRows(data);
     } catch (error) {
       setErrorMessage(error instanceof Error ? error.message : 'Не удалось загрузить закупки сметы');
     } finally {
-      setIsLoading(false);
+      if (!silent) {
+        setIsLoading(false);
+      }
     }
   }, [estimateId]);
 
@@ -38,6 +44,20 @@ export function useEstimateProcurementController({ estimateId, initialRows }: Us
 
     void loadRows();
   }, [initialRows, loadRows]);
+
+  useEffect(() => {
+    const reloadSilently = () => {
+      void loadRows(true);
+    };
+
+    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, reloadSilently);
+    const unsubscribePurchases = addEstimatePurchasesMutatedListener(estimateId, reloadSilently);
+
+    return () => {
+      unsubscribeRows();
+      unsubscribePurchases();
+    };
+  }, [estimateId, loadRows]);
 
   const totals = useMemo(
     () => rows.reduce((acc, row) => {
