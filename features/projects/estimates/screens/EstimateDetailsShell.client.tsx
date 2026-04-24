@@ -6,6 +6,8 @@ import dynamic from 'next/dynamic';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
+import type { EstimateExecutionRow } from '../types/execution.dto';
+import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
@@ -50,17 +52,12 @@ const EstimateFinance = dynamic(
 const estimateTabsListClassName = 'w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto rounded-[9.6px] border border-[oklab(0.919723_0.0011749_-0.00385052_/_0.4)] bg-[oklab(0.967428_0.000417888_-0.00125271_/_0.4)] p-1 text-[#71717a] no-scrollbar';
 const estimateTabsTriggerClassName = 'flex items-center justify-center gap-1.5 rounded-[7.6px] border border-transparent px-3 py-2 text-center text-[12px] leading-[16px] font-semibold tracking-[0.3px] [font-family:Manrope] text-[#71717a] transition-colors data-[state=active]:bg-[#f60] data-[state=active]:text-white';
 
-
-
-
-
 const buildTabHref = (pathname: string, search: string, nextTab: string) => {
     const params = new URLSearchParams(search);
     params.set('tab', nextTab);
     const query = params.toString();
     return query.length > 0 ? `${pathname}?${query}` : pathname;
 };
-
 
 function EstimateTableLoader({ estimateId, rowsPromise, initialCoefPercent, projectSlug, estimateName }: { estimateId: string; rowsPromise: Promise<EstimateRow[]>; initialCoefPercent: number; projectSlug: string; estimateName: string }) {
     const rows = use(rowsPromise);
@@ -72,11 +69,23 @@ function EstimateParamsLoader({ estimateId, roomParamsPromise }: { estimateId: s
     return <EstimateParams estimateId={estimateId} initialRows={roomParams} />;
 }
 
+function EstimateProcurementLoader({ estimateId, procurementRowsPromise }: { estimateId: string; procurementRowsPromise: Promise<EstimateProcurementRow[]> }) {
+    const procurementRows = use(procurementRowsPromise);
+    return <EstimateProcurement estimateId={estimateId} initialRows={procurementRows} />;
+}
+
+function EstimateExecutionLoader({ estimateId, executionRowsPromise }: { estimateId: string; executionRowsPromise: Promise<EstimateExecutionRow[]> }) {
+    const executionRows = use(executionRowsPromise);
+    return <EstimateExecution estimateId={estimateId} initialRows={executionRows} />;
+}
+
 interface EstimateDetailsShellProps {
     initialCoefPercent: number;
     estimateId: string;
     rowsPromise: Promise<EstimateRow[]>;
     roomParamsPromise: Promise<EstimateRoomParam[]>;
+    executionRowsPromise: Promise<EstimateExecutionRow[]>;
+    procurementRowsPromise: Promise<EstimateProcurementRow[]>;
     project: {
         id: string;
         name: string;
@@ -88,7 +97,7 @@ interface EstimateDetailsShellProps {
     };
 }
 
-export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
+export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, executionRowsPromise, procurementRowsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
 
@@ -156,10 +165,22 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     )}
                 </TabsContent>
                 <TabsContent value="procurement" className="mt-2">
-                    {loadedTabs.has('procurement') ? <EstimateProcurement estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                    {loadedTabs.has('procurement') ? (
+                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                            <EstimateProcurementLoader estimateId={estimateId} procurementRowsPromise={procurementRowsPromise} />
+                        </Suspense>
+                    ) : (
+                        <Skeleton className="h-[520px] w-full" />
+                    )}
                 </TabsContent>
                 <TabsContent value="execution" className="mt-2">
-                    {loadedTabs.has('execution') ? <EstimateExecution estimateId={estimateId} /> : <Skeleton className="h-[520px] w-full" />}
+                    {loadedTabs.has('execution') ? (
+                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                            <EstimateExecutionLoader estimateId={estimateId} executionRowsPromise={executionRowsPromise} />
+                        </Suspense>
+                    ) : (
+                        <Skeleton className="h-[520px] w-full" />
+                    )}
                 </TabsContent>
                 <TabsContent value="finance" className="mt-2">
                     {loadedTabs.has('finance') ? <EstimateFinance projectId={project.id} /> : <Skeleton className="h-[520px] w-full" />}
