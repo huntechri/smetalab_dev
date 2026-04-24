@@ -276,7 +276,11 @@ export class EstimateExecutionService {
                 return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
-            await this.syncEstimateIfStale(teamId, estimateId);
+            const executionSyncVersion = estimate.executionSyncVersion ?? 0;
+            const executionSyncedVersion = estimate.executionSyncedVersion ?? 0;
+            if (executionSyncedVersion < executionSyncVersion) {
+                await this.syncEstimateIfStale(teamId, estimateId);
+            }
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
