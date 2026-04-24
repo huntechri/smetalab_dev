@@ -1,6 +1,6 @@
 import { db } from '../db/drizzle';
-import { estimates, estimateRows, type NewEstimate } from '../db/schema';
-import { eq, and, desc, isNull, sql } from 'drizzle-orm';
+import { estimates, type NewEstimate } from '../db/schema';
+import { eq, and, desc, isNull } from 'drizzle-orm';
 import { withActiveTenant } from '../db/queries';
 
 export async function createEstimate(data: NewEstimate) {
@@ -16,24 +16,11 @@ export async function getEstimatesByProjectId(projectId: string, teamId: number)
             name: estimates.name,
             slug: estimates.slug,
             status: estimates.status,
-            total: sql<number>`COALESCE(
-                SUM(
-                    CASE 
-                        WHEN ${estimateRows.kind} = 'work' 
-                        THEN ${estimateRows.sum} * (1 + ${estimates.coefPercent} / 100.0) 
-                        ELSE ${estimateRows.sum} 
-                    END
-                ), 
-                0
-            )`.mapWith(Number),
+            total: estimates.total,
             createdAt: estimates.createdAt,
             updatedAt: estimates.updatedAt,
         })
         .from(estimates)
-        .leftJoin(
-            estimateRows,
-            and(eq(estimateRows.estimateId, estimates.id), isNull(estimateRows.deletedAt))
-        )
         .where(
             and(
                 eq(estimates.projectId, projectId),
@@ -41,7 +28,6 @@ export async function getEstimatesByProjectId(projectId: string, teamId: number)
                 withActiveTenant(estimates, teamId)
             )
         )
-        .groupBy(estimates.id)
         .orderBy(desc(estimates.updatedAt));
 }
 
