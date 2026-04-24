@@ -105,36 +105,6 @@ const resolveSupplier = async (client: DbLike, teamId: number, supplierId: strin
 type ProjectSnapshot = { id: string; name: string };
 type SupplierSnapshot = { id: string; name: string; color: string };
 
-const getCachedProject = async (
-  client: DbLike,
-  teamId: number,
-  projectId: string,
-  cache: Map<string, ProjectSnapshot | null>
-) => {
-  if (cache.has(projectId)) {
-    return cache.get(projectId) ?? null;
-  }
-
-  const project = await resolveProject(client, teamId, projectId);
-  cache.set(projectId, project ?? null);
-  return project ?? null;
-};
-
-const getCachedSupplier = async (
-  client: DbLike,
-  teamId: number,
-  supplierId: string,
-  cache: Map<string, SupplierSnapshot | null>
-) => {
-  if (cache.has(supplierId)) {
-    return cache.get(supplierId) ?? null;
-  }
-
-  const supplier = await resolveSupplier(client, teamId, supplierId);
-  cache.set(supplierId, supplier ?? null);
-  return supplier ?? null;
-};
-
 export class GlobalPurchasesService {
   static async list(teamId: number, rawFilters: unknown): Promise<Result<PurchaseRow[]>> {
     const parsed = listSchema.safeParse(rawFilters);
@@ -300,11 +270,44 @@ export class GlobalPurchasesService {
         }
 
         const existingMap = new Map(existingRows.map((row) => [row.id, row]));
-        const projectCache = new Map<string, ProjectSnapshot | null>();
-        const supplierCache = new Map<string, SupplierSnapshot | null>();
         const updatesByRowId = new Map<string, (typeof parsed.data.updates)[number]>();
         for (const update of parsed.data.updates) {
           updatesByRowId.set(update.rowId, update);
+        }
+
+        const projectIdsToValidate = [...new Set(
+          [...updatesByRowId.values()]
+            .map((update) => update.patch.projectId)
+            .filter((projectId): projectId is string => typeof projectId === 'string')
+        )];
+        const supplierIdsToValidate = [...new Set(
+          [...updatesByRowId.values()]
+            .map((update) => update.patch.supplierId)
+            .filter((supplierId): supplierId is string => typeof supplierId === 'string')
+        )];
+
+        const projectsListForValidation = projectIdsToValidate.length > 0
+          ? await tx.query.projects.findMany({
+            where: and(inArray(projects.id, projectIdsToValidate), withActiveTenant(projects, teamId)),
+            columns: { id: true, name: true },
+          })
+          : [];
+        const suppliersListForValidation = supplierIdsToValidate.length > 0
+          ? await tx.query.materialSuppliers.findMany({
+            where: and(inArray(materialSuppliers.id, supplierIdsToValidate), withActiveTenant(materialSuppliers, teamId)),
+            columns: { id: true, name: true, color: true },
+          })
+          : [];
+
+        const projectValidationMap = new Map<string, ProjectSnapshot>(projectsListForValidation.map((project) => [project.id, project]));
+        const supplierValidationMap = new Map<string, SupplierSnapshot>(suppliersListForValidation.map((supplier) => [supplier.id, supplier]));
+
+        if (projectValidationMap.size !== projectIdsToValidate.length) {
+          throw new Error('PROJECT_NOT_FOUND');
+        }
+
+        if (supplierValidationMap.size !== supplierIdsToValidate.length) {
+          throw new Error('SUPPLIER_NOT_FOUND');
         }
 
         const preparedUpdates: Array<{
@@ -333,7 +336,7 @@ export class GlobalPurchasesService {
           const nextPrice = patch.price ?? existing.price;
 
           const project = patch.projectId !== undefined && patch.projectId !== null
-            ? await getCachedProject(tx, teamId, patch.projectId, projectCache)
+            ? projectValidationMap.get(patch.projectId) ?? null
             : null;
 
           if (patch.projectId && !project) {
@@ -341,7 +344,7 @@ export class GlobalPurchasesService {
           }
 
           if (patch.supplierId) {
-            const supplier = await getCachedSupplier(tx, teamId, patch.supplierId, supplierCache);
+            const supplier = supplierValidationMap.get(patch.supplierId) ?? null;
             if (!supplier) {
               throw new Error('SUPPLIER_NOT_FOUND');
             }
@@ -363,32 +366,57 @@ export class GlobalPurchasesService {
           });
         }
 
-        const updatedRows: typeof globalPurchases.$inferSelect[] = [];
-        for (const prepared of preparedUpdates) {
-          const [updated] = await tx.update(globalPurchases)
-            .set({
-              materialName: prepared.materialName,
-              materialId: prepared.materialId,
-              unit: prepared.unit,
-              note: prepared.note,
-              purchaseDate: prepared.purchaseDate,
-              projectId: prepared.projectId,
-              projectName: prepared.projectName,
-              supplierId: prepared.supplierId,
-              qty: prepared.qty,
-              price: prepared.price,
-              amount: prepared.amount,
-              updatedAt: new Date(),
-            })
-            .where(and(eq(globalPurchases.id, prepared.rowId), withActiveTenant(globalPurchases, teamId)))
-            .returning();
+        const now = new Date();
+        const values = preparedUpdates.map((prepared) => sql`(
+          ${prepared.rowId}::uuid,
+          ${prepared.materialName},
+          ${prepared.materialId}::uuid,
+          ${prepared.unit},
+          ${prepared.note},
+          ${prepared.purchaseDate}::date,
+          ${prepared.projectId}::uuid,
+          ${prepared.projectName},
+          ${prepared.supplierId}::uuid,
+          ${prepared.qty},
+          ${prepared.price},
+          ${prepared.amount}
+        )`);
 
-          if (!updated) {
-            throw new Error('NOT_FOUND');
-          }
+        await tx.execute(sql`
+          UPDATE ${globalPurchases}
+          SET
+            material_name = v.material_name,
+            material_id = v.material_id,
+            unit = v.unit,
+            note = v.note,
+            purchase_date = v.purchase_date,
+            project_id = v.project_id,
+            project_name = v.project_name,
+            supplier_id = v.supplier_id,
+            qty = v.qty,
+            price = v.price,
+            amount = v.amount,
+            updated_at = ${now.toISOString()}::timestamp
+          FROM (VALUES ${sql.join(values, sql`, `)}) AS v(
+            id,
+            material_name,
+            material_id,
+            unit,
+            note,
+            purchase_date,
+            project_id,
+            project_name,
+            supplier_id,
+            qty,
+            price,
+            amount
+          )
+          WHERE ${globalPurchases.id} = v.id AND ${withActiveTenant(globalPurchases, teamId)}
+        `);
 
-          updatedRows.push(updated);
-        }
+        const updatedRows = await tx.query.globalPurchases.findMany({
+          where: and(inArray(globalPurchases.id, preparedUpdates.map((row) => row.rowId)), withActiveTenant(globalPurchases, teamId)),
+        });
 
         const updatedMap = new Map(updatedRows.map((row) => [row.id, row]));
         const orderedUpdatedRows = preparedUpdates.map((row) => {

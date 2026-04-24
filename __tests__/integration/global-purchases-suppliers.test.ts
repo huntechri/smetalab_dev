@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { db } from '@/lib/data/db/drizzle';
-import { globalPurchases, materialSuppliers, materials, teams } from '@/lib/data/db/schema';
+import { globalPurchases, materialSuppliers, materials, projects, teams } from '@/lib/data/db/schema';
 import { GlobalPurchasesService } from '@/lib/services/global-purchases.service';
 import { eq } from 'drizzle-orm';
 import { resetDatabase } from '@/lib/data/db/test-utils';
@@ -11,6 +11,7 @@ describe('Global purchases supplier badges integration', () => {
   let purchaseId: string;
   let supplierAId: string;
   let supplierBId: string;
+  let projectBId: string;
 
   beforeEach(async () => {
     await resetDatabase();
@@ -36,6 +37,15 @@ describe('Global purchases supplier badges integration', () => {
 
     supplierAId = supplierA.id;
     supplierBId = supplierB.id;
+    await db.insert(projects).values({
+      tenantId: teamA,
+      name: 'Project A',
+    }).returning();
+    const [projectB] = await db.insert(projects).values({
+      tenantId: teamB,
+      name: 'Project B',
+    }).returning();
+    projectBId = projectB.id;
 
     const [row] = await db.insert(globalPurchases).values({
       tenantId: teamA,
@@ -158,6 +168,113 @@ describe('Global purchases supplier badges integration', () => {
 
     const totalAmount = patchResult.data.reduce((acc, row) => acc + row.amount, 0);
     expect(totalAmount).toBeGreaterThan(0);
+  });
+
+  it('returns NOT_FOUND when any row in batch is missing', async () => {
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [
+        { rowId: purchaseId, patch: { qty: 2 } },
+        { rowId: '0f6f95a0-9db0-4b58-bb12-d7faadf09999', patch: { qty: 3 } },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+  });
+
+  it('returns NOT_FOUND when target row is soft-deleted', async () => {
+    await db.update(globalPurchases)
+      .set({ deletedAt: new Date() })
+      .where(eq(globalPurchases.id, purchaseId));
+
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [{ rowId: purchaseId, patch: { qty: 5 } }],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+  });
+
+  it('returns NOT_FOUND when project does not belong to tenant', async () => {
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [{ rowId: purchaseId, patch: { projectId: projectBId } }],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+  });
+
+  it('returns NOT_FOUND when supplier does not belong to tenant', async () => {
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [{ rowId: purchaseId, patch: { supplierId: supplierBId } }],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+  });
+
+  it('enforces tenant isolation for batch updates', async () => {
+    const [teamBRow] = await db.insert(globalPurchases).values({
+      tenantId: teamB,
+      projectName: '',
+      materialName: 'Team B material',
+      unit: 'шт',
+      qty: 1,
+      price: 100,
+      amount: 100,
+      note: '',
+      source: 'manual',
+      purchaseDate: '2026-02-01',
+      order: 1,
+    }).returning();
+
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [{ rowId: teamBRow.id, patch: { qty: 7 } }],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+  });
+
+  it('rejects entire batch when one update fails validation', async () => {
+    const [secondRow] = await db.insert(globalPurchases).values({
+      tenantId: teamA,
+      projectName: '',
+      materialName: 'Песок',
+      unit: 'шт',
+      qty: 2,
+      price: 200,
+      amount: 400,
+      note: '',
+      source: 'manual',
+      purchaseDate: '2026-02-01',
+      order: 2,
+    }).returning();
+
+    const result = await GlobalPurchasesService.patchBatch(teamA, {
+      updates: [
+        { rowId: purchaseId, patch: { qty: 10 } },
+        { rowId: secondRow.id, patch: { projectId: projectBId } },
+      ],
+    });
+
+    expect(result.success).toBe(false);
+    if (result.success) return;
+    expect(result.error.code).toBe('NOT_FOUND');
+
+    const untouchedRows = await db.query.globalPurchases.findMany({
+      where: eq(globalPurchases.tenantId, teamA),
+    });
+    const firstRowAfter = untouchedRows.find((row) => row.id === purchaseId);
+    const secondRowAfter = untouchedRows.find((row) => row.id === secondRow.id);
+
+    expect(firstRowAfter?.qty).toBe(1);
+    expect(secondRowAfter?.projectId).toBeNull();
   });
 
   it('resolves materialId during import by explicit id or catalog name', async () => {
