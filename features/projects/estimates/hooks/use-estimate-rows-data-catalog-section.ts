@@ -163,7 +163,6 @@ export function useEstimateRowsDataCatalogSection({
       }
 
       notifyEstimateRowsMutated(estimateId);
-      void reloadRows();
 
       toast({
         title: "Работа добавлена",
