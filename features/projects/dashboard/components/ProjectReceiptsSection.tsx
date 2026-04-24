@@ -1,6 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Plus } from 'lucide-react';
 
 import { useAppToast } from '@/components/providers/use-app-toast';
@@ -79,14 +80,29 @@ const receiptStatusBadgeVariant: Record<ProjectReceiptRow['status'], "success" |
   cancelled: "neutral",
 };
 
+const dispatchProjectReceiptsMutated = (projectId: string) => {
+  window.dispatchEvent(new CustomEvent('project-receipts:mutated', { detail: { projectId } }));
+};
+
 export function ProjectReceiptsSection({ projectId, initialRows, initialAggregates }: ProjectReceiptsSectionProps) {
   const { toast } = useAppToast();
+  const router = useRouter();
   const [rows, setRows] = useState<ProjectReceiptRow[]>(initialRows);
   const [aggregates, setAggregates] = useState<ProjectReceiptAggregates>(initialAggregates);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingRow, setEditingRow] = useState<ProjectReceiptRow | null>(null);
   const [form, setForm] = useState<ReceiptFormState>(createDefaultFormState());
   const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (isSaving) return;
+    setRows(initialRows);
+  }, [initialRows, isSaving]);
+
+  useEffect(() => {
+    if (isSaving) return;
+    setAggregates(initialAggregates);
+  }, [initialAggregates, isSaving]);
 
   const confirmedRows = useMemo(
     () => rows.filter((row) => row.status === 'confirmed'),
@@ -96,6 +112,11 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
   const refreshAggregates = async () => {
     const nextAggregates = await projectReceiptsActionRepo.getAggregates(projectId);
     setAggregates(nextAggregates);
+  };
+
+  const notifyReceiptsMutation = () => {
+    dispatchProjectReceiptsMutated(projectId);
+    router.refresh();
   };
 
   const onAddClick = () => {
@@ -144,6 +165,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       }
 
       await refreshAggregates();
+      notifyReceiptsMutation();
       setIsDialogOpen(false);
     } catch {
       toast({ variant: 'destructive', title: 'Ошибка', description: 'Не удалось сохранить поступление.' });
@@ -157,6 +179,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       const cancelled = await projectReceiptsActionRepo.cancel(receiptId);
       setRows((current) => current.map((row) => (row.id === cancelled.id ? cancelled : row)));
       await refreshAggregates();
+      notifyReceiptsMutation();
       toast({ title: 'Поступление отменено' });
     } catch {
       toast({ variant: 'destructive', title: 'Ошибка', description: 'Не удалось отменить поступление.' });
