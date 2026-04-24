@@ -847,6 +847,11 @@ export class EstimateRowsService {
                     .where(eq(estimateRows.id, rowId))
                     .returning();
 
+                const coefPercent = estimate.coefPercent ?? 0;
+                let totalDelta =
+                    estimateRowContribution(row as EstimateRowEntity, coefPercent) -
+                    estimateRowContribution(existing as EstimateRowEntity, coefPercent);
+
                 // 2. Каскадное обновление материалов при изменении объема работы
                 if (existing.kind === 'work' && patch.qty !== undefined && patch.qty !== existing.qty) {
                     const children = await tx
@@ -858,11 +863,17 @@ export class EstimateRowsService {
                         // Если у материала расход 0, пытаемся его восстановить из текущего количества и старого объема работы
                         const effectiveExpense = child.expense > 0 ? child.expense : (existing.qty > 0 ? child.qty / existing.qty : 0);
                         const newChildQty = Math.ceil(nextQty * effectiveExpense);
+                        const newChildSum = newChildQty * child.price;
+
+                        totalDelta +=
+                            estimateRowContribution({ kind: child.kind, sum: newChildSum }, coefPercent) -
+                            estimateRowContribution({ kind: child.kind, sum: child.sum }, coefPercent);
+
                         return {
                             id: child.id,
                             qty: newChildQty,
                             expense: effectiveExpense,
-                            sum: newChildQty * child.price,
+                            sum: newChildSum,
                         };
                     });
 
@@ -882,43 +893,41 @@ export class EstimateRowsService {
                                     eq(estimateRows.estimateId, estimateId),
                                     isNull(estimateRows.deletedAt),
                                 ));
-                            await recalculateEstimateTotal(tx, estimateId);
-                            return { row, touchedWork: existing.kind === 'work' };
+                        } else {
+                            const now = new Date();
+                            const ids = childMutations.map((row) => row.id);
+                            const qtyCase = sql.join(
+                                childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.qty}`),
+                                sql` `,
+                            );
+                            const expenseCase = sql.join(
+                                childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.expense}`),
+                                sql` `,
+                            );
+                            const sumCase = sql.join(
+                                childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.sum}`),
+                                sql` `,
+                            );
+
+                            await tx.update(estimateRows)
+                                .set({
+                                    qty: sql`CASE ${qtyCase} ELSE ${estimateRows.qty} END`,
+                                    expense: sql`CASE ${expenseCase} ELSE ${estimateRows.expense} END`,
+                                    sum: sql`CASE ${sumCase} ELSE ${estimateRows.sum} END`,
+                                    updatedAt: now,
+                                })
+                                .where(and(
+                                    inArray(estimateRows.id, ids),
+                                    eq(estimateRows.parentWorkId, rowId),
+                                    eq(estimateRows.estimateId, estimateId),
+                                    isNull(estimateRows.deletedAt),
+                                ));
                         }
-
-                        const now = new Date();
-                        const ids = childMutations.map((row) => row.id);
-                        const qtyCase = sql.join(
-                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.qty}`),
-                            sql` `,
-                        );
-                        const expenseCase = sql.join(
-                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.expense}`),
-                            sql` `,
-                        );
-                        const sumCase = sql.join(
-                            childMutations.map((row) => sql`WHEN ${estimateRows.id} = ${row.id} THEN ${row.sum}`),
-                            sql` `,
-                        );
-
-                        await tx.update(estimateRows)
-                            .set({
-                                qty: sql`CASE ${qtyCase} ELSE ${estimateRows.qty} END`,
-                                expense: sql`CASE ${expenseCase} ELSE ${estimateRows.expense} END`,
-                                sum: sql`CASE ${sumCase} ELSE ${estimateRows.sum} END`,
-                                updatedAt: now,
-                            })
-                            .where(and(
-                                inArray(estimateRows.id, ids),
-                                eq(estimateRows.parentWorkId, rowId),
-                                eq(estimateRows.estimateId, estimateId),
-                                isNull(estimateRows.deletedAt),
-                            ));
                     }
                 }
 
 
-                await recalculateEstimateTotal(tx, estimateId);
+                await applyEstimateTotalDelta(tx, estimateId, roundContribution(totalDelta));
                 return { row, touchedWork: existing.kind === 'work' };
             });
 
