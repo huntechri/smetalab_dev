@@ -3,6 +3,7 @@
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { CatalogMaterial, CatalogWork } from "@/features/catalog/types/dto";
 import { estimatesActionRepo } from "../repository/estimates.actions";
+import { notifyEstimateRowsMutated } from "../lib/estimate-client-events";
 import { EstimateRowsStateModel } from "./use-estimate-rows-state";
 
 interface UseEstimateRowsDataCatalogSectionParams {
@@ -41,7 +42,6 @@ export function useEstimateRowsDataCatalogSection({
       );
 
       state._setRows((prev) => {
-        // Мимикрируем серверный сдвиг order для материалов (+1)
         const shifted = prev.map((row) => {
           if (row.order >= created.order) {
             return { ...row, order: row.order + 1 };
@@ -51,6 +51,7 @@ export function useEstimateRowsDataCatalogSection({
         return [...shifted, created];
       });
       state._setExpandedWorkIds((prev) => new Set([...prev, activeWorkForMaterial.id]));
+      notifyEstimateRowsMutated(estimateId);
       toast({ title: "Материал добавлен", description: material.name });
     } catch {
       toast({
@@ -86,6 +87,7 @@ export function useEstimateRowsDataCatalogSection({
         prev.map((row) => (row.id === targetMaterialId ? updated : row)),
       );
       state.setActiveMaterialForReplace(null);
+      notifyEstimateRowsMutated(estimateId);
       toast({ title: "Материал обновлен", description: material.name });
     } catch {
       toast({
@@ -115,6 +117,7 @@ export function useEstimateRowsDataCatalogSection({
         prev.map((row) => (row.id === targetWorkId ? updated : row)),
       );
       state.setActiveWorkForReplace(null);
+      notifyEstimateRowsMutated(estimateId);
       toast({ title: "Работа заменена", description: catalogWork.name });
     } catch {
       toast({
@@ -139,8 +142,6 @@ export function useEstimateRowsDataCatalogSection({
       });
 
       state._setRows((prev) => {
-        // Мимикрируем серверный сдвиг order для работ (+100)
-        // Это предотвращает "прыжки" строк до того, как завершится reloadRows
         const shifted = prev.map((row) => {
           if (row.order >= created.order) {
             return { ...row, order: row.order + 100 };
@@ -161,6 +162,7 @@ export function useEstimateRowsDataCatalogSection({
         state.setPendingInsertAfterWork({ id: created.id, name: created.name });
       }
 
+      notifyEstimateRowsMutated(estimateId);
       void reloadRows();
 
       toast({
@@ -195,7 +197,6 @@ export function useEstimateRowsDataCatalogSection({
       });
 
       state._setRows((prev) => {
-        // Мимикрируем серверный сдвиг order для разделов (+1)
         const shifted = prev.map((row) => {
           if (row.order >= created.order) {
             return { ...row, order: row.order + 1 };
@@ -207,6 +208,7 @@ export function useEstimateRowsDataCatalogSection({
       state.setIsSectionDialogOpen(false);
       state._setSectionInsertAfterRowId(undefined);
       state._setSectionInsertBeforeRowId(undefined);
+      notifyEstimateRowsMutated(estimateId);
       toast({ title: "Раздел добавлен", description: `${created.code} ${created.name}` });
       void reloadRows();
     } catch (addSectionError) {
