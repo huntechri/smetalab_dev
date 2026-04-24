@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 import { parseDecimalInput } from '@/features/projects/estimates/lib/decimal-input';
-import { EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
+import { EstimateExecutionRow, EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
 import { useEstimateExecutionController } from '../../hooks/use-estimate-execution-controller';
 import { EstimateTotals } from '../EstimateTotals';
 import { EstimateExecutionTableActions } from './execution/EstimateExecutionTableActions';
@@ -117,7 +117,7 @@ function ExecutionValue({
     );
 }
 
-export function EstimateExecution({ estimateId }: { estimateId: string }) {
+export function EstimateExecution({ estimateId, initialRows }: { estimateId: string; initialRows?: EstimateExecutionRow[] }) {
     const {
         rows,
         isLoading,
@@ -127,7 +127,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
         handleExport,
         totals,
         addedWorkNames,
-    } = useEstimateExecutionController({ estimateId });
+    } = useEstimateExecutionController({ estimateId, initialRows });
 
     const [searchValue, setSearchValue] = useState('');
 
