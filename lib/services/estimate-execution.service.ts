@@ -184,8 +184,9 @@ export class EstimateExecutionService {
     }
 
     static async syncAfterEstimateMutation(teamId: number, estimateId: string): Promise<void> {
+        // Keep estimate row mutations fast. They only mark execution data stale;
+        // the expensive execution-row upsert is performed when the Execution tab is read.
         await this.bumpSyncVersion(teamId, estimateId);
-        await this.syncEstimateIfStale(teamId, estimateId);
     }
 
     static async syncEstimateIfStale(teamId: number, estimateId: string, options?: { refreshProjectProgress?: boolean }): Promise<void> {
@@ -274,6 +275,8 @@ export class EstimateExecutionService {
             if (!hasExecutionTable) {
                 return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
+
+            await this.syncEstimateIfStale(teamId, estimateId);
 
             const rows = await db
                 .select(estimateExecutionRowSelect)
