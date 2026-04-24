@@ -14,10 +14,20 @@ interface Props {
     addedWorkNames?: Set<string>;
 }
 
+interface SearchCriteria {
+    query: string;
+    category: string;
+    isAiMode: boolean;
+}
+
+const INITIAL_WORKS_LIMIT = 120;
+const QUERY_WORKS_LIMIT = 300;
+
 export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Props) {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('all');
     const [isAiMode, setIsAiMode] = useState(false);
+    const [searchCriteria, setSearchCriteria] = useState<SearchCriteria>({ query: '', category: 'all', isAiMode: false });
     const [works, setWorks] = useState<CatalogWork[]>([]);
     const [loading, setLoading] = useState(true);
     const virtuosoRef = useRef<VirtuosoHandle>(null);
@@ -28,11 +38,18 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
         const fetchData = async () => {
             setLoading(true);
             try {
-                const results = await catalogRepository.searchWorks(searchQuery, selectedCategory, isAiMode);
+                const hasQuery = searchCriteria.query.trim().length > 0;
+                const limit = hasQuery || searchCriteria.isAiMode ? QUERY_WORKS_LIMIT : INITIAL_WORKS_LIMIT;
+                const results = await catalogRepository.searchWorks(
+                    searchCriteria.query,
+                    searchCriteria.category,
+                    searchCriteria.isAiMode,
+                    limit,
+                );
+
                 if (isCancelled) return;
 
                 setWorks(results);
-                // Reset scroll when filter or search changes
                 virtuosoRef.current?.scrollTo({ top: 0 });
             } finally {
                 if (!isCancelled) {
@@ -41,13 +58,27 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
             }
         };
 
-        const isInitialBrowseLoad = searchQuery.trim().length === 0 && selectedCategory === 'all' && !isAiMode;
-        const timer = setTimeout(fetchData, isInitialBrowseLoad ? 0 : 300);
+        void fetchData();
         return () => {
             isCancelled = true;
-            clearTimeout(timer);
         };
-    }, [searchQuery, selectedCategory, isAiMode]);
+    }, [searchCriteria]);
+
+    const submitSearch = () => {
+        setSearchCriteria({
+            query: searchQuery.trim(),
+            category: selectedCategory,
+            isAiMode,
+        });
+    };
+
+    const handleCategoryChange = (category: string) => {
+        setSelectedCategory(category);
+        setSearchCriteria((current) => ({
+            ...current,
+            category,
+        }));
+    };
 
     return (
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden">
@@ -55,9 +86,11 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                 searchQuery={searchQuery}
                 onSearchChange={setSearchQuery}
                 selectedCategory={selectedCategory}
-                onCategoryChange={setSelectedCategory}
+                onCategoryChange={handleCategoryChange}
                 isAiMode={isAiMode}
                 onAiModeChange={setIsAiMode}
+                onSearchSubmit={submitSearch}
+                isSearching={loading}
             />
 
             <div className="flex-1 relative min-h-0 overflow-hidden">
