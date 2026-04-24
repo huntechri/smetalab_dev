@@ -170,7 +170,7 @@ function buildProcurementRowKey(row: EstimateProcurementRow, index: number) {
   return `${row.materialName}-${row.unit}-${row.source}-${row.purchaseCount}-${row.lastPurchaseDate ?? 'none'}-${index}`;
 }
 
-export function EstimateProcurement({ estimateId }: { estimateId: string }) {
+export function EstimateProcurement({ estimateId, initialRows }: { estimateId: string; initialRows?: EstimateProcurementRow[] }) {
   const {
     rows,
     searchValue,
@@ -180,7 +180,7 @@ export function EstimateProcurement({ estimateId }: { estimateId: string }) {
     totals,
     filteredRows,
     handleExport,
-  } = useEstimateProcurementController({ estimateId });
+  } = useEstimateProcurementController({ estimateId, initialRows });
 
   if (isLoading) {
     return (
