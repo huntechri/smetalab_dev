@@ -5,6 +5,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { projectReceipts, projects } from '@/lib/data/db/schema';
 import { Result, error, success } from '@/lib/utils/result';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 export const projectReceiptTypeSchema = z.enum([
   'advance',
@@ -125,6 +126,7 @@ export class ProjectReceiptsService {
         return row;
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(toRow(created));
     } catch (serviceError) {
       if (serviceError instanceof Error && serviceError.message === 'PROJECT_NOT_FOUND') {
@@ -164,6 +166,7 @@ export class ProjectReceiptsService {
         return row;
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(toRow(updated));
     } catch (serviceError) {
       if (serviceError instanceof Error && serviceError.message === 'NOT_FOUND') {

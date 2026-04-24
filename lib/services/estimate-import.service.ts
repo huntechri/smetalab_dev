@@ -6,6 +6,7 @@ import { db } from "@/lib/data/db/drizzle";
 import { withActiveTenant } from "@/lib/data/db/queries";
 import { estimateRows, estimates, materials, works } from "@/lib/data/db/schema";
 import { EstimateExecutionService } from "@/lib/services/estimate-execution.service";
+import { invalidateHomeDashboardCache } from "@/lib/services/home-dashboard-cache";
 import { Result, error, success } from "@/lib/utils/result";
 
 const importedEstimateRowSchema = z.object({
@@ -411,6 +412,7 @@ export class EstimateImportService {
       });
 
       await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+      invalidateHomeDashboardCache(teamId);
 
       return success({
         imported: importedRows.length,

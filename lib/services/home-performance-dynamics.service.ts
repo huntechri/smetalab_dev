@@ -5,6 +5,12 @@ import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 import { buildPerformanceDynamics, PerformanceDynamicsPoint } from './project-performance-dynamics.service';
+import {
+    HOME_DYNAMICS_VISIBLE_ESTIMATES_TAG,
+    HOME_PERFORMANCE_DYNAMICS_TAG,
+    getHomeDynamicsVisibleEstimatesTeamTag,
+    getHomePerformanceDynamicsTeamTag,
+} from './home-dashboard-cache';
 
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
 const ESTIMATE_STATUS_APPROVED = 'approved' as const;
@@ -195,10 +201,10 @@ export class HomePerformanceDynamicsService {
     static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
         return unstable_cache(
             () => this.hasVisibleEstimatesByTeamIdUncached(teamId),
-            [`home-dynamics-visible-estimates-${teamId}`],
+            [getHomeDynamicsVisibleEstimatesTeamTag(teamId)],
             {
                 revalidate: 120,
-                tags: ['home-dynamics-visible-estimates', `home-dynamics-visible-estimates-${teamId}`],
+                tags: [HOME_DYNAMICS_VISIBLE_ESTIMATES_TAG, getHomeDynamicsVisibleEstimatesTeamTag(teamId)],
             },
         )();
     }
@@ -206,10 +212,10 @@ export class HomePerformanceDynamicsService {
     static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
         return unstable_cache(
             () => this.listByTeamIdUncached(teamId),
-            [`home-performance-dynamics-${teamId}`],
+            [getHomePerformanceDynamicsTeamTag(teamId)],
             {
                 revalidate: 120,
-                tags: ['home-performance-dynamics', `home-performance-dynamics-${teamId}`],
+                tags: [HOME_PERFORMANCE_DYNAMICS_TAG, getHomePerformanceDynamicsTeamTag(teamId)],
             },
         )();
     }

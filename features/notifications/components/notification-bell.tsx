@@ -14,19 +14,25 @@ import { NotificationsList } from '@/features/notifications/components/notificat
 import { NotificationPayload } from '@/features/notifications/components/types';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
-export const getNotificationsSWRKey = (isOpen: boolean): string | null => (isOpen ? '/api/notifications' : null);
+const NOTIFICATIONS_LIST_KEY = '/api/notifications';
+const NOTIFICATIONS_UNREAD_COUNT_KEY = '/api/notifications/unread-count';
+
+export const getNotificationsSWRKey = (isOpen: boolean): string | null => (isOpen ? NOTIFICATIONS_LIST_KEY : null);
 
 export function NotificationBell() {
     const [mounted, setMounted] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
     const notificationsKey = getNotificationsSWRKey(isOpen);
     const { data: notifications, isLoading } = useSWR<NotificationPayload[]>(notificationsKey, fetcher);
+    const { data: unreadCountPayload } = useSWR<{ unreadCount: number }>(NOTIFICATIONS_UNREAD_COUNT_KEY, fetcher);
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const unreadCount = notifications?.filter((n) => !n.read).length || 0;
+    const unreadCount = notifications
+        ? notifications.filter((n) => !n.read).length
+        : unreadCountPayload?.unreadCount ?? 0;
 
     if (!mounted) {
         return (
@@ -39,17 +45,29 @@ export function NotificationBell() {
 
     const handleMarkAsRead = async (id: number) => {
         // Optimistic update
-        mutate('/api/notifications', (currentNotifications: NotificationPayload[] | undefined) => {
+        mutate(NOTIFICATIONS_LIST_KEY, (currentNotifications: NotificationPayload[] | undefined) => {
             if (!currentNotifications) return [];
             return currentNotifications.map(n => n.id === id ? { ...n, read: true } : n);
         }, false);
+        mutate(
+            NOTIFICATIONS_UNREAD_COUNT_KEY,
+            (currentCount: { unreadCount: number } | undefined) => ({
+                unreadCount: Math.max((currentCount?.unreadCount ?? unreadCount) - 1, 0),
+            }),
+            false,
+        );
 
         try {
-            await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
-            mutate('/api/notifications'); // Revalidate to ensure data consistency
+            const response = await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+            if (!response.ok) {
+                throw new Error('Failed to mark notification as read');
+            }
+            mutate(NOTIFICATIONS_LIST_KEY); // Revalidate to ensure data consistency
+            mutate(NOTIFICATIONS_UNREAD_COUNT_KEY);
         } catch (error) {
             console.error('Failed to mark as read', error);
-            mutate('/api/notifications'); // Revert on error
+            mutate(NOTIFICATIONS_LIST_KEY); // Revert on error
+            mutate(NOTIFICATIONS_UNREAD_COUNT_KEY);
         }
     };
 

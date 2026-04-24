@@ -7,6 +7,7 @@ import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import { EstimateRow } from '@/features/projects/estimates/types/dto';
 import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const addWorkSchema = z.object({
     name: z.string().trim().min(1),
@@ -531,6 +532,7 @@ export class EstimateRowsService {
             });
 
             await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+            invalidateHomeDashboardCache(teamId);
 
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -648,6 +650,7 @@ export class EstimateRowsService {
                 return section;
             });
 
+            invalidateHomeDashboardCache(teamId);
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'ANCHOR_ROW_NOT_FOUND') {
@@ -759,6 +762,7 @@ export class EstimateRowsService {
                 return row;
             });
 
+            invalidateHomeDashboardCache(teamId);
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_MATERIAL_NAME') {
@@ -919,6 +923,7 @@ export class EstimateRowsService {
             if (updated.touchedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
             }
+            invalidateHomeDashboardCache(teamId);
 
             return success(toEstimateRowDto(updated.row as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -980,6 +985,7 @@ export class EstimateRowsService {
             if (removedResult.removedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
             }
+            invalidateHomeDashboardCache(teamId);
 
             return success({ removedIds: removedResult.idsToDelete });
         } catch (e) {

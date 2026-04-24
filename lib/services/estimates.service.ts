@@ -4,6 +4,7 @@ import { estimates, estimateRows, estimateExecutionRows, estimateRoomParams } fr
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { error, Result, success } from '@/lib/utils/result';
 import { ProjectStatusService } from './project-status.service';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 export class EstimateService {
     static async delete(teamId: number, estimateId: string): Promise<Result<{ projectId: string }>> {
@@ -47,6 +48,7 @@ export class EstimateService {
                 // Use the transaction to see its own updates
                 await ProjectStatusService.refreshForProject(teamId, estimate.projectId, tx);
 
+                invalidateHomeDashboardCache(teamId);
                 return success({ projectId: estimate.projectId });
             });
         } catch (err) {

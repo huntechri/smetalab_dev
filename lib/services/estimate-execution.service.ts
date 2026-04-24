@@ -7,6 +7,7 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import { ProjectProgressService } from '@/lib/services/project-progress.service';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 import {
     AddExtraExecutionWorkInput,
     EstimateExecutionRow,
@@ -393,6 +394,7 @@ export class EstimateExecutionService {
             });
 
             await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
+            invalidateHomeDashboardCache(teamId);
 
             return success(updated as EstimateExecutionRow);
         } catch (e) {
@@ -449,6 +451,7 @@ export class EstimateExecutionService {
             });
 
             await ProjectProgressService.refreshForProject(teamId, estimate.projectId);
+            invalidateHomeDashboardCache(teamId);
 
             return success(created as EstimateExecutionRow);
         } catch (e) {

@@ -5,6 +5,7 @@ import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateExecutionRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 import { calculateDaysRemaining } from './project-dashboard-kpi.service';
+import { HOME_DASHBOARD_KPI_TAG, getHomeDashboardKpiTeamTag } from './home-dashboard-cache';
 
 type HomeDashboardKpiFinance = {
     confirmedReceipts: number;
@@ -184,10 +185,10 @@ export class HomeDashboardKpiService {
     static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
         return unstable_cache(
             () => this.getByTeamIdUncached(teamId),
-            [`home-dashboard-kpi-${teamId}`],
+            [getHomeDashboardKpiTeamTag(teamId)],
             {
                 revalidate: 120,
-                tags: ['home-dashboard-kpi', `home-dashboard-kpi-${teamId}`],
+                tags: [HOME_DASHBOARD_KPI_TAG, getHomeDashboardKpiTeamTag(teamId)],
             },
         )();
     }
