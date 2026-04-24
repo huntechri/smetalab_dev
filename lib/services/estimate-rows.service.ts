@@ -461,7 +461,7 @@ export class EstimateRowsService {
                     .orderBy(estimateRows.order);
 
                 const anchorWork = existingRows.find((row) => row.id === payload.insertAfterWorkId);
-                if (!anchorWork || anchorWork.kind !== 'work') {
+                if (!anchorWork || (anchorWork.kind !== 'work' && anchorWork.kind !== 'section')) {
                     throw new Error('INSERT_ANCHOR_NOT_FOUND');
                 }
 
@@ -471,9 +471,11 @@ export class EstimateRowsService {
                 }
 
                 // Находим "границу" — саму работу или её последний материал
-                const anchorAndMaterials = existingRows.filter(
+                const anchorAndMaterials = anchorWork.kind === 'work'
+                    ? existingRows.filter(
                     (row) => row.id === anchorWork.id || row.parentWorkId === anchorWork.id
-                );
+                    )
+                    : [anchorWork];
                 const boundaryOrder = Math.max(...anchorAndMaterials.map(r => r.order));
 
                 // Ищем следующую строку ЛЮБОГО типа (работу или раздел), которая идет после границы

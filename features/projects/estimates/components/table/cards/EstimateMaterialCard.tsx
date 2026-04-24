@@ -27,7 +27,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
       <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-1.5 sm:gap-2">
         <div className="min-w-0 overflow-hidden">
           <div className="flex min-w-0 items-start gap-1.5">
-            <span className="mt-1 shrink-0 text-[10px] font-semibold text-slate-500 sm:text-[11px]">
+            <span className="mt-1 shrink-0 text-[9px] font-semibold text-slate-500 sm:text-[11px]">
               {material.code}
             </span>
             <EstimateInlineTextCell
@@ -39,7 +39,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
             />
           </div>
 
-          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[10px] text-slate-500 sm:mt-0.5">
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[9px] text-slate-500 sm:mt-0.5 sm:text-[11px]">
             <div className="flex items-center gap-1.5 shrink-0">
               <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 sm:h-7 sm:w-7">
                 {material.imageUrl ? (
@@ -66,8 +66,8 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-slate-300 bg-slate-50 px-1 py-0 text-[10px] text-slate-600 sm:h-5 sm:px-1.5">
-                <span className="opacity-70">Кол:</span>
+              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-slate-300 bg-slate-50 px-1 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+                <span className="opacity-70 text-[9px] sm:text-[10px]">Кол:</span>
                 <EstimateInlineNumberCell
                   value={material.qty}
                   onCommit={(value) => props.onPatch(material.id, 'qty', value)}
@@ -75,8 +75,8 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
                   className={MATERIAL_QTY_CLASS}
                 />
               </div>
-              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-blue-200 bg-blue-50 px-1 py-0 text-[10px] text-blue-600 sm:h-5 sm:px-1.5">
-                <span className="opacity-70">Расх:</span>
+              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-blue-200 bg-blue-50 px-1 py-0 text-[9px] text-blue-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+                <span className="opacity-70 text-[9px] sm:text-[10px]">Расх:</span>
                 <EstimateInlineNumberCell
                   value={material.expense}
                   onCommit={(value) => props.onPatch(material.id, 'expense', value)}
@@ -92,7 +92,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
               </span>
               <Badge
                 variant="success"
-                className="h-4 border border-green-200 bg-green-100 px-1.5 py-0 text-[10px] font-bold leading-none text-green-600 sm:h-5 sm:px-2 sm:text-[10px]"
+                className="h-4 border border-green-200 bg-green-100 px-1.5 py-0 text-[9px] font-bold leading-none text-green-600 sm:h-5 sm:px-2 sm:text-[10px]"
               >
                 <MoneyCell value={material.sum} />
               </Badge>

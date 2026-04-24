@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { MoreHorizontal, Plus } from 'lucide-react';
 
 import { useAppToast } from '@/components/providers/use-app-toast';
+import { cn } from '@/lib/utils';
 import { Badge } from '@repo/ui';
 import { Button } from '@repo/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
@@ -180,28 +181,28 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
         ) : null}
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Дата</TableHead>
-              <TableHead>Тип</TableHead>
-              <TableHead>Сумма</TableHead>
-              <TableHead>Статус</TableHead>
-              <TableHead>Комментарий</TableHead>
-              <TableHead className="w-[40px]" />
+            <TableRow className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+              <TableHead className="h-8">Дата</TableHead>
+              <TableHead className="h-8">Тип</TableHead>
+              <TableHead className="h-8">Сумма</TableHead>
+              <TableHead className="h-8">Статус</TableHead>
+              <TableHead className="h-8">Комментарий</TableHead>
+              <TableHead className="h-8 w-[40px]" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{new Date(row.date).toLocaleDateString('ru-RU')}</TableCell>
-                <TableCell>{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
-                <TableCell className={row.amount < 0 ? 'text-red-600' : 'text-green-600'}>{formatCurrency(row.amount)}</TableCell>
-                <TableCell>
+              <TableRow key={row.id} className="text-[9px] sm:text-[11px]">
+                <TableCell className="py-2">{new Date(row.date).toLocaleDateString('ru-RU')}</TableCell>
+                <TableCell className="py-2">{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
+                <TableCell className={cn('py-2 font-semibold', row.amount < 0 ? 'text-rose-600' : 'text-emerald-600')}>{formatCurrency(row.amount)}</TableCell>
+                <TableCell className="py-2">
                   <Badge variant={receiptStatusBadgeVariant[row.status]} size="xs">
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
                   </Badge>
                 </TableCell>
-                <TableCell className="max-w-[320px] truncate">{row.comment || '—'}</TableCell>
-                <TableCell>
+                <TableCell className="py-2 max-w-[320px] truncate text-slate-500">{row.comment || '—'}</TableCell>
+                <TableCell className="py-2">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon-sm">

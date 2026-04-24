@@ -13,7 +13,7 @@ type Totals = {
 
 function TotalLine({ label, totals, isGrandTotal = false }: { label: string; totals: Totals; isGrandTotal?: boolean }) {
     return (
-        <div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[11px] ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-bold' : 'py-1 text-muted-foreground'}`}>
+        <div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[9px] sm:text-[11px] ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-bold' : 'py-1 text-muted-foreground'}`}>
             <span className={isGrandTotal ? "text-foreground min-w-[80px]" : "min-w-[120px]"}>{label}</span>
             <div className="flex items-center gap-1">
                 <span>Σ S пола:</span>
@@ -47,7 +47,7 @@ export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomPar
     return (
         <Card className="bg-muted/30 border-none shadow-none mt-4">
             <CardContent className="p-3 space-y-0.5">
-                <div className="font-bold text-xs mb-2">Итого:</div>
+                <div className="font-bold text-[9px] sm:text-[11px] mb-2 uppercase tracking-wider text-muted-foreground">Итого:</div>
 
                 {rows.map((row, index) => {
                     const rowTotals: Totals = {

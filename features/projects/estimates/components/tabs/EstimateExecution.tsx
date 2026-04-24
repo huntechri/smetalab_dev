@@ -215,12 +215,12 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                         <div className="flex flex-col justify-center min-w-0">
                                             <div className="flex items-start gap-1.5">
                                                 {row.code && (
-                                                    <span className="shrink-0 text-[9px] font-semibold leading-tight text-slate-500 sm:text-[10px]">
+                                                    <span className="shrink-0 text-[9px] font-semibold leading-tight text-slate-500 sm:text-[11px]">
                                                         {row.code}
                                                     </span>
                                                 )}
                                                 <span 
-                                                    className="min-w-0 flex-1 text-[9px] font-semibold leading-tight text-slate-800 sm:text-[10px]" 
+                                                    className="min-w-0 flex-1 text-[9px] font-semibold leading-tight text-slate-800 sm:text-[11px]" 
                                                     title={row.name}
                                                 >
                                                     {row.name}
@@ -271,7 +271,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                                     <span className="text-[9px] font-bold uppercase tracking-widest text-green-600 sm:text-[10px]">Факт</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2 items-center">
-                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[10px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
                                                         <span>Кол-во</span>
                                                         <EstimateInlineNumberCell
                                                             value={row.actualQty}
@@ -285,7 +285,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                                             className={WORK_NUMBER_CLASS}
                                                         />
                                                     </div>
-                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[10px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
                                                         <span>Цена</span>
                                                         <EstimateInlineNumberCell
                                                             value={row.actualPrice}
@@ -302,7 +302,7 @@ export function EstimateExecution({ estimateId }: { estimateId: string }) {
                                                     </div>
                                                     <Badge
                                                         variant="success"
-                                                        className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[11px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
+                                                        className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[9px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
                                                     >
                                                         <MoneyCell value={row.actualSum} />
                                                     </Badge>

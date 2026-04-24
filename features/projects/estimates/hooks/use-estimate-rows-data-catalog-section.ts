@@ -165,9 +165,7 @@ export function useEstimateRowsDataCatalogSection({
 
       toast({
         title: "Работа добавлена",
-        description: insertAfterWork
-          ? `Позиция добавлена ниже: ${insertAfterWork.name}`
-          : catalogWork.name,
+        description: catalogWork.name,
       });
     } catch {
       toast({
