@@ -417,7 +417,6 @@ export function shouldRefreshProcurementCache(params: {
 }): boolean {
     const { cacheHasRows, maxRefreshedAt, latestSourceAt } = params;
 
-    // PERF+CORRECTNESS: if all source rows are gone, refresh only when stale cache rows still exist.
     if (!latestSourceAt) {
         return cacheHasRows;
     }
@@ -471,7 +470,6 @@ export class EstimateProcurementService {
                     FROM ${globalPurchases}
                     WHERE ${globalPurchases.tenantId} = ${teamId}
                       AND ${globalPurchases.projectId} = ${projectId}
-                      AND ${globalPurchases.deletedAt} IS NULL
                 ) AS combined_sources
             `),
         ]);
@@ -595,7 +593,6 @@ export class EstimateProcurementService {
                     purchaseCount: row.purchaseCount,
                     lastPurchaseDate: row.lastPurchaseDate,
                 })))
-                // CORRECTNESS: unique key ignores deleted_at, so upsert reuses soft-deleted cache rows.
                 .onConflictDoUpdate({
                     target: [estimateProcurementCache.tenantId, estimateProcurementCache.estimateId, estimateProcurementCache.matchKey],
                     set: {
@@ -631,7 +628,7 @@ export class EstimateProcurementService {
             if (!estimate) return error('Смета не найдена', 'NOT_FOUND');
 
             if (await this.shouldRefreshCache(teamId, estimateId, estimate.projectId)) {
-                await this.refreshCache(teamId, estimateId, estimate.projectId);
+                await this.refreshCache(teamId, estimate.id, estimate.projectId);
             }
 
             const cacheRows = await db
