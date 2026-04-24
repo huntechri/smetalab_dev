@@ -9,6 +9,8 @@ import { EstimateRoomParam } from '../types/room-params.dto';
 import type { EstimateExecutionRow } from '../types/execution.dto';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import { EstimateTable } from '../components/table/EstimateTable.client';
+import { EstimateExecution } from '../components/tabs/EstimateExecution';
+import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
@@ -16,37 +18,17 @@ const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution',
 
 const EstimateParams = dynamic(
     () => import('../components/tabs/EstimateParams').then((mod) => mod.EstimateParams),
-    {
-        loading: () => <Skeleton className="h-[520px] w-full" />,
-    },
-);
-
-const EstimateProcurement = dynamic(
-    () => import('../components/tabs/EstimateProcurement').then((mod) => mod.EstimateProcurement),
-    {
-        loading: () => <Skeleton className="h-[520px] w-full" />,
-    },
-);
-
-const EstimateExecution = dynamic(
-    () => import('../components/tabs/EstimateExecution').then((mod) => mod.EstimateExecution),
-    {
-        loading: () => <Skeleton className="h-[520px] w-full" />,
-    },
+    { loading: () => <Skeleton className="h-[520px] w-full" /> },
 );
 
 const EstimateDocuments = dynamic(
     () => import('../components/tabs/EstimateDocuments').then((mod) => mod.EstimateDocuments),
-    {
-        loading: () => <Skeleton className="h-[240px] w-full" />,
-    },
+    { loading: () => <Skeleton className="h-[240px] w-full" /> },
 );
 
 const EstimateFinance = dynamic(
     () => import('../components/tabs/EstimateFinance').then((mod) => mod.EstimateFinance),
-    {
-        loading: () => <Skeleton className="h-[520px] w-full" />,
-    },
+    { loading: () => <Skeleton className="h-[520px] w-full" /> },
 );
 
 const estimateTabsListClassName = 'w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto rounded-[9.6px] border border-[oklab(0.919723_0.0011749_-0.00385052_/_0.4)] bg-[oklab(0.967428_0.000417888_-0.00125271_/_0.4)] p-1 text-[#71717a] no-scrollbar';
@@ -86,21 +68,13 @@ interface EstimateDetailsShellProps {
     roomParamsPromise: Promise<EstimateRoomParam[]>;
     executionRowsPromise: Promise<EstimateExecutionRow[]>;
     procurementRowsPromise: Promise<EstimateProcurementRow[]>;
-    project: {
-        id: string;
-        name: string;
-        slug: string;
-    };
-    estimate: {
-        name: string;
-        slug: string;
-    };
+    project: { id: string; name: string; slug: string };
+    estimate: { name: string; slug: string };
 }
 
 export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, executionRowsPromise, procurementRowsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
-
     const tabParam = searchParams.get('tab') ?? 'estimate';
     const initialTab = availableTabs.has(tabParam) ? tabParam : 'estimate';
     const [tab, setTab] = useState(initialTab);
@@ -120,10 +94,7 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
 
     useEffect(() => {
         setLoadedTabs((prev) => {
-            if (prev.has(tab)) {
-                return prev;
-            }
-
+            if (prev.has(tab)) return prev;
             const next = new Set(prev);
             next.add(tab);
             return next;
@@ -132,14 +103,12 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
 
     return (
         <div className="space-y-2">
-
-            {/* Keep estimate tab mounted to avoid losing optimistic table state between tab switches. */}
             <Tabs
                 value={tab}
                 onValueChange={(nextValue) => {
                     setTab(nextValue);
                     const nextHref = buildTabHref(pathname, searchParams.toString(), nextValue);
-                    window.history.replaceState(window.history.state, '', nextHref);
+                    history.replaceState(history.state, '', nextHref);
                 }}
             >
                 <TabsList className={estimateTabsListClassName}>
@@ -160,27 +129,17 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                         <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
                             <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
                         </Suspense>
-                    ) : (
-                        <Skeleton className="h-[520px] w-full" />
-                    )}
+                    ) : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
                 <TabsContent value="procurement" className="mt-2">
-                    {loadedTabs.has('procurement') ? (
-                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                            <EstimateProcurementLoader estimateId={estimateId} procurementRowsPromise={procurementRowsPromise} />
-                        </Suspense>
-                    ) : (
-                        <Skeleton className="h-[520px] w-full" />
-                    )}
+                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                        <EstimateProcurementLoader estimateId={estimateId} procurementRowsPromise={procurementRowsPromise} />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="execution" className="mt-2">
-                    {loadedTabs.has('execution') ? (
-                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                            <EstimateExecutionLoader estimateId={estimateId} executionRowsPromise={executionRowsPromise} />
-                        </Suspense>
-                    ) : (
-                        <Skeleton className="h-[520px] w-full" />
-                    )}
+                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                        <EstimateExecutionLoader estimateId={estimateId} executionRowsPromise={executionRowsPromise} />
+                    </Suspense>
                 </TabsContent>
                 <TabsContent value="finance" className="mt-2">
                     {loadedTabs.has('finance') ? <EstimateFinance projectId={project.id} /> : <Skeleton className="h-[520px] w-full" />}
@@ -193,6 +152,4 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
     );
 }
 
-export const __estimateDetailsShellInternal = {
-    buildTabHref,
-};
+export const __estimateDetailsShellInternal = { buildTabHref };
