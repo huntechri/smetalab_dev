@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import { notifyEstimatePurchasesMutated } from '@/features/projects/estimates/lib/estimate-client-events';
 import { patchPurchaseRow } from '../lib/rows';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
 import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
@@ -71,12 +72,14 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     const addManualRow = useCallback(async (projectId: string | null) => {
         const created = await globalPurchasesActionRepo.addManual(projectId, range.from);
         setRows((prev) => sortRowsByProjectId([...prev, created]));
+        notifyEstimatePurchasesMutated();
         return created;
     }, [range.from]);
 
     const addCatalogRow = useCallback(async (material: CatalogMaterial, projectId: string | null) => {
         const created = await globalPurchasesActionRepo.addFromCatalog(material, projectId, range.from);
         setRows((prev) => sortRowsByProjectId([...prev, created]));
+        notifyEstimatePurchasesMutated();
         return created;
     }, [range.from]);
 
@@ -94,6 +97,7 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
             const updatedMap = new Map(updatedRows.map((row) => [row.id, row]));
 
             setRows((current) => sortRowsByProjectId(current.map((row) => updatedMap.get(row.id) ?? row)));
+            notifyEstimatePurchasesMutated();
             for (const { rowId } of batchEntries) {
                 previousRowsRef.current.delete(rowId);
                 const waiters = updateWaitersRef.current.get(rowId) ?? [];
@@ -180,13 +184,12 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
         waiters.forEach((waiter) => waiter.reject(new Error('ROW_REMOVED')));
         updateWaitersRef.current.delete(rowId);
 
-        // Optimistic remove
         setRows((current) => current.filter((row) => row.id !== rowId));
 
         try {
             await globalPurchasesActionRepo.remove(rowId);
+            notifyEstimatePurchasesMutated();
         } catch (serviceError) {
-            // Rollback
             setRows((current) => {
                 if (current.some((row) => row.id === rowId)) return current;
                 const nextRows = [...current];
@@ -202,11 +205,15 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     const importRows = useCallback(async (payloadRows: ImportablePurchaseRow[]) => {
         const createdRows = await globalPurchasesActionRepo.importRows(payloadRows);
         setRows((prev) => sortRowsByProjectId([...prev, ...createdRows]));
+        notifyEstimatePurchasesMutated();
         return createdRows;
     }, []);
 
     const copyToNextDay = useCallback(async () => {
         const createdRows = await globalPurchasesActionRepo.copyToNextDay(range.from);
+        if (createdRows.length > 0) {
+            notifyEstimatePurchasesMutated();
+        }
         return createdRows;
     }, [range.from]);
 
