@@ -7,12 +7,24 @@ import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { ProjectDashboardKpiService } from '@/lib/services/project-dashboard-kpi.service';
 import { ProjectPerformanceDynamicsService } from '@/lib/services/project-performance-dynamics.service';
 
-const projectDashboardSpy = vi.fn(({ project }: { project: { name: string }; estimates: Array<{ id: string }> }) => (
+const projectDashboardSpy = vi.fn(({
+    project,
+}: {
+    project: { name: string };
+    estimates: Array<{ id: string }>;
+    performanceDynamicsPromise: Promise<unknown>;
+    kpiPromise: Promise<unknown>;
+}) => (
     <div data-testid="project-dashboard">{project.name}</div>
 ));
 
 vi.mock('@/features/projects/dashboard/screens/ProjectDashboard', () => ({
-    ProjectDashboard: (props: { project: { name: string }; estimates: Array<{ id: string }> }) => projectDashboardSpy(props),
+    ProjectDashboard: (props: {
+        project: { name: string };
+        estimates: Array<{ id: string }>;
+        performanceDynamicsPromise: Promise<unknown>;
+        kpiPromise: Promise<unknown>;
+    }) => projectDashboardSpy(props),
 }));
 
 vi.mock('next/navigation', () => ({
@@ -41,7 +53,7 @@ vi.mock('@/lib/data/projects/repo', () => ({
 
 vi.mock('@/lib/data/estimates/repo', () => ({
     getEstimatesByProjectId: vi.fn(async () => [
-        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }
+        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1', status: 'in_progress' }
     ]),
 }));
 
@@ -70,6 +82,7 @@ vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
     },
     buildProjectDashboardKpiViewModel: vi.fn(() => ({
         revenue: 130000,
+        expense: 110000,
         profit: 20000,
         progress: 62,
         remainingDays: 12,
@@ -83,9 +96,11 @@ test('project dashboard page maps project data and renders feature screen', asyn
 
     render(PageComponent as React.ReactElement);
 
+    const props = projectDashboardSpy.mock.calls[0]?.[0];
+
     expect(screen.getByTestId('project-dashboard')).toHaveTextContent('ЖК «Северный парк»');
     expect(projectDashboardSpy).toHaveBeenCalledTimes(1);
-    expect(projectDashboardSpy.mock.calls[0]?.[0]?.project).toMatchObject({
+    expect(props?.project).toMatchObject({
         id: 'uuid-1',
         slug: 'north-park',
         name: 'ЖК «Северный парк»',
@@ -93,10 +108,10 @@ test('project dashboard page maps project data and renders feature screen', asyn
         progress: 62,
         status: 'active',
     });
-    expect(projectDashboardSpy.mock.calls[0]?.[0]?.estimates).toEqual([
-        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }
+    expect(props?.estimates).toEqual([
+        { id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1', status: 'in_progress' }
     ]);
-    expect(projectDashboardSpy.mock.calls[0]?.[0]?.performanceDynamics).toEqual([
+    await expect(props?.performanceDynamicsPromise).resolves.toEqual([
         {
             date: '2025-03-01',
             receiptsFact: 50,
@@ -106,15 +121,16 @@ test('project dashboard page maps project data and renders feature screen', asyn
             procurementFact: 20,
         },
     ]);
-    expect(projectDashboardSpy.mock.calls[0]?.[0]?.kpi).toEqual({
+    await expect(props?.kpiPromise).resolves.toEqual({
         revenue: 130000,
+        expense: 110000,
         profit: 20000,
         progress: 62,
         remainingDays: 12,
     });
 });
 
-test('project dashboard launches independent queries in parallel after project lookup', async () => {
+test('project dashboard starts KPI query before streaming heavy dynamics after estimates resolve', async () => {
     type Deferred<T> = {
         promise: Promise<T>;
         resolve: (value: T) => void;
@@ -129,7 +145,7 @@ test('project dashboard launches independent queries in parallel after project l
         return { promise, resolve };
     };
 
-    const estimatesDeferred = createDeferred<Array<{ id: string; name: string; slug: string }>>();
+    const estimatesDeferred = createDeferred<Array<{ id: string; name: string; slug: string; status: string }>>();
     const dynamicsDeferred = createDeferred<Array<{
         date: string;
         receiptsFact: number;
@@ -157,10 +173,14 @@ test('project dashboard launches independent queries in parallel after project l
     await Promise.resolve();
 
     expect(getEstimatesByProjectId).toHaveBeenCalledTimes(1);
-    expect(ProjectPerformanceDynamicsService.list).toHaveBeenCalledTimes(1);
     expect(ProjectDashboardKpiService.getByProjectId).toHaveBeenCalledTimes(1);
+    expect(ProjectPerformanceDynamicsService.list).not.toHaveBeenCalled();
 
-    estimatesDeferred.resolve([{ id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1' }]);
+    estimatesDeferred.resolve([{ id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1', status: 'in_progress' }]);
+    await Promise.resolve();
+
+    expect(ProjectPerformanceDynamicsService.list).toHaveBeenCalledTimes(1);
+
     dynamicsDeferred.resolve([
         {
             date: '2025-03-01',
