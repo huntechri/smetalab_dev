@@ -14,17 +14,14 @@ const dbMock = vi.hoisted(() => ({
     transaction: vi.fn(),
 }));
 
-const migrateMock = vi.hoisted(() => vi.fn());
-
 vi.mock('@/lib/data/db/drizzle', () => ({ db: dbMock }));
-vi.mock('drizzle-orm/postgres-js/migrator', () => ({ migrate: migrateMock }));
 vi.mock('@/lib/services/project-progress.service', () => ({
     ProjectProgressService: {
         refreshForProject: progressRefreshMock,
     },
 }));
 
-import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
+import { EstimateExecutionService, resetExecutionStorageReadyStateForTests } from '@/lib/services/estimate-execution.service';
 
 describe('EstimateExecutionService sync behavior', () => {
     beforeEach(() => {
@@ -33,18 +30,17 @@ describe('EstimateExecutionService sync behavior', () => {
         dbMock.select.mockReset();
         dbMock.update.mockReset();
         dbMock.transaction.mockReset();
-        migrateMock.mockReset();
         progressRefreshMock.mockReset();
+        resetExecutionStorageReadyStateForTests();
 
         dbMock.query.estimates.findFirst.mockResolvedValue({ id: 'est-1', projectId: 'pr-1', coefPercent: 0 });
     });
 
-    it('returns MIGRATION_REQUIRED when table is missing even after auto-migrate attempt', async () => {
-        dbMock.execute.mockResolvedValueOnce([{ table_name: null }]).mockResolvedValueOnce([{ table_name: null }]);
+    it('returns MIGRATION_REQUIRED when execution table is missing', async () => {
+        dbMock.execute.mockResolvedValueOnce([{ table_name: null }]);
 
         const result = await EstimateExecutionService.list(1, 'est-1');
 
-        expect(migrateMock).toHaveBeenCalledTimes(1);
         expect(result.success).toBe(false);
         if (!result.success) {
             expect(result.error.code).toBe('MIGRATION_REQUIRED');

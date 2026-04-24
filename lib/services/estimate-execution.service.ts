@@ -1,6 +1,4 @@
 import { and, asc, eq, isNull, notInArray, sql } from 'drizzle-orm';
-import path from 'path';
-import { migrate } from 'drizzle-orm/postgres-js/migrator';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateExecutionRows, estimateRows, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
@@ -38,50 +36,13 @@ const checkExecutionTableExists = async () => {
     return rows[0]?.table_name !== null;
 };
 
-let migrationAttempted = false;
 let executionStorageReadyPromise: Promise<boolean> | null = null;
 
 const ensureExecutionStorageReady = async () => {
-    if (process.env.NODE_ENV === 'test') {
-        const exists = await checkExecutionTableExists();
-        if (exists) {
-            return true;
-        }
-
-        if (!migrationAttempted) {
-            migrationAttempted = true;
-
-            try {
-                await migrate(db, {
-                    migrationsFolder: path.join(process.cwd(), 'lib/data/db/migrations'),
-                });
-            } catch (migrationError) {
-                console.error('EstimateExecutionService.autoMigrate error:', migrationError);
-            }
-        }
-
-        return checkExecutionTableExists();
-    }
-
     if (!executionStorageReadyPromise) {
         executionStorageReadyPromise = (async () => {
-            const exists = await checkExecutionTableExists();
-            if (exists) {
-                return true;
-            }
-
-            if (!migrationAttempted) {
-                migrationAttempted = true;
-
-                try {
-                    await migrate(db, {
-                        migrationsFolder: path.join(process.cwd(), 'lib/data/db/migrations'),
-                    });
-                } catch (migrationError) {
-                    console.error('EstimateExecutionService.autoMigrate error:', migrationError);
-                }
-            }
-
+            // IMPORTANT: runtime request paths must remain read-only for schema compatibility.
+            // DDL and migrations are allowed only via dedicated migration workflows.
             return checkExecutionTableExists();
         })().catch((error) => {
             executionStorageReadyPromise = null;
@@ -90,6 +51,10 @@ const ensureExecutionStorageReady = async () => {
     }
 
     return executionStorageReadyPromise;
+};
+
+export const resetExecutionStorageReadyStateForTests = () => {
+    executionStorageReadyPromise = null;
 };
 
 const estimateExecutionRowSelect = {
@@ -302,7 +267,7 @@ export class EstimateExecutionService {
 
             const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
+                return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             const currentVersion = estimate.executionSyncVersion ?? 0;
@@ -325,7 +290,7 @@ export class EstimateExecutionService {
                     return this.list(teamId, estimateId);
                 }
 
-                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
+                return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             console.error('EstimateExecutionService.list error:', e);
@@ -347,7 +312,7 @@ export class EstimateExecutionService {
 
             const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
+                return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             const updated = await db.transaction(async (tx) => {
@@ -417,7 +382,7 @@ export class EstimateExecutionService {
 
             const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
-                return error('Не удалось автоматически применить структуру БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
+                return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
             }
 
             const payload = parsed.data as AddExtraExecutionWorkInput;

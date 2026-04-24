@@ -17,26 +17,26 @@ describe('schema compatibility helpers', () => {
     const { ensureWorksCodeSortKeyColumn, ensureMaterialsSortOrderColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
     resetSchemaCompatibilityStateForTests();
 
-    executeMock.mockResolvedValue(undefined);
+    executeMock.mockResolvedValue([{ exists: true }]);
 
     await ensureWorksCodeSortKeyColumn();
     await ensureWorksCodeSortKeyColumn();
     await ensureMaterialsSortOrderColumn();
     await ensureMaterialsSortOrderColumn();
 
-    expect(executeMock).toHaveBeenCalledTimes(7);
+    expect(executeMock).toHaveBeenCalledTimes(2);
   });
 
   it('retries after failed ensure call', async () => {
     const { ensureWorksCodeSortKeyColumn, ensureMaterialsSortOrderColumn, resetSchemaCompatibilityStateForTests } = await import('@/lib/data/db/schema-compat');
     resetSchemaCompatibilityStateForTests();
 
-    executeMock.mockRejectedValueOnce(new Error('boom')).mockResolvedValue(undefined);
+    executeMock.mockRejectedValueOnce(new Error('boom')).mockResolvedValue([{ exists: true }]);
 
     await expect(ensureWorksCodeSortKeyColumn()).rejects.toThrow('boom');
     await ensureWorksCodeSortKeyColumn();
     await ensureMaterialsSortOrderColumn();
 
-    expect(executeMock).toHaveBeenCalledTimes(8);
+    expect(executeMock).toHaveBeenCalledTimes(3);
   });
 });
