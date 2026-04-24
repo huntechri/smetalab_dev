@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { CatalogWork } from "@/features/catalog/types/dto";
+import { addEstimateRowsMutatedListener } from "../lib/estimate-client-events";
 import { buildExtraWorkFromCatalog } from "../lib/execution-extra-work";
 import { calculateExecutionTotals } from "../lib/execution-totals";
 import { estimateExecutionActionsRepo } from "../repository/execution.actions";
@@ -68,6 +69,10 @@ export function useEstimateExecutionController({
   }, [initialRows, loadRows]);
 
   useEffect(() => {
+    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, () => {
+      void loadRows(true);
+    });
+
     const onCoefUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{ estimateId?: string }>;
       if (customEvent.detail?.estimateId !== estimateId) {
@@ -82,6 +87,7 @@ export function useEstimateExecutionController({
       onCoefUpdated as (event: Event) => void,
     );
     return () => {
+      unsubscribeRows();
       window.removeEventListener(
         "estimate:coefficient-updated",
         onCoefUpdated as (event: Event) => void,

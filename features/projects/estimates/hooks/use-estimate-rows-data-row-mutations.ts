@@ -3,6 +3,7 @@
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { getEstimateCoefMultiplier } from "@/lib/utils/estimate-coefficient";
 import { estimatesActionRepo } from "../repository/estimates.actions";
+import { notifyEstimateRowsMutated } from "../lib/estimate-client-events";
 import { RowPatch } from "../types/dto";
 import { EstimateRowsStateModel } from "./use-estimate-rows-state";
 
@@ -27,8 +28,6 @@ export function useEstimateRowsDataRowMutations({
     const previousRows = state.rows;
     let parsedValue = field === "name" ? rawValue : Number(rawValue);
 
-    // Для количества разрешаем дробные значения (например, 10.5 м2),
-    // но округляем до 3 знаков для чистоты.
     if (field === "qty") {
       parsedValue = Math.round(Number(rawValue) * 1000) / 1000;
     }
@@ -41,13 +40,11 @@ export function useEstimateRowsDataRowMutations({
 
     const patchData: RowPatch = { [field]: parsedValue };
 
-    // 1. Расчет базовой цены при изменении цены работы (с учетом коэффициента).
     if (field === "price" && targetRow.kind === "work") {
       patchData.price =
         Number(parsedValue) / getEstimateCoefMultiplier(state.coefPercent);
     }
 
-    // 2. Двусторонняя связь qty <-> expense для материалов.
     if (targetRow.kind === "material" && targetRow.parentWorkId) {
       const parentWork = state.rows.find((row) => row.id === targetRow.parentWorkId);
       if (parentWork) {
@@ -62,7 +59,6 @@ export function useEstimateRowsDataRowMutations({
       }
     }
 
-    // 3. Оптимистичное обновление.
     const optimistic = state.rows.map((row) => {
       if (row.id === rowId) {
         const updated = { ...row, ...patchData };
@@ -78,8 +74,6 @@ export function useEstimateRowsDataRowMutations({
         return updated;
       }
 
-      // Каскадное обновление количества материалов в UI при изменении
-      // объема работы (оптимистично).
       if (
         field === "qty" &&
         targetRow.kind === "work" &&
@@ -117,6 +111,8 @@ export function useEstimateRowsDataRowMutations({
           currentRows.map((row) => (row.id === rowId ? updated : row)),
         );
       }
+
+      notifyEstimateRowsMutated(estimateId);
     } catch {
       state._setRows(previousRows);
       toast({
@@ -158,6 +154,7 @@ export function useEstimateRowsDataRowMutations({
         });
       }
 
+      notifyEstimateRowsMutated(estimateId);
       toast({ title: "Строка удалена", description: rowToRemove.name });
     } catch {
       state._setRows(previousRows);
