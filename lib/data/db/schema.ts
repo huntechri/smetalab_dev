@@ -214,6 +214,7 @@ export const estimateRows = pgTable('estimate_rows', {
   index('estimate_rows_tenant_estimate_idx').on(table.tenantId, table.estimateId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_tenant_estimate_kind_updated_idx').on(table.tenantId, table.estimateId, table.kind, table.updatedAt.desc()).where(sql`kind = 'material'`),
   index('estimate_rows_tenant_estimate_kind_match_key_idx').on(table.tenantId, table.estimateId, table.kind, table.matchKey).where(sql`deleted_at IS NULL AND kind = 'material'`),
+  index('idx_estimate_rows_tenant_created_material_active').on(table.tenantId, table.createdAt).where(sql`deleted_at IS NULL AND kind = 'material'`),
   index('estimate_rows_parent_idx').on(table.parentWorkId).where(sql`deleted_at IS NULL`),
   index('estimate_rows_material_id_idx').on(table.materialId),
 ]);
@@ -313,6 +314,8 @@ export const estimateExecutionRows = pgTable('estimate_execution_rows', {
   index('estimate_execution_rows_tenant_estimate_order_idx').on(table.tenantId, table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_execution_rows_estimate_order_idx').on(table.estimateId, table.order).where(sql`deleted_at IS NULL`),
   index('estimate_execution_rows_estimate_status_idx').on(table.estimateId, table.status).where(sql`deleted_at IS NULL`),
+  index('idx_exec_rows_tenant_created_at_active').on(table.tenantId, table.createdAt).where(sql`deleted_at IS NULL`),
+  index('idx_exec_rows_tenant_completed_at_active').on(table.tenantId, table.completedAt).where(sql`deleted_at IS NULL AND completed_at IS NOT NULL`),
 ]);
 
 export const globalPurchases = pgTable('global_purchases', {
@@ -368,6 +371,7 @@ export const projectReceipts = pgTable('project_receipts', {
   index('project_receipts_tenant_project_date_idx').on(table.tenantId, table.projectId, table.receiptDate).where(sql`deleted_at IS NULL`),
   index('project_receipts_tenant_project_status_idx').on(table.tenantId, table.projectId, table.status).where(sql`deleted_at IS NULL`),
   index('project_receipts_tenant_updated_idx').on(table.tenantId, table.updatedAt.desc()).where(sql`deleted_at IS NULL`),
+  index('idx_project_receipts_tenant_confirmed_date_active').on(table.tenantId, table.receiptDate).where(sql`deleted_at IS NULL AND status = 'confirmed'`),
 ]);
 
 export const estimateProcurementCache = pgTable('estimate_procurement_cache', {
