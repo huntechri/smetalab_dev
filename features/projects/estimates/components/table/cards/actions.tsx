@@ -1,4 +1,4 @@
-import { FolderTree, FolderUp, RefreshCw, Trash2 } from 'lucide-react';
+import { FolderTree, FolderUp, HardHat, RefreshCw, Trash2 } from 'lucide-react';
 import { ActionMenuItem } from '@/shared/ui/action-menu';
 import type { EstimateRow } from '../../../types/dto';
 import { DEFAULT_SECTION_ID } from '../../../lib/estimate-cards-table';
@@ -8,7 +8,7 @@ export function buildSectionActions(
   section: EstimateRow,
   props: Pick<
     EstimateCardsTableProps,
-    'onRequestCreateSection' | 'onRequestCreateSectionBefore' | 'onRemoveRow'
+    'onRequestCreateSection' | 'onRequestCreateSectionBefore' | 'onRemoveRow' | 'onInsertWorkAfter'
   >,
 ): ActionMenuItem[] {
   if (section.id === DEFAULT_SECTION_ID) {
@@ -16,6 +16,11 @@ export function buildSectionActions(
   }
 
   return [
+    {
+      label: 'Добавить работу',
+      icon: <HardHat className="size-4" />,
+      onClick: () => props.onInsertWorkAfter(section.id, section.name),
+    },
     {
       label: 'Добавить раздел выше',
       icon: <FolderUp className="size-4" />,

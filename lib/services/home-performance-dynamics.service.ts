@@ -1,9 +1,16 @@
 import { and, eq, exists, gte, inArray, lte, sql } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { estimateExecutionRows, estimateRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 import { buildPerformanceDynamics, PerformanceDynamicsPoint } from './project-performance-dynamics.service';
+import {
+    HOME_DYNAMICS_VISIBLE_ESTIMATES_TAG,
+    HOME_PERFORMANCE_DYNAMICS_TAG,
+    getHomeDynamicsVisibleEstimatesTeamTag,
+    getHomePerformanceDynamicsTeamTag,
+} from './home-dashboard-cache';
 
 const ESTIMATE_STATUS_IN_PROGRESS = 'in_progress' as const;
 const ESTIMATE_STATUS_APPROVED = 'approved' as const;
@@ -27,7 +34,7 @@ export class HomePerformanceDynamicsService {
         return maybeCause?.code === '42P01';
     }
 
-    static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
+    private static async hasVisibleEstimatesByTeamIdUncached(teamId: number): Promise<boolean> {
         const [estimate] = await db
             .select({ id: estimates.id })
             .from(estimates)
@@ -46,7 +53,7 @@ export class HomePerformanceDynamicsService {
         return Boolean(estimate);
     }
 
-    static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
+    private static async listByTeamIdUncached(teamId: number): Promise<PerformanceDynamicsPoint[]> {
         const today = new Date();
         const periodEnd = endOfMonth(today);
         const startDate = new Date(periodEnd.getFullYear(), periodEnd.getMonth() - 11, 1);
@@ -189,5 +196,27 @@ export class HomePerformanceDynamicsService {
             procurementPlanRows,
             procurementFactRows,
         );
+    }
+
+    static async hasVisibleEstimatesByTeamId(teamId: number): Promise<boolean> {
+        return unstable_cache(
+            () => this.hasVisibleEstimatesByTeamIdUncached(teamId),
+            [getHomeDynamicsVisibleEstimatesTeamTag(teamId)],
+            {
+                revalidate: 120,
+                tags: [HOME_DYNAMICS_VISIBLE_ESTIMATES_TAG, getHomeDynamicsVisibleEstimatesTeamTag(teamId)],
+            },
+        )();
+    }
+
+    static async listByTeamId(teamId: number): Promise<PerformanceDynamicsPoint[]> {
+        return unstable_cache(
+            () => this.listByTeamIdUncached(teamId),
+            [getHomePerformanceDynamicsTeamTag(teamId)],
+            {
+                revalidate: 120,
+                tags: [HOME_PERFORMANCE_DYNAMICS_TAG, getHomePerformanceDynamicsTeamTag(teamId)],
+            },
+        )();
     }
 }

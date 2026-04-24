@@ -457,25 +457,22 @@ export class EstimateProcurementService {
                     ),
                 ),
             db.execute(sql<{ latest_source_at: Date | null }>`
-                SELECT GREATEST(
-                    (
-                        -- BUG-FIX: intentionally include soft-deleted rows (no deleted_at IS NULL filter)
-                        -- so that deleting a single material row still moves MAX(updated_at) forward
-                        -- and invalidates the procurement cache correctly.
-                        SELECT MAX(${estimateRows.updatedAt})
-                        FROM ${estimateRows}
-                        WHERE ${estimateRows.tenantId} = ${teamId}
-                          AND ${estimateRows.estimateId} = ${estimateId}
-                          AND ${estimateRows.kind} = 'material'
-                    ),
-                    (
-                        SELECT MAX(${globalPurchases.updatedAt})
-                        FROM ${globalPurchases}
-                        WHERE ${globalPurchases.tenantId} = ${teamId}
-                          AND ${globalPurchases.projectId} = ${projectId}
-                          AND ${globalPurchases.deletedAt} IS NULL
-                    )
-                ) AS latest_source_at
+                SELECT MAX(updated_at) AS latest_source_at
+                FROM (
+                    SELECT ${estimateRows.updatedAt} AS updated_at
+                    FROM ${estimateRows}
+                    WHERE ${estimateRows.tenantId} = ${teamId}
+                      AND ${estimateRows.estimateId} = ${estimateId}
+                      AND ${estimateRows.kind} = 'material'
+
+                    UNION ALL
+
+                    SELECT ${globalPurchases.updatedAt} AS updated_at
+                    FROM ${globalPurchases}
+                    WHERE ${globalPurchases.tenantId} = ${teamId}
+                      AND ${globalPurchases.projectId} = ${projectId}
+                      AND ${globalPurchases.deletedAt} IS NULL
+                ) AS combined_sources
             `),
         ]);
 
@@ -510,6 +507,7 @@ export class EstimateProcurementService {
         }
 
         const latestSourceAt = toDateOrNull(latestSourceRows[0]?.latest_source_at);
+        const maxRefreshedAt = toDateOrNull(cacheState?.maxRefreshedAt);
 
         if (!cacheHasRows && !latestSourceAt) {
             return false;
@@ -517,7 +515,7 @@ export class EstimateProcurementService {
 
         return shouldRefreshProcurementCache({
             cacheHasRows,
-            maxRefreshedAt: toDateOrNull(cacheState?.maxRefreshedAt),
+            maxRefreshedAt,
             latestSourceAt,
         });
     }

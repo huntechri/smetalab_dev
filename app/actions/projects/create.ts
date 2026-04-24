@@ -8,6 +8,7 @@ import { NewProject } from '@/lib/data/db/schema';
 import { generateUniqueSlug } from '@/lib/utils/slug';
 import { safeAction } from '@/lib/actions/safe-action';
 import { error, success } from '@/lib/utils/result';
+import { invalidateHomeDashboardCache } from '@/lib/services/home-dashboard-cache';
 
 export const createProjectAction = safeAction(
     async ({ team }, formData: unknown) => {
@@ -36,6 +37,7 @@ export const createProjectAction = safeAction(
 
             await createProjectUseCase(projectData);
 
+            invalidateHomeDashboardCache(team.id);
             revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);

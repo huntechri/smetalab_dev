@@ -7,6 +7,7 @@ import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
 import { EstimateRow } from '@/features/projects/estimates/types/dto';
 import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const addWorkSchema = z.object({
     name: z.string().trim().min(1),
@@ -460,7 +461,7 @@ export class EstimateRowsService {
                     .orderBy(estimateRows.order);
 
                 const anchorWork = existingRows.find((row) => row.id === payload.insertAfterWorkId);
-                if (!anchorWork || anchorWork.kind !== 'work') {
+                if (!anchorWork || (anchorWork.kind !== 'work' && anchorWork.kind !== 'section')) {
                     throw new Error('INSERT_ANCHOR_NOT_FOUND');
                 }
 
@@ -470,9 +471,11 @@ export class EstimateRowsService {
                 }
 
                 // Находим "границу" — саму работу или её последний материал
-                const anchorAndMaterials = existingRows.filter(
+                const anchorAndMaterials = anchorWork.kind === 'work'
+                    ? existingRows.filter(
                     (row) => row.id === anchorWork.id || row.parentWorkId === anchorWork.id
-                );
+                    )
+                    : [anchorWork];
                 const boundaryOrder = Math.max(...anchorAndMaterials.map(r => r.order));
 
                 // Ищем следующую строку ЛЮБОГО типа (работу или раздел), которая идет после границы
@@ -531,6 +534,7 @@ export class EstimateRowsService {
             });
 
             await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+            invalidateHomeDashboardCache(teamId);
 
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -648,6 +652,7 @@ export class EstimateRowsService {
                 return section;
             });
 
+            invalidateHomeDashboardCache(teamId);
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'ANCHOR_ROW_NOT_FOUND') {
@@ -759,6 +764,7 @@ export class EstimateRowsService {
                 return row;
             });
 
+            invalidateHomeDashboardCache(teamId);
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
             if (e instanceof Error && e.message === 'DUPLICATE_MATERIAL_NAME') {
@@ -919,6 +925,7 @@ export class EstimateRowsService {
             if (updated.touchedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
             }
+            invalidateHomeDashboardCache(teamId);
 
             return success(toEstimateRowDto(updated.row as EstimateRowEntity, estimate.coefPercent ?? 0));
         } catch (e) {
@@ -980,6 +987,7 @@ export class EstimateRowsService {
             if (removedResult.removedWork) {
                 await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
             }
+            invalidateHomeDashboardCache(teamId);
 
             return success({ removedIds: removedResult.idsToDelete });
         } catch (e) {

@@ -4,6 +4,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimatePatterns, estimateRows } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const createPatternSchema = z.object({
   estimateId: z.string().uuid(),
@@ -247,6 +248,7 @@ export class EstimatePatternsService {
         }
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success({ appliedRows: snapshot.rows.length });
     } catch (e) {
       console.error('EstimatePatternsService.apply error:', e);

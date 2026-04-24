@@ -223,6 +223,98 @@ describe('EstimateRowsService duplicate protection', () => {
         expect(tx.update).toHaveBeenCalledTimes(0);
     });
 
+    it('inserts a work after selected section', async () => {
+        const sectionId = '33333333-3333-4333-8333-333333333333';
+        const tx = {
+            query: {
+                estimates: {
+                    findFirst: vi.fn().mockResolvedValue({ coefPercent: 0 }),
+                },
+                estimateRows: {
+                    findFirst: vi.fn().mockResolvedValue({
+                        id: 'w-new',
+                        kind: 'work',
+                        code: '1',
+                        name: 'Новая работа',
+                        unit: 'шт',
+                        qty: 1,
+                        price: 0,
+                        sum: 0,
+                        expense: 0,
+                        order: 150,
+                        parentWorkId: null,
+                        materialId: null,
+                        imageUrl: null,
+                    }),
+                },
+            },
+            select: vi
+                .fn()
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({
+                            orderBy: vi.fn().mockResolvedValue([
+                                { id: sectionId, order: 100, kind: 'section', name: 'Раздел 1' },
+                                { id: 'work-1', order: 200, kind: 'work', name: 'Работа 1' },
+                            ]),
+                        })),
+                    })),
+                }))
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({
+                            orderBy: vi.fn().mockResolvedValue([
+                                { id: sectionId, kind: 'section', parentWorkId: null, code: '1', order: 100 },
+                                { id: 'w-new', kind: 'work', parentWorkId: null, code: '0', order: 150 },
+                                { id: 'work-1', kind: 'work', parentWorkId: null, code: '2', order: 200 },
+                            ]),
+                        })),
+                    })),
+                }))
+                .mockImplementationOnce(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn().mockResolvedValue([{ total: 0 }]),
+                    })),
+                })),
+            update: vi.fn(() => ({
+                set: vi.fn(() => ({ where: vi.fn() })),
+            })),
+            execute: vi.fn().mockResolvedValue([]),
+            insert: vi.fn(() => ({
+                values: vi.fn(() => ({
+                    returning: vi.fn().mockResolvedValue([
+                        {
+                            id: 'w-new',
+                            kind: 'work',
+                            parentWorkId: null,
+                            code: '0',
+                            name: 'Новая работа',
+                            materialId: null,
+                            imageUrl: null,
+                            unit: 'шт',
+                            qty: 1,
+                            price: 0,
+                            sum: 0,
+                            expense: 0,
+                            order: 150,
+                        },
+                    ]),
+                })),
+            })),
+        };
+
+        dbMock.transaction.mockImplementation(async (callback: (trx: typeof tx) => Promise<unknown>) => callback(tx));
+
+        const result = await EstimateRowsService.addWork(7, 'est-1', {
+            name: 'Новая работа',
+            insertAfterWorkId: sectionId,
+        });
+
+        expect(result.success).toBe(true);
+        expect(tx.insert).toHaveBeenCalledTimes(1);
+        expect(tx.query.estimateRows.findFirst).toHaveBeenCalled();
+    });
+
 
 
     it('removes section without deleting works/materials', async () => {

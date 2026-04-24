@@ -77,7 +77,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     <EstimateStatusBadge status={meta.status} />
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
-                        <span className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1">Итого</span>
+                        <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1 sm:text-[11px]">Итого</span>
                         <span className="text-lg md:text-xl font-bold text-primary">
                             {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(meta.total)}
                         </span>

@@ -219,6 +219,15 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         items={[
                             ...(item.kind !== 'material'
                                 ? [
+                                      ...(item.kind === 'section'
+                                          ? [
+                                                {
+                                                    label: 'Добавить работу',
+                                                    icon: <HardHat className="size-4" />,
+                                                    onClick: () => actions.onInsertWorkAfter(item.id, item.name),
+                                                },
+                                            ]
+                                          : []),
                                       {
                                           label: 'Добавить раздел выше',
                                           icon: <FolderUp className="size-4" />,

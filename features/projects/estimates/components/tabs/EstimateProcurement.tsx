@@ -106,7 +106,7 @@ function ProcurementCard({ row }: { row: EstimateProcurementRow }) {
       <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1fr_1fr] lg:gap-6">
         <div className="flex flex-col justify-center min-w-0">
           <div className="flex items-start gap-1.5">
-            <span className="min-w-0 flex-1 text-[9px] font-semibold leading-tight text-slate-800 sm:text-[10px]" title={row.materialName}>
+            <span className="min-w-0 flex-1 text-[9px] font-semibold leading-tight text-slate-800 sm:text-[11px]" title={row.materialName}>
               {row.materialName}
             </span>
             <Badge

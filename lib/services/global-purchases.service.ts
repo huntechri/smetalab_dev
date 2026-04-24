@@ -6,6 +6,7 @@ import { globalPurchases, materialSuppliers, materials, projects } from '@/lib/d
 import { getTodayIsoLocal, addDaysToIsoDate } from '@/features/global-purchases/lib/date';
 import { error, Result, success } from '@/lib/utils/result';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const nonNegative = z.number().finite().min(0);
 const isoDateSchema = z.string().date();
@@ -206,6 +207,7 @@ export class GlobalPurchasesService {
         return { row, projectName: project?.name ?? null, supplier };
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(toRow(created.row, created.projectName, created.supplier ?? null));
     } catch (serviceError) {
       if (serviceError instanceof Error) {
@@ -269,6 +271,7 @@ export class GlobalPurchasesService {
         };
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(toRow(result.row, result.projectName, result.supplier ?? null));
     } catch (serviceError) {
       if (serviceError instanceof Error) {
@@ -423,6 +426,7 @@ export class GlobalPurchasesService {
         ));
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(rows);
     } catch (serviceError) {
       if (serviceError instanceof Error) {
@@ -524,6 +528,7 @@ export class GlobalPurchasesService {
         ));
       });
 
+      invalidateHomeDashboardCache(teamId);
       return success(importedRows);
     } catch (serviceError) {
       console.error('GlobalPurchasesService.importRows error', serviceError);
@@ -539,6 +544,7 @@ export class GlobalPurchasesService {
         .returning({ id: globalPurchases.id });
 
       if (!deleted) return error('Строка закупки не найдена', 'NOT_FOUND');
+      invalidateHomeDashboardCache(teamId);
       return success({ removedId: deleted.id });
     } catch (serviceError) {
       console.error('GlobalPurchasesService.remove error', serviceError);
@@ -613,6 +619,9 @@ export class GlobalPurchasesService {
         ));
       });
 
+      if (createdRows.length > 0) {
+        invalidateHomeDashboardCache(teamId);
+      }
       return success(createdRows);
     } catch (serviceError) {
       console.error('GlobalPurchasesService.copyRowsToNextDay error', serviceError);

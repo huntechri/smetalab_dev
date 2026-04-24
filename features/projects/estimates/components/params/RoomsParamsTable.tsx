@@ -51,7 +51,7 @@ export function RoomsParamsTable({
 }) {
     return (
         <div className="w-full overflow-x-auto rounded-md border">
-            <Table className="text-xs">
+            <Table className="text-[9px] sm:text-[11px]">
                 <TableHeader>
                     <TableRow>
                         {headers.map((header) => <TableHead key={header} className="whitespace-nowrap py-2">{header}</TableHead>)}

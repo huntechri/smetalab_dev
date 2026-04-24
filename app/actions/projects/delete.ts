@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { deleteProject } from '@/lib/data/projects/repo';
 import { safeAction } from '@/lib/actions/safe-action';
 import { error, success } from '@/lib/utils/result';
+import { invalidateHomeDashboardCache } from '@/lib/services/home-dashboard-cache';
 
 export const deleteProjectAction = safeAction(
     async ({ team }, projectId: string) => {
@@ -14,6 +15,7 @@ export const deleteProjectAction = safeAction(
                 return error('Проект не найден или у вас нет прав на его удаление', 'PROJECT_NOT_FOUND');
             }
 
+            invalidateHomeDashboardCache(team.id);
             revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);

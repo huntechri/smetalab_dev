@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { sql } from 'drizzle-orm';
 
 const dbExecuteMock = vi.hoisted(() => vi.fn());
+const unstableCacheMock = vi.hoisted(() => vi.fn((fn: () => Promise<unknown>) => fn));
 
 vi.mock('@/lib/data/db/drizzle', () => ({
     db: {
@@ -13,11 +14,16 @@ vi.mock('@/lib/data/db/queries', () => ({
     withActiveTenant: vi.fn(() => sql`TRUE`),
 }));
 
+vi.mock('next/cache', () => ({
+    unstable_cache: unstableCacheMock,
+}));
+
 import { HomeDashboardKpiService } from '@/lib/services/home-dashboard-kpi.service';
 
 describe('HomeDashboardKpiService SQL aggregation', () => {
     beforeEach(() => {
         dbExecuteMock.mockReset();
+        unstableCacheMock.mockClear();
     });
 
     it('builds consolidated KPI model from confirmed receipts and actual totals', async () => {
@@ -101,5 +107,23 @@ describe('HomeDashboardKpiService SQL aggregation', () => {
             progress: 40,
             remainingDays: null,
         });
+    });
+
+    it('wraps KPI query with unstable_cache per team key', async () => {
+        dbExecuteMock
+            .mockResolvedValueOnce([
+                { confirmedReceipts: '100', actualWorks: '40', actualMaterials: '10' },
+            ])
+            .mockResolvedValueOnce([
+                { avgProgress: '10', nearestEndDate: null },
+            ]);
+
+        await HomeDashboardKpiService.getByTeamId(99);
+
+        expect(unstableCacheMock).toHaveBeenCalledWith(
+            expect.any(Function),
+            ['home-dashboard-kpi-99'],
+            expect.objectContaining({ revalidate: 120 }),
+        );
     });
 });

@@ -1,9 +1,11 @@
 import { sql } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { db } from '@/lib/data/db/drizzle';
 import { estimateExecutionRows, estimates, globalPurchases, projectReceipts, projects } from '@/lib/data/db/schema';
 import { calculateDaysRemaining } from './project-dashboard-kpi.service';
+import { HOME_DASHBOARD_KPI_TAG, getHomeDashboardKpiTeamTag } from './home-dashboard-cache';
 
 type HomeDashboardKpiFinance = {
     confirmedReceipts: number;
@@ -144,7 +146,7 @@ export class HomeDashboardKpiService {
         `;
     }
 
-    static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
+    private static async getByTeamIdUncached(teamId: number): Promise<HomeDashboardKpiViewModel> {
         let financeRows: Array<Partial<HomeDashboardKpiFinance>>;
 
         try {
@@ -178,5 +180,16 @@ export class HomeDashboardKpiService {
             progress: Number(projectsSummary?.avgProgress ?? 0),
             remainingDays: calculateDaysRemaining(nearestEndDate),
         };
+    }
+
+    static async getByTeamId(teamId: number): Promise<HomeDashboardKpiViewModel> {
+        return unstable_cache(
+            () => this.getByTeamIdUncached(teamId),
+            [getHomeDashboardKpiTeamTag(teamId)],
+            {
+                revalidate: 120,
+                tags: [HOME_DASHBOARD_KPI_TAG, getHomeDashboardKpiTeamTag(teamId)],
+            },
+        )();
     }
 }

@@ -8,6 +8,7 @@ import { eq, and } from 'drizzle-orm';
 import { withActiveTenant, getCounterparties } from '@/lib/data/db/queries';
 import { safeAction } from '@/lib/actions/safe-action';
 import { error, success } from '@/lib/utils/result';
+import { invalidateHomeDashboardCache } from '@/lib/services/home-dashboard-cache';
 
 export const updateProjectAction = safeAction(
     async ({ team }, projectId: string, formData: unknown) => {
@@ -40,6 +41,7 @@ export const updateProjectAction = safeAction(
                     )
                 );
 
+            invalidateHomeDashboardCache(team.id);
             revalidatePath('/app');
             revalidatePath('/app/projects');
             return success(true);

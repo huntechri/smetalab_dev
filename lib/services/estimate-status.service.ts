@@ -5,6 +5,7 @@ import { estimates, projects } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { error, Result, success } from '@/lib/utils/result';
 import { resolveProjectStatusFromCounts } from './project-status.service';
+import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const updateEstimateStatusSchema = z.object({
   status: z.enum(['draft', 'in_progress', 'approved']),
@@ -63,7 +64,8 @@ export class EstimateStatusService {
         return error('Не удалось обновить статус сметы', 'UPDATE_FAILED');
       }
 
-      return success({ 
+      invalidateHomeDashboardCache(teamId);
+      return success({
         status: updatedEstimate.status as 'draft' | 'in_progress' | 'approved', 
         projectId: updatedEstimate.projectId 
       });

@@ -117,7 +117,7 @@ export function EstimateTable({
               />
             }
             filterPlaceholder="Поиск..."
-            hasFilterControls={model.rows.length > 0}
+            hasFilterControls={true}
             isAiMode={isAiMode}
             setIsAiMode={setIsAiMode}
             searchValue={searchValue}

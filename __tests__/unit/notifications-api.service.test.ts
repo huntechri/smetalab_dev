@@ -37,4 +37,14 @@ describe('NotificationsApiService', () => {
     await NotificationsApiService.listForUser(42, 10);
     expect(chain.limit).toHaveBeenCalledWith(10);
   });
+
+  it('counts unread notifications for a user', async () => {
+    chain.where.mockResolvedValueOnce([{ count: '3' }]);
+
+    const result = await NotificationsApiService.countUnreadForUser(42);
+
+    expect(chain.from).toHaveBeenCalledTimes(1);
+    expect(chain.where).toHaveBeenCalledTimes(1);
+    expect(result).toBe(3);
+  });
 });

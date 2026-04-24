@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
+import { ChevronDown, ChevronRight, Settings, HardHat } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
@@ -60,7 +60,7 @@ export function EstimateSectionCard({
                 {section.code}
               </Badge>
               <p
-                className="min-w-0 truncate text-[10px] font-semibold leading-snug text-slate-800 sm:text-[11px]"
+                className="min-w-0 truncate text-[9px] font-semibold leading-snug text-slate-800 sm:text-[11px]"
                 title={section.name}
               >
                 {section.name}
@@ -70,13 +70,13 @@ export function EstimateSectionCard({
 
           <div className="ml-auto flex items-center gap-3 sm:gap-6">
             <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-[10px] font-medium text-slate-400 sm:text-[11px]">Работы</p>
+              <p className="text-[9px] font-medium text-slate-400 sm:text-[11px]">Работы</p>
               <p className="text-[12px] font-bold tabular-nums text-slate-800 sm:text-sm">
                 <MoneyCell value={sectionTotals.works} />
               </p>
             </div>
             <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-[10px] font-medium text-slate-400 sm:text-[11px]">Материалы</p>
+              <p className="text-[9px] font-medium text-slate-400 sm:text-[11px]">Материалы</p>
               <p className="text-[12px] font-bold tabular-nums text-green-600 sm:text-sm">
                 <MoneyCell value={sectionTotals.materials} />
               </p>
