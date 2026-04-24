@@ -17,6 +17,8 @@ const materialSearchInFlight = new Map<string, Promise<CatalogMaterial[]>>();
 const worksSearchInFlight = new Map<string, Promise<CatalogWork[]>>();
 let materialCategoriesInFlight: Promise<string[]> | null = null;
 let materialCategoriesCache: CacheEntry<string[]> | null = null;
+let workCategoriesInFlight: Promise<string[]> | null = null;
+let workCategoriesCache: CacheEntry<string[]> | null = null;
 
 function getCached<T>(entry: CacheEntry<T> | undefined | null, ttlMs: number): T | null {
     if (!entry) {
@@ -67,8 +69,26 @@ export const catalogRepository = {
     },
 
     async getCategories(): Promise<string[]> {
-        const result = await fetchCatalogCategories();
-        return result.success ? result.data : [];
+        const cached = getCached(workCategoriesCache, CATEGORY_CACHE_TTL_MS);
+        if (cached) {
+            return cached;
+        }
+
+        if (workCategoriesInFlight) {
+            return workCategoriesInFlight;
+        }
+
+        workCategoriesInFlight = fetchCatalogCategories()
+            .then((result) => {
+                const value = result.success ? result.data : [];
+                workCategoriesCache = { createdAt: Date.now(), value };
+                return value;
+            })
+            .finally(() => {
+                workCategoriesInFlight = null;
+            });
+
+        return workCategoriesInFlight;
     },
 
     async searchMaterials(query: string, category?: string, isAiMode?: boolean, limit = 200): Promise<CatalogMaterial[]> {
@@ -130,5 +150,7 @@ export const __catalogRepositoryInternal = {
         worksSearchInFlight.clear();
         materialCategoriesInFlight = null;
         materialCategoriesCache = null;
+        workCategoriesInFlight = null;
+        workCategoriesCache = null;
     }
 };
