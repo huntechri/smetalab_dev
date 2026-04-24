@@ -79,8 +79,6 @@ const toRow = (row: typeof projectReceipts.$inferSelect): ProjectReceiptRow => (
   updatedAt: row.updatedAt,
 });
 
-const isCorrectionType = (type: ProjectReceiptRow['type']) => type === 'adjustment' || type === 'refund';
-
 export class ProjectReceiptsService {
   static async listByProject(teamId: number, projectId: string): Promise<Result<ProjectReceiptRow[]>> {
     try {
@@ -255,22 +253,54 @@ export class ProjectReceiptsService {
     const twelveMonths = new Date(now);
     twelveMonths.setMonth(twelveMonths.getMonth() - 12);
 
-    const [m1, m3, m12, all] = await Promise.all([
-      this.listConfirmedByProjectAndRange(teamId, projectId, { from: toIsoDate(oneMonth), to: end }),
-      this.listConfirmedByProjectAndRange(teamId, projectId, { from: toIsoDate(threeMonths), to: end }),
-      this.listConfirmedByProjectAndRange(teamId, projectId, { from: toIsoDate(twelveMonths), to: end }),
-      this.listByProject(teamId, projectId),
-    ]);
+    const range1From = toIsoDate(oneMonth);
+    const range3From = toIsoDate(threeMonths);
+    const range12From = toIsoDate(twelveMonths);
 
-    const sum = (rows: ProjectReceiptRow[]) => rows.reduce((acc, row) => acc + row.amount, 0);
-    const confirmedAll = (all.success ? all.data : []).filter((row) => row.status === 'confirmed');
+    const rows = await db
+      .select({
+        month1Raw: sql<number>`COALESCE(SUM(CASE
+          WHEN ${projectReceipts.status} = 'confirmed'
+           AND ${projectReceipts.receiptDate} >= ${range1From}
+           AND ${projectReceipts.receiptDate} <= ${end}
+          THEN ${projectReceipts.amount}
+          ELSE 0
+        END), 0)`,
+        month3Raw: sql<number>`COALESCE(SUM(CASE
+          WHEN ${projectReceipts.status} = 'confirmed'
+           AND ${projectReceipts.receiptDate} >= ${range3From}
+           AND ${projectReceipts.receiptDate} <= ${end}
+          THEN ${projectReceipts.amount}
+          ELSE 0
+        END), 0)`,
+        month12Raw: sql<number>`COALESCE(SUM(CASE
+          WHEN ${projectReceipts.status} = 'confirmed'
+           AND ${projectReceipts.receiptDate} >= ${range12From}
+           AND ${projectReceipts.receiptDate} <= ${end}
+          THEN ${projectReceipts.amount}
+          ELSE 0
+        END), 0)`,
+        cumulativeRaw: sql<number>`COALESCE(SUM(CASE
+          WHEN ${projectReceipts.status} = 'confirmed'
+          THEN ${projectReceipts.amount}
+          ELSE 0
+        END), 0)`,
+        hasCorrectionsRaw: sql<number>`COALESCE(SUM(CASE
+          WHEN ${projectReceipts.status} = 'confirmed'
+           AND ${projectReceipts.type} IN ('adjustment', 'refund')
+          THEN 1
+          ELSE 0
+        END), 0)`,
+      })
+      .from(projectReceipts)
+      .where(and(eq(projectReceipts.projectId, projectId), withActiveTenant(projectReceipts, teamId)));
 
     return {
-      month1: m1.success ? sum(m1.data) : 0,
-      month3: m3.success ? sum(m3.data) : 0,
-      month12: m12.success ? sum(m12.data) : 0,
-      cumulative: sum(confirmedAll),
-      hasCorrections: confirmedAll.some((row) => isCorrectionType(row.type)),
+      month1: Number(rows[0]?.month1Raw ?? 0),
+      month3: Number(rows[0]?.month3Raw ?? 0),
+      month12: Number(rows[0]?.month12Raw ?? 0),
+      cumulative: Number(rows[0]?.cumulativeRaw ?? 0),
+      hasCorrections: Number(rows[0]?.hasCorrectionsRaw ?? 0) > 0,
     };
   }
 }
