@@ -6,47 +6,38 @@ import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement
 
 interface UseEstimateProcurementControllerParams {
   estimateId: string;
+  initialRows?: EstimateProcurementRow[];
 }
 
-export function useEstimateProcurementController({ estimateId }: UseEstimateProcurementControllerParams) {
-  const [rows, setRows] = useState<EstimateProcurementRow[]>([]);
+export function useEstimateProcurementController({ estimateId, initialRows }: UseEstimateProcurementControllerParams) {
+  const [rows, setRows] = useState<EstimateProcurementRow[]>(() => initialRows ?? []);
   const [searchValue, setSearchValue] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const loadRows = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setErrorMessage(null);
+      const data = await estimateProcurementActionsRepo.list(estimateId);
+      setRows(data);
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Не удалось загрузить закупки сметы');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [estimateId]);
+
   useEffect(() => {
-    let active = true;
-
-    const loadRows = async () => {
-      try {
-        setIsLoading(true);
-        setErrorMessage(null);
-        const data = await estimateProcurementActionsRepo.list(estimateId);
-
-        if (!active) {
-          return;
-        }
-
-        setRows(data);
-      } catch (error) {
-        if (!active) {
-          return;
-        }
-
-        setErrorMessage(error instanceof Error ? error.message : 'Не удалось загрузить закупки сметы');
-      } finally {
-        if (active) {
-          setIsLoading(false);
-        }
-      }
-    };
+    if (initialRows !== undefined) {
+      setRows(initialRows);
+      setIsLoading(false);
+      setErrorMessage(null);
+      return;
+    }
 
     void loadRows();
-
-    return () => {
-      active = false;
-    };
-  }, [estimateId]);
+  }, [initialRows, loadRows]);
 
   const totals = useMemo(
     () => rows.reduce((acc, row) => {
@@ -80,6 +71,7 @@ export function useEstimateProcurementController({ estimateId }: UseEstimateProc
     totals,
     filteredRows,
     handleExport,
+    reloadRows: loadRows,
   };
 }
 
