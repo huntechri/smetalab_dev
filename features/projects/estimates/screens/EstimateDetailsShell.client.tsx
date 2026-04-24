@@ -8,9 +8,11 @@ import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
 import type { EstimateExecutionRow } from '../types/execution.dto';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
+import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 import { EstimateTable } from '../components/table/EstimateTable.client';
 import { EstimateExecution } from '../components/tabs/EstimateExecution';
 import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
+import { EstimateFinance } from '../components/tabs/EstimateFinance';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
@@ -24,11 +26,6 @@ const EstimateParams = dynamic(
 const EstimateDocuments = dynamic(
     () => import('../components/tabs/EstimateDocuments').then((mod) => mod.EstimateDocuments),
     { loading: () => <Skeleton className="h-[240px] w-full" /> },
-);
-
-const EstimateFinance = dynamic(
-    () => import('../components/tabs/EstimateFinance').then((mod) => mod.EstimateFinance),
-    { loading: () => <Skeleton className="h-[520px] w-full" /> },
 );
 
 const estimateTabsListClassName = 'w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto rounded-[9.6px] border border-[oklab(0.919723_0.0011749_-0.00385052_/_0.4)] bg-[oklab(0.967428_0.000417888_-0.00125271_/_0.4)] p-1 text-[#71717a] no-scrollbar';
@@ -61,6 +58,12 @@ function EstimateExecutionLoader({ estimateId, executionRowsPromise }: { estimat
     return <EstimateExecution estimateId={estimateId} initialRows={executionRows} />;
 }
 
+function EstimateFinanceLoader({ projectId, financeRowsPromise, financeAggregatesPromise }: { projectId: string; financeRowsPromise: Promise<ProjectReceiptRow[]>; financeAggregatesPromise: Promise<ProjectReceiptAggregates> }) {
+    const financeRows = use(financeRowsPromise);
+    const financeAggregates = use(financeAggregatesPromise);
+    return <EstimateFinance projectId={projectId} initialRows={financeRows} initialAggregates={financeAggregates} />;
+}
+
 interface EstimateDetailsShellProps {
     initialCoefPercent: number;
     estimateId: string;
@@ -68,11 +71,13 @@ interface EstimateDetailsShellProps {
     roomParamsPromise: Promise<EstimateRoomParam[]>;
     executionRowsPromise: Promise<EstimateExecutionRow[]>;
     procurementRowsPromise: Promise<EstimateProcurementRow[]>;
+    financeRowsPromise: Promise<ProjectReceiptRow[]>;
+    financeAggregatesPromise: Promise<ProjectReceiptAggregates>;
     project: { id: string; name: string; slug: string };
     estimate: { name: string; slug: string };
 }
 
-export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, executionRowsPromise, procurementRowsPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
+export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, executionRowsPromise, procurementRowsPromise, financeRowsPromise, financeAggregatesPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const tabParam = searchParams.get('tab') ?? 'estimate';
@@ -142,7 +147,11 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
                     </Suspense>
                 </TabsContent>
                 <TabsContent value="finance" className="mt-2">
-                    {loadedTabs.has('finance') ? <EstimateFinance projectId={project.id} /> : <Skeleton className="h-[520px] w-full" />}
+                    {loadedTabs.has('finance') ? (
+                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
+                            <EstimateFinanceLoader projectId={project.id} financeRowsPromise={financeRowsPromise} financeAggregatesPromise={financeAggregatesPromise} />
+                        </Suspense>
+                    ) : <Skeleton className="h-[520px] w-full" />}
                 </TabsContent>
                 <TabsContent value="docs" className="mt-2">
                     {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}
