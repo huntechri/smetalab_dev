@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, expect, test, vi } from 'vitest';
 
 import Page from '@/app/(workspace)/app/projects/[projectId]/page';
@@ -174,16 +174,18 @@ test('project dashboard starts KPI query before streaming heavy dynamics after e
         params: Promise.resolve({ projectId: 'north-park' }),
     });
 
-    await Promise.resolve();
+    await waitFor(() => {
+        expect(getEstimatesByProjectId).toHaveBeenCalledTimes(1);
+    });
 
-    expect(getEstimatesByProjectId).toHaveBeenCalledTimes(1);
     expect(ProjectDashboardKpiService.getByProjectId).toHaveBeenCalledTimes(1);
     expect(ProjectPerformanceDynamicsService.list).not.toHaveBeenCalled();
 
     estimatesDeferred.resolve([{ id: 'est-uuid', name: 'Смета 1', slug: 'smeta-1', status: 'in_progress' }]);
-    await Promise.resolve();
 
-    expect(ProjectPerformanceDynamicsService.list).toHaveBeenCalledTimes(1);
+    await waitFor(() => {
+        expect(ProjectPerformanceDynamicsService.list).toHaveBeenCalledTimes(1);
+    });
 
     dynamicsDeferred.resolve([
         {
