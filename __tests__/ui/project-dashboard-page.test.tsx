@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { expect, test, vi } from 'vitest';
+import { beforeEach, expect, test, vi } from 'vitest';
 
 import Page from '@/app/(workspace)/app/projects/[projectId]/page';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
@@ -88,6 +88,10 @@ vi.mock('@/lib/services/project-dashboard-kpi.service', () => ({
         remainingDays: 12,
     })),
 }));
+
+beforeEach(() => {
+    vi.clearAllMocks();
+});
 
 test('project dashboard page maps project data and renders feature screen', async () => {
     const PageComponent = await Page({
