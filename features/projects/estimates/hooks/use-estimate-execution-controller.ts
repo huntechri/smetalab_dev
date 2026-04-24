@@ -17,13 +17,15 @@ type EstimateExecutionPatch = {
 
 interface UseEstimateExecutionControllerParams {
   estimateId: string;
+  initialRows?: EstimateExecutionRow[];
 }
 
 export function useEstimateExecutionController({
   estimateId,
+  initialRows,
 }: UseEstimateExecutionControllerParams) {
-  const [rows, setRows] = useState<EstimateExecutionRow[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [rows, setRows] = useState<EstimateExecutionRow[]>(() => initialRows ?? []);
+  const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const requestVersionRef = useRef<Record<string, number>>({});
   const { toast } = useAppToast();
@@ -55,8 +57,15 @@ export function useEstimateExecutionController({
   );
 
   useEffect(() => {
+    if (initialRows !== undefined) {
+      setRows(initialRows);
+      setIsLoading(false);
+      setErrorMessage(null);
+      return;
+    }
+
     void loadRows();
-  }, [loadRows]);
+  }, [initialRows, loadRows]);
 
   useEffect(() => {
     const onCoefUpdated = (event: Event) => {
