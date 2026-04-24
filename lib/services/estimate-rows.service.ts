@@ -533,7 +533,7 @@ export class EstimateRowsService {
                 return row;
             });
 
-            await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+            await EstimateExecutionService.syncAfterEstimateMutation(teamId, estimateId);
             invalidateHomeDashboardCache(teamId);
 
             return success(toEstimateRowDto(created as EstimateRowEntity, estimate.coefPercent ?? 0));
@@ -923,7 +923,7 @@ export class EstimateRowsService {
             });
 
             if (updated.touchedWork) {
-                await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+                await EstimateExecutionService.syncAfterEstimateMutation(teamId, estimateId);
             }
             invalidateHomeDashboardCache(teamId);
 
@@ -985,7 +985,7 @@ export class EstimateRowsService {
             });
 
             if (removedResult.removedWork) {
-                await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+                await EstimateExecutionService.syncAfterEstimateMutation(teamId, estimateId);
             }
             invalidateHomeDashboardCache(teamId);
 

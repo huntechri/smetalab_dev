@@ -11,6 +11,7 @@ const dbMock = vi.hoisted(() => ({
 
 const executionServiceMocks = vi.hoisted(() => ({
     bumpSyncVersion: vi.fn(),
+    syncAfterEstimateMutation: vi.fn(),
     syncEstimateIfStale: vi.fn(),
 }));
 
@@ -29,6 +30,7 @@ describe('EstimateRowsService duplicate protection', () => {
         dbMock.query.estimates.findFirst.mockReset();
         dbMock.transaction.mockReset();
         executionServiceMocks.bumpSyncVersion.mockReset();
+        executionServiceMocks.syncAfterEstimateMutation.mockReset();
         executionServiceMocks.syncEstimateIfStale.mockReset();
         dbMock.query.estimates.findFirst.mockResolvedValue({ id: 'est-1' });
     });
@@ -357,7 +359,7 @@ describe('EstimateRowsService duplicate protection', () => {
         if (result.success) {
             expect(result.data.removedIds).toEqual(['section-1']);
         }
-        expect(executionServiceMocks.bumpSyncVersion).not.toHaveBeenCalled();
+        expect(executionServiceMocks.syncAfterEstimateMutation).not.toHaveBeenCalled();
     });
     it('returns conflict when adding duplicate material under same work', async () => {
         const tx = {

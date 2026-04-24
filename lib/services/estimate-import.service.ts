@@ -411,7 +411,7 @@ export class EstimateImportService {
         };
       });
 
-      await EstimateExecutionService.bumpSyncVersion(teamId, estimateId);
+      await EstimateExecutionService.syncAfterEstimateMutation(teamId, estimateId);
       invalidateHomeDashboardCache(teamId);
 
       return success({

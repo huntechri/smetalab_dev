@@ -183,6 +183,11 @@ export class EstimateExecutionService {
             .where(and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)));
     }
 
+    static async syncAfterEstimateMutation(teamId: number, estimateId: string): Promise<void> {
+        await this.bumpSyncVersion(teamId, estimateId);
+        await this.syncEstimateIfStale(teamId, estimateId);
+    }
+
     static async syncEstimateIfStale(teamId: number, estimateId: string, options?: { refreshProjectProgress?: boolean }): Promise<void> {
         const hasExecutionTable = await ensureExecutionStorageReady();
         if (!hasExecutionTable) {
@@ -268,12 +273,6 @@ export class EstimateExecutionService {
             const hasExecutionTable = await ensureExecutionStorageReady();
             if (!hasExecutionTable) {
                 return error('Требуется применить миграции БД для вкладки «Выполнение». Обратитесь к администратору.', 'MIGRATION_REQUIRED');
-            }
-
-            const currentVersion = estimate.executionSyncVersion ?? 0;
-            const syncedVersion = estimate.executionSyncedVersion ?? 0;
-            if (syncedVersion < currentVersion) {
-                await this.syncEstimateIfStale(teamId, estimateId);
             }
 
             const rows = await db
