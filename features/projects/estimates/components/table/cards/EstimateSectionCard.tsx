@@ -1,4 +1,4 @@
-import { ChevronDown, ChevronRight, Settings, HardHat } from 'lucide-react';
+import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';

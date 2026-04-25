@@ -64,6 +64,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
+                    className={className}
                 >
                     <span className="truncate">{value || placeholder}</span>
                     <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />

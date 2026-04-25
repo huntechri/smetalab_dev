@@ -3,7 +3,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimateRows, estimates, globalPurchases, projects, teams, estimateProcurementCache } from '@/lib/data/db/schema';
 import { resetDatabase } from '@/lib/data/db/test-utils';
 import { EstimateProcurementService } from '@/lib/services/estimate-procurement.service';
-import { eq, and } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 
 describe('EstimateProcurementService caching', () => {
     let teamId: number;
