@@ -94,6 +94,17 @@ vi.mock('@/shared/ui/dropdown-menu', () => ({
     DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+vi.mock('@/shared/ui/alert-dialog', () => ({
+    AlertDialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogAction: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    AlertDialogCancel: ({ children }: { children: React.ReactNode }) => <button>{children}</button>,
+    AlertDialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
+    AlertDialogFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogTitle: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2>,
+}));
+
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
     MaterialCatalogDialog: ({ onSelect }: { onSelect: (material: { name: string; unit: string; price: string }) => Promise<void> }) => (
         <button
@@ -124,8 +135,8 @@ describe('GlobalPurchasesTable', () => {
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: /Добавить строку вручную/i }));
-        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника/i })); // Click "Из справочника" to open dialog
-        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i })); // Click mock dialog select
+        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i }));
 
         await waitFor(() => {
             expect(addManualRowMock).toHaveBeenCalledWith(null);
