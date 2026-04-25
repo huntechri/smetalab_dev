@@ -44,7 +44,7 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
           size="xs"
           disabled={disabled}
           aria-label="Назначить поставщика"
-          className="h-6 max-w-full justify-start gap-1.5 rounded-md px-1.5 text-[10px]"
+          className="h-5 max-w-full justify-start gap-1 rounded-full px-1.5 text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
         >
           {disabled ? (
             <Loader2 className="size-3 animate-spin" aria-hidden="true" />
@@ -56,7 +56,7 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
             />
           )}
           <span className="truncate">{name || 'Поставщик'}</span>
-          <ChevronsUpDown className="ml-auto size-3 opacity-60" aria-hidden="true" />
+          <ChevronsUpDown className="size-3 opacity-60" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
