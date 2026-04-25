@@ -2,6 +2,7 @@
 
 import { safeAction } from '@/lib/actions/safe-action';
 import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
+import { EstimateRowMaterialsService } from '@/lib/services/estimate-row-materials.service';
 
 export const getEstimateRowsAction = safeAction(
     async ({ team }, estimateId: string) => EstimateRowsService.list(team.id, estimateId),
@@ -22,7 +23,7 @@ export const addEstimateWorkAction = safeAction(
 
 export const addEstimateMaterialAction = safeAction(
     async ({ team }, estimateId: string, parentWorkId: string, payload?: { name?: string; materialId?: string | null; unit?: string; imageUrl?: string | null; qty?: number; price?: number; expense?: number }) =>
-        EstimateRowsService.addMaterial(team.id, estimateId, parentWorkId, payload),
+        EstimateRowMaterialsService.addMaterial(team.id, estimateId, parentWorkId, payload),
     { name: 'addEstimateMaterialAction' }
 );
 

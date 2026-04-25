@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
@@ -50,9 +50,15 @@ describe('WorkCatalogPicker', () => {
             />
         );
 
-        // Wait for the 300ms debounce + fetch
-        const button = await screen.findByRole('button', {}, { timeout: 2000 });
-        expect(button).toBeDisabled();
-        expect(button.querySelector('svg')).toHaveClass('lucide-check');
+        await screen.findByText('Тестовая работа');
+
+        await waitFor(() => {
+            const addButton = screen
+                .getAllByRole('button')
+                .find((button) => button.querySelector('.lucide-check'));
+
+            expect(addButton).toBeDefined();
+            expect(addButton).toBeDisabled();
+        });
     });
 });

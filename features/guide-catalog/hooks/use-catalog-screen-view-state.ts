@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   useBreadcrumbs,
@@ -12,17 +12,12 @@ interface UseCatalogScreenViewStateOptions {
 export function useCatalogScreenViewState({
   breadcrumbs,
 }: UseCatalogScreenViewStateOptions) {
-  const [mounted, setMounted] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useBreadcrumbs(breadcrumbs);
 
   return {
-    mounted,
+    mounted: true,
     showSidebar,
     setShowSidebar,
   };

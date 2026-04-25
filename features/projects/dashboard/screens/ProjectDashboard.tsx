@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense, use } from 'react';
 import { ProjectListItem } from '../../shared/types';
 import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
@@ -7,6 +8,7 @@ import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics';
 import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
+import { Skeleton } from '@repo/ui';
 
 type EstimateListItem = {
     id: string;
@@ -19,20 +21,47 @@ type EstimateListItem = {
     updatedAt: Date;
 };
 
+type ProjectDashboardKpi = {
+    revenue: number;
+    expense: number;
+    profit: number;
+    progress: number;
+    remainingDays: number | null;
+};
+
 type ProjectDashboardProps = {
     project: ProjectListItem;
     estimates: EstimateListItem[];
-    performanceDynamics: PerformanceDynamicsPoint[];
-    kpi: {
-        revenue: number;
-        expense: number;
-        profit: number;
-        progress: number;
-        remainingDays: number | null;
-    };
+    performanceDynamicsPromise: Promise<PerformanceDynamicsPoint[]>;
+    kpiPromise: Promise<ProjectDashboardKpi>;
 };
 
-export function ProjectDashboard({ project, estimates, performanceDynamics, kpi }: ProjectDashboardProps) {
+function DashboardKpiCardsLoader({ kpiPromise }: { kpiPromise: Promise<ProjectDashboardKpi> }) {
+    const kpi = use(kpiPromise);
+    return <DashboardKpiCards kpi={kpi} />;
+}
+
+function DashboardChartLoader({ performanceDynamicsPromise }: { performanceDynamicsPromise: Promise<PerformanceDynamicsPoint[]> }) {
+    const performanceDynamics = use(performanceDynamicsPromise);
+    return <DashboardChart data={performanceDynamics} />;
+}
+
+function DashboardKpiCardsFallback() {
+    return (
+        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
+            <Skeleton className="h-[72px] sm:h-[85px] md:h-[95px] rounded-[13.6px]" />
+            <Skeleton className="h-[72px] sm:h-[85px] md:h-[95px] rounded-[13.6px]" />
+            <Skeleton className="h-[72px] sm:h-[85px] md:h-[95px] rounded-[13.6px]" />
+            <Skeleton className="h-[72px] sm:h-[85px] md:h-[95px] rounded-[13.6px]" />
+        </div>
+    );
+}
+
+function DashboardChartFallback() {
+    return <Skeleton className="h-[390px] w-full rounded-[13.6px]" />;
+}
+
+export function ProjectDashboard({ project, estimates, performanceDynamicsPromise, kpiPromise }: ProjectDashboardProps) {
     useBreadcrumbs([
         { label: 'Главная', href: '/app' },
         { label: 'Проекты', href: '/app/projects' },
@@ -51,7 +80,9 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
 
             <div className="space-y-4 lg:space-y-10">
                 <div className="@container/main space-y-4 lg:space-y-10">
-                    <DashboardKpiCards kpi={kpi} />
+                    <Suspense fallback={<DashboardKpiCardsFallback />}>
+                        <DashboardKpiCardsLoader kpiPromise={kpiPromise} />
+                    </Suspense>
 
                     <div
                         className={canShowDynamicsChart
@@ -60,7 +91,9 @@ export function ProjectDashboard({ project, estimates, performanceDynamics, kpi 
                     >
                         {canShowDynamicsChart ? (
                             <div className="min-w-0 overflow-hidden">
-                                <DashboardChart data={performanceDynamics} />
+                                <Suspense fallback={<DashboardChartFallback />}>
+                                    <DashboardChartLoader performanceDynamicsPromise={performanceDynamicsPromise} />
+                                </Suspense>
                             </div>
                         ) : null}
 

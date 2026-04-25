@@ -9,17 +9,25 @@ import { useAppToast } from '@/components/providers/use-app-toast';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { estimatePatternsActionRepo, type EstimatePatternListItem, type EstimatePatternPreviewRow } from '@/features/projects/estimates';
 
-export function PatternsScreen() {
+type PatternsScreenProps = {
+  initialItems: EstimatePatternListItem[];
+};
+
+export function PatternsScreen({ initialItems }: PatternsScreenProps) {
   useBreadcrumbs([
     { label: 'Главная', href: '/app' },
     { label: 'Шаблоны' },
   ]);
 
   const { toast } = useAppToast();
-  const [items, setItems] = useState<EstimatePatternListItem[]>([]);
+  const [items, setItems] = useState<EstimatePatternListItem[]>(initialItems);
   const [selectedName, setSelectedName] = useState<string>('');
   const [previewRows, setPreviewRows] = useState<EstimatePatternPreviewRow[]>([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, [initialItems]);
 
   const loadPatterns = async () => {
     try {
@@ -33,10 +41,6 @@ export function PatternsScreen() {
       });
     }
   };
-
-  useEffect(() => {
-    void loadPatterns();
-  }, []);
 
   const openPreview = async (id: string) => {
     try {

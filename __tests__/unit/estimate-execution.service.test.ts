@@ -33,7 +33,13 @@ describe('EstimateExecutionService sync behavior', () => {
         progressRefreshMock.mockReset();
         resetExecutionStorageReadyStateForTests();
 
-        dbMock.query.estimates.findFirst.mockResolvedValue({ id: 'est-1', projectId: 'pr-1', coefPercent: 0 });
+        dbMock.query.estimates.findFirst.mockResolvedValue({
+            id: 'est-1',
+            projectId: 'pr-1',
+            coefPercent: 0,
+            executionSyncVersion: 1,
+            executionSyncedVersion: 1,
+        });
     });
 
     it('returns MIGRATION_REQUIRED when execution table is missing', async () => {
@@ -64,7 +70,7 @@ describe('EstimateExecutionService sync behavior', () => {
         expect(progressRefreshMock).not.toHaveBeenCalled();
     });
 
-    it('does not trigger sync/write operations in list() when estimate sync version is stale', async () => {
+    it('syncs execution rows in list() when estimate sync version is stale', async () => {
         dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
         dbMock.query.estimates.findFirst.mockResolvedValue({
             id: 'est-1',
@@ -94,39 +100,12 @@ describe('EstimateExecutionService sync behavior', () => {
             },
         ];
 
-        dbMock.select.mockReturnValue({
+        const readRowsSelectMock = vi.fn(() => ({
             from: vi.fn(() => ({
                 where: vi.fn(() => ({ orderBy: vi.fn().mockResolvedValue(rows) })),
             })),
-        });
-
-        const result = await EstimateExecutionService.list(1, 'est-1');
-
-        expect(result.success).toBe(true);
-        if (result.success) {
-            expect(result.data).toEqual(rows);
-        }
-        expect(dbMock.transaction).not.toHaveBeenCalled();
-        expect(dbMock.update).not.toHaveBeenCalled();
-        expect(progressRefreshMock).not.toHaveBeenCalled();
-    });
-
-    it('syncAfterEstimateMutation bumps version and synchronizes execution rows', async () => {
-        dbMock.execute.mockResolvedValue([{ table_name: 'estimate_execution_rows' }]);
-
-        const dbUpdateWhereMock = vi.fn().mockResolvedValue([]);
-        dbMock.update.mockReturnValue({
-            set: vi.fn(() => ({ where: dbUpdateWhereMock })),
-        });
-
-        const txUpdateWhereMock = vi.fn().mockResolvedValue([]);
-        const txUpdateSetMock = vi.fn(() => ({ where: txUpdateWhereMock }));
-        const txUpdateMock = vi.fn(() => ({ set: txUpdateSetMock }));
-        const txSelectMock = vi.fn(() => ({
-            from: vi.fn(() => ({
-                where: vi.fn(() => ({ orderBy: vi.fn().mockResolvedValue([]) })),
-            })),
         }));
+        dbMock.select.mockImplementation(readRowsSelectMock);
 
         dbMock.transaction.mockImplementation(async (callback: (tx: { execute: ReturnType<typeof vi.fn>; select: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; insert: ReturnType<typeof vi.fn> }) => Promise<unknown>) => {
             const tx = {
@@ -135,24 +114,47 @@ describe('EstimateExecutionService sync behavior', () => {
                         id: 'est-1',
                         project_id: 'pr-1',
                         coef_percent: 0,
-                        execution_sync_version: 2,
-                        execution_synced_version: 1,
+                        execution_sync_version: 5,
+                        execution_synced_version: 2,
                     },
                 ]),
-                select: txSelectMock,
-                update: txUpdateMock,
+                select: vi.fn(() => ({
+                    from: vi.fn(() => ({
+                        where: vi.fn(() => ({ orderBy: vi.fn().mockResolvedValue([]) })),
+                    })),
+                })),
+                update: vi.fn(() => ({
+                    set: vi.fn(() => ({ where: vi.fn().mockResolvedValue([]) })),
+                })),
                 insert: vi.fn(),
             };
 
             return callback(tx);
         });
 
+        const result = await EstimateExecutionService.list(1, 'est-1');
+
+        expect(result.success).toBe(true);
+        if (result.success) {
+            expect(result.data).toEqual(rows);
+        }
+        expect(dbMock.transaction).toHaveBeenCalledTimes(1);
+        expect(dbMock.update).not.toHaveBeenCalled();
+        expect(progressRefreshMock).not.toHaveBeenCalled();
+    });
+
+    it('syncAfterEstimateMutation only bumps version and defers execution-row sync', async () => {
+        const dbUpdateWhereMock = vi.fn().mockResolvedValue([]);
+        dbMock.update.mockReturnValue({
+            set: vi.fn(() => ({ where: dbUpdateWhereMock })),
+        });
+
         await EstimateExecutionService.syncAfterEstimateMutation(1, 'est-1');
 
         expect(dbMock.update).toHaveBeenCalledTimes(1);
         expect(dbUpdateWhereMock).toHaveBeenCalledTimes(1);
-        expect(dbMock.transaction).toHaveBeenCalledTimes(1);
-        expect(txSelectMock).toHaveBeenCalledTimes(1);
+        expect(dbMock.transaction).not.toHaveBeenCalled();
+        expect(dbMock.select).not.toHaveBeenCalled();
     });
 
     it('soft-deletes all generated execution rows when estimate has no works', async () => {

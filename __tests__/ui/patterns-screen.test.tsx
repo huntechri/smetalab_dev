@@ -20,19 +20,20 @@ vi.mock('@/components/providers/use-app-toast', () => ({
   useAppToast: () => ({ toast: vi.fn() }),
 }));
 
+const initialItems = [
+  {
+    id: 'p-1',
+    name: 'Шаблон отделки',
+    description: 'Базовый шаблон',
+    rowsCount: 2,
+    worksCount: 1,
+    materialsCount: 1,
+    updatedAt: new Date(),
+  },
+];
+
 describe('PatternsScreen', () => {
-  it('renders patterns and opens preview dialog', async () => {
-    repoMocks.list.mockResolvedValue([
-      {
-        id: 'p-1',
-        name: 'Шаблон отделки',
-        description: 'Базовый шаблон',
-        rowsCount: 2,
-        worksCount: 1,
-        materialsCount: 1,
-        updatedAt: new Date(),
-      },
-    ]);
+  it('renders preloaded patterns and opens preview dialog', async () => {
     repoMocks.preview.mockResolvedValue({
       id: 'p-1',
       name: 'Шаблон отделки',
@@ -42,11 +43,10 @@ describe('PatternsScreen', () => {
       ],
     });
 
-    render(<PatternsScreen />);
+    render(<PatternsScreen initialItems={initialItems} />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Шаблон отделки')).toBeInTheDocument();
-    });
+    expect(screen.getByText('Шаблон отделки')).toBeInTheDocument();
+    expect(repoMocks.list).not.toHaveBeenCalled();
 
     fireEvent.click(screen.getByText('Превью'));
 

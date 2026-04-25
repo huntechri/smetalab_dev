@@ -29,8 +29,33 @@ const sortRowsByProjectId = (rows: PurchaseRow[]) => [...rows].sort((a, b) => {
     return aProject.localeCompare(bProject, 'ru');
 });
 
+const buildRowsSignature = (rows: PurchaseRow[]) => rows.map((row) => [
+    row.id,
+    row.projectId ?? '',
+    row.projectName ?? '',
+    row.purchaseDate,
+    row.materialName,
+    row.unit,
+    row.qty,
+    row.price,
+    row.amount,
+    row.note ?? '',
+    row.supplierId ?? '',
+    row.supplierName ?? '',
+    row.supplierColor ?? '',
+].join('\u001f')).join('\u001e');
+
 export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange: PurchaseRowsRange) {
-    const [rows, setRows] = useState<PurchaseRow[]>(() => sortRowsByProjectId(initialRows));
+    const initialRowsSignatureRef = useRef<string | null>(null);
+    const normalizedInitialRowsRef = useRef<PurchaseRow[]>([]);
+    const nextInitialRowsSignature = buildRowsSignature(initialRows);
+
+    if (initialRowsSignatureRef.current !== nextInitialRowsSignature) {
+        initialRowsSignatureRef.current = nextInitialRowsSignature;
+        normalizedInitialRowsRef.current = sortRowsByProjectId(initialRows);
+    }
+
+    const [rows, setRows] = useState<PurchaseRow[]>(() => normalizedInitialRowsRef.current);
     const [range, setRange] = useState<PurchaseRowsRange>(initialRange);
     const [pendingIds, setPendingIds] = useState<Set<string>>(new Set());
     const pendingIdsRef = useRef<Set<string>>(new Set());
@@ -40,6 +65,14 @@ export function useGlobalPurchasesTable(initialRows: PurchaseRow[], initialRange
     const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const flushInFlightRef = useRef(false);
     const updateWaitersRef = useRef<Map<string, Array<{ resolve: () => void; reject: (error: unknown) => void }>>>(new Map());
+
+    useEffect(() => {
+        if (pendingIdsRef.current.size > 0 || queuedPatchesRef.current.size > 0 || flushInFlightRef.current) {
+            return;
+        }
+
+        setRows(normalizedInitialRowsRef.current);
+    }, [nextInitialRowsSignature]);
 
     const startPending = useCallback((rowId: string) => {
         if (pendingIdsRef.current.has(rowId)) {

@@ -8,12 +8,22 @@ import { EstimateRowsService } from '@/lib/services/estimate-rows.service';
 import { EstimateRoomParamsService } from '@/lib/services/estimate-room-params.service';
 import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
 import { EstimateProcurementService } from '@/lib/services/estimate-procurement.service';
+import { ProjectReceiptsService } from '@/lib/services/project-receipts.service';
 import type { EstimateRoomParam } from '@/features/projects';
 import type { EstimateExecutionRow } from '@/features/projects/estimates/types/execution.dto';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
+import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 
 type PageProps = {
     params: Promise<{ projectId: string; estimateId: string }>;
+};
+
+const emptyFinanceAggregates: ProjectReceiptAggregates = {
+    totalConfirmedReceipts: 0,
+    confirmedCount: 0,
+    lastConfirmedReceiptDate: null,
+    lastConfirmedReceiptAmount: null,
+    hasCorrections: false,
 };
 
 export default async function Page({ params }: PageProps) {
@@ -38,6 +48,8 @@ export default async function Page({ params }: PageProps) {
     const roomParamsPromise: Promise<EstimateRoomParam[]> = EstimateRoomParamsService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
     const executionRowsPromise: Promise<EstimateExecutionRow[]> = EstimateExecutionService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
     const procurementRowsPromise: Promise<EstimateProcurementRow[]> = EstimateProcurementService.list(team.id, estimate.id).then((result) => result.success ? result.data : []);
+    const financeRowsPromise: Promise<ProjectReceiptRow[]> = ProjectReceiptsService.listByProject(team.id, project.id).then((result) => result.success ? result.data : []);
+    const financeAggregatesPromise: Promise<ProjectReceiptAggregates> = ProjectReceiptsService.getAggregatesByProject(team.id, project.id).then((result) => result.success ? result.data : emptyFinanceAggregates);
 
     return (
         <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-0 -mb-4 md:-mb-6 lg:-mb-8">
@@ -47,6 +59,8 @@ export default async function Page({ params }: PageProps) {
                 roomParamsPromise={roomParamsPromise}
                 executionRowsPromise={executionRowsPromise}
                 procurementRowsPromise={procurementRowsPromise}
+                financeRowsPromise={financeRowsPromise}
+                financeAggregatesPromise={financeAggregatesPromise}
                 project={{ id: project.id, name: project.name, slug: project.slug }}
                 estimate={{ name: estimate.name, slug: estimate.slug }}
                 initialCoefPercent={estimate.coefPercent ?? 0}

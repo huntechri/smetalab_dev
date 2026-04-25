@@ -11,6 +11,8 @@ type PageProps = {
     params: Promise<{ projectId: string }>;
 };
 
+const estimateStatusesWithDynamics = new Set(['in_progress', 'approved']);
+
 export default async function Page({ params }: PageProps) {
     const { projectId: projectSlug } = await params;
     const team = await getTeamForUser();
@@ -25,11 +27,19 @@ export default async function Page({ params }: PageProps) {
         notFound();
     }
 
-    const [estimates, performanceDynamics, kpiData] = await Promise.all([
-        getEstimatesByProjectId(projectData.id, team.id),
-        ProjectPerformanceDynamicsService.list(team.id, projectData.id),
-        ProjectDashboardKpiService.getByProjectId(team.id, projectData.id),
-    ]);
+    const estimatesPromise = getEstimatesByProjectId(projectData.id, team.id);
+    const kpiPromise = ProjectDashboardKpiService.getByProjectId(team.id, projectData.id)
+        .then((kpiData) => buildProjectDashboardKpiViewModel({
+            finance: kpiData,
+            progress: projectData.progress,
+            endDate: projectData.endDate,
+        }));
+
+    const estimates = await estimatesPromise;
+    const shouldLoadPerformanceDynamics = estimates.some((estimate) => estimateStatusesWithDynamics.has(estimate.status));
+    const performanceDynamicsPromise = shouldLoadPerformanceDynamics
+        ? ProjectPerformanceDynamicsService.list(team.id, projectData.id)
+        : Promise.resolve([]);
 
     const project: ProjectListItem = {
         id: projectData.id,
@@ -45,18 +55,12 @@ export default async function Page({ params }: PageProps) {
         status: projectData.status as ProjectStatus,
     };
 
-    const kpi = buildProjectDashboardKpiViewModel({
-        finance: kpiData,
-        progress: projectData.progress,
-        endDate: projectData.endDate,
-    });
-
     return (
         <ProjectDashboard
             project={project}
             estimates={estimates}
-            performanceDynamics={performanceDynamics}
-            kpi={kpi}
+            performanceDynamicsPromise={performanceDynamicsPromise}
+            kpiPromise={kpiPromise}
         />
     );
 }
