@@ -10,16 +10,16 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
 });
 
 export const inlineCellClassName =
-  'h-6 min-w-0 rounded-sm border-0 bg-transparent px-1 py-0 text-[11px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
+  'h-5 min-w-0 rounded-sm border-0 bg-transparent px-1 py-0 text-[10px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
 
 export const inlineNumberCellClassName = cn(
   inlineCellClassName,
-  'w-16 justify-end text-right tabular-nums',
+  'w-12 justify-end text-right tabular-nums',
 );
 
 export const inlineTextCellClassName = cn(
   inlineCellClassName,
-  'min-h-8 w-full !whitespace-normal !justify-start break-words text-left text-slate-800',
+  'h-7 min-h-0 w-full !justify-start !whitespace-nowrap truncate px-1 text-left text-[11px] font-semibold text-slate-900 hover:bg-transparent',
 );
 
 export function formatPurchaseDate(value: string) {
