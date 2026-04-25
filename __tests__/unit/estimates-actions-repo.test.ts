@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const actionsMocks = vi.hoisted(() => ({
     patchEstimateRowAction: vi.fn(),
@@ -41,6 +41,11 @@ describe('estimatesActionRepo', () => {
         actionsMocks.updateEstimateStatusAction.mockReset();
         actionsMocks.updateEstimateCoefficientAction.mockReset();
         actionsMocks.resetEstimateCoefficientAction.mockReset();
+        vi.stubGlobal('fetch', vi.fn());
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
     });
 
 
@@ -162,14 +167,23 @@ describe('estimatesActionRepo', () => {
     });
 
     it('removes estimate row', async () => {
-        actionsMocks.removeEstimateRowAction.mockResolvedValue({
-            success: true,
-            data: { removedIds: ['w-1', 'm-1'] },
-        });
+        const fetchMock = vi.mocked(fetch);
+        fetchMock.mockResolvedValue({
+            ok: true,
+            json: async () => ({
+                success: true,
+                data: { removedIds: ['w-1', 'm-1'] },
+            }),
+        } as Response);
 
         const result = await estimatesActionRepo.removeRow('est-1', 'w-1');
 
-        expect(actionsMocks.removeEstimateRowAction).toHaveBeenCalledWith('est-1', 'w-1');
+        expect(fetchMock).toHaveBeenCalledWith('/api/estimates/est-1/rows/w-1', {
+            method: 'DELETE',
+            headers: { Accept: 'application/json' },
+            cache: 'no-store',
+        });
+        expect(actionsMocks.removeEstimateRowAction).not.toHaveBeenCalled();
         expect(result.removedIds).toEqual(['w-1', 'm-1']);
     });
 
@@ -182,7 +196,7 @@ describe('estimatesActionRepo', () => {
 
         const result = await estimatesActionRepo.updateStatus('est-1', 'approved');
 
-        expect(actionsMocks.updateEstimateStatusAction).toHaveBeenCalledWith('est-1', { status: 'approved' });
+        expect(actionsMocks.updateEstimateStatusAction).toHaveBeenCalledWith('est-1', { status });
         expect(result.status).toBe('approved');
     });
 
