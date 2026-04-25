@@ -1,7 +1,8 @@
 import type React from 'react';
-import { GlobalPurchasesTable } from '@/features/global-purchases/components/GlobalPurchasesTable.client';
+import { GlobalPurchasesView } from '@/features/global-purchases/components/GlobalPurchasesView.client';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
 const { MockButton } = vi.hoisted(() => ({
     MockButton: ({
@@ -13,19 +14,22 @@ const { MockButton } = vi.hoisted(() => ({
 
 const addManualRowMock = vi.fn();
 const addCatalogRowMock = vi.fn();
+const updateRowMock = vi.fn();
+const removeRowMock = vi.fn();
 const copyToNextDayMock = vi.fn();
 const importRowsMock = vi.fn();
+let mockRows: PurchaseRow[] = [];
 
 vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     useGlobalPurchasesTable: () => ({
-        rows: [],
+        rows: mockRows,
         range: { from: '2026-01-15', to: '2026-01-15' },
         setRange: vi.fn(),
         reloadRows: vi.fn().mockResolvedValue(undefined),
         addManualRow: addManualRowMock,
         addCatalogRow: addCatalogRowMock,
-        updateRow: vi.fn().mockResolvedValue(undefined),
-        removeRow: vi.fn().mockResolvedValue(undefined),
+        updateRow: updateRowMock,
+        removeRow: removeRowMock,
         importRows: importRowsMock,
         copyToNextDay: copyToNextDayMock,
         totals: { amount: 0 },
@@ -47,7 +51,13 @@ vi.mock('@/shared/ui/data-table', () => ({
 }));
 
 vi.mock('@/shared/ui/table-empty-state', () => ({
-    TableEmptyState: ({ action }: { action?: React.ReactNode }) => <div>{action}</div>,
+    TableEmptyState: ({ title, description, action }: { title?: string; description?: string; action?: React.ReactNode }) => (
+        <div>
+            {title ? <p>{title}</p> : null}
+            {description ? <p>{description}</p> : null}
+            {action}
+        </div>
+    ),
 }));
 
 vi.mock('@/shared/ui/button', () => ({
@@ -118,19 +128,33 @@ vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
     ),
 }));
 
-describe('GlobalPurchasesTable', () => {
+function renderView() {
+    return render(
+        <GlobalPurchasesView
+            initialRows={[]}
+            initialRange={{ from: '2026-01-15', to: '2026-01-15' }}
+            projectOptions={[{ id: 'project-1', name: 'ЖК Горизонт' }]}
+            supplierOptions={[{ id: 'supplier-1', name: 'Поставщик 1', color: '#64748b' }]}
+        />,
+    );
+}
+
+describe('GlobalPurchasesView', () => {
+    beforeEach(() => {
+        mockRows = [];
+        addManualRowMock.mockReset();
+        addCatalogRowMock.mockReset();
+        updateRowMock.mockReset();
+        removeRowMock.mockReset();
+        importRowsMock.mockReset();
+        copyToNextDayMock.mockReset();
+    });
+
     it('adds manual and catalog rows without default project binding', async () => {
         addManualRowMock.mockResolvedValue(undefined);
         addCatalogRowMock.mockResolvedValue(undefined);
 
-        render(
-            <GlobalPurchasesTable
-                initialRows={[]}
-                initialRange={{ from: '2026-01-15', to: '2026-01-15' }}
-                projectOptions={[{ id: 'project-1', name: 'ЖК Горизонт' }]}
-                supplierOptions={[]}
-            />,
-        );
+        renderView();
 
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
@@ -142,5 +166,67 @@ describe('GlobalPurchasesTable', () => {
             expect(addManualRowMock).toHaveBeenCalledWith(null);
             expect(addCatalogRowMock).toHaveBeenCalledWith(expect.objectContaining({ name: 'Щебень' }), null);
         });
+    });
+
+    it('renders purchase cards without exposing row source badges', () => {
+        mockRows = [
+            {
+                id: 'purchase-1',
+                projectId: 'project-1',
+                projectName: 'ЖК Горизонт',
+                materialName: 'Штукатурка Ротбанд',
+                materialId: 'material-1',
+                unit: 'меш',
+                qty: 10,
+                price: 500,
+                amount: 5000,
+                note: '',
+                source: 'catalog',
+                purchaseDate: '2026-01-15',
+                supplierId: 'supplier-1',
+                supplierName: 'Поставщик 1',
+                supplierColor: '#64748b',
+            },
+        ];
+
+        renderView();
+
+        expect(screen.getByText('15.01.2026')).toBeInTheDocument();
+        expect(screen.getByText('Штукатурка Ротбанд')).toBeInTheDocument();
+        expect(screen.getByText('ЖК Горизонт')).toBeInTheDocument();
+        expect(screen.getByText('Поставщик 1')).toBeInTheDocument();
+        expect(screen.queryByText('Каталог')).not.toBeInTheDocument();
+        expect(screen.queryByText('Ручная')).not.toBeInTheDocument();
+    });
+
+    it('shows search empty state when existing rows are filtered out', () => {
+        mockRows = [
+            {
+                id: 'purchase-1',
+                projectId: null,
+                projectName: '',
+                materialName: 'Цемент',
+                materialId: null,
+                unit: 'меш',
+                qty: 1,
+                price: 100,
+                amount: 100,
+                note: '',
+                source: 'manual',
+                purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
+            },
+        ];
+
+        renderView();
+
+        fireEvent.change(screen.getByLabelText('Поиск...'), {
+            target: { value: 'штукатурка' },
+        });
+
+        expect(screen.getByText('По запросу ничего не найдено')).toBeInTheDocument();
+        expect(screen.queryByText('В выбранном периоде нет данных. Добавьте закупку вручную или из справочника.')).not.toBeInTheDocument();
     });
 });
