@@ -369,17 +369,17 @@ export class GlobalPurchasesService {
         const now = new Date();
         const values = preparedUpdates.map((prepared) => sql`(
           ${prepared.rowId}::uuid,
-          ${prepared.materialName},
+          ${prepared.materialName}::text,
           ${prepared.materialId}::uuid,
-          ${prepared.unit},
-          ${prepared.note},
+          ${prepared.unit}::text,
+          ${prepared.note}::text,
           ${prepared.purchaseDate}::date,
           ${prepared.projectId}::uuid,
-          ${prepared.projectName},
+          ${prepared.projectName}::text,
           ${prepared.supplierId}::uuid,
-          ${prepared.qty},
-          ${prepared.price},
-          ${prepared.amount}
+          ${prepared.qty}::double precision,
+          ${prepared.price}::double precision,
+          ${prepared.amount}::double precision
         )`);
 
         await tx.execute(sql`
