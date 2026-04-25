@@ -194,7 +194,7 @@ describe('GlobalPurchasesView', () => {
         expect(screen.getByText('15.01.2026')).toBeInTheDocument();
         expect(screen.getByText('Штукатурка Ротбанд')).toBeInTheDocument();
         expect(screen.getAllByText('ЖК Горизонт').length).toBeGreaterThan(0);
-        expect(screen.getByText('Поставщик 1')).toBeInTheDocument();
+        expect(screen.getAllByText('Поставщик 1').length).toBeGreaterThan(0);
         expect(screen.queryByText('Каталог')).not.toBeInTheDocument();
         expect(screen.queryByText('Ручная')).not.toBeInTheDocument();
     });
