@@ -222,7 +222,8 @@ describe('GlobalPurchasesView', () => {
 
         renderView();
 
-        fireEvent.change(screen.getByLabelText('Поиск...'), {
+        const searchInput = screen.getAllByLabelText('Поиск...')[0];
+        fireEvent.change(searchInput, {
             target: { value: 'штукатурка' },
         });
 
