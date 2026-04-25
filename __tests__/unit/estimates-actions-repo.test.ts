@@ -196,7 +196,7 @@ describe('estimatesActionRepo', () => {
 
         const result = await estimatesActionRepo.updateStatus('est-1', 'approved');
 
-        expect(actionsMocks.updateEstimateStatusAction).toHaveBeenCalledWith('est-1', { status });
+        expect(actionsMocks.updateEstimateStatusAction).toHaveBeenCalledWith('est-1', { status: 'approved' });
         expect(result.status).toBe('approved');
     });
 
