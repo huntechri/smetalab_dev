@@ -2,19 +2,19 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FilePlus } from 'lucide-react';
+import { DataTableToolbar } from '@/shared/ui/data-table/data-table-toolbar';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
-import { DataTable } from '@/shared/ui/data-table';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/features/catalog/types/dto';
 import { useAppToast } from '@/components/providers/use-app-toast';
-import { getGlobalPurchasesColumns } from './global-purchases-columns';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
-import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
 import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
 import { GlobalPurchasesTableToolbar } from './GlobalPurchasesTableToolbar';
 import { GlobalPurchasesSummary } from './GlobalPurchasesSummary';
 import { GlobalPurchasesEmptyStateActions } from './GlobalPurchasesEmptyStateActions';
+import { GlobalPurchasesCardsList } from './GlobalPurchasesCardsList';
 
 interface GlobalPurchasesTableProps {
     initialRows: PurchaseRow[];
@@ -27,11 +27,11 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
     const [isCatalogOpen, setIsCatalogOpen] = useState(false);
     const defaultProjectId: string | null = null;
     const [isAddingManual, setIsAddingManual] = useState(false);
-
-
     const [isAddingCatalog, setIsAddingCatalog] = useState(false);
     const [filterProjectId, setFilterProjectId] = useState<string | null>(null);
     const [openProjectFilter, setOpenProjectFilter] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [isAiMode, setIsAiMode] = useState(false);
     const { toast } = useAppToast();
     const reloadTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -61,38 +61,44 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         return rows.filter((r) => r.projectId === filterProjectId);
     }, [rows, filterProjectId]);
 
+    const cardRows = useMemo(() => {
+        const query = searchValue.trim().toLowerCase();
+
+        if (!query) {
+            return displayedRows;
+        }
+
+        return displayedRows.filter((row) => row.materialName.toLowerCase().includes(query));
+    }, [displayedRows, searchValue]);
+
     const displayedTotalsAmount = useMemo(() =>
         displayedRows.reduce((acc, row) => acc + row.amount, 0),
         [displayedRows]);
 
-    const columns = useMemo(() => getGlobalPurchasesColumns({
-        projectOptions,
-        supplierOptions,
-        pendingIds,
-        onPatchAction: async (rowId, patch) => {
-            try {
-                await updateRow(rowId, patch);
-            } catch (serviceError) {
-                toast({
-                    variant: 'destructive',
-                    title: 'Ошибка сохранения',
-                    description: 'Не удалось сохранить изменения в строке закупки.',
-                });
-                throw serviceError;
-            }
-        },
-        onRemoveAction: async (rowId) => {
-            try {
-                await removeRow(rowId);
-            } catch {
-                toast({
-                    variant: 'destructive',
-                    title: 'Ошибка удаления',
-                    description: 'Не удалось удалить строку закупки.',
-                });
-            }
-        },
-    }), [projectOptions, supplierOptions, pendingIds, removeRow, toast, updateRow]);
+    const handlePatchAction = async (rowId: string, patch: PurchaseRowPatch) => {
+        try {
+            await updateRow(rowId, patch);
+        } catch (serviceError) {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка сохранения',
+                description: 'Не удалось сохранить изменения в строке закупки.',
+            });
+            throw serviceError;
+        }
+    };
+
+    const handleRemoveAction = async (rowId: string) => {
+        try {
+            await removeRow(rowId);
+        } catch {
+            toast({
+                variant: 'destructive',
+                title: 'Ошибка удаления',
+                description: 'Не удалось удалить строку закупки.',
+            });
+        }
+    };
 
     const handleCatalogSelect = async (material: CatalogMaterial) => {
         if (isAddingCatalog) return;
@@ -130,8 +136,6 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         }
     };
 
-
-
     const {
         importInputRef,
         handleExport,
@@ -162,50 +166,68 @@ export function GlobalPurchasesTable({ initialRows, projectOptions, supplierOpti
         }, 250);
     };
 
+    const emptyState = (
+        <TableEmptyState
+            title="Закупки не найдены"
+            description="В выбранном периоде нет данных. Добавьте закупку вручную или из справочника."
+            icon={FilePlus}
+            action={
+                <GlobalPurchasesEmptyStateActions
+                    isAddingManual={isAddingManual}
+                    isAddingCatalog={isAddingCatalog}
+                    onAddManual={() => void handleAddManualRow()}
+                    onOpenCatalog={() => setIsCatalogOpen(true)}
+                />
+            }
+        />
+    );
+
     return (
         <div className="space-y-3">
-            <DataTable
-                columns={columns}
-                data={displayedRows}
-                filterColumn="materialName"
-                filterPlaceholder="Поиск..."
-                height="625px"
-                emptyState={
-                    <TableEmptyState
-                        title="Закупки не найдены"
-                        description="В выбранном периоде нет данных. Добавьте закупку вручную или из справочника."
-                        icon={FilePlus}
-                        action={
-                            <GlobalPurchasesEmptyStateActions
+            <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+                <div className="p-1.5 sm:p-2 pb-0">
+                    <DataTableToolbar
+                        actions={(
+                            <GlobalPurchasesTableToolbar
+                                filterProjectId={filterProjectId}
+                                projectOptions={projectOptions}
+                                openProjectFilter={openProjectFilter}
+                                onOpenProjectFilterChange={setOpenProjectFilter}
+                                onFilterProjectChange={setFilterProjectId}
+                                range={range}
+                                onRangeChange={handleRangeChange}
+                                importInputRef={importInputRef}
+                                onExport={() => void handleExport()}
+                                onImportClick={handleImportClick}
+                                onFileChange={handleImportFileChange}
                                 isAddingManual={isAddingManual}
                                 isAddingCatalog={isAddingCatalog}
                                 onAddManual={() => void handleAddManualRow()}
-                                onOpenCatalog={() => setIsCatalogOpen(true)}
+                                onAddCatalog={() => setIsCatalogOpen(true)}
                             />
-                        }
+                        )}
+                        filterPlaceholder="Поиск..."
+                        hasFilterControls={true}
+                        isAiMode={isAiMode}
+                        setIsAiMode={setIsAiMode}
+                        searchValue={searchValue}
+                        setSearchValue={setSearchValue}
+                        compactMobileToolbar
                     />
-                }
-                compactMobileToolbar
-                actions={(
-                    <GlobalPurchasesTableToolbar
-                        filterProjectId={filterProjectId}
+                </div>
+
+                <div className="pt-1.5 sm:pt-2">
+                    <GlobalPurchasesCardsList
+                        rows={cardRows}
                         projectOptions={projectOptions}
-                        openProjectFilter={openProjectFilter}
-                        onOpenProjectFilterChange={setOpenProjectFilter}
-                        onFilterProjectChange={setFilterProjectId}
-                        range={range}
-                        onRangeChange={handleRangeChange}
-                        importInputRef={importInputRef}
-                        onExport={() => void handleExport()}
-                        onImportClick={handleImportClick}
-                        onFileChange={handleImportFileChange}
-                        isAddingManual={isAddingManual}
-                        isAddingCatalog={isAddingCatalog}
-                        onAddManual={() => void handleAddManualRow()}
-                        onAddCatalog={() => setIsCatalogOpen(true)}
+                        supplierOptions={supplierOptions}
+                        pendingIds={pendingIds}
+                        emptyState={emptyState}
+                        onPatchAction={handlePatchAction}
+                        onRemoveAction={handleRemoveAction}
                     />
-                )}
-            />
+                </div>
+            </section>
 
             <GlobalPurchasesSummary totalAmount={displayedTotalsAmount} />
 
