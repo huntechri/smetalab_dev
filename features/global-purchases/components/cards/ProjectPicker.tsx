@@ -43,11 +43,11 @@ export function ProjectPicker({ row, projectOptions, disabled, onPatchAction }: 
           size="xs"
           disabled={disabled}
           aria-label="Выбрать объект"
-          className="h-5 max-w-full justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
+          className="h-4 sm:h-5 max-w-[12rem] justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
         >
-          {disabled ? <Loader2 className="size-3 animate-spin" aria-hidden="true" /> : null}
-          <span className="truncate">{name || 'Без объекта'}</span>
-          <ChevronsUpDown className="size-3 opacity-60" aria-hidden="true" />
+          {disabled ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" /> : null}
+          <span className="min-w-0 truncate">{name || 'Без объекта'}</span>
+          <ChevronsUpDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
