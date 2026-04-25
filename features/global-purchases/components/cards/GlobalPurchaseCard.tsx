@@ -59,21 +59,12 @@ export function GlobalPurchaseCard({
             />
           </div>
           <div className="flex flex-wrap items-center gap-1.5">
-            <EditableCell
-              value={row.unit}
-              disabled={isPending}
-              ariaLabel="Единица измерения"
-              className="h-4 w-11 rounded-full border border-slate-200 bg-white px-1 py-0 text-center text-[9px] font-bold leading-none text-slate-700 !shadow-none sm:h-5 sm:text-[10px] focus-visible:!ring-0 focus-visible:!ring-offset-0"
-              onCommit={async (value: string) => {
-                await onPatchAction(row.id, { unit: value });
-              }}
-            />
             <ProjectPicker row={row} projectOptions={projectOptions} disabled={isPending} onPatchAction={onPatchAction} />
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 lg:justify-end">
-          <div className="inline-flex h-4 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
             <span className="shrink-0 opacity-70">Кол-во:</span>
             <EditableCell
               type="number"
@@ -98,7 +89,7 @@ export function GlobalPurchaseCard({
               }}
             />
           </div>
-          <div className="inline-flex h-4 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
             <span className="shrink-0 opacity-70">Цена:</span>
             <EditableCell
               type="number"
