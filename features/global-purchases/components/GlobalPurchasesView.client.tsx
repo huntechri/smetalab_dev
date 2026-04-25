@@ -11,7 +11,7 @@ import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
 import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
-import { GlobalPurchasesTableToolbar } from './GlobalPurchasesTableToolbar';
+import { GlobalPurchasesToolbar } from './GlobalPurchasesToolbar';
 import { GlobalPurchasesSummary } from './GlobalPurchasesSummary';
 import { GlobalPurchasesEmptyStateActions } from './GlobalPurchasesEmptyStateActions';
 import { GlobalPurchasesCardsList } from './GlobalPurchasesCardsList';
@@ -185,7 +185,7 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
     const searchEmptyState = (
         <TableEmptyState
             title="По запросу ничего не найдено"
-            description="Измените строку поиска или сбросьте фильтр объекта, чтобы увидеть закупки."
+            description="Измените поиск или фильтры, чтобы увидеть закупки."
             icon={PackageSearch}
         />
     );
@@ -200,7 +200,7 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
                 <div className="p-1.5 sm:p-2 pb-0">
                     <DataTableToolbar
                         actions={(
-                            <GlobalPurchasesTableToolbar
+                            <GlobalPurchasesToolbar
                                 filterProjectId={filterProjectId}
                                 projectOptions={projectOptions}
                                 openProjectFilter={openProjectFilter}
