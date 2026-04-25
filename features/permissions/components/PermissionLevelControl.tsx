@@ -24,7 +24,7 @@ export function PermissionLevelControl({
           <TooltipTrigger asChild>
             <Button
               type="button"
-              variant="ghost"
+              variant={currentLevel === 'none' ? 'secondary' : 'ghost'}
               size="icon-xs"
               onClick={() => onSetLevel('none')}
               disabled={isUpdating}
@@ -40,7 +40,7 @@ export function PermissionLevelControl({
           <TooltipTrigger asChild>
             <Button
               type="button"
-              variant="ghost"
+              variant={currentLevel === 'read' ? 'secondary' : 'ghost'}
               size="icon-xs"
               onClick={() => onSetLevel('read')}
               disabled={isUpdating}
@@ -56,7 +56,7 @@ export function PermissionLevelControl({
           <TooltipTrigger asChild>
             <Button
               type="button"
-              variant="ghost"
+              variant={currentLevel === 'manage' ? 'secondary' : 'ghost'}
               size="icon-xs"
               onClick={() => onSetLevel('manage')}
               disabled={isUpdating}
