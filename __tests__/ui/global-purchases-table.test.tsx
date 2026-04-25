@@ -1,6 +1,6 @@
 import type React from 'react';
 import { GlobalPurchasesView } from '@/features/global-purchases/components/GlobalPurchasesView.client';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
@@ -191,12 +191,16 @@ describe('GlobalPurchasesView', () => {
 
         renderView();
 
-        expect(screen.getByText('15.01.2026')).toBeInTheDocument();
-        expect(screen.getByText('Штукатурка Ротбанд')).toBeInTheDocument();
-        expect(screen.getAllByText('ЖК Горизонт').length).toBeGreaterThan(0);
-        expect(screen.getAllByText('Поставщик 1').length).toBeGreaterThan(0);
-        expect(screen.queryByText('Каталог')).not.toBeInTheDocument();
-        expect(screen.queryByText('Ручная')).not.toBeInTheDocument();
+        const card = screen.getByText('Штукатурка Ротбанд').closest('article');
+        expect(card).not.toBeNull();
+        const cardScope = within(card as HTMLElement);
+
+        expect(cardScope.getByText('15.01.2026')).toBeInTheDocument();
+        expect(cardScope.getByText('Штукатурка Ротбанд')).toBeInTheDocument();
+        expect(cardScope.getAllByText('ЖК Горизонт').length).toBeGreaterThan(0);
+        expect(cardScope.getAllByText('Поставщик 1').length).toBeGreaterThan(0);
+        expect(cardScope.queryByText('Каталог')).not.toBeInTheDocument();
+        expect(cardScope.queryByText('Ручная')).not.toBeInTheDocument();
     });
 
     it('shows search empty state when existing rows are filtered out', () => {
