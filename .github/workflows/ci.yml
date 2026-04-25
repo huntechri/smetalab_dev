@@ -65,8 +65,9 @@ jobs:
               - 'package.json'
               - 'packages/*/package.json'
               - 'pnpm-workspace.yaml'
-              # This workflow itself
-              - '.github/workflows/ci.yml'
+              # Workflow and local action changes can change build/deploy behavior.
+              - '.github/workflows/*.yml'
+              - '.github/workflows/*.yaml'
               - '.github/actions/**'
 
   install:
