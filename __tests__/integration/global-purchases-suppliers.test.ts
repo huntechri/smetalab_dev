@@ -40,10 +40,12 @@ describe('Global purchases supplier badges integration', () => {
     await db.insert(projects).values({
       tenantId: teamA,
       name: 'Project A',
+      slug: 'project-a',
     }).returning();
     const [projectB] = await db.insert(projects).values({
       tenantId: teamB,
       name: 'Project B',
+      slug: 'project-b',
     }).returning();
     projectBId = projectB.id;
 
