@@ -43,7 +43,7 @@ export function ProjectPicker({ row, projectOptions, disabled, onPatchAction }: 
           size="xs"
           disabled={disabled}
           aria-label="Выбрать объект"
-          className="h-4 sm:h-5 max-w-[12rem] justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
+          className="h-6 sm:h-5 max-w-[14rem] sm:max-w-[12rem] justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 text-[11px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
         >
           {disabled ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" /> : null}
           <span className="min-w-0 truncate">{name || 'Без объекта'}</span>
