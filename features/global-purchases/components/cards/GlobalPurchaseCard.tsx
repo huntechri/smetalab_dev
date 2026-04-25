@@ -8,9 +8,11 @@ import { PurchaseMetric } from './PurchaseMetric';
 import { SupplierPicker } from './SupplierPicker';
 import {
   formatPurchaseDate,
+  inlineDateCellClassName,
   inlinePriceCellClassName,
   inlineQtyCellClassName,
   inlineTextCellClassName,
+  inlineUnitCellClassName,
 } from './format';
 import type { GlobalPurchaseCardProps } from './types';
 
@@ -88,7 +90,7 @@ export function GlobalPurchaseCard({
                 displayValue={formatPurchaseDate(row.purchaseDate)}
                 disabled={isPending}
                 ariaLabel="Дата закупки"
-                className="h-4 w-auto rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 shadow-none sm:h-5 sm:px-1.5 sm:text-[10px] focus-visible:ring-1"
+                className={inlineDateCellClassName}
                 onCommit={async (value: string) => {
                   await onPatchAction(row.id, { purchaseDate: value });
                 }}
@@ -100,8 +102,8 @@ export function GlobalPurchaseCard({
           <div className="space-y-2.5">
             <CardSectionTitle label="Закупка" tone="green" />
             <div className="flex flex-wrap gap-2">
-              <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
-                <span className="opacity-70">Кол-во:</span>
+              <div className="inline-flex h-4 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+                <span className="shrink-0 opacity-70">Кол-во:</span>
                 <EditableCell
                   type="number"
                   align="right"
@@ -119,14 +121,14 @@ export function GlobalPurchaseCard({
                   value={row.unit}
                   disabled={isPending}
                   ariaLabel="Единица измерения"
-                  className="h-4 w-8 border-0 bg-transparent px-0 py-0 text-left text-[9px] font-bold text-slate-700 !shadow-none sm:h-5 sm:text-[10px] focus-visible:!ring-0 focus-visible:!ring-offset-0"
+                  className={inlineUnitCellClassName}
                   onCommit={async (value: string) => {
                     await onPatchAction(row.id, { unit: value });
                   }}
                 />
               </div>
-              <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
-                <span className="opacity-70">Цена:</span>
+              <div className="inline-flex h-4 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+                <span className="shrink-0 opacity-70">Цена:</span>
                 <EditableCell
                   type="number"
                   align="right"
@@ -140,7 +142,7 @@ export function GlobalPurchaseCard({
                     await onPatchAction(row.id, { price: Number(value) });
                   }}
                 />
-                <span>₽</span>
+                <span className="shrink-0">₽</span>
               </div>
               <PurchaseMetric label="Итого" value={<MoneyCell value={row.amount} />} tone="success" />
             </div>
