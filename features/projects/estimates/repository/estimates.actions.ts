@@ -4,12 +4,15 @@ import {
     addEstimateWorkAction,
     getEstimateRowsAction,
     patchEstimateRowAction,
-    removeEstimateRowAction,
 } from '@/app/actions/estimates/rows';
 import { resetEstimateCoefficientAction, updateEstimateCoefficientAction } from '@/app/actions/estimates/coefficient';
 import { updateEstimateStatusAction } from '@/app/actions/estimates/status';
 import { deleteEstimateAction } from '@/app/actions/estimates/delete';
 import { EstimateRow, RowPatch } from '../types/dto';
+
+type RemoveEstimateRowResult =
+    | { success: true; data: { removedIds: string[] } }
+    | { success: false; error: { message: string; code?: string } };
 
 export const estimatesActionRepo = {
     async list(estimateId: string): Promise<EstimateRow[]> {
@@ -72,10 +75,16 @@ export const estimatesActionRepo = {
     },
 
     async removeRow(estimateId: string, rowId: string): Promise<{ removedIds: string[] }> {
-        const result = await removeEstimateRowAction(estimateId, rowId);
+        const response = await fetch(`/api/estimates/${estimateId}/rows/${rowId}`, {
+            method: 'DELETE',
+            headers: { Accept: 'application/json' },
+            cache: 'no-store',
+        });
 
-        if (!result.success) {
-            throw new Error(result.error.message);
+        const result = (await response.json()) as RemoveEstimateRowResult;
+
+        if (!response.ok || !result.success) {
+            throw new Error(result.success ? 'Не удалось удалить строку.' : result.error.message);
         }
 
         return result.data;
