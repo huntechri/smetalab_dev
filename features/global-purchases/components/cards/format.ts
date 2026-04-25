@@ -9,17 +9,31 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   year: 'numeric',
 });
 
-export const inlineCellClassName =
-  'h-4 sm:h-5 min-w-0 rounded-sm border-0 bg-transparent px-0.5 py-0 text-[9px] sm:text-[10px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
+const hideInlineEditIconClassName = '[&_svg]:hidden';
+
+export const inlineCellClassName = cn(
+  'h-4 sm:h-5 min-w-0 rounded-sm border-0 bg-transparent px-0.5 py-0 text-[9px] sm:text-[10px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0',
+  hideInlineEditIconClassName,
+);
 
 export const inlineQtyCellClassName = cn(
   inlineCellClassName,
-  'w-8 justify-end text-right tabular-nums',
+  'w-11 justify-end text-right tabular-nums',
+);
+
+export const inlineUnitCellClassName = cn(
+  inlineCellClassName,
+  'w-8 justify-start text-left font-bold text-slate-700',
 );
 
 export const inlinePriceCellClassName = cn(
   inlineCellClassName,
-  'w-16 justify-end text-right tabular-nums',
+  'w-[4.75rem] justify-end text-right tabular-nums',
+);
+
+export const inlineDateCellClassName = cn(
+  inlineCellClassName,
+  'w-[4.9rem] justify-center rounded-full border border-slate-200 bg-slate-50 px-1 text-slate-600 sm:px-1.5',
 );
 
 export const inlineTextCellClassName = cn(
