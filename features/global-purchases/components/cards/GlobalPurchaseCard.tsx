@@ -8,7 +8,8 @@ import { PurchaseMetric } from './PurchaseMetric';
 import { SupplierPicker } from './SupplierPicker';
 import {
   formatPurchaseDate,
-  inlineNumberCellClassName,
+  inlinePriceCellClassName,
+  inlineQtyCellClassName,
   inlineTextCellClassName,
 } from './format';
 import type { GlobalPurchaseCardProps } from './types';
@@ -60,7 +61,7 @@ export function GlobalPurchaseCard({
 
   return (
     <article className="overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg">
-      <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1fr_1fr_auto] lg:gap-6">
+      <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1.2fr_1fr_1fr_auto] lg:gap-6">
         <div className="flex min-w-0 flex-col justify-center">
           <div className="flex items-start gap-1.5">
             {isPending ? <Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin text-muted-foreground" aria-hidden="true" /> : null}
@@ -79,15 +80,15 @@ export function GlobalPurchaseCard({
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:contents">
           <div className="space-y-2.5">
-            <CardSectionTitle label="Дата" tone="blue" />
-            <div className="flex flex-wrap gap-2">
+            <CardSectionTitle label="Дата/Объект" tone="blue" />
+            <div className="flex flex-wrap gap-1.5 sm:flex-nowrap">
               <EditableCell
                 type="date"
                 value={row.purchaseDate}
                 displayValue={formatPurchaseDate(row.purchaseDate)}
                 disabled={isPending}
                 ariaLabel="Дата закупки"
-                className="h-4 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[9px] font-semibold leading-none text-slate-600 shadow-none sm:h-5 sm:text-[10px] focus-visible:ring-1"
+                className="h-4 w-auto rounded-full border border-slate-200 bg-slate-50 px-1 py-0 text-[9px] font-semibold leading-none text-slate-600 shadow-none sm:h-5 sm:px-1.5 sm:text-[10px] focus-visible:ring-1"
                 onCommit={async (value: string) => {
                   await onPatchAction(row.id, { purchaseDate: value });
                 }}
@@ -109,7 +110,7 @@ export function GlobalPurchaseCard({
                   value={row.qty}
                   disabled={isPending}
                   ariaLabel="Количество"
-                  className={inlineNumberCellClassName}
+                  className={inlineQtyCellClassName}
                   onCommit={async (value: string) => {
                     await onPatchAction(row.id, { qty: Number(value) });
                   }}
@@ -118,7 +119,7 @@ export function GlobalPurchaseCard({
                   value={row.unit}
                   disabled={isPending}
                   ariaLabel="Единица измерения"
-                  className="h-4 w-9 border-0 bg-transparent px-0 py-0 text-left text-[9px] font-bold text-slate-700 !shadow-none sm:text-[10px] focus-visible:!ring-0 focus-visible:!ring-offset-0"
+                  className="h-4 w-8 border-0 bg-transparent px-0 py-0 text-left text-[9px] font-bold text-slate-700 !shadow-none sm:h-5 sm:text-[10px] focus-visible:!ring-0 focus-visible:!ring-offset-0"
                   onCommit={async (value: string) => {
                     await onPatchAction(row.id, { unit: value });
                   }}
@@ -134,7 +135,7 @@ export function GlobalPurchaseCard({
                   value={row.price}
                   disabled={isPending}
                   ariaLabel="Цена"
-                  className={cn(inlineNumberCellClassName, 'font-bold')}
+                  className={cn(inlinePriceCellClassName, 'font-bold')}
                   onCommit={async (value: string) => {
                     await onPatchAction(row.id, { price: Number(value) });
                   }}
