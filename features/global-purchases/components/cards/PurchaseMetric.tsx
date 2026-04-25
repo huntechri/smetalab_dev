@@ -19,11 +19,11 @@ export function PurchaseMetric({ label, value, tone = 'neutral' }: PurchaseMetri
     <Badge
       variant="outline"
       className={cn(
-        'h-5 px-1.5 text-[10px] font-semibold normal-case leading-none tracking-tight border shadow-none',
+        'h-4 sm:h-5 whitespace-nowrap px-1 sm:px-1.5 text-[9px] sm:text-[10px] font-semibold normal-case leading-none tracking-tight border shadow-none',
         toneClasses[tone],
       )}
     >
-      <span className="opacity-70">{label}:</span>
+      <span className="shrink-0 opacity-70">{label}:</span>
       <span className="ml-0.5 tabular-nums">{value}</span>
     </Badge>
   );
