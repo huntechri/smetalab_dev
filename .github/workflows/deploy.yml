@@ -202,9 +202,8 @@ jobs:
     environment:
       name: production
     env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL || secrets.POSTGRES_URL }}
-      POSTGRES_URL: ${{ secrets.POSTGRES_URL || secrets.DATABASE_URL }}
       AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -219,8 +218,25 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+      - name: Pull production env
+        run: vercel pull --yes --environment production --token="$VERCEL_TOKEN"
       - name: Run database migrations
-        run: pnpm db:migrate:prod
+        run: |
+          set -euo pipefail
+          if [ ! -f .vercel/.env.production.local ]; then
+            echo "Missing .vercel/.env.production.local after vercel pull."
+            exit 1
+          fi
+          set -a
+          . .vercel/.env.production.local
+          set +a
+          if [ -z "${DATABASE_URL:-}" ]; then
+            echo "DATABASE_URL is not defined in Vercel production environment."
+            exit 1
+          fi
+          pnpm db:migrate:prod
 
   deploy-production:
     name: Deploy to Vercel Production (smetalabv3-timeweb)
