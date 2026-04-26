@@ -2,6 +2,7 @@ import * as React from "react";
 import { Upload, Download, Trash2, Filter } from "lucide-react";
 
 import { Button } from "@repo/ui";
+import { ToolbarButton } from "@/shared/ui/toolbar-button";
 import { cn } from "@/lib/utils";
 import {
   AlertDialog,
@@ -71,9 +72,9 @@ export function CatalogToolbar<TFilters>({
       <div className="lg:hidden">
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon-xs">
+            <ToolbarButton variant="outline" size="icon-xs">
               <Filter className="h-4 w-4" />
-            </Button>
+            </ToolbarButton>
           </SheetTrigger>
           <SheetContent side="left" className="w-[300px] p-6 focus-visible:ring-0">
             <SheetHeader className="mb-4">
@@ -95,7 +96,7 @@ export function CatalogToolbar<TFilters>({
       </div>
 
       <div className="hidden lg:block">
-        <Button
+        <ToolbarButton
           variant="outline"
           size="icon-xs"
           onClick={() => setShowSidebar?.(!showSidebar)}
@@ -106,20 +107,19 @@ export function CatalogToolbar<TFilters>({
               showSidebar && "scale-110"
             )}
           />
-        </Button>
+        </ToolbarButton>
       </div>
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
+          <ToolbarButton
             variant="outline"
-            size="xs"
             onClick={onImportClick}
             loading={isImporting}
             iconLeft={<Upload />}
           >
             Импорт
-          </Button>
+          </ToolbarButton>
         </TooltipTrigger>
         <TooltipContent>
           <p>{importTooltip}</p>
@@ -128,15 +128,14 @@ export function CatalogToolbar<TFilters>({
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
+          <ToolbarButton
             variant="outline"
-            size="xs"
             onClick={onExport}
             loading={isExporting}
             iconLeft={<Download />}
           >
             Экспорт
-          </Button>
+          </ToolbarButton>
         </TooltipTrigger>
         <TooltipContent>
           <p>{exportTooltip}</p>
@@ -151,15 +150,15 @@ export function CatalogToolbar<TFilters>({
               className="inline-block outline-none"
             >
               <AlertDialogTrigger asChild>
-                <Button
+                <ToolbarButton
                   variant="destructive"
-                  size="xs"
                   disabled={isActionDisabled}
                   loading={isDeletingAll}
                   iconLeft={<Trash2 />}
+                  labelClassName="hidden sm:inline"
                 >
-                  <span className="hidden sm:inline">Удалить всё</span>
-                </Button>
+                  Удалить всё
+                </ToolbarButton>
               </AlertDialogTrigger>
             </span>
           </TooltipTrigger>
