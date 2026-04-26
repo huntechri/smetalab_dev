@@ -13,15 +13,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@repo/ui";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@repo/ui";
+} from "@/shared/ui/alert-dialog";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/shared/ui/tooltip";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@repo/ui";
+} from "@/shared/ui/sheet";
 import {
   CatalogFiltersUpdater,
   CatalogSidebarProps,

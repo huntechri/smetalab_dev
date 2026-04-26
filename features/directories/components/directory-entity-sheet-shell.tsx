@@ -2,15 +2,15 @@
 
 import type { ReactNode } from 'react';
 
+import { ScrollArea } from '@/shared/ui/scroll-area';
 import {
-  ScrollArea,
   Sheet,
   SheetContent,
   SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from '@repo/ui';
+} from '@/shared/ui/sheet';
 
 interface DirectoryEntitySheetShellProps {
   open: boolean;

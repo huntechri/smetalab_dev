@@ -1,7 +1,7 @@
 'use client';
 
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
-import { TooltipProvider } from '@repo/ui';
+import { TooltipProvider } from '@/shared/ui/tooltip';
 import { GlobalPurchasesView } from '../components/GlobalPurchasesView.client';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
