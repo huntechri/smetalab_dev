@@ -1,4 +1,4 @@
-import { Skeleton } from '@repo/ui';
+import { Skeleton } from '@/shared/ui/skeleton';
 
 export default function AppLoading() {
   return (
