@@ -2,7 +2,10 @@
 
 import { useActionState } from 'react';
 import { Loader2, Lock, Trash2 } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
 import { deleteAccount, updatePassword } from '@/app/(login)/actions';
 
 type PasswordState = {
