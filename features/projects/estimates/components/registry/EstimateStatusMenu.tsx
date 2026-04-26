@@ -1,12 +1,13 @@
 'use client';
 
-import { Badge, Button } from '@repo/ui';
+import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/dropdown-menu';
 import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { cn } from '@/lib/utils';
 import type { EstimateStatus } from '../../types/dto';
