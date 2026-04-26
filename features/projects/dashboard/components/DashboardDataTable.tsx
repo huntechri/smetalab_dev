@@ -50,9 +50,9 @@ import { z } from "zod"
 
 import { taskSchema } from "../schemas/task-schema"
 import { useIsMobile } from "@/shared/hooks/use-mobile"
-import { Badge } from "@repo/ui"
-import { Button } from '@repo/ui'
-import { Checkbox } from "@repo/ui"
+import { Badge } from "@/shared/ui/badge"
+import { Button } from '@/shared/ui/button'
+import { Checkbox } from "@/shared/ui/checkbox"
 import {
     Drawer,
     DrawerClose,
@@ -62,7 +62,7 @@ import {
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
-} from "@repo/ui"
+} from "@/shared/ui/drawer"
 import {
     DropdownMenu,
     DropdownMenuCheckboxItem,
@@ -70,17 +70,17 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@repo/ui"
-import { Input } from "@repo/ui"
-import { Label } from "@repo/ui"
+} from "@/shared/ui/dropdown-menu"
+import { Input } from "@/shared/ui/input"
+import { Label } from "@/shared/ui/label"
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@repo/ui"
-import { Separator } from "@repo/ui"
+} from "@/shared/ui/select"
+import { Separator } from "@/shared/ui/separator"
 import {
     Table,
     TableBody,
@@ -88,12 +88,12 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@repo/ui"
+} from "@/shared/ui/table"
 import {
     Tabs,
     TabsList,
     TabsTrigger,
-} from "@repo/ui"
+} from "@/shared/ui/tabs"
 
 import demoData from "../data/demo-tasks.json"
 
