@@ -40,10 +40,16 @@ const toDraft = (row: EstimateRoomParam): EstimateRoomParamDraft => ({
     portals: row.portals.map((portal) => ({ height: String(portal.height), width: String(portal.width) })) as EstimateRoomParamDraft['portals'],
 });
 
+const toInitialDraftRows = (initialRows: EstimateRoomParam[]): EstimateRoomParamDraft[] => {
+    if (initialRows.length === 0) {
+        return [createDraftRow()];
+    }
+
+    return [...initialRows].sort((a, b) => a.order - b.order).map(toDraft);
+};
+
 export function useRoomsParamsTable(initialRows: EstimateRoomParam[]) {
-    const [rows, setRows] = useState<EstimateRoomParamDraft[]>(
-        initialRows.length > 0 ? initialRows.sort((a, b) => a.order - b.order).map(toDraft) : [createDraftRow()],
-    );
+    const [rows, setRows] = useState<EstimateRoomParamDraft[]>(() => toInitialDraftRows(initialRows));
 
     const totals = useMemo(() => calculateTotals(rows), [rows]);
 
