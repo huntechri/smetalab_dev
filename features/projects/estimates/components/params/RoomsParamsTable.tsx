@@ -1,5 +1,5 @@
-import { Button } from '@repo/ui';
-import { Input } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import {
     Table,
     TableBody,
@@ -7,7 +7,7 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from '@repo/ui';
+} from '@/shared/ui/table';
 import { Trash2 } from 'lucide-react';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2 } from '../../lib/room-params-calculations';

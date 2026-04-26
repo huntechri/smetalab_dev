@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 
 export default function ActivityPageSkeleton() {
   return (

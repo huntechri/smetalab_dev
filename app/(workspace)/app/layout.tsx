@@ -1,4 +1,4 @@
-import { SidebarProvider, SidebarInset } from '@repo/ui';
+import { SidebarProvider, SidebarInset } from '@/shared/ui/sidebar';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';

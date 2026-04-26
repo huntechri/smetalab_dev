@@ -1,4 +1,4 @@
-import { Badge } from '@repo/ui'
+import { Badge } from '@/shared/ui/badge'
 
 import { getEstimateStatusLabel, type EstimateStatus } from '@/entities/estimate/model/status'
 

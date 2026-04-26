@@ -1,4 +1,4 @@
-import { Card } from '@repo/ui';
+import { Card } from '@/shared/ui/card';
 import { cn } from '@/lib/utils';
 import { Activity, AlertTriangle, Clock } from 'lucide-react';
 

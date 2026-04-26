@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Check, ChevronsUpDown, Filter } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import {
     Command,
     CommandEmpty,
@@ -11,17 +11,17 @@ import {
     CommandInput,
     CommandItem,
     CommandList,
-} from '@repo/ui';
+} from '@/shared/ui/command';
 import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/popover';
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/tooltip';
 import { ProjectSortOption } from '../../shared/types';
 
 type ProjectsSortSelectProps = {

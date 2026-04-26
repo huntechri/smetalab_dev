@@ -1,9 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import { ScrollArea } from "@repo/ui";
-import { Button } from '@repo/ui';
-import { Separator } from "@repo/ui";
+import { ScrollArea } from "@/shared/ui/scroll-area";
+import { Button } from '@/shared/ui/button';
+import { Separator } from "@/shared/ui/separator";
 import { Check, FilterX, Layers, Tag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { getWorkPhases, getWorkCategories } from '@/app/actions/works/search';

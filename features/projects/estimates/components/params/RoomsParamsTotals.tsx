@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@repo/ui';
+import { Card, CardContent } from '@/shared/ui/card';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2, toSafeNumber } from '../../lib/room-params-calculations';
 

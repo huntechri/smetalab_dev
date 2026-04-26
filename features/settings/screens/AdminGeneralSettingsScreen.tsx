@@ -3,7 +3,10 @@
 import { Suspense, useActionState } from 'react';
 import useSWR from 'swr';
 import { Loader2 } from 'lucide-react';
-import { Button, Card, CardContent, CardHeader, CardTitle, Input, Label } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Input } from '@/shared/ui/input';
+import { Label } from '@/shared/ui/label';
 import { updateAccount } from '@/app/(login)/actions';
 import type { AppUserWithPermissions } from '@/shared/types/session';
 

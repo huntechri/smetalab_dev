@@ -2,10 +2,10 @@
 
 import type { KeyboardEvent } from 'react';
 import { Sparkles } from 'lucide-react';
-import { SearchInput } from '@repo/ui';
+import { SearchInput } from '@/shared/ui/search-input';
 import { WorkCatalogCategories } from './WorkCatalogCategories.client';
-import { Switch } from '@repo/ui';
-import { Button } from '@repo/ui';
+import { Switch } from '@/shared/ui/switch';
+import { Button } from '@/shared/ui/button';
 import { cn } from '@/lib/utils';
 
 interface Props {
