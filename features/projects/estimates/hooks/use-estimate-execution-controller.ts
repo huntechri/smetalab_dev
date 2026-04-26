@@ -21,6 +21,9 @@ interface UseEstimateExecutionControllerParams {
   initialRows?: EstimateExecutionRow[];
 }
 
+const EXTERNAL_REFRESH_DEBOUNCE_MS = 750;
+const VISIBLE_TAB_REFRESH_MS = 5 * 60 * 1000;
+
 export function useEstimateExecutionController({
   estimateId,
   initialRows,
@@ -29,6 +32,7 @@ export function useEstimateExecutionController({
   const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const requestVersionRef = useRef<Record<string, number>>({});
+  const lastExternalRefreshRef = useRef(0);
   const { toast } = useAppToast();
   const router = useRouter();
 
@@ -57,6 +61,16 @@ export function useEstimateExecutionController({
     [estimateId],
   );
 
+  const reloadAfterExternalChange = useCallback(() => {
+    const now = Date.now();
+    if (now - lastExternalRefreshRef.current < EXTERNAL_REFRESH_DEBOUNCE_MS) {
+      return;
+    }
+
+    lastExternalRefreshRef.current = now;
+    void loadRows(true);
+  }, [loadRows]);
+
   useEffect(() => {
     if (initialRows !== undefined) {
       setRows(initialRows);
@@ -69,9 +83,7 @@ export function useEstimateExecutionController({
   }, [initialRows, loadRows]);
 
   useEffect(() => {
-    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, () => {
-      void loadRows(true);
-    });
+    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, reloadAfterExternalChange);
 
     const onCoefUpdated = (event: Event) => {
       const customEvent = event as CustomEvent<{ estimateId?: string }>;
@@ -79,21 +91,43 @@ export function useEstimateExecutionController({
         return;
       }
 
-      void loadRows(true);
+      reloadAfterExternalChange();
     };
+
+    const handleFocus = () => reloadAfterExternalChange();
+    const handlePageShow = () => reloadAfterExternalChange();
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        reloadAfterExternalChange();
+      }
+    };
+
+    const intervalId = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        reloadAfterExternalChange();
+      }
+    }, VISIBLE_TAB_REFRESH_MS);
 
     window.addEventListener(
       "estimate:coefficient-updated",
       onCoefUpdated as (event: Event) => void,
     );
+    window.addEventListener("focus", handleFocus);
+    window.addEventListener("pageshow", handlePageShow);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       unsubscribeRows();
       window.removeEventListener(
         "estimate:coefficient-updated",
         onCoefUpdated as (event: Event) => void,
       );
+      window.clearInterval(intervalId);
+      window.removeEventListener("focus", handleFocus);
+      window.removeEventListener("pageshow", handlePageShow);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [estimateId, loadRows]);
+  }, [estimateId, reloadAfterExternalChange]);
 
   const patchRow = useCallback(
     async (rowId: string, patch: EstimateExecutionPatch) => {
