@@ -8,7 +8,7 @@ import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics';
 import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
-import { Skeleton } from '@repo/ui';
+import { Skeleton } from '@/shared/ui/skeleton';
 
 type EstimateListItem = {
     id: string;
