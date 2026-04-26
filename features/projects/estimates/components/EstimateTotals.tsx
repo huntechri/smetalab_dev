@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Badge } from '@repo/ui';
+import { Badge } from '@/shared/ui/badge';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
