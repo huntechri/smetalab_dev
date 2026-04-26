@@ -26,7 +26,6 @@ interface CreateMaterialSupplierSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   materialSupplier?: MaterialSupplierRow | null;
-  tenantId: number;
   onSaved?: (supplier: MaterialSupplierRow) => void;
 }
 
@@ -34,7 +33,6 @@ export function CreateMaterialSupplierSheet({
   open,
   onOpenChange,
   materialSupplier,
-  tenantId: _tenantId,
   onSaved,
 }: CreateMaterialSupplierSheetProps) {
   const [isPending, startTransition] = useTransition();
@@ -203,8 +201,7 @@ export function CreateMaterialSupplierSheet({
 
                 <div className="grid grid-cols-2 gap-4">
                   <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel className="text-xs">Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="email" render={({ field }) => <FormItem><FormLabel>Email</FormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel>Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="address" render={({ field }) => <FormItem><FormLabel className="text-xs">Адрес</FormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
                 </div>
               </div>
             </ScrollArea>
