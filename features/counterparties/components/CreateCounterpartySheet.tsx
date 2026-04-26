@@ -28,7 +28,6 @@ interface CreateCounterpartySheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   counterparty?: CounterpartyRow | null;
-  tenantId: number;
   onSaved?: (saved: CounterpartyRow, mode: "create" | "update") => void;
 }
 
@@ -36,7 +35,6 @@ export function CreateCounterpartySheet({
   open,
   onOpenChange,
   counterparty,
-  tenantId: _tenantId,
   onSaved,
 }: CreateCounterpartySheetProps) {
   const { form, legalStatus, isPending, modeTitle, submitLabel, onSubmit } =
