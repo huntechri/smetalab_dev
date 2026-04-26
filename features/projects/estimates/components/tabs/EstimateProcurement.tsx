@@ -3,8 +3,8 @@
 import { cn } from '@/lib/utils';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
-import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { Download, PackageSearch, Search } from 'lucide-react';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
@@ -91,10 +91,9 @@ function ProcurementToolbar({
             aria-label="Поиск закупок"
           />
         </div>
-        <Button variant="outline" size="xs" className="shrink-0" onClick={onExport}>
-          <Download className="mr-2 size-3.5" aria-hidden="true" />
+        <ToolbarButton className="shrink-0" onClick={onExport} iconLeft={<Download className="mr-2 size-3.5" aria-hidden="true" />}>
           Экспорт Excel
-        </Button>
+        </ToolbarButton>
       </div>
     </div>
   );

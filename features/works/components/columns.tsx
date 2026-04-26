@@ -2,11 +2,11 @@
 
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
-import { Pencil, Settings, Trash, Plus, Check, X, ChevronRight } from "lucide-react"
+import { ChevronRight } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
 import { Input } from "@/shared/ui/input"
-import { ActionMenu } from "@/shared/ui/action-menu"
+import { TableHeaderActions, TableRowActions } from "@/shared/ui/table-actions"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
@@ -17,74 +17,16 @@ interface RowActionsProps {
     table: Table<WorkRow>;
 }
 
-const RowActions = React.memo(({ row, table }: RowActionsProps) => {
-    const meta = table.options.meta as TableMeta<WorkRow> & {
-        setEditingRow?: (row: WorkRow | null) => void;
-        setDeletingRow?: (row: WorkRow | null) => void;
-    };
-
-    if (row.original.isPlaceholder) {
-        return (
-            <div className="flex gap-1 justify-end pr-2">
-                <Button
-                    size="icon-xs"
-                    variant="ghost"
-                    onClick={() => meta.onSaveInsert?.(row.original.id)}
-                    aria-label="Сохранить строку"
-                    title="Сохранить строку"
-               >
-                    <Check className="h-4 w-4" />
-                </Button>
-                <Button
-                    size="icon-xs"
-                    variant="ghost"
-                    onClick={() => meta.onCancelInsert?.()}
-                    aria-label="Отменить вставку"
-                    title="Отменить вставку"
-               >
-                    <X className="h-4 w-4" />
-                </Button>
-            </div>
-        )
-    }
-
-    return (
-        <div className="flex items-center justify-end md:pr-4 gap-1">
-            <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => meta?.onInsertRequest?.(row.original.id)}
-                aria-label="Вставить строку ниже"
-                title="Вставить строку ниже"
-           >
-                <Plus className="h-4 w-4" />
-            </Button>
-
-            <ActionMenu
-                ariaLabel="Действия"
-                modal={false}
-                trigger={
-                    <Button variant="ghost" size="icon-xs" aria-label="Действия" title="Действия">
-                        <Settings className="h-4 w-4" />
-                    </Button>
-                }
-                items={[
-                    {
-                        label: "Изменить",
-                        icon: <Pencil className="h-4 w-4" />,
-                        onClick: () => meta.setEditingRow?.(row.original),
-                    },
-                    {
-                        label: "Удалить",
-                        icon: <Trash className="h-4 w-4" />,
-                        variant: "destructive",
-                        onClick: () => meta.setDeletingRow?.(row.original),
-                    },
-                ]}
-            />
-        </div>
-    )
-})
+const RowActions = React.memo(({ row, table }: RowActionsProps) => (
+    <TableRowActions
+        row={row.original}
+        table={table}
+        className="flex items-center justify-end md:pr-4 gap-1"
+        actionMenuModal={false}
+        insertLabel="Вставить строку ниже"
+        insertTitle="Вставить строку ниже"
+    />
+))
 RowActions.displayName = "RowActions"
 
 const IndexCell = React.memo(({ row }: { row: Row<WorkRow> }) => {
@@ -233,37 +175,17 @@ export const columns: ColumnDef<WorkRow>[] = [
     },
     {
         id: "actions",
-        header: ({ table }) => {
-            const meta = table.options.meta as TableMeta<WorkRow>
-            return (
-                <div className="flex justify-end pr-6 items-center gap-1">
-                    <Button
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => meta.onInsertRequest?.()}
-                        title="Добавить строку"
-                        aria-label="Добавить строку"
-                   >
-                        <Plus className="h-4 w-4" />
+        header: ({ table }) => (
+            <TableHeaderActions
+                table={table}
+                className="flex justify-end pr-6 items-center gap-1"
+                trigger={
+                    <Button variant="ghost" aria-label="Действия" title="Действия">
+                        Действия
                     </Button>
-                    <ActionMenu
-                        ariaLabel="Действия"
-                        modal={false}
-                        trigger={
-                            <Button variant="ghost" aria-label="Действия" title="Действия">
-                                Действия
-                            </Button>
-                        }
-                        items={[
-                            {
-                                label: "Сбросить сортировку",
-                                onClick: () => meta.onReorder?.(),
-                            },
-                        ]}
-                    />
-                </div>
-            )
-        },
+                }
+            />
+        ),
         size: 90,
         cell: ({ row, table }) => <RowActions row={row} table={table} />,
     },

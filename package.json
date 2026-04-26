@@ -29,7 +29,13 @@
     "codemod:buttons": "npx tsx scripts/migrate-buttons.ts --write",
     "codemod:buttons:report": "npx tsx scripts/migrate-buttons.ts --report",
     "codemod:inputs": "npx tsx scripts/migrate-inputs.ts --write",
-    "codemod:inputs:report": "npx tsx scripts/migrate-inputs.ts --report"
+    "codemod:inputs:report": "npx tsx scripts/migrate-inputs.ts --report",
+    "audit:buttons": "pnpm codemod:buttons:report",
+    "audit:inputs": "pnpm codemod:inputs:report",
+    "audit:unused": "pnpm dlx ts-prune",
+    "audit:deps": "pnpm dlx depcheck",
+    "audit:imports": "pnpm dlx unimported",
+    "audit:ui": "pnpm audit:buttons && pnpm audit:inputs"
   },
   "dependencies": {
     "@repo/ui": "workspace:*",

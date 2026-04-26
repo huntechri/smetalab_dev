@@ -21,7 +21,6 @@ const PAGE_SIZE = 50;
 interface CounterpartiesScreenProps {
   initialData: CounterpartyRow[];
   totalCount: number;
-  tenantId: number;
 }
 
 const counterpartiesListAdapter: DirectoryListAdapter<CounterpartyRow> = {
@@ -33,7 +32,7 @@ const counterpartiesListAdapter: DirectoryListAdapter<CounterpartyRow> = {
   desktopHeight: '600px',
 };
 
-export function CounterpartiesScreen({ initialData, totalCount, tenantId }: CounterpartiesScreenProps) {
+export function CounterpartiesScreen({ initialData, totalCount }: CounterpartiesScreenProps) {
   const {
     isSheetOpen,
     editingItem: editingCounterparty,
@@ -158,7 +157,6 @@ export function CounterpartiesScreen({ initialData, totalCount, tenantId }: Coun
         open={isSheetOpen}
         onOpenChange={onSheetOpenChange}
         counterparty={editingCounterparty}
-        tenantId={tenantId}
         onSaved={onSaved}
       />
     </>

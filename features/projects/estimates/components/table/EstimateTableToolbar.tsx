@@ -12,7 +12,7 @@ import {
   Trash2,
 } from 'lucide-react';
 
-import { Button } from '@/shared/ui/button';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -44,18 +44,15 @@ function DesktopPrimaryActions({
 >) {
   return (
     <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
-      <Button variant="outline" aria-label="Режим расчета" onClick={onOpenCalculationMode}>
-        <Calculator className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="hidden sm:inline">Режим расчета</span>
-      </Button>
-      <Button variant="outline" aria-label="Добавить раздел" onClick={onOpenCreateSectionDialog}>
-        <FolderTree className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="hidden sm:inline">Раздел</span>
-      </Button>
-      <Button variant="outline" aria-label="Сохранить смету" onClick={onOpenSavePattern}>
-        <Save className="h-3.5 w-3.5 text-muted-foreground" />
-        <span className="hidden sm:inline">Сохранить</span>
-      </Button>
+      <ToolbarButton aria-label="Режим расчета" onClick={onOpenCalculationMode} iconLeft={<Calculator className="h-3.5 w-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+        Режим расчета
+      </ToolbarButton>
+      <ToolbarButton aria-label="Добавить раздел" onClick={onOpenCreateSectionDialog} iconLeft={<FolderTree className="h-3.5 w-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+        Раздел
+      </ToolbarButton>
+      <ToolbarButton aria-label="Сохранить смету" onClick={onOpenSavePattern} iconLeft={<Save className="h-3.5 w-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+        Сохранить
+      </ToolbarButton>
     </div>
   );
 }
@@ -80,24 +77,20 @@ function DesktopSecondaryActions({
 >) {
   return (
     <div className="hidden xl:flex items-center gap-1.5">
-      <Button variant="outline" onClick={onOpenApplyPattern}>
-        <FileStack className="h-3.5 w-3.5 text-muted-foreground" />
-        <span>Шаблон</span>
-      </Button>
-      <Button variant="outline" onClick={onOpenCoefficientDialog}>
-        <Percent className="h-3.5 w-3.5 text-muted-foreground" />
-        <span>Коэффициент</span>
-      </Button>
-      <Button variant="outline" onClick={onImportEstimate} disabled={isImporting}>
-        <FileUp className="h-3.5 w-3.5 text-muted-foreground" />
-        <span>{isImporting ? 'Импорт...' : 'Импорт'}</span>
-      </Button>
+      <ToolbarButton onClick={onOpenApplyPattern} iconLeft={<FileStack className="h-3.5 w-3.5 text-muted-foreground" />}>
+        Шаблон
+      </ToolbarButton>
+      <ToolbarButton onClick={onOpenCoefficientDialog} iconLeft={<Percent className="h-3.5 w-3.5 text-muted-foreground" />}>
+        Коэффициент
+      </ToolbarButton>
+      <ToolbarButton onClick={onImportEstimate} disabled={isImporting} iconLeft={<FileUp className="h-3.5 w-3.5 text-muted-foreground" />}>
+        {isImporting ? 'Импорт...' : 'Импорт'}
+      </ToolbarButton>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" disabled={isExporting}>
-            <FileDown className="h-3.5 w-3.5 text-muted-foreground" />
-            <span>{isExporting ? 'Экспорт...' : 'Экспорт'}</span>
-          </Button>
+          <ToolbarButton disabled={isExporting} iconLeft={<FileDown className="h-3.5 w-3.5 text-muted-foreground" />}>
+            {isExporting ? 'Экспорт...' : 'Экспорт'}
+          </ToolbarButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuItem className="gap-2" onClick={onExportXlsx}>
@@ -131,10 +124,10 @@ function MobileOverflowActions({
     <div className="xl:hidden">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" size="icon-xs" aria-label="Действия по смете">
+          <ToolbarButton size="icon-xs" aria-label="Действия по смете">
             <MoreHorizontal className="h-4 w-4" />
             <span className="sr-only">Действия по смете</span>
-          </Button>
+          </ToolbarButton>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
           <DropdownMenuItem className="gap-2" onClick={onOpenCalculationMode}>
@@ -197,10 +190,9 @@ export function EstimateTableToolbar(props: EstimateTableToolbarProps) {
         onExportPdf={props.onExportPdf}
       />
       <div className="hidden xl:flex">
-        <Button variant="destructive" aria-label="Удалить смету" onClick={props.onOpenDeleteDialog}>
-          <Trash2 className="h-3.5 w-3.5" />
-          <span className="hidden sm:inline">Удалить</span>
-        </Button>
+        <ToolbarButton variant="destructive" aria-label="Удалить смету" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 className="h-3.5 w-3.5" />} labelClassName="hidden sm:inline">
+          Удалить
+        </ToolbarButton>
       </div>
       <MobileOverflowActions {...props} />
     </div>

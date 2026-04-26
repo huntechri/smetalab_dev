@@ -1,112 +1,13 @@
 "use client"
 
-import * as React from "react"
-import { ColumnDef, Table } from "@tanstack/react-table"
-import { Pencil, Settings, Trash, Check, X, Plus } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table"
+import { Settings } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/shared/ui/tooltip"
 import { MaterialRow } from "@/shared/types/domain/material-row"
 import { TableMeta } from "@/shared/ui/data-table"
-import { ActionMenu } from "@/shared/ui/action-menu"
-
-const MaterialRowActions = ({ row, table }: { row: { original: MaterialRow }, table: Table<MaterialRow> }) => {
-    const meta = table.options.meta as TableMeta<MaterialRow>
-
-    if (row.original.isPlaceholder) {
-        return (
-            <div className="flex gap-1 justify-end pr-2">
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            size="icon-xs"
-                            variant="ghost"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                meta.onSaveInsert?.(row.original.id);
-                            }}
-                            aria-label="Сохранить строку"
-                       >
-                            <Check className="h-3 w-3" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Сохранить строку</p>
-                    </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                    <TooltipTrigger asChild>
-                        <Button
-                            size="icon-xs"
-                            variant="ghost"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                meta.onCancelInsert?.();
-                            }}
-                            aria-label="Отменить вставку"
-                       >
-                            <X className="h-3 w-3" />
-                        </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                        <p>Отменить вставку</p>
-                    </TooltipContent>
-                </Tooltip>
-            </div>
-        )
-    }
-
-    return (
-        <div className="flex justify-end pr-2 items-center gap-1 group/actions">
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button
-                        variant="ghost"
-                        size="icon-sm"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            meta.onInsertRequest?.(row.original.id);
-                        }}
-                        aria-label="Добавить строку ниже"
-                        title="Добавить строку ниже"
-                   >
-                        <Plus className="h-4 w-4" />
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Добавить строку ниже</p>
-                </TooltipContent>
-            </Tooltip>
-
-            <ActionMenu
-                ariaLabel="Действия"
-                trigger={
-                    <Button variant="ghost" size="icon-sm" aria-label="Действия" title="Действия">
-                        <Settings className="h-4 w-4" />
-                    </Button>
-                }
-                items={[
-                    {
-                        label: "Изменить",
-                        icon: <Pencil className="h-4 w-4" />,
-                        onClick: () => meta.setEditingRow?.(row.original),
-                    },
-                    {
-                        label: "Удалить",
-                        icon: <Trash className="h-4 w-4" />,
-                        variant: "destructive",
-                        onClick: () => meta.setDeletingRow?.(row.original),
-                    },
-                ]}
-            />
-        </div>
-    )
-}
+import { TableHeaderActions, TableRowActions } from "@/shared/ui/table-actions"
 
 export const columns: ColumnDef<MaterialRow>[] = [
     {
@@ -223,44 +124,34 @@ export const columns: ColumnDef<MaterialRow>[] = [
     {
         id: "actions",
         size: 80,
-        header: ({ table }) => {
-            const meta = table.options.meta as TableMeta<MaterialRow>
-            return (
-                <div className="flex justify-end pr-4 items-center gap-1">
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={() => meta.onInsertRequest?.()}
-                                aria-label="Добавить строку"
-                                title="Добавить строку"
-                           >
-                                <Plus className="h-4 w-4" />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                            <p>Добавить строку</p>
-                        </TooltipContent>
-                    </Tooltip>
-                    <ActionMenu
-                        ariaLabel="Дополнительные действия"
-                        modal={false}
-                        trigger={
-                            <Button variant="ghost" size="icon-sm" aria-label="Дополнительные действия" title="Дополнительные действия">
-                                <Settings className="h-4 w-4" />
-                            </Button>
-                        }
-                        items={[
-                            {
-                                label: "Сбросить сортировку",
-                                onClick: () => meta.onReorder?.(),
-                            },
-                        ]}
-                    />
-                </div>
-            )
-        },
-        cell: ({ row, table }) => <MaterialRowActions row={row} table={table} />
+        header: ({ table }) => (
+            <TableHeaderActions
+                table={table}
+                className="flex justify-end pr-4 items-center gap-1"
+                insertButtonSize="icon-sm"
+                actionMenuAriaLabel="Дополнительные действия"
+                insertWithTooltip
+                trigger={
+                    <Button variant="ghost" size="icon-sm" aria-label="Дополнительные действия" title="Дополнительные действия">
+                        <Settings className="h-4 w-4" />
+                    </Button>
+                }
+            />
+        ),
+        cell: ({ row, table }) => (
+            <TableRowActions
+                row={row.original}
+                table={table}
+                className="flex justify-end pr-2 items-center gap-1 group/actions"
+                insertButtonSize="icon-sm"
+                actionButtonSize="icon-sm"
+                insertLabel="Добавить строку ниже"
+                insertTitle="Добавить строку ниже"
+                insertWithTooltip
+                placeholderIconClassName="h-3 w-3"
+                placeholderWithTooltips
+                placeholderStopPropagation
+            />
+        )
     }
 ]

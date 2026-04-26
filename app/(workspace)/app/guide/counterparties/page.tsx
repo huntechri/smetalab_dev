@@ -30,7 +30,6 @@ export default async function CounterpartiesPage() {
             <CounterpartiesScreen
                 initialData={data}
                 totalCount={count}
-                tenantId={user.tenantId}
             />
         </div>
     );
