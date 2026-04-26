@@ -13,7 +13,7 @@ export { EstimatePurchasesScreen } from './screens/EstimatePurchasesScreen';
 export { EstimateAccomplishmentScreen } from './screens/EstimateAccomplishmentScreen';
 export { EstimateDetailsLayout } from './layouts/EstimateDetailsLayout';
 
-export { EditableCell } from '@repo/ui';
+export { EditableCell } from '@/shared/ui/cells/editable-cell';
 export {
     estimatePatternsActionRepo,
     type EstimatePatternListItem,
