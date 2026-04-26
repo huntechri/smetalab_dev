@@ -2,8 +2,8 @@
 
 import * as React from 'react';
 import { LogOut, Settings, Users, Shield } from 'lucide-react';
-import { Avatar, AvatarFallback } from '@repo/ui';
-import { Button } from '@repo/ui';
+import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
+import { Button } from '@/shared/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,7 +11,7 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/dropdown-menu';
 import { signOut } from '@/app/(login)/actions';
 import { useRouter, usePathname } from 'next/navigation';
 
