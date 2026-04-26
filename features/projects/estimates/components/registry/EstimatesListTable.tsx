@@ -1,11 +1,11 @@
 'use client';
 
-import { DataTable } from '@repo/ui';
+import { DataTable } from '@/shared/ui/data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { EstimateMeta } from '../../types/dto';
 import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useEstimateMutations } from '../../hooks/use-estimate-mutations';
 import {
@@ -18,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/alert-dialog';
 import { EstimateStatusMenu } from './EstimateStatusMenu';
 
 type EstimatesListTableProps = {
