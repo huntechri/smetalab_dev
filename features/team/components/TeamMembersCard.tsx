@@ -1,4 +1,8 @@
-import { Avatar, AvatarFallback, Badge, Button, Label, SearchInput } from '@repo/ui';
+import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
+import { Badge } from '@/shared/ui/badge';
+import { Button } from '@/shared/ui/button';
+import { Label } from '@/shared/ui/label';
+import { SearchInput } from '@/shared/ui/search-input';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Trash2 } from 'lucide-react';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
