@@ -1,16 +1,16 @@
 'use client';
 
 import { useState } from 'react';
+import { Button } from '@/shared/ui/button';
+import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import {
-    Button,
-    DropdownMenuItem,
     Sheet,
     SheetContent,
     SheetDescription,
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/sheet';
 import { Plus } from 'lucide-react';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
 import { CatalogWork } from '@/features/catalog/types/dto';
