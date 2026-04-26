@@ -5,8 +5,8 @@ import { InviteTeamMemberCard } from '../components/InviteTeamMemberCard';
 import { TeamHeaderCard } from '../components/TeamHeaderCard';
 import { TeamMembersCard } from '../components/TeamMembersCard';
 import { useTeamPage } from '../hooks/useTeamPage';
-import { Card } from '@repo/ui';
-import { Separator } from '@repo/ui';
+import { Card } from '@/shared/ui/card';
+import { Separator } from '@/shared/ui/separator';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 export function TeamScreen() {

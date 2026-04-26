@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button } from '@repo/ui';
-import { Card, CardContent, CardHeader, CardTitle } from '@repo/ui';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@repo/ui';
-import { Badge } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
+import { Badge } from '@/shared/ui/badge';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { estimatePatternsActionRepo, type EstimatePatternListItem, type EstimatePatternPreviewRow } from '@/features/projects/estimates';
