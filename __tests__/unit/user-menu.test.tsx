@@ -48,14 +48,20 @@ vi.mock('@/app/(login)/actions', () => ({
   signOut: vi.fn(),
 }));
 
-vi.mock('@repo/ui', () => ({
+vi.mock('@/shared/ui/button', () => ({
   Button: MockButton,
+}));
+
+vi.mock('@/shared/ui/dropdown-menu', () => ({
   DropdownMenu: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuTrigger: ({ children }: { children: ReactNode }) => <>{children}</>,
   DropdownMenuContent: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuItem: MockButton,
   DropdownMenuLabel: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   DropdownMenuSeparator: () => <hr />,
+}));
+
+vi.mock('@/shared/ui/avatar', () => ({
   Avatar: ({ children }: { children: ReactNode }) => <div>{children}</div>,
   AvatarFallback: ({ children }: { children: ReactNode }) => <span>{children}</span>,
 }));
@@ -73,12 +79,11 @@ describe('UserMenu', () => {
       id: 1,
       name: 'Super Admin',
       email: 'superadmin@example.com',
-      passwordHash: null,
       platformRole: 'superadmin',
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
-    } as User;
+    } as unknown as User;
     contextState.loading = false;
 
     render(<UserMenu />);
@@ -95,12 +100,11 @@ describe('UserMenu', () => {
       id: 2,
       name: 'Regular User',
       email: 'user@example.com',
-      passwordHash: null,
       platformRole: null,
       createdAt: new Date(),
       updatedAt: new Date(),
       deletedAt: null,
-    } as User;
+    } as unknown as User;
     contextState.loading = false;
 
     render(<UserMenu />);

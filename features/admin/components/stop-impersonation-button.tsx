@@ -1,7 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import { stopImpersonation } from '@/app/actions/admin/impersonation';
 import { LogOut } from 'lucide-react';
 import { notify } from '@/lib/infrastructure/notifications/notify';

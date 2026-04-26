@@ -1,7 +1,7 @@
 'use client';
 
-import { Badge } from '@repo/ui';
-import { Tooltip, TooltipContent, TooltipTrigger } from '@repo/ui';
+import { Badge } from '@/shared/ui/badge';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { useUserContext } from '@/components/providers/permissions-provider';
 
 export function ActiveTeamIndicator() {

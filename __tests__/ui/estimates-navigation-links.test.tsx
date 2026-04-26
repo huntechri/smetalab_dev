@@ -11,16 +11,16 @@ const { MockButton } = vi.hoisted(() => ({
     }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
 }));
 
-vi.mock('@repo/ui', () => ({
+vi.mock('@/shared/ui/data-table', () => ({
     DataTable: ({
         columns,
         data,
     }: {
         columns: Array<{
             accessorKey?: string;
-            cell?: (context: { row: { original: { id: string; projectId: string; name: string } } }) => React.ReactNode;
+            cell?: (context: { row: { original: { id: string; projectId: string; name: string; slug: string } } }) => React.ReactNode;
         }>;
-        data: Array<{ id: string; projectId: string; name: string }>;
+        data: Array<{ id: string; projectId: string; name: string; slug: string }>;
     }) => {
         const nameColumn = columns.find((column) => column.accessorKey === 'name');
         const nameCell = nameColumn?.cell
@@ -29,6 +29,9 @@ vi.mock('@repo/ui', () => ({
 
         return <div>{nameCell}</div>;
     },
+}));
+
+vi.mock('@repo/ui', () => ({
     Card: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CardContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     CardDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
