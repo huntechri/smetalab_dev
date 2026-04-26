@@ -27,7 +27,7 @@ vi.mock('next/link', () => ({
   default: MockNextLink,
 }));
 
-vi.mock('@repo/ui', () => ({
+vi.mock('@/shared/ui/sidebar', () => ({
   SidebarGroup: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarGroupContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
   SidebarGroupLabel: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
