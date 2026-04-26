@@ -6,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import {
     Dialog,
     DialogContent,
@@ -14,7 +14,7 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@repo/ui';
+} from '@/shared/ui/dialog';
 import {
     Form,
     FormControl,
@@ -22,8 +22,8 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-} from '@repo/ui';
-import { Input } from '@repo/ui';
+} from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
 
 import {
     createEstimateSchema,
