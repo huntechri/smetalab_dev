@@ -1,7 +1,7 @@
 import './globals.css';
 import type { Metadata, Viewport } from 'next';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
-import { Toaster } from '@repo/ui';
+import { Toaster } from '@/shared/ui/sonner';
 
 export const metadata: Metadata = {
   title: 'Smetalab - Smart Engineering & Management',
