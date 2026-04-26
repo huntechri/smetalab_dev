@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
