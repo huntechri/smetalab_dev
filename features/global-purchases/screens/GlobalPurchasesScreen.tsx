@@ -2,7 +2,7 @@
 
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { TooltipProvider } from '@repo/ui';
-import { GlobalPurchasesTable } from '../components/GlobalPurchasesTable.client';
+import { GlobalPurchasesView } from '../components/GlobalPurchasesView.client';
 import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
 
 interface GlobalPurchasesScreenProps {
@@ -20,9 +20,8 @@ export function GlobalPurchasesScreen({ initialRows, projectOptions, supplierOpt
 
   return (
     <div className="space-y-2">
-
       <TooltipProvider>
-        <GlobalPurchasesTable
+        <GlobalPurchasesView
           initialRows={initialRows}
           projectOptions={projectOptions}
           supplierOptions={supplierOptions}

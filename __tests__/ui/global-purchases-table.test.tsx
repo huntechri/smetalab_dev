@@ -1,7 +1,8 @@
 import type React from 'react';
-import { GlobalPurchasesTable } from '@/features/global-purchases/components/GlobalPurchasesTable.client';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { GlobalPurchasesView } from '@/features/global-purchases/components/GlobalPurchasesView.client';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import type { PurchaseRow } from '@/features/global-purchases/types/dto';
 
 const { MockButton } = vi.hoisted(() => ({
     MockButton: ({
@@ -13,19 +14,22 @@ const { MockButton } = vi.hoisted(() => ({
 
 const addManualRowMock = vi.fn();
 const addCatalogRowMock = vi.fn();
+const updateRowMock = vi.fn();
+const removeRowMock = vi.fn();
 const copyToNextDayMock = vi.fn();
 const importRowsMock = vi.fn();
+let mockRows: PurchaseRow[] = [];
 
 vi.mock('@/features/global-purchases/hooks/useGlobalPurchasesTable', () => ({
     useGlobalPurchasesTable: () => ({
-        rows: [],
+        rows: mockRows,
         range: { from: '2026-01-15', to: '2026-01-15' },
         setRange: vi.fn(),
         reloadRows: vi.fn().mockResolvedValue(undefined),
         addManualRow: addManualRowMock,
         addCatalogRow: addCatalogRowMock,
-        updateRow: vi.fn().mockResolvedValue(undefined),
-        removeRow: vi.fn().mockResolvedValue(undefined),
+        updateRow: updateRowMock,
+        removeRow: removeRowMock,
         importRows: importRowsMock,
         copyToNextDay: copyToNextDayMock,
         totals: { amount: 0 },
@@ -47,7 +51,13 @@ vi.mock('@/shared/ui/data-table', () => ({
 }));
 
 vi.mock('@/shared/ui/table-empty-state', () => ({
-    TableEmptyState: ({ action }: { action?: React.ReactNode }) => <div>{action}</div>,
+    TableEmptyState: ({ title, description, action }: { title?: string; description?: string; action?: React.ReactNode }) => (
+        <div>
+            {title ? <p>{title}</p> : null}
+            {description ? <p>{description}</p> : null}
+            {action}
+        </div>
+    ),
 }));
 
 vi.mock('@/shared/ui/button', () => ({
@@ -94,6 +104,17 @@ vi.mock('@/shared/ui/dropdown-menu', () => ({
     DropdownMenuTrigger: ({ children }: { children: React.ReactNode }) => <>{children}</>,
 }));
 
+vi.mock('@/shared/ui/alert-dialog', () => ({
+    AlertDialog: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogAction: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+    AlertDialogCancel: ({ children }: { children: React.ReactNode }) => <button>{children}</button>,
+    AlertDialogContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogDescription: ({ children }: { children: React.ReactNode }) => <p>{children}</p>,
+    AlertDialogFooter: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogHeader: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
+    AlertDialogTitle: ({ children }: { children: React.ReactNode }) => <h2>{children}</h2>,
+}));
+
 vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
     MaterialCatalogDialog: ({ onSelect }: { onSelect: (material: { name: string; unit: string; price: string }) => Promise<void> }) => (
         <button
@@ -107,29 +128,110 @@ vi.mock('@/features/catalog/components/MaterialCatalogDialog.client', () => ({
     ),
 }));
 
-describe('GlobalPurchasesTable', () => {
+function renderView() {
+    return render(
+        <GlobalPurchasesView
+            initialRows={[]}
+            initialRange={{ from: '2026-01-15', to: '2026-01-15' }}
+            projectOptions={[{ id: 'project-1', name: 'ЖК Горизонт' }]}
+            supplierOptions={[{ id: 'supplier-1', name: 'Поставщик 1', color: '#64748b' }]}
+        />,
+    );
+}
+
+describe('GlobalPurchasesView', () => {
+    beforeEach(() => {
+        mockRows = [];
+        addManualRowMock.mockReset();
+        addCatalogRowMock.mockReset();
+        updateRowMock.mockReset();
+        removeRowMock.mockReset();
+        importRowsMock.mockReset();
+        copyToNextDayMock.mockReset();
+    });
+
     it('adds manual and catalog rows without default project binding', async () => {
         addManualRowMock.mockResolvedValue(undefined);
         addCatalogRowMock.mockResolvedValue(undefined);
 
-        render(
-            <GlobalPurchasesTable
-                initialRows={[]}
-                initialRange={{ from: '2026-01-15', to: '2026-01-15' }}
-                projectOptions={[{ id: 'project-1', name: 'ЖК Горизонт' }]}
-                supplierOptions={[]}
-            />,
-        );
+        renderView();
 
         expect(screen.queryByText('Объект по умолчанию')).not.toBeInTheDocument();
 
         fireEvent.click(screen.getByRole('button', { name: /Добавить строку вручную/i }));
-        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника/i })); // Click "Из справочника" to open dialog
-        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i })); // Click mock dialog select
+        fireEvent.click(screen.getByRole('button', { name: /Добавить из справочника/i }));
+        fireEvent.click(screen.getByRole('button', { name: /Выбрать материал/i }));
 
         await waitFor(() => {
             expect(addManualRowMock).toHaveBeenCalledWith(null);
             expect(addCatalogRowMock).toHaveBeenCalledWith(expect.objectContaining({ name: 'Щебень' }), null);
         });
+    });
+
+    it('renders purchase cards without exposing row source badges', () => {
+        mockRows = [
+            {
+                id: 'purchase-1',
+                projectId: 'project-1',
+                projectName: 'ЖК Горизонт',
+                materialName: 'Штукатурка Ротбанд',
+                materialId: 'material-1',
+                unit: 'меш',
+                qty: 10,
+                price: 500,
+                amount: 5000,
+                note: '',
+                source: 'catalog',
+                purchaseDate: '2026-01-15',
+                supplierId: 'supplier-1',
+                supplierName: 'Поставщик 1',
+                supplierColor: '#64748b',
+            },
+        ];
+
+        renderView();
+
+        const card = screen.getByText('Штукатурка Ротбанд').closest('article');
+        expect(card).not.toBeNull();
+        const cardScope = within(card as HTMLElement);
+
+        expect(cardScope.getByText('15.01.2026')).toBeInTheDocument();
+        expect(cardScope.getByText('Штукатурка Ротбанд')).toBeInTheDocument();
+        expect(cardScope.getAllByText('ЖК Горизонт').length).toBeGreaterThan(0);
+        expect(cardScope.getAllByText('Поставщик 1').length).toBeGreaterThan(0);
+        expect(cardScope.queryByText('Каталог')).not.toBeInTheDocument();
+        expect(cardScope.queryByText('Ручная')).not.toBeInTheDocument();
+    });
+
+    it('shows search empty state when existing rows are filtered out', () => {
+        mockRows = [
+            {
+                id: 'purchase-1',
+                projectId: null,
+                projectName: '',
+                materialName: 'Цемент',
+                materialId: null,
+                unit: 'меш',
+                qty: 1,
+                price: 100,
+                amount: 100,
+                note: '',
+                source: 'manual',
+                purchaseDate: '2026-01-15',
+                supplierId: null,
+                supplierName: null,
+                supplierColor: null,
+            },
+        ];
+
+        renderView();
+
+        const searchInput = screen.getAllByLabelText('Поиск...')[0];
+        fireEvent.change(searchInput, {
+            target: { value: 'штукатурка' },
+        });
+
+        expect(screen.getByText('По запросу ничего не найдено')).toBeInTheDocument();
+        expect(screen.queryByText('В выбранном периоде нет данных. Добавьте закупку вручную или из справочника.')).not.toBeInTheDocument();
     });
 });

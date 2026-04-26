@@ -143,7 +143,7 @@ function DateRangeFilterControl({ range, onRangeChange }: DateRangeFilterControl
   );
 }
 
-interface GlobalPurchasesTableToolbarProps {
+interface GlobalPurchasesToolbarProps {
   filterProjectId: string | null;
   projectOptions: ProjectOption[];
   openProjectFilter: boolean;
@@ -161,7 +161,7 @@ interface GlobalPurchasesTableToolbarProps {
   onAddCatalog: () => void;
 }
 
-export function GlobalPurchasesTableToolbar({
+export function GlobalPurchasesToolbar({
   filterProjectId,
   projectOptions,
   openProjectFilter,
@@ -177,7 +177,7 @@ export function GlobalPurchasesTableToolbar({
   isAddingCatalog,
   onAddManual,
   onAddCatalog,
-}: GlobalPurchasesTableToolbarProps) {
+}: GlobalPurchasesToolbarProps) {
   return (
     <div className="flex flex-row xl:flex-row w-auto xl:w-auto items-center xl:items-center gap-2 xl:gap-2">
       <div className="flex flex-row items-center gap-2">
