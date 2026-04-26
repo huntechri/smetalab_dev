@@ -10,7 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     useSidebar,
-} from '@repo/ui';
+} from '@/shared/ui/sidebar';
 
 interface SidebarNavItem {
     title: string;
