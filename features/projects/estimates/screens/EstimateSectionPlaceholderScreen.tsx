@@ -1,4 +1,4 @@
-import { EmptyState } from '@repo/ui';
+import { EmptyState } from '@/shared/ui/states';
 
 interface EstimateSectionPlaceholderScreenProps {
     title: string;
