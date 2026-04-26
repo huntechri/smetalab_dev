@@ -31,9 +31,9 @@ function OpeningInput({
 }) {
     return (
         <div className="flex items-center gap-1 min-w-[150px]">
-            <Input  type="number" inputMode="decimal" value={height} onChange={(event) => onHeight(event.target.value)} placeholder="В" />
+            <Input type="number" inputMode="decimal" value={height} onChange={(event) => onHeight(event.target.value)} placeholder="В" />
             <span className="text-muted-foreground">×</span>
-            <Input  type="number" inputMode="decimal" value={width} onChange={(event) => onWidth(event.target.value)} placeholder="Ш" />
+            <Input type="number" inputMode="decimal" value={width} onChange={(event) => onWidth(event.target.value)} placeholder="Ш" />
         </div>
     );
 }
