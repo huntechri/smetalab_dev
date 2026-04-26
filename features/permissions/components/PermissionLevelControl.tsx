@@ -1,5 +1,5 @@
-import { Button } from '@repo/ui';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/shared/ui/tooltip';
 import { Edit3, Eye, XCircle } from 'lucide-react';
 
 interface PermissionLevelControlProps {
