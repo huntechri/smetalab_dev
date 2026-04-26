@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Upload, Download, Trash2, Filter } from "lucide-react";
 
-import { Button } from "@repo/ui";
 import { ToolbarButton } from "@/shared/ui/toolbar-button";
 import { cn } from "@/lib/utils";
 import {
