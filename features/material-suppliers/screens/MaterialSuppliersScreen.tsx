@@ -18,7 +18,6 @@ const PAGE_SIZE = 100;
 interface MaterialSuppliersScreenProps {
   initialData: MaterialSupplierRow[];
   totalCount: number;
-  tenantId: number;
 }
 
 const materialSuppliersListAdapter: DirectoryListAdapter<MaterialSupplierRow> = {
@@ -30,7 +29,7 @@ const materialSuppliersListAdapter: DirectoryListAdapter<MaterialSupplierRow> = 
   emptyDescription: 'Добавьте первого поставщика для ведения базы материалов',
 };
 
-export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: MaterialSuppliersScreenProps) {
+export function MaterialSuppliersScreen({ initialData, totalCount }: MaterialSuppliersScreenProps) {
   const {
     isSheetOpen,
     editingItem: editingSupplier,
@@ -141,7 +140,6 @@ export function MaterialSuppliersScreen({ initialData, totalCount, tenantId }: M
         open={isSheetOpen}
         onOpenChange={onSheetOpenChange}
         materialSupplier={editingSupplier}
-        tenantId={tenantId}
         onSaved={(supplier) => {
           applySupplierToList(supplier);
           closeSheet();
