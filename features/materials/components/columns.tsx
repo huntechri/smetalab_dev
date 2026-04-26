@@ -1,6 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { Settings } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
@@ -132,7 +133,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
                 insertWithTooltip
                 trigger={
                     <Button variant="ghost" size="icon-sm" aria-label="Дополнительные действия" title="Дополнительные действия">
-                        Действия
+                        <Settings className="h-4 w-4" />
                     </Button>
                 }
             />
