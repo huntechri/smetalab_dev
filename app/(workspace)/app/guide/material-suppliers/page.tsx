@@ -27,7 +27,7 @@ export default async function MaterialSuppliersPage() {
 
   return (
     <div className="flex-1 w-full flex flex-col">
-      <MaterialSuppliersScreen initialData={data} totalCount={count} tenantId={user.tenantId} />
+      <MaterialSuppliersScreen initialData={data} totalCount={count} />
     </div>
   );
 }
