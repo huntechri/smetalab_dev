@@ -1,7 +1,8 @@
 'use client';
 
-import { Button, DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@repo/ui';
 import { Download, MoreHorizontal } from 'lucide-react';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { CatalogWork } from '@/features/catalog/types/dto';
 import { EstimateExecutionAddExtraWorkSheet } from './EstimateExecutionAddExtraWorkSheet';
 
@@ -19,10 +20,9 @@ export function EstimateExecutionTableActions({
     return (
         <>
             <div className="hidden items-center gap-2 sm:flex">
-                <Button variant="outline" onClick={onExport}>
-                    <Download className="h-4 w-4" />
+                <ToolbarButton onClick={onExport} iconLeft={<Download className="h-4 w-4" />}>
                     Экспорт Excel
-                </Button>
+                </ToolbarButton>
                 <EstimateExecutionAddExtraWorkSheet
                     addedWorkNames={addedWorkNames}
                     onAddWork={onAddWork}
@@ -32,9 +32,9 @@ export function EstimateExecutionTableActions({
             <div className="sm:hidden">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <Button variant="outline" size="icon-xs">
+                        <ToolbarButton size="icon-xs" aria-label="Действия выполнения">
                             <MoreHorizontal className="h-4 w-4" />
-                        </Button>
+                        </ToolbarButton>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="min-w-[220px]">
                         <DropdownMenuItem onClick={onExport}>
