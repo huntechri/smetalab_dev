@@ -4,7 +4,7 @@ import { BookOpen, CalendarDays, Check, ChevronsUpDown, Download, Filter, MoreHo
 import type { DateRange } from 'react-day-picker';
 import { ru } from 'date-fns/locale';
 
-import { Button } from '@/shared/ui/button';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { Calendar } from '@/shared/ui/calendar';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/shared/ui/command';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
@@ -41,13 +41,13 @@ function ProjectFilterControl({
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
-            <Button variant="outline">
+            <ToolbarButton>
               <div className="flex items-center gap-2 truncate">
                 <Filter className="size-4 shrink-0 opacity-60" />
                 <span className="truncate hidden lg:inline font-semibold">{activeProjectName}</span>
               </div>
               <ChevronsUpDown className="size-3.5 opacity-50 shrink-0 ml-1 hidden lg:block" />
-            </Button>
+            </ToolbarButton>
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
@@ -120,12 +120,12 @@ function DateRangeFilterControl({ range, onRangeChange }: DateRangeFilterControl
       <Tooltip>
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
-            <Button type="button" variant="outline">
+            <ToolbarButton type="button">
               <CalendarDays className="size-4 opacity-70" />
               <span className="flex-1 text-left sm:text-center text-[13px] font-semibold tracking-tight hidden lg:inline">
                 {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
               </span>
-            </Button>
+            </ToolbarButton>
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>Выберете период отображения закупок</TooltipContent>
@@ -204,32 +204,32 @@ export function GlobalPurchasesToolbar({
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
+            <ToolbarButton
               type="button"
-              variant="outline"
               onClick={onAddManual}
               disabled={isAddingManual}
               aria-label="Добавить строку вручную"
+              iconLeft={<Plus className="size-4" />}
+              labelClassName="hidden sm:inline"
             >
-              <Plus className="size-4" />
-              <span className="hidden sm:inline">Вручную</span>
-            </Button>
+              Вручную
+            </ToolbarButton>
           </TooltipTrigger>
           <TooltipContent>Добавить пустую строку закупки</TooltipContent>
         </Tooltip>
 
         <Tooltip>
           <TooltipTrigger asChild>
-            <Button
+            <ToolbarButton
               type="button"
-              variant="outline"
               onClick={onAddCatalog}
               disabled={isAddingCatalog}
               aria-label="Добавить из справочника"
+              iconLeft={<BookOpen className="size-4" />}
+              labelClassName="hidden sm:inline"
             >
-              <BookOpen className="size-4" />
-              <span className="hidden sm:inline">Из справочника</span>
-            </Button>
+              Из справочника
+            </ToolbarButton>
           </TooltipTrigger>
           <TooltipContent>Выбрать материалы из каталога</TooltipContent>
         </Tooltip>
@@ -238,9 +238,9 @@ export function GlobalPurchasesToolbar({
       <div className="sm:hidden ml-auto">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="icon-xs" aria-label="Действия по закупкам">
+            <ToolbarButton size="icon-xs" aria-label="Действия по закупкам">
               <MoreHorizontal className="size-4" />
-            </Button>
+            </ToolbarButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem className="gap-2" onClick={onImportClick}>

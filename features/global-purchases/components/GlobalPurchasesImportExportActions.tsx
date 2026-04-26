@@ -2,7 +2,7 @@
 
 import type { ChangeEvent, RefObject } from 'react';
 import { Download, Upload } from 'lucide-react';
-import { Button } from '@/shared/ui/button';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
 interface GlobalPurchasesImportExportActionsProps {
@@ -32,30 +32,30 @@ export function GlobalPurchasesImportExportActions({
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
+          <ToolbarButton
             type="button"
-            variant="outline"
             onClick={() => void onExport()}
             aria-label="Экспорт закупок"
+            iconLeft={<Download className="size-4" />}
+            labelClassName="hidden sm:inline"
           >
-            <Download className="size-4" />
-            <span className="hidden sm:inline">Экспорт XLSX</span>
-          </Button>
+            Экспорт XLSX
+          </ToolbarButton>
         </TooltipTrigger>
         <TooltipContent>Экспортировать отображаемые строки в XLSX</TooltipContent>
       </Tooltip>
 
       <Tooltip>
         <TooltipTrigger asChild>
-          <Button
+          <ToolbarButton
             type="button"
-            variant="outline"
             onClick={onImportClick}
             aria-label="Импорт закупок"
+            iconLeft={<Upload className="size-4" />}
+            labelClassName="hidden sm:inline"
           >
-            <Upload className="size-4" />
-            <span className="hidden sm:inline">Импорт CSV/XLSX</span>
-          </Button>
+            Импорт CSV/XLSX
+          </ToolbarButton>
         </TooltipTrigger>
         <TooltipContent>Импортировать строки закупок из CSV или XLSX</TooltipContent>
       </Tooltip>
