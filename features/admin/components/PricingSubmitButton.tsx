@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import { ArrowRight, Loader2 } from 'lucide-react';
 import { useFormStatus } from 'react-dom';
 
