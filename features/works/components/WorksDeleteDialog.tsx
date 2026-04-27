@@ -9,7 +9,7 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-} from "@repo/ui"
+} from "@/shared/ui/alert-dialog"
 
 interface WorksDeleteDialogProps {
     open: boolean
