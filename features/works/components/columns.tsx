@@ -5,12 +5,17 @@ import { ColumnDef, Table, Row } from "@tanstack/react-table"
 import { ChevronRight } from "lucide-react"
 import { Button } from "@/shared/ui/button"
 import { Badge } from "@/shared/ui/badge"
-import { Input } from "@/shared/ui/input"
 import { TableHeaderActions, TableRowActions } from "@/shared/ui/table-actions"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { TableMeta } from "@/shared/ui/data-table"
+import {
+    CenteredUnitCell,
+    FormattedCurrencyCell,
+    PlaceholderNumberCell,
+    PlaceholderTextCell,
+} from "@/shared/ui/cells/table-cell-helpers"
 
 interface RowActionsProps {
     row: { original: WorkRow };
@@ -50,12 +55,11 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
 
     if (isPlaceholder) {
         return (
-            <Input
+            <PlaceholderTextCell
                 placeholder="Наименование работы..."
-                
                 autoFocus
                 value={row.original.name || ""}
-                onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })}
+                onValueChange={(name) => meta.updatePlaceholderRow?.(row.original.id, { name })}
            />
         )
     }
@@ -109,7 +113,7 @@ const UnitCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
            />
         )
     }
-    return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
+    return <CenteredUnitCell value={row.getValue("unit")} />
 });
 UnitCell.displayName = "UnitCell";
 
@@ -119,31 +123,15 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
 
     if (isPlaceholder) {
         return (
-            <Input
-                type="number"
+            <PlaceholderNumberCell
                 placeholder="Цена"
-                
                 value={row.original.price || ""}
-                onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })}
+                onValueChange={(price) => meta.updatePlaceholderRow?.(row.original.id, { price })}
            />
         )
     }
 
-    const priceValue = row.getValue("price");
-    const formatted = React.useMemo(() => {
-        const price = typeof priceValue === 'number' ? priceValue : parseFloat(String(priceValue));
-        return new Intl.NumberFormat("ru-RU", {
-            style: "currency",
-            currency: "RUB",
-            minimumFractionDigits: 0,
-        }).format(isNaN(price) ? 0 : price);
-    }, [priceValue]);
-
-    return (
-        <div className="text-center font-bold text-[12px] tracking-tighter text-foreground tabular-nums">
-            {formatted}
-        </div>
-    )
+    return <FormattedCurrencyCell value={row.getValue("price")} className="tracking-tighter text-foreground tabular-nums" />
 });
 PriceCell.displayName = "PriceCell";
 
