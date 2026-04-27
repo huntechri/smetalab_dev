@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring-files.
 
 # dependencies
 node_modules/
@@ -70,4 +70,6 @@ DONOR/
 # Generated codemod reports
 /reports/button-audit.json
 /reports/button-canonical-spec.md
+/reports/input-audit.json
+/reports/input-canonical-spec.md
 attached_assets/
