@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This PR starts the larger data-refresh parity batch after dense-card UI consolidation. The scope is estimate tab stale-data behavior only.
+This document records the current estimate tab stale-data behavior after PR #98 and the execution refresh hook follow-up.
 
 ## Surfaces reviewed
 
@@ -12,7 +12,7 @@ This PR starts the larger data-refresh parity batch after dense-card UI consolid
 - Estimate procurement controller.
 - Global purchases mutation notifications.
 
-## Confirmed existing behavior
+## Confirmed behavior
 
 ### Base estimate rows
 
@@ -20,13 +20,11 @@ Base estimate row mutations notify dependent tabs through `notifyEstimateRowsMut
 
 ### Coefficient updates
 
-Coefficient updates reload estimate rows and emit the coefficient-updated event.
-
-This PR centralizes that event through `notifyEstimateCoefficientUpdated(estimateId)` instead of dispatching the raw browser event inline.
+Coefficient updates reload estimate rows and emit the coefficient-updated event through `notifyEstimateCoefficientUpdated(estimateId)`.
 
 ### Execution tab
 
-Execution already refreshes after:
+Execution refreshes after:
 
 - estimate rows mutated;
 - coefficient updated;
@@ -35,11 +33,11 @@ Execution already refreshes after:
 - visibility change back to visible;
 - periodic visible-tab interval.
 
-This PR keeps the behavior aligned through the centralized coefficient event API. Moving execution to `useEstimateExternalRefresh` is left as a follow-up because the connector blocked the large file update.
+The execution controller now uses `useEstimateExternalRefresh` for the shared refresh lifecycle wiring.
 
 ### Procurement tab
 
-Procurement already refreshes after:
+Procurement refreshes after:
 
 - estimate rows mutated;
 - estimate purchases mutated;
@@ -48,22 +46,20 @@ Procurement already refreshes after:
 - visibility change back to visible;
 - periodic visible-tab interval.
 
-This PR keeps the behavior and moves the repeated lifecycle wiring into `useEstimateExternalRefresh`.
+The procurement controller uses `useEstimateExternalRefresh` for the shared refresh lifecycle wiring.
 
 ### Global purchases
 
 Global purchase mutations call `notifyEstimatePurchasesMutated()` after add, patch batch, remove, import and copy actions. The procurement tab listener accepts global purchase invalidation events without an explicit estimate id.
 
-## Changes in this PR
+## Closed items
 
-- Added `notifyEstimateCoefficientUpdated`.
-- Added `addEstimateCoefficientUpdatedListener`.
-- Added `useEstimateExternalRefresh` for shared focus/pageshow/visibility/interval refresh wiring.
-- Updated procurement controller to use `useEstimateExternalRefresh`.
-- Kept execution behavior aligned through the centralized coefficient event API.
-- Added focused unit coverage for estimate client invalidation events.
+- Coefficient refresh event is centralized.
+- Procurement refresh lifecycle wiring is centralized.
+- Execution refresh lifecycle wiring is centralized.
+- Estimate client invalidation events have unit coverage.
 
-## Test coverage added
+## Test coverage
 
 `__tests__/unit/estimate-client-events.test.ts` verifies:
 
@@ -84,5 +80,5 @@ Global purchase mutations call `notifyEstimatePurchasesMutated()` after add, pat
 
 ## Follow-up candidates
 
-1. Finish wiring execution controller to `useEstimateExternalRefresh` through a smaller patch or local IDE if the connector keeps blocking the file update.
-2. Audit whether project dashboard KPI should listen to estimate/global-purchase invalidations or rely only on route refresh.
+1. Audit whether project dashboard KPI should listen to estimate/global-purchase invalidations or rely only on route refresh.
+2. Add integration-level stale-data smoke coverage if regressions recur in estimate tabs.

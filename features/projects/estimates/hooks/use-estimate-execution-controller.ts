@@ -4,11 +4,15 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
 import { CatalogWork } from "@/features/catalog/types/dto";
-import { addEstimateRowsMutatedListener } from "../lib/estimate-client-events";
+import {
+  addEstimateCoefficientUpdatedListener,
+  addEstimateRowsMutatedListener,
+} from "../lib/estimate-client-events";
 import { buildExtraWorkFromCatalog } from "../lib/execution-extra-work";
 import { calculateExecutionTotals } from "../lib/execution-totals";
 import { estimateExecutionActionsRepo } from "../repository/execution.actions";
 import { EstimateExecutionRow, EstimateExecutionStatus } from "../types/execution.dto";
+import { useEstimateExternalRefresh } from "./use-estimate-external-refresh";
 
 type EstimateExecutionPatch = {
   actualQty?: number;
@@ -21,9 +25,6 @@ interface UseEstimateExecutionControllerParams {
   initialRows?: EstimateExecutionRow[];
 }
 
-const EXTERNAL_REFRESH_DEBOUNCE_MS = 750;
-const VISIBLE_TAB_REFRESH_MS = 5 * 60 * 1000;
-
 export function useEstimateExecutionController({
   estimateId,
   initialRows,
@@ -32,7 +33,6 @@ export function useEstimateExecutionController({
   const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const requestVersionRef = useRef<Record<string, number>>({});
-  const lastExternalRefreshRef = useRef(0);
   const { toast } = useAppToast();
   const router = useRouter();
 
@@ -61,15 +61,17 @@ export function useEstimateExecutionController({
     [estimateId],
   );
 
-  const reloadAfterExternalChange = useCallback(() => {
-    const now = Date.now();
-    if (now - lastExternalRefreshRef.current < EXTERNAL_REFRESH_DEBOUNCE_MS) {
-      return;
-    }
-
-    lastExternalRefreshRef.current = now;
+  const reloadSilently = useCallback(() => {
     void loadRows(true);
   }, [loadRows]);
+
+  const subscribeExternalRefresh = useCallback(
+    (callback: () => void) => [
+      addEstimateRowsMutatedListener(estimateId, callback),
+      addEstimateCoefficientUpdatedListener(estimateId, callback),
+    ],
+    [estimateId],
+  );
 
   useEffect(() => {
     if (initialRows !== undefined) {
@@ -82,52 +84,10 @@ export function useEstimateExecutionController({
     void loadRows();
   }, [initialRows, loadRows]);
 
-  useEffect(() => {
-    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, reloadAfterExternalChange);
-
-    const onCoefUpdated = (event: Event) => {
-      const customEvent = event as CustomEvent<{ estimateId?: string }>;
-      if (customEvent.detail?.estimateId !== estimateId) {
-        return;
-      }
-
-      reloadAfterExternalChange();
-    };
-
-    const handleFocus = () => reloadAfterExternalChange();
-    const handlePageShow = () => reloadAfterExternalChange();
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === "visible") {
-        reloadAfterExternalChange();
-      }
-    };
-
-    const intervalId = window.setInterval(() => {
-      if (document.visibilityState === "visible") {
-        reloadAfterExternalChange();
-      }
-    }, VISIBLE_TAB_REFRESH_MS);
-
-    window.addEventListener(
-      "estimate:coefficient-updated",
-      onCoefUpdated as (event: Event) => void,
-    );
-    window.addEventListener("focus", handleFocus);
-    window.addEventListener("pageshow", handlePageShow);
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-
-    return () => {
-      unsubscribeRows();
-      window.removeEventListener(
-        "estimate:coefficient-updated",
-        onCoefUpdated as (event: Event) => void,
-      );
-      window.clearInterval(intervalId);
-      window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("pageshow", handlePageShow);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [estimateId, reloadAfterExternalChange]);
+  useEstimateExternalRefresh({
+    onRefresh: reloadSilently,
+    subscribe: subscribeExternalRefresh,
+  });
 
   const patchRow = useCallback(
     async (rowId: string, patch: EstimateExecutionPatch) => {
