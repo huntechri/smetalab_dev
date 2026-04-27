@@ -13,6 +13,7 @@ import { formatPrice, formatUnit } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
 import { CatalogMaterial } from '../types/dto';
 import { buildMaterialCategoryTree, filterMaterialsByCategoryPath, MaterialCategorySelection } from '../lib/material-category-tree';
+import { CatalogCategoryButton } from './CatalogCategoryButton';
 
 interface MaterialCatalogPickerProps {
     onAddMaterial: (material: CatalogMaterial) => Promise<void>;
@@ -207,51 +208,56 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     <div className="px-4 py-3 border-b text-xs font-semibold text-muted-foreground uppercase tracking-wider">Категории L1–L4</div>
                     <ScrollArea className="h-full">
                         <div className="p-2 space-y-1">
-                            <Button
-                                variant={selectedCategory.lv1 === null ? 'secondary' : 'ghost'}
+                            <CatalogCategoryButton
+                                active={selectedCategory.lv1 === null}
+                                activeVariant="secondary"
                                 onClick={() => applyCategorySelection(defaultCategorySelection)}
                             >
                                 Все категории
-                            </Button>
+                            </CatalogCategoryButton>
 
                             {categoryLv1Items.map((lv1) => {
                                 const lv1Node = categoryTreeMap.get(lv1);
 
                                 return (
                                     <div key={lv1} className="space-y-1">
-                                        <Button
-                                            variant={selectedCategory.lv1 === lv1 && selectedCategory.lv2 === null ? 'secondary' : 'ghost'}
+                                        <CatalogCategoryButton
+                                            active={selectedCategory.lv1 === lv1 && selectedCategory.lv2 === null}
+                                            activeVariant="secondary"
                                             onClick={() => applyCategorySelection({ lv1, lv2: null, lv3: null, lv4: null })}
                                         >
                                             {lv1}
-                                        </Button>
+                                        </CatalogCategoryButton>
 
                                         {selectedCategory.lv1 === lv1 && lv1Node?.children.map((lv2) => (
                                             <div key={`${lv1}-${lv2.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
-                                                <Button
-                                                    variant={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null ? 'secondary' : 'ghost'}
+                                                <CatalogCategoryButton
+                                                    active={selectedCategory.lv2 === lv2.name && selectedCategory.lv3 === null}
+                                                    activeVariant="secondary"
                                                     onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: null, lv4: null })}
                                                 >
                                                     {lv2.name}
-                                                </Button>
+                                                </CatalogCategoryButton>
 
                                                 {selectedCategory.lv2 === lv2.name && lv2.children.map((lv3) => (
                                                     <div key={`${lv1}-${lv2.name}-${lv3.name}`} className="space-y-1 pl-3 border-l border-border/60 ml-2">
-                                                        <Button
-                                                            variant={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null ? 'secondary' : 'ghost'}
+                                                        <CatalogCategoryButton
+                                                            active={selectedCategory.lv3 === lv3.name && selectedCategory.lv4 === null}
+                                                            activeVariant="secondary"
                                                             onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: null })}
                                                         >
                                                             {lv3.name}
-                                                        </Button>
+                                                        </CatalogCategoryButton>
 
                                                         {selectedCategory.lv3 === lv3.name && lv3.children.map((lv4) => (
                                                             <div key={`${lv1}-${lv2.name}-${lv3.name}-${lv4.name}`} className="pl-3 border-l border-border/60 ml-2">
-                                                                <Button
-                                                                    variant={selectedCategory.lv4 === lv4.name ? 'secondary' : 'ghost'}
+                                                                <CatalogCategoryButton
+                                                                    active={selectedCategory.lv4 === lv4.name}
+                                                                    activeVariant="secondary"
                                                                     onClick={() => applyCategorySelection({ lv1, lv2: lv2.name, lv3: lv3.name, lv4: lv4.name })}
                                                                 >
                                                                     {lv4.name}
-                                                                </Button>
+                                                                </CatalogCategoryButton>
                                                             </div>
                                                         ))}
                                                     </div>
