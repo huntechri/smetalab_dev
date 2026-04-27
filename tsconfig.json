@@ -33,6 +33,12 @@
     "paths": {
       "@/*": [
         "./*"
+      ],
+      "@repo/ui": [
+        "./packages/ui/src/index.ts"
+      ],
+      "@repo/utils": [
+        "./packages/utils/src/index.ts"
       ]
     }
   },
