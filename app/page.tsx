@@ -32,12 +32,12 @@ export default function LandingPage() {
                         <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
-                        <Link href="/sign-in">
-                            <Button variant="ghost">Войти</Button>
-                        </Link>
-                        <Link href="/sign-up">
-                            <Button>Запросить демо</Button>
-                        </Link>
+                        <Button variant="ghost" asChild>
+                            <Link href="/sign-in">Войти</Link>
+                        </Button>
+                        <Button asChild>
+                            <Link href="/sign-up">Запросить демо</Link>
+                        </Button>
                     </div>
                     <details className="group md:hidden">
                         <summary className="list-none rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 [&::-webkit-details-marker]:hidden">
@@ -51,16 +51,12 @@ export default function LandingPage() {
                                     <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
                                 </nav>
                                 <div className="flex flex-col gap-3">
-                                    <Link href="/sign-in">
-                                        <Button
-                                            variant="outline"
-                                        >
-                                            Войти
-                                        </Button>
-                                    </Link>
-                                    <Link href="/sign-up">
-                                        <Button>Запросить демо</Button>
-                                    </Link>
+                                    <Button variant="outline" asChild>
+                                        <Link href="/sign-in">Войти</Link>
+                                    </Button>
+                                    <Button asChild>
+                                        <Link href="/sign-up">Запросить демо</Link>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
