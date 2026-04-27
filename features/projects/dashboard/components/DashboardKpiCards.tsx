@@ -1,4 +1,4 @@
-import { KPICard } from "@repo/ui"
+import { KPICard } from "@/shared/ui/kpi-card"
 
 type DashboardKpiCardsProps = {
     kpi: {
