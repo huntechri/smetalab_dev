@@ -1,24 +1,21 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { addEstimatePurchasesMutatedListener, addEstimateRowsMutatedListener } from '@/features/projects/estimates/lib/estimate-client-events';
 import { estimateProcurementActionsRepo } from '@/features/projects/estimates/repository/procurement.actions';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
+import { useEstimateExternalRefresh } from './use-estimate-external-refresh';
 
 interface UseEstimateProcurementControllerParams {
   estimateId: string;
   initialRows?: EstimateProcurementRow[];
 }
 
-const EXTERNAL_REFRESH_DEBOUNCE_MS = 750;
-const VISIBLE_TAB_REFRESH_MS = 5 * 60 * 1000;
-
 export function useEstimateProcurementController({ estimateId, initialRows }: UseEstimateProcurementControllerParams) {
   const [rows, setRows] = useState<EstimateProcurementRow[]>(() => initialRows ?? []);
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(() => initialRows === undefined);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const lastExternalRefreshRef = useRef(0);
 
   const loadRows = useCallback(async (silent = false) => {
     try {
@@ -38,15 +35,17 @@ export function useEstimateProcurementController({ estimateId, initialRows }: Us
     }
   }, [estimateId]);
 
-  const reloadAfterExternalChange = useCallback(() => {
-    const now = Date.now();
-    if (now - lastExternalRefreshRef.current < EXTERNAL_REFRESH_DEBOUNCE_MS) {
-      return;
-    }
-
-    lastExternalRefreshRef.current = now;
+  const reloadSilently = useCallback(() => {
     void loadRows(true);
   }, [loadRows]);
+
+  const subscribeExternalRefresh = useCallback(
+    (callback: () => void) => [
+      addEstimateRowsMutatedListener(estimateId, callback),
+      addEstimatePurchasesMutatedListener(estimateId, callback),
+    ],
+    [estimateId],
+  );
 
   useEffect(() => {
     if (initialRows !== undefined) {
@@ -59,37 +58,10 @@ export function useEstimateProcurementController({ estimateId, initialRows }: Us
     void loadRows();
   }, [initialRows, loadRows]);
 
-  useEffect(() => {
-    const unsubscribeRows = addEstimateRowsMutatedListener(estimateId, reloadAfterExternalChange);
-    const unsubscribePurchases = addEstimatePurchasesMutatedListener(estimateId, reloadAfterExternalChange);
-
-    const handleFocus = () => reloadAfterExternalChange();
-    const handlePageShow = () => reloadAfterExternalChange();
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        reloadAfterExternalChange();
-      }
-    };
-
-    const intervalId = window.setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        reloadAfterExternalChange();
-      }
-    }, VISIBLE_TAB_REFRESH_MS);
-
-    window.addEventListener('focus', handleFocus);
-    window.addEventListener('pageshow', handlePageShow);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      unsubscribeRows();
-      unsubscribePurchases();
-      window.clearInterval(intervalId);
-      window.removeEventListener('focus', handleFocus);
-      window.removeEventListener('pageshow', handlePageShow);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, [estimateId, reloadAfterExternalChange]);
+  useEstimateExternalRefresh({
+    onRefresh: reloadSilently,
+    subscribe: subscribeExternalRefresh,
+  });
 
   const totals = useMemo(
     () => rows.reduce((acc, row) => {
