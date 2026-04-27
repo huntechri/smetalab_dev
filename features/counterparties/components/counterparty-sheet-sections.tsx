@@ -1,22 +1,11 @@
 import type { UseFormReturn } from "react-hook-form";
 import { FileText, Landmark, Phone, User } from "lucide-react";
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  Input,
-  RadioGroup,
-  RadioGroupItem,
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-  Separator,
-  TabsContent,
-} from "@repo/ui";
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
+import { Separator } from "@/shared/ui/separator";
+import { TabsContent } from "@/shared/ui/tabs";
 
 import type { CounterpartyFormValues } from "@/features/counterparties/schemas/counterparty-form.schema";
 
