@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { Input } from '@/shared/ui/input';
+import { DenseCard } from '@/shared/ui/dense-card';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { FilePlus, Search } from 'lucide-react';
 import {
@@ -20,6 +21,7 @@ import { EstimateTotals } from '../EstimateTotals';
 import { EstimateExecutionTableActions } from './execution/EstimateExecutionTableActions';
 import { EstimateExecutionAddExtraWorkSheet } from './execution/EstimateExecutionAddExtraWorkSheet';
 import { EstimateInlineNumberCell } from '../table/cards/EstimateInlineNumberCell';
+import { EstimateMetricPill } from '../table/cards/EstimateMetricPill';
 import { WORK_NUMBER_CLASS } from '../table/cards/constants';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -85,8 +87,6 @@ function ExecutionStatusCell({
         </DropdownMenu>
     );
 }
-
-
 
 function ExecutionValue({
     label,
@@ -206,10 +206,7 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                     {filteredRows.length > 0 ? (
                         <div className="space-y-2">
                             {filteredRows.map((row) => (
-                                <article
-                                    key={row.id}
-                                    className="overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
-                                >
+                                <DenseCard key={row.id}>
                                     <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1.5fr] lg:gap-6">
                                         {/* Раздел 1: Основная информация */}
                                         <div className="flex flex-col justify-center min-w-0">
@@ -271,7 +268,7 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                                                     <span className="text-[9px] font-bold uppercase tracking-widest text-green-600 sm:text-[10px]">Факт</span>
                                                 </div>
                                                 <div className="flex flex-wrap gap-2 items-center">
-                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+                                                    <EstimateMetricPill>
                                                         <span>Кол-во</span>
                                                         <EstimateInlineNumberCell
                                                             value={row.actualQty}
@@ -284,8 +281,8 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                                                             ariaLabel={`Количество: ${row.name}`}
                                                             className={WORK_NUMBER_CLASS}
                                                         />
-                                                    </div>
-                                                    <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+                                                    </EstimateMetricPill>
+                                                    <EstimateMetricPill>
                                                         <span>Цена</span>
                                                         <EstimateInlineNumberCell
                                                             value={row.actualPrice}
@@ -299,7 +296,7 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                                                             className={WORK_NUMBER_CLASS}
                                                         />
                                                         <span>₽</span>
-                                                    </div>
+                                                    </EstimateMetricPill>
                                                     <Badge
                                                         variant="success"
                                                         className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[9px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
@@ -310,7 +307,7 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                                             </div>
                                         </div>
                                     </div>
-                                </article>
+                                </DenseCard>
                             ))}
                         </div>
                     ) : (
