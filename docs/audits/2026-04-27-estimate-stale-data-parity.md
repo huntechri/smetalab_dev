@@ -35,7 +35,7 @@ Execution already refreshes after:
 - visibility change back to visible;
 - periodic visible-tab interval.
 
-This PR keeps the behavior and moves the repeated lifecycle wiring into `useEstimateExternalRefresh`.
+This PR keeps the behavior aligned through the centralized coefficient event API. Moving execution to `useEstimateExternalRefresh` is left as a follow-up because the connector blocked the large file update.
 
 ### Procurement tab
 
@@ -61,6 +61,17 @@ Global purchase mutations call `notifyEstimatePurchasesMutated()` after add, pat
 - Added `useEstimateExternalRefresh` for shared focus/pageshow/visibility/interval refresh wiring.
 - Updated procurement controller to use `useEstimateExternalRefresh`.
 - Kept execution behavior aligned through the centralized coefficient event API.
+- Added focused unit coverage for estimate client invalidation events.
+
+## Test coverage added
+
+`__tests__/unit/estimate-client-events.test.ts` verifies:
+
+- row invalidation only notifies matching estimate listeners;
+- coefficient invalidation only notifies matching estimate listeners;
+- purchase invalidation accepts global events without `estimateId`;
+- purchase invalidation ignores events for another estimate;
+- unsubscribe functions remove listeners.
 
 ## Explicit non-goals
 
@@ -73,6 +84,5 @@ Global purchase mutations call `notifyEstimatePurchasesMutated()` after add, pat
 
 ## Follow-up candidates
 
-1. Finish wiring execution controller to `useEstimateExternalRefresh` if the connector session allows a clean file update.
-2. Add focused tests around `estimate-client-events` filtering.
-3. Audit whether project dashboard KPI should listen to estimate/global-purchase invalidations or rely only on route refresh.
+1. Finish wiring execution controller to `useEstimateExternalRefresh` through a smaller patch or local IDE if the connector keeps blocking the file update.
+2. Audit whether project dashboard KPI should listen to estimate/global-purchase invalidations or rely only on route refresh.
