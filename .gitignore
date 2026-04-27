@@ -70,4 +70,6 @@ DONOR/
 # Generated codemod reports
 /reports/button-audit.json
 /reports/button-canonical-spec.md
+/reports/input-audit.json
+/reports/input-canonical-spec.md
 attached_assets/
