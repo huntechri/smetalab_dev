@@ -8,6 +8,8 @@ import type { EstimateRow } from '../../../types/dto';
 import type { EstimateCardsTableProps } from './types';
 import { buildMaterialActions } from './actions';
 import {
+  ESTIMATE_CARD_ICON_ACTION_CLASS,
+  ESTIMATE_MATERIAL_CARD_CLASS,
   INTEGER_FORMATTER,
   MATERIAL_EXPENSE_CLASS,
   MATERIAL_NAME_CLASS,
@@ -23,7 +25,7 @@ interface EstimateMaterialCardProps {
 
 export function EstimateMaterialCard({ material, props }: EstimateMaterialCardProps) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-1 sm:p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]">
+    <div className={ESTIMATE_MATERIAL_CARD_CLASS}>
       <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-1.5 sm:gap-2">
         <div className="min-w-0 overflow-hidden">
           <div className="flex min-w-0 items-start gap-1.5">
@@ -107,7 +109,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
               <Button
                 size="icon-xs"
                 variant="outline"
-                className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+                className={ESTIMATE_CARD_ICON_ACTION_CLASS}
                 aria-label="Действия с материалом"
               >
                 <Settings className="size-3 sm:size-3.5" />

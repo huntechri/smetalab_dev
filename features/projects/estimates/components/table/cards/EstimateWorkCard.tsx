@@ -9,7 +9,7 @@ import { buildWorkActions } from './actions';
 import { EstimateMaterialCard } from './EstimateMaterialCard';
 import { EstimateInlineNumberCell } from './EstimateInlineNumberCell';
 import { EstimateInlineTextCell } from './EstimateInlineTextCell';
-import { WORK_NAME_CLASS, WORK_NUMBER_CLASS } from './constants';
+import { ESTIMATE_CARD_ICON_ACTION_CLASS, WORK_NAME_CLASS, WORK_NUMBER_CLASS } from './constants';
 
 interface EstimateWorkCardProps {
   workNode: WorkNode;
@@ -98,7 +98,7 @@ export function EstimateWorkCard({
           <Button
             size="icon-xs"
             variant="outline"
-            className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+            className={ESTIMATE_CARD_ICON_ACTION_CLASS}
             onClick={() => props.onOpenMaterialCatalog(work.id, work.name)}
             title="Добавить материал"
             aria-label="Добавить материал"
@@ -108,7 +108,7 @@ export function EstimateWorkCard({
           <Button
             size="icon-xs"
             variant="outline"
-            className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+            className={ESTIMATE_CARD_ICON_ACTION_CLASS}
             onClick={() => props.onInsertWorkAfter(work.id, work.name)}
             title="Добавить работу ниже"
             aria-label="Добавить работу ниже"
@@ -121,7 +121,7 @@ export function EstimateWorkCard({
               <Button
                 size="icon-xs"
                 variant="outline"
-                className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+                className={ESTIMATE_CARD_ICON_ACTION_CLASS}
                 aria-label="Действия с работой"
               >
                 <Settings className="size-3 sm:size-3.5" />

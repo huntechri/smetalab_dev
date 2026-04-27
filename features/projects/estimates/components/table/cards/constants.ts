@@ -2,6 +2,12 @@ export const INTEGER_FORMATTER = new Intl.NumberFormat('ru-RU', {
   maximumFractionDigits: 0,
 });
 
+export const ESTIMATE_CARD_SHADOW_CLASS = 'shadow-[0_1px_2px_rgba(0,0,0,0.04)]';
+export const ESTIMATE_CARD_ICON_ACTION_CLASS =
+  'size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7';
+export const ESTIMATE_MATERIAL_CARD_CLASS =
+  `rounded-lg border border-slate-200 bg-white p-1 sm:p-1.5 ${ESTIMATE_CARD_SHADOW_CLASS}`;
+
 const INLINE_NUMBER_BASE_CLASS =
   'h-4 min-w-0 flex-none rounded-sm border-0 bg-transparent px-1 py-0 text-right font-semibold leading-none text-slate-800 !border-0 !shadow-none outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
 export const WORK_NUMBER_CLASS = `${INLINE_NUMBER_BASE_CLASS} w-10 text-[9px] sm:w-14 sm:text-[10px]`;
