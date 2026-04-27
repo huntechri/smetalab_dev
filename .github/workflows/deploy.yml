@@ -126,7 +126,7 @@ jobs:
   deploy-preview:
     name: Deploy to Vercel Preview (smetalabv3-timeweb)
     needs: [ci]
-    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event_name == 'pull_request' && github.event.action != 'closed' && github.actor != 'dependabot[bot]' && github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     permissions:
       contents: read
