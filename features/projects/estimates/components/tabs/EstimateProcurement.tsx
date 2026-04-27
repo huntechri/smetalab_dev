@@ -5,6 +5,7 @@ import { Badge } from '@/shared/ui/badge';
 import { Skeleton } from '@/shared/ui/skeleton';
 import { Input } from '@/shared/ui/input';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
+import { DenseCard } from '@/shared/ui/dense-card';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { Download, PackageSearch, Search } from 'lucide-react';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
@@ -101,7 +102,7 @@ function ProcurementToolbar({
 
 function ProcurementCard({ row }: { row: EstimateProcurementRow }) {
   return (
-    <article className="overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg">
+    <DenseCard>
       <div className="grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1fr_1fr] lg:gap-6">
         <div className="flex flex-col justify-center min-w-0">
           <div className="flex items-start gap-1.5">
@@ -161,7 +162,7 @@ function ProcurementCard({ row }: { row: EstimateProcurementRow }) {
           </div>
         </div>
       </div>
-    </article>
+    </DenseCard>
   );
 }
 
