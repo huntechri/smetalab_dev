@@ -1,5 +1,5 @@
-import { act, renderHook, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { act, cleanup, renderHook, waitFor } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   notifyEstimateCoefficientUpdated,
   notifyEstimatePurchasesMutated,
@@ -96,14 +96,19 @@ describe('estimate stale-data refresh parity', () => {
     procurementRepoMocks.list.mockReset();
   });
 
+  afterEach(() => {
+    cleanup();
+  });
+
   it('reloads execution rows after base estimate rows mutate', async () => {
+    const initialRows = [makeExecutionRow()];
     const refreshedRows = [makeExecutionRow({ id: 'execution-row-refreshed', plannedQty: 12 })];
     executionRepoMocks.list.mockResolvedValue(refreshedRows);
 
     const { result, unmount } = renderHook(() =>
       useEstimateExecutionController({
         estimateId,
-        initialRows: [makeExecutionRow()],
+        initialRows,
       }),
     );
 
@@ -120,13 +125,14 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('reloads execution rows after coefficient updates', async () => {
+    const initialRows = [makeExecutionRow()];
     const refreshedRows = [makeExecutionRow({ id: 'execution-row-coef', plannedPrice: 120 })];
     executionRepoMocks.list.mockResolvedValue(refreshedRows);
 
     const { result, unmount } = renderHook(() =>
       useEstimateExecutionController({
         estimateId,
-        initialRows: [makeExecutionRow()],
+        initialRows,
       }),
     );
 
@@ -143,10 +149,11 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('ignores execution invalidation events for another estimate', () => {
+    const initialRows = [makeExecutionRow()];
     const { unmount } = renderHook(() =>
       useEstimateExecutionController({
         estimateId,
-        initialRows: [makeExecutionRow()],
+        initialRows,
       }),
     );
 
@@ -161,13 +168,14 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('reloads procurement rows after base estimate rows mutate', async () => {
+    const initialRows = [makeProcurementRow()];
     const refreshedRows = [makeProcurementRow({ materialName: 'Грунтовка', plannedQty: 4 })];
     procurementRepoMocks.list.mockResolvedValue(refreshedRows);
 
     const { result, unmount } = renderHook(() =>
       useEstimateProcurementController({
         estimateId,
-        initialRows: [makeProcurementRow()],
+        initialRows,
       }),
     );
 
@@ -184,13 +192,14 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('reloads procurement rows after global purchase invalidation', async () => {
+    const initialRows = [makeProcurementRow()];
     const refreshedRows = [makeProcurementRow({ materialName: 'Шпаклевка', actualQty: 3 })];
     procurementRepoMocks.list.mockResolvedValue(refreshedRows);
 
     const { result, unmount } = renderHook(() =>
       useEstimateProcurementController({
         estimateId,
-        initialRows: [makeProcurementRow()],
+        initialRows,
       }),
     );
 
@@ -207,10 +216,11 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('ignores procurement purchase events for another estimate', () => {
+    const initialRows = [makeProcurementRow()];
     const { unmount } = renderHook(() =>
       useEstimateProcurementController({
         estimateId,
-        initialRows: [makeProcurementRow()],
+        initialRows,
       }),
     );
 
@@ -224,6 +234,8 @@ describe('estimate stale-data refresh parity', () => {
   });
 
   it('uses the shared visible-route refresh lifecycle for mounted estimate tabs', async () => {
+    const initialExecutionRows = [makeExecutionRow()];
+    const initialProcurementRows = [makeProcurementRow()];
     const refreshedExecutionRows = [makeExecutionRow({ id: 'execution-row-focus' })];
     const refreshedProcurementRows = [makeProcurementRow({ materialName: 'Краска' })];
     executionRepoMocks.list.mockResolvedValue(refreshedExecutionRows);
@@ -232,13 +244,13 @@ describe('estimate stale-data refresh parity', () => {
     const executionHook = renderHook(() =>
       useEstimateExecutionController({
         estimateId,
-        initialRows: [makeExecutionRow()],
+        initialRows: initialExecutionRows,
       }),
     );
     const procurementHook = renderHook(() =>
       useEstimateProcurementController({
         estimateId,
-        initialRows: [makeProcurementRow()],
+        initialRows: initialProcurementRows,
       }),
     );
 
