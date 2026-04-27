@@ -13,6 +13,8 @@ This audit is the next P2 step after PR #93. It identifies the button/input over
 - `shared/ui/textarea.tsx`
 - `shared/ui/input-group.tsx`
 - `shared/ui/toolbar-button.tsx`
+- `features/catalog/components/WorkCatalogCategories.client.tsx`
+- `features/catalog/components/MaterialCatalogPicker.client.tsx`
 
 ## Current primitive baseline
 
@@ -54,6 +56,18 @@ shrink-0 font-semibold tracking-tight shadow-sm transition-all active:scale-95
 ```
 
 This keeps the recipe out of global `buttonVariants` while removing repeated toolbar/action styling from feature call sites over time.
+
+### CatalogCategoryButton
+
+`features/catalog/components/CatalogCategoryButton.tsx` has been added as a feature-level adapter for catalog category selectors.
+
+It centralizes active/inactive variant selection without changing the global `Button` API:
+
+```tsx
+<CatalogCategoryButton active={isActive} activeVariant="secondary" />
+```
+
+This intentionally stays inside `features/catalog` because catalog category selection is not a global button semantic.
 
 ### Input
 
@@ -158,8 +172,14 @@ Common places:
 Recommended handling:
 
 - keep category/chip behavior feature-owned for now;
-- consider a separate `ChipButton`/`PillButton` adapter only for catalog/filter controls;
+- use feature-level adapters for catalog/filter controls;
 - do not change global `Button` radius defaults.
+
+Current PR implementation:
+
+- `CatalogCategoryButton` centralizes catalog active/inactive variant selection.
+- `WorkCatalogCategories.client.tsx` uses it for horizontal work category buttons.
+- `MaterialCatalogPicker.client.tsx` uses it for L1-L4 category tree buttons.
 
 Rationale:
 
@@ -339,17 +359,21 @@ Allowed changes:
 - no JSX structure changes;
 - no global `Button` API changes.
 
-### PR B — Catalog/filter pill adapter audit
+### PR B — Catalog/filter pill adapter
+
+Status: included in this PR for catalog category selectors only.
 
 Scope:
 
-- inspect catalog category/filter controls;
-- decide whether a feature-level `CatalogChipButton` adapter is justified.
+- add `CatalogCategoryButton` as a feature-level adapter;
+- use it in work categories and material category tree;
+- do not change global `Button` radius defaults.
 
 Allowed changes:
 
 - feature-level adapter only;
-- no global `Button` radius changes.
+- active/inactive variant wiring only;
+- no global `Button` API changes.
 
 ### PR C — Input numeric/table cleanup
 
@@ -374,9 +398,10 @@ Allowed changes:
 
 ## Recommended next PR
 
-After this PR, the next safe implementation candidates are:
+After this PR, the next safe implementation candidate is input numeric/table cleanup:
 
-1. inspect catalog/filter pill controls and decide whether a feature-level `CatalogChipButton` adapter is justified;
-2. inspect numeric/table inputs and replace manual `tabular-nums` with `numeric` where behavior is identical.
+- inspect numeric inputs in room params/execution/table cells;
+- replace manual `tabular-nums` with `numeric` where behavior is identical;
+- do not change table widths or form layout classes.
 
-Both should remain narrow, mechanically verifiable cleanup PRs.
+This should remain a narrow, mechanically verifiable cleanup PR.
