@@ -1,7 +1,7 @@
 'use client';
 
 import { Building2, Activity, Wallet, BarChart3 } from 'lucide-react';
-import { KPICard } from '@repo/ui';
+import { KPICard } from '@/shared/ui/kpi-card';
 import { ProjectListItem } from '../../shared/types';
 
 interface ProjectsStatsCardsProps {
