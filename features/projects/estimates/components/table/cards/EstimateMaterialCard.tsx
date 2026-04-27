@@ -17,6 +17,7 @@ import {
 } from './constants';
 import { EstimateInlineNumberCell } from './EstimateInlineNumberCell';
 import { EstimateInlineTextCell } from './EstimateInlineTextCell';
+import { EstimateMetricPill } from './EstimateMetricPill';
 
 interface EstimateMaterialCardProps {
   material: EstimateRow;
@@ -68,7 +69,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
-              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-slate-300 bg-slate-50 px-1 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+              <EstimateMetricPill density="material">
                 <span className="opacity-70 text-[9px] sm:text-[10px]">Кол:</span>
                 <EstimateInlineNumberCell
                   value={material.qty}
@@ -76,8 +77,8 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
                   ariaLabel={`Количество: ${material.name}`}
                   className={MATERIAL_QTY_CLASS}
                 />
-              </div>
-              <div className="inline-flex h-4 items-center gap-0.5 rounded-full border border-blue-200 bg-blue-50 px-1 py-0 text-[9px] text-blue-600 sm:h-5 sm:px-1.5 sm:text-[10px]">
+              </EstimateMetricPill>
+              <EstimateMetricPill density="material" tone="info">
                 <span className="opacity-70 text-[9px] sm:text-[10px]">Расх:</span>
                 <EstimateInlineNumberCell
                   value={material.expense}
@@ -85,7 +86,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
                   ariaLabel={`Расход: ${material.name}`}
                   className={MATERIAL_EXPENSE_CLASS}
                 />
-              </div>
+              </EstimateMetricPill>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0 ml-auto sm:ml-0">
