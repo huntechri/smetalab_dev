@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { catalogRepository } from '../repository';
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { CatalogCategoryButton } from './CatalogCategoryButton';
 
 interface Props {
     selectedCategory: string;
@@ -97,20 +97,20 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                 onPointerCancel={stopDragging}
                 onPointerLeave={stopDragging}
             >
-                <Button
-                    variant={selectedCategory === 'all' ? 'primary' : 'ghost'}
+                <CatalogCategoryButton
+                    active={selectedCategory === 'all'}
                     onClick={() => !isDragging && onCategoryChange('all')}
                 >
                     {allLabel}
-                </Button>
+                </CatalogCategoryButton>
                 {categories.map((category) => (
-                    <Button
+                    <CatalogCategoryButton
                         key={category}
-                        variant={selectedCategory === category ? 'primary' : 'ghost'}
+                        active={selectedCategory === category}
                         onClick={() => !isDragging && onCategoryChange(category)}
                     >
                         {category}
-                    </Button>
+                    </CatalogCategoryButton>
                 ))}
             </div>
         </div>
