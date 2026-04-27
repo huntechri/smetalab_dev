@@ -34,12 +34,13 @@ function ProjectActionButtons({
     compact,
 }: ProjectActionButtonsProps) {
     const gridClassName = compact
-        ? 'grid shrink-0 grid-cols-3 gap-2'
+        ? 'grid w-full grid-cols-3 gap-1.5 sm:gap-2'
         : 'grid grid-cols-3 gap-2 pt-2';
+    const buttonSize = compact ? 'xs' : 'default';
 
     return (
         <div className={gridClassName}>
-            <Button asChild variant="outline">
+            <Button asChild variant="outline" size={buttonSize}>
                 <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
                     <ExternalLink className="size-4 sm:hidden" />
                     <span className="hidden sm:inline">Открыть</span>
@@ -47,6 +48,7 @@ function ProjectActionButtons({
             </Button>
             <Button
                 variant="outline"
+                size={buttonSize}
                 onClick={() => onEdit(projectId)}
                 aria-label={`Изменить ${projectName}`}
             >
@@ -54,7 +56,7 @@ function ProjectActionButtons({
                 <span className="hidden sm:inline">Изменить</span>
             </Button>
             <AlertDialogTrigger asChild>
-                <Button variant="destructive" aria-label={`Удалить ${projectName}`}>
+                <Button variant="destructive" size={buttonSize} aria-label={`Удалить ${projectName}`}>
                     <Trash2 className="size-4 sm:hidden hover:text-destructive" />
                     <span className="hidden sm:inline hover:text-destructive">Удалить</span>
                 </Button>
