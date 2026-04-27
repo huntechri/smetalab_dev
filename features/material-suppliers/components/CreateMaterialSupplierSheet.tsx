@@ -3,10 +3,10 @@
 import { useEffect, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@repo/ui';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@repo/ui';
-import { Input } from '@repo/ui';
-import { RadioGroup, RadioGroupItem } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
+import { Input } from '@/shared/ui/input';
+import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
 import { DirectoryEntitySheetShell } from '@/features/directories';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
