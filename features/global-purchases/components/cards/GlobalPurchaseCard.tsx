@@ -1,5 +1,6 @@
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { DenseCard } from '@/shared/ui/dense-card';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { EditableCell } from '@/shared/ui/cells/editable-cell';
 import { DeletePurchaseAction } from './DeletePurchaseAction';
@@ -27,7 +28,7 @@ export function GlobalPurchaseCard({
   const isPending = pendingIds.has(row.id);
 
   return (
-    <article className="overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg">
+    <DenseCard>
       <div className="grid grid-cols-1 gap-2.5 p-2 sm:p-2.5 lg:grid-cols-[92px_minmax(0,1fr)_minmax(300px,auto)_minmax(150px,220px)_auto] lg:items-center lg:gap-3">
         <div className="min-w-0">
           <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">Дата</p>
@@ -118,6 +119,6 @@ export function GlobalPurchaseCard({
           <DeletePurchaseAction row={row} disabled={isPending} onRemoveAction={onRemoveAction} />
         </div>
       </div>
-    </article>
+    </DenseCard>
   );
 }
