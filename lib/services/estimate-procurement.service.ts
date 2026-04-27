@@ -471,7 +471,6 @@ export class EstimateProcurementService {
                     FROM ${globalPurchases}
                     WHERE ${globalPurchases.tenantId} = ${teamId}
                       AND ${globalPurchases.projectId} = ${projectId}
-                      AND ${globalPurchases.deletedAt} IS NULL
                 ) AS combined_sources
             `),
         ]);
