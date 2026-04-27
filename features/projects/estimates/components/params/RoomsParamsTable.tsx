@@ -18,6 +18,26 @@ const headers = [
     'Окно 1 (В×Ш)', 'Окно 2 (В×Ш)', 'Окно 3 (В×Ш)', 'Портал 1 (В×Ш)', 'Портал 2 (В×Ш)', 'Портал 3 (В×Ш)', 'Действия',
 ];
 
+const calculatedValueClassName = 'h-8 w-24 rounded border bg-muted/30 px-2 flex items-center';
+
+type RoomParamNumberInputProps = {
+    value: string;
+    onChange: (value: string) => void;
+    placeholder?: string;
+};
+
+function RoomParamNumberInput({ value, onChange, placeholder }: RoomParamNumberInputProps) {
+    return (
+        <Input
+            type="number"
+            inputMode="decimal"
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
+            placeholder={placeholder}
+        />
+    );
+}
+
 function OpeningInput({
     height,
     width,
@@ -31,11 +51,23 @@ function OpeningInput({
 }) {
     return (
         <div className="flex items-center gap-1 min-w-[150px]">
-            <Input  type="number" inputMode="decimal" value={height} onChange={(event) => onHeight(event.target.value)} placeholder="В" />
+            <RoomParamNumberInput value={height} onChange={onHeight} placeholder="В" />
             <span className="text-muted-foreground">×</span>
-            <Input  type="number" inputMode="decimal" value={width} onChange={(event) => onWidth(event.target.value)} placeholder="Ш" />
+            <RoomParamNumberInput value={width} onChange={onWidth} placeholder="Ш" />
         </div>
     );
+}
+
+function NumericCell({ value, onChange }: RoomParamNumberInputProps) {
+    return (
+        <div className="w-24">
+            <RoomParamNumberInput value={value} onChange={onChange} />
+        </div>
+    );
+}
+
+function CalculatedValueCell({ value }: { value: string }) {
+    return <div className={calculatedValueClassName}>{value}</div>;
 }
 
 export function RoomsParamsTable({
@@ -62,20 +94,20 @@ export function RoomsParamsTable({
                         <TableRow key={row.id}>
                             <TableCell>{rowIndex + 1}</TableCell>
                             <TableCell><div className="min-w-[180px]"><Input value={row.name} onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.perimeter} onChange={(event) => onChangeCell(row.id, 'perimeter', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.height} onChange={(event) => onChangeCell(row.id, 'height', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.floorArea} onChange={(event) => onChangeCell(row.id, 'floorArea', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="h-8 w-24 rounded border bg-muted/30 px-2 flex items-center">{format2(calcWallsArea(row))}</div></TableCell>
-                            <TableCell><div className="h-8 w-24 rounded border bg-muted/30 px-2 flex items-center">{format2(calcSlopes(row))}</div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.ceilingArea} onChange={(event) => onChangeCell(row.id, 'ceilingArea', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.ceilingSlopes} onChange={(event) => onChangeCell(row.id, 'ceilingSlopes', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.doorsCount} onChange={(event) => onChangeCell(row.id, 'doorsCount', event.target.value)} /></div></TableCell>
-                            <TableCell><div className="w-24"><Input type="number" value={row.wallSegments} onChange={(event) => onChangeCell(row.id, 'wallSegments', event.target.value)} /></div></TableCell>
-                            {row.windows.map((window, index) => (
+                            <TableCell><NumericCell value={row.perimeter} onChange={(value) => onChangeCell(row.id, 'perimeter', value)} /></TableCell>
+                            <TableCell><NumericCell value={row.height} onChange={(value) => onChangeCell(row.id, 'height', value)} /></TableCell>
+                            <TableCell><NumericCell value={row.floorArea} onChange={(value) => onChangeCell(row.id, 'floorArea', value)} /></TableCell>
+                            <TableCell><CalculatedValueCell value={format2(calcWallsArea(row))} /></TableCell>
+                            <TableCell><CalculatedValueCell value={format2(calcSlopes(row))} /></TableCell>
+                            <TableCell><NumericCell value={row.ceilingArea} onChange={(value) => onChangeCell(row.id, 'ceilingArea', value)} /></TableCell>
+                            <TableCell><NumericCell value={row.ceilingSlopes} onChange={(value) => onChangeCell(row.id, 'ceilingSlopes', value)} /></TableCell>
+                            <TableCell><NumericCell value={row.doorsCount} onChange={(value) => onChangeCell(row.id, 'doorsCount', value)} /></TableCell>
+                            <TableCell><NumericCell value={row.wallSegments} onChange={(value) => onChangeCell(row.id, 'wallSegments', value)} /></TableCell>
+                            {row.windows.map((opening, index) => (
                                 <TableCell key={`w-${row.id}-${index}`}>
                                     <OpeningInput
-                                        height={window.height}
-                                        width={window.width}
+                                        height={opening.height}
+                                        width={opening.width}
                                         onHeight={(value) => onChangeOpening(row.id, 'windows', index, 'height', value)}
                                         onWidth={(value) => onChangeOpening(row.id, 'windows', index, 'width', value)}
                                    />
