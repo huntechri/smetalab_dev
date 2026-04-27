@@ -4,7 +4,7 @@
 
 This PR follows the procurement/global-purchases consistency batch and starts the production hardening layer.
 
-The goal is to make the repository-level verification path explicit and to bring UI governance checks into the main PR gate.
+The goal is to make the repository-level verification path explicit, bring UI governance checks into the main PR gate, and reduce CI duplication between PR validation and production deployment.
 
 ## Surfaces reviewed
 
@@ -14,24 +14,41 @@ The goal is to make the repository-level verification path explicit and to bring
 - Vercel project `smetalabv3-timeweb`
 - Recent Vercel deployments for project `prj_t39HsTOj40SuLwFunRf0njg1qz6M`
 
-## Current CI/CD baseline
+## CI/CD policy
 
-The main CI/CD workflow currently runs on push to `main`, pull requests to `main`, and manual dispatch.
+The workflow supports pull requests to `main`, pushes to `main`, and manual dispatch, but jobs are now split by responsibility.
 
-The `ci` job runs:
+### Pull request gate
 
-- install dependencies;
+The PR gate runs only for pull requests from the same repository and for manual dispatch.
+
+It runs:
+
+- dependency install;
+- pnpm cache restore;
+- Next.js build cache restore;
 - lint;
 - type-check;
+- UI audit;
 - unit/isolated tests;
 - build.
 
-The integration-test job is optional and uses a Neon test branch. Failures are reported as warnings rather than hard-blocking the pipeline.
+This is the required release-verification surface before merge.
 
-Production deploy path is split into:
+### Integration tests
 
-- production migration job;
-- production Vercel deploy job.
+Integration tests now use a local GitHub Actions service database based on `pgvector/pgvector:pg16`.
+
+This removes the cross-region GitHub Actions runner to Neon round-trip cost from PR validation. The job remains optional and reports failures as warnings, matching the previous policy.
+
+### Main branch path
+
+On `push` to `main`, the workflow no longer repeats the full PR gate. A merge commit should already have passed the PR gate against the protected target branch.
+
+The main branch path is focused on production work:
+
+- run production migrations;
+- deploy the prebuilt production application to Vercel.
 
 ## Changes in this PR
 
@@ -59,11 +76,22 @@ The main `ci` job now runs `pnpm audit:ui` between type-check and unit tests.
 
 This makes UI governance a first-class merge gate instead of a manual-only follow-up.
 
-## Vercel deployment observation
+### CI runtime optimization
 
-Recent Vercel deployment listing shows production deployments are being created for main-branch merge commits. The latest observed production deployment in the returned page was still for PR #102 at the time of inspection, while later main commits existed in GitHub.
+Added Next.js build cache restore for `.next/cache` in the PR gate.
 
-This PR does not change Vercel deployment logic. The next manual check after merge should confirm that the production deployment advances to the current main commit.
+Moved PR integration tests from a remote Neon branch to a local `pgvector/pgvector:pg16` service database. This keeps the test semantics DB-backed while removing the largest source of latency: remote network round-trips and branch lifecycle overhead.
+
+### PR/main split
+
+The full lint/typecheck/audit/unit/build gate no longer runs again on `push main`.
+
+Rationale:
+
+- the PR gate validates the merge candidate before merge;
+- repeating the same checks after merge increases CI time without adding much signal;
+- production pushes should focus on migration and deployment correctness;
+- manual dispatch remains available for an explicit re-run of the gate.
 
 ## Explicit non-goals
 
@@ -72,20 +100,22 @@ This PR does not change Vercel deployment logic. The next manual check after mer
 - No server action changes.
 - No DB/schema migrations.
 - No Neon query tuning changes in this PR.
-- No integration-test gating policy change.
-- No Vercel project/env variable changes.
+- No integration-test assertion rewrites.
+- No Vercel project changes.
 
 ## Manual smoke
 
 After merge, verify:
 
-- GitHub CI runs the `UI Audit` step.
+- GitHub PR gate runs the `UI Audit` step.
 - `pnpm verify:release` passes locally or in an agent environment.
-- Production migration job still pulls Vercel production env.
+- Integration job uses local `pgvector/pgvector:pg16` instead of creating a Neon branch.
+- Production migration job completes.
 - Production deploy job creates a deployment for the latest main commit.
 
 ## Follow-up candidates
 
-1. Neon slow query/index audit as a separate database-performance batch.
-2. Decide whether optional integration tests should eventually become required on protected branches.
-3. Add targeted Vercel deployment status documentation if deployment observability remains confusing.
+1. Make a separate `integration:neon-smoke` job for a small compatibility subset against Neon.
+2. Split Vitest configs into node-only unit and jsdom UI suites to reduce unit test environment/import overhead.
+3. Reduce `resetDatabase()` frequency or introduce schema-per-worker isolation for integration parallelism.
+4. Add targeted Vercel deployment status documentation if deployment observability remains confusing.
