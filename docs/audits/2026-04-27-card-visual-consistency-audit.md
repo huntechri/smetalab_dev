@@ -2,34 +2,74 @@
 
 ## Purpose
 
-This audit is the next P2 step after PR #94. It reviews the existing card surfaces before any shared card recipe or visual consolidation is introduced.
+This audit records the card-surface review for the deep UI cleanup series and keeps the implementation boundary explicit.
 
 The goal is to identify safe consolidation points without doing a broad redesign.
+
+## Current status after follow-up PRs
+
+Status: mostly closed for the current cleanup series.
+
+The original audit recommended incremental card cleanup only. Current main already contains the key safe implementation pieces:
+
+- estimate-local card constants in `features/projects/estimates/components/table/cards/constants.ts`;
+- `EstimateMetricPill` in `features/projects/estimates/components/table/cards/EstimateMetricPill.tsx`;
+- estimate-local icon action class reuse across estimate work/material cards;
+- shared operational dense wrapper in `shared/ui/dense-card.tsx`;
+- `DenseCard` usage in estimate execution cards;
+- `DenseCard` usage in global purchase cards.
+
+This means the strongest exact wrapper duplication from the original audit is already resolved. Future work should be treated as optional P3 refinement only.
 
 ## Sources checked
 
 - `features/projects/list/components/project-card.tsx`
 - `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx`
 - `features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx`
+- `features/projects/estimates/components/table/cards/EstimateMetricPill.tsx`
+- `features/projects/estimates/components/table/cards/constants.ts`
 - `features/projects/estimates/components/tabs/EstimateExecution.tsx`
 - `features/global-purchases/components/GlobalPurchasesCardsList.tsx`
 - `features/global-purchases/components/cards/GlobalPurchaseCard.tsx`
+- `features/global-purchases/components/cards/PurchaseMetric.tsx`
 - `shared/ui/card.tsx`
 - `shared/ui/kpi-card.tsx`
+- `shared/ui/dense-card.tsx`
 
-## Current state
-
-### Shared Card primitive
+## Shared Card primitive
 
 `shared/ui/card.tsx` remains a low-level shadcn-style primitive.
 
 Recommendation: keep it generic. Do not push feature-specific dense-card layout decisions into the primitive.
 
-### KPI card primitive
+## KPI card primitive
 
-`shared/ui/kpi-card.tsx` already represents a separate dashboard/KPI surface. It should remain separate from dense operational list cards.
+`shared/ui/kpi-card.tsx` represents a separate dashboard/KPI surface.
 
 Recommendation: do not merge KPI semantics with estimate/procurement/project cards.
+
+## Dense operational card wrapper
+
+Current implementation:
+
+```tsx
+// shared/ui/dense-card.tsx
+export const denseCardClassName =
+  'overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg';
+```
+
+Used by:
+
+- estimate execution cards;
+- global purchase cards.
+
+Status: closed for exact wrapper duplication.
+
+Remaining rule:
+
+- keep field composition feature-owned;
+- do not move estimate/procurement-specific cells into `shared/ui/dense-card.tsx`;
+- do not turn this into a global replacement for `Card`.
 
 ## Surface review
 
@@ -43,8 +83,8 @@ Observed structure:
 
 - uses shared `Card`, `CardHeader`, `CardContent`, `CardFooter`;
 - has semantic project header with status/progress badges;
-- has two metric blocks for budget and dates;
-- has a progress area with custom gradient via `getProgressGradient`;
+- has metric blocks for budget and dates;
+- has a progress area with project-specific gradient logic;
 - has action footer using `ProjectActions`.
 
 Pattern type:
@@ -52,13 +92,9 @@ Pattern type:
 - entity summary card;
 - not a dense editable operational row.
 
-Recommended handling:
+Status: keep separate.
 
-- keep on shared `Card` primitive;
-- do not force into estimate/procurement dense-row recipe;
-- later visual cleanup can target project-specific metric blocks and progress gradient separately.
-
-Do not change now:
+Do not change in this cleanup series:
 
 - `getProgressGradient`;
 - project card grid/action layout;
@@ -70,34 +106,20 @@ File:
 
 - `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx`
 
-Observed structure:
+Current state:
 
-- dense operational row/card;
-- work row is not using `Card`; it uses lightweight `div` wrappers;
-- hierarchy: main work row + expandable materials area;
-- repeated metric pills for qty/price/sum;
-- repeated small icon action buttons with `size="icon-xs"`, `rounded-lg`, slate border/background classes.
+- dense operational work row/card;
+- uses estimate-local `EstimateMetricPill`;
+- uses estimate-local `ESTIMATE_CARD_ICON_ACTION_CLASS`;
+- uses estimate-local inline number/text class constants.
 
-Pattern type:
+Status: closed for current exact class extraction.
 
-- dense editable operational card;
-- table replacement card, not a general content card.
+Remaining optional refinement:
 
-Recommended handling:
-
-- keep as feature-owned estimate card surface;
-- extract small estimate-local recipes only after comparing with material/execution cards;
-- do not replace with global `Card` wrapper without checking density and virtualization/layout impact.
-
-Candidate future adapter:
-
-```tsx
-<EstimateDenseCard />
-<EstimateMetricPill />
-<EstimateCardIconAction />
-```
-
-Only implement after a narrow estimate-card PR.
+- only small estimate-local cleanup if a repeated class remains after direct file comparison;
+- no data-flow changes;
+- no virtualization/layout changes.
 
 ### Estimate material cards
 
@@ -105,31 +127,15 @@ File:
 
 - `features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx`
 
-Observed structure:
+Current state:
 
 - compact nested material card;
-- uses `rounded-lg border border-slate-200 bg-white p-1 sm:p-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.04)]`;
-- repeats slate metric pills and green sum badge;
-- repeats card icon action button style from work cards.
+- uses `ESTIMATE_MATERIAL_CARD_CLASS`;
+- uses `EstimateMetricPill`;
+- uses `ESTIMATE_CARD_ICON_ACTION_CLASS`;
+- uses estimate-local inline number/text class constants.
 
-Pattern type:
-
-- nested dense editable operational card.
-
-Recommended handling:
-
-- good candidate for estimate-local recipe extraction;
-- align with `EstimateWorkCard` first;
-- avoid global shared card variant.
-
-Candidate safe extraction:
-
-```tsx
-const estimateCardShadowClassName = "shadow-[0_1px_2px_rgba(0,0,0,0.04)]"
-const estimateIconActionClassName = "size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
-```
-
-Do not implement in this audit PR.
+Status: closed for current exact class extraction.
 
 ### Estimate execution cards
 
@@ -137,23 +143,18 @@ File:
 
 - `features/projects/estimates/components/tabs/EstimateExecution.tsx`
 
-Observed structure:
+Current state:
 
 - dense operational cards for works only;
-- article wrapper uses `overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg`;
-- layout is plan/fact oriented;
-- repeats metric pill style with slate/blue/green tonal variants;
-- uses `EstimateInlineNumberCell` for editable actual qty/price.
+- uses shared `DenseCard` wrapper;
+- uses estimate-local `EstimateMetricPill` for editable fact values;
+- keeps execution-specific `ExecutionValue` and status dropdown local.
 
-Pattern type:
+Status: closed for wrapper compatibility.
 
-- dense execution status card;
-- close to estimate work/material card density, but not identical semantics.
+Remaining rule:
 
-Recommended handling:
-
-- candidate for estimate-local metric-pills and dense-card wrapper recipes;
-- do not mix execution card cleanup with execution data-refresh or stale-data work.
+- do not mix execution card visual cleanup with execution data-refresh or stale-data work.
 
 ### Global purchase cards
 
@@ -162,163 +163,78 @@ Files:
 - `features/global-purchases/components/GlobalPurchasesCardsList.tsx`
 - `features/global-purchases/components/cards/GlobalPurchaseCard.tsx`
 
-Observed structure:
-
-- list wrapper with `max-h-[625px] overflow-y-auto px-1.5 pb-1.5 sm:px-3 sm:pb-3`;
-- card wrapper uses `article` with `overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg`;
-- grid layout is procurement-specific: date, material/project, qty/price/sum, supplier, actions;
-- uses `EditableCell`, `ProjectPicker`, `SupplierPicker`, `PurchaseMetric`, `DeletePurchaseAction`.
-
-Pattern type:
+Current state:
 
 - dense editable operational row/card;
-- semantically close to estimate execution card wrapper.
+- uses shared `DenseCard` wrapper;
+- keeps procurement-specific composition local: `EditableCell`, `ProjectPicker`, `SupplierPicker`, `PurchaseMetric`, `DeletePurchaseAction`;
+- `PurchaseMetric` exists for read-only amount display.
 
-Recommended handling:
+Status: closed for wrapper compatibility.
 
-- good candidate for a shared dense operational wrapper only if estimate execution and procurement wrappers stay identical;
-- keep procurement field composition feature-owned.
+Remaining optional refinement:
 
-Candidate future adapter:
+- a small feature-local editable metric wrapper may be considered only if it preserves the exact current class string and behavior;
+- do not promote procurement-specific editable cells into shared UI.
 
-```tsx
-<OperationalDenseCard as="article" />
-```
-
-But only after an implementation PR verifies exact class compatibility and no layout regression.
-
-## Repeatable patterns found
+## Repeatable patterns and current decision
 
 ### Dense card wrapper
 
-Repeated class shape:
+Decision: closed.
 
-```text
-overflow-hidden rounded-md border border-border bg-card shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg
-```
-
-Appears in:
-
-- estimate execution cards;
-- global purchase cards.
-
-Similar but not identical:
-
-- estimate material card uses `rounded-lg border border-slate-200 bg-white p-1 sm:p-1.5`;
-- project card uses shared `Card` and hover translation.
-
-Recommendation:
-
-- possible future shared adapter for dense operational cards;
-- do not force project cards into it.
+The exact wrapper duplication is handled by `shared/ui/dense-card.tsx`.
 
 ### Metric pill pattern
 
-Repeated shape:
+Decision: partially closed, feature-owned.
 
-```text
-inline-flex h-4/h-5 items-center rounded-full border bg-* px-* text-[9px]/text-[10px]
-```
+Current split is intentional:
 
-Appears in:
-
-- estimate work cards;
-- estimate material cards;
-- estimate execution cards;
-- global purchase cards.
-
-Recommendation:
-
-- best first implementation candidate;
-- start feature-local, likely under estimate cards first;
-- avoid global badge changes.
-
-Possible future APIs:
-
-```tsx
-<EstimateMetricPill tone="neutral" label="Кол-во" />
-<PurchaseMetric /> // already exists for global purchases
-```
+- estimate cards use `EstimateMetricPill`;
+- global purchases use `PurchaseMetric` plus local editable metric wrappers where needed;
+- no global `MetricPill` should be introduced unless multiple features share exact class, density and semantics.
 
 ### Icon action button style
 
-Repeated shape:
+Decision: closed for estimate card scope.
 
-```text
-size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7
-```
-
-Appears in:
-
-- estimate work card action buttons;
-- estimate material card action menu trigger.
-
-Recommendation:
-
-- estimate-local extraction is safe;
-- do not add global Button variant.
+Estimate work/material cards already use `ESTIMATE_CARD_ICON_ACTION_CLASS`.
 
 ### Status/badge tone style
 
-Repeated behavior:
+Decision: keep local.
 
-- status badges;
-- metric badges;
-- sum badges;
-- category/label badges.
+Status badges, metric badges, sum badges and category labels remain business-context dependent.
 
-Recommendation:
+## Remaining safe next batches
 
-- do not normalize all badges globally;
-- badge tones are business-context dependent;
-- only extract local recipes when exact class and semantics match.
-
-## Safe implementation plan
-
-### PR A — Estimate dense card recipe extraction
+### Optional PR A — Global purchase editable metric wrapper
 
 Scope:
 
-- estimate cards only;
-- extract exact repeated class constants from:
-  - `EstimateWorkCard.tsx`
-  - `EstimateMaterialCard.tsx`
-  - possibly `EstimateExecution.tsx`
-- no JSX structure changes;
-- no data-flow changes.
+- `features/global-purchases/components/cards/GlobalPurchaseCard.tsx` only;
+- extract only the repeated editable quantity/price metric shell;
+- preserve exact class string;
+- no behavior changes;
+- no shared UI changes.
 
-Candidate constants:
-
-```ts
-export const ESTIMATE_CARD_SHADOW_CLASS = "shadow-[0_1px_2px_rgba(0,0,0,0.04)]";
-export const ESTIMATE_CARD_ICON_ACTION_CLASS = "size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7";
-```
-
-### PR B — Estimate metric pill extraction
-
-Scope:
-
-- estimate work/material/execution metric pills;
-- local component only;
-- no global `Badge` changes.
-
-Candidate component:
+Allowed shape:
 
 ```tsx
-<EstimateMetricPill tone="neutral" label="Кол-во">
-  <EstimateInlineNumberCell />
-</EstimateMetricPill>
+<EditablePurchaseMetric label="Кол-во">
+  <EditableCell />
+  <EditableCell />
+</EditablePurchaseMetric>
 ```
 
-### PR C — Operational dense card wrapper check
+### Optional PR B — No-op verification of dense card usage
 
 Scope:
 
-- compare estimate execution card wrapper and global purchase card wrapper;
-- if exactly equivalent, extract shared adapter under `shared/ui` or `shared/ui/cards`;
-- keep field composition feature-owned.
-
-Do not do this before PR A/B.
+- audit-only or test-only if needed;
+- verify that estimate execution and global purchase cards keep using `DenseCard`;
+- no visual changes.
 
 ## Explicit non-goals
 
@@ -328,13 +244,10 @@ Do not do this before PR A/B.
 - Do not merge `Card` and `KPICard` semantics.
 - Do not change `Progress` colors or `getProgressGradient`.
 - Do not touch server actions, DB/schema, or stale-data refresh logic.
+- Do not introduce a global metric pill unless exact cross-feature compatibility is proven.
 
-## Recommended next PR
+## Final recommendation
 
-Start with estimate-local extraction of exact repeated constants/components:
+For the current audit series, card cleanup can be considered effectively complete.
 
-1. action icon button class in estimate work/material cards;
-2. card shadow/border wrapper classes where exact;
-3. only then metric pill extraction.
-
-Keep it narrow and mechanically verifiable.
+Only proceed with optional feature-local refinements when they are mechanically verifiable and confined to one feature file at a time.
