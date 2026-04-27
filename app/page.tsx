@@ -10,6 +10,45 @@ import {
     Truck
 } from 'lucide-react';
 
+const navigationLinks = [
+    { href: '#capabilities', label: 'Возможности' },
+    { href: '#workflow', label: 'Процесс' },
+    { href: '#pricing', label: 'Тарифы' },
+];
+
+const capabilityTags = [
+    'Календарное планирование',
+    'Контроль смет',
+    'Снабжение',
+    'Отчётность для заказчика',
+];
+
+const capabilityCards = [
+    { icon: CalendarClock, title: 'Графики и смены', text: 'Контроль этапов, смен и критических сроков.' },
+    { icon: Truck, title: 'Снабжение', text: 'Поставки, заявки, остатки — без хаоса.' },
+    { icon: Building2, title: 'Портфель объектов', text: 'Сравнение эффективности между площадками.' },
+    { icon: ChartNoAxesCombined, title: 'Финансовая панель', text: 'Бюджет, маржинальность, отклонения.' },
+];
+
+const workflowSteps = [
+    { step: '01', title: 'Собери объект', text: 'Импорт сметы, календаря, ресурсов.' },
+    { step: '02', title: 'Запусти исполнение', text: 'Бригады, поставки, контроль качества.' },
+    { step: '03', title: 'Отчитывайся', text: 'Дашборды, отчёты, SLA и риски.' },
+];
+
+const pricingPlans = [
+    { name: 'Pilot', price: '0 ₽', desc: 'Для пилотного объекта', action: 'Создать объект', href: '/sign-up', accent: false },
+    { name: 'General', price: '12 900 ₽', desc: 'Для генподрядчика', action: 'Подключить команду', href: '/sign-up', accent: true },
+    { name: 'Enterprise', price: 'по запросу', desc: 'Для сетей и девелоперов', action: 'Запросить расчёт', href: '/sign-up', accent: false },
+];
+
+const scheduleFrames = ['Нед 1', 'Нед 2', 'Нед 3'];
+
+const pricingFeatures = ['До 5 объектов', 'Контроль закупок', 'Отчёты заказчику'];
+
+const headerNavLinkClassName = 'rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
+const footerNavLinkClassName = 'rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
+
 export default function LandingPage() {
     return (
         <div className="min-h-screen overflow-x-clip bg-[#0B0A0F] text-white font-sans">
@@ -27,9 +66,9 @@ export default function LandingPage() {
                         </div>
                     </div>
                     <nav className="hidden md:flex items-center gap-4 text-sm text-white/90" aria-label="Основная навигация">
-                        <Link href="#capabilities" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
-                        <Link href="#workflow" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
-                        <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
+                        {navigationLinks.map((link) => (
+                            <Link key={link.href} href={link.href} className={headerNavLinkClassName}>{link.label}</Link>
+                        ))}
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
                         <Button variant="ghost" asChild>
@@ -46,9 +85,9 @@ export default function LandingPage() {
                         <div className="absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl">
                             <div className="container mx-auto flex flex-col gap-4 px-4 py-6">
                                 <nav className="flex flex-col gap-3 text-sm text-white/90" aria-label="Основная навигация (мобильная)">
-                                    <Link href="#capabilities" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
-                                    <Link href="#workflow" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
-                                    <Link href="#pricing" className="rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
+                                    {navigationLinks.map((link) => (
+                                        <Link key={link.href} href={link.href} className={headerNavLinkClassName}>{link.label}</Link>
+                                    ))}
                                 </nav>
                                 <div className="flex flex-col gap-3">
                                     <Button variant="outline" asChild>
@@ -129,7 +168,7 @@ export default function LandingPage() {
                                         <div className="rounded-2xl border border-white/10 bg-[#111015] p-4">
                                             <p className="text-xs text-white/75">График работ</p>
                                             <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                                                {['Нед 1', 'Нед 2', 'Нед 3'].map((frame) => (
+                                                {scheduleFrames.map((frame) => (
                                                     <div key={frame} className="relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent">
                                                         <span className="absolute left-2 top-2 rounded-full bg-[#0B0A0F] px-2 py-0.5 text-[10px] text-white">{frame}</span>
                                                     </div>
@@ -152,18 +191,13 @@ export default function LandingPage() {
                                 <h2 className="text-3xl md:text-4xl font-semibold">Операционная архитектура стройки</h2>
                                 <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
                                 <div className="flex flex-wrap gap-3 text-xs text-white/80">
-                                    {['Календарное планирование', 'Контроль смет', 'Снабжение', 'Отчётность для заказчика'].map((tag) => (
+                                    {capabilityTags.map((tag) => (
                                         <span key={tag} className="rounded-full border border-white/20 bg-white/5 px-3 py-1">{tag}</span>
                                     ))}
                                 </div>
                             </div>
                             <div className="grid gap-4 md:grid-cols-2">
-                                {[
-                                    { icon: CalendarClock, title: 'Графики и смены', text: 'Контроль этапов, смен и критических сроков.' },
-                                    { icon: Truck, title: 'Снабжение', text: 'Поставки, заявки, остатки — без хаоса.' },
-                                    { icon: Building2, title: 'Портфель объектов', text: 'Сравнение эффективности между площадками.' },
-                                    { icon: ChartNoAxesCombined, title: 'Финансовая панель', text: 'Бюджет, маржинальность, отклонения.' },
-                                ].map((item) => (
+                                {capabilityCards.map((item) => (
                                     <div key={item.title} className="rounded-2xl border border-white/10 bg-[#15131B] p-5 transition hover:-translate-y-1 hover:border-white/30">
                                         <item.icon className="h-6 w-6 text-[#FF6A3D]" aria-hidden="true" />
                                         <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
@@ -185,11 +219,7 @@ export default function LandingPage() {
                             <p className="max-w-lg text-white/80">Один контур процесса: план → исполнение → контроль. Без таблиц на стороне.</p>
                         </div>
                         <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                            {[
-                                { step: '01', title: 'Собери объект', text: 'Импорт сметы, календаря, ресурсов.' },
-                                { step: '02', title: 'Запусти исполнение', text: 'Бригады, поставки, контроль качества.' },
-                                { step: '03', title: 'Отчитывайся', text: 'Дашборды, отчёты, SLA и риски.' },
-                            ].map((item) => (
+                            {workflowSteps.map((item) => (
                                 <div key={item.step} className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6">
                                     <div className="absolute right-6 top-6 text-xs text-white/75">{item.step}</div>
                                     <h3 className="text-xl font-semibold">{item.title}</h3>
@@ -211,22 +241,18 @@ export default function LandingPage() {
                             <p className="max-w-md text-white/80">Гибкий старт для подрядчиков и девелоперов, которым нужен прозрачный контроль проектов.</p>
                         </div>
                         <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                            {[
-                                { name: 'Pilot', price: '0 ₽', desc: 'Для пилотного объекта', action: 'Создать объект', href: '/sign-up', accent: false },
-                                { name: 'General', price: '12 900 ₽', desc: 'Для генподрядчика', action: 'Подключить команду', href: '/sign-up', accent: true },
-                                { name: 'Enterprise', price: 'по запросу', desc: 'Для сетей и девелоперов', action: 'Запросить расчёт', href: '/sign-up', accent: false },
-                            ].map((plan) => (
+                            {pricingPlans.map((plan) => (
                                 <div key={plan.name} className={`rounded-3xl border ${plan.accent ? 'border-[#FF6A3D] bg-[#16131A] shadow-[0_30px_80px_rgba(255,106,61,0.2)]' : 'border-white/10 bg-[#14121A]'} p-6`}>
                                     <span className="text-xs uppercase tracking-[0.3em] text-white/75">{plan.name}</span>
                                     <div className="mt-6 text-3xl font-semibold">{plan.price}</div>
                                     <p className="mt-2 text-sm text-white/80">{plan.desc}</p>
                                     <ul className="mt-6 space-y-2 text-sm text-white/70">
-                                        <li>До 5 объектов</li>
-                                        <li>Контроль закупок</li>
-                                        <li>Отчёты заказчику</li>
+                                        {pricingFeatures.map((feature) => (
+                                            <li key={feature}>{feature}</li>
+                                        ))}
                                     </ul>
-                                    <Button 
-                                        variant={plan.accent ? "brand" : "outline"}
+                                    <Button
+                                        variant={plan.accent ? 'brand' : 'outline'}
                                         asChild
                                     >
                                         <Link href={plan.href}>{plan.action}</Link>
@@ -267,9 +293,9 @@ export default function LandingPage() {
                         <p className="text-sm text-white/80">© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-6 text-sm text-white/80">
-                        <Link href="#capabilities" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Возможности</Link>
-                        <Link href="#workflow" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Процесс</Link>
-                        <Link href="#pricing" className="rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">Тарифы</Link>
+                        {navigationLinks.map((link) => (
+                            <Link key={link.href} href={link.href} className={footerNavLinkClassName}>{link.label}</Link>
+                        ))}
                     </div>
                 </div>
             </footer>
