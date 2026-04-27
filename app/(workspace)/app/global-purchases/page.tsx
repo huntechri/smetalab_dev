@@ -4,6 +4,9 @@ import { getProjects } from '@/lib/data/projects/repo';
 import { GlobalPurchasesService } from '@/lib/services/global-purchases.service';
 import { getTodayIsoLocal } from '@/features/global-purchases';
 
+type ProjectOptionSource = Awaited<ReturnType<typeof getProjects>>[number];
+type SupplierOptionSource = Awaited<ReturnType<typeof getMaterialSuppliers>>['data'][number];
+
 export default async function GlobalPurchasesPage() {
   const team = await getTeamForUser();
   const today = getTodayIsoLocal();
@@ -18,8 +21,8 @@ export default async function GlobalPurchasesPage() {
     <GlobalPurchasesScreen
       initialRows={purchases?.success ? purchases.data : []}
       initialRange={{ from: today, to: today }}
-      projectOptions={projects.map((project) => ({ id: project.id, name: project.name }))}
-      supplierOptions={suppliers.data.map((supplier) => ({
+      projectOptions={projects.map((project: ProjectOptionSource) => ({ id: project.id, name: project.name }))}
+      supplierOptions={suppliers.data.map((supplier: SupplierOptionSource) => ({
         id: supplier.id,
         name: supplier.name,
         color: supplier.color,
