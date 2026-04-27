@@ -4,10 +4,15 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Settings } from "lucide-react"
 import Image from "next/image"
 import { Button } from "@/shared/ui/button"
-import { Input } from "@/shared/ui/input"
 import { MaterialRow } from "@/shared/types/domain/material-row"
 import { TableMeta } from "@/shared/ui/data-table"
 import { TableHeaderActions, TableRowActions } from "@/shared/ui/table-actions"
+import {
+    CenteredUnitCell,
+    FormattedCurrencyCell,
+    PlaceholderNumberCell,
+    PlaceholderTextCell,
+} from "@/shared/ui/cells/table-cell-helpers"
 
 export const columns: ColumnDef<MaterialRow>[] = [
     {
@@ -18,7 +23,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  placeholder="Код..." value={row.original.code || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { code: e.target.value })} />
+                return <PlaceholderTextCell placeholder="Код..." value={row.original.code || ""} onValueChange={(code) => meta.updatePlaceholderRow?.(row.original.id, { code })} />
             }
             return <div className="font-medium text-[12px] px-2 text-muted-foreground">{row.getValue("code")}</div>
         }
@@ -31,7 +36,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  placeholder="Название..." value={row.original.name || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { name: e.target.value })} />
+                return <PlaceholderTextCell placeholder="Название..." value={row.original.name || ""} onValueChange={(name) => meta.updatePlaceholderRow?.(row.original.id, { name })} />
             }
             return (
                 <div className="flex flex-col gap-0.5 py-1 min-w-0 min-h-7">
@@ -55,7 +60,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  placeholder="URL..." value={row.original.imageUrl || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl: e.target.value })} />
+                return <PlaceholderTextCell placeholder="URL..." value={row.original.imageUrl || ""} onValueChange={(imageUrl) => meta.updatePlaceholderRow?.(row.original.id, { imageUrl })} />
             }
             const imageUrl = row.original.imageLocalUrl ?? row.original.imageUrl
             if (!imageUrl) return <div className="w-[25px] h-[25px] bg-muted/30 rounded flex items-center justify-center text-[10px] text-muted-foreground/50">N/A</div>
@@ -81,9 +86,9 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  placeholder="ед..." value={row.original.unit || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { unit: e.target.value })} />
+                return <PlaceholderTextCell placeholder="ед..." value={row.original.unit || ""} onValueChange={(unit) => meta.updatePlaceholderRow?.(row.original.id, { unit })} />
             }
-            return <div className="text-center text-[12px] text-muted-foreground font-medium">{row.getValue("unit")}</div>
+            return <CenteredUnitCell value={row.getValue("unit")} />
         }
     },
     {
@@ -94,11 +99,9 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  type="number" placeholder="0" value={row.original.price || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { price: Number(e.target.value) })} />
+                return <PlaceholderNumberCell placeholder="0" value={row.original.price || ""} onValueChange={(price) => meta.updatePlaceholderRow?.(row.original.id, { price })} />
             }
-            const price = parseFloat(row.getValue("price"))
-            const formatted = new Intl.NumberFormat("ru-RU", { style: "currency", currency: "RUB", minimumFractionDigits: 0 }).format(price || 0)
-            return <div className="text-center font-bold text-[12px] tracking-tight">{formatted}</div>
+            return <FormattedCurrencyCell value={row.getValue("price")} />
         }
     },
     {
@@ -109,7 +112,7 @@ export const columns: ColumnDef<MaterialRow>[] = [
             const isPlaceholder = row.original.isPlaceholder
             const meta = table.options.meta as TableMeta<MaterialRow>
             if (isPlaceholder) {
-                return <Input  placeholder="Кат1..." value={row.original.categoryLv1 || ""} onChange={(e) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1: e.target.value })} />
+                return <PlaceholderTextCell placeholder="Кат1..." value={row.original.categoryLv1 || ""} onValueChange={(categoryLv1) => meta.updatePlaceholderRow?.(row.original.id, { categoryLv1 })} />
             }
             const cats = [row.original.categoryLv1, row.original.categoryLv2, row.original.categoryLv3, row.original.categoryLv4].filter(Boolean)
             return (
