@@ -9,6 +9,7 @@ import { buildWorkActions } from './actions';
 import { EstimateMaterialCard } from './EstimateMaterialCard';
 import { EstimateInlineNumberCell } from './EstimateInlineNumberCell';
 import { EstimateInlineTextCell } from './EstimateInlineTextCell';
+import { EstimateMetricPill } from './EstimateMetricPill';
 import { ESTIMATE_CARD_ICON_ACTION_CLASS, WORK_NAME_CLASS, WORK_NUMBER_CLASS } from './constants';
 
 interface EstimateWorkCardProps {
@@ -65,7 +66,7 @@ export function EstimateWorkCard({
               >
                 {work.unit}
               </Badge>
-              <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+              <EstimateMetricPill>
                 <span className="text-[9px] sm:text-[10px]">Кол-во</span>
                 <EstimateInlineNumberCell
                   value={work.qty}
@@ -73,8 +74,8 @@ export function EstimateWorkCard({
                   ariaLabel={`Количество: ${work.name}`}
                   className={WORK_NUMBER_CLASS}
                 />
-              </div>
-              <div className="inline-flex h-4 items-center gap-1 rounded-full border border-slate-300 bg-slate-50 px-1.5 py-0 text-[9px] text-slate-600 sm:h-5 sm:px-2 sm:text-[10px]">
+              </EstimateMetricPill>
+              <EstimateMetricPill>
                 <span className="text-[9px] sm:text-[10px]">Цена</span>
                 <EstimateInlineNumberCell
                   value={work.price}
@@ -83,7 +84,7 @@ export function EstimateWorkCard({
                   className={WORK_NUMBER_CLASS}
                 />
                 <span className="text-[9px] sm:text-[10px]">₽</span>
-              </div>
+              </EstimateMetricPill>
               <Badge
                 variant="success"
                 className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[9px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
