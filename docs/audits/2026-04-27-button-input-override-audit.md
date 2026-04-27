@@ -12,6 +12,7 @@ This audit is the next P2 step after PR #93. It identifies the button/input over
 - `shared/ui/input.tsx`
 - `shared/ui/textarea.tsx`
 - `shared/ui/input-group.tsx`
+- `shared/ui/toolbar-button.tsx`
 
 ## Current primitive baseline
 
@@ -41,6 +42,18 @@ Supported sizes:
 - `icon-lg`
 
 The main gap is not missing base primitives. The gap is repeated feature-level `className` recipes layered on top of buttons.
+
+### ToolbarButton
+
+`shared/ui/toolbar-button.tsx` already exists as the toolbar/action adapter used by catalog, estimate and global-purchases toolbar surfaces.
+
+In this PR, the repeated action recipe has been codified inside `ToolbarButton`:
+
+```text
+shrink-0 font-semibold tracking-tight shadow-sm transition-all active:scale-95
+```
+
+This keeps the recipe out of global `buttonVariants` while removing repeated toolbar/action styling from feature call sites over time.
 
 ### Input
 
@@ -115,22 +128,17 @@ Examples appear across catalog, guide, global purchases, directories and admin c
 Recommended handling:
 
 - do not add another visual variant immediately;
-- first introduce a tiny shared recipe/helper or feature-level constant if the exact recipe repeats in a single feature area;
-- only promote to `buttonVariants` if the same semantic recipe is stable across several unrelated features.
+- use `ToolbarButton` for toolbar/action surfaces;
+- keep feature-specific adapters for non-toolbar action patterns;
+- only promote to `buttonVariants` if the same semantic recipe is stable across several unrelated non-toolbar features.
 
-Possible future API, after a narrow implementation PR:
-
-```tsx
-<Button className={actionButtonClassName} />
-```
-
-or, only if proven global:
+Current PR implementation:
 
 ```tsx
-<Button emphasis="action" />
+const toolbarButtonClassName = "shrink-0 font-semibold tracking-tight shadow-sm transition-all active:scale-95"
 ```
 
-Do not implement a new `emphasis` API until the repeated usage is mechanically verified.
+This is intentionally an adapter-level recipe, not a new global `Button` variant.
 
 ### Cluster B — pill/rounded controls
 
@@ -315,18 +323,21 @@ Recommended handling:
 
 ## Safe implementation plan
 
-### PR A — Button action recipe audit codification
+### PR A — Button action recipe codification
+
+Status: included in this PR for toolbar/action surfaces only.
 
 Scope:
 
-- create a small documented helper only if exact duplicates are confirmed in files under one feature area;
-- start with `features/guide-catalog` or `features/global-purchases`, not the whole app.
+- codify the repeated action recipe in `shared/ui/toolbar-button.tsx`;
+- keep the recipe adapter-level;
+- do not add a new global `Button` variant.
 
 Allowed changes:
 
-- class recipe extraction inside one feature;
+- adapter class recipe extraction;
 - no JSX structure changes;
-- no variant API changes.
+- no global `Button` API changes.
 
 ### PR B — Catalog/filter pill adapter audit
 
@@ -363,6 +374,9 @@ Allowed changes:
 
 ## Recommended next PR
 
-Start with a narrow implementation PR in `features/guide-catalog` or `features/global-purchases` to extract the repeated action button class recipe into a local constant/helper.
+After this PR, the next safe implementation candidates are:
 
-This should be a small, mechanically verifiable cleanup, not a visual redesign.
+1. inspect catalog/filter pill controls and decide whether a feature-level `CatalogChipButton` adapter is justified;
+2. inspect numeric/table inputs and replace manual `tabular-nums` with `numeric` where behavior is identical.
+
+Both should remain narrow, mechanically verifiable cleanup PRs.
