@@ -6,6 +6,7 @@ import { DashboardKpiCards } from '../components/DashboardKpiCards';
 import { DashboardChart } from '../components/DashboardChart';
 import { ProjectEstimatesTable } from '../components/ProjectEstimatesTable';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
+import { useVisibleRouteRefresh } from '@/shared/hooks/use-visible-route-refresh';
 import type { PerformanceDynamicsPoint } from '@/shared/types/performance-dynamics';
 import { canShowDynamicsChartByEstimateStatuses } from '../lib/performance-dynamics';
 import { Skeleton } from '@/shared/ui/skeleton';
@@ -67,6 +68,7 @@ export function ProjectDashboard({ project, estimates, performanceDynamicsPromis
         { label: 'Проекты', href: '/app/projects' },
         { label: project.name },
     ]);
+    useVisibleRouteRefresh();
 
     const canShowDynamicsChart = canShowDynamicsChartByEstimateStatuses(
         estimates.map((estimate) => estimate.status),
