@@ -2,6 +2,7 @@
 
 const ESTIMATE_ROWS_MUTATED_EVENT = "estimate:rows-mutated";
 const ESTIMATE_PURCHASES_MUTATED_EVENT = "estimate:purchases-mutated";
+const ESTIMATE_COEFFICIENT_UPDATED_EVENT = "estimate:coefficient-updated";
 
 export type EstimateInvalidationDetail = {
   estimateId?: string;
@@ -23,9 +24,15 @@ export const notifyEstimatePurchasesMutated = (estimateId?: string) => {
   dispatchEstimateEvent(ESTIMATE_PURCHASES_MUTATED_EVENT, { estimateId });
 };
 
-export const addEstimateRowsMutatedListener = (
+export const notifyEstimateCoefficientUpdated = (estimateId: string) => {
+  dispatchEstimateEvent(ESTIMATE_COEFFICIENT_UPDATED_EVENT, { estimateId });
+};
+
+const addEstimateEventListener = (
+  eventName: string,
   estimateId: string,
   callback: () => void,
+  matchGlobalEvents = false,
 ) => {
   if (typeof window === "undefined") {
     return () => undefined;
@@ -33,34 +40,32 @@ export const addEstimateRowsMutatedListener = (
 
   const handler = (event: Event) => {
     const customEvent = event as CustomEvent<EstimateInvalidationDetail>;
-    if (customEvent.detail?.estimateId !== estimateId) {
+    if (customEvent.detail?.estimateId) {
+      if (customEvent.detail.estimateId !== estimateId) {
+        return;
+      }
+    } else if (!matchGlobalEvents) {
       return;
     }
 
     callback();
   };
 
-  window.addEventListener(ESTIMATE_ROWS_MUTATED_EVENT, handler);
-  return () => window.removeEventListener(ESTIMATE_ROWS_MUTATED_EVENT, handler);
+  window.addEventListener(eventName, handler);
+  return () => window.removeEventListener(eventName, handler);
 };
+
+export const addEstimateRowsMutatedListener = (
+  estimateId: string,
+  callback: () => void,
+) => addEstimateEventListener(ESTIMATE_ROWS_MUTATED_EVENT, estimateId, callback);
 
 export const addEstimatePurchasesMutatedListener = (
   estimateId: string,
   callback: () => void,
-) => {
-  if (typeof window === "undefined") {
-    return () => undefined;
-  }
+) => addEstimateEventListener(ESTIMATE_PURCHASES_MUTATED_EVENT, estimateId, callback, true);
 
-  const handler = (event: Event) => {
-    const customEvent = event as CustomEvent<EstimateInvalidationDetail>;
-    if (customEvent.detail?.estimateId && customEvent.detail.estimateId !== estimateId) {
-      return;
-    }
-
-    callback();
-  };
-
-  window.addEventListener(ESTIMATE_PURCHASES_MUTATED_EVENT, handler);
-  return () => window.removeEventListener(ESTIMATE_PURCHASES_MUTATED_EVENT, handler);
-};
+export const addEstimateCoefficientUpdatedListener = (
+  estimateId: string,
+  callback: () => void,
+) => addEstimateEventListener(ESTIMATE_COEFFICIENT_UPDATED_EVENT, estimateId, callback);

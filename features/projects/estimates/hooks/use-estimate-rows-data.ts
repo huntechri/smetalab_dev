@@ -1,6 +1,7 @@
 "use client";
 
 import { estimatesActionRepo } from "../repository/estimates.actions";
+import { notifyEstimateCoefficientUpdated } from "../lib/estimate-client-events";
 import { EstimateRowsStateModel } from "./use-estimate-rows-state";
 import { useEstimateRowsDataCatalogSection } from "./use-estimate-rows-data-catalog-section";
 import { useEstimateRowsDataCoefficient } from "./use-estimate-rows-data-coefficient";
@@ -15,11 +16,7 @@ export function useEstimateRowsData({ estimateId, state }: UseEstimateRowsDataPa
   const reloadRows = async () => {
     const refreshed = await estimatesActionRepo.list(estimateId);
     state._setRows(refreshed);
-    window.dispatchEvent(
-      new CustomEvent("estimate:coefficient-updated", {
-        detail: { estimateId },
-      }),
-    );
+    notifyEstimateCoefficientUpdated(estimateId);
   };
 
   const coefficientActions = useEstimateRowsDataCoefficient({
