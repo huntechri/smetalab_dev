@@ -4,6 +4,8 @@ import * as React from "react"
 import {
     ColumnDef,
     flexRender,
+    Header,
+    HeaderGroup,
     Row,
 } from "@tanstack/react-table"
 import { Loader2 } from "lucide-react"
@@ -59,6 +61,95 @@ export interface DataTableProps<TData, TValue> {
     showFilter?: boolean;
     tableMinWidth?: string | number;
     tableContainerClassName?: string;
+}
+
+type DataTableHeaderContentProps<TData> = {
+    headerGroups: HeaderGroup<TData>[];
+}
+
+type DataTableHeaderCellProps<TData> = {
+    header: Header<TData, unknown>;
+}
+
+type SortableHeaderTriggerProps = {
+    children: React.ReactNode;
+    onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+}
+
+function SortableHeaderTrigger({ children, onClick }: SortableHeaderTriggerProps) {
+    return (
+        <button
+            type="button"
+            className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+            onClick={onClick}
+            aria-label="Сортировать столбец"
+        >
+            {children}
+        </button>
+    );
+}
+
+function HeaderCellContent<TData>({ header }: DataTableHeaderCellProps<TData>) {
+    const content = (
+        <div className="truncate flex-1 text-xs">
+            {flexRender(
+                header.column.columnDef.header,
+                header.getContext(),
+            )}
+        </div>
+    );
+
+    if (header.column.getCanSort()) {
+        return (
+            <SortableHeaderTrigger onClick={header.column.getToggleSortingHandler()}>
+                {content}
+            </SortableHeaderTrigger>
+        );
+    }
+
+    return (
+        <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
+            {content}
+        </div>
+    );
+}
+
+function DataTableHeaderCell<TData>({ header }: DataTableHeaderCellProps<TData>) {
+    const isSortable = header.column.getCanSort()
+    const sortDirection = header.column.getIsSorted()
+    const ariaSort = (isSortable
+        ? sortDirection === "asc"
+            ? "ascending"
+            : sortDirection === "desc"
+                ? "descending"
+                : "none"
+        : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
+
+    return (
+        <th
+            key={header.id}
+            colSpan={header.colSpan}
+            className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
+            style={{ width: header.getSize() }}
+            aria-sort={ariaSort}
+        >
+            {header.isPlaceholder ? null : <HeaderCellContent header={header} />}
+        </th>
+    );
+}
+
+function DataTableHeaderContent<TData>({ headerGroups }: DataTableHeaderContentProps<TData>) {
+    return (
+        <>
+            {headerGroups.map((headerGroup) => (
+                <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
+                    {headerGroup.headers.map((header) => (
+                        <DataTableHeaderCell key={header.id} header={header} />
+                    ))}
+                </tr>
+            ))}
+        </>
+    );
 }
 
 export function DataTable<TData, TValue>({
@@ -158,60 +249,7 @@ export function DataTable<TData, TValue>({
     }, [height]);
 
     const renderHeaderContent = () => (
-        <>
-            {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
-                    {headerGroup.headers.map((header) => {
-                        const isSortable = header.column.getCanSort()
-                        const sortDirection = header.column.getIsSorted()
-                        const ariaSort = (isSortable
-                            ? sortDirection === "asc"
-                                ? "ascending"
-                                : sortDirection === "desc"
-                                    ? "descending"
-                                    : "none"
-                            : undefined) as React.HTMLAttributes<HTMLTableCellElement>["aria-sort"]
-
-                        return (
-                            <th
-                                key={header.id}
-                                colSpan={header.colSpan}
-                                className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
-                                style={{ width: header.getSize() }}
-                                aria-sort={ariaSort}
-                            >
-                                {header.isPlaceholder ? null : (
-                                    isSortable ? (
-                                        <button
-                                            type="button"
-                                            className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
-                                            onClick={header.column.getToggleSortingHandler()}
-                                            aria-label="Сортировать столбец"
-                                        >
-                                            <div className="truncate flex-1 text-xs">
-                                                {flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                            </div>
-                                        </button>
-                                    ) : (
-                                        <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
-                                            <div className="truncate flex-1 text-xs">
-                                                {flexRender(
-                                                    header.column.columnDef.header,
-                                                    header.getContext()
-                                                )}
-                                            </div>
-                                        </div>
-                                    )
-                                )}
-                            </th>
-                        )
-                    })}
-                </tr>
-            ))}
-        </>
+        <DataTableHeaderContent headerGroups={table.getHeaderGroups()} />
     )
 
     return (
