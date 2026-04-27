@@ -87,12 +87,14 @@ export default function LandingPage() {
                                     Все проекты — в одной операционной панели.
                                 </p>
                                 <div className="flex flex-col gap-4 sm:flex-row">
-                                    <Button variant="brand" size="xl">
-                                        Запустить пилот
-                                        <ArrowRight className="ml-2 h-5 w-5" />
+                                    <Button variant="brand" size="xl" asChild>
+                                        <Link href="/sign-up">
+                                            Запустить пилот
+                                            <ArrowRight className="ml-2 h-5 w-5" />
+                                        </Link>
                                     </Button>
-                                    <Button variant="outline" size="xl">
-                                        Сценарий внедрения
+                                    <Button variant="outline" size="xl" asChild>
+                                        <Link href="#workflow">Сценарий внедрения</Link>
                                     </Button>
                                 </div>
                                 <div className="flex flex-wrap items-center gap-6 text-sm text-white/75">
@@ -210,9 +212,9 @@ export default function LandingPage() {
                         </div>
                         <div className="mt-10 grid gap-6 lg:grid-cols-3">
                             {[
-                                { name: 'Pilot', price: '0 ₽', desc: 'Для пилотного объекта', action: 'Создать объект', accent: false },
-                                { name: 'General', price: '12 900 ₽', desc: 'Для генподрядчика', action: 'Подключить команду', accent: true },
-                                { name: 'Enterprise', price: 'по запросу', desc: 'Для сетей и девелоперов', action: 'Запросить расчёт', accent: false },
+                                { name: 'Pilot', price: '0 ₽', desc: 'Для пилотного объекта', action: 'Создать объект', href: '/sign-up', accent: false },
+                                { name: 'General', price: '12 900 ₽', desc: 'Для генподрядчика', action: 'Подключить команду', href: '/sign-up', accent: true },
+                                { name: 'Enterprise', price: 'по запросу', desc: 'Для сетей и девелоперов', action: 'Запросить расчёт', href: '/sign-up', accent: false },
                             ].map((plan) => (
                                 <div key={plan.name} className={`rounded-3xl border ${plan.accent ? 'border-[#FF6A3D] bg-[#16131A] shadow-[0_30px_80px_rgba(255,106,61,0.2)]' : 'border-white/10 bg-[#14121A]'} p-6`}>
                                     <span className="text-xs uppercase tracking-[0.3em] text-white/75">{plan.name}</span>
@@ -225,8 +227,9 @@ export default function LandingPage() {
                                     </ul>
                                     <Button 
                                         variant={plan.accent ? "brand" : "outline"}
+                                        asChild
                                     >
-                                        {plan.action}
+                                        <Link href={plan.href}>{plan.action}</Link>
                                     </Button>
                                 </div>
                             ))}
@@ -244,8 +247,12 @@ export default function LandingPage() {
                                     <p className="text-white/80">Покажем вашу картину объекта за 30 минут и составим план внедрения.</p>
                                 </div>
                                 <div className="flex flex-col gap-4">
-                                    <Button size="xl">Запросить презентацию</Button>
-                                    <Button variant="outline" size="xl">Назначить встречу</Button>
+                                    <Button size="xl" asChild>
+                                        <Link href="/sign-up">Запросить презентацию</Link>
+                                    </Button>
+                                    <Button variant="outline" size="xl" asChild>
+                                        <Link href="/sign-up">Назначить встречу</Link>
+                                    </Button>
                                 </div>
                             </div>
                         </div>
