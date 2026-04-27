@@ -6,6 +6,10 @@ vi.mock('@/features/dashboard/components/HomeDynamicsChart', () => ({
     HomeDynamicsChart: () => <div>Динамика проекта</div>,
 }));
 
+vi.mock('@/shared/hooks/use-visible-route-refresh', () => ({
+    useVisibleRouteRefresh: vi.fn(),
+}));
+
 describe('AppHomeScreen', () => {
     it('renders project-style summary cards and project dynamics chart', () => {
         render(
