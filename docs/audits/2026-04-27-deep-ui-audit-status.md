@@ -4,9 +4,9 @@
 
 This document records the current implementation status after the deep UI/code audit follow-up series. It is intended to prevent repeat analysis drift and to make the next safe refactor batches explicit.
 
-## Baseline
+## Current baseline
 
-Current baseline after the follow-up cleanup chain:
+Current baseline after the follow-up cleanup chain through PR #123:
 
 - PR #90 — `chore(ui): enforce canonical shared ui imports`
 - PR #91 — `refactor(data-table): extract header rendering helpers`
@@ -17,6 +17,12 @@ Current baseline after the follow-up cleanup chain:
 - PR #115 — `chore(audit): tighten generated audit artifact handling`
 - PR #116 — `fix(typecheck): stabilize workspace aliases and purchase page types`
 - PR #117 — `chore(audit): classify depcheck and unimported false positives`
+- PR #118 — `docs(audit): sync deep UI audit status`
+- PR #119 — `docs(audit): review estimate stale-data parity`
+- PR #120 — `test(estimates): cover stale-data refresh parity`
+- PR #121 — `fix(landing): use asChild for header auth links`
+- PR #122 — `fix(landing): wire static CTA buttons as links`
+- PR #123 — `refactor(landing): extract local navigation and CTA data`
 
 ## Closed items
 
@@ -229,9 +235,9 @@ Remaining rule:
 
 - do not promote layout-only classes such as `w-full`, `flex-1`, `col-span-*`, `w-24`, or dark-surface landing classes to global Button/Input variants.
 
-### 11. Card visual consistency audit
+### 11. Card visual consistency audit and narrow implementation path
 
-Status: audit closed; implementation should remain incremental.
+Status: audit closed; implementation remains incremental.
 
 Tracking document:
 
@@ -245,11 +251,53 @@ Already present in estimate cards:
 - `EstimateMetricPill` under estimate card components;
 - estimate-local icon action class reuse.
 
-Still open only as optional future refinement:
+Already present for exact operational dense wrapper compatibility:
 
-- compare estimate execution and global purchase dense-card wrappers for exact compatibility;
-- extract a shared operational dense-card wrapper only if classes and semantics match exactly;
-- do not merge project cards, KPI cards, estimate cards and procurement cards into one global card variant.
+- `shared/ui/dense-card.tsx`
+- `DenseCard` usage in estimate execution cards
+
+Remaining rule:
+
+- keep project cards, KPI cards, estimate cards and procurement cards semantically separate unless an exact class/behavior match is proven.
+
+### 12. Estimate stale-data parity review and tests
+
+Status: closed for the current audit scope.
+
+Implemented by PR #119 and PR #120.
+
+Closed coverage:
+
+- audit-only review of estimate tab refresh boundaries;
+- execution/procurement parity review;
+- test coverage for execution refresh after base row mutation, coefficient updates and focus lifecycle;
+- test coverage for procurement refresh after base row mutation, global purchase invalidation and focus lifecycle;
+- estimate-id filtering for non-matching invalidation events.
+
+Remaining rule:
+
+- do not change estimate refresh runtime behavior unless a concrete stale-data bug is reproduced.
+
+### 13. Landing page semantics and local data cleanup
+
+Status: closed for the current cleanup scope.
+
+Implemented by PR #121, PR #122 and PR #123.
+
+Closed coverage:
+
+- header auth links now use `Button asChild` with `Link`;
+- static hero, pricing and final CTA buttons are wired as semantic links;
+- landing navigation links, capabilities, workflow steps, pricing plans, schedule frames and pricing features are extracted as local constants in `app/page.tsx`;
+- header, mobile menu and footer navigation reuse the same local navigation data.
+
+Preserved intentionally:
+
+- landing copy;
+- routes;
+- visual styling;
+- server actions and data loading;
+- shared UI primitives.
 
 ## Current guardrails
 
@@ -280,36 +328,9 @@ Then remove only one confirmed low-risk candidate per PR after exact search and 
 
 ## Remaining safe next batches
 
-### P2 — Estimate stale-data parity review
-
-Status: partially closed.
-
-Already improved:
-
-- procurement refresh behavior existed before;
-- execution refresh parity was added in PR #89.
-
-Still worth auditing:
-
-- estimate details tabs with route refresh boundaries;
-- coefficient update propagation;
-- insert/delete row flows across tabs;
-- purchases/execution visibility-change parity.
-
-Recommended next action:
-
-- create an audit-only PR first;
-- do not change refresh/data-loading behavior until exact stale-data gaps are proven.
-
-### P3 — Landing page visual cleanup
-
-Status: open, optional.
-
-This is visual polish only and should not be mixed with P1/P2 guardrail work.
-
 ### P3 — Single-candidate dependency cleanup
 
-Status: optional, gated.
+Status: optional and gated.
 
 Potential candidates from classification:
 
@@ -319,8 +340,25 @@ Potential candidates from classification:
 Requirements before removal:
 
 - exact full-tree search;
-- package-lock/pnpm-lock update;
-- `pnpm lint`, `pnpm type-check`, `pnpm test`, `pnpm build` pass.
+- `package.json` and `pnpm-lock.yaml` update in the same PR;
+- `pnpm lint`, `pnpm type-check`, `pnpm test`, and `pnpm build` pass after removal.
+
+Do not start this from raw `depcheck` output alone.
+
+### P3 — Card visual consistency refinement
+
+Status: optional.
+
+Allowed scope:
+
+- only exact local class/adapter extraction where the class string, density and semantics already match;
+- no redesign;
+- no broad global `Card` variant.
+
+Recommended next action only if needed:
+
+- audit/compare current `DenseCard`, estimate execution cards and global purchase cards after the latest main branch;
+- implement only if a concrete duplicate remains.
 
 ## Non-goals for the current cleanup series
 
@@ -330,3 +368,4 @@ Requirements before removal:
 - No feature UX changes hidden inside cleanup PRs.
 - No migration away from shadcn/Radix primitives.
 - No broad dependency pruning from raw static-audit output.
+- No project/KPI/estimate/procurement card unification without exact proof.
