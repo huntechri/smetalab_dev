@@ -13,7 +13,7 @@ import {
 export default function LandingPage() {
     return (
         <div className="min-h-screen overflow-x-clip bg-[#0B0A0F] text-white font-sans">
-            <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 py-2 focus:text-sm focus:text-black">
+            <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
                 Пропустить к содержимому
             </a>
 
