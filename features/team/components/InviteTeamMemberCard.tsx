@@ -16,6 +16,10 @@ interface InviteTeamMemberCardProps {
     onSubmit: (event: React.FormEvent) => Promise<void>;
 }
 
+function getStatusMessageClassName(type: TeamMessage['type']) {
+    return type === 'error' ? 'text-destructive' : 'text-success';
+}
+
 export function InviteTeamMemberCard({
     email,
     role,
@@ -70,7 +74,7 @@ export function InviteTeamMemberCard({
 
                 {message && (
                     <p
-                        className={`mt-3 text-sm ${message.type === 'error' ? 'text-destructive' : 'text-emerald-700'}`}
+                        className={`mt-3 text-sm ${getStatusMessageClassName(message.type)}`}
                         aria-live="polite"
                         aria-atomic="true"
                    >
@@ -80,7 +84,7 @@ export function InviteTeamMemberCard({
                                 <span className="text-muted-foreground">(Dev Link: </span>
                                 <a
                                     href={parsedMessage.url}
-                                    className="underline underline-offset-4 hover:text-blue-700"
+                                    className="underline underline-offset-4 hover:text-primary"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                >
