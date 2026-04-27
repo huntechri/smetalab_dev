@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { MaterialSuppliersScreen } from '@/features/material-suppliers';
-import { ForbiddenState } from '@repo/ui';
+import { ForbiddenState } from '@/shared/ui/states';
 import { getMaterialSuppliers, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
 

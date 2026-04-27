@@ -1,4 +1,4 @@
-import { Skeleton } from "@repo/ui";
+import { Skeleton } from "@/shared/ui/skeleton";
 
 export function CatalogScreenFallback() {
   return (

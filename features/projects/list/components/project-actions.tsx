@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Edit, ExternalLink, Trash2 } from 'lucide-react';
-import { Button } from '@repo/ui';
+import { Button } from '@/shared/ui/button';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -11,7 +11,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@repo/ui';
+} from '@/shared/ui/alert-dialog';
 
 type ProjectActionsProps = {
     projectId: string;
