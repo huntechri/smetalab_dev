@@ -9,8 +9,41 @@ import {
     ShieldCheck,
     Truck
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-const navigationLinks = [
+type NavigationLink = {
+    href: `#${string}`;
+    label: string;
+};
+
+type CapabilityCard = {
+    icon: LucideIcon;
+    title: string;
+    text: string;
+};
+
+type WorkflowStep = {
+    step: string;
+    title: string;
+    text: string;
+};
+
+type PricingPlan = {
+    name: string;
+    price: string;
+    desc: string;
+    action: string;
+    href: '/sign-up';
+    accent: boolean;
+};
+
+type AuthLink = {
+    href: '/sign-in' | '/sign-up';
+    label: string;
+    variant: 'ghost' | 'outline' | 'default';
+};
+
+const navigationLinks: NavigationLink[] = [
     { href: '#capabilities', label: 'Возможности' },
     { href: '#workflow', label: 'Процесс' },
     { href: '#pricing', label: 'Тарифы' },
@@ -23,20 +56,20 @@ const capabilityTags = [
     'Отчётность для заказчика',
 ];
 
-const capabilityCards = [
+const capabilityCards: CapabilityCard[] = [
     { icon: CalendarClock, title: 'Графики и смены', text: 'Контроль этапов, смен и критических сроков.' },
     { icon: Truck, title: 'Снабжение', text: 'Поставки, заявки, остатки — без хаоса.' },
     { icon: Building2, title: 'Портфель объектов', text: 'Сравнение эффективности между площадками.' },
     { icon: ChartNoAxesCombined, title: 'Финансовая панель', text: 'Бюджет, маржинальность, отклонения.' },
 ];
 
-const workflowSteps = [
+const workflowSteps: WorkflowStep[] = [
     { step: '01', title: 'Собери объект', text: 'Импорт сметы, календаря, ресурсов.' },
     { step: '02', title: 'Запусти исполнение', text: 'Бригады, поставки, контроль качества.' },
     { step: '03', title: 'Отчитывайся', text: 'Дашборды, отчёты, SLA и риски.' },
 ];
 
-const pricingPlans = [
+const pricingPlans: PricingPlan[] = [
     { name: 'Pilot', price: '0 ₽', desc: 'Для пилотного объекта', action: 'Создать объект', href: '/sign-up', accent: false },
     { name: 'General', price: '12 900 ₽', desc: 'Для генподрядчика', action: 'Подключить команду', href: '/sign-up', accent: true },
     { name: 'Enterprise', price: 'по запросу', desc: 'Для сетей и девелоперов', action: 'Запросить расчёт', href: '/sign-up', accent: false },
@@ -46,8 +79,19 @@ const scheduleFrames = ['Нед 1', 'Нед 2', 'Нед 3'];
 
 const pricingFeatures = ['До 5 объектов', 'Контроль закупок', 'Отчёты заказчику'];
 
-const headerNavLinkClassName = 'rounded-md px-3 py-2 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
-const footerNavLinkClassName = 'rounded-md px-2 py-1 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
+const navLinkClassNameBase = 'rounded-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
+const headerNavLinkClassName = `${navLinkClassNameBase} px-3 py-2`;
+const footerNavLinkClassName = `${navLinkClassNameBase} px-2 py-1`;
+
+const desktopAuthLinks: AuthLink[] = [
+    { href: '/sign-in', label: 'Войти', variant: 'ghost' },
+    { href: '/sign-up', label: 'Запросить демо', variant: 'default' },
+];
+
+const mobileAuthLinks: AuthLink[] = [
+    { href: '/sign-in', label: 'Войти', variant: 'outline' },
+    { href: '/sign-up', label: 'Запросить демо', variant: 'default' },
+];
 
 export default function LandingPage() {
     return (
@@ -71,18 +115,20 @@ export default function LandingPage() {
                         ))}
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
-                        <Button variant="ghost" asChild>
-                            <Link href="/sign-in">Войти</Link>
-                        </Button>
-                        <Button asChild>
-                            <Link href="/sign-up">Запросить демо</Link>
-                        </Button>
+                        {desktopAuthLinks.map((link) => (
+                            <Button key={link.href} variant={link.variant} role="button" asChild>
+                                <Link href={link.href}>{link.label}</Link>
+                            </Button>
+                        ))}
                     </div>
                     <details className="group md:hidden">
-                        <summary className="list-none rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 [&::-webkit-details-marker]:hidden">
+                        <summary
+                            aria-controls="mobile-navigation-panel"
+                            className="list-none rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 [&::-webkit-details-marker]:hidden"
+                        >
                             Меню
                         </summary>
-                        <div className="absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl">
+                        <div id="mobile-navigation-panel" className="absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl">
                             <div className="container mx-auto flex flex-col gap-4 px-4 py-6">
                                 <nav className="flex flex-col gap-3 text-sm text-white/90" aria-label="Основная навигация (мобильная)">
                                     {navigationLinks.map((link) => (
@@ -90,12 +136,11 @@ export default function LandingPage() {
                                     ))}
                                 </nav>
                                 <div className="flex flex-col gap-3">
-                                    <Button variant="outline" asChild>
-                                        <Link href="/sign-in">Войти</Link>
-                                    </Button>
-                                    <Button asChild>
-                                        <Link href="/sign-up">Запросить демо</Link>
-                                    </Button>
+                                    {mobileAuthLinks.map((link) => (
+                                        <Button key={link.href} variant={link.variant} role="button" asChild>
+                                            <Link href={link.href}>{link.label}</Link>
+                                        </Button>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -132,7 +177,7 @@ export default function LandingPage() {
                                             <ArrowRight className="ml-2 h-5 w-5" />
                                         </Link>
                                     </Button>
-                                    <Button variant="outline" size="xl" asChild>
+                                    <Button variant="outline" size="xl" role="button" asChild>
                                         <Link href="#workflow">Сценарий внедрения</Link>
                                     </Button>
                                 </div>
