@@ -33,7 +33,7 @@ export const inlinePriceCellClassName = cn(
 
 export const inlineDateCellClassName = cn(
   inlineCellClassName,
-  'w-[5.75rem] sm:w-[4.9rem] justify-center rounded-full border border-slate-200 bg-slate-50 px-1.5 text-slate-600',
+  'w-[5.75rem] sm:w-[4.9rem] justify-center rounded-full border border-border/60 bg-muted/40 px-1.5 text-muted-foreground',
 );
 
 export const inlineTextCellClassName = cn(

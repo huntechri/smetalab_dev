@@ -10,7 +10,7 @@ type PurchaseMetricProps = {
 
 export function PurchaseMetric({ label, value, tone = 'neutral' }: PurchaseMetricProps) {
   const toneClasses = {
-    neutral: 'border-border/60 bg-slate-50 text-slate-600',
+    neutral: 'border-border/60 bg-muted/40 text-muted-foreground',
     info: 'border-blue-200 bg-blue-50 text-blue-600',
     success: 'border-green-200 bg-green-50 text-green-600',
   };

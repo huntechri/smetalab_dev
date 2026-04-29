@@ -44,7 +44,7 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
           size="xs"
           disabled={disabled}
           aria-label="Назначить поставщика"
-          className="h-6 sm:h-5 max-w-full justify-start gap-1 rounded-full border border-border/60 bg-slate-50 px-1.5 text-[11px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
+          className="h-6 sm:h-5 max-w-full justify-start gap-1 rounded-full border border-border/60 bg-muted/40 px-1.5 text-[11px] sm:text-[10px] font-semibold text-muted-foreground hover:bg-muted/60"
         >
           {disabled ? (
             <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
