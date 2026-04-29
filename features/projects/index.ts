@@ -1,4 +1,5 @@
 export { ProjectsScreen } from './list/screens/ProjectsScreen';
+export { ProjectsPageContent } from './list/screens/ProjectsPageContent';
 export { ProjectDashboard } from './dashboard/screens/ProjectDashboard';
 export { ProjectEstimatesSection } from './dashboard/components/ProjectEstimatesSection';
 export * from './estimates';
