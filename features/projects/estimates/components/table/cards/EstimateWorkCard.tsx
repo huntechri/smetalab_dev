@@ -31,7 +31,7 @@ export function EstimateWorkCard({
         <Button
           variant="outline"
           size="icon-xs"
-          className="mt-0.5 size-5 rounded-lg border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 sm:size-6"
+          className="mt-0.5 size-5 rounded-lg border-border/60 bg-slate-50 text-slate-500 hover:bg-slate-100 sm:size-6"
           aria-label={isWorkOpen ? 'Свернуть работу' : 'Развернуть работу'}
           onClick={() => props.onToggleExpand(work.id)}
         >
@@ -62,7 +62,7 @@ export function EstimateWorkCard({
             <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
               <Badge
                 variant="outline"
-                className="h-4 border-slate-200 bg-white px-2 py-0 text-[9px] leading-none text-slate-700 sm:h-5 sm:px-2.5 sm:text-[10px]"
+                className="h-4 border-border/60 bg-white px-2 py-0 text-[9px] leading-none text-slate-700 sm:h-5 sm:px-2.5 sm:text-[10px]"
               >
                 {work.unit}
               </Badge>
@@ -134,7 +134,7 @@ export function EstimateWorkCard({
       </div>
 
       {isWorkOpen ? (
-        <div className="border-t border-slate-100 bg-slate-50 px-2 py-2.5 sm:px-3.5 sm:py-3">
+        <div className="border-t border-border/40 bg-slate-50 px-2 py-2.5 sm:px-3.5 sm:py-3">
           {workNode.materials.length > 0 ? (
             <>
               <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-400 sm:mb-2 sm:text-[11px]">
@@ -148,7 +148,7 @@ export function EstimateWorkCard({
               </div>
             </>
           ) : (
-            <div className="rounded-md border border-dashed border-slate-200 bg-white p-3 text-center text-xs text-slate-500">
+            <div className="rounded-md border border-dashed border-border/60 bg-white p-3 text-center text-xs text-slate-500">
               У работы пока нет материалов.
             </div>
           )}

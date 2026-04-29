@@ -22,7 +22,7 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
 
   if (filteredSections.length === 0) {
     return (
-      <div className="flex min-h-52 items-center justify-center rounded-xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm">
+      <div className="flex min-h-52 items-center justify-center rounded-xl border border-border/60 bg-white p-6 text-sm text-slate-600 shadow-sm">
         По вашему запросу ничего не найдено.
       </div>
     );

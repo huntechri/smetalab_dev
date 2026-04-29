@@ -65,7 +65,7 @@ export function GlobalPurchaseCard({
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5 lg:justify-end">
-          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
+          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-border/60 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
             <span className="shrink-0 opacity-70">Кол-во:</span>
             <EditableCell
               type="number"
@@ -90,7 +90,7 @@ export function GlobalPurchaseCard({
               }}
             />
           </div>
-          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
+          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-border/60 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
             <span className="shrink-0 opacity-70">Цена:</span>
             <EditableCell
               type="number"

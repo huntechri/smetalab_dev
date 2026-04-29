@@ -22,7 +22,7 @@ export default async function TenantsPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {teams.map((team) => (
-                    <Card key={team.id} className="border border-gray-100 shadow-sm hover:shadow-md transition-shadow rounded-2xl overflow-hidden bg-white">
+                    <Card key={team.id} className="border border-border/60 shadow-sm hover:shadow-md transition-shadow rounded-2xl overflow-hidden bg-white">
                         <CardHeader className="pb-2 space-y-0">
                             <div className="flex items-start justify-between">
                                 <div className="p-2 bg-orange-50 rounded-xl text-orange-600">

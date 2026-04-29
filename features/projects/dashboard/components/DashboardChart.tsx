@@ -146,7 +146,7 @@ export function DashboardChart({ data }: DashboardChartProps) {
     }, [])
 
     return (
-        <Card className="@container/card rounded-[13.6px] border border-[#e4e4e7] bg-white text-[#09090b] shadow-none p-6 gap-6 leading-6 text-[12px]">
+        <Card className="@container/card rounded-[13.6px] border border-border bg-white text-[#09090b] shadow-none p-6 gap-6 leading-6 text-[12px]">
             <CardHeader className="px-0 gap-3 !grid-cols-1">
                 <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
                     <CardTitle>Динамика проекта</CardTitle>

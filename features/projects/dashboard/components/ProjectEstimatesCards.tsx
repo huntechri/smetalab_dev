@@ -60,7 +60,7 @@ export function ProjectEstimatesCards({
   const approvedCount = estimates.filter((estimate) => estimate.status === 'approved').length;
 
   return (
-    <section className="rounded-lg border border-[#e4e4e7] bg-white p-3 text-[#09090b] shadow-none">
+    <section className="rounded-lg border border-border bg-white p-3 text-[#09090b] shadow-none">
       <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
@@ -68,7 +68,7 @@ export function ProjectEstimatesCards({
             <Badge
               variant="outline"
               size="xs"
-              className="h-5 border-[#e4e4e7] bg-[#f4f4f5] px-2 py-0 text-[10px] text-[#71717a]"
+              className="h-5 border-border bg-[#f4f4f5] px-2 py-0 text-[10px] text-[#71717a]"
             >
               {estimates.length}
             </Badge>
@@ -86,7 +86,7 @@ export function ProjectEstimatesCards({
           size="icon-xs"
           aria-label="Создать смету"
           title="Создать смету"
-          className="size-7 rounded-md border-[#e4e4e7] bg-white text-[#71717a] hover:bg-[#f4f4f5]"
+          className="size-7 rounded-md border-border bg-white text-[#71717a] hover:bg-[#f4f4f5]"
         >
           <Plus className="size-4" aria-hidden="true" />
         </Button>
@@ -98,7 +98,7 @@ export function ProjectEstimatesCards({
             {estimates.map((estimate) => (
               <article
                 key={estimate.id}
-                className="overflow-hidden rounded-md border border-[#e4e4e7] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
+                className="overflow-hidden rounded-md border border-border bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
               >
                 <div className="flex items-center gap-1.5 px-2 py-2 sm:gap-2 sm:px-3 sm:py-2.5">
                   <div className="min-w-0 flex-1">
@@ -136,7 +136,7 @@ export function ProjectEstimatesCards({
                         size="icon-xs"
                         title="Удалить смету"
                         aria-label={`Удалить смету ${estimate.name}`}
-                        className="size-6 rounded-md border-[#e4e4e7] bg-white text-[#71717a] hover:bg-[#f4f4f5] sm:size-7"
+                        className="size-6 rounded-md border-border bg-white text-[#71717a] hover:bg-[#f4f4f5] sm:size-7"
                       >
                         <Trash2 className="size-3 sm:size-3.5" aria-hidden="true" />
                       </Button>

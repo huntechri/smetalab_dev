@@ -44,7 +44,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
 
           <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-[9px] text-slate-500 sm:mt-0.5 sm:text-[11px]">
             <div className="flex items-center gap-1.5 shrink-0">
-              <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50 sm:h-7 sm:w-7">
+              <div className="flex h-6 w-6 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/60 bg-slate-50 sm:h-7 sm:w-7">
                 {material.imageUrl ? (
                   <Image
                     src={material.imageUrl}
@@ -62,7 +62,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
               </div>
               <Badge
                 variant="outline"
-                className="h-4 shrink-0 border-slate-200 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]"
+                className="h-4 shrink-0 border-border/60 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px]"
               >
                 {material.unit}
               </Badge>

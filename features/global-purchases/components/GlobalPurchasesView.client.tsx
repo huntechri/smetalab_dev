@@ -196,7 +196,7 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
 
     return (
         <div className="space-y-3">
-            <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+            <section className="flex flex-col rounded-lg border border-border bg-white text-[#09090b] shadow-none">
                 <div className="p-1.5 sm:p-2 pb-0">
                     <DataTableToolbar
                         actions={(

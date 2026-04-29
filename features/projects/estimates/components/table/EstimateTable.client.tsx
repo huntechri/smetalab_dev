@@ -97,7 +97,7 @@ export function EstimateTable({
 
   return (
     <div className="space-y-1.5 sm:space-y-2 [--table-height:calc(100vh-250px)] sm:[--table-height:calc(100vh-280px)]">
-      <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
+      <section className="flex flex-col rounded-lg border border-border bg-white text-[#09090b] shadow-none">
         {/* Тулбар внутри контейнера */}
         <div className="p-1.5 sm:p-2 pb-0">
           <DataTableToolbar

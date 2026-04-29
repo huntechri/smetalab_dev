@@ -50,7 +50,7 @@ function ProcurementValue({
   tone?: 'neutral' | 'success' | 'info';
 }) {
   const toneClasses = {
-    neutral: 'border-slate-200 bg-slate-50 text-slate-600',
+    neutral: 'border-border/60 bg-slate-50 text-slate-600',
     info: 'border-blue-200 bg-blue-50 text-blue-600',
     success: 'border-green-200 bg-green-50 text-green-600',
   };
@@ -111,7 +111,7 @@ function ProcurementCard({ row }: { row: EstimateProcurementRow }) {
             </span>
             <Badge
               variant="outline"
-              className="h-4 shrink-0 border-slate-200 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px] font-bold normal-case"
+              className="h-4 shrink-0 border-border/60 bg-white px-1 py-0 text-[9px] leading-none text-slate-600 sm:h-5 sm:px-1.5 sm:text-[10px] font-bold normal-case"
             >
               {row.unit}
             </Badge>

@@ -55,7 +55,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="rounded-2xl shadow-sm border-gray-100">
+                <Card className="rounded-2xl shadow-sm border-border/60">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Пользователи</CardTitle>
                         <Users className="h-4 w-4 text-muted-foreground" />
@@ -64,7 +64,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                         <div className="text-2xl font-bold">{team.teamMembers.length}</div>
                     </CardContent>
                 </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
+                <Card className="rounded-2xl shadow-sm border-border/60">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Работы</CardTitle>
                         <Hammer className="h-4 w-4 text-muted-foreground" />
@@ -73,7 +73,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                         <div className="text-2xl font-bold">{team.metrics.worksCount}</div>
                     </CardContent>
                 </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
+                <Card className="rounded-2xl shadow-sm border-border/60">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Материалы</CardTitle>
                         <Package className="h-4 w-4 text-muted-foreground" />
@@ -82,7 +82,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                         <div className="text-2xl font-bold">{team.metrics.materialsCount}</div>
                     </CardContent>
                 </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
+                <Card className="rounded-2xl shadow-sm border-border/60">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Последняя активность</CardTitle>
                         <Activity className="h-4 w-4 text-muted-foreground" />
@@ -104,7 +104,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                 </TabsList>
 
                 <TabsContent value="members" className="mt-4 space-y-4">
-                    <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+                    <Card className="rounded-2xl shadow-sm border-border/60 overflow-hidden">
                         <div className="divide-y divide-gray-100">
                             {team.teamMembers.map((member) => (
                                 <div key={member.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
@@ -130,7 +130,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                 </TabsContent>
 
                 <TabsContent value="activity" className="mt-4">
-                    <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
+                    <Card className="rounded-2xl shadow-sm border-border/60 overflow-hidden">
                         <div className="divide-y divide-gray-100 text-sm">
                             {team.recentActivity.length === 0 ? (
                                 <div className="p-8 text-center text-muted-foreground italic">

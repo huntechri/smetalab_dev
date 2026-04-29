@@ -32,9 +32,9 @@ export function EstimateSectionCard({
   return (
     <div
       key={section.id}
-      className="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm"
+      className="overflow-hidden rounded-xl border border-border/40 bg-white shadow-sm"
     >
-      <div className="border-b border-slate-200 bg-white">
+      <div className="border-b border-border/60 bg-white">
         <div className="flex min-w-0 items-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3.5 sm:py-3">
           <Button
             variant="ghost"
@@ -55,7 +55,7 @@ export function EstimateSectionCard({
               <Badge
                 variant="outline"
                 size="xs"
-                className="h-4 shrink-0 border-slate-200 bg-slate-100 px-1.5 py-0 text-[9px] leading-none text-slate-600 tracking-[0.08em] sm:h-5 sm:px-2 sm:text-[10px]"
+                className="h-4 shrink-0 border-border/60 bg-slate-100 px-1.5 py-0 text-[9px] leading-none text-slate-600 tracking-[0.08em] sm:h-5 sm:px-2 sm:text-[10px]"
               >
                 {section.code}
               </Badge>
@@ -90,7 +90,7 @@ export function EstimateSectionCard({
                 <Button
                   size="icon-xs"
                   variant="outline"
-                  className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+                  className="size-6 rounded-lg border-border/60 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
                   aria-label="Действия с разделом"
                 >
                   <Settings className="size-3.5" />
