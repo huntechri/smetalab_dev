@@ -1,24 +1,30 @@
 #!/usr/bin/env node
+import { execSync } from 'node:child_process';
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
-const ROOTS = ['app', 'features', 'shared', 'lib'];
-const EXTS = new Set(['.ts', '.tsx', '.js', '.jsx', '.css', '.mdx']);
+const EXTS = new Set([
+  '.ts',
+  '.tsx',
+  '.js',
+  '.jsx',
+  '.css',
+  '.mdx',
+  '.html',
+  '.json',
+  '.yml',
+  '.yaml',
+]);
 
-const BORDER_TOKEN_RE = /\bborder(?:-[^\s"'`}]*)?/g;
+const BORDER_TOKEN_RE = /\bborder(?:-[^\s"'`)]*)?/g;
 
-async function walk(dir, out = []) {
-  const entries = await fs.readdir(dir, { withFileTypes: true });
-  for (const entry of entries) {
-    if (entry.name.startsWith('.git') || entry.name === 'node_modules' || entry.name === '.next') continue;
-    const full = path.join(dir, entry.name);
-    if (entry.isDirectory()) {
-      await walk(full, out);
-      continue;
-    }
-    if (EXTS.has(path.extname(entry.name))) out.push(full);
-  }
-  return out;
+function listTrackedFiles() {
+  const stdout = execSync('git ls-files', { encoding: 'utf8' });
+  return stdout
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .filter((file) => EXTS.has(path.extname(file)));
 }
 
 function classify(token) {
@@ -30,7 +36,7 @@ function classify(token) {
   return 'other';
 }
 
-const files = (await Promise.all(ROOTS.map((r) => walk(r).catch(() => [])))).flat();
+const files = listTrackedFiles();
 const stats = new Map();
 const hits = [];
 
@@ -38,6 +44,7 @@ for (const file of files) {
   const text = await fs.readFile(file, 'utf8');
   const lines = text.split(/\r?\n/);
   lines.forEach((line, idx) => {
+    if (line.includes('--border')) return;
     const matches = line.match(BORDER_TOKEN_RE);
     if (!matches) return;
     for (const token of matches) {
