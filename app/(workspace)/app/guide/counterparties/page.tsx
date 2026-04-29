@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { CounterpartiesScreen } from '@/features/counterparties';
+import { CounterpartiesPageContent } from '@/features/counterparties';
 import { ForbiddenState } from '@/shared/ui/states';
 import { getCounterparties, getUser } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
@@ -25,12 +25,5 @@ export default async function CounterpartiesPage() {
 
     const { data, count } = await getCounterparties(user.tenantId, { limit: 50, offset: 0 });
 
-    return (
-        <div className="flex-1 w-full flex flex-col">
-            <CounterpartiesScreen
-                initialData={data}
-                totalCount={count}
-            />
-        </div>
-    );
+    return <CounterpartiesPageContent initialData={data} totalCount={count} />;
 }
