@@ -7,8 +7,20 @@ const { MockButton } = vi.hoisted(() => ({
   MockButton: ({
     children,
     asChild: _asChild,
+    iconLeft: _iconLeft,
+    iconRight: _iconRight,
+    loading: _loading,
+    isLoading: _isLoading,
+    loadingText: _loadingText,
     ...props
-  }: React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean }) => <button {...props}>{children}</button>,
+  }: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    asChild?: boolean;
+    iconLeft?: React.ReactNode;
+    iconRight?: React.ReactNode;
+    loading?: boolean;
+    isLoading?: boolean;
+    loadingText?: string;
+  }) => <button {...props}>{children}</button>,
 }));
 
 const addWorkMock = vi.fn();
