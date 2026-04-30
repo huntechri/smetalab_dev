@@ -16,6 +16,16 @@ function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} МБ`;
 }
 
+function createImportPathname(estimateId: string, fileName: string) {
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const uniquePart =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  return `estimate-imports/${estimateId}/${uniquePart}-${safeFileName}`;
+}
+
 export function useEstimateImportExportController({
   estimateId,
   reloadRows,
@@ -70,9 +80,12 @@ export function useEstimateImportExportController({
             description: "Загружаем большой Excel-файл в хранилище.",
           });
 
-          const blob = await upload(`estimate-imports/${estimateId}/${file.name}`, file, {
+          const blob = await upload(createImportPathname(estimateId, file.name), file, {
             access: "private",
             handleUploadUrl: `/api/estimates/${estimateId}/import/upload`,
+            contentType:
+              file.type ||
+              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             onUploadProgress: (progressEvent) => {
               if (progressEvent.percentage === 100) {
                 toast({
