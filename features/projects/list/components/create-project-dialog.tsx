@@ -3,10 +3,10 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import { notify } from '@/lib/infrastructure/notifications/notify';
 import { Button } from '@/shared/ui/button';
 import {
     Dialog,
@@ -104,7 +104,7 @@ export function CreateProjectDialog({
                 : await createProjectAction(data);
 
             if (result.success) {
-                toast.success(project ? 'Проект успешно обновлен' : 'Проект успешно создан');
+                notify({ title: project ? 'Проект успешно обновлен' : 'Проект успешно создан', intent: 'success' });
                 onOpenChange(false);
                 form.reset();
                 router.refresh();
@@ -113,10 +113,10 @@ export function CreateProjectDialog({
                 // but since we updated ProjectsScreen to use local state + router.refresh,
                 // we should ensure the parent actually updates.
             } else {
-                toast.error(result.error?.message || 'Произошла ошибка');
+                notify({ title: result.error?.message || 'Произошла ошибка', intent: 'error' });
             }
         } catch {
-            toast.error('Произошла непредвиденная ошибка');
+            notify({ title: 'Произошла непредвиденная ошибка', intent: 'error' });
         } finally {
             setIsSubmitting(false);
         }
