@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { toast } from 'sonner';
 import { deleteProjectAction } from '@/app/actions/projects/delete';
+import { notify } from '@/lib/infrastructure/notifications/notify';
 import { filterProjects } from '../../shared/utils/filter';
 import { sortProjects } from '../../shared/utils/sort';
 import { type ProjectListItem, type ProjectSortOption } from '../../shared/types';
@@ -47,14 +47,14 @@ export function useProjectsScreen({ projects, onEditProjectSelect, onAddProject 
         try {
             const result = await deleteProjectAction(projectId);
             if (result.success) {
-                toast.success('Проект успешно удален');
+                notify({ title: 'Проект успешно удален', intent: 'success' });
                 return true;
             }
 
-            toast.error(result.error?.message || 'Не удалось удалить проект');
+            notify({ title: result.error?.message || 'Не удалось удалить проект', intent: 'error' });
             return false;
         } catch {
-            toast.error('Произошла непредвиденная ошибка');
+            notify({ title: 'Произошла непредвиденная ошибка', intent: 'error' });
             return false;
         }
     };
