@@ -4,7 +4,7 @@ import {
   CatalogTableAdapter,
   CatalogTableActions,
   CatalogFeatureTableWrapper,
-} from "@/features/guide-catalog";
+} from "@/features/_shared/guide-catalog";
 import { columns } from "./columns";
 import { MaterialRow } from "@/shared/types/domain/material-row";
 
