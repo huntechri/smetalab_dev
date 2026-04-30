@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring-files.
 
 # dependencies
 node_modules/
@@ -72,4 +72,6 @@ DONOR/
 /reports/button-canonical-spec.md
 /reports/input-audit.json
 /reports/input-canonical-spec.md
+/reports/ui-visual-audit.json
+/reports/ui-visual-audit.md
 attached_assets/
