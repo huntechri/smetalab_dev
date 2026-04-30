@@ -19,9 +19,10 @@ Smetalab is a SaaS application built with Next.js, Postgres, Drizzle, Stripe, an
 ## Project Structure
 - `app/`: Next.js App Router pages and API routes.
 - `app/actions/`: thin server actions (`safeAction`) that delegate business logic.
-- `features/`: feature modules (screens, hooks, components, adapters).
-  - `features/guide-catalog/`: shared shell/table/toolbar for `materials` and `works`.
-  - `features/directories/`: shared list screen for directory-style modules.
+- `features/`: real business feature modules (screens, hooks, components, adapters).
+- `features/_shared/`: shared feature-level infrastructure.
+  - `features/_shared/guide-catalog/`: shared shell/table/toolbar for `materials` and `works`.
+  - `features/_shared/directories/`: shared list screen for directory-style modules.
 - `shared/ui/`: reusable shadcn/ui primitives and UI states.
 - `shared/types/`: client-safe DTO types.
 - `lib/services/`: orchestration/business services.
@@ -41,7 +42,7 @@ Smetalab is a SaaS application built with Next.js, Postgres, Drizzle, Stripe, an
 6. **Service Layer**: Business logic belongs in `lib/services/*.service.ts`; server actions stay thin.
 7. **AI Batching**: Use `generateEmbeddingsBatch` for multi-item embedding generation.
 8. **Frontend Decomposition**: Large components must be split into hooks (logic) + presentation components.
-9. **Deduplication First**: Reuse `features/guide-catalog` and `features/directories` for similar list/catalog scenarios before adding new bespoke screens.
+9. **Deduplication First**: Reuse `features/_shared/guide-catalog` and `features/_shared/directories` for similar list/catalog scenarios before adding new bespoke screens.
 10. **Client Types**: Client components must use DTO types from `shared/types` or `features/*/types`; avoid importing DB types from `lib/data/db/schema` into client code.
 11. **Database Consistency**: Keep `drizzle/*.sql` and `lib/data/db/schema.ts` in sync.
 12. **RBAC**: Respect `owner`, `admin`, `member`, `estimator`, `manager`. Admin-only features live under `/admin/**`.
