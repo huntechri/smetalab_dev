@@ -61,7 +61,7 @@ jobs:
         run: pnpm audit:ui
       - name: Generate UI Visual Audit domain summary
         if: always() && hashFiles('reports/ui-visual-audit.json') != ''
-        run: tsx scripts/summarize-ui-visual-audit.ts
+        run: pnpm exec tsx scripts/summarize-ui-visual-audit.ts
       - name: Publish UI Visual Audit summary
         if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
         run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
