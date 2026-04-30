@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { getTeamForUser, getUser } from "@/lib/data/db/queries";
 import { EstimateImportService } from "@/lib/services/estimate-import.service";
 
+export function GET() {
+  return NextResponse.json(
+    { success: false, message: "Метод не поддерживается" },
+    { status: 405, headers: { Allow: "POST" } },
+  );
+}
+
 export async function POST(
   request: NextRequest,
   context: { params: Promise<{ estimateId: string }> },
@@ -63,5 +70,16 @@ export async function POST(
     );
   }
 
-  return NextResponse.json({ success: true, data: importResult.data });
+  const { imported, matchingSummary } = importResult.data;
+
+  return NextResponse.json({
+    success: true,
+    imported,
+    matchingSummary: {
+      worksMatched: matchingSummary.worksMatched,
+      worksUnmatched: matchingSummary.worksUnmatched,
+      materialsMatched: matchingSummary.materialsMatched,
+      materialsUnmatched: matchingSummary.materialsUnmatched,
+    },
+  });
 }
