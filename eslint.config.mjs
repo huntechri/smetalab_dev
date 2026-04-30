@@ -57,6 +57,16 @@ export default [
             "no-restricted-imports": [
                 "error",
                 {
+                    paths: [
+                        {
+                            name: "@/features/guide-catalog",
+                            message: "Import shared guide catalog shells from '@/features/_shared/guide-catalog'.",
+                        },
+                        {
+                            name: "@/features/directories",
+                            message: "Import shared directory shells from '@/features/_shared/directories'.",
+                        },
+                    ],
                     patterns: [
                         {
                             group: ["@/components/ui/*"],
@@ -130,7 +140,7 @@ export default [
                     paths: [
                         {
                             name: "@/shared/ui/data-table",
-                            message: "Use DirectoryListScreen from '@/features/directories' in directory screens.",
+                            message: "Use DirectoryListScreen from '@/features/_shared/directories' in directory screens.",
                         },
                         {
                             name: "@/shared/ui/shells/data-table-shell",
