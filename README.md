@@ -1,437 +1,235 @@
-# Smetalab v1.0.3
+# Smetalab
 
-Профессиональная SaaS-платформа на **Next.js**, с продвинутой мультиарендностью, гибридным AI-поиском и системой управления командой.
+Smetalab is a multi-tenant SaaS application for construction estimating and project operations. It supports project management, estimates, work/material catalogs, procurement tracking, execution tracking, finance-related project data, team workflows, and administration tools.
 
-**Репозиторий: [https://github.com/huntechri/smetalab_dev](https://github.com/huntechri/smetalab_dev)**
+The application is built as a production-oriented Next.js App Router codebase with a strict layered architecture, shared UI governance, tenant-aware data access, and AI-assisted catalog search.
 
----
+Repository: <https://github.com/huntechri/smetalab_dev>
 
-## 🏛 Архитектура и Правила Разработки (Важно!)
+## Overview
 
-Этот раздел описывает новый стандарт кода после рефакторинга. Пожалуйста, следуйте этим правилам, чтобы проект оставался чистым и надежным.
+Smetalab is designed for construction and fit-out workflows where estimates, materials, works, purchases, and execution data must stay connected inside a tenant-scoped workspace.
 
-### 1. Безопасность и Multi-tenancy (Слой БД)
-**Проблема:** Опасно вручную прописывать `where(eq(table.tenantId, ...))` в каждом запросе. Можно забыть и «слить» данные другой команде.
+Core product areas:
 
-**Решение:** Использовать хелпер `withActiveTenant` из `lib/data/db/queries.ts`.
-- ✅ **Как НУЖНО:**
-  ```typescript
-  // Хелпер автоматически добавит: .where(and(eq(tenantId, ...), isNull(deletedAt)))
-  const data = await db.select().from(materials).where(withActiveTenant(materials, teamId));
-  ```
-- ❌ **Как НЕЛЬЗЯ:**
-  ```typescript
-  // Не пишите фильтры вручную, если есть tenantId и deletedAt
-  .where(and(eq(materials.tenantId, id), isNull(materials.deletedAt))) 
-  ```
+- workspace dashboard and project dashboards;
+- project registry and project details;
+- estimate registry and estimate details;
+- estimate rows with works and nested materials;
+- materials and works catalogs;
+- estimate procurement reconciliation against global purchases;
+- execution tracking for actual work quantities and prices;
+- global purchases;
+- counterparties and material suppliers;
+- team, permissions, settings, notifications, and admin surfaces;
+- AI/semantic search for catalog workflows where configured.
 
-### 2. Оптимизация SQL и Индексация
-**Принцип:** Запросы должны быть быстрыми даже при миллионах записей.
-- **Индексы:** Все поля, используемые в `WHERE`, `JOIN` и `ORDER BY`, должны быть проиндексированы. 
-- **Поиск:** Для текстового поиска используйте GIN-индексы с `gin_trgm_ops`.
-- **AI-поиск материалов и работ:** Используется двухфазный пайплайн (кандидаты по FTS/trgm + векторный top-K, затем re-rank), чтобы задействовать индексы и ускорить поиск на больших справочниках.
-- **Защита от дублей:** В справочниках работ и материалов реализована визуальная индикация и блокировка при попытке добавить позицию, которая уже присутствует в текущей смете.
-- **Импорт/экспорт справочников:** Порядок строк сохраняется через `sortOrder`: экспорт идет в текущем UI-порядке, а импорт пересобирает его по фактическому порядку строк в Excel.
-- **Кэширование поиска:** Для повторных одинаковых запросов используется короткий TTL-кэш на серверном сервис-слое.
-- **Soft Delete:** Для полей `deleted_at` установлены индексы, так как они участвуют в каждом запросе.
+## Tech Stack
 
-### 3. Целостность данных и Транзакции (Слой Сервисов)
-**Принцип:** Все массовые операции или сложные цепочки записей должны быть в **транзакции**.
-- ✅ **Как НУЖНО:**
-  ```typescript
-  await db.transaction(async (tx) => {
-    await tx.insert(materials).values(rows);
-    await tx.insert(logs).values(logEntry);
-  });
-  ```
-- ⚠️ **Правило:** Бизнес-логика живет в `lib/services/`. Server Actions лишь вызывают эти сервисы.
+High-level stack:
 
-### 4. Чистый Фронтенд (Декомпозиция)
-**Решение:** Разделяйте код на 3 уровня:
-1.  **Хуки (hooks/):** Вся «черная работа» — запросы к API, стейты.
-2.  **Компоненты (components/):** Только UI.
-3.  **Контейнер (client.tsx):** Собирает хуки и компоненты вместе.
+- Next.js App Router;
+- React and TypeScript;
+- Tailwind CSS and shadcn/Radix-style UI primitives;
+- Postgres hosted on Neon;
+- Drizzle ORM and Drizzle migrations;
+- Vercel for deployment;
+- Vercel Blob for larger estimate import files;
+- Stripe for billing/payment integration;
+- Resend for transactional email;
+- Sentry for monitoring;
+- OpenAI embeddings for semantic/AI search.
 
----
+The exact package versions are defined in `package.json` and `pnpm-lock.yaml`.
 
-## 🧭 Подробная архитектура (уровни и потоки)
+## Architecture
 
-Ниже — детальное описание слоёв и взаимодействий в приложении. Цель — сохранить предсказуемую структуру и упростить поддержку.
+`ARCHITECTURE.md` is the authoritative architecture map for this repository. The README only summarizes the current rules.
 
-### 1) Общий поток запроса (Request Flow)
-1. **UI-компонент** инициирует действие (клик, сабмит формы, выбор в таблице).
-2. **Feature-хук** обрабатывает событие: проверяет состояние, готовит данные, вызывает серверные экшены.
-3. **Server Action** (`app/actions/**`) выполняет валидацию и авторизацию через `safeAction`, затем вызывает сервис.
-4. **Сервис** (`lib/services/**.service.ts`) реализует бизнес-логику и обращения к БД.
-5. **DB-слой** (`lib/data/db/**`) выполняет запросы с `withActiveTenant`.
-6. **Клиент** обновляет состояние, ререндерит UI и показывает результат (toast/диалог).
+Canonical layers:
 
-### 2) Фронтенд-слой (App Router)
-**Цель:** route-файлы остаются тонкими, а сложная UI-оркестрация изолируется в feature-модулях. Используются **человекопонятные URL (slugs)** для проектов и смет.
-
-- **Route-страницы** (`app/**/page.tsx`, `loading.tsx`, `layout.tsx`)
-  - Получают серверные данные (поиск по `slug` вместо UUID) и передают их в feature-экраны.
-  - Параметры в путях `[projectId]` и `[estimateId]` теперь принимают текстовые слаги.
-  - Не содержат клиентской бизнес-логики таблиц, импорта, поиска и модалок.
-- **Глобальная навигация** (`components/providers/breadcrumb-provider.tsx`)
-  - Хлебные крошки управляются через `BreadcrumbProvider` и хук `useBreadcrumbs`.
-  - Путь автоматически отображается в `AppHeader` с поддержкой адаптивного сокращения (ellipsis) для мобильных устройств.
-- **Entities-слой (переиспользуемый доменный UI)** (`entities/<entity>/{ui,model}`)
-  - Содержит доменно-ориентированные UI-блоки и модели (например, `entities/project/ui/ProjectStatusDot.tsx`, `entities/estimate/ui/EstimateStatusBadge.tsx`), которые используются в нескольких фичах.
-  - Не импортирует `features/**`, чтобы сохранить однонаправленные зависимости.
-- **Feature-экраны и оркестрация** (`features/**/screens`, `features/**/hooks`, `features/**/components`)
-  - Экраны (`*Screen`) собирают страницу из атомарных компонент и специализированных хуков.
-  - Хуки управляют состояниями таблиц (поиск, вставка, редактирование, удаление, пагинация, AI-поиск).
-  - Общие сценарии выносятся в shared-хуки (например, `hooks/use-guide-table-search.ts`).
-- **UI-примитивы** (`shared/ui/**`)
-  - Содержат только переиспользуемые shadcn/Radix примитивы и общие паттерны состояний (`shared/ui/states/**`).
-  - Не должны тянуть бизнес-логику домена или запросы к БД.
-- **UI-дедупликация справочников** (`features/guide-catalog/**`, `features/directories/**`)
-  - Для `materials/works` используется единый shell-слой (`CatalogScreenShell`, `CatalogTableWrapper`, `CatalogToolbar`) с модульными адаптерами.
-  - Для `counterparties/material-suppliers` используется общий `DirectoryListScreen` + типизированные адаптеры.
-- **DTO и клиентские типы** (`shared/types/**`, `features/**/types/**`)
-  - Клиентские компоненты используют UI DTO-типы и не импортируют DB-типы напрямую из `lib/data/db/schema` или сервисные типы из `lib/services/**`.
-
-Текущая практическая схема для экранов workspace (`dashboard/works/materials/counterparties/projects`):
-1. `app/(workspace)/app/guide/**/page.tsx` загружает initial data на сервере.
-2. Передаёт данные в `features/**/screens/*Screen.tsx`.
-3. Экран использует `features/**/hooks/*` и `hooks/*` для поведения.
-4. Переиспользуемые доменные блоки берутся из `entities/**`, а таблицы/диалоги собираются в `features/**/components/*` на базе `shared/ui/*`.
-5. Формы аутентификации (`sign-in`/`sign-up`/`forgot-password`/`reset-password`) хранятся в `features/auth/components/*`, а страницы в `app/(login)` выступают thin wrappers.
-6. Экраны настроек (`workspace` и `admin`) собираются в `features/settings/**`, а route-файлы в `app/**/settings/**` остаются thin wrappers.
-
-**Пример реализации (Projects):**
-- `app/(workspace)/app/projects/page.tsx` — серверная загрузка списка проектов.
-- `app/(workspace)/app/projects/[projectId]/page.tsx` — дашборд проекта, доступный по слэгу (например, `/app/projects/north-park`).
-- `features/projects/list/screens/ProjectsScreen.tsx` — композиция экрана без низкоуровневой логики URL-параметров.
-- `features/projects/list/hooks/use-projects-screen.ts` — управление фильтрами, сортировкой, режимом отображения и действиями списка.
-
-### 3) Server Actions
-**Файл-локатор:** `app/actions/**`.
-
-- Всегда обёрнуты в `safeAction` и проверяют `allowedRoles`.
-- Не содержат бизнес-правил. Делегируют работу сервисам.
-- Отвечают за кеш-инвалидацию (`revalidatePath`) и простую оркестрацию.
-
-### 4) Сервисный слой
-**Файл-локатор:** `lib/services/**.service.ts`.
-
-- Бизнес-правила и изменения данных живут здесь.
-- Массовые операции выполняются в `db.transaction()`.
-- Вся работа с tenant-данными проходит через `withActiveTenant`.
-- Сервисы — единственная точка, где допускаются сложные операции над БД.
-
-### 5) Доступ к БД
-**Файл-локатор:** `lib/data/db/**`.
-
-- `schema.ts` описывает структуру таблиц (Drizzle).
-- `queries.ts` содержит `withActiveTenant` и общие утилиты.
-- Миграции в `drizzle/*.sql` должны соответствовать `schema.ts`.
-
-### 6) RBAC и безопасность
-- Роли (`owner`, `admin`, `member`, `estimator`, `manager`) проверяются в `safeAction`.
-- Админские функции размещаются под `/admin/**`.
-- Для admin dashboard действует server-side gate: доступ только для platform-ролей `superadmin`/`support`; дополнительная проверка выполняется также в `lib/data/db/admin-queries.ts`.
-- Actions проектов (`create/update/delete`) унифицированы через `safeAction` и возвращают единый `Result`-контракт с Zod-валидацией.
-- Любые мутации должны предваряться проверкой прав и валидацией данных (Zod).
-
-### 7) Интеграции
-- **Платежи**: `lib/infrastructure/payments/` (Stripe).
-- **Email**: Resend.
-- **AI-поиск**: `lib/ai/` + embeddings. Для батчей — `generateEmbeddingsBatch`.
-
-### 8) Тестовая архитектура
-- **Unit** (`__tests__/unit/`) — hooks, utils, маленькие UI-компоненты.
-- **Integration** (`__tests__/integration/`) — server actions, сервисы, БД/tenant-логика.
-- **UI** (`__tests__/ui/`) — тестирование визуальных компонентов и страниц.
-- `pnpm test` запускает только unit/isolated набор и не требует БД/сети.
-- Интеграционные тесты (`pnpm test:integration`) запускаются отдельно и требуют валидный `DATABASE_URL`.
-
-## 📂 Структура Проекта
-
-Подробные правила слоев и зависимостей: `ARCHITECTURE.md`.
-
-
-- `app/(workspace)/app/`: Основные страницы рабочего пространства.
-- `app/(workspace)/app/page.tsx`: Консолидированный home-дашборд по всем проектам команды (KPI + график "Динамика проекта").
-- `app/actions/`: Server Actions (обертки `safeAction` с проверкой ролей).
-- `lib/data/db/`: Схема Drizzle и миграции.
-- `lib/domain/`: Контракты и доменные сервисы (в некоторых модулях остаются use-cases, в `materials/works` CRUD-оркестрация идёт через `lib/services/*-catalog.service.ts` → `lib/domain/*/*.service.ts`).
-- `lib/infrastructure/auth/`: Логика RBAC и контроля доступа.
-- `shared/ui/`: Библиотека Shadcn/UI (базовые блоки).
-- `shared/types/`: UI DTO-типы для client-слоя.
-- `features/guide-catalog/`: Единый каркас справочников `materials/works`.
-- `features/directories/`: Единый каркас списочных экранов справочников.
-- `features/settings/`: UI-экраны настроек (workspace/admin) и локальные user-preferences hooks.
-- `features/projects/estimates/`: UI-first модуль «Сметы» в контексте проекта (registry + details) с server actions для строк сметы и иерархией Work -> Materials.
-- В деталях сметы вкладка **«Выполнение»** хранит факт работ в отдельной таблице `estimate_execution_rows`, не изменяя плановые строки сметы; при отсутствии таблицы сервис один раз запускает `drizzle`-миграции программно и повторно проверяет структуру.
-
-## 🛠 Технологии
-
-- **Framework**: Next.js 15+ (App Router)
-- **Database**: Postgres (Neon) + Drizzle ORM
-- **AI**: OpenAI (модель `text-embedding-3-small`) для умного поиска.
-- **UI**: Tailwind CSS 4 + Shadcn/UI. Включает премиальный Dashboard для управления проектами.
-- **Monitoring**: Sentry (Error tracking & Performance)
-
-## 🚦 Быстрый Старт
-
-1. `pnpm install` — установка зависимостей.
-2. `cp .env.example .env` — настройка переменных.
-3. **Настройка БД**: Укажите `DATABASE_URL` и `TEST_DATABASE_URL` (оба Neon).
-4. `pnpm db:migrate` — накат схемы на БД Neon.
-5. `pnpm db:seed` — заполнение базовыми данными.
-6. `pnpm dev` — запуск сервера (использует `TEST_DATABASE_URL` если он задан, затем автоматически выполняет `db:sync`).
-
-## 🧪 Команды проверки
-
-```bash
-pnpm type-check    # Проверка типов (обязательно перед коммитом)
-pnpm lint          # Проверка стиля кода
-pnpm test                # Только unit/isolated тесты (без БД/сети)
-pnpm test:integration    # Интеграционные тесты (требуют DATABASE_URL)
+```txt
+app/**                  Next.js route segments, pages, layouts, route handlers
+app/actions/**          thin Server Action entrypoints
+features/**             real business feature modules
+features/_shared/**     shared feature-level infrastructure
+shared/ui/**            canonical runtime UI primitives and shared UI patterns
+shared/types/**         shared client/server-safe DTOs and plain types
+shared/hooks/**         reusable client hooks
+entities/**             reusable domain-oriented UI/model blocks
+lib/data/**             database schema, repositories, queries, tenant filters
+lib/domain/**           framework-independent business rules and use cases
+lib/services/**         server-side application services and DB-backed workflows
+lib/infrastructure/**   external adapters such as auth, payments, email, storage
+packages/**             workspace packages and compatibility exports
 ```
 
-**Важно:** `pnpm test` должен проходить без `.env.test` и без `DATABASE_URL`. Для `pnpm test:integration` нужен валидный `DATABASE_URL` (обычно тестовая ветка Neon).
+Core dependency rules:
 
-- Локально используйте `pnpm test:integration`: это обёртка с preflight-проверкой TCP (IPv4 + retry), и она может сделать **skip** при временной недоступности БД, чтобы не блокировать разработку.
-- В CI `pnpm test:integration` автоматически переходит в strict-режим (без skip), но рекомендуемая команда для явности — `pnpm test:integration:force`.
+- route files in `app/**` should stay thin and pass server-loaded data into feature screens;
+- `app/actions/**` should validate input, check permissions, call lower layers, and handle cache invalidation;
+- runtime app UI should import shared primitives from `@/shared/ui/*`;
+- `components/ui/**` is a legacy compatibility layer, not the canonical place for new runtime UI;
+- `@repo/ui` is package export compatibility and should not be the internal runtime UI source for the app;
+- `features/_shared/**` is the canonical home for shared feature shells such as guide-catalog and directory infrastructure;
+- `shared/ui/**` must remain presentation-oriented and must not import features, app routes, DB code, or domain workflows;
+- `lib/**` must not import from `features/**`;
+- service-layer code should depend on `lib/domain/**`, `lib/data/**`, `lib/infrastructure/**`, and neutral shared types.
 
-## 🚀 CI/CD и Preview Deploys (с изолированными БД Neon)
+For file placement, import direction, and cleanup rules, use `ARCHITECTURE.md`.
 
-- CI запускается на `pull_request` в `main`, на `push` в `main` и по расписанию.
-- Integration Tests теперь запускаются и на внутренних PR, чтобы гарантировать рабочую базу до слияния.
-- **Изолированные превью для PR:** При открытии или обновлении Pull Request 자동으로 создаётся отдельная ветка базы данных в Neon (1 PR = 1 ветка).
-- **Автоматические миграции и сиды**: GitHub Actions (`deploy.yml`) самостоятельно накатывает зависимости, схему (migrations) и права доступа (`pnpm db:seed:permissions`) на эту изолированную ветку БД перед сборкой приложения.
-- Для каждого внутреннего PR создается Vercel Preview Deploy, который **напрямую подключается** (через внедренные env-переменные) к этой временной ветке БД, и ссылка публикуется комментарием в PR.
-- **Уборка мусора**: При закрытии или мердже PR временная ветка в базе данных Neon автоматически удаляется.
-- Production деплой в Vercel выполняется только после успешного завершения всего CI пайплайна на `push` в `main`.
-- Для работы деплоев в GitHub Secrets должны быть заданы: `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `NEON_API_KEY`.
+## Getting Started
 
-## 💾 Команды работы с БД
-
-Проект работает **исключительно с Neon DB** для обеспечения консистентности данных между разработчиками.
+Install dependencies:
 
 ```bash
-pnpm db:sync       # Синхронизировать код и БД (generate + migrate) c защитой от запуска на production URL
-pnpm db:migrate    # Применить миграции к Neon (обычно в текущую DATABASE_URL)
-pnpm db:seed       # Заполнить Neon начальными данными
-pnpm db:studio     # Открыть графический интерфейс (Drizzle Studio) для Neon
-pnpm db:generate   # Генерация новых файлов миграций после изменения схемы
-pnpm db:migrate:prod # Явный алиас для наката миграций в production (через production DATABASE_URL)
+pnpm install
 ```
 
-Если нужно накатить только уже существующие миграции без генерации, используйте `pnpm db:sync -- --skip-generate`. 
-
-Если нужно осознанно применить миграции к production URL, используйте `pnpm db:sync -- --allow-production`.
-
-
-### Как новые колонки попадают в production
-1. Меняете `schema.ts` и выполняете `pnpm db:generate` (получаете SQL-миграцию в репозитории).
-2. Коммитите миграцию вместе с кодом.
-3. На production используется `pnpm release` (или `pnpm db:migrate:prod`) с production `DATABASE_URL` — именно этот шаг накатывает новые колонки в прод.
-4. `pnpm db:sync` нужен для локальной/тестовой синхронизации и по умолчанию блокирует не-тестовые URL.
-
-## 🌳 Стратегия веток и БД (Schema Drift)
-
-**Критически важно:**
-*   **`main`** — это Production. Схема данных в этой ветке **обязана** совпадать с реальной структурой продакшн-базы.
-*   **Feature-ветки** — для разработки. Если вы меняете схему, вы должны создать миграцию.
-
-**Правила избегания "Schema Drift" (расхождений):**
-1.  Перед началом работы всегда делайте `git pull origin main`, чтобы получить актуальную `schema.ts`.
-2.  Если при накате миграций (`pnpm db:migrate`) вы видите ошибки вида "column "X" does not exist" или наоборот "already exists", но в коде этого нет — значит, схема в базе отличается от кода.
-3.  **Не правьте базу руками!** Используйте только Drizzle миграции.
-4.  Если база "убежала" вперед (в ней есть колонки, которых нет в коде), нужно синхронизировать `schema.ts` с реальностью и закоммитить это в `main`.
-
----
-
-## 🔒 CI и Защита веток
-
-### Как работает CI
-
-Каждый pull request проходит три обязательных проверки в GitHub Actions (`.github/workflows/ci.yml`):
-
-| Проверка | Команда |
-|---|---|
-| Линтинг (ESLint) | `pnpm lint` |
-| Проверка типов (TypeScript) | `pnpm type-check` |
-| Тесты (Vitest) | `pnpm test` |
-
-Финальный агрегирующий job **`ci`** (отображается в GitHub как **"All Checks Passed"**) завершается успешно только если все три проверки прошли. Именно этот статус используется как required status check на ветке `main`.
-
-### Настройка защиты ветки (для администратора репозитория)
-
-Правило задано декларативно в **`.github/rulesets/main-protection.json`** и применяется одним из трёх способов — выберите любой удобный.
-
-> **Обязательный ревью:** Помимо прохождения CI-проверок, каждый pull request должен получить **не менее 1 подтверждающего ревью** (approving review) от другого участника команды — автор не может смержить свой PR самостоятельно. Это правило задано в ruleset через `required_approving_review_count: 1`.
->
-> **Автоматический сброс устаревших ревью:** Если автор пушит новые коммиты после того, как ревьюер уже одобрил PR, это одобрение автоматически сбрасывается (`dismiss_stale_reviews_on_push: true`). Перед мержем потребуется новое ревью, отражающее актуальное состояние кода.
->
-> **Ревью от эксперта предметной области (CODEOWNERS):** Файл **`.github/CODEOWNERS`** задаёт маппинг чувствительных путей (авторизация, схема БД, платежи, server actions) к ответственным командам. При изменении таких файлов GitHub автоматически добавляет соответствующего владельца как обязательного ревьюера. Настройка `require_code_owner_review: true` в ruleset гарантирует, что PR не может быть смержен без его одобрения. Список путей и команд-владельцев: `.github/CODEOWNERS`.
->
-> **Финальный апрувер ≠ автор последнего пуша:** Настройка `require_last_push_approval: true` запрещает человеку, сделавшему последний коммит в PR, самому же его одобрить. Это исключает ситуацию, когда разработчик «резинового штампует» собственные изменения после сброса устаревшего ревью. Финальное одобрение всегда должно исходить от другого участника команды.
-
-#### Способ 1 — скрипт из командной строки (рекомендуется для новых форков)
-
-Требования: установленный [GitHub CLI](https://cli.github.com/) и токен с правом `administration:write`.
+Create a local environment file from the example:
 
 ```bash
-# Аутентификация (если ещё не выполнена)
-gh auth login
-
-# Применить ruleset к текущему репозиторию
-./scripts/setup-branch-protection.sh
-
-# Или явно указать репозиторий:
-./scripts/setup-branch-protection.sh owner/repo
+cp .env.example .env
 ```
 
-Скрипт создаёт (или обновляет) Ruleset **`main-protection`** через GitHub Rulesets API.  
-При повторном запуске на уже защищённом репозитории он просто обновит существующее правило — настройки не задвоятся.
+Fill the required local values in `.env`. Do not commit real environment values.
 
-#### Способ 2 — GitHub Actions workflow (без локального окружения)
-
-1. Перейдите в **Actions → Setup Branch Protection** в репозитории.
-2. Нажмите **Run workflow** и запустите.
-3. Workflow применит полный Ruleset **`main-protection`** через GitHub Rulesets API, прочитав файл `.github/rulesets/main-protection.json`. Ruleset уже содержит условия для веток `main` и `master`, поэтому выбирать ветку вручную не нужно. При повторном запуске существующий ruleset будет обновлён, а не создан заново.
-
-> Файл workflow: `.github/workflows/setup-branch-protection.yml`
-
-#### Способ 3 — ручная настройка через GitHub UI
-
-1. Перейдите в **Settings → Rules → Rulesets** репозитория.
-2. Нажмите **New ruleset → Import a ruleset** и загрузите `.github/rulesets/main-protection.json`.  
-   Либо создайте вручную: **New branch ruleset**, target `main`/`master`, добавьте правило **Require a pull request before merging** (1 approving review) и **Require status checks → All Checks Passed**.
-3. Сохраните.
-
-После применения любого из способов GitHub блокирует кнопку "Merge" на любом PR, где хотя бы одна из проверок (lint, type-check, test) завершилась с ошибкой или не получено хотя бы одно approving review.
-
----
-
-### Автоматическая защита при форке: org-level vs repo-level rulesets
-
-> **Рекомендуемая стратегия:**
-> - **Организации на GitHub Team/Enterprise** → используйте **Способ 4** (org-level ruleset). Защита применяется ко всем репозиториям автоматически — никаких действий после форка не нужно.
-> - **Индивидуальные аккаунты / бесплатный план** → используйте **Способы 1–3** (repo-level, вручную) или **Способ 5** (GitHub App webhook) для автоматизации.
-
-#### Разница между org-level и repo-level rulesets
-
-| | Repo-level ruleset | Org-level ruleset |
-|---|---|---|
-| **Область действия** | Один конкретный репозиторий | Все репозитории организации (включая будущие форки) |
-| **Где настраивается** | Settings → Rules → Rulesets репозитория | Organization Settings → Rules → Rulesets |
-| **API endpoint** | `POST /repos/{owner}/{repo}/rulesets` | `POST /orgs/{org}/rulesets` |
-| **Форки** | Требует ручной настройки в каждом новом форке | Применяется автоматически ко всем форкам |
-| **Подходит для** | Индивидуальных репозиториев | Организаций, где нужна единая политика |
-
-**Repo-level** (текущий способ — `.github/rulesets/main-protection.json`) требует, чтобы владелец нового форка вручную запустил скрипт или workflow. Это описано выше в Способах 1–3.
-
-**Org-level** (файл `.github/rulesets/org-main-protection.json`) настраивается один раз на уровне организации и автоматически покрывает все существующие и будущие репозитории — никаких ручных действий после форка не требуется.
-
-#### Способ 4 — org-level ruleset (нулевое касание для форков)
-
-Требования: токен с правом **`admin:org`** (не `administration:write`, как для repo-level).
+Run database migrations and seed data:
 
 ```bash
-# Применить org-level ruleset ко всей организации
-./scripts/setup-org-branch-protection.sh my-org-name
-
-# Или авто-определить организацию из git remote:
-./scripts/setup-org-branch-protection.sh
+pnpm db:migrate
+pnpm db:seed
 ```
 
-Скрипт вызывает `POST /orgs/{org}/rulesets` и создаёт (или обновляет) правило **`org-main-protection`**, которое покрывает ветки `main`/`master` во ВСЕХ репозиториях организации. Конфигурация: `.github/rulesets/org-main-protection.json`.
-
-> **Важно:** org-level rulesets требуют GitHub Team или Enterprise plan. На бесплатных личных аккаунтах используйте repo-level (Способы 1–3).
-
-#### Способ 5 — автоматический webhook при создании репозитория (через GitHub App)
-
-Этот способ — резервный вариант для окружений, где org-level rulesets недоступны (например, бесплатный план), или там, где нужно применять защиту к форкам вне организации.
-
-> **Важно:** GitHub Organization Webhooks **не могут** напрямую вызывать GitHub REST API `/repos/{org}/{repo}/dispatches`, так как сами webhook-запросы не проходят аутентификацию как API-клиенты. Для этого паттерна **обязательно нужен** промежуточный аутентифицированный агент — GitHub App или внешний сервис.
-
-**Быстрый старт (без редактирования кода):**
-
-Используйте готовый интерактивный скрипт, который зарегистрирует org-webhook за вас:
+Start the development server:
 
 ```bash
-./scripts/configure-org-webhook.sh [org-name]
+pnpm dev
 ```
 
-Скрипт:
-- проверяет наличие зависимостей (`curl`, `jq`)
-- запрашивает имя организации, токен (`admin:org_hook`), URL вашего GitHub App и webhook-secret
-- создаёт (или сообщает о существующем) org-webhook через GitHub API
-- выводит инструкции по следующим шагам
+## Environment Variables
 
-Нужные переменные можно передать через окружение, чтобы пропустить интерактивные промпты:
-```bash
-GH_TOKEN=ghp_xxx \
-WEBHOOK_URL=https://your-app.example.com/github/webhook \
-WEBHOOK_SECRET=your-secret \
-./scripts/configure-org-webhook.sh my-org
-```
+Required variable names and categories are documented in `.env.example`.
 
-**Проверка скрипта (без реальных учётных данных):**
+Environment categories:
 
-Запустите автоматизированный набор тестов, который использует mock-версию `curl` и проверяет все ключевые сценарии — успешное создание, дубликат (HTTP 422), отказ в доступе (HTTP 403) и несуществующую организацию (HTTP 404):
+- database connection variables;
+- authentication/session variables;
+- Stripe variables;
+- Resend email variables;
+- OpenAI variables;
+- Sentry variables;
+- Vercel Blob storage variables;
+- Neon/Vercel/GitHub variables used by CI/CD and preview environments.
 
-```bash
-bash scripts/test-configure-org-webhook.sh
-```
+Rules:
 
-Все 7 тестов должны завершиться с пометкой `PASS`.  Если тест падает, значит изменение в скрипте нарушило поведение соответствующего сценария.
+- never commit `.env` or real environment files;
+- never document real API keys, webhook secrets, database URLs, auth secrets, tokens, passwords, DSNs, or private credentials;
+- store deployment values in Vercel environment variables and GitHub Secrets;
+- keep README examples limited to variable names and categories only.
 
-**Просмотр и удаление существующих webhooks:**
+## Available Scripts
 
-Скрипт `scripts/list-org-webhooks.sh` позволяет администраторам просматривать и удалять org-webhooks без изменения кода.
-
-Вывести список всех webhooks с их ID, URL, статусом и датой создания:
+Important scripts from `package.json`:
 
 ```bash
-./scripts/list-org-webhooks.sh [org-name]
+pnpm dev                         # start the development server
+pnpm build                       # build the Next.js application
+pnpm start                       # start the production server
+
+pnpm lint                        # run ESLint
+pnpm type-check                  # run TypeScript checks
+pnpm test                        # run unit/isolated tests
+pnpm test:watch                  # run Vitest in watch mode
+pnpm test:integration            # run integration tests with preflight handling
+pnpm test:integration:force      # run integration tests in strict mode
+pnpm e2e                         # run Playwright tests
+
+pnpm audit:ui                    # run UI import/button/input audits
+pnpm audit:lib-feature-imports   # block lib-to-feature imports
+pnpm audit:legacy-compat-imports # block legacy compatibility import paths
+pnpm verify:release              # lint, type-check, audits, tests, and build
+
+pnpm db:generate                 # generate Drizzle migrations
+pnpm db:migrate                  # apply migrations
+pnpm db:seed                     # seed database data
+pnpm db:studio                   # open Drizzle Studio
+pnpm db:sync                     # generate and migrate with production guardrails
+pnpm db:migrate:prod             # explicit production migration alias
 ```
 
-Удалить конкретный webhook по ID (ID берётся из вывода команды выше):
+Testing model:
 
-```bash
-./scripts/list-org-webhooks.sh [org-name] --delete <hook-id>
-```
+- `pnpm test` is intended for unit and isolated tests and should not require a live database;
+- `pnpm test:integration` is for DB-backed integration tests and depends on a valid database environment;
+- `pnpm verify:release` is the main release verification command and includes architecture/UI audits.
 
-Как и `configure-org-webhook.sh`, скрипт поддерживает переменные окружения для работы без интерактивных запросов:
+## Database and Migrations
 
-```bash
-GH_TOKEN=ghp_xxx ORG=my-org ./scripts/list-org-webhooks.sh
-GH_TOKEN=ghp_xxx ORG=my-org ./scripts/list-org-webhooks.sh --delete 12345678
-```
+The project uses Postgres with Drizzle ORM.
 
-**Рекомендуемая схема (полная):**
+Database rules:
 
-1. Создайте **GitHub App** с разрешением `Contents: Read & Write` и подпиской на событие **`installation.repositories_added`** (или org webhook `repository → created`).
-2. Запустите `./scripts/configure-org-webhook.sh` — он зарегистрирует org-webhook, указывающий на URL вашего App.
-3. GitHub App получает webhook от GitHub при создании/форке репозитория.
-4. App аутентифицируется как installation и вызывает:
-   ```
-   POST /repos/<org>/<this-repo>/dispatches
-   {
-     "event_type": "repository_created",
-     "client_payload": { "repository": "owner/new-repo-name" }
-   }
-   ```
-5. Workflow `.github/workflows/auto-branch-protection.yml` ловит событие и применяет защиту через `scripts/setup-branch-protection.sh`.
-6. В секретах репозитория добавьте `BRANCH_PROTECTION_TOKEN` — токен с правом `administration:write` на целевой репозиторий.
+- schema changes must be represented in Drizzle schema and committed migration files;
+- do not manually patch production schema outside the migration flow;
+- tenant-aware queries must preserve tenant isolation and soft-delete behavior;
+- shared DTOs used outside the data layer should live in neutral locations such as `shared/types/**` or `lib/domain/**`;
+- production and preview database values must be provided through environment variables, not committed documentation.
 
-**Примечание о стратегии:** workflow применяет repo-level защиту к конкретному указанному репозиторию — это намеренно, поскольку данный способ предназначен для случаев, когда org-level ruleset недоступен.
+## CI/CD
 
----
+The repository uses GitHub Actions for validation and Vercel for deployment.
 
-## ⚠️ Важные Правила
+Current CI/CD responsibilities include:
 
-1. **Никакой локальной БД**: Все изменения вносятся прямо в облачную базу Neon.
-2. **Изоляция тестов**: Тесты автоматически переключаются на `TEST_DATABASE_URL`. Никогда не используйте одну и ту же базу для разработки и тестов.
-3. **Безопасность**: Следите за тем, чтобы `.env` не попадал в репозиторий.
+- pull request validation;
+- linting, type-checking, UI/architecture audits, tests, and build verification;
+- Vercel preview and production deployment flows;
+- Neon preview database branch handling where configured;
+- production migration/deploy sequencing;
+- branch protection through repository rulesets and the setup workflow.
 
-📚 **Дополнительно**: 
-- [Быстрый справочник](docs/database-quick-reference.md)
-- [Полное руководство](docs/database-commands.md)
+Relevant files:
+
+- `.github/workflows/deploy.yml`;
+- `.github/workflows/setup-branch-protection.yml`;
+- `.github/rulesets/main-protection.json`;
+- `.github/CODEOWNERS`.
+
+Do not place operational tokens or secret values in README. Use GitHub Secrets and Vercel environment variables.
+
+## Security and Secret Handling
+
+This repository must not contain real secrets.
+
+Do not commit or document:
+
+- API keys;
+- database URLs;
+- webhook secrets;
+- auth/session secrets;
+- access tokens;
+- OAuth credentials;
+- SMTP or email provider credentials;
+- Sentry auth tokens or DSNs with private context;
+- Vercel, Neon, Stripe, Resend, OpenAI, or GitHub credentials;
+- real passwords or private account identifiers.
+
+Safe documentation may include only variable names, placeholder names, or links to configuration files that do not expose real values.
+
+## Documentation
+
+Important repository documents:
+
+- `ARCHITECTURE.md` — source of truth for file-system architecture and dependency direction;
+- `.env.example` — environment variable names and categories;
+- `docs/audits/**` — audit notes and historical cleanup status;
+- `.github/workflows/deploy.yml` — CI/CD workflow;
+- `.github/rulesets/main-protection.json` — branch protection ruleset.
+
+Older architecture and audit documents should be treated as historical references unless `ARCHITECTURE.md` points to them as current.
+
+## License
+
+License: not specified in this repository.
