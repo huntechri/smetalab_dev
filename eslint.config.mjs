@@ -78,6 +78,29 @@ export default [
         },
     },
     {
+        files: [
+            "app/**/*.{ts,tsx,js,jsx}",
+            "features/**/*.{ts,tsx,js,jsx}",
+            "entities/**/*.{ts,tsx,js,jsx}",
+            "components/**/*.{ts,tsx,js,jsx}",
+            "lib/**/*.{ts,tsx,js,jsx}",
+        ],
+        ignores: ["components/shadcn-studio/**/*", "__tests__/**/*"],
+        rules: {
+            "no-restricted-imports": [
+                "error",
+                {
+                    patterns: [
+                        {
+                            group: ["@radix-ui/*"],
+                            message: "Use project primitives from '@/shared/ui/*'. Direct Radix imports belong only in the shared/ui primitive layer.",
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    {
         files: ["app/**/page.tsx"],
         ignores: ["app/api-docs/page.tsx"],
         rules: {
