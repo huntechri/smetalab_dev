@@ -7,7 +7,7 @@ import {
 } from '@/features/projects/estimates/lib/estimate-client-events';
 import { useEstimateExecutionController } from '@/features/projects/estimates/hooks/use-estimate-execution-controller';
 import { useEstimateProcurementController } from '@/features/projects/estimates/hooks/use-estimate-procurement-controller';
-import type { EstimateExecutionRow } from '@/features/projects/estimates/types/execution.dto';
+import type { EstimateExecutionRow } from '@/shared/types/domain/estimate-execution';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 
 const toastMock = vi.fn();

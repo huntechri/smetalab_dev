@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDaysToIsoDate, formatLocalDateToIso, isIsoDateString, parseIsoDateSafe } from '@/features/global-purchases/lib/date';
+import { addDaysToIsoDate, formatLocalDateToIso, isIsoDateString, parseIsoDateSafe } from '@/lib/domain/global-purchases/date';
 
 describe('Global Purchases Date Helpers v2', () => {
     describe('isIsoDateString', () => {

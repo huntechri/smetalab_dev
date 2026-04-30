@@ -7,7 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
 import { RadioGroup, RadioGroupItem } from '@/shared/ui/radio-group';
-import { DirectoryEntitySheetShell } from '@/features/directories';
+import { DirectoryEntitySheetShell } from '@/features/_shared/directories';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { createMaterialSupplier, updateMaterialSupplier } from '@/app/actions/material-suppliers';
 import { materialSupplierFormSchema, type MaterialSupplierFormValues } from '../schemas/material-supplier-form.schema';

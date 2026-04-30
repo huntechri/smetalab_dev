@@ -1,11 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import type { CatalogMaterial } from '@/shared/types/domain/catalog';
 import { notifyEstimatePurchasesMutated } from '@/features/projects/estimates/lib/estimate-client-events';
 import { patchPurchaseRow } from '../lib/rows';
 import { globalPurchasesActionRepo } from '../repository/global-purchases.actions';
-import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '../types/dto';
+import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange } from '@/shared/types/domain/purchase-row';
 import type { ImportablePurchaseRow } from '../lib/import-export';
 
 const PATCH_DEBOUNCE_MS = 180;

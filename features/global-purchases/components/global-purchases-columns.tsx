@@ -28,7 +28,7 @@ import {
   CommandList,
 } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
-import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '@/shared/types/domain/purchase-row';
 
 const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });

@@ -2,7 +2,7 @@ import React from 'react';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ProjectEstimatesCards } from '@/features/projects/dashboard/components/ProjectEstimatesCards';
-import type { EstimateMeta } from '@/features/projects/estimates/types/dto';
+import type { EstimateMeta } from '@/shared/types/domain/estimate';
 
 vi.mock('@/shared/ui/badge', () => ({
   Badge: ({ children, ...props }: React.HTMLAttributes<HTMLSpanElement>) => (

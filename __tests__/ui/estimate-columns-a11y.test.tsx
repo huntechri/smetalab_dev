@@ -1,7 +1,7 @@
 import { cleanup, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { EstimateCardsTable } from '@/features/projects/estimates/components/table/EstimateCardsTable';
-import type { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { EstimateRow } from '@/shared/types/domain/estimate';
 import type { SectionTotals } from '@/features/projects/estimates/lib/section-totals';
 
 const noopPatch = vi.fn().mockResolvedValue(undefined);

@@ -2,7 +2,7 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import { useGlobalPurchasesTable } from '@/features/global-purchases/hooks/useGlobalPurchasesTable';
 import { globalPurchasesActionRepo } from '@/features/global-purchases/repository/global-purchases.actions';
-import type { PurchaseRow } from '@/features/global-purchases/types/dto';
+import type { PurchaseRow } from '@/shared/types/domain/purchase-row';
 
 vi.mock('@/features/global-purchases/repository/global-purchases.actions', () => ({
     globalPurchasesActionRepo: {

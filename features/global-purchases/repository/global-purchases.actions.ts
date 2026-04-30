@@ -7,8 +7,8 @@ import {
     copyGlobalPurchasesToNextDayAction,
     importGlobalPurchasesAction,
 } from '@/app/actions/global-purchases';
-import type { CatalogMaterial } from '@/features/catalog/types/dto';
-import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, PurchaseRowBatchPatchPayload } from '../types/dto';
+import type { CatalogMaterial } from '@/shared/types/domain/catalog';
+import type { PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, PurchaseRowBatchPatchPayload } from '@/shared/types/domain/purchase-row';
 import type { ImportablePurchaseRow } from '../lib/import-export';
 
 const toPayloadFromCatalog = (material: CatalogMaterial, projectId: string | null, purchaseDate: string) => {

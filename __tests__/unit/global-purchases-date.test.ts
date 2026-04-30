@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { addDaysToIsoDate, formatLocalDateToIso, isIsoDateString } from '@/features/global-purchases/lib/date';
+import { addDaysToIsoDate, formatLocalDateToIso, isIsoDateString } from '@/lib/domain/global-purchases/date';
 
 describe('global purchases date helpers', () => {
     it('formats local date into ISO', () => {

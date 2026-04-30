@@ -3,7 +3,7 @@
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Download, MoreHorizontal } from 'lucide-react';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
-import { CatalogWork } from '@/features/catalog/types/dto';
+import { CatalogWork } from '@/shared/types/domain/catalog';
 import { EstimateExecutionAddExtraWorkSheet } from './EstimateExecutionAddExtraWorkSheet';
 
 interface EstimateExecutionTableActionsProps {

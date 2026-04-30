@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { EstimateTable } from '@/features/projects/estimates/components/table/EstimateTable.client';
-import type { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { EstimateRow } from '@/shared/types/domain/estimate';
 
 const { MockButton } = vi.hoisted(() => ({
   MockButton: ({

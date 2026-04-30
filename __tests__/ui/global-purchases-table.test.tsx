@@ -2,7 +2,7 @@ import type React from 'react';
 import { GlobalPurchasesView } from '@/features/global-purchases/components/GlobalPurchasesView.client';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { PurchaseRow } from '@/features/global-purchases/types/dto';
+import type { PurchaseRow } from '@/shared/types/domain/purchase-row';
 
 const { MockButton } = vi.hoisted(() => ({
     MockButton: ({

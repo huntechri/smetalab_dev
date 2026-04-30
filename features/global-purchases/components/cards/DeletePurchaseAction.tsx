@@ -12,7 +12,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/shared/ui/alert-dialog';
-import type { PurchaseRow } from '../../types/dto';
+import type { PurchaseRow } from '@/shared/types/domain/purchase-row';
 
 type DeletePurchaseActionProps = {
   row: PurchaseRow;

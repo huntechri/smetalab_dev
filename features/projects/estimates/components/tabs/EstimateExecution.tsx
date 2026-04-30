@@ -15,7 +15,7 @@ import {
     DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 import { parseDecimalInput } from '@/features/projects/estimates/lib/decimal-input';
-import { EstimateExecutionRow, EstimateExecutionStatus } from '@/features/projects/estimates/types/execution.dto';
+import { EstimateExecutionRow, EstimateExecutionStatus } from '@/shared/types/domain/estimate-execution';
 import { useEstimateExecutionController } from '../../hooks/use-estimate-execution-controller';
 import { EstimateTotals } from '../EstimateTotals';
 import { EstimateExecutionTableActions } from './execution/EstimateExecutionTableActions';

@@ -14,7 +14,7 @@ import {
   DirectoryListScreen,
   type DirectoryListAdapter,
   useDirectorySheetState,
-} from "@/features/directories";
+} from "@/features/_shared/directories";
 
 const PAGE_SIZE = 50;
 

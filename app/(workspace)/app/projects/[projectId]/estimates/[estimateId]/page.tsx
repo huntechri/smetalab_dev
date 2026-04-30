@@ -10,7 +10,7 @@ import { EstimateExecutionService } from '@/lib/services/estimate-execution.serv
 import { EstimateProcurementService } from '@/lib/services/estimate-procurement.service';
 import { ProjectReceiptsService } from '@/lib/services/project-receipts.service';
 import type { EstimateRoomParam } from '@/features/projects';
-import type { EstimateExecutionRow } from '@/features/projects/estimates/types/execution.dto';
+import type { EstimateExecutionRow } from '@/shared/types/domain/estimate-execution';
 import type { EstimateProcurementRow } from '@/shared/types/estimate-procurement';
 import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 

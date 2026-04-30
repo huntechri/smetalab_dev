@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CreateEstimateDialog } from '@/features/projects/estimates/components/CreateEstimateDialog';
 import { useRouter } from 'next/navigation';
 import { useEstimateMutations } from '@/features/projects/estimates/hooks/use-estimate-mutations';
-import type { EstimateMeta, EstimateStatus } from '@/features/projects/estimates/types/dto';
+import type { EstimateMeta, EstimateStatus } from '@/shared/types/domain/estimate';
 import { ProjectEstimatesCards } from './ProjectEstimatesCards';
 
 type EstimateListItem = {

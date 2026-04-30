@@ -17,7 +17,7 @@ import {
   AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog';
 import { EstimateStatusMenu } from '@/features/projects/estimates/components/registry/EstimateStatusMenu';
-import type { EstimateMeta, EstimateStatus } from '@/features/projects/estimates/types/dto';
+import type { EstimateMeta, EstimateStatus } from '@/shared/types/domain/estimate';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
   style: 'currency',

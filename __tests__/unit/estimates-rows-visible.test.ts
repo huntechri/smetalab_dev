@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getVisibleRows } from '@/features/projects/estimates/lib/rows-visible';
-import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateRow } from '@/shared/types/domain/estimate';
 
 const rows: EstimateRow[] = [
     { id: 's1', kind: 'section', code: 'S1', name: 'Раздел 1', unit: '', qty: 0, price: 0, sum: 0, expense: 0, order: 50 },
