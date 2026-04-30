@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createProjectSchema } from '@/features/projects';
+import { createProjectSchema } from '@/shared/types/domain/project';
 import { createProjectUseCase } from '@/lib/domain/projects/use-cases';
 import { getCounterparties } from '@/lib/data/db/queries';
 import { NewProject } from '@/lib/data/db/schema';
