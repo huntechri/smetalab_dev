@@ -39,7 +39,6 @@ interface PatternRule {
   pattern: RegExp
   reason: string
   getSeverity?: (filePath: string, surface: Surface, token: string) => Severity
-  getReason?: (filePath: string, surface: Surface, token: string) => string
 }
 
 const ROOT = process.cwd()
@@ -91,7 +90,8 @@ const TAILWIND_PALETTE_NAMES = [
 ].join("|")
 
 const COLOR_PREFIXES = "bg|text|border|ring|from|via|to|fill|stroke|decoration|outline"
-const LAYOUT_PREFIXES = "w|h|min-w|max-w|min-h|max-h|gap|gap-x|gap-y|space-x|space-y|px|py|pt|pr|pb|pl|p|mx|my|mt|mr|mb|ml|m|top|right|bottom|left|inset|translate-x|translate-y"
+const LAYOUT_PREFIXES = "w|h|min-w|max-w|min-h|max-h|gap|gap-x|gap-y|space-x|space-y|mx|my|mt|mr|mb|ml|m|top|right|bottom|left|inset|translate-x|translate-y"
+const PADDING_PREFIXES = "p|px|py|pt|pr|pb|pl"
 const BADGE_SYMBOLS = "Badge|badgeVariants|StatusBadge|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
 const BADGE_STYLE_MARKERS = "rounded-full|rounded-2xl|rounded-xl|inline-flex|items-center|whitespace-nowrap"
 
@@ -107,12 +107,12 @@ function toPosix(filePath: string): string {
   return filePath.split(path.sep).join("/")
 }
 
-function isExcludedPath(relativePath: string): boolean {
-  return relativePath.split("/").some((segment) => EXCLUDED_SEGMENTS.has(segment))
-}
-
 function getRootName(relativePath: string): string {
   return relativePath.split("/")[0] || "unknown"
+}
+
+function isExcludedPath(relativePath: string): boolean {
+  return relativePath.split("/").some((segment) => EXCLUDED_SEGMENTS.has(segment))
 }
 
 function classifySurface(relativePath: string): Surface {
@@ -217,6 +217,15 @@ function severityForBadge(filePath: string, surface: Surface): Severity {
   return "low"
 }
 
+function severityForPadding(filePath: string, surface: Surface, token: string): Severity {
+  if (isCanonicalTokenFile(filePath)) return "low"
+  const isCompactPadding = /\b(?:p|px|py|pt|pr|pb|pl)-(?:0|0\.5|1|1\.5|2|\[[^\]]+\])\b/.test(token)
+  if (isBusinessRuntimeSurface(surface, filePath)) {
+    return downgradeForMarketingAuth(isCompactPadding ? "medium" : "low", filePath)
+  }
+  return "low"
+}
+
 function reasonSuffix(relativePath: string): string {
   if (isCanonicalTokenFile(relativePath)) {
     return " Classified as canonical token/primitive or compatibility surface; keep visible but do not treat as immediate business UI drift."
@@ -262,6 +271,13 @@ const RULES: PatternRule[] = [
     pattern: new RegExp(`\\b(?:${BADGE_STYLE_MARKERS})\\b(?=.*\\b(?:${COLOR_PREFIXES})-(?:${TAILWIND_PALETTE_NAMES})-(?:50|100|200|300|400|500|600|700|800|900|950)|.*\\b(?:${COLOR_PREFIXES})-\\[#(?:[0-9a-fA-F]{3,8})\\])`, "g"),
     reason: "Badge-like pill/chip class recipe with local color styling should be normalized to shared badge variants.",
     getSeverity: severityForBadge,
+  },
+  {
+    category: "padding-overlap",
+    defaultSeverity: "medium",
+    pattern: new RegExp(`\\b(?:${PADDING_PREFIXES})-(?:0|0\\.5|1|1\\.5|2|2\\.5|3|3\\.5|4|5|6|7|8|9|10|11|12|14|16|20|24|28|32|36|40|44|48|52|56|60|64|72|80|96|\\[[^\\]]+\\])\\b`, "g"),
+    reason: "Internal padding is tracked separately from layout. Repeated dense values should move into shared size contracts for buttons, tabs, badges, cards, and table cells.",
+    getSeverity: severityForPadding,
   },
   {
     category: "color-overlap",
@@ -376,14 +392,13 @@ function scanLine(relativePath: string, line: string, lineNumber: number, findin
       if (!token) continue
 
       const severity = rule.getSeverity?.(relativePath, surface, token) ?? rule.defaultSeverity
-      const baseReason = rule.getReason?.(relativePath, surface, token) ?? rule.reason
       addFinding(findings, seen, {
         filePath: relativePath,
         line: lineNumber,
         category: rule.category,
         severity,
         token,
-        reason: `${baseReason}${reasonSuffix(relativePath)}`,
+        reason: `${rule.reason}${reasonSuffix(relativePath)}`,
         surface,
       })
     }
@@ -529,6 +544,7 @@ ${formatCounts(report.surfaceCounts)}
 - Canonical token/primitive and compatibility surfaces remain reported, but findings there are intentionally lower severity than business runtime drift.
 - Marketing/auth surfaces, including app/page.tsx and auth/pricing routes, remain reported as exception candidates with downgraded severity.
 - Badge/status/chip surfaces are tracked explicitly through badge-overlap to catch duplicated visual recipes beyond generic color/typography findings.
+- Internal padding is tracked explicitly through padding-overlap to separate dense component sizing from outer layout drift.
 
 ## Top high-priority findings
 
@@ -541,9 +557,10 @@ ${formatFindingTable(highPriority, 50)}
 3. Normalize dashboard compact cards colors, borders, and badges.
 4. Normalize permissions matrix palette, radius, and shadow.
 5. Normalize Badge/status/chip variants and remove feature-local badge recipes.
-6. Deduplicate delete confirmation wrappers.
-7. Introduce dense table typography utilities.
-8. Enable strict UI visual audit gate after baseline cleanup.
+6. Normalize internal padding contracts for buttons, tabs, badges, table cells, cards, and sheets.
+7. Deduplicate delete confirmation wrappers.
+8. Introduce dense table typography utilities.
+9. Enable strict UI visual audit gate after baseline cleanup.
 
 ## All findings by severity
 
