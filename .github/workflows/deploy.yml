@@ -178,7 +178,7 @@ jobs:
           mkdir -p .vercel
           printf "DATABASE_URL=%s\nPOSTGRES_URL=%s\n" "$NEON_DB_URL" "$NEON_DB_URL" >> .vercel/.env.preview.local
           vercel build --target preview --token="$VERCEL_TOKEN"
-          deploy_output=$(vercel deploy --prebuilt --target preview -e DATABASE_URL="$NEON_DB_URL" -e POSTGRES_URL="$NEON_DB_URL" --token="$VERCEL_TOKEN" 2>&1)
+          deploy_output=$(vercel deploy --prebuilt --archive=tgz --target preview -e DATABASE_URL="$NEON_DB_URL" -e POSTGRES_URL="$NEON_DB_URL" --token="$VERCEL_TOKEN" 2>&1)
           echo "$deploy_output"
           PREVIEW_URL=$(echo "$deploy_output" | awk '/^Preview: https:\/\// {print $2}' | tail -n 1)
           if [ -z "$PREVIEW_URL" ]; then
@@ -270,4 +270,4 @@ jobs:
           set -euo pipefail
           vercel pull --yes --environment production --token="$VERCEL_TOKEN"
           vercel build --prod --token="$VERCEL_TOKEN"
-          vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+          vercel deploy --prebuilt --archive=tgz --prod --token="$VERCEL_TOKEN"
