@@ -1,5 +1,6 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
 
@@ -15,6 +16,16 @@ interface UseEstimateImportExportControllerParams {
 
 function formatFileSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} МБ`;
+}
+
+function createImportPathname(estimateId: string, fileName: string) {
+  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
+  const uniquePart =
+    typeof crypto !== "undefined" && "randomUUID" in crypto
+      ? crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+
+  return `estimate-imports/${estimateId}/${uniquePart}-${safeFileName}`;
 }
 
 export function useEstimateImportExportController({
@@ -71,44 +82,19 @@ export function useEstimateImportExportController({
             description: "Загружаем большой Excel-файл в хранилище.",
           });
 
-          const uploadResponse = await fetch(
-            `/api/estimates/${estimateId}/import/upload?filename=${encodeURIComponent(file.name)}`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": file.type || XLSX_CONTENT_TYPE,
-                "Content-Length": String(file.size),
-              },
-              body: file,
-            },
-          );
-
-          if (!uploadResponse.ok) {
-            let message = "Не удалось загрузить файл импорта.";
-            try {
-              const payload = (await uploadResponse.json()) as { message?: string };
-              if (payload?.message) {
-                message = payload.message;
+          const blob = await upload(createImportPathname(estimateId, file.name), file, {
+            access: "private",
+            handleUploadUrl: `/api/estimates/${estimateId}/import/upload`,
+            contentType: file.type || XLSX_CONTENT_TYPE,
+            multipart: true,
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.percentage === 100) {
+                toast({
+                  title: "Файл загружен",
+                  description: "Обрабатываем Excel-файл и обновляем смету.",
+                });
               }
-            } catch {
-              void 0;
-            }
-
-            throw new Error(message);
-          }
-
-          const uploadedBlob = (await uploadResponse.json()) as {
-            pathname?: string;
-            url?: string;
-          };
-
-          if (!uploadedBlob.pathname && !uploadedBlob.url) {
-            throw new Error("Файл загружен, но ссылка на него не получена.");
-          }
-
-          toast({
-            title: "Файл загружен",
-            description: "Обрабатываем Excel-файл и обновляем смету.",
+            },
           });
 
           response = await fetch(`/api/estimates/${estimateId}/import`, {
@@ -117,8 +103,8 @@ export function useEstimateImportExportController({
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              pathname: uploadedBlob.pathname,
-              url: uploadedBlob.url,
+              pathname: blob.pathname,
+              url: blob.url,
             }),
           });
         }
