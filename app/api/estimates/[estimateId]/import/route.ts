@@ -14,10 +14,18 @@ async function readImportFileBuffer(request: NextRequest) {
   const contentType = request.headers.get("content-type") ?? "";
 
   if (contentType.includes("application/json")) {
-    const payload = (await request.json()) as { pathname?: unknown };
-    const pathname = typeof payload.pathname === "string" ? payload.pathname : "";
+    const payload = (await request.json()) as {
+      pathname?: unknown;
+      url?: unknown;
+    };
+    const blobRef =
+      typeof payload.pathname === "string"
+        ? payload.pathname
+        : typeof payload.url === "string"
+          ? payload.url
+          : "";
 
-    if (!pathname) {
+    if (!blobRef) {
       return {
         success: false as const,
         response: NextResponse.json(
@@ -27,7 +35,7 @@ async function readImportFileBuffer(request: NextRequest) {
       };
     }
 
-    if (!pathname.toLocaleLowerCase().endsWith(".xlsx")) {
+    if (!blobRef.toLocaleLowerCase().includes(".xlsx")) {
       return {
         success: false as const,
         response: NextResponse.json(
@@ -37,7 +45,7 @@ async function readImportFileBuffer(request: NextRequest) {
       };
     }
 
-    const blob = await get(pathname, { access: "private" });
+    const blob = await get(blobRef, { access: "private" });
 
     if (blob?.statusCode !== 200 || !blob.stream) {
       return {
