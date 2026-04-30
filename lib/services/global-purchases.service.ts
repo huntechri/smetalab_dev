@@ -3,9 +3,9 @@ import { z } from 'zod';
 import { db } from '@/lib/data/db/drizzle';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { globalPurchases, materialSuppliers, materials, projects } from '@/lib/data/db/schema';
-import { getTodayIsoLocal, addDaysToIsoDate } from '@/features/global-purchases/lib/date';
+import { getTodayIsoLocal, addDaysToIsoDate } from '@/lib/domain/global-purchases/date';
 import { error, Result, success } from '@/lib/utils/result';
-import type { PurchaseRow } from '@/features/global-purchases/types/dto';
+import type { PurchaseRow } from '@/shared/types/domain/purchase-row';
 import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const nonNegative = z.number().finite().min(0);
