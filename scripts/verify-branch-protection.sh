@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 # verify-branch-protection.sh
 #
-# Queries the GitHub Rulesets API (and optionally the legacy branch-protection
-# API) for a repository and asserts that the expected protections are active.
+# Queries the GitHub repo-level Rulesets API for a repository and asserts that
+# the expected main-protection ruleset is active.
 #
 # Exits 0 on success, non-zero if any assertion fails.
 #
 # Prerequisites:
 #   - curl   (brew install curl / apt-get install curl)
 #   - jq     (brew install jq / apt-get install jq)
-#   - GH_TOKEN env var with at least "repo" read access
+#   - GH_TOKEN env var with at least repo read access
 #
 # Usage:
 #   ./scripts/verify-branch-protection.sh [owner/repo]
@@ -18,16 +18,14 @@
 
 set -euo pipefail
 
-# ── Dependency check ────────────────────────────────────────────────────────
 MISSING_DEPS=()
 command -v curl &>/dev/null || MISSING_DEPS+=("curl")
-command -v jq   &>/dev/null || MISSING_DEPS+=("jq")
+command -v jq &>/dev/null || MISSING_DEPS+=("jq")
 if [ ${#MISSING_DEPS[@]} -gt 0 ]; then
   echo "Error: missing required tools: ${MISSING_DEPS[*]}" >&2
   exit 1
 fi
 
-# ── Resolve repository ───────────────────────────────────────────────────────
 if [ -n "${1:-}" ]; then
   REPO_FULL="$1"
 else
@@ -46,7 +44,6 @@ REPO_NAME="${REPO_FULL##*/}"
 echo "Repository : ${OWNER}/${REPO_NAME}"
 echo ""
 
-# ── Resolve GitHub token ─────────────────────────────────────────────────────
 if [ -z "${GH_TOKEN:-}" ]; then
   if command -v gh &>/dev/null; then
     GH_TOKEN=$(gh auth token 2>/dev/null || true)
@@ -58,7 +55,6 @@ if [ -z "${GH_TOKEN:-}" ]; then
   exit 1
 fi
 
-# ── Shared curl helper ───────────────────────────────────────────────────────
 gh_api() {
   curl -sf \
     -H "Authorization: Bearer ${GH_TOKEN}" \
@@ -71,28 +67,18 @@ PASS=0
 FAIL=0
 WARN=0
 
-assert_pass() { echo "  [PASS] $*"; PASS=$((PASS+1)); }
-assert_fail() { echo "  [FAIL] $*" >&2; FAIL=$((FAIL+1)); }
-assert_warn() { echo "  [WARN] $*"; WARN=$((WARN+1)); }
+assert_pass() { echo "  [PASS] $*"; PASS=$((PASS + 1)); }
+assert_fail() { echo "  [FAIL] $*" >&2; FAIL=$((FAIL + 1)); }
+assert_warn() { echo "  [WARN] $*"; WARN=$((WARN + 1)); }
 
-# ── Check 1: Rulesets API — 'main-protection' ruleset exists and is active ──
-echo "=== Check 1: Repo-level rulesets ==="
+echo "=== Check 1: repo-level main-protection ruleset ==="
 RULESETS=$(gh_api "https://api.github.com/repos/${OWNER}/${REPO_NAME}/rulesets" 2>/dev/null || echo "[]")
 
 RULESET=$(echo "$RULESETS" \
   | jq -r '.[] | select(.name == "main-protection")' 2>/dev/null || true)
 
 if [ -z "$RULESET" ]; then
-  # No repo-level ruleset found — check org-level rulesets instead (they apply
-  # to all repos in the org and may satisfy the requirement)
-  echo "  No repo-level 'main-protection' ruleset found; checking org-level rulesets..."
-  ORG_RULESETS=$(gh_api "https://api.github.com/orgs/${OWNER}/rulesets" 2>/dev/null || echo "[]")
-  RULESET=$(echo "$ORG_RULESETS" \
-    | jq -r '.[] | select(.name == "main-protection" or .name == "org-main-protection")' 2>/dev/null || true)
-fi
-
-if [ -z "$RULESET" ]; then
-  assert_fail "No active 'main-protection' (repo or org level) ruleset found."
+  assert_fail "No repo-level 'main-protection' ruleset found."
 else
   ENFORCEMENT=$(echo "$RULESET" | jq -r '.enforcement' 2>/dev/null || echo "unknown")
   if [ "$ENFORCEMENT" = "active" ]; then
@@ -101,15 +87,11 @@ else
     assert_fail "Ruleset found but enforcement='${ENFORCEMENT}' (expected 'active')."
   fi
 
-  # ── Check 2: required_status_checks rule present ──────────────────────────
+  RULESET_ID=$(echo "$RULESET" | jq -r '.id')
+  RULESET_DETAIL=$(gh_api "https://api.github.com/repos/${OWNER}/${REPO_NAME}/rulesets/${RULESET_ID}" 2>/dev/null || echo "{}")
+
   echo ""
   echo "=== Check 2: required_status_checks rule ==="
-  RULESET_ID=$(echo "$RULESET" | jq -r '.id')
-  # Fetch full ruleset detail (list endpoint omits rules array)
-  RULESET_DETAIL=$(gh_api "https://api.github.com/repos/${OWNER}/${REPO_NAME}/rulesets/${RULESET_ID}" 2>/dev/null \
-    || gh_api "https://api.github.com/orgs/${OWNER}/rulesets/${RULESET_ID}" 2>/dev/null \
-    || echo "{}")
-
   STATUS_CHECK_RULE=$(echo "$RULESET_DETAIL" \
     | jq '.rules // [] | map(select(.type == "required_status_checks")) | first' 2>/dev/null || echo "null")
 
@@ -118,7 +100,6 @@ else
   else
     assert_pass "'required_status_checks' rule is present."
 
-    # ── Check 3: 'All Checks Passed' context is required ─────────────────────
     echo ""
     echo "=== Check 3: 'All Checks Passed' context ==="
     ALL_CHECKS_PRESENT=$(echo "$STATUS_CHECK_RULE" \
@@ -131,7 +112,6 @@ else
       assert_fail "'All Checks Passed' is NOT in the required_status_checks list."
     fi
 
-    # ── Check 4: strict_required_status_checks_policy ────────────────────────
     echo ""
     echo "=== Check 4: strict policy (branch must be up to date) ==="
     STRICT=$(echo "$STATUS_CHECK_RULE" \
@@ -143,30 +123,32 @@ else
     fi
   fi
 
-  # ── Check 5: pull_request rule (at least 1 approving review) ─────────────
-  # This is advisory: the org-level ruleset (org-main-protection.json) does not
-  # include a pull_request rule, so absence is reported as a warning rather than
-  # a fatal failure.  Add a pull_request rule to the ruleset JSON to promote this
-  # to a hard assertion.
   echo ""
-  echo "=== Check 5: pull_request review requirement (advisory) ==="
+  echo "=== Check 5: pull_request review requirement ==="
   PR_RULE=$(echo "$RULESET_DETAIL" \
     | jq '.rules // [] | map(select(.type == "pull_request")) | first' 2>/dev/null || echo "null")
 
   if [ "$PR_RULE" = "null" ] || [ -z "$PR_RULE" ]; then
-    assert_warn "No 'pull_request' rule found — PRs may be merged without a required review. Add a pull_request rule to the ruleset to enforce review requirements."
+    assert_warn "No 'pull_request' rule found — PRs may be merged without a required review."
   else
     REVIEW_COUNT=$(echo "$PR_RULE" \
       | jq -r '.parameters.required_approving_review_count // 0' 2>/dev/null || echo "0")
     if [ "$REVIEW_COUNT" -ge 1 ]; then
       assert_pass "At least ${REVIEW_COUNT} approving review(s) required."
     else
-      assert_warn "required_approving_review_count is 0 — PRs can merge without review. Increase to at least 1 in the ruleset definition."
+      assert_warn "required_approving_review_count is 0 — PRs can merge without review."
+    fi
+
+    CODE_OWNER_REVIEW=$(echo "$PR_RULE" \
+      | jq -r '.parameters.require_code_owner_review // false' 2>/dev/null || echo "false")
+    if [ "$CODE_OWNER_REVIEW" = "true" ]; then
+      assert_pass "require_code_owner_review is true."
+    else
+      assert_warn "require_code_owner_review is false."
     fi
   fi
 fi
 
-# ── Summary ──────────────────────────────────────────────────────────────────
 echo ""
 echo "=============================="
 echo "Results: ${PASS} passed, ${FAIL} failed, ${WARN} warnings"
