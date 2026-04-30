@@ -96,6 +96,7 @@ jobs:
             const topTable = highPriorityRows
               ? `| Severity | Category | Surface | Location | Token |\n| --- | --- | --- | --- | --- |\n${highPriorityRows}`
               : '_No high-priority findings._';
+            const roots = Array.isArray(report.scanRoots) ? report.scanRoots.map((root) => `\`${root}\``).join(', ') : '_not reported_';
             const body = `${marker}
             ## UI Visual Audit report
 
@@ -103,6 +104,10 @@ jobs:
 
             - Scanned files: ${report.scannedFiles}
             - Total findings: ${report.totalFindings}
+            - Scan roots: ${roots}
+
+            ### Scanned root counts
+            ${formatCounts(report.scannedRootCounts)}
 
             ### Severity counts
             ${formatCounts(report.severityCounts)}
