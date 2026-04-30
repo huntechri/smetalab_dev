@@ -52,6 +52,11 @@ export function useEstimateImportExportController({
         let response: Response;
 
         if (file.size <= DIRECT_IMPORT_FILE_SIZE_BYTES) {
+          toast({
+            title: "Импорт запущен",
+            description: "Загружаем Excel-файл и обновляем смету.",
+          });
+
           const formData = new FormData();
           formData.append("file", file);
 
@@ -60,9 +65,22 @@ export function useEstimateImportExportController({
             body: formData,
           });
         } else {
+          toast({
+            title: "Импорт запущен",
+            description: "Загружаем большой Excel-файл в хранилище.",
+          });
+
           const blob = await upload(`estimate-imports/${estimateId}/${file.name}`, file, {
             access: "private",
             handleUploadUrl: `/api/estimates/${estimateId}/import/upload`,
+            onUploadProgress: (progressEvent) => {
+              if (progressEvent.percentage === 100) {
+                toast({
+                  title: "Файл загружен",
+                  description: "Обрабатываем Excel-файл и обновляем смету.",
+                });
+              }
+            },
           });
 
           response = await fetch(`/api/estimates/${estimateId}/import`, {
@@ -70,7 +88,10 @@ export function useEstimateImportExportController({
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ pathname: blob.pathname }),
+            body: JSON.stringify({
+              pathname: blob.pathname,
+              url: blob.url,
+            }),
           });
         }
 
