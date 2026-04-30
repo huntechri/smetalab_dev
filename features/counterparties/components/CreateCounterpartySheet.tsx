@@ -5,7 +5,7 @@ import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
-import { DirectoryEntitySheetShell } from "@/features/directories";
+import { DirectoryEntitySheetShell } from "@/features/_shared/directories";
 import { type CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { useCounterpartySheetForm } from "@/features/counterparties/hooks/useCounterpartySheetForm";
 import {
