@@ -46,7 +46,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         console.info("Estimate import blob upload completed", {
           pathname: blob.pathname,
           contentType: blob.contentType,
-          size: blob.size,
+          url: blob.url,
           tokenPayload,
         });
       },
