@@ -8,7 +8,7 @@ jobs:
     name: Apply Branch Protection Ruleset
     runs-on: ubuntu-latest
     permissions:
-      administration: write
+      contents: read
 
     steps:
       - name: Checkout repository
@@ -16,11 +16,17 @@ jobs:
 
       - name: Apply full main-protection ruleset via Rulesets API
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
+
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "BRANCH_PROTECTION_TOKEN secret is required to create or update repo rulesets." >&2
+            echo "Create a fine-grained PAT with repository Administration read/write access and save it as BRANCH_PROTECTION_TOKEN." >&2
+            exit 1
+          fi
 
           RULESET_FILE=".github/rulesets/main-protection.json"
           API_BASE="/repos/${OWNER}/${REPO}/rulesets"
@@ -69,10 +75,14 @@ jobs:
 
       - name: Verify ruleset was applied
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.BRANCH_PROTECTION_TOKEN }}
           OWNER: ${{ github.repository_owner }}
           REPO: ${{ github.event.repository.name }}
         run: |
           set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "BRANCH_PROTECTION_TOKEN secret is required to verify repo rulesets." >&2
+            exit 1
+          fi
           chmod +x ./scripts/verify-branch-protection.sh
           ./scripts/verify-branch-protection.sh "${OWNER}/${REPO}"
