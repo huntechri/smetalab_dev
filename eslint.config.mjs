@@ -72,19 +72,17 @@ export default [
                             group: ["@/components/ui/*"],
                             message: "Import from '@/shared/ui/*' instead of '@/components/ui/*'.",
                         },
+                        {
+                            group: ["@radix-ui/*"],
+                            message: "Use project primitives from '@/shared/ui/*'. Direct Radix imports belong only in the shared/ui primitive layer.",
+                        },
                     ],
                 },
             ],
         },
     },
     {
-        files: [
-            "app/**/*.{ts,tsx,js,jsx}",
-            "features/**/*.{ts,tsx,js,jsx}",
-            "entities/**/*.{ts,tsx,js,jsx}",
-            "components/**/*.{ts,tsx,js,jsx}",
-            "lib/**/*.{ts,tsx,js,jsx}",
-        ],
+        files: ["components/**/*.{ts,tsx,js,jsx}", "lib/**/*.{ts,tsx,js,jsx}"],
         ignores: ["components/shadcn-studio/**/*", "__tests__/**/*"],
         rules: {
             "no-restricted-imports": [
