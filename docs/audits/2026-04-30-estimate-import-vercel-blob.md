@@ -25,3 +25,13 @@ Validation checklist:
 3. Confirm that the larger file no longer shows the old 4 MB blocking toast.
 4. Confirm that Vercel logs no longer show `FUNCTION_PAYLOAD_TOO_LARGE` for the import flow.
 5. Confirm that rows reload and the existing success toast is shown after import.
+
+## Blob token redeploy trigger
+
+Triggered a fresh PR preview deployment after connecting the new private Blob Store:
+
+- Store ID: `store_eyWkV0K8MW3p7jHB`
+- Region: `FRA1`
+- Access: `private`
+- Base URL: `https://eywkv0k8mw3p7jhb.private.blob.vercel-storage.com`
+- Triggered at: `2026-04-30T09:45:00Z`
