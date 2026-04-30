@@ -3,8 +3,8 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimateRoomParams, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
-import { roomParamSaveArraySchema, RoomParamSaveInput } from '@/features/projects/estimates/schemas/room-params.schema';
-import { EstimateRoomParam } from '@/features/projects/estimates/types/room-params.dto';
+import { roomParamSaveArraySchema, RoomParamSaveInput } from '@/shared/types/domain/estimate-room-params';
+import { EstimateRoomParam } from '@/shared/types/domain/estimate-room-params';
 
 const ensureEstimateAccess = async (teamId: number, estimateId: string) => db.query.estimates.findFirst({
     where: and(eq(estimates.id, estimateId), withActiveTenant(estimates, teamId)),
