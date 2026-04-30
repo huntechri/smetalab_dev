@@ -4,6 +4,13 @@ import { getTeamForUser, getUser } from "@/lib/data/db/queries";
 
 const MAX_IMPORT_FILE_SIZE_BYTES = 25 * 1024 * 1024;
 
+const XLSX_CONTENT_TYPES = [
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/octet-stream",
+  "application/zip",
+  "application/x-zip-compressed",
+];
+
 export async function POST(request: Request): Promise<NextResponse> {
   const body = (await request.json()) as HandleUploadBody;
 
@@ -33,6 +40,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         });
 
         return {
+          allowedContentTypes: XLSX_CONTENT_TYPES,
           maximumSizeInBytes: MAX_IMPORT_FILE_SIZE_BYTES,
           addRandomSuffix: true,
           tokenPayload: JSON.stringify({
