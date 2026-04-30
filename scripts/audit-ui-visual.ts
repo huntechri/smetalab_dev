@@ -3,7 +3,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 
 type Severity = "critical" | "high" | "medium" | "low"
-type Surface = "app" | "shared-ui" | "feature" | "entity" | "component" | "package" | "unknown"
+type Surface = "app" | "shared-ui" | "feature" | "entity" | "component" | "package" | "style" | "unknown"
 
 interface Finding {
   filePath: string
@@ -17,7 +17,9 @@ interface Finding {
 
 interface AuditReport {
   generatedAt: string
+  scanRoots: string[]
   scannedFiles: number
+  scannedRootCounts: Record<string, number>
   totalFindings: number
   severityCounts: Record<Severity, number>
   categoryCounts: Record<string, number>
@@ -41,7 +43,7 @@ interface PatternRule {
 }
 
 const ROOT = process.cwd()
-const SCAN_ROOTS = ["app", "components", "entities", "features", "shared", "packages"]
+const SCAN_ROOTS = ["app", "components", "entities", "features", "shared", "packages", "styles", "widgets"]
 const EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css"])
 const REPORT_JSON_PATH = path.join(ROOT, "reports", "ui-visual-audit.json")
 const REPORT_MD_PATH = path.join(ROOT, "reports", "ui-visual-audit.md")
@@ -107,6 +109,10 @@ function isExcludedPath(relativePath: string): boolean {
   return relativePath.split("/").some((segment) => EXCLUDED_SEGMENTS.has(segment))
 }
 
+function getRootName(relativePath: string): string {
+  return relativePath.split("/")[0] || "unknown"
+}
+
 function classifySurface(relativePath: string): Surface {
   if (relativePath.startsWith("shared/ui/")) return "shared-ui"
   if (relativePath.startsWith("app/")) return "app"
@@ -114,6 +120,7 @@ function classifySurface(relativePath: string): Surface {
   if (relativePath.startsWith("entities/")) return "entity"
   if (relativePath.startsWith("components/")) return "component"
   if (relativePath.startsWith("packages/")) return "package"
+  if (relativePath.startsWith("styles/")) return "style"
   return "unknown"
 }
 
@@ -129,6 +136,7 @@ function isCanonicalTokenFile(relativePath: string): boolean {
 
 function isMarketingOrAuthSurface(relativePath: string): boolean {
   return (
+    relativePath === "app/page.tsx" ||
     relativePath.includes("/(login)/") ||
     relativePath.includes("/(marketing)/") ||
     relativePath.includes("/landing") ||
@@ -136,7 +144,14 @@ function isMarketingOrAuthSurface(relativePath: string): boolean {
     relativePath.startsWith("app/(login)/") ||
     relativePath.startsWith("app/(marketing)/") ||
     relativePath.startsWith("app/login/") ||
-    relativePath.startsWith("app/register/")
+    relativePath.startsWith("app/register/") ||
+    relativePath.startsWith("app/pricing/") ||
+    relativePath.startsWith("app/sign-in/") ||
+    relativePath.startsWith("app/sign-up/") ||
+    relativePath.startsWith("app/forgot-password/") ||
+    relativePath.startsWith("app/reset-password/") ||
+    relativePath.startsWith("app/verify-email/") ||
+    relativePath.startsWith("app/invitations/")
   )
 }
 
@@ -373,16 +388,29 @@ function countBySurface(findings: Finding[]): Record<Surface, number> {
     entity: 0,
     component: 0,
     package: 0,
+    style: 0,
     unknown: 0,
   }
   for (const finding of findings) counts[finding.surface] += 1
   return counts
 }
 
-function createReport(scannedFiles: number, findings: Finding[]): AuditReport {
+function countScannedRoots(files: string[]): Record<string, number> {
+  const counts = Object.fromEntries(SCAN_ROOTS.map((root) => [root, 0])) as Record<string, number>
+  for (const filePath of files) {
+    const relativePath = toPosix(path.relative(ROOT, filePath))
+    const rootName = getRootName(relativePath)
+    counts[rootName] = (counts[rootName] ?? 0) + 1
+  }
+  return counts
+}
+
+function createReport(files: string[], findings: Finding[]): AuditReport {
   return {
     generatedAt: new Date().toISOString(),
-    scannedFiles,
+    scanRoots: SCAN_ROOTS,
+    scannedFiles: files.length,
+    scannedRootCounts: countScannedRoots(files),
     totalFindings: findings.length,
     severityCounts: countBySeverity(findings),
     categoryCounts: countBy(findings, (finding) => finding.category),
@@ -443,6 +471,12 @@ Generated at: ${report.generatedAt}
 - Scanned files: ${report.scannedFiles}
 - Total findings: ${report.totalFindings}
 
+## Scan coverage
+
+Roots: ${report.scanRoots.map((root) => `\`${root}\``).join(", ")}
+
+${formatCounts(report.scannedRootCounts)}
+
 ## Findings by severity
 
 ${formatCounts(report.severityCounts)}
@@ -457,10 +491,10 @@ ${formatCounts(report.surfaceCounts)}
 
 ## Source-of-truth notes
 
-- Runtime source is the source of truth for this audit: app/globals.css, app/layout.tsx, shared/ui/**, features/**, entities/**, components/ui/**, packages/ui/**, and existing audit/package scripts.
+- Runtime source is the source of truth for this audit: app/globals.css, app/layout.tsx, shared/ui/**, features/**, entities/**, components/ui/**, packages/ui/**, styles/**, widgets/**, and existing audit/package scripts.
 - docs/DESIGN_SYSTEM.md is classified as stale-reference for this phase and is not scanned as source of truth.
 - Canonical token/primitive and compatibility surfaces remain reported, but findings there are intentionally lower severity than business runtime drift.
-- Marketing/auth surfaces remain reported as exception candidates with downgraded severity.
+- Marketing/auth surfaces, including app/page.tsx and auth/pricing routes, remain reported as exception candidates with downgraded severity.
 
 ## Top high-priority findings
 
@@ -506,7 +540,7 @@ function main(): void {
 
   for (const filePath of files) scanFile(filePath, findings, seen)
 
-  const report = createReport(files.length, findings)
+  const report = createReport(files, findings)
   if (options.report) writeReports(report)
 
   console.log(`UI visual audit complete. Scanned ${report.scannedFiles} file(s), found ${report.totalFindings} finding(s).`)
