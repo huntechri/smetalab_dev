@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { WorksService } from '@/lib/domain/works/works.service';
 import { MaterialsService } from '@/lib/domain/materials/materials.service';
 import { Result, error, success } from '@/lib/utils/result';
-import { CatalogMaterial, CatalogWork } from '@/features/catalog/types/dto';
+import { CatalogMaterial, CatalogWork } from '@/shared/types/domain/catalog';
 
 const searchInputSchema = z.object({
     query: z.string().trim().max(200).optional().default(''),
