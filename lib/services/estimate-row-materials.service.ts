@@ -5,7 +5,7 @@ import { db } from '@/lib/data/db/drizzle';
 import { estimateRows, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
-import type { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { EstimateRow } from '@/shared/types/domain/estimate';
 import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
 const addMaterialSchema = z.object({
