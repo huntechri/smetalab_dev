@@ -46,32 +46,92 @@ const IMPORTANT_CATEGORY_ORDER: Record<string, number> = {
   "arbitrary-layout-overlap": 8,
 }
 
+function isEstimatePath(finding: Finding): boolean {
+  return (
+    finding.filePath.startsWith("features/projects/estimates/") ||
+    finding.filePath.startsWith("features/estimates/") ||
+    /^app\/.*estimates/.test(finding.filePath)
+  )
+}
+
+function includesAny(filePath: string, parts: string[]): boolean {
+  return parts.some((part) => filePath.includes(part))
+}
+
 const FOCUS_AREAS: FocusArea[] = [
   {
     id: "estimate-module",
     title: "Estimate module / smeta",
-    matches: (finding) =>
-      finding.filePath.startsWith("features/projects/estimates/") ||
-      finding.filePath.startsWith("features/estimates/") ||
-      /^app\/.*estimates/.test(finding.filePath),
+    matches: isEstimatePath,
   },
   {
-    id: "estimate-tabs",
-    title: "Estimate details shell and tabs",
+    id: "estimate-shell-tabs-navigation",
+    title: "Estimate shell and tab navigation",
     matches: (finding) =>
-      finding.filePath.includes("features/projects/estimates/screens/EstimateDetailsShell") ||
-      finding.filePath.includes("features/projects/estimates/components/tabs/") ||
-      finding.filePath.includes("features/projects/estimates/screens/EstimateParametersScreen") ||
-      finding.filePath.includes("features/projects/estimates/screens/EstimatePurchasesScreen") ||
-      finding.filePath.includes("features/projects/estimates/screens/EstimateAccomplishmentScreen") ||
-      finding.filePath.includes("features/projects/estimates/screens/EstimateDocsScreen"),
+      includesAny(finding.filePath, [
+        "features/projects/estimates/screens/EstimateDetailsShell",
+        "features/projects/estimates/layouts/EstimateDetailsLayout",
+        "features/projects/estimates/components/EstimateHeader",
+      ]),
   },
   {
     id: "estimate-table",
-    title: "Estimate table",
+    title: "Estimate table / Смета tab",
     matches: (finding) =>
-      finding.filePath.includes("features/projects/estimates/components/table/") ||
-      finding.filePath.includes("EstimateTable"),
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/table/",
+        "features/projects/estimates/components/EstimateTable",
+        "features/projects/estimates/screens/EstimateDetailsShell",
+      ]) && !includesAny(finding.filePath, ["components/tabs/", "EstimateExecution", "EstimateProcurement", "EstimateFinance"]),
+  },
+  {
+    id: "estimate-execution",
+    title: "Estimate Execution / Выполнение tab",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/tabs/EstimateExecution",
+        "features/projects/estimates/screens/EstimateAccomplishmentScreen",
+        "features/projects/estimates/types/execution",
+      ]),
+  },
+  {
+    id: "estimate-procurement",
+    title: "Estimate Procurement / Закупки tab",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/tabs/EstimateProcurement",
+        "features/projects/estimates/screens/EstimatePurchasesScreen",
+        "features/projects/estimates/types/procurement",
+      ]) ||
+      (isEstimatePath(finding) && includesAny(finding.filePath.toLowerCase(), ["procurement", "purchase", "purchases"])),
+  },
+  {
+    id: "estimate-finance",
+    title: "Estimate Finance / Финансы tab",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/tabs/EstimateFinance",
+        "features/projects/estimates/types/finance",
+      ]) || (isEstimatePath(finding) && finding.filePath.toLowerCase().includes("finance")),
+  },
+  {
+    id: "estimate-params",
+    title: "Estimate Params / Параметры tab",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/tabs/EstimateParams",
+        "features/projects/estimates/screens/EstimateParametersScreen",
+        "features/projects/estimates/types/room-params",
+      ]) || (isEstimatePath(finding) && includesAny(finding.filePath.toLowerCase(), ["params", "parameters", "room-params"])),
+  },
+  {
+    id: "estimate-docs",
+    title: "Estimate Docs / Документы tab",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/projects/estimates/components/tabs/EstimateDocuments",
+        "features/projects/estimates/screens/EstimateDocsScreen",
+      ]) || (isEstimatePath(finding) && finding.filePath.toLowerCase().includes("doc")),
   },
   {
     id: "dashboard-cards-charts",
