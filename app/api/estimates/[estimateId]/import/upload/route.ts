@@ -1,84 +1,66 @@
-import { put } from "@vercel/blob";
-import { NextRequest, NextResponse } from "next/server";
+import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
+import { NextResponse } from "next/server";
 import { getTeamForUser, getUser } from "@/lib/data/db/queries";
 
 const MAX_IMPORT_FILE_SIZE_BYTES = 25 * 1024 * 1024;
-const XLSX_CONTENT_TYPE =
-  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
-function createSafePathname(estimateId: string, fileName: string) {
-  const safeFileName = fileName.replace(/[^a-zA-Z0-9._-]/g, "-");
-  const uniquePart = crypto.randomUUID();
+const XLSX_CONTENT_TYPES = [
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/octet-stream",
+  "application/zip",
+  "application/x-zip-compressed",
+];
 
-  return `estimate-imports/${estimateId}/${uniquePart}-${safeFileName}`;
-}
+export async function POST(request: Request): Promise<NextResponse> {
+  const body = (await request.json()) as HandleUploadBody;
 
-export async function POST(
-  request: NextRequest,
-  context: { params: Promise<{ estimateId: string }> },
-): Promise<NextResponse> {
   try {
-    const user = await getUser();
-    if (!user) {
-      return NextResponse.json(
-        { success: false, message: "Пользователь не найден" },
-        { status: 401 },
-      );
-    }
+    const jsonResponse = await handleUpload({
+      body,
+      request,
+      onBeforeGenerateToken: async (pathname) => {
+        const user = await getUser();
+        if (!user) {
+          throw new Error("Пользователь не найден");
+        }
 
-    const team = await getTeamForUser();
-    if (!team) {
-      return NextResponse.json(
-        { success: false, message: "Команда не найдена" },
-        { status: 404 },
-      );
-    }
+        const team = await getTeamForUser();
+        if (!team) {
+          throw new Error("Команда не найдена");
+        }
 
-    const { estimateId } = await context.params;
-    const fileName = request.nextUrl.searchParams.get("filename") ?? "import.xlsx";
-    const sizeHeader = Number(request.headers.get("content-length") ?? 0);
+        if (!pathname.toLocaleLowerCase().endsWith(".xlsx")) {
+          throw new Error("Поддерживается только импорт Excel (.xlsx)");
+        }
 
-    if (!fileName.toLocaleLowerCase().endsWith(".xlsx")) {
-      return NextResponse.json(
-        { success: false, message: "Поддерживается только импорт Excel (.xlsx)" },
-        { status: 400 },
-      );
-    }
+        console.info("Estimate import blob token generated", {
+          pathname,
+          teamId: team.id,
+          userId: user.id,
+        });
 
-    if (sizeHeader > MAX_IMPORT_FILE_SIZE_BYTES) {
-      return NextResponse.json(
-        { success: false, message: "Файл импорта слишком большой" },
-        { status: 413 },
-      );
-    }
-
-    if (!request.body) {
-      return NextResponse.json(
-        { success: false, message: "Файл для импорта не найден" },
-        { status: 400 },
-      );
-    }
-
-    const pathname = createSafePathname(estimateId, fileName);
-    const blob = await put(pathname, request.body, {
-      access: "private",
-      contentType: request.headers.get("content-type") || XLSX_CONTENT_TYPE,
-      addRandomSuffix: false,
+        return {
+          allowedContentTypes: XLSX_CONTENT_TYPES,
+          maximumSizeInBytes: MAX_IMPORT_FILE_SIZE_BYTES,
+          addRandomSuffix: true,
+          tokenPayload: JSON.stringify({
+            userId: user.id,
+            teamId: team.id,
+            originalPathname: pathname,
+          }),
+        };
+      },
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        console.info("Estimate import blob upload completed", {
+          pathname: blob.pathname,
+          contentType: blob.contentType,
+          url: blob.url,
+          tokenPayload,
+        });
+      },
     });
 
-    console.info("Estimate import blob uploaded through same-origin route", {
-      pathname: blob.pathname,
-      contentType: blob.contentType,
-      url: blob.url,
-      teamId: team.id,
-      userId: user.id,
-    });
-
-    return NextResponse.json({
-      success: true,
-      pathname: blob.pathname,
-      url: blob.url,
-    });
+    return NextResponse.json(jsonResponse);
   } catch (uploadError) {
     console.error("Estimate import blob upload error:", uploadError);
 
