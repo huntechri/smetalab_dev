@@ -3,9 +3,15 @@
 import { useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
 
+const MAX_IMPORT_FILE_SIZE_BYTES = 4 * 1024 * 1024;
+
 interface UseEstimateImportExportControllerParams {
   estimateId: string;
   reloadRows: () => Promise<void>;
+}
+
+function formatFileSize(bytes: number) {
+  return `${(bytes / 1024 / 1024).toFixed(1)} МБ`;
 }
 
 export function useEstimateImportExportController({
@@ -27,6 +33,15 @@ export function useEstimateImportExportController({
       const file = fileInput.files?.[0];
 
       if (!file) {
+        return;
+      }
+
+      if (file.size > MAX_IMPORT_FILE_SIZE_BYTES) {
+        toast({
+          variant: "destructive",
+          title: "Файл слишком большой",
+          description: `Размер файла ${formatFileSize(file.size)}. Для импорта через текущий API загрузите Excel-файл до ${formatFileSize(MAX_IMPORT_FILE_SIZE_BYTES)}.`,
+        });
         return;
       }
 
