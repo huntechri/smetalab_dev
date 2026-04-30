@@ -5,7 +5,7 @@ import { estimateRows, estimates } from '@/lib/data/db/schema';
 import { withActiveTenant } from '@/lib/data/db/queries';
 import { Result, error, success } from '@/lib/utils/result';
 import { applyEstimateCoefficient } from '@/lib/utils/estimate-coefficient';
-import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateRow } from '@/shared/types/domain/estimate';
 import { EstimateExecutionService } from '@/lib/services/estimate-execution.service';
 import { invalidateHomeDashboardCache } from './home-dashboard-cache';
 
