@@ -92,6 +92,8 @@ const TAILWIND_PALETTE_NAMES = [
 
 const COLOR_PREFIXES = "bg|text|border|ring|from|via|to|fill|stroke|decoration|outline"
 const LAYOUT_PREFIXES = "w|h|min-w|max-w|min-h|max-h|gap|gap-x|gap-y|space-x|space-y|px|py|pt|pr|pb|pl|p|mx|my|mt|mr|mb|ml|m|top|right|bottom|left|inset|translate-x|translate-y"
+const BADGE_SYMBOLS = "Badge|badgeVariants|StatusBadge|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
+const BADGE_STYLE_MARKERS = "rounded-full|rounded-2xl|rounded-xl|inline-flex|items-center|whitespace-nowrap"
 
 function parseArgs(argv: string[]): AuditOptions {
   const args = new Set(argv)
@@ -131,6 +133,16 @@ function isCanonicalTokenFile(relativePath: string): boolean {
     relativePath.startsWith("shared/ui/") ||
     relativePath.startsWith("components/ui/") ||
     relativePath.startsWith("packages/ui/")
+  )
+}
+
+function isCanonicalBadgeFile(relativePath: string): boolean {
+  return (
+    relativePath === "shared/ui/badge.tsx" ||
+    relativePath === "components/ui/badge.tsx" ||
+    relativePath === "packages/ui/src/badge.tsx" ||
+    relativePath.endsWith("/shared/ui/badge.tsx") ||
+    relativePath.endsWith("/components/ui/badge.tsx")
   )
 }
 
@@ -198,6 +210,13 @@ function severityForEntrypoint(filePath: string, surface: Surface, token: string
   return "medium"
 }
 
+function severityForBadge(filePath: string, surface: Surface): Severity {
+  if (isCanonicalBadgeFile(filePath)) return "low"
+  if (isCanonicalTokenFile(filePath)) return "low"
+  if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth("medium", filePath)
+  return "low"
+}
+
 function reasonSuffix(relativePath: string): string {
   if (isCanonicalTokenFile(relativePath)) {
     return " Classified as canonical token/primitive or compatibility surface; keep visible but do not treat as immediate business UI drift."
@@ -229,6 +248,20 @@ const RULES: PatternRule[] = [
     pattern: /\[font-family:[^\]]+\]|\bfont-\[[^\]]+\]|font-family\s*:\s*[^;]+/g,
     reason: "Font ownership should be centralized in app/layout.tsx and app/globals.css, not feature-local UI.",
     getSeverity: severityForFont,
+  },
+  {
+    category: "badge-overlap",
+    defaultSeverity: "medium",
+    pattern: new RegExp(`\\b(?:${BADGE_SYMBOLS})\\b`, "g"),
+    reason: "Badge/status/chip usage is tracked separately. Prefer shared badge variants and avoid feature-local visual recipes.",
+    getSeverity: severityForBadge,
+  },
+  {
+    category: "badge-overlap",
+    defaultSeverity: "medium",
+    pattern: new RegExp(`\\b(?:${BADGE_STYLE_MARKERS})\\b(?=.*\\b(?:${COLOR_PREFIXES})-(?:${TAILWIND_PALETTE_NAMES})-(?:50|100|200|300|400|500|600|700|800|900|950)|.*\\b(?:${COLOR_PREFIXES})-\\[#(?:[0-9a-fA-F]{3,8})\\])`, "g"),
+    reason: "Badge-like pill/chip class recipe with local color styling should be normalized to shared badge variants.",
+    getSeverity: severityForBadge,
   },
   {
     category: "color-overlap",
@@ -495,6 +528,7 @@ ${formatCounts(report.surfaceCounts)}
 - docs/DESIGN_SYSTEM.md is classified as stale-reference for this phase and is not scanned as source of truth.
 - Canonical token/primitive and compatibility surfaces remain reported, but findings there are intentionally lower severity than business runtime drift.
 - Marketing/auth surfaces, including app/page.tsx and auth/pricing routes, remain reported as exception candidates with downgraded severity.
+- Badge/status/chip surfaces are tracked explicitly through badge-overlap to catch duplicated visual recipes beyond generic color/typography findings.
 
 ## Top high-priority findings
 
@@ -506,9 +540,10 @@ ${formatFindingTable(highPriority, 50)}
 2. Normalize estimate tabs visual contract.
 3. Normalize dashboard compact cards colors, borders, and badges.
 4. Normalize permissions matrix palette, radius, and shadow.
-5. Deduplicate delete confirmation wrappers.
-6. Introduce dense table typography utilities.
-7. Enable strict UI visual audit gate after baseline cleanup.
+5. Normalize Badge/status/chip variants and remove feature-local badge recipes.
+6. Deduplicate delete confirmation wrappers.
+7. Introduce dense table typography utilities.
+8. Enable strict UI visual audit gate after baseline cleanup.
 
 ## All findings by severity
 
