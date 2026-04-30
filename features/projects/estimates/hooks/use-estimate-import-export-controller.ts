@@ -1,9 +1,11 @@
 "use client";
 
+import { upload } from "@vercel/blob/client";
 import { useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
 
-const MAX_IMPORT_FILE_SIZE_BYTES = 4 * 1024 * 1024;
+const DIRECT_IMPORT_FILE_SIZE_BYTES = 4 * 1024 * 1024;
+const MAX_IMPORT_FILE_SIZE_BYTES = 25 * 1024 * 1024;
 
 interface UseEstimateImportExportControllerParams {
   estimateId: string;
@@ -40,20 +42,37 @@ export function useEstimateImportExportController({
         toast({
           variant: "destructive",
           title: "Файл слишком большой",
-          description: `Размер файла ${formatFileSize(file.size)}. Для импорта через текущий API загрузите Excel-файл до ${formatFileSize(MAX_IMPORT_FILE_SIZE_BYTES)}.`,
+          description: `Размер файла ${formatFileSize(file.size)}. Максимальный размер импорта — ${formatFileSize(MAX_IMPORT_FILE_SIZE_BYTES)}.`,
         });
         return;
       }
 
-      const formData = new FormData();
-      formData.append("file", file);
-
       try {
         setIsImporting(true);
-        const response = await fetch(`/api/estimates/${estimateId}/import`, {
-          method: "POST",
-          body: formData,
-        });
+        let response: Response;
+
+        if (file.size <= DIRECT_IMPORT_FILE_SIZE_BYTES) {
+          const formData = new FormData();
+          formData.append("file", file);
+
+          response = await fetch(`/api/estimates/${estimateId}/import`, {
+            method: "POST",
+            body: formData,
+          });
+        } else {
+          const blob = await upload(`estimate-imports/${estimateId}/${file.name}`, file, {
+            access: "private",
+            handleUploadUrl: `/api/estimates/${estimateId}/import/upload`,
+          });
+
+          response = await fetch(`/api/estimates/${estimateId}/import`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ pathname: blob.pathname }),
+          });
+        }
 
         if (!response.ok) {
           let message = "Не удалось импортировать смету.";
