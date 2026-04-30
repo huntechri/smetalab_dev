@@ -59,9 +59,12 @@ jobs:
         run: pnpm type-check
       - name: UI Audit
         run: pnpm audit:ui
+      - name: Generate UI Visual Audit domain summary
+        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
+        run: tsx scripts/summarize-ui-visual-audit.ts
       - name: Publish UI Visual Audit summary
-        if: always() && hashFiles('reports/ui-visual-audit.md') != ''
-        run: cat reports/ui-visual-audit.md >> "$GITHUB_STEP_SUMMARY"
+        if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
+        run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI Visual Audit reports
         if: always() && hashFiles('reports/ui-visual-audit.md') != ''
         uses: actions/upload-artifact@v4
@@ -70,56 +73,19 @@ jobs:
           path: |
             reports/ui-visual-audit.json
             reports/ui-visual-audit.md
+            reports/ui-visual-audit-summary.md
           if-no-files-found: error
           retention-days: 14
       - name: Comment UI Visual Audit summary
-        if: always() && github.event_name == 'pull_request' && hashFiles('reports/ui-visual-audit.json') != ''
+        if: always() && github.event_name == 'pull_request' && hashFiles('reports/ui-visual-audit-summary.md') != ''
         continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
             const fs = require('node:fs');
-            const report = JSON.parse(fs.readFileSync('reports/ui-visual-audit.json', 'utf8'));
             const marker = '<!-- ui-visual-audit-summary -->';
-            const formatCounts = (counts) => {
-              const entries = Object.entries(counts || {})
-                .filter(([, count]) => count > 0)
-                .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-              return entries.length > 0 ? entries.map(([name, count]) => `- ${name}: ${count}`).join('\n') : '- none';
-            };
-            const escapeCell = (value) => String(value ?? '').replace(/\|/g, '\\|');
-            const highPriorityRows = (report.findings || [])
-              .filter((finding) => finding.severity === 'critical' || finding.severity === 'high')
-              .slice(0, 20)
-              .map((finding) => `| ${finding.severity} | ${finding.category} | ${finding.surface} | \`${finding.filePath}:${finding.line}\` | \`${escapeCell(finding.token)}\` |`)
-              .join('\n');
-            const topTable = highPriorityRows
-              ? `| Severity | Category | Surface | Location | Token |\n| --- | --- | --- | --- | --- |\n${highPriorityRows}`
-              : '_No high-priority findings._';
-            const roots = Array.isArray(report.scanRoots) ? report.scanRoots.map((root) => `\`${root}\``).join(', ') : '_not reported_';
-            const body = `${marker}
-            ## UI Visual Audit report
-
-            Generated at: ${report.generatedAt}
-
-            - Scanned files: ${report.scannedFiles}
-            - Total findings: ${report.totalFindings}
-            - Scan roots: ${roots}
-
-            ### Scanned root counts
-            ${formatCounts(report.scannedRootCounts)}
-
-            ### Severity counts
-            ${formatCounts(report.severityCounts)}
-
-            ### Category counts
-            ${formatCounts(report.categoryCounts)}
-
-            ### Surface counts
-            ${formatCounts(report.surfaceCounts)}
-
-            ### Top high-priority findings
-            ${topTable}
+            const summary = fs.readFileSync('reports/ui-visual-audit-summary.md', 'utf8');
+            const body = `${summary.trim()}
 
             Artifact: \`ui-visual-audit-${context.runNumber}\``.replace(/^ {12}/gm, '');
             const comments = await github.paginate(github.rest.issues.listComments, {
