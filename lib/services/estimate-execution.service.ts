@@ -12,7 +12,7 @@ import {
     EstimateExecutionRowPatch,
     addExtraExecutionWorkSchema,
     estimateExecutionRowPatchSchema,
-} from '@/features/projects/estimates/types/execution.dto';
+} from '@/shared/types/domain/estimate-execution';
 
 const ensureEstimateAccess = async (teamId: number, estimateId: string) => {
     const estimate = await db.query.estimates.findFirst({
