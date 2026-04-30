@@ -1,4 +1,4 @@
-import { CatalogToolbar, CatalogFiltersUpdater } from "@/features/guide-catalog";
+import { CatalogToolbar, CatalogFiltersUpdater } from "@/features/_shared/guide-catalog";
 import { MaterialsSidebar } from "./MaterialsSidebar";
 
 type MaterialsFilters = {
