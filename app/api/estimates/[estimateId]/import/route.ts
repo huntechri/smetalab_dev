@@ -1,3 +1,4 @@
+import { get } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { getTeamForUser, getUser } from "@/lib/data/db/queries";
 import { EstimateImportService } from "@/lib/services/estimate-import.service";
@@ -7,6 +8,76 @@ export function GET() {
     { success: false, message: "Метод не поддерживается" },
     { status: 405, headers: { Allow: "POST" } },
   );
+}
+
+async function readImportFileBuffer(request: NextRequest) {
+  const contentType = request.headers.get("content-type") ?? "";
+
+  if (contentType.includes("application/json")) {
+    const payload = (await request.json()) as { pathname?: unknown };
+    const pathname = typeof payload.pathname === "string" ? payload.pathname : "";
+
+    if (!pathname) {
+      return {
+        success: false as const,
+        response: NextResponse.json(
+          { success: false, message: "Файл для импорта не найден" },
+          { status: 400 },
+        ),
+      };
+    }
+
+    if (!pathname.toLocaleLowerCase().endsWith(".xlsx")) {
+      return {
+        success: false as const,
+        response: NextResponse.json(
+          { success: false, message: "Поддерживается только импорт Excel (.xlsx)" },
+          { status: 400 },
+        ),
+      };
+    }
+
+    const blob = await get(pathname, { access: "private" });
+
+    if (blob?.statusCode !== 200 || !blob.stream) {
+      return {
+        success: false as const,
+        response: NextResponse.json(
+          { success: false, message: "Файл импорта не найден в хранилище" },
+          { status: 404 },
+        ),
+      };
+    }
+
+    const fileBuffer = Buffer.from(await new Response(blob.stream).arrayBuffer());
+    return { success: true as const, fileBuffer };
+  }
+
+  const formData = await request.formData();
+  const file = formData.get("file");
+
+  if (!(file instanceof File)) {
+    return {
+      success: false as const,
+      response: NextResponse.json(
+        { success: false, message: "Файл для импорта не найден" },
+        { status: 400 },
+      ),
+    };
+  }
+
+  if (!file.name.toLocaleLowerCase().endsWith(".xlsx")) {
+    return {
+      success: false as const,
+      response: NextResponse.json(
+        { success: false, message: "Поддерживается только импорт Excel (.xlsx)" },
+        { status: 400 },
+      ),
+    };
+  }
+
+  const fileBuffer = Buffer.from(await file.arrayBuffer());
+  return { success: true as const, fileBuffer };
 }
 
 export async function POST(
@@ -29,27 +100,16 @@ export async function POST(
     );
   }
 
-  const formData = await request.formData();
-  const file = formData.get("file");
-
-  if (!(file instanceof File)) {
-    return NextResponse.json(
-      { success: false, message: "Файл для импорта не найден" },
-      { status: 400 },
-    );
-  }
-
-  if (!file.name.toLocaleLowerCase().endsWith(".xlsx")) {
-    return NextResponse.json(
-      { success: false, message: "Поддерживается только импорт Excel (.xlsx)" },
-      { status: 400 },
-    );
+  const readFileResult = await readImportFileBuffer(request);
+  if (!readFileResult.success) {
+    return readFileResult.response;
   }
 
   const { estimateId } = await context.params;
 
-  const fileBuffer = Buffer.from(await file.arrayBuffer());
-  const parsedResult = await EstimateImportService.parseXlsx(fileBuffer);
+  const parsedResult = await EstimateImportService.parseXlsx(
+    readFileResult.fileBuffer,
+  );
   if (!parsedResult.success) {
     return NextResponse.json(
       { success: false, message: parsedResult.error.message },
