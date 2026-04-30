@@ -1,5 +1,5 @@
 import type React from 'react';
-import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '../../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '@/shared/types/domain/purchase-row';
 
 export type GlobalPurchasesCardsListProps = {
   rows: PurchaseRow[];

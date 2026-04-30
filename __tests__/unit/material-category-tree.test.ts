@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildMaterialCategoryTree, filterMaterialsByCategoryPath } from '@/features/catalog/lib/material-category-tree';
-import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import type { CatalogMaterial } from '@/shared/types/domain/catalog';
 
 const materials: CatalogMaterial[] = [
     { id: '1', code: 'A', name: 'М1', unit: 'шт', price: 1, categoryLv1: 'L1-A', categoryLv2: 'L2-A', categoryLv3: 'L3-A', categoryLv4: 'L4-A' },

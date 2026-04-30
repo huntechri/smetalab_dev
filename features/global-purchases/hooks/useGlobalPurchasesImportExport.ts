@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import type { ChangeEvent } from 'react';
 import type { ImportablePurchaseRow } from '../lib/import-export';
 import { exportGlobalPurchasesXlsx, parseGlobalPurchasesImportFile } from '../lib/import-export';
-import type { PurchaseRow, PurchaseRowsRange } from '../types/dto';
+import type { PurchaseRow, PurchaseRowsRange } from '@/shared/types/domain/purchase-row';
 
 type ToastPayload = {
   variant?: 'default' | 'destructive';

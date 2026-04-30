@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getSectionTotals, SECTION_WITHOUT_GROUP_ID } from '@/features/projects/estimates/lib/section-totals';
-import { EstimateRow } from '@/features/projects/estimates/types/dto';
+import { EstimateRow } from '@/shared/types/domain/estimate';
 
 describe('getSectionTotals', () => {
     it('groups rows by section boundaries and keeps pre-section bucket', () => {

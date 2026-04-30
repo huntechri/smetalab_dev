@@ -5,10 +5,10 @@ import { FilePlus, PackageSearch } from 'lucide-react';
 import { DataTableToolbar } from '@/shared/ui/data-table/data-table-toolbar';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
-import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import type { CatalogMaterial } from '@/shared/types/domain/catalog';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
-import type { ProjectOption, PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, SupplierOption } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, SupplierOption } from '@/shared/types/domain/purchase-row';
 
 import { useGlobalPurchasesImportExport } from '../hooks/useGlobalPurchasesImportExport';
 import { GlobalPurchasesToolbar } from './GlobalPurchasesToolbar';

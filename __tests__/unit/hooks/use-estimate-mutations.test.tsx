@@ -2,7 +2,7 @@ import type React from 'react';
 import { act, renderHook } from '@testing-library/react';
 import { describe, expect, it, vi, beforeEach } from 'vitest';
 import { useEstimateMutations } from '@/features/projects/estimates/hooks/use-estimate-mutations';
-import type { EstimateMeta } from '@/features/projects/estimates/types/dto';
+import type { EstimateMeta } from '@/shared/types/domain/estimate';
 
 const toastMock = vi.fn();
 

@@ -4,7 +4,7 @@ import {
   DEFAULT_SECTION_ID,
   filterSectionsByQuery,
 } from '@/features/projects/estimates/lib/estimate-cards-table';
-import type { EstimateRow } from '@/features/projects/estimates/types/dto';
+import type { EstimateRow } from '@/shared/types/domain/estimate';
 
 function makeRows(): EstimateRow[] {
   return [

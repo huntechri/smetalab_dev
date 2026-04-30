@@ -17,7 +17,7 @@ vi.mock('@/features/global-purchases/repository/global-purchases.actions', () =>
 }));
 
 import { useGlobalPurchasesTable } from '@/features/global-purchases/hooks/useGlobalPurchasesTable';
-import type { PurchaseRow } from '@/features/global-purchases/types/dto';
+import type { PurchaseRow } from '@/shared/types/domain/purchase-row';
 
 const baseRows: PurchaseRow[] = [
     { id: '1', projectId: null, projectName: '', materialName: 'Цемент', unit: 'шт', qty: 1, price: 100, amount: 100, note: '', source: 'manual', purchaseDate: '2026-01-15', supplierId: null, supplierName: null, supplierColor: null },

@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppToast } from "@/components/providers/use-app-toast";
-import { CatalogWork } from "@/features/catalog/types/dto";
+import { CatalogWork } from "@/shared/types/domain/catalog";
 import {
   addEstimateCoefficientUpdatedListener,
   addEstimateRowsMutatedListener,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calcSlopes, calcWallsArea, calculateTotals, toSafeNumber } from '@/features/projects/estimates/lib/room-params-calculations';
-import { EstimateRoomParamDraft } from '@/features/projects/estimates/types/room-params.dto';
+import { EstimateRoomParamDraft } from '@/shared/types/domain/estimate-room-params';
 
 const baseRow: EstimateRoomParamDraft = {
     id: '1f665de7-1935-4dfe-8718-4fe78a3e6402',

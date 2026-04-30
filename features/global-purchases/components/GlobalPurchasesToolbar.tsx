@@ -12,7 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { cn } from '@/lib/utils';
 
-import type { ProjectOption, PurchaseRowsRange } from '../types/dto';
+import type { ProjectOption, PurchaseRowsRange } from '@/shared/types/domain/purchase-row';
 import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
 import { GlobalPurchasesImportExportActions } from './GlobalPurchasesImportExportActions';
 

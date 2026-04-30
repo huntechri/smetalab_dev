@@ -11,7 +11,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/shared/ui/command';
-import type { ProjectOption, PurchaseRow, PurchaseRowPatch } from '../../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowPatch } from '@/shared/types/domain/purchase-row';
 
 type ProjectPickerProps = {
   row: PurchaseRow;

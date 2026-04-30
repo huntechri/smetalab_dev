@@ -3,7 +3,7 @@
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { TooltipProvider } from '@/shared/ui/tooltip';
 import { GlobalPurchasesView } from '../components/GlobalPurchasesView.client';
-import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '../types/dto';
+import type { ProjectOption, PurchaseRow, PurchaseRowsRange, SupplierOption } from '@/shared/types/domain/purchase-row';
 
 interface GlobalPurchasesScreenProps {
   initialRows: PurchaseRow[];

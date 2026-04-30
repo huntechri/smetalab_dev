@@ -1,7 +1,7 @@
 "use client";
 
 import { useAppToast } from "@/components/providers/use-app-toast";
-import { CatalogMaterial, CatalogWork } from "@/features/catalog/types/dto";
+import { CatalogMaterial, CatalogWork } from "@/shared/types/domain/catalog";
 import { estimatesActionRepo } from "../repository/estimates.actions";
 import { notifyEstimateRowsMutated } from "../lib/estimate-client-events";
 import { EstimateRow } from "../types/dto";

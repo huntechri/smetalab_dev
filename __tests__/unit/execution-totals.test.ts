@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { calculateExecutionTotals } from '@/features/projects/estimates/lib/execution-totals';
-import type { EstimateExecutionRow } from '@/features/projects/estimates/types/execution.dto';
+import type { EstimateExecutionRow } from '@/shared/types/domain/estimate-execution';
 
 function createRow(overrides: Partial<EstimateExecutionRow>): EstimateExecutionRow {
     return {

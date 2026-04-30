@@ -1,4 +1,4 @@
-import { CatalogWork } from '@/features/catalog/types/dto';
+import { CatalogWork } from '@/shared/types/domain/catalog';
 
 type ExtraWorkPayload = {
     name: string;

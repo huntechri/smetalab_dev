@@ -13,7 +13,7 @@ import {
 } from '@/shared/ui/sheet';
 import { Plus } from 'lucide-react';
 import { WorkCatalogPicker } from '@/features/catalog/components/WorkCatalogPicker.client';
-import { CatalogWork } from '@/features/catalog/types/dto';
+import { CatalogWork } from '@/shared/types/domain/catalog';
 
 interface EstimateExecutionAddExtraWorkSheetProps {
     addedWorkNames: Set<string>;

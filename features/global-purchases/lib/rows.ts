@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import type { CatalogMaterial } from '@/features/catalog/types/dto';
+import type { CatalogMaterial } from '@/shared/types/domain/catalog';
 import { getTodayIsoLocal } from './date';
-import type { PurchaseRow, PurchaseRowPatch } from '../types/dto';
+import type { PurchaseRow, PurchaseRowPatch } from '@/shared/types/domain/purchase-row';
 
 const nonNegativeNumber = z.coerce.number().finite().min(0);
 
