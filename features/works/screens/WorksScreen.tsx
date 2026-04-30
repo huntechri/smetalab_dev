@@ -8,7 +8,7 @@ import {
   type CatalogScreenAdapter,
   useCatalogEditFieldChange,
   useCatalogScreenViewState,
-} from '@/features/guide-catalog';
+} from '@/features/_shared/guide-catalog';
 import { WorkRow } from '@/shared/types/domain/work-row';
 import { WorksEditDialog } from '../components/WorksEditDialog';
 import { WorksDeleteDialog } from '../components/WorksDeleteDialog';

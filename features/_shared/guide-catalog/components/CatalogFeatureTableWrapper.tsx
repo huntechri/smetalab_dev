@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
 
-import { CatalogTableWrapper } from "@/features/guide-catalog/components/CatalogTableWrapper";
+import { CatalogTableWrapper } from "@/features/_shared/guide-catalog/components/CatalogTableWrapper";
 import {
   CatalogTableAdapter,
   CatalogTableActions,
-} from "@/features/guide-catalog/types";
+} from "@/features/_shared/guide-catalog/types";
 
 interface CatalogFeatureTableWrapperProps<TData, TValue = unknown> {
   adapter: CatalogTableAdapter<TData, TValue>;

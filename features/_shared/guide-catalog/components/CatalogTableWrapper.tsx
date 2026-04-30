@@ -8,7 +8,7 @@ import { DataTableShell } from "@/shared/ui/shells/data-table-shell";
 import {
   CatalogEmptyStateConfig,
   CatalogTableActions,
-} from "@/features/guide-catalog/types";
+} from "@/features/_shared/guide-catalog/types";
 
 interface CatalogTableWrapperProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

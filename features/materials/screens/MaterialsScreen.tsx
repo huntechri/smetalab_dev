@@ -8,7 +8,7 @@ import {
   type CatalogScreenAdapter,
   useCatalogEditFieldChange,
   useCatalogScreenViewState,
-} from '@/features/guide-catalog';
+} from '@/features/_shared/guide-catalog';
 import { MaterialRow } from '@/shared/types/domain/material-row';
 import { MaterialsEditDialog } from '../components/MaterialsEditDialog';
 import { MaterialsDeleteDialog } from '../components/MaterialsDeleteDialog';
