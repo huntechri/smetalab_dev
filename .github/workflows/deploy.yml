@@ -55,6 +55,19 @@ jobs:
         run: pnpm type-check
       - name: UI Audit
         run: pnpm audit:ui
+      - name: Publish UI Visual Audit summary
+        if: always() && hashFiles('reports/ui-visual-audit.md') != ''
+        run: cat reports/ui-visual-audit.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI Visual Audit reports
+        if: always() && hashFiles('reports/ui-visual-audit.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-visual-audit-${{ github.run_number }}
+          path: |
+            reports/ui-visual-audit.json
+            reports/ui-visual-audit.md
+          if-no-files-found: error
+          retention-days: 14
       - name: Run Unit/Isolated Tests
         run: pnpm test
       - name: Build
