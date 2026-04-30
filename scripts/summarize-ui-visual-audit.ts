@@ -37,13 +37,15 @@ const SEVERITY_ORDER: Record<Finding["severity"], number> = { critical: 0, high:
 const IMPORTANT_CATEGORY_ORDER: Record<string, number> = {
   "ui-entrypoint-overlap": 0,
   "font-overlap": 1,
-  "color-overlap": 2,
-  "radius-overlap": 3,
-  "border-overlap": 4,
-  "shadow-overlap": 5,
-  "typography-overlap": 6,
-  "inline-style-overlap": 7,
-  "arbitrary-layout-overlap": 8,
+  "badge-overlap": 2,
+  "padding-overlap": 3,
+  "color-overlap": 4,
+  "radius-overlap": 5,
+  "border-overlap": 6,
+  "shadow-overlap": 7,
+  "typography-overlap": 8,
+  "inline-style-overlap": 9,
+  "arbitrary-layout-overlap": 10,
 }
 
 function isEstimatePath(finding: Finding): boolean {
@@ -58,11 +60,47 @@ function includesAny(filePath: string, parts: string[]): boolean {
   return parts.some((part) => filePath.includes(part))
 }
 
+function isBadgeFinding(finding: Finding): boolean {
+  const target = `${finding.filePath} ${finding.category} ${finding.token}`.toLowerCase()
+  return (
+    finding.category === "badge-overlap" ||
+    target.includes("badge") ||
+    target.includes("chip") ||
+    target.includes("pill") ||
+    target.includes("status") ||
+    target.includes("статус")
+  )
+}
+
+function isPaddingFinding(finding: Finding): boolean {
+  return finding.category === "padding-overlap"
+}
+
 const FOCUS_AREAS: FocusArea[] = [
+  {
+    id: "badges-status-chips",
+    title: "Badges / status chips / pills",
+    matches: isBadgeFinding,
+  },
+  {
+    id: "internal-padding",
+    title: "Internal padding / component density",
+    matches: isPaddingFinding,
+  },
   {
     id: "estimate-module",
     title: "Estimate module / smeta",
     matches: isEstimatePath,
+  },
+  {
+    id: "estimate-padding-density",
+    title: "Estimate internal padding / density",
+    matches: (finding) => isEstimatePath(finding) && isPaddingFinding(finding),
+  },
+  {
+    id: "estimate-badges-status-chips",
+    title: "Estimate badges / statuses / chips",
+    matches: (finding) => isEstimatePath(finding) && isBadgeFinding(finding),
   },
   {
     id: "estimate-shell-tabs-navigation",
