@@ -3,9 +3,9 @@
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toast } from 'sonner';
 import { Loader2 } from 'lucide-react';
 
+import { notify } from '@/lib/infrastructure/notifications/notify';
 import { Button } from '@/shared/ui/button';
 import {
     Dialog,
@@ -69,15 +69,15 @@ export function CreateEstimateDialog({
             const result = await createEstimateAction(data);
 
             if (result.success) {
-                toast.success('Смета успешно создана');
+                notify({ title: 'Смета успешно создана', intent: 'success' });
                 onOpenChange(false);
                 form.reset();
                 onSuccess?.();
             } else {
-                toast.error(result.error || 'Произошла ошибка');
+                notify({ title: result.error || 'Произошла ошибка', intent: 'error' });
             }
         } catch {
-            toast.error('Произошла непредвиденная ошибка');
+            notify({ title: 'Произошла непредвиденная ошибка', intent: 'error' });
         } finally {
             setIsSubmitting(false);
         }
