@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createProjectSchema } from '@/features/projects';
+import { createProjectSchema } from '@/shared/types/domain/project';
 import { db } from '@/lib/data/db/drizzle';
 import { projects } from '@/lib/data/db/schema';
 import { eq, and } from 'drizzle-orm';
