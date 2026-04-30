@@ -26,23 +26,36 @@ export async function POST(request: Request): Promise<NextResponse> {
           throw new Error("Поддерживается только импорт Excel (.xlsx)");
         }
 
+        console.info("Estimate import blob token generated", {
+          pathname,
+          teamId: team.id,
+          userId: user.id,
+        });
+
         return {
-          allowedContentTypes: [
-            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "application/octet-stream",
-          ],
           maximumSizeInBytes: MAX_IMPORT_FILE_SIZE_BYTES,
           addRandomSuffix: true,
           tokenPayload: JSON.stringify({
             userId: user.id,
             teamId: team.id,
+            originalPathname: pathname,
           }),
         };
+      },
+      onUploadCompleted: async ({ blob, tokenPayload }) => {
+        console.info("Estimate import blob upload completed", {
+          pathname: blob.pathname,
+          contentType: blob.contentType,
+          size: blob.size,
+          tokenPayload,
+        });
       },
     });
 
     return NextResponse.json(jsonResponse);
   } catch (uploadError) {
+    console.error("Estimate import blob upload error:", uploadError);
+
     return NextResponse.json(
       {
         success: false,
