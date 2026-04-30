@@ -165,6 +165,20 @@ Testing model:
 - `pnpm test:integration` is for DB-backed integration tests and depends on a valid database environment;
 - `pnpm verify:release` is the main release verification command and includes architecture/UI audits.
 
+## 💾 Команды работы с БД
+
+The README keeps this section name stable because repository consistency tests verify that documented database commands exist in `package.json`.
+
+```bash
+pnpm db:setup          # prepare database structure when required by the setup flow
+pnpm db:generate       # generate Drizzle migration files after schema changes
+pnpm db:migrate        # apply committed migrations
+pnpm db:seed           # seed database data
+pnpm db:studio         # open Drizzle Studio
+pnpm db:sync           # generate and migrate with production guardrails
+pnpm db:migrate:prod   # explicit production migration alias
+```
+
 ## Database and Migrations
 
 The project uses Postgres with Drizzle ORM.
