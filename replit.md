@@ -42,17 +42,20 @@ pnpm db:seed
 
 ## Key Directories
 - `app/` — Next.js App Router pages and API routes
-- `components/` — Shared UI components (shadcn/ui based)
-- `features/` — Feature-level modules
-- `lib/` — Shared utilities, DB client, auth helpers (re-export from workspace packages where moved)
-- `entities/` — Domain entity types
+- `components/` — Application layout, navigation, providers, and legacy UI compatibility re-exports
+- `features/` — Business feature modules and `features/_shared/**` feature-level shared shells
+- `shared/ui/` — Canonical runtime UI source for app/features/entities/components code
+- `shared/types/` — Client/server-safe DTOs and shared type contracts
+- `lib/` — Data access, domain logic, services, infrastructure adapters, and shared utilities
+- `entities/` — Reusable domain-oriented UI/model building blocks
 - `packages/` — pnpm workspace packages shared across the monorepo
   - `packages/utils` (`@repo/utils`) — Framework-agnostic utilities: `cn`, `Result` types, `slug` helpers
-  - `packages/ui` (`@repo/ui`) — Shared UI component library (re-exports all shadcn/ui components from `shared/ui/`)
+  - `packages/ui` (`@repo/ui`) — Package export compatibility for shared UI components
 - `scripts/` — DB migration, seeding, and dev utilities
 
 ## Monorepo / Workspace Packages
 The project uses a pnpm workspace (`pnpm-workspace.yaml`) with `packages/*` and `apps/*` globs.
 - `@repo/utils` — Shared utilities: `cn`, `success/error` result helpers, and slug generators.
   `lib/utils.ts`, `lib/utils/result.ts`, and `lib/utils/slug.ts` now re-export from this package for backward compatibility.
-- `@repo/ui` — Shared UI component library. Re-exports all ~60 shadcn/ui components from `shared/ui/` through a single barrel export at `packages/ui/src/index.ts`. All app files import UI primitives from `@repo/ui` instead of `@/shared/ui/*`.
+- `@repo/ui` — Package-level export compatibility for shared UI components. Runtime app code should import UI primitives from `@/shared/ui/*`, not from `@repo/ui`.
+- `components/ui/**` — Legacy compatibility layer. New runtime shared UI belongs in `shared/ui/**`.
