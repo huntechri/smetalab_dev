@@ -5,7 +5,7 @@ import {
   primitiveInputBaseClassName,
   primitiveInputSizeClassNames,
   primitiveInputVariantClassNames,
-} from "@/lib/ui/primitive-density"
+} from "@/shared/ui/primitive-density"
 import { cn } from "@/lib/utils"
 
 const inputVariants = cva(primitiveInputBaseClassName, {
