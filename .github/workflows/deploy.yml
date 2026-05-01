@@ -116,7 +116,7 @@ jobs:
         if: always() && hashFiles('reports/isolated-test-db-boundaries.md') != ''
         run: cat reports/isolated-test-db-boundaries.md >> "$GITHUB_STEP_SUMMARY"
       - name: Run Unit/Isolated Tests
-        run: pnpm test
+        run: pnpm exec vitest run --config vitest.config.ts
       - name: Generate Vitest timing summary
         if: always() && hashFiles('test-results/junit*.xml') != ''
         run: pnpm test:diagnostics
