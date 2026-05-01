@@ -48,6 +48,14 @@ const IMPORTANT_CATEGORY_ORDER: Record<string, number> = {
   "arbitrary-layout-overlap": 10,
 }
 
+function includesAny(filePath: string, parts: string[]): boolean {
+  return parts.some((part) => filePath.includes(part))
+}
+
+function lowerPath(finding: Finding): string {
+  return finding.filePath.toLowerCase()
+}
+
 function isEstimatePath(finding: Finding): boolean {
   return (
     finding.filePath.startsWith("features/projects/estimates/") ||
@@ -56,8 +64,16 @@ function isEstimatePath(finding: Finding): boolean {
   )
 }
 
-function includesAny(filePath: string, parts: string[]): boolean {
-  return parts.some((part) => filePath.includes(part))
+function isProjectPath(finding: Finding): boolean {
+  return (
+    finding.filePath.startsWith("features/projects/") ||
+    finding.filePath.startsWith("app/(workspace)/app/projects") ||
+    finding.filePath.startsWith("app/projects")
+  )
+}
+
+function isProjectNonEstimatePath(finding: Finding): boolean {
+  return isProjectPath(finding) && !isEstimatePath(finding)
 }
 
 function isBadgeFinding(finding: Finding): boolean {
@@ -76,7 +92,42 @@ function isPaddingFinding(finding: Finding): boolean {
   return finding.category === "padding-overlap"
 }
 
+function isDataTableFinding(finding: Finding): boolean {
+  const target = lowerPath(finding)
+  return (
+    target.includes("datatable") ||
+    target.includes("data-table") ||
+    target.includes("table") ||
+    target.includes("columns") ||
+    target.includes("cell") ||
+    target.includes("row")
+  )
+}
+
+function isCardFinding(finding: Finding): boolean {
+  const target = lowerPath(finding)
+  return target.includes("card") || target.includes("cards/") || target.includes("projectcard")
+}
+
+function isFormSheetDialogFinding(finding: Finding): boolean {
+  const target = lowerPath(finding)
+  return (
+    target.includes("sheet") ||
+    target.includes("dialog") ||
+    target.includes("form") ||
+    target.includes("drawer") ||
+    target.includes("modal") ||
+    target.includes("create") ||
+    target.includes("edit")
+  )
+}
+
 const FOCUS_AREAS: FocusArea[] = [
+  {
+    id: "runtime-feature-screens",
+    title: "All runtime feature screens",
+    matches: (finding) => finding.surface === "feature" || finding.surface === "app" || finding.surface === "entity",
+  },
   {
     id: "badges-status-chips",
     title: "Badges / status chips / pills",
@@ -86,6 +137,47 @@ const FOCUS_AREAS: FocusArea[] = [
     id: "internal-padding",
     title: "Internal padding / component density",
     matches: isPaddingFinding,
+  },
+  {
+    id: "tables-datatables-cells",
+    title: "Tables / DataTables / cells",
+    matches: isDataTableFinding,
+  },
+  {
+    id: "cards-compact-surfaces",
+    title: "Cards / compact card surfaces",
+    matches: isCardFinding,
+  },
+  {
+    id: "forms-sheets-dialogs",
+    title: "Forms / Sheets / Dialogs",
+    matches: isFormSheetDialogFinding,
+  },
+  {
+    id: "workspace-shell-navigation",
+    title: "Workspace shell / navigation / layout",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "app/(workspace)/",
+        "components/layout/",
+        "components/navigation/",
+        "components/providers/",
+        "features/navigation/",
+      ]) && !isEstimatePath(finding),
+  },
+  {
+    id: "projects-list-cards",
+    title: "Projects list / project cards",
+    matches: (finding) =>
+      isProjectNonEstimatePath(finding) &&
+      includesAny(lowerPath(finding), ["projectcard", "projects/page", "project-list", "projectslist", "registry", "card"]),
+  },
+  {
+    id: "project-dashboard",
+    title: "Project dashboard",
+    matches: (finding) =>
+      isProjectNonEstimatePath(finding) &&
+      includesAny(finding.filePath, ["features/projects/dashboard/", "ProjectDashboard", "DashboardChart"]),
   },
   {
     id: "estimate-module",
@@ -141,7 +233,7 @@ const FOCUS_AREAS: FocusArea[] = [
         "features/projects/estimates/screens/EstimatePurchasesScreen",
         "features/projects/estimates/types/procurement",
       ]) ||
-      (isEstimatePath(finding) && includesAny(finding.filePath.toLowerCase(), ["procurement", "purchase", "purchases"])),
+      (isEstimatePath(finding) && includesAny(lowerPath(finding), ["procurement", "purchase", "purchases"])),
   },
   {
     id: "estimate-finance",
@@ -150,7 +242,7 @@ const FOCUS_AREAS: FocusArea[] = [
       includesAny(finding.filePath, [
         "features/projects/estimates/components/tabs/EstimateFinance",
         "features/projects/estimates/types/finance",
-      ]) || (isEstimatePath(finding) && finding.filePath.toLowerCase().includes("finance")),
+      ]) || (isEstimatePath(finding) && lowerPath(finding).includes("finance")),
   },
   {
     id: "estimate-params",
@@ -160,7 +252,7 @@ const FOCUS_AREAS: FocusArea[] = [
         "features/projects/estimates/components/tabs/EstimateParams",
         "features/projects/estimates/screens/EstimateParametersScreen",
         "features/projects/estimates/types/room-params",
-      ]) || (isEstimatePath(finding) && includesAny(finding.filePath.toLowerCase(), ["params", "parameters", "room-params"])),
+      ]) || (isEstimatePath(finding) && includesAny(lowerPath(finding), ["params", "parameters", "room-params"])),
   },
   {
     id: "estimate-docs",
@@ -169,22 +261,87 @@ const FOCUS_AREAS: FocusArea[] = [
       includesAny(finding.filePath, [
         "features/projects/estimates/components/tabs/EstimateDocuments",
         "features/projects/estimates/screens/EstimateDocsScreen",
-      ]) || (isEstimatePath(finding) && finding.filePath.toLowerCase().includes("doc")),
-  },
-  {
-    id: "dashboard-cards-charts",
-    title: "Dashboard cards and charts",
-    matches: (finding) => finding.filePath.includes("dashboard") || finding.filePath.includes("Dashboard"),
+      ]) || (isEstimatePath(finding) && lowerPath(finding).includes("doc")),
   },
   {
     id: "global-purchases",
-    title: "Global purchases",
+    title: "Global purchases / Закупки",
     matches: (finding) => finding.filePath.includes("global-purchases") || finding.filePath.includes("GlobalPurchases"),
+  },
+  {
+    id: "materials-catalog",
+    title: "Materials catalog / Материалы",
+    matches: (finding) =>
+      finding.filePath.startsWith("features/materials/") ||
+      includesAny(lowerPath(finding), ["materials/page", "materialsscreen", "materialstable", "material-card"]),
+  },
+  {
+    id: "works-catalog",
+    title: "Works catalog / Работы",
+    matches: (finding) =>
+      finding.filePath.startsWith("features/works/") || includesAny(lowerPath(finding), ["works/page", "worksscreen", "workstable"]),
+  },
+  {
+    id: "material-suppliers",
+    title: "Material suppliers / Поставщики материалов",
+    matches: (finding) => finding.filePath.includes("material-suppliers") || finding.filePath.includes("MaterialSupplier"),
+  },
+  {
+    id: "counterparties",
+    title: "Counterparties / Контрагенты",
+    matches: (finding) => finding.filePath.includes("counterparties") || finding.filePath.includes("Counterpart"),
+  },
+  {
+    id: "shared-directory-catalog-shells",
+    title: "Shared directory/catalog shells",
+    matches: (finding) =>
+      includesAny(finding.filePath, [
+        "features/_shared/directories/",
+        "features/_shared/guide-catalog/",
+        "shared/ui/shells/",
+        "DirectoryListScreen",
+        "CatalogScreenShell",
+        "DataTableShell",
+      ]),
+  },
+  {
+    id: "dashboard-analytics",
+    title: "Dashboard / analytics widgets",
+    matches: (finding) =>
+      includesAny(finding.filePath, ["features/dashboard/", "features/projects/dashboard/"]) ||
+      includesAny(lowerPath(finding), ["dashboard", "analytics", "chart"]),
+  },
+  {
+    id: "admin-tenants-activity",
+    title: "Admin / tenants / activity screens",
+    matches: (finding) =>
+      finding.filePath.startsWith("app/(admin)/") ||
+      finding.filePath.startsWith("features/admin/") ||
+      includesAny(lowerPath(finding), ["tenant", "activity"]),
   },
   {
     id: "permissions",
     title: "Permissions matrix",
     matches: (finding) => finding.filePath.includes("permissions"),
+  },
+  {
+    id: "auth-marketing-landing",
+    title: "Auth / marketing / landing surfaces",
+    matches: (finding) =>
+      finding.filePath === "app/page.tsx" ||
+      finding.filePath.includes("/(login)/") ||
+      finding.filePath.includes("/(marketing)/") ||
+      finding.filePath.startsWith("features/auth/") ||
+      includesAny(lowerPath(finding), ["login", "register", "sign-in", "sign-up", "pricing", "landing"]),
+  },
+  {
+    id: "shared-ui-primitives",
+    title: "Shared UI primitives / compatibility surfaces",
+    matches: (finding) =>
+      finding.filePath.startsWith("shared/ui/") ||
+      finding.filePath.startsWith("components/ui/") ||
+      finding.filePath.startsWith("components/ui-primitives/") ||
+      finding.filePath.startsWith("packages/ui/"),
   },
 ]
 
