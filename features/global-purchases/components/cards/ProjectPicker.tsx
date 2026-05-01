@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import { DenseListPickerButton, denseListPickerPopoverClassName } from '@/shared/ui/dense-list';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import {
   Command,
@@ -37,20 +37,17 @@ export function ProjectPicker({ row, projectOptions, disabled, onPatchAction }: 
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="xs"
+        <DenseListPickerButton
           disabled={disabled}
           aria-label="Выбрать объект"
-          className="h-6 sm:h-5 max-w-[14rem] sm:max-w-[12rem] justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 text-[11px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
+          maxWidth="project"
         >
           {disabled ? <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" /> : null}
           <span className="min-w-0 truncate">{name || 'Без объекта'}</span>
           <ChevronsUpDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
-        </Button>
+        </DenseListPickerButton>
       </PopoverTrigger>
-      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+      <PopoverContent className={denseListPickerPopoverClassName} align="start">
         <Command>
           <CommandInput placeholder="Поиск объекта..." />
           <CommandList>
