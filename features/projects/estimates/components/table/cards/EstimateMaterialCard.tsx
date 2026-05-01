@@ -8,6 +8,7 @@ import {
   DenseListMaterialMeta,
   DenseListMaterialRow,
   DenseListToken,
+  DenseListTrailingAction,
 } from '@/shared/ui/dense-list';
 import type { EstimateRow } from '../../../types/dto';
 import type { EstimateCardsTableProps } from './types';
@@ -100,7 +101,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
           </DenseListMaterialMeta>
         </div>
 
-        <div className="flex shrink-0 items-start pt-0.5">
+        <DenseListTrailingAction>
           <ActionMenu
             ariaLabel="Действия с материалом"
             trigger={
@@ -115,7 +116,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
             }
             items={buildMaterialActions(material, props)}
           />
-        </div>
+        </DenseListTrailingAction>
       </DenseListMaterialRow>
     </div>
   );
