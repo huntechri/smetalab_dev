@@ -2,7 +2,11 @@ import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
-import { DenseListToken } from '@/shared/ui/dense-list';
+import {
+  DenseListBodyRow,
+  DenseListStat,
+  DenseListToken,
+} from '@/shared/ui/dense-list';
 import type { SectionNode } from '../../../lib/estimate-cards-table';
 import type { SectionTotals } from '../../../lib/section-totals';
 import type { EstimateCardsTableProps } from './types';
@@ -35,7 +39,7 @@ export function EstimateSectionCard({
       className="overflow-hidden rounded-xl border bg-card shadow-sm"
     >
       <div className="border-b bg-card">
-        <div className="flex min-w-0 items-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3.5 sm:py-3">
+        <DenseListBodyRow>
           <Button
             variant="ghost"
             size="icon-xs"
@@ -65,18 +69,12 @@ export function EstimateSectionCard({
           </div>
 
           <div className="ml-auto flex items-center gap-3 sm:gap-6">
-            <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-xs font-medium text-muted-foreground">Работы</p>
-              <p className="text-sm font-bold tabular-nums text-foreground">
-                <MoneyCell value={sectionTotals.works} />
-              </p>
-            </div>
-            <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-xs font-medium text-muted-foreground">Материалы</p>
-              <p className="text-sm font-bold tabular-nums text-success">
-                <MoneyCell value={sectionTotals.materials} />
-              </p>
-            </div>
+            <DenseListStat label="Работы">
+              <MoneyCell value={sectionTotals.works} />
+            </DenseListStat>
+            <DenseListStat label="Материалы" valueTone="success">
+              <MoneyCell value={sectionTotals.materials} />
+            </DenseListStat>
           </div>
 
           {sectionActions.length > 0 ? (
@@ -95,7 +93,7 @@ export function EstimateSectionCard({
               items={sectionActions}
             />
           ) : null}
-        </div>
+        </DenseListBodyRow>
       </div>
 
       {isSectionOpen ? (
