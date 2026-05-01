@@ -2,9 +2,7 @@
 
 import * as React from "react"
 import { ColumnDef, Table, Row } from "@tanstack/react-table"
-import { ChevronRight } from "lucide-react"
 import { Button } from "@/shared/ui/button"
-import { Badge } from "@/shared/ui/badge"
 import { TableHeaderActions, TableRowActions } from "@/shared/ui/table-actions"
 
 import { WorkRow } from "@/shared/types/domain/work-row"
@@ -16,6 +14,11 @@ import {
     PlaceholderNumberCell,
     PlaceholderTextCell,
 } from "@/shared/ui/cells/table-cell-helpers"
+import {
+    DirectoryIndexCell,
+    DirectoryStackCell,
+    type DirectoryBadgeTrailItem,
+} from "@/shared/ui/cells/directory-table-cells"
 
 interface RowActionsProps {
     row: { original: WorkRow };
@@ -26,7 +29,6 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => (
     <TableRowActions
         row={row.original}
         table={table}
-        className="flex items-center justify-end md:pr-4 gap-1"
         actionMenuModal={false}
         insertLabel="Вставить строку ниже"
         insertTitle="Вставить строку ниже"
@@ -34,19 +36,9 @@ const RowActions = React.memo(({ row, table }: RowActionsProps) => (
 ))
 RowActions.displayName = "RowActions"
 
-const IndexCell = React.memo(({ row }: { row: Row<WorkRow> }) => {
-    const isPlaceholder = row.original.isPlaceholder;
-    const index = row.index + 1;
-
-    return (
-        <div className="relative group/cell flex items-center justify-center h-full min-h-[40px]">
-
-            <div className="font-medium text-[12px] text-muted-foreground">
-                {isPlaceholder ? "..." : index}
-            </div>
-        </div>
-    );
-});
+const IndexCell = React.memo(({ row }: { row: Row<WorkRow> }) => (
+    <DirectoryIndexCell index={row.index + 1} isPlaceholder={row.original.isPlaceholder} />
+));
 IndexCell.displayName = "IndexCell";
 
 const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<WorkRow> }) => {
@@ -65,39 +57,13 @@ const NameCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<W
     }
 
     const { phase, category, subcategory, name } = row.original;
+    const trailItems: DirectoryBadgeTrailItem[] = [
+        phase ? { label: phase, tone: "info" } : null,
+        category ? { label: category, tone: "neutral" } : null,
+        subcategory ? { label: subcategory, tone: "paused" } : null,
+    ].filter(Boolean) as DirectoryBadgeTrailItem[];
 
-    return (
-        <div className="flex flex-col gap-1.5 py-1.5 min-w-0">
-            <div className="text-[12px] font-normal truncate" title={name || undefined}>
-                {name}
-            </div>
-            {(phase || category || subcategory) && (
-                <div className="flex flex-wrap items-center gap-1 opacity-80 group-hover/row:opacity-100 transition-opacity">
-                    {phase && (
-                        <Badge variant="outline" className="h-[16px] rounded-full border-none bg-blue-50/70 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-blue-700">
-                            {phase}
-                        </Badge>
-                    )}
-                    {category && (
-                        <>
-                            {phase && <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-[16px] rounded-full border-none bg-slate-100 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-slate-700">
-                                {category}
-                            </Badge>
-                        </>
-                    )}
-                    {subcategory && (
-                        <>
-                            {(phase || category) && <ChevronRight className="h-2.5 w-2.5 text-muted-foreground/30" />}
-                            <Badge variant="outline" className="h-[16px] rounded-full border-none bg-indigo-50/70 px-1.5 py-0 text-[10px] font-medium leading-[16px] text-indigo-700">
-                                {subcategory}
-                            </Badge>
-                        </>
-                    )}
-                </div>
-            )}
-        </div>
-    );
+    return <DirectoryStackCell title={name || undefined} primary={name} trailItems={trailItems} />;
 });
 NameCell.displayName = "NameCell";
 
@@ -131,7 +97,7 @@ const PriceCell = React.memo(({ row, table }: { row: Row<WorkRow>; table: Table<
         )
     }
 
-    return <FormattedCurrencyCell value={row.getValue("price")} className="tracking-tighter text-foreground tabular-nums" />
+    return <FormattedCurrencyCell value={row.getValue("price")} />
 });
 PriceCell.displayName = "PriceCell";
 
@@ -166,7 +132,6 @@ export const columns: ColumnDef<WorkRow>[] = [
         header: ({ table }) => (
             <TableHeaderActions
                 table={table}
-                className="flex justify-end pr-6 items-center gap-1"
                 trigger={
                     <Button variant="ghost" aria-label="Действия" title="Действия">
                         Действия

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Upload, Download, Trash2, Filter } from "lucide-react";
 
+import { catalogToolbarClassNames } from "@/shared/ui/shells/catalog-directory-visual-contracts";
 import { ToolbarButton } from "@/shared/ui/toolbar-button";
 import { cn } from "@/lib/utils";
 import {
@@ -68,20 +69,20 @@ export function CatalogToolbar<TFilters>({
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className={catalogToolbarClassNames.mobileFilter}>
         <Sheet>
           <SheetTrigger asChild>
             <ToolbarButton variant="outline" size="icon-xs">
-              <Filter className="h-4 w-4" />
+              <Filter className="size-4" />
             </ToolbarButton>
           </SheetTrigger>
-          <SheetContent side="left" className="w-[300px] p-6 focus-visible:ring-0">
-            <SheetHeader className="mb-4">
-              <SheetTitle className="text-[16px] font-bold uppercase tracking-wider text-left">
+          <SheetContent side="left" className={catalogToolbarClassNames.sheet}>
+            <SheetHeader className={catalogToolbarClassNames.sheetHeader}>
+              <SheetTitle className={catalogToolbarClassNames.sheetTitle}>
                 Параметры
               </SheetTitle>
             </SheetHeader>
-            <div className="h-full">
+            <div className={catalogToolbarClassNames.sheetBody}>
               {SidebarComponent && filters && setFilters ? (
                 <SidebarComponent
                   filters={filters}
@@ -94,7 +95,7 @@ export function CatalogToolbar<TFilters>({
         </Sheet>
       </div>
 
-      <div className="hidden lg:block">
+      <div className={catalogToolbarClassNames.desktopFilter}>
         <ToolbarButton
           variant="outline"
           size="icon-xs"
@@ -102,7 +103,7 @@ export function CatalogToolbar<TFilters>({
         >
           <Filter
             className={cn(
-              "h-4 w-4 transition-transform",
+              "size-4 transition-transform",
               showSidebar && "scale-110"
             )}
           />
@@ -146,7 +147,7 @@ export function CatalogToolbar<TFilters>({
           <TooltipTrigger asChild>
             <span
               tabIndex={isActionDisabled ? 0 : -1}
-              className="inline-block outline-none"
+              className={catalogToolbarClassNames.disabledTrigger}
             >
               <AlertDialogTrigger asChild>
                 <ToolbarButton
@@ -174,7 +175,7 @@ export function CatalogToolbar<TFilters>({
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               onClick={onDeleteAll}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className={catalogToolbarClassNames.destructiveAction}
             >
               Удалить всё
             </AlertDialogAction>
