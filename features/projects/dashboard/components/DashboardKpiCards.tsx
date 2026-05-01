@@ -1,4 +1,4 @@
-import { KPICard } from "@/shared/ui/kpi-card"
+import { KPICard, KPICardGrid, type KPICardValueTone } from "@/shared/ui/kpi-card"
 
 type DashboardKpiCardsProps = {
     kpi: {
@@ -9,6 +9,22 @@ type DashboardKpiCardsProps = {
         remainingDays: number | null;
     };
 };
+
+function getProfitTone(profit: number, revenue: number): KPICardValueTone {
+    if (profit < 0) return "negative";
+
+    const profitPercent = revenue > 0 ? (profit / revenue) * 100 : 0;
+    if (profitPercent <= 15) return "warning";
+
+    return "positive";
+}
+
+function getRemainingDaysTone(remainingDays: number | null): KPICardValueTone {
+    if (remainingDays === null) return "muted";
+    if (remainingDays < 0) return "negative";
+
+    return "positive";
+}
 
 export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
     const currencyFormatter = new Intl.NumberFormat('ru-RU', {
@@ -26,55 +42,39 @@ export function DashboardKpiCards({ kpi }: DashboardKpiCardsProps) {
             ? `Просрочено ${Math.abs(kpi.remainingDays)} дн.`
             : `${kpi.remainingDays} дн.`;
 
-    const getProfitValueClassName = (profit: number, revenue: number) => {
-        if (profit < 0) return "text-red-600 dark:text-red-400";
-
-        const profitPercent = revenue > 0 ? (profit / revenue) * 100 : 0;
-        if (profitPercent <= 15) return "text-orange-500 dark:text-orange-400";
-
-        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
-    };
-
-    const getRemainingDaysValueClassName = (remainingDays: number | null) => {
-        if (remainingDays === null) return "text-muted-foreground";
-        if (remainingDays < 0) return "text-red-600 dark:text-red-400";
-
-        return "bg-linear-to-r from-green-500 to-emerald-400 bg-clip-text text-transparent";
-    };
-
     return (
-        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
+        <KPICardGrid>
             <KPICard
                 title="Приход"
                 value={formattedRevenue}
-                valueClassName="text-green-600 dark:text-green-400"
-                className="h-[72px] sm:h-[85px] md:h-[95px]"
+                valueTone="positive"
+                density="dashboard"
                 tooltip="Сумма подтвержденных поступлений от заказчика"
             />
 
             <KPICard
                 title="Расход"
                 value={formattedExpense}
-                valueClassName="text-red-600 dark:text-red-400"
-                className="h-[72px] sm:h-[85px] md:h-[95px]"
+                valueTone="negative"
+                density="dashboard"
                 tooltip="Выполнение факт + закупки факт"
             />
 
             <KPICard
                 title="Прибыль"
                 value={formattedProfit}
-                valueClassName={getProfitValueClassName(kpi.profit, kpi.revenue)}
-                className="h-[72px] sm:h-[85px] md:h-[95px]"
+                valueTone={getProfitTone(kpi.profit, kpi.revenue)}
+                density="dashboard"
                 tooltip="Поступления - факт работ - факт материалов"
             />
 
             <KPICard
                 title="Срок"
                 value={remainingDaysLabel}
-                valueClassName={getRemainingDaysValueClassName(kpi.remainingDays)}
-                className="h-[72px] sm:h-[85px] md:h-[95px]"
+                valueTone={getRemainingDaysTone(kpi.remainingDays)}
+                density="dashboard"
                 tooltip="Оставшееся время до завершения"
             />
-        </div>
+        </KPICardGrid>
     )
 }
