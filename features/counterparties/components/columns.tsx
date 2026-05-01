@@ -4,16 +4,19 @@ import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { CounterpartyRow } from "@/shared/types/domain/counterparty-row"
 import { TableMeta } from "@/shared/ui/data-table"
-import { Button } from "@/shared/ui/button"
-import { Pencil, Trash, Settings } from "lucide-react"
-import { Badge } from "@/shared/ui/badge"
-import { ActionMenu } from "@/shared/ui/action-menu"
+import {
+    DirectoryActionsHeader,
+    DirectoryBadgeCell,
+    DirectoryNameCell,
+    DirectoryRowActionMenu,
+    DirectoryTextCell,
+} from "@/shared/ui/cells/directory-table-cells"
 
 export const columns: ColumnDef<CounterpartyRow>[] = [
     {
         accessorKey: "name",
         header: "Наименование",
-        cell: ({ row }) => <div className="font-normal text-[12px] truncate" title={row.getValue("name") as string}>{row.getValue("name")}</div>,
+        cell: ({ row }) => <DirectoryNameCell title={row.getValue("name") as string}>{row.getValue("name")}</DirectoryNameCell>,
     },
     {
         accessorKey: "type",
@@ -25,7 +28,7 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 contractor: "Подрядчик",
                 supplier: "Поставщик"
             };
-            return <Badge variant="secondary" className="h-6 border-none bg-slate-500/10 px-2 text-[12px] text-slate-700">{map[type] || type}</Badge>;
+            return <DirectoryBadgeCell>{map[type] || type}</DirectoryBadgeCell>;
         },
     },
     {
@@ -37,55 +40,36 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
                 individual: "Физ. лицо",
                 company: "Юр. лицо"
             };
-            return <span className="text-muted-foreground text-[12px]">{map[status] || status}</span>;
+            return <DirectoryTextCell muted>{map[status] || status}</DirectoryTextCell>;
         },
     },
     {
         accessorKey: "inn",
         header: "ИНН",
-        cell: ({ row }) => <span className="text-[12px]">{row.getValue("inn") || "—"}</span>,
+        cell: ({ row }) => <DirectoryTextCell>{row.getValue("inn")}</DirectoryTextCell>,
     },
     {
         accessorKey: "phone",
         header: "Телефон",
-        cell: ({ row }) => <span className="text-[12px]">{row.getValue("phone") || "—"}</span>,
+        cell: ({ row }) => <DirectoryTextCell>{row.getValue("phone")}</DirectoryTextCell>,
     },
     {
         accessorKey: "email",
         header: "Email",
-        cell: ({ row }) => <span className="text-[12px]">{row.getValue("email") || "—"}</span>,
+        cell: ({ row }) => <DirectoryTextCell>{row.getValue("email")}</DirectoryTextCell>,
     },
     {
         id: "actions",
-        header: () => <div className="text-right pr-4 text-[12px]">Действия</div>,
+        header: () => <DirectoryActionsHeader />,
         cell: ({ row, table }) => {
             const meta = table.options.meta as TableMeta<CounterpartyRow> | undefined;
 
             return (
-                <div className="text-right pr-2">
-                    <ActionMenu
-                        ariaLabel="Открыть меню действий"
-                        trigger={
-                            <Button variant="ghost" size="icon-sm" aria-label="Открыть меню действий">
-                                <span className="sr-only">Открыть меню действий</span>
-                                <Settings className="h-4 w-4" />
-                            </Button>
-                        }
-                        items={[
-                            {
-                                label: "Редактировать",
-                                icon: <Pencil className="h-4 w-4" />,
-                                onClick: () => meta?.onEdit?.(row.original),
-                            },
-                            {
-                                label: "Удалить",
-                                icon: <Trash className="h-4 w-4" />,
-                                variant: "destructive",
-                                onClick: () => meta?.onDelete?.(row.original),
-                            },
-                        ]}
-                    />
-                </div>
+                <DirectoryRowActionMenu
+                    row={row.original}
+                    onEdit={meta?.onEdit}
+                    onDelete={meta?.onDelete}
+                />
             )
         },
     },
