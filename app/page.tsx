@@ -188,7 +188,7 @@ export default function LandingPage() {
                                 </div>
                             </div>
                             <div className="relative">
-                                <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
+                                <div className="rounded-4xl border border-white/10 bg-white/5 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
                                     <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/75">
                                         <span className="rounded-full bg-[#0B0A0F] px-2 py-0.5 text-white">Project Control</span>
                                         <span className="rounded-full bg-[#0B0A0F] px-2 py-0.5 text-white">Live site</span>
@@ -310,7 +310,7 @@ export default function LandingPage() {
 
                 <section className="relative border-t border-white/10">
                     <div className="container mx-auto px-4 md:px-8 py-20">
-                        <div className="rounded-[32px] border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14">
+                        <div className="rounded-4xl border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14">
                             <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
                                 <div className="space-y-4 rounded-2xl bg-[#0B0A0F] p-4">
                                     <span className="text-xs uppercase tracking-[0.3em] text-white/75">Final Call</span>
