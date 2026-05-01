@@ -161,7 +161,7 @@ export function DirectoryCategoryCell({ values }: { values: Array<string | null 
   return (
     <div className="flex flex-col gap-0.5">
       <span
-        className="whitespace-normal break-words text-[10px] font-medium leading-tight text-muted-foreground"
+        className="whitespace-normal break-words text-xs font-medium leading-tight text-muted-foreground"
         title={categories.join("> ")}
       >
         {categories.join(" / ") || "—"}
@@ -179,15 +179,15 @@ interface DirectoryImageCellProps {
 export function DirectoryImageCell({ src, alt, emptyLabel = "N/A" }: DirectoryImageCellProps) {
   if (!src) {
     return (
-      <div className="flex size-[25px] items-center justify-center rounded bg-muted/30 text-[10px] text-muted-foreground/50">
+      <div className="flex size-6 items-center justify-center rounded bg-muted/30 text-xs text-muted-foreground/50">
         {emptyLabel}
       </div>
     )
   }
 
   return (
-    <div className="relative size-[25px] overflow-hidden rounded border border-border/50 shadow-sm transition-transform group-hover/row:scale-110">
-      <Image src={src} alt={alt} fill sizes="25px" className="object-cover" loading="lazy" />
+    <div className="relative size-6 overflow-hidden rounded border border-border/50 shadow-sm transition-transform group-hover/row:scale-110">
+      <Image src={src} alt={alt} fill sizes="24px" className="object-cover" loading="lazy" />
     </div>
   )
 }
