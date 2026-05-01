@@ -348,7 +348,6 @@ function classifyOwnership(relativePath: string, surface: Surface): Ownership {
   }
   if (ACCEPTED_PRIMITIVE_CONTRACT_OWNERS.has(relativePath)) return "primitive-contract"
   if (ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS.has(relativePath)) return "feature-family-contract"
-  if (relativePath.startsWith("shared/ui/")) return "primitive-contract"
   if (relativePath.startsWith("components/ui/") || relativePath.startsWith("packages/ui/")) return "compatibility-surface"
   if (isMarketingOrAuthSurface(relativePath)) return "marketing-auth-exception"
   if (surface === "app" || surface === "feature" || surface === "entity") return "business-runtime-drift"
@@ -695,7 +694,7 @@ function validateTarget(target: TargetSurface, findings: Finding[]): TargetValid
   const targetOnlyAcceptedSharedResiduals =
     targetFindings.length > 0 &&
     targetFindings.every(
-      (finding) => finding.ownership === "primitive-contract" || finding.ownership === "feature-family-contract"
+      (finding) => sharedResidualOwners.includes(finding.filePath) && isAcceptedSharedContract(finding.filePath)
     )
 
   let status: ValidationStatus = "PASS"
