@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import {
   primitiveButtonBaseClassName,
   primitiveButtonSizeClassNames,
-} from "@/shared/ui/primitive-density"
+} from "@/lib/ui/primitive-density"
 
 const buttonVariants = cva(primitiveButtonBaseClassName, {
   variants: {
