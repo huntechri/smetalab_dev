@@ -3,6 +3,14 @@
 import Link from 'next/link';
 import { CalendarDays, FilePlus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import {
+  CompactCardHeader,
+  CompactCardInlineContent,
+  CompactCardItem,
+  CompactCardRow,
+  CompactCardSurface,
+  CompactCardViewport,
+} from '@/shared/ui/compact-card';
 import { CompactToken } from '@/shared/ui/compact-token';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
@@ -30,10 +38,6 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   month: '2-digit',
   year: 'numeric',
 });
-
-const estimatesListViewportClassName = 'max-h-96 overflow-y-auto sm:pr-1';
-const estimateCardRowClassName = 'flex items-center gap-1.5 sm:gap-2';
-const estimateCardContentClassName = 'flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden sm:gap-2';
 
 interface ProjectEstimatesCardsProps {
   estimates: EstimateMeta[];
@@ -64,8 +68,8 @@ export function ProjectEstimatesCards({
   const approvedCount = estimates.filter((estimate) => estimate.status === 'approved').length;
 
   return (
-    <section className="rounded-lg border bg-card text-card-foreground shadow-none">
-      <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
+    <CompactCardSurface>
+      <CompactCardHeader>
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-sm font-semibold">Сметы</h2>
@@ -87,19 +91,16 @@ export function ProjectEstimatesCards({
         >
           <Plus className="size-4" aria-hidden="true" />
         </Button>
-      </div>
+      </CompactCardHeader>
 
       {estimates.length > 0 ? (
-        <div className={estimatesListViewportClassName}>
+        <CompactCardViewport>
           <div className="space-y-2">
             {estimates.map((estimate) => (
-              <article
-                key={estimate.id}
-                className="overflow-hidden rounded-md border bg-card shadow-sm sm:rounded-lg"
-              >
-                <div className={estimateCardRowClassName}>
+              <CompactCardItem key={estimate.id}>
+                <CompactCardRow>
                   <div className="min-w-0 flex-1">
-                    <div className={estimateCardContentClassName}>
+                    <CompactCardInlineContent>
                       <Link
                         href={`/app/projects/${projectSlug}/estimates/${estimate.slug}`}
                         className="min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm"
@@ -120,7 +121,7 @@ export function ProjectEstimatesCards({
                         <CalendarDays className="size-3" aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
                       </CompactToken>
-                    </div>
+                    </CompactCardInlineContent>
                   </div>
 
                   <AlertDialog>
@@ -154,11 +155,11 @@ export function ProjectEstimatesCards({
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                </div>
-              </article>
+                </CompactCardRow>
+              </CompactCardItem>
             ))}
           </div>
-        </div>
+        </CompactCardViewport>
       ) : (
         <TableEmptyState
           title="Нет смет в проекте"
@@ -171,6 +172,6 @@ export function ProjectEstimatesCards({
           }
         />
       )}
-    </section>
+    </CompactCardSurface>
   );
 }
