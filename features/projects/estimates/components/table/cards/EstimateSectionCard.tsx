@@ -1,8 +1,12 @@
 import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import {
+  DenseListBodyRow,
+  DenseListStat,
+  DenseListToken,
+} from '@/shared/ui/dense-list';
 import type { SectionNode } from '../../../lib/estimate-cards-table';
 import type { SectionTotals } from '../../../lib/section-totals';
 import type { EstimateCardsTableProps } from './types';
@@ -32,35 +36,31 @@ export function EstimateSectionCard({
   return (
     <div
       key={section.id}
-      className="overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm"
+      className="overflow-hidden rounded-xl border bg-card shadow-sm"
     >
-      <div className="border-b border-slate-200 bg-white">
-        <div className="flex min-w-0 items-center gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3.5 sm:py-3">
+      <div className="border-b bg-card">
+        <DenseListBodyRow>
           <Button
             variant="ghost"
             size="icon-xs"
-            className="mt-0.5 size-5 rounded-md text-slate-400 hover:bg-slate-100 hover:text-slate-600 sm:size-6"
+            className="mt-0.5 size-5 sm:size-6"
             aria-label={isSectionOpen ? 'Свернуть раздел' : 'Развернуть раздел'}
             onClick={() => onToggleSection(section.id)}
           >
             {isSectionOpen ? (
-              <ChevronDown className="size-4 text-slate-500" />
+              <ChevronDown className="size-4 text-muted-foreground" />
             ) : (
-              <ChevronRight className="size-4 text-slate-500" />
+              <ChevronRight className="size-4 text-muted-foreground" />
             )}
           </Button>
 
           <div className="min-w-0 flex-1">
             <div className="flex min-w-0 items-center gap-2">
-              <Badge
-                variant="outline"
-                size="xs"
-                className="h-4 shrink-0 border-slate-200 bg-slate-100 px-1.5 py-0 text-[9px] leading-none text-slate-600 tracking-[0.08em] sm:h-5 sm:px-2 sm:text-[10px]"
-              >
+              <DenseListToken variant="neutral">
                 {section.code}
-              </Badge>
+              </DenseListToken>
               <p
-                className="min-w-0 truncate text-[9px] font-semibold leading-snug text-slate-800 sm:text-[11px]"
+                className="min-w-0 truncate text-xs font-semibold leading-snug text-foreground"
                 title={section.name}
               >
                 {section.name}
@@ -69,18 +69,12 @@ export function EstimateSectionCard({
           </div>
 
           <div className="ml-auto flex items-center gap-3 sm:gap-6">
-            <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-[9px] font-medium text-slate-400 sm:text-[11px]">Работы</p>
-              <p className="text-[12px] font-bold tabular-nums text-slate-800 sm:text-sm">
-                <MoneyCell value={sectionTotals.works} />
-              </p>
-            </div>
-            <div className="text-right min-w-[60px] sm:min-w-[80px]">
-              <p className="text-[9px] font-medium text-slate-400 sm:text-[11px]">Материалы</p>
-              <p className="text-[12px] font-bold tabular-nums text-green-600 sm:text-sm">
-                <MoneyCell value={sectionTotals.materials} />
-              </p>
-            </div>
+            <DenseListStat label="Работы">
+              <MoneyCell value={sectionTotals.works} />
+            </DenseListStat>
+            <DenseListStat label="Материалы" valueTone="success">
+              <MoneyCell value={sectionTotals.materials} />
+            </DenseListStat>
           </div>
 
           {sectionActions.length > 0 ? (
@@ -90,7 +84,7 @@ export function EstimateSectionCard({
                 <Button
                   size="icon-xs"
                   variant="outline"
-                  className="size-6 rounded-lg border-slate-200 bg-white text-slate-500 hover:bg-slate-50 sm:size-7"
+                  className="size-6 sm:size-7"
                   aria-label="Действия с разделом"
                 >
                   <Settings className="size-3.5" />
@@ -99,11 +93,11 @@ export function EstimateSectionCard({
               items={sectionActions}
             />
           ) : null}
-        </div>
+        </DenseListBodyRow>
       </div>
 
       {isSectionOpen ? (
-        <div className="divide-y divide-slate-200">
+        <div className="divide-y">
           {sectionNode.works.map((workNode) => {
             const work = workNode.work;
             const isWorkOpen = forceExpandForSearch || props.expandedWorkIds.has(work.id);

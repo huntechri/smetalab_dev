@@ -1,8 +1,15 @@
 import { ChevronDown, ChevronRight, Pencil, Settings, Wrench } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import {
+  DenseListActionsGrid,
+  DenseListBodyRow,
+  DenseListEmptyInset,
+  DenseListMaterialGrid,
+  DenseListNestedPanel,
+  DenseListToken,
+} from '@/shared/ui/dense-list';
 import type { WorkNode } from '../../../lib/estimate-cards-table';
 import type { EstimateCardsTableProps } from './types';
 import { buildWorkActions } from './actions';
@@ -26,26 +33,26 @@ export function EstimateWorkCard({
   const work = workNode.work;
 
   return (
-    <div className="bg-white">
-      <div className="flex items-start gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3.5 sm:py-3">
+    <div className="bg-card">
+      <DenseListBodyRow>
         <Button
           variant="outline"
           size="icon-xs"
-          className="mt-0.5 size-5 rounded-lg border-slate-200 bg-slate-50 text-slate-500 hover:bg-slate-100 sm:size-6"
+          className="mt-0.5 size-5 sm:size-6"
           aria-label={isWorkOpen ? 'Свернуть работу' : 'Развернуть работу'}
           onClick={() => props.onToggleExpand(work.id)}
         >
           {isWorkOpen ? (
-            <ChevronDown className="size-4 text-slate-500" />
+            <ChevronDown className="size-4 text-muted-foreground" />
           ) : (
-            <ChevronRight className="size-4 text-slate-500" />
+            <ChevronRight className="size-4 text-muted-foreground" />
           )}
         </Button>
 
         <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-1 sm:gap-1.5 xl:flex-row xl:items-baseline xl:gap-2">
             <div className="flex items-baseline gap-1.5 min-w-0">
-              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-500 sm:text-[11px]">
+              <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
                 {work.code}
               </span>
               <div className="min-w-0 flex-1">
@@ -60,14 +67,9 @@ export function EstimateWorkCard({
             </div>
 
             <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
-              <Badge
-                variant="outline"
-                className="h-4 border-slate-200 bg-white px-2 py-0 text-[9px] leading-none text-slate-700 sm:h-5 sm:px-2.5 sm:text-[10px]"
-              >
-                {work.unit}
-              </Badge>
+              <DenseListToken variant="neutral">{work.unit}</DenseListToken>
               <EstimateMetricPill>
-                <span className="text-[9px] sm:text-[10px]">Кол-во</span>
+                <span className="text-xs">Кол-во</span>
                 <EstimateInlineNumberCell
                   value={work.qty}
                   onCommit={(value) => props.onPatch(work.id, 'qty', value)}
@@ -76,21 +78,18 @@ export function EstimateWorkCard({
                 />
               </EstimateMetricPill>
               <EstimateMetricPill>
-                <span className="text-[9px] sm:text-[10px]">Цена</span>
+                <span className="text-xs">Цена</span>
                 <EstimateInlineNumberCell
                   value={work.price}
                   onCommit={(value) => props.onPatch(work.id, 'price', value)}
                   ariaLabel={`Цена: ${work.name}`}
                   className={WORK_NUMBER_CLASS}
                 />
-                <span className="text-[9px] sm:text-[10px]">₽</span>
+                <span className="text-xs">₽</span>
               </EstimateMetricPill>
-              <Badge
-                variant="success"
-                className="h-4 border border-green-200 bg-green-100 px-2 py-0 text-[9px] font-bold leading-none text-green-600 sm:h-5 sm:px-2.5 sm:text-[10px]"
-              >
+              <DenseListToken variant="success">
                 <MoneyCell value={work.sum} />
-              </Badge>
+              </DenseListToken>
             </div>
           </div>
         </div>
@@ -131,29 +130,29 @@ export function EstimateWorkCard({
             items={buildWorkActions(work, props)}
           />
         </div>
-      </div>
+      </DenseListBodyRow>
 
       {isWorkOpen ? (
-        <div className="border-t border-slate-100 bg-slate-50 px-2 py-2.5 sm:px-3.5 sm:py-3">
+        <DenseListNestedPanel>
           {workNode.materials.length > 0 ? (
             <>
-              <p className="mb-1.5 text-[9px] font-semibold uppercase tracking-[0.08em] text-slate-400 sm:mb-2 sm:text-[11px]">
+              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:mb-2">
                 Материалы
               </p>
 
-              <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              <DenseListMaterialGrid>
                 {workNode.materials.map((material) => (
                   <EstimateMaterialCard key={material.id} material={material} props={props} />
                 ))}
-              </div>
+              </DenseListMaterialGrid>
             </>
           ) : (
-            <div className="rounded-md border border-dashed border-slate-200 bg-white p-3 text-center text-xs text-slate-500">
+            <DenseListEmptyInset>
               У работы пока нет материалов.
-            </div>
+            </DenseListEmptyInset>
           )}
 
-          <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:max-w-[400px] sm:gap-2">
+          <DenseListActionsGrid>
             <Button
               variant="outline"
               size="xs"
@@ -178,8 +177,8 @@ export function EstimateWorkCard({
             >
               Удалить
             </Button>
-          </div>
-        </div>
+          </DenseListActionsGrid>
+        </DenseListNestedPanel>
       ) : null}
     </div>
   );
