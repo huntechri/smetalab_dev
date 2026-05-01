@@ -1,12 +1,12 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
 import {
   primitiveInputBaseClassName,
   primitiveInputSizeClassNames,
   primitiveInputVariantClassNames,
-} from "@/shared/ui/primitive-density"
+} from "@/lib/ui/primitive-density"
+import { cn } from "@/lib/utils"
 
 const inputVariants = cva(primitiveInputBaseClassName, {
   variants: {
@@ -24,13 +24,15 @@ const inputVariants = cva(primitiveInputBaseClassName, {
   },
 })
 
-type InputProps = Omit<React.ComponentProps<"input">, "className" | "size"> &
+type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "className" | "size"> &
   VariantProps<typeof inputVariants> & {
     numeric?: boolean
     className?: string
   }
 
 function Input({ type, variant, size, textAlign, numeric, className, ...props }: InputProps) {
+  const usesColorPickerStyles = type === "color"
+
   return (
     <input
       type={type}
@@ -38,7 +40,7 @@ function Input({ type, variant, size, textAlign, numeric, className, ...props }:
       className={cn(
         inputVariants({ variant, size, textAlign }),
         (numeric || type === "number") && "tabular-nums",
-        type === "color" && "cursor-pointer p-1",
+        usesColorPickerStyles && "cursor-pointer p-1",
         className
       )}
       {...props}
