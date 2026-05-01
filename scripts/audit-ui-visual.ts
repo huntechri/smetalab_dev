@@ -62,7 +62,13 @@ const EXCLUDED_SEGMENTS = new Set([
   "build",
   "out",
   "playwright-report",
+  "__tests__",
+  "__mocks__",
+  "__fixtures__",
+  "fixtures",
 ])
+
+const TEST_FILE_PATTERN = /(?:^|\/|\.)(test|spec)\.(tsx|ts|jsx|js|mjs|cjs)$/u
 
 const TAILWIND_PALETTE_NAMES = [
   "slate",
@@ -112,7 +118,7 @@ function getRootName(relativePath: string): string {
 }
 
 function isExcludedPath(relativePath: string): boolean {
-  return relativePath.split("/").some((segment) => EXCLUDED_SEGMENTS.has(segment))
+  return relativePath.split("/").some((segment) => EXCLUDED_SEGMENTS.has(segment)) || TEST_FILE_PATTERN.test(relativePath)
 }
 
 function classifySurface(relativePath: string): Surface {
@@ -543,6 +549,7 @@ ${formatCounts(report.surfaceCounts)}
 - docs/DESIGN_SYSTEM.md is classified as stale-reference for this phase and is not scanned as source of truth.
 - Canonical token/primitive and compatibility surfaces remain reported, but findings there are intentionally lower severity than business runtime drift.
 - Marketing/auth surfaces, including app/page.tsx and auth/pricing routes, remain reported as exception candidates with downgraded severity.
+- Test, mock, fixture, build, report, and documentation paths are excluded from visual runtime audit scope.
 - Badge/status/chip surfaces are tracked explicitly through badge-overlap to catch duplicated visual recipes beyond generic color/typography findings.
 - Internal padding is tracked explicitly through padding-overlap to separate dense component sizing from outer layout drift.
 
