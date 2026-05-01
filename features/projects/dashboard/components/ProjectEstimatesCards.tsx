@@ -60,20 +60,16 @@ export function ProjectEstimatesCards({
   const approvedCount = estimates.filter((estimate) => estimate.status === 'approved').length;
 
   return (
-    <section className="rounded-lg border border-[#e4e4e7] bg-white p-3 text-[#09090b] shadow-none">
+    <section className="rounded-lg border bg-card p-3 text-card-foreground shadow-none">
       <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-sm font-semibold">Сметы</h2>
-            <Badge
-              variant="outline"
-              size="xs"
-              className="h-5 border-[#e4e4e7] bg-[#f4f4f5] px-2 py-0 text-[10px] text-[#71717a]"
-            >
+            <Badge variant="neutral" size="xs">
               {estimates.length}
             </Badge>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-[11px] text-[#71717a]">
+          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
             <span>Итого: {moneyFormatter.format(total)}</span>
             <span aria-hidden="true">·</span>
             <span>Выполнено: {approvedCount}</span>
@@ -86,7 +82,6 @@ export function ProjectEstimatesCards({
           size="icon-xs"
           aria-label="Создать смету"
           title="Создать смету"
-          className="size-7 rounded-md border-[#e4e4e7] bg-white text-[#71717a] hover:bg-[#f4f4f5]"
         >
           <Plus className="size-4" aria-hidden="true" />
         </Button>
@@ -98,14 +93,14 @@ export function ProjectEstimatesCards({
             {estimates.map((estimate) => (
               <article
                 key={estimate.id}
-                className="overflow-hidden rounded-md border border-[#e4e4e7] bg-white shadow-[0_1px_2px_rgba(0,0,0,0.04)] sm:rounded-lg"
+                className="overflow-hidden rounded-md border bg-card shadow-sm sm:rounded-lg"
               >
                 <div className="flex items-center gap-1.5 px-2 py-2 sm:gap-2 sm:px-3 sm:py-2.5">
                   <div className="min-w-0 flex-1">
                     <div className="flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden sm:gap-2">
                       <Link
                         href={`/app/projects/${projectSlug}/estimates/${estimate.slug}`}
-                        className="min-w-0 shrink truncate text-[12px] font-semibold leading-snug hover:underline sm:text-[13px]"
+                        className="min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm"
                         title={estimate.name}
                       >
                         {estimate.name}
@@ -113,19 +108,16 @@ export function ProjectEstimatesCards({
                       <EstimateStatusMenu
                         status={estimate.status}
                         onChange={(nextStatus) => onChangeStatus(estimate, nextStatus)}
-                        badgeSize="default"
-                        className="h-[18px] min-w-[72px] border border-[#bfdbfe] bg-[#eff6ff] px-1.5 py-0 text-[9px] font-bold leading-none text-[#1d4ed8] sm:h-5 sm:min-w-[88px] sm:px-2 sm:text-[10px] md:min-w-[100px]"
+                        badgeSize="xs"
+                        className="min-w-20 md:min-w-24"
                       />
-                      <Badge
-                        variant="success"
-                        className="h-[18px] shrink-0 border border-green-200 bg-green-100 px-1.5 py-0 text-[10px] font-bold leading-none text-green-700 sm:h-5 sm:px-2 sm:text-[11px]"
-                      >
+                      <Badge variant="success" size="xs" className="shrink-0 normal-case tracking-normal">
                         {moneyFormatter.format(estimate.total)}
                       </Badge>
-                      <span className="inline-flex h-[18px] shrink-0 items-center gap-0.5 rounded-full border border-[#d4d4d8] bg-[#fafafa] px-1.5 text-[9px] font-medium text-[#71717a] sm:h-5 sm:gap-1 sm:px-2 sm:text-[10px]">
-                        <CalendarDays className="size-2.5 sm:size-3" aria-hidden="true" />
+                      <Badge variant="neutral" size="xs" className="shrink-0 normal-case tracking-normal">
+                        <CalendarDays className="size-3" aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
-                      </span>
+                      </Badge>
                     </div>
                   </div>
 
@@ -136,7 +128,7 @@ export function ProjectEstimatesCards({
                         size="icon-xs"
                         title="Удалить смету"
                         aria-label={`Удалить смету ${estimate.name}`}
-                        className="size-6 rounded-md border-[#e4e4e7] bg-white text-[#71717a] hover:bg-[#f4f4f5] sm:size-7"
+                        className="size-6 sm:size-7"
                       >
                         <Trash2 className="size-3 sm:size-3.5" aria-hidden="true" />
                       </Button>
