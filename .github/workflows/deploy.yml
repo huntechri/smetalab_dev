@@ -27,6 +27,10 @@ jobs:
     name: PR Gate (Lint + Typecheck + UI Audit + Unit + Build)
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -55,6 +59,57 @@ jobs:
         run: pnpm type-check
       - name: UI Audit
         run: pnpm audit:ui
+      - name: Generate UI Visual Audit domain summary
+        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
+        run: pnpm exec tsx scripts/summarize-ui-visual-audit.ts
+      - name: Publish UI Visual Audit summary
+        if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
+        run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI Visual Audit reports
+        if: always() && hashFiles('reports/ui-visual-audit.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-visual-audit-${{ github.run_number }}
+          path: |
+            reports/ui-visual-audit.json
+            reports/ui-visual-audit.md
+            reports/ui-visual-audit-summary.md
+          if-no-files-found: error
+          retention-days: 14
+      - name: Comment UI Visual Audit summary
+        if: always() && github.event_name == 'pull_request' && hashFiles('reports/ui-visual-audit-summary.md') != ''
+        continue-on-error: true
+        uses: actions/github-script@v8
+        with:
+          script: |
+            const fs = require('node:fs');
+            const marker = '<!-- ui-visual-audit-summary -->';
+            const summary = fs.readFileSync('reports/ui-visual-audit-summary.md', 'utf8');
+            const body = `${summary.trim()}
+
+            Artifact: \`ui-visual-audit-${context.runNumber}\``.replace(/^ {12}/gm, '');
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.pull_request.number,
+              per_page: 100,
+            });
+            const existing = comments.find((comment) => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.payload.pull_request.number,
+                body,
+              });
+            }
       - name: Run Unit/Isolated Tests
         run: pnpm test
       - name: Build
