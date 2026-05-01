@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
+  DenseListColorIndicator,
   DenseListPickerButton,
-  denseListIndicatorClassName,
-  denseListMutedIndicatorClassName,
   denseListPickerPopoverClassName,
 } from '@/shared/ui/dense-list';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
@@ -50,11 +49,7 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
           {disabled ? (
             <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
           ) : (
-            <span
-              className={color ? denseListIndicatorClassName : denseListMutedIndicatorClassName}
-              style={color ? { backgroundColor: color } : undefined}
-              aria-hidden="true"
-            />
+            <DenseListColorIndicator color={color} />
           )}
           <span className="truncate">{name || 'Без поставщика'}</span>
           <ChevronsUpDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
@@ -68,14 +63,14 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
             <CommandGroup>
               {name ? (
                 <CommandItem onSelect={() => void handleSelect(null)}>
-                  <span className={denseListMutedIndicatorClassName} aria-hidden="true" />
+                  <DenseListColorIndicator />
                   Снять поставщика
                 </CommandItem>
               ) : null}
               {supplierOptions.map((supplier) => (
                 <CommandItem key={supplier.id} value={`${supplier.name} ${supplier.color}`} onSelect={() => void handleSelect(supplier.id)}>
                   <Check className={cn('size-4', supplier.id === row.supplierId ? 'opacity-100' : 'opacity-0')} />
-                  <span className={denseListIndicatorClassName} style={{ backgroundColor: supplier.color }} aria-hidden="true" />
+                  <DenseListColorIndicator color={supplier.color} />
                   <span className="truncate">{supplier.name}</span>
                 </CommandItem>
               ))}
