@@ -11,6 +11,15 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/shared/ui/sheet';
+import { cn } from '@/lib/utils';
+
+const directorySheetContentClassName = 'flex max-h-dvh w-full flex-col p-0 sm:max-w-[540px]';
+const directorySheetHeaderClassName = 'px-4 pb-3 pt-4 sm:px-6 sm:pb-4 sm:pt-6';
+const directorySheetTitleClassName = 'text-base sm:text-lg';
+const directorySheetDescriptionClassName = 'text-xs sm:text-sm';
+const directorySheetBodyClassName = 'space-y-4 px-4 pb-4 sm:px-6 sm:pb-6';
+const directorySheetFooterFrameClassName = 'border-t bg-muted/20 px-4 py-3 sm:p-6';
+const directorySheetFooterClassName = 'flex-row gap-2 sm:space-x-0';
 
 interface DirectoryEntitySheetShellProps {
   open: boolean;
@@ -30,25 +39,25 @@ export function DirectoryEntitySheetShell({
   description,
   children,
   footer,
-  contentClassName = 'w-full sm:max-w-[540px] max-h-dvh flex flex-col p-0',
-  bodyClassName = 'px-4 pb-4 sm:px-6 sm:pb-6 space-y-4 sm:space-y-4',
+  contentClassName,
+  bodyClassName,
 }: DirectoryEntitySheetShellProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className={contentClassName}>
-        <SheetHeader className="px-4 pt-4 pb-3 sm:px-6 sm:pt-6 sm:pb-4">
-          <SheetTitle className="text-base sm:text-lg">{title}</SheetTitle>
-          <SheetDescription className="text-xs sm:text-sm">
+      <SheetContent className={cn(directorySheetContentClassName, contentClassName)}>
+        <SheetHeader className={directorySheetHeaderClassName}>
+          <SheetTitle className={directorySheetTitleClassName}>{title}</SheetTitle>
+          <SheetDescription className={directorySheetDescriptionClassName}>
             {description}
           </SheetDescription>
         </SheetHeader>
 
-        <ScrollArea className="flex-1 min-h-0">
-          <div className={bodyClassName}>{children}</div>
+        <ScrollArea className="min-h-0 flex-1">
+          <div className={cn(directorySheetBodyClassName, bodyClassName)}>{children}</div>
         </ScrollArea>
 
-        <div className="px-4 py-3 sm:p-6 border-t bg-muted/20">
-          <SheetFooter className="flex-row gap-2 sm:space-x-0">
+        <div className={directorySheetFooterFrameClassName}>
+          <SheetFooter className={directorySheetFooterClassName}>
             {footer}
           </SheetFooter>
         </div>
