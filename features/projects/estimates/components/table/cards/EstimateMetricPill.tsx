@@ -12,8 +12,8 @@ type EstimateMetricPillProps = {
 };
 
 const toneClassName: Record<EstimateMetricPillTone, string> = {
-  neutral: 'border-slate-300 bg-slate-50 text-slate-600',
-  info: 'border-blue-200 bg-blue-50 text-blue-600',
+  neutral: 'border-border bg-muted text-muted-foreground',
+  info: 'border-info/30 bg-info/10 text-info',
 };
 
 const densityClassName: Record<EstimateMetricPillDensity, string> = {
@@ -30,7 +30,7 @@ export function EstimateMetricPill({
   return (
     <div
       className={cn(
-        'inline-flex h-4 items-center rounded-full border py-0 text-[9px] sm:h-5 sm:text-[10px]',
+        'inline-flex h-4 items-center rounded-full border py-0 text-xs sm:h-5',
         toneClassName[tone],
         densityClassName[density],
         className,
