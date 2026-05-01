@@ -1,9 +1,15 @@
 'use client';
 
 import { Suspense, use, useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import dynamic from 'next/dynamic';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import {
+    WorkspaceTabs,
+    WorkspaceTabsContent,
+    WorkspaceTabsFallback,
+    WorkspaceTabsList,
+    WorkspaceTabsTrigger,
+} from '@/shared/ui/workspace-tabs';
 import { EstimateRow } from '../types/dto';
 import { EstimateRoomParam } from '../types/room-params.dto';
 import type { EstimateExecutionRow } from '../types/execution.dto';
@@ -13,23 +19,19 @@ import { EstimateTable } from '../components/table/EstimateTable.client';
 import { EstimateExecution } from '../components/tabs/EstimateExecution';
 import { EstimateProcurement } from '../components/tabs/EstimateProcurement';
 import { EstimateFinance } from '../components/tabs/EstimateFinance';
-import { Skeleton } from '@/shared/ui/skeleton';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
 const availableTabs = new Set(['estimate', 'params', 'procurement', 'execution', 'finance', 'docs']);
 
 const EstimateParams = dynamic(
     () => import('../components/tabs/EstimateParams').then((mod) => mod.EstimateParams),
-    { loading: () => <Skeleton className="h-[520px] w-full" /> },
+    { loading: () => <WorkspaceTabsFallback /> },
 );
 
 const EstimateDocuments = dynamic(
     () => import('../components/tabs/EstimateDocuments').then((mod) => mod.EstimateDocuments),
-    { loading: () => <Skeleton className="h-[240px] w-full" /> },
+    { loading: () => <WorkspaceTabsFallback size="compact" /> },
 );
-
-const estimateTabsListClassName = 'w-full md:w-[671px] max-w-full justify-start overflow-x-auto h-auto rounded-[9.6px] border border-[oklab(0.919723_0.0011749_-0.00385052_/_0.4)] bg-[oklab(0.967428_0.000417888_-0.00125271_/_0.4)] p-1 text-[#71717a] no-scrollbar';
-const estimateTabsTriggerClassName = 'flex items-center justify-center gap-1.5 rounded-[7.6px] border border-transparent px-3 py-2 text-center text-[12px] leading-[16px] font-semibold tracking-[0.3px] [font-family:Manrope] text-[#71717a] transition-colors data-[state=active]:bg-[#f60] data-[state=active]:text-white';
 
 const buildTabHref = (pathname: string, search: string, nextTab: string) => {
     const params = new URLSearchParams(search);
@@ -78,6 +80,7 @@ interface EstimateDetailsShellProps {
 }
 
 export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromise, executionRowsPromise, procurementRowsPromise, financeRowsPromise, financeAggregatesPromise, project, estimate, initialCoefPercent }: EstimateDetailsShellProps) {
+    const router = useRouter();
     const searchParams = useSearchParams();
     const pathname = usePathname();
     const tabParam = searchParams.get('tab') ?? 'estimate';
@@ -107,57 +110,54 @@ export function EstimateDetailsShell({ estimateId, rowsPromise, roomParamsPromis
     }, [tab]);
 
     return (
-        <div className="space-y-2">
-            <Tabs
-                value={tab}
-                onValueChange={(nextValue) => {
-                    setTab(nextValue);
-                    const nextHref = buildTabHref(pathname, searchParams.toString(), nextValue);
-                    history.replaceState(history.state, '', nextHref);
-                }}
-            >
-                <TabsList className={estimateTabsListClassName}>
-                    <TabsTrigger value="estimate" className={estimateTabsTriggerClassName}>Смета</TabsTrigger>
-                    <TabsTrigger value="params" className={estimateTabsTriggerClassName}>Параметры</TabsTrigger>
-                    <TabsTrigger value="procurement" className={estimateTabsTriggerClassName}>Закупки</TabsTrigger>
-                    <TabsTrigger value="execution" className={estimateTabsTriggerClassName}>Выполнение</TabsTrigger>
-                    <TabsTrigger value="finance" className={estimateTabsTriggerClassName}>Финансы</TabsTrigger>
-                    <TabsTrigger value="docs" className={estimateTabsTriggerClassName}>Документы</TabsTrigger>
-                </TabsList>
-                <TabsContent value="estimate" forceMount className="mt-2">
-                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} projectSlug={project.slug} estimateName={estimate.name} />
+        <WorkspaceTabs
+            value={tab}
+            onValueChange={(nextValue) => {
+                setTab(nextValue);
+                router.replace(buildTabHref(pathname, searchParams.toString(), nextValue), { scroll: false });
+            }}
+        >
+            <WorkspaceTabsList>
+                <WorkspaceTabsTrigger value="estimate">Смета</WorkspaceTabsTrigger>
+                <WorkspaceTabsTrigger value="params">Параметры</WorkspaceTabsTrigger>
+                <WorkspaceTabsTrigger value="procurement">Закупки</WorkspaceTabsTrigger>
+                <WorkspaceTabsTrigger value="execution">Выполнение</WorkspaceTabsTrigger>
+                <WorkspaceTabsTrigger value="finance">Финансы</WorkspaceTabsTrigger>
+                <WorkspaceTabsTrigger value="docs">Документы</WorkspaceTabsTrigger>
+            </WorkspaceTabsList>
+            <WorkspaceTabsContent value="estimate" forceMount>
+                <Suspense fallback={<WorkspaceTabsFallback />}>
+                    <EstimateTableLoader estimateId={estimateId} rowsPromise={rowsPromise} initialCoefPercent={initialCoefPercent} projectSlug={project.slug} estimateName={estimate.name} />
+                </Suspense>
+            </WorkspaceTabsContent>
+            <WorkspaceTabsContent value="params">
+                {loadedTabs.has('params') ? (
+                    <Suspense fallback={<WorkspaceTabsFallback />}>
+                        <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
                     </Suspense>
-                </TabsContent>
-                <TabsContent value="params" className="mt-2">
-                    {loadedTabs.has('params') ? (
-                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                            <EstimateParamsLoader estimateId={estimateId} roomParamsPromise={roomParamsPromise} />
-                        </Suspense>
-                    ) : <Skeleton className="h-[520px] w-full" />}
-                </TabsContent>
-                <TabsContent value="procurement" className="mt-2">
-                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateProcurementLoader estimateId={estimateId} procurementRowsPromise={procurementRowsPromise} />
+                ) : <WorkspaceTabsFallback />}
+            </WorkspaceTabsContent>
+            <WorkspaceTabsContent value="procurement">
+                <Suspense fallback={<WorkspaceTabsFallback />}>
+                    <EstimateProcurementLoader estimateId={estimateId} procurementRowsPromise={procurementRowsPromise} />
+                </Suspense>
+            </WorkspaceTabsContent>
+            <WorkspaceTabsContent value="execution">
+                <Suspense fallback={<WorkspaceTabsFallback />}>
+                    <EstimateExecutionLoader estimateId={estimateId} executionRowsPromise={executionRowsPromise} />
+                </Suspense>
+            </WorkspaceTabsContent>
+            <WorkspaceTabsContent value="finance">
+                {loadedTabs.has('finance') ? (
+                    <Suspense fallback={<WorkspaceTabsFallback />}>
+                        <EstimateFinanceLoader projectId={project.id} financeRowsPromise={financeRowsPromise} financeAggregatesPromise={financeAggregatesPromise} />
                     </Suspense>
-                </TabsContent>
-                <TabsContent value="execution" className="mt-2">
-                    <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                        <EstimateExecutionLoader estimateId={estimateId} executionRowsPromise={executionRowsPromise} />
-                    </Suspense>
-                </TabsContent>
-                <TabsContent value="finance" className="mt-2">
-                    {loadedTabs.has('finance') ? (
-                        <Suspense fallback={<Skeleton className="h-[520px] w-full" />}>
-                            <EstimateFinanceLoader projectId={project.id} financeRowsPromise={financeRowsPromise} financeAggregatesPromise={financeAggregatesPromise} />
-                        </Suspense>
-                    ) : <Skeleton className="h-[520px] w-full" />}
-                </TabsContent>
-                <TabsContent value="docs" className="mt-2">
-                    {loadedTabs.has('docs') ? <EstimateDocuments /> : <Skeleton className="h-[240px] w-full" />}
-                </TabsContent>
-            </Tabs>
-        </div>
+                ) : <WorkspaceTabsFallback />}
+            </WorkspaceTabsContent>
+            <WorkspaceTabsContent value="docs">
+                {loadedTabs.has('docs') ? <EstimateDocuments /> : <WorkspaceTabsFallback size="compact" />}
+            </WorkspaceTabsContent>
+        </WorkspaceTabs>
     );
 }
 
