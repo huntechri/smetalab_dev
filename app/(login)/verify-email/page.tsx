@@ -1,19 +1,40 @@
 import Link from 'next/link';
-import { verifyEmail } from '@/app/(login)/actions';
 
-export default async function VerifyEmailPage({ searchParams }: { searchParams: Promise<{ token?: string }> }) {
+import { verifyEmail } from '@/app/(login)/actions';
+import { Button } from '@/shared/ui/button';
+import { AuthFormShell, AuthStatusMessage } from '@/features/auth/components/AuthFormShell';
+
+export default async function VerifyEmailPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ token?: string }>;
+}) {
   const params = await searchParams;
   const formData = new FormData();
   formData.set('token', params.token ?? '');
   const result = await verifyEmail(undefined, formData);
-  const hasError = typeof result === 'object' && result !== null && 'error' in result && typeof result.error === 'string';
+  const hasError =
+    typeof result === 'object' &&
+    result !== null &&
+    'error' in result &&
+    typeof result.error === 'string';
 
   return (
-    <main className="mx-auto flex min-h-[100dvh] max-w-md items-center px-4">
-      <div className="w-full rounded-xl border p-6 text-center">
-        {hasError ? <p className="text-red-500">{result.error as string}</p> : <p className="text-green-600">Email подтвержден. Теперь можно войти.</p>}
-        <Link href="/sign-in" className="mt-4 inline-block text-sm text-muted-foreground hover:underline">Перейти ко входу</Link>
+    <AuthFormShell title="Подтверждение email" align="center">
+      <div className="space-y-4 text-center">
+        {hasError ? (
+          <AuthStatusMessage variant="error">
+            {result.error as string}
+          </AuthStatusMessage>
+        ) : (
+          <AuthStatusMessage variant="success">
+            Email подтвержден. Теперь можно войти.
+          </AuthStatusMessage>
+        )}
+        <Button variant="outline" asChild>
+          <Link href="/sign-in">Перейти ко входу</Link>
+        </Button>
       </div>
-    </main>
+    </AuthFormShell>
   );
 }
