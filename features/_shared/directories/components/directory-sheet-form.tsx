@@ -6,7 +6,7 @@ import { FormLabel } from "@/shared/ui/form"
 import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group"
 import { cn } from "@/lib/utils"
 
-export const DEFAULT_DIRECTORY_ENTITY_COLOR = "hsl(var(--primary))"
+export const DEFAULT_DIRECTORY_ENTITY_COLOR = "#3b82f6"
 
 export function DirectorySheetForm({ children }: { children: React.ReactNode }) {
   return <div className="space-y-4">{children}</div>
