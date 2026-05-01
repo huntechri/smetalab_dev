@@ -83,6 +83,7 @@ jobs:
       LOCAL_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
       BASE_URL: http://localhost:3000
       AUTH_TRUST_HOST: true
+      PLAYWRIGHT_WEB_SERVER_COMMAND: pnpm exec next dev --turbopack
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -97,8 +98,11 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Prepare empty smoke database
-        run: pnpm db:reset
+      - name: Prepare smoke database
+        run: |
+          pnpm db:reset
+          pnpm db:migrate
+          pnpm db:seed
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
       - name: Run UI smoke tests
