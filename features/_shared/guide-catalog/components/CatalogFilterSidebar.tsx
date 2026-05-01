@@ -53,7 +53,14 @@ export function CatalogFilterSidebar({
         ) : null}
       </div>
 
-      <ScrollArea className={catalogFilterSidebarClassNames.scrollArea} style={{ height: isMobile ? "calc(100vh - 120px)" : "calc(771px - 60px)" }}>
+      <ScrollArea
+        className={cn(
+          catalogFilterSidebarClassNames.scrollArea,
+          isMobile
+            ? catalogFilterSidebarClassNames.mobileScrollArea
+            : catalogFilterSidebarClassNames.desktopScrollArea
+        )}
+      >
         <div className={cn(catalogFilterSidebarClassNames.body, isMobile && catalogFilterSidebarClassNames.mobileBody)}>{children}</div>
       </ScrollArea>
     </div>
