@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { CalendarDays, FilePlus, Plus, Trash2 } from 'lucide-react';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
+import { CompactToken } from '@/shared/ui/compact-token';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
   AlertDialog,
@@ -30,6 +30,10 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   month: '2-digit',
   year: 'numeric',
 });
+
+const estimatesListViewportClassName = 'max-h-96 overflow-y-auto sm:pr-1';
+const estimateCardRowClassName = 'flex items-center gap-1.5 sm:gap-2';
+const estimateCardContentClassName = 'flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden sm:gap-2';
 
 interface ProjectEstimatesCardsProps {
   estimates: EstimateMeta[];
@@ -60,14 +64,12 @@ export function ProjectEstimatesCards({
   const approvedCount = estimates.filter((estimate) => estimate.status === 'approved').length;
 
   return (
-    <section className="rounded-lg border bg-card p-3 text-card-foreground shadow-none">
+    <section className="rounded-lg border bg-card text-card-foreground shadow-none">
       <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-sm font-semibold">Сметы</h2>
-            <Badge variant="neutral" size="xs">
-              {estimates.length}
-            </Badge>
+            <CompactToken variant="neutral">{estimates.length}</CompactToken>
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
             <span>Итого: {moneyFormatter.format(total)}</span>
@@ -88,16 +90,16 @@ export function ProjectEstimatesCards({
       </div>
 
       {estimates.length > 0 ? (
-        <div className="max-h-[430px] overflow-y-auto pr-0 sm:pr-1">
+        <div className={estimatesListViewportClassName}>
           <div className="space-y-2">
             {estimates.map((estimate) => (
               <article
                 key={estimate.id}
                 className="overflow-hidden rounded-md border bg-card shadow-sm sm:rounded-lg"
               >
-                <div className="flex items-center gap-1.5 px-2 py-2 sm:gap-2 sm:px-3 sm:py-2.5">
+                <div className={estimateCardRowClassName}>
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-w-0 flex-nowrap items-center gap-1.5 overflow-hidden sm:gap-2">
+                    <div className={estimateCardContentClassName}>
                       <Link
                         href={`/app/projects/${projectSlug}/estimates/${estimate.slug}`}
                         className="min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm"
@@ -111,13 +113,13 @@ export function ProjectEstimatesCards({
                         badgeSize="xs"
                         className="min-w-20 md:min-w-24"
                       />
-                      <Badge variant="success" size="xs" className="shrink-0 normal-case tracking-normal">
+                      <CompactToken variant="success">
                         {moneyFormatter.format(estimate.total)}
-                      </Badge>
-                      <Badge variant="neutral" size="xs" className="shrink-0 normal-case tracking-normal">
+                      </CompactToken>
+                      <CompactToken variant="neutral">
                         <CalendarDays className="size-3" aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
-                      </Badge>
+                      </CompactToken>
                     </div>
                   </div>
 
