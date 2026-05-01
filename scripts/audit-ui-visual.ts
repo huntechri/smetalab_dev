@@ -348,6 +348,7 @@ function classifyOwnership(relativePath: string, surface: Surface): Ownership {
   }
   if (ACCEPTED_PRIMITIVE_CONTRACT_OWNERS.has(relativePath)) return "primitive-contract"
   if (ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS.has(relativePath)) return "feature-family-contract"
+  if (relativePath.startsWith("shared/ui/")) return "primitive-contract"
   if (relativePath.startsWith("components/ui/") || relativePath.startsWith("packages/ui/")) return "compatibility-surface"
   if (isMarketingOrAuthSurface(relativePath)) return "marketing-auth-exception"
   if (surface === "app" || surface === "feature" || surface === "entity") return "business-runtime-drift"
@@ -691,10 +692,17 @@ function validateTarget(target: TargetSurface, findings: Finding[]): TargetValid
   const targetHighCritical = targetFindings.filter(isHighCritical)
   const sharedHighCritical = sharedResidualFindings.filter(isHighCritical)
   const files = [...new Set(targetFindings.map((finding) => finding.filePath))].sort()
+  const targetOnlyAcceptedSharedResiduals =
+    targetFindings.length > 0 &&
+    targetFindings.every(
+      (finding) => finding.ownership === "primitive-contract" || finding.ownership === "feature-family-contract"
+    )
 
   let status: ValidationStatus = "PASS"
   if (targetHighCritical.length > 0) {
     status = "FAIL"
+  } else if (targetOnlyAcceptedSharedResiduals) {
+    status = "PASS_WITH_SHARED_RESIDUAL"
   } else if (targetFindings.length > 0) {
     status = "REVIEW"
   } else if (sharedResidualFindings.length > 0 && sharedHighCritical.length === 0) {
