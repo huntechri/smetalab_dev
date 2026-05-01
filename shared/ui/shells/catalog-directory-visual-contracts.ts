@@ -28,6 +28,8 @@ export const catalogFilterSidebarClassNames = {
   mobileHeader: "border-none bg-transparent px-0",
   title: "flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-foreground",
   scrollArea: "flex-1 overflow-hidden",
+  mobileScrollArea: "h-[calc(100vh-120px)]",
+  desktopScrollArea: "h-[711px]",
   body: "space-y-6 p-4 pb-6",
   mobileBody: "px-0 pb-12",
   section: "space-y-3",
