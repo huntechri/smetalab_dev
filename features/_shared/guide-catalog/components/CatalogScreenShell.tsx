@@ -1,18 +1,7 @@
 import * as React from "react";
 import { Loader2 } from "lucide-react";
 
-const catalogRootClassName = "space-y-2";
-const catalogHeaderClassName = "mb-2 flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between md:px-0";
-const catalogHeaderContentClassName = "flex items-center gap-3";
-const catalogFrameClassName = "relative flex flex-col items-start gap-6 px-1 transition-all duration-300 md:px-0 lg:flex-row";
-const catalogSidebarClassName = "hidden w-64 shrink-0 animate-in slide-in-from-left sticky top-4 duration-200 lg:block";
-const catalogMainClassName = "relative w-full min-w-0 flex-1";
-const catalogOverlayClassName = "absolute inset-0 z-50 flex items-center justify-center rounded-2xl bg-background/50 backdrop-blur-[1px]";
-const catalogOverlayCardClassName = "flex flex-col items-center gap-3 rounded-xl border bg-card p-6 shadow-xl";
-const catalogOverlayIconClassName = "size-10 animate-spin text-primary";
-const catalogOverlayTextFrameClassName = "flex flex-col items-center gap-1";
-const catalogOverlayTitleClassName = "text-xs font-semibold";
-const catalogOverlayDescriptionClassName = "text-xs font-medium uppercase tracking-wider text-muted-foreground";
+import { catalogScreenShellClassNames } from "@/shared/ui/shells/catalog-directory-visual-contracts";
 
 interface CatalogScreenShellProps {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
@@ -44,7 +33,7 @@ export function CatalogScreenShell({
   children,
 }: CatalogScreenShellProps) {
   return (
-    <div className={catalogRootClassName}>
+    <div className={catalogScreenShellClassNames.root}>
       <input
         type="file"
         ref={fileInputRef}
@@ -55,26 +44,26 @@ export function CatalogScreenShell({
         title={fileInputTitle}
       />
 
-      <div className={catalogHeaderClassName}>
-        <div className={catalogHeaderContentClassName}>{header}</div>
+      <div className={catalogScreenShellClassNames.header}>
+        <div className={catalogScreenShellClassNames.headerContent}>{header}</div>
       </div>
 
-      <div className={catalogFrameClassName}>
+      <div className={catalogScreenShellClassNames.frame}>
         {showSidebar && sidebar ? (
-          <aside className={catalogSidebarClassName}>
+          <aside className={catalogScreenShellClassNames.sidebar}>
             {sidebar}
           </aside>
         ) : null}
 
-        <div className={catalogMainClassName}>
+        <div className={catalogScreenShellClassNames.main}>
           {isOverlayVisible ? (
-            <div className={catalogOverlayClassName}>
-              <div className={catalogOverlayCardClassName}>
-                <Loader2 className={catalogOverlayIconClassName} />
-                <div className={catalogOverlayTextFrameClassName}>
-                  <p className={catalogOverlayTitleClassName}>{overlayTitle}</p>
+            <div className={catalogScreenShellClassNames.overlay}>
+              <div className={catalogScreenShellClassNames.overlayCard}>
+                <Loader2 className={catalogScreenShellClassNames.overlayIcon} />
+                <div className={catalogScreenShellClassNames.overlayTextFrame}>
+                  <p className={catalogScreenShellClassNames.overlayTitle}>{overlayTitle}</p>
                   {overlayDescription ? (
-                    <p className={catalogOverlayDescriptionClassName}>
+                    <p className={catalogScreenShellClassNames.overlayDescription}>
                       {overlayDescription}
                     </p>
                   ) : null}
