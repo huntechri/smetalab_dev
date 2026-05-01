@@ -18,7 +18,6 @@ env:
   NODE_VERSION: 24
   NEXT_TELEMETRY_DISABLED: 1
   AUTH_SECRET: ui-coverage-smoke-test-secret
-  DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
   UI_SMOKE_ROUTES: /
 
 jobs:
@@ -62,6 +61,28 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smetalab_smoke
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d smetalab_smoke"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      ALLOW_TEST_DB_CLEANUP: "true"
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      POSTGRES_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      LOCAL_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      BASE_URL: http://localhost:3000
+      AUTH_TRUST_HOST: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -76,6 +97,11 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+      - name: Prepare smoke database
+        run: |
+          pnpm db:reset
+          pnpm db:migrate
+          pnpm db:seed
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
       - name: Run UI smoke tests
