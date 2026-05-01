@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { cn } from '@/lib/utils';
 import {
+  denseListCalendarPopoverClassName,
   denseListPickerPopoverClassName,
   denseListToolbarActionsClassName,
   denseListToolbarChevronClassName,
@@ -143,7 +144,7 @@ function DateRangeFilterControl({ range, onRangeChange }: DateRangeFilterControl
         </TooltipTrigger>
         <TooltipContent>Выберете период отображения закупок</TooltipContent>
       </Tooltip>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent className={denseListCalendarPopoverClassName} align="start">
         <Calendar
           mode="range"
           selected={{ from: parseIsoDateSafe(range.from), to: parseIsoDateSafe(range.to) }}
