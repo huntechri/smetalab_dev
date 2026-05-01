@@ -81,6 +81,7 @@ const denseListPickerButtonMaxWidthClassName: Record<DenseListPickerButtonMaxWid
 export const denseListActionIconClassName = 'size-6 sm:size-7';
 export const denseListMaterialCardClassName = 'rounded-lg border bg-card p-1 sm:p-1.5 shadow-sm';
 export const denseListPickerPopoverClassName = 'w-[min(20rem,calc(100vw-2rem))] p-0';
+export const denseListCalendarPopoverClassName = 'w-auto p-0';
 export const denseListIndicatorClassName = 'size-2.5 shrink-0 rounded-full';
 export const denseListMutedIndicatorClassName = `${denseListIndicatorClassName} bg-muted-foreground/40`;
 export const denseListTableTextClassName = 'text-[12px]';
