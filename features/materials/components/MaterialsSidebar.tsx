@@ -1,12 +1,18 @@
 'use client';
 
 import * as React from 'react';
-import { ScrollArea } from "@/shared/ui/scroll-area";
+import { Check, Tag, ChevronRight, ChevronDown } from "lucide-react";
 import { Button } from '@/shared/ui/button';
-import { Check, FilterX, Tag, ChevronRight, ChevronDown } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { getMaterialCategoryTree } from '@/app/actions/materials/search';
 import { MaterialCategoryNode } from '@/lib/domain/materials/materials.contract';
+import {
+  CatalogFilterButton,
+  CatalogFilterEmptyText,
+  CatalogFilterLoadingState,
+  CatalogFilterNestedGroup,
+  CatalogFilterSection,
+  CatalogFilterSidebar,
+} from '@/features/_shared/guide-catalog';
 
 interface MaterialsSidebarProps {
   filters: { 
@@ -109,12 +115,6 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
 
   const hasFilters = !!(filters.categoryLv1 || filters.categoryLv2 || filters.categoryLv3 || filters.categoryLv4);
 
-  const containerStyles = isMobile 
-    ? "w-full flex-1 flex flex-col bg-transparent overflow-hidden h-full"
-    : "w-64 bg-card border border-border rounded-xl shadow-sm flex flex-col h-[771px] overflow-hidden";
-
-  const scrollHeight = isMobile ? "calc(100vh - 120px)" : "calc(771px - 60px)";
-
   const renderCategoryNode = (node: MaterialCategoryNode, level: 1 | 2 | 3 | 4, parentPath: string = "") => {
     const currentPath = parentPath ? `${parentPath}>${node.name}` : node.name;
     const isExpanded = expandedNodes.has(currentPath);
@@ -122,23 +122,23 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
     const hasChildren = node.children.length > 0;
 
     return (
-      <div key={currentPath} className="flex flex-col gap-1">
-        <div className="flex items-center gap-1 group">
-          <Button
-            variant="ghost"
+      <div key={currentPath}>
+        <div className="flex items-center gap-1">
+          <CatalogFilterButton
             onClick={() => handleCategorySelect(level, node.name, currentPath)}
             title={node.name}
+            selected={isSelected}
+            checkIcon={<Check className="size-3" />}
           >
-            <span className="block whitespace-normal break-words">{node.name}</span>
-            {isSelected && <Check className="size-3 shrink-0 ml-auto self-center" />}
-          </Button>
+            {node.name}
+          </CatalogFilterButton>
           
           {hasChildren && (
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={(e) => {
-                e.stopPropagation();
+              onClick={(event) => {
+                event.stopPropagation();
                 toggleExpand(currentPath);
               }}
             >
@@ -147,70 +147,33 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
           )}
         </div>
 
-        {hasChildren && isExpanded && (
-          <div className="flex flex-col gap-1 pl-4 ml-2 border-l border-border/60">
+        {hasChildren && isExpanded ? (
+          <CatalogFilterNestedGroup>
             {node.children.map((child) => renderCategoryNode(child, (level + 1) as 1 | 2 | 3 | 4, currentPath))}
-          </div>
-        )}
+          </CatalogFilterNestedGroup>
+        ) : null}
       </div>
     );
   };
 
   return (
-    <div className={cn(containerStyles, className)}>
-      <div className={cn(
-        "p-4 flex items-center justify-between border-b border-border/50 bg-secondary/10 shrink-0",
-        isMobile && "bg-transparent border-none px-0"
-      )}>
-        <h3 className="text-[14px] font-semibold text-foreground flex items-center gap-2 uppercase tracking-wider">
-          Фильтры
-        </h3>
-        {hasFilters && (
-          <Button 
-            variant="ghost" 
-            size="icon-sm" 
-            onClick={resetFilters}
-          >
-            <FilterX className="size-3 mr-1" />
-            Сбросить
-          </Button>
-        )}
-      </div>
-
-      <ScrollArea className="flex-1 overflow-hidden" style={{ height: scrollHeight }}>
-        <div className={cn("p-4 space-y-6 pb-6", isMobile && "px-0 pb-12")}>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 px-2 text-[12px] font-medium text-muted-foreground">
-              <Tag className="size-3.5" />
-              Каскадный каталог
-            </div>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant="ghost"
-                onClick={() => handleCategorySelect(1, undefined)}
-              >
-                <span className="block whitespace-normal break-words">Все материалы</span>
-              </Button>
-              
-              {categoryTree.map((node) => renderCategoryNode(node, 1))}
-              
-              {isLoading && categoryTree.length === 0 && (
-                 <div className="px-2 py-4 flex flex-col items-center gap-2">
-                    <div className="size-4 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
-                    <span className="text-[11px] text-muted-foreground animate-pulse">Загрузка структуры...</span>
-                 </div>
-              )}
-              
-              {!isLoading && categoryTree.length === 0 && (
-                <div className="px-2 py-4 text-[12px] text-muted-foreground text-center italic opacity-60">
-                   Категории не найдены
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </ScrollArea>
-    </div>
+    <CatalogFilterSidebar hasFilters={hasFilters} onReset={resetFilters} isMobile={isMobile} className={className}>
+      <CatalogFilterSection icon={Tag} title="Каскадный каталог">
+        <CatalogFilterButton onClick={() => handleCategorySelect(1, undefined)}>
+          Все материалы
+        </CatalogFilterButton>
+        
+        {categoryTree.map((node) => renderCategoryNode(node, 1))}
+        
+        {isLoading && categoryTree.length === 0 ? (
+          <CatalogFilterLoadingState>Загрузка структуры...</CatalogFilterLoadingState>
+        ) : null}
+        
+        {!isLoading && categoryTree.length === 0 ? (
+          <CatalogFilterEmptyText>Категории не найдены</CatalogFilterEmptyText>
+        ) : null}
+      </CatalogFilterSection>
+    </CatalogFilterSidebar>
   );
 }
 
