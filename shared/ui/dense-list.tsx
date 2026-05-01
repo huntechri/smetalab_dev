@@ -69,8 +69,8 @@ const denseListViewportSizeClassName: Record<DenseListViewportSize, string> = {
 };
 
 const denseListMetaFieldLabelClassName: Record<DenseListMetaFieldAlign, string> = {
-  start: 'mb-1 text-[9px] font-bold uppercase tracking-[0.08em] text-muted-foreground',
-  end: 'mb-1 text-[9px] font-bold uppercase tracking-[0.08em] text-muted-foreground lg:text-right',
+  start: 'mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground',
+  end: 'mb-1 text-xs font-bold uppercase tracking-wide text-muted-foreground lg:text-right',
 };
 
 const denseListPickerButtonMaxWidthClassName: Record<DenseListPickerButtonMaxWidth, string> = {
@@ -84,7 +84,7 @@ export const denseListPickerPopoverClassName = 'w-[min(20rem,calc(100vw-2rem))] 
 export const denseListCalendarPopoverClassName = 'w-auto p-0';
 export const denseListIndicatorClassName = 'size-2.5 shrink-0 rounded-full';
 export const denseListMutedIndicatorClassName = `${denseListIndicatorClassName} bg-muted-foreground/40`;
-export const denseListTableTextClassName = 'text-[12px]';
+export const denseListTableTextClassName = 'text-xs';
 export const denseListTableNumericCellClassName = `${denseListTableTextClassName} tabular-nums text-right`;
 export const denseListTableAmountClassName = `${denseListTableNumericCellClassName} font-bold tracking-tight pr-2`;
 export const denseListTableActionsClassName = 'flex justify-start pl-2';
@@ -92,7 +92,7 @@ export const denseListToolbarRowClassName = 'flex w-auto flex-row items-center g
 export const denseListToolbarFilterContentClassName = 'flex items-center gap-2 truncate';
 export const denseListToolbarFilterLabelClassName = 'hidden truncate font-semibold lg:inline';
 export const denseListToolbarChevronClassName = 'ml-1 hidden size-3.5 shrink-0 opacity-50 lg:block';
-export const denseListToolbarDateLabelClassName = 'hidden flex-1 text-left text-[13px] font-semibold tracking-tight sm:text-center lg:inline';
+export const denseListToolbarDateLabelClassName = 'hidden flex-1 text-left text-sm font-semibold tracking-tight sm:text-center lg:inline';
 export const denseListToolbarDividerClassName = 'mx-1 hidden h-6 w-px bg-border xl:block';
 export const denseListToolbarActionsClassName = 'hidden flex-row items-center gap-2 overflow-x-auto pb-1 sm:flex xl:pb-0';
 export const denseListToolbarMobileActionsClassName = 'ml-auto sm:hidden';
@@ -112,7 +112,7 @@ export const denseListMaterialNameClassName = `${denseListInlineTextBaseClassNam
 
 const denseListInlineEditIconClassName = '[&_svg]:hidden';
 export const denseListInlineCellClassName = cn(
-  'h-6 sm:h-5 min-w-0 rounded-sm border-0 bg-transparent px-1 sm:px-0.5 py-0 text-[11px] sm:text-[10px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0',
+  'h-6 sm:h-5 min-w-0 rounded-sm border-0 bg-transparent px-1 sm:px-0.5 py-0 text-xs sm:text-xs font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0',
   denseListInlineEditIconClassName,
 );
 export const denseListInlineQtyCellClassName = cn(
@@ -133,7 +133,7 @@ export const denseListInlineDateCellClassName = cn(
 );
 export const denseListInlineTextCellClassName = cn(
   denseListInlineCellClassName,
-  'h-auto min-h-6 sm:min-h-5 w-full !justify-start !whitespace-normal break-words px-0 text-left text-[11px] sm:text-[11px] font-semibold leading-tight text-foreground hover:bg-transparent',
+  'h-auto min-h-6 sm:min-h-5 w-full !justify-start !whitespace-normal break-words px-0 text-left text-xs sm:text-xs font-semibold leading-tight text-foreground hover:bg-transparent',
 );
 
 function DenseListSurface({ className, ...props }: React.ComponentProps<'section'>) {
@@ -337,7 +337,7 @@ function DenseListInlineMetric({ label, className, children, ...props }: DenseLi
   return (
     <div
       className={cn(
-        'inline-flex h-6 items-center gap-1 whitespace-nowrap rounded-full border border-border bg-muted px-1.5 py-0 text-[11px] font-semibold leading-none text-muted-foreground sm:h-5 sm:text-[10px]',
+        'inline-flex h-6 items-center gap-1 whitespace-nowrap rounded-full border border-border bg-muted px-1.5 py-0 text-xs font-semibold leading-none text-muted-foreground sm:h-5 sm:text-xs',
         className,
       )}
       {...props}
@@ -359,7 +359,7 @@ function DenseListPickerButton({ maxWidth = 'default', className, ...props }: De
       variant="ghost"
       size="xs"
       className={cn(
-        'h-6 justify-start gap-1 rounded-full border border-border bg-muted px-1.5 text-[11px] font-semibold text-foreground hover:bg-muted/80 sm:h-5 sm:text-[10px]',
+        'h-6 justify-start gap-1 rounded-full border border-border bg-muted px-1.5 text-xs font-semibold text-foreground hover:bg-muted/80 sm:h-5 sm:text-xs',
         denseListPickerButtonMaxWidthClassName[maxWidth],
         className,
       )}

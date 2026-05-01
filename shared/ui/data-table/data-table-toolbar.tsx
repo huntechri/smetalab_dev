@@ -51,7 +51,7 @@ export function DataTableToolbar({
 
     return (
         <div className={cn(
-            "justify-between px-1 md:px-0",
+            "justify-between px-0",
             compactMobileToolbar
                 ? "flex items-center gap-2 xl:flex-row xl:items-center"
                 : "flex flex-col gap-3 xl:flex-row xl:items-center"
@@ -101,12 +101,12 @@ export function DataTableToolbar({
                     </div>
 
                     {showAiSearch && onSearch && (
-                        <div className="flex shrink-0 items-center gap-2 px-2 h-7 rounded-md border border-border bg-muted/30">
+                        <div className="flex shrink-0 items-center gap-2 h-7 rounded-md border border-border bg-muted/30">
                             <Tooltip>
                                 <TooltipTrigger asChild>
                                     <div className="flex items-center gap-3 cursor-help">
                                         <Sparkles className={cn("h-4 w-4 shrink-0", isAiMode ? "text-foreground" : "text-muted-foreground")} />
-                                        <span className="text-[12px] font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
+                                        <span className="text-xs font-medium text-muted-foreground whitespace-nowrap hidden sm:inline">Умный поиск</span>
                                     </div>
                                 </TooltipTrigger>
                                 <TooltipContent>
@@ -133,7 +133,7 @@ export function DataTableToolbar({
             {actions && (
                 <div
                     className={cn(
-                        "flex items-center gap-2 xl:justify-end overflow-x-auto xl:pb-0 scrollbar-hide",
+                        "flex items-center gap-2 xl:justify-end overflow-x-auto scrollbar-hide",
                         hasFilterControls ? "xl:w-auto" : "xl:w-full",
                         compactMobileToolbar
                             ? "w-auto justify-end shrink-0"

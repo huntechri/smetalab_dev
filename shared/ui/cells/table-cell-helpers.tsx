@@ -64,7 +64,7 @@ type FormattedCurrencyCellProps = {
 
 export function FormattedCurrencyCell({ value, className }: FormattedCurrencyCellProps) {
   return (
-    <div className={cn("text-center font-bold text-[12px] tracking-tight", className)}>
+    <div className={cn("text-center font-bold text-xs tracking-tight", className)}>
       {formatCurrencyRu(value)}
     </div>
   )
@@ -76,7 +76,7 @@ type CenteredUnitCellProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export function CenteredUnitCell({ value, className, ...props }: CenteredUnitCellProps) {
   return (
-    <div className={cn("text-center text-[12px] text-muted-foreground font-medium", className)} {...props}>
+    <div className={cn("text-center text-xs text-muted-foreground font-medium", className)} {...props}>
       {value}
     </div>
   )

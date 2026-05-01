@@ -42,7 +42,7 @@ export function PermissionsMatrix() {
             Функциональная область
           </TableHead>
           {roles.map((role) => (
-            <TableHead key={role} className="border-l border-gray-100 px-2 py-4 text-center">
+            <TableHead key={role} className="border-l border-border/70 px-2 py-4 text-center">
               <Badge
                 variant="secondary"
                 className="border-none bg-zinc-100 px-2 py-0.5 text-xs font-semibold text-zinc-700"
@@ -67,7 +67,7 @@ export function PermissionsMatrix() {
               const isUpdating = updating === `${type}-${role}-${perm.id}`;
 
               return (
-                <TableCell key={role} className="border-l border-gray-50 px-2 py-4">
+                <TableCell key={role} className="border-l border-border/50 px-2 py-4">
                   <div className="flex items-center justify-center">
                     <PermissionLevelControl
                       currentLevel={currentLevel}
@@ -119,7 +119,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <div className="overflow-hidden rounded-2xl border-2 border-zinc-100 bg-white shadow-2xl shadow-zinc-200/50">
+        <div className="overflow-hidden rounded-2xl border-2 border-border/70 bg-white shadow-2xl shadow-zinc-200/50">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>

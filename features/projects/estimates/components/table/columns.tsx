@@ -34,7 +34,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         cell: ({ row }) => {
             const item = row.original;
             if (item.kind === 'section') {
-                return <div className="pl-1 tabular-nums text-[12px] font-semibold">{item.code}</div>;
+                return <div className="pl-1 tabular-nums text-xs font-semibold">{item.code}</div>;
             }
 
             if (item.kind === 'work') {
@@ -53,11 +53,11 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 <ChevronRight className="size-3.5 text-muted-foreground transition-transform duration-200" />
                             )}
                         </Button>
-                        <span className="tabular-nums text-[12px] font-medium">{item.code}</span>
+                        <span className="tabular-nums text-xs font-medium">{item.code}</span>
                     </div>
                 );
             }
-            return <div className="pl-9 tabular-nums text-[12px] text-muted-foreground/80">{item.code}</div>;
+            return <div className="pl-9 tabular-nums text-xs text-muted-foreground/80">{item.code}</div>;
         },
     },
     {
@@ -76,7 +76,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Раздел: ${item.name}`}
                         title={item.name}
-                        className="text-[11px] font-bold uppercase tracking-widest truncate"
+                        className="text-xs font-bold uppercase tracking-widest truncate"
                     />
                 );
             }
@@ -88,7 +88,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Наименование: ${item.name}`}
-                        className={item.kind === 'material' ? 'text-[12px] italic text-muted-foreground' : 'text-[12px] font-normal'}
+                        className={item.kind === 'material' ? 'text-xs italic text-muted-foreground' : 'text-xs font-normal'}
                     />
                 </div>
             );
@@ -111,7 +111,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-center">Ед. изм.</div>,
         size: 70,
         cell: ({ row }) => (
-            <div className={row.original.kind === 'section' ? 'text-center text-[12px] text-muted-foreground/50' : row.original.kind === 'material' ? 'text-[12px] italic text-muted-foreground text-center' : 'text-center text-[12px] text-muted-foreground font-medium'}>
+            <div className={row.original.kind === 'section' ? 'text-center text-xs text-muted-foreground/50' : row.original.kind === 'material' ? 'text-xs italic text-muted-foreground text-center' : 'text-center text-xs text-muted-foreground font-medium'}>
                 {row.original.unit}
             </div>
         )
@@ -121,7 +121,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 80,
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} ariaLabel={`Количество: ${row.original.name}`} />}
             </div>
         )
@@ -131,7 +131,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 100,
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} ariaLabel={`Цена: ${row.original.name}`} />}
             </div>
         )
@@ -144,14 +144,14 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-[11px] font-bold tracking-tight tabular-nums opacity-90">
+                    <div className="pr-6 text-right text-xs font-bold tracking-tight tabular-nums opacity-90">
                         Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
                     </div>
                 );
             }
 
             return (
-                <div className={`text-right tabular-nums pr-6 text-[12px] ${row.original.kind === 'material' ? 'italic text-muted-foreground' : 'font-medium text-primary/90'}`}>
+                <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : 'font-medium text-primary/90'}`}>
                     <MoneyCell value={row.original.sum} />
                 </div>
             );
@@ -163,10 +163,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-right">Расход</div>,
         cell: ({ row }) => {
             if (row.original.kind === 'work' || row.original.kind === 'section') {
-                return <div className="text-right tabular-nums pr-6 text-[12px]" />;
+                return <div className="text-right tabular-nums pr-6 text-xs" />;
             }
             return (
-                <div className="text-right tabular-nums pr-6 text-[12px]">
+                <div className="text-right tabular-nums pr-6 text-xs">
                     <EditableCell
                         type="number"
                         align="right"

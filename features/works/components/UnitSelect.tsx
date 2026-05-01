@@ -95,7 +95,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                                     key={unit}
                                     value={unit}
                                     onSelect={handleSelect}
-                                    className="text-[12px] py-1"
+                                    className="text-xs py-1"
                                 >
                                     <Check
                                         className={cn(

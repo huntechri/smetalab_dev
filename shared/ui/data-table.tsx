@@ -129,7 +129,7 @@ function DataTableHeaderCell<TData>({ header }: DataTableHeaderCellProps<TData>)
         <th
             key={header.id}
             colSpan={header.colSpan}
-            className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
+            className="h-10 px-3 md:px-4 text-left align-middle text-xs font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
             style={{ width: header.getSize() }}
             aria-sort={ariaSort}
         >
@@ -273,7 +273,7 @@ export function DataTable<TData, TValue>({
                 <div
                     className={cn(
                         "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
-                        isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20",
+                        isAiMode && "border-border/60 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20",
                         tableContainerClassName,
                     )}
                     style={{ contain: 'layout style paint' }}
@@ -283,7 +283,7 @@ export function DataTable<TData, TValue>({
                             <div
                                 role="status"
                                 aria-live="polite"
-                                className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg"
+                                className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-xs font-medium text-muted-foreground shadow-lg"
                             >
                                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
                                 <span>Загрузка...</span>

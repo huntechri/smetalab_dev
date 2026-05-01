@@ -94,7 +94,7 @@ export function NotificationBell() {
                 <div className="flex items-center justify-between border-b pb-2 mb-2">
                     <h4 className="font-semibold">Уведомления</h4>
                     {unreadCount > 0 && (
-                        <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
+                        <Badge variant="secondary" className="border-none bg-blue-500/12 text-xs uppercase text-blue-700">
                             {unreadCount} новых
                         </Badge>
                     )}

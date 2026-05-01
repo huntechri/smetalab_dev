@@ -48,7 +48,7 @@ export function TeamMembersCard({
                     </div>
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
-                            <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
+                            <Label htmlFor="search" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
                             <div className="w-[min(20rem,calc(100vw-2rem))]">
                                 <SearchInput
                                     id="search"
@@ -59,7 +59,7 @@ export function TeamMembersCard({
                             </div>
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                            <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
                                     <Button

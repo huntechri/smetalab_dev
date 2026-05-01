@@ -24,7 +24,7 @@ export const DataTableRow = React.memo(<TData,>({
                     )}
                     style={{ width: cell.column.getSize() }}
                 >
-                    <div className="w-full text-[12px] leading-tight">
+                    <div className="w-full text-xs leading-tight">
                         {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()

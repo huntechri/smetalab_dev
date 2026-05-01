@@ -40,7 +40,7 @@ export function InviteTeamMemberCard({
             <div>
                 <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
-                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
+                        <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
                         <Input
                             id="email"
                             type="email"
@@ -51,7 +51,7 @@ export function InviteTeamMemberCard({
                        />
                     </div>
                     <div className="space-y-1.5 shrink-0">
-                        <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                        <Label className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline">

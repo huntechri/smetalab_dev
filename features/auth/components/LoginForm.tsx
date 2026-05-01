@@ -56,13 +56,13 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               S
             </div>
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/70">Smetalab</p>
+              <p className="text-xs uppercase tracking-widest text-white/70">Smetalab</p>
               <p className="text-sm font-semibold">BuildOS</p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/70">
+            <p className="text-xs uppercase tracking-widest text-white/70">
               {isSignIn ? 'Client access' : 'Start building'}
             </p>
             <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
@@ -79,11 +79,11 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
           <div className="grid gap-3 text-sm text-white/80 sm:grid-cols-2">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70">Безопасность</p>
+              <p className="text-xs uppercase tracking-widest text-white/70">Безопасность</p>
               <p className="mt-2 font-semibold">RBAC и аудит действий</p>
             </div>
             <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70">Команды</p>
+              <p className="text-xs uppercase tracking-widest text-white/70">Команды</p>
               <p className="mt-2 font-semibold">Роли для всех участников</p>
             </div>
           </div>

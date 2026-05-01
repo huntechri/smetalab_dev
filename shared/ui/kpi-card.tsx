@@ -69,7 +69,7 @@ export function KPICard({
         >
             <div className="flex flex-col justify-center flex-1 p-2 sm:p-3 md:p-4 min-h-0">
                 <CardHeader className="p-0 space-y-0 relative">
-                    <CardDescription className="text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
+                    <CardDescription className="text-xs sm:text-xs md:text-xs font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
                         {title}
                     </CardDescription>
                     <CardTitle
@@ -89,7 +89,7 @@ export function KPICard({
                 </CardHeader>
                 {description && (
                     <div className="flex items-center justify-between mt-0.5">
-                        <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium opacity-70 leading-none">
+                        <span className="text-xs sm:text-xs text-muted-foreground font-medium opacity-70 leading-none">
                             {description}
                         </span>
                     </div>

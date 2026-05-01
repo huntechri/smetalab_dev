@@ -49,7 +49,7 @@ export function CatalogTableWrapper<TData, TValue>({
       data={data}
       desktopHeight="720px"
       mobileHeight="400px"
-      className="text-[12px]"
+      className="text-xs"
       filterColumn="name"
       filterPlaceholder={filterPlaceholder}
       emptyState={

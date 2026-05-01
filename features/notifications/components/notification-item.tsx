@@ -45,7 +45,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{notification.title}</p>
-            <Badge variant="secondary" className="border-none bg-slate-500/12 text-[10px] uppercase text-slate-700">
+            <Badge variant="secondary" className="border-none bg-slate-500/12 text-xs uppercase text-slate-700">
               Прочитано
             </Badge>
           </div>
@@ -69,7 +69,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold">{notification.title}</p>
-          <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
+          <Badge variant="secondary" className="border-none bg-blue-500/12 text-xs uppercase text-blue-700">
             Новое
           </Badge>
         </div>

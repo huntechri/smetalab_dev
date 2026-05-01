@@ -216,7 +216,7 @@ function EstimateTabTitleRow({ className, ...props }: React.ComponentProps<'div'
 function EstimateTabCodeText({ className, ...props }: EstimateTabTextProps) {
   return (
     <span
-      className={cn('shrink-0 text-[9px] font-semibold leading-tight text-muted-foreground sm:text-[11px]', className)}
+      className={cn('shrink-0 text-xs font-semibold leading-tight text-muted-foreground sm:text-xs', className)}
       {...props}
     />
   );
@@ -225,7 +225,7 @@ function EstimateTabCodeText({ className, ...props }: EstimateTabTextProps) {
 function EstimateTabNameText({ className, ...props }: EstimateTabTextProps) {
   return (
     <span
-      className={cn('min-w-0 flex-1 text-[9px] font-semibold leading-tight text-foreground sm:text-[11px]', className)}
+      className={cn('min-w-0 flex-1 text-xs font-semibold leading-tight text-foreground sm:text-xs', className)}
       {...props}
     />
   );
@@ -266,7 +266,7 @@ function EstimateTabMetricSection({
     <section className={cn('space-y-2.5', className)} {...props}>
       <div className={cn('flex items-center gap-2 border-b pb-1.5', estimateTabSectionToneClassName[tone])}>
         <span className={cn('h-1.5 w-1.5 rounded-full', estimateTabSectionMarkerClassName[tone])} aria-hidden="true" />
-        <span className="text-[9px] font-bold uppercase tracking-widest sm:text-[10px]">{title}</span>
+        <span className="text-xs font-bold uppercase tracking-widest sm:text-xs">{title}</span>
       </div>
       {children}
     </section>

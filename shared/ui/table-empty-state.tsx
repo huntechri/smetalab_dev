@@ -38,7 +38,7 @@ export function TableEmptyState({
         <EmptyHeader>
           <EmptyTitle className="text-[16px] font-semibold text-foreground/80">{title}</EmptyTitle>
           {description && (
-            <EmptyDescription className="text-muted-foreground/70 text-[13px]">
+            <EmptyDescription className="text-muted-foreground/70 text-sm">
               {description}
             </EmptyDescription>
           )}

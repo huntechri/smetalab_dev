@@ -18,18 +18,18 @@ export function TeamWidgetSection() {
                         <div key={member.name} className="flex items-center justify-between rounded-xl border border-border/20 bg-muted/10 p-3 transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm cursor-pointer">
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-9 w-9 border border-border/50">
-                                    <AvatarFallback className="bg-primary/5 text-[11px] font-bold text-primary">
+                                    <AvatarFallback className="bg-primary/5 text-xs font-bold text-primary">
                                         {member.name[0]}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="leading-tight">
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{member.role}</p>
+                                    <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{member.role}</p>
                                     <p className="text-sm font-semibold">{member.name}</p>
                                 </div>
                             </div>
                             <div className="flex items-center gap-1.5">
                                 <span className={cn('h-1.5 w-1.5 rounded-full', member.status === 'Онлайн' ? 'bg-emerald-500 animate-pulse' : 'bg-muted-foreground/30')} />
-                                <span className="text-[10px] font-medium text-muted-foreground">{member.status}</span>
+                                <span className="text-xs font-medium text-muted-foreground">{member.status}</span>
                             </div>
                         </div>
                     ))}

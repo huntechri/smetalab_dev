@@ -286,7 +286,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         <Virtuoso
                             ref={virtuosoRef}
                             data={filteredMaterials}
-                            style={{ height: '100%', width: '100%' }}
+                            className="h-full w-full"
                             className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                             increaseViewportBy={300}
                             itemContent={(_index, material) => {
@@ -313,23 +313,23 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                 </div>
                                                 <div className="space-y-1 min-w-0 flex-1">
                                                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                                                        <span className="text-[10px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/60 px-1.5 py-0.5 rounded leading-none border border-border/40">
+                                                        <span className="text-xs font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/60 px-1.5 py-0.5 rounded leading-none border border-border/40">
                                                             {material.code}
                                                         </span>
                                                         {material.categoryLv1 && (
-                                                            <span className="text-[10px] text-muted-foreground font-medium bg-muted/30 px-1.5 py-0.5 rounded truncate max-w-[120px] leading-none border border-border/20">
+                                                            <span className="text-xs text-muted-foreground font-medium bg-muted/30 px-1.5 py-0.5 rounded truncate max-w-[120px] leading-none border border-border/20">
                                                                 {material.categoryLv1}
                                                             </span>
                                                         )}
                                                     </div>
-                                                    <h4 className="text-[13px] sm:text-[14px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                                    <h4 className="text-sm sm:text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        <span className="text-[11px] font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
+                                                        <span className="text-xs font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
                                                             {formatPrice(material.price)} ₽
                                                         </span>
-                                                        <span className="text-[10px] text-muted-foreground/60 font-medium">
+                                                        <span className="text-xs text-muted-foreground/60 font-medium">
                                                             {formatUnit(material.unit)}
                                                         </span>
                                                     </div>

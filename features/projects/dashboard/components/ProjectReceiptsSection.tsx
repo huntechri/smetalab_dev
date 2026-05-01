@@ -204,7 +204,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
         ) : null}
         <Table>
           <TableHeader>
-            <TableRow className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
+            <TableRow className="text-xs sm:text-xs font-bold uppercase tracking-wider text-muted-foreground/70">
               <TableHead className="h-8">Дата</TableHead>
               <TableHead className="h-8">Тип</TableHead>
               <TableHead className="h-8">Сумма</TableHead>
@@ -215,7 +215,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id} className="text-[9px] sm:text-[11px]">
+              <TableRow key={row.id} className="text-xs sm:text-xs">
                 <TableCell className="py-2">{new Date(row.date).toLocaleDateString('ru-RU')}</TableCell>
                 <TableCell className="py-2">{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
                 <TableCell className={cn('py-2 font-semibold', row.amount < 0 ? 'text-rose-600' : 'text-emerald-600')}>{formatCurrency(row.amount)}</TableCell>

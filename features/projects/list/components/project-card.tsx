@@ -40,8 +40,8 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
-                            <Badge variant="outline" className="h-5 px-2 text-[10px]">{statusLabel}</Badge>
-                            <Badge variant="secondary" className="h-5 px-2 text-[10px]">{project.progress}%</Badge>
+                            <Badge variant="outline" className="h-5 px-2 text-xs">{statusLabel}</Badge>
+                            <Badge variant="secondary" className="h-5 px-2 text-xs">{project.progress}%</Badge>
                         </div>
                         <CardTitle className="mt-1.5 text-base leading-tight">
                             <Link
@@ -67,7 +67,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
             <CardContent className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
                 <div className="grid gap-2 sm:grid-cols-2">
                     <div className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2">
-                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                             <CircleDollarSign className="size-3.5" aria-hidden="true" />
                             <span>Бюджет</span>
                         </div>
@@ -76,7 +76,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         </p>
                     </div>
                     <div className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2">
-                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-2 text-xs font-medium text-muted-foreground">
                             <CalendarRange className="size-3.5" aria-hidden="true" />
                             <span>Сроки</span>
                         </div>

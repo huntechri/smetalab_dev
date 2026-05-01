@@ -16,7 +16,7 @@ export const directorySheetFormClassNames = {
   radioGroup: "flex h-8 flex-row items-center gap-2 sm:gap-4",
   radioLabel: "flex items-center gap-1 space-y-0 sm:gap-2",
   radioItem: "size-3.5",
-  radioText: "whitespace-nowrap text-[10px] font-normal sm:text-xs",
+  radioText: "whitespace-nowrap text-xs font-normal sm:text-xs",
   colorInputFrame: "w-14",
   body: "space-y-4 px-4 pb-4 pt-4 sm:px-6 sm:pb-6",
 } as const
@@ -43,7 +43,7 @@ export const catalogFilterSidebarClassNames = {
   emptyText: "px-2 py-4 text-center text-xs italic text-muted-foreground/60",
   loadingFrame: "flex flex-col items-center gap-2 px-2 py-4",
   loadingSpinner: "size-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary",
-  loadingLabel: "animate-pulse text-[11px] text-muted-foreground",
+  loadingLabel: "animate-pulse text-xs text-muted-foreground",
   nestedGroup: "ml-2 flex flex-col gap-1 border-l border-border/60 pl-4",
 } as const
 

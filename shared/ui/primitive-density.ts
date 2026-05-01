@@ -48,7 +48,7 @@ export const primitiveBadgeVariantClassNames = {
 
 export const primitiveBadgeSizeClassNames = {
   default: "px-2 py-0.5 text-xs",
-  xs: "px-1.5 py-0 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide",
+  xs: "px-1.5 py-0 text-xs sm:text-xs font-semibold uppercase tracking-wide",
 } as const
 
 export const primitiveInputBaseClassName =
@@ -89,7 +89,7 @@ export const primitiveInputGroupRootClassName = [
 ].join(" ")
 
 export const primitiveInputGroupAddonBaseClassName =
-  "text-muted-foreground flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-[calc(var(--radius)-5px)] [&>svg:not([class*='size-'])]:size-4"
+  "text-muted-foreground flex h-auto cursor-text select-none items-center justify-center gap-2 py-1.5 text-sm font-medium group-data-[disabled=true]/input-group:opacity-50 [&>kbd]:rounded-xs [&>svg:not([class*='size-'])]:size-4"
 
 export const primitiveInputGroupAddonAlignClassNames = {
   "inline-start": "order-first pl-3 has-[>button]:ml-[-0.45rem] has-[>kbd]:ml-[-0.35rem]",
@@ -104,9 +104,9 @@ export const primitiveInputGroupButtonBaseClassName =
   "flex items-center gap-2 text-sm shadow-none"
 
 export const primitiveInputGroupButtonSizeClassNames = {
-  xs: "h-6 gap-1 rounded-[calc(var(--radius)-5px)] px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
+  xs: "h-6 gap-1 rounded-xs px-2 has-[>svg]:px-2 [&>svg:not([class*='size-'])]:size-3.5",
   sm: "h-8 gap-1.5 rounded-md px-2.5 has-[>svg]:px-2.5",
-  "icon-xs": "size-6 rounded-[calc(var(--radius)-5px)] p-0 has-[>svg]:p-0",
+  "icon-xs": "size-6 rounded-xs p-0 has-[>svg]:p-0",
   "icon-sm": "size-8 p-0 has-[>svg]:p-0",
 } as const
 

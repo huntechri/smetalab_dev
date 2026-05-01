@@ -108,7 +108,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                     <Virtuoso
                         ref={virtuosoRef}
                         data={works}
-                        style={{ height: '100%', width: '100%' }}
+                        className="h-full w-full"
                         className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                         increaseViewportBy={300}
                         itemContent={(index, work) => (
@@ -117,29 +117,29 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                     className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 transition-all cursor-default border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden"
                                 >
                                     <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                        <div className="hidden xs:flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-muted text-[9px] font-mono text-muted-foreground border border-border/50">
+                                        <div className="hidden xs:flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-muted text-xs font-mono text-muted-foreground border border-border/50">
                                             {work.code.split('.').pop()}
                                         </div>
                                         <div className="space-y-0.5 min-w-0 flex-1">
                                             <div className="flex items-center gap-1.5 flex-wrap">
-                                                <span className="text-[9px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/80 px-1 py-0.5 rounded leading-none">
+                                                <span className="text-xs font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/80 px-1 py-0.5 rounded leading-none">
                                                     {work.code}
                                                 </span>
                                                 {work.category && (
-                                                    <span className="text-[9px] text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[80px] sm:max-w-[120px] leading-none">
+                                                    <span className="text-xs text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[80px] sm:max-w-[120px] leading-none">
                                                         {work.category}
                                                     </span>
                                                 )}
                                             </div>
-                                            <h4 className="text-[13px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                            <h4 className="text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
                                                 {work.name}
                                             </h4>
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
-                                                <span className="text-[12px] font-medium text-foreground">
+                                                <span className="text-xs font-medium text-foreground">
                                                     {formatPrice(work.price)} ₽
                                                 </span>
-                                                <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>
+                                                <span className="text-xs text-muted-foreground leading-none">/ {work.unit}</span>
                                             </div>
                                         </div>
                                     </div>
