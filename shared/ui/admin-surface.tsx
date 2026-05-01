@@ -76,6 +76,25 @@ function AdminHeaderActions({ children }: { children: React.ReactNode }) {
   return <div className="ml-auto flex shrink-0 items-center gap-2">{children}</div>
 }
 
+function AdminPublicHeader({
+  brand,
+  actions,
+}: {
+  brand: React.ReactNode
+  actions: React.ReactNode
+}) {
+  return (
+    <header className="border-b border-border">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <div className="[&>a]:flex [&>a]:items-center [&>a]:gap-2 [&_svg]:size-6 [&_svg]:text-primary [&_span]:text-xl [&_span]:font-semibold [&_span]:text-foreground">
+          {brand}
+        </div>
+        <div className="flex items-center gap-4 [&_[aria-hidden=true]]:h-9">{actions}</div>
+      </div>
+    </header>
+  )
+}
+
 function AdminStatusBadge({
   children,
   variant = "neutral",
@@ -122,6 +141,23 @@ function AdminMetricCard({
       <CardContent>
         <div className="text-2xl font-bold">{value}</div>
       </CardContent>
+    </Card>
+  )
+}
+
+function AdminSectionCard({
+  title,
+  children,
+}: {
+  title: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent>{children}</CardContent>
     </Card>
   )
 }
@@ -299,6 +335,10 @@ function AdminEmptyState({
       {description ? <p className="max-w-sm text-sm text-muted-foreground">{description}</p> : null}
     </div>
   )
+}
+
+function AdminEmptyMessage({ children }: { children: React.ReactNode }) {
+  return <div className="p-8 text-center text-sm italic text-muted-foreground">{children}</div>
 }
 
 function AdminTabsList({ children }: { children: React.ReactNode }) {
@@ -522,7 +562,7 @@ function AdminImpersonationBannerView({
   action: React.ReactNode
 }) {
   return (
-    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-warning/10 px-4 py-2 text-sm text-foreground">
+    <div className="sticky top-0 z-50 flex items-center justify-between border-b border-border bg-primary/10 px-4 py-2 text-sm text-foreground">
       <div className="flex items-center gap-2">
         <span className="font-medium">Режим имперсонации:</span>
         <span>
@@ -581,6 +621,7 @@ export {
   AdminActivityList,
   AdminActivityRecord,
   AdminCardGrid,
+  AdminEmptyMessage,
   AdminEmptyState,
   AdminHeaderActions,
   AdminHeaderTextLink,
@@ -599,7 +640,9 @@ export {
   AdminPersonAvatar,
   AdminPricingCard,
   AdminPricingGrid,
+  AdminPublicHeader,
   AdminRecordText,
+  AdminSectionCard,
   AdminSidebarBrand,
   AdminStatusBadge,
   AdminTabsList,
