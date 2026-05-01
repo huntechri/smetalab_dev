@@ -1,6 +1,6 @@
 import * as React from "react"
 import type { LucideIcon } from "lucide-react"
-import { Check } from "lucide-react"
+import { Check, Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Badge } from "@/shared/ui/badge"
@@ -475,6 +475,8 @@ function AdminTerminalPreview({
   copied: boolean
   onCopy: () => void
 }) {
+  const CopyIcon = copied ? Check : Copy
+
   return (
     <div className="relative w-full overflow-hidden rounded-lg bg-foreground font-mono text-sm text-background shadow-lg">
       <div className="p-4">
@@ -491,8 +493,7 @@ function AdminTerminalPreview({
             size="icon-sm"
             aria-label="Copy to clipboard"
           >
-            {copied ? <Check className="size-5" /> : null}
-            {!copied ? null : null}
+            <CopyIcon className="size-5" />
           </Button>
         </div>
         <div className="space-y-2">
