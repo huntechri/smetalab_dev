@@ -6,7 +6,7 @@ import {
   primitiveBadgeBaseClassName,
   primitiveBadgeSizeClassNames,
   primitiveBadgeVariantClassNames,
-} from "@/lib/ui/primitive-density"
+} from "@/shared/ui/primitive-density"
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(primitiveBadgeBaseClassName, {
