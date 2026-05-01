@@ -691,10 +691,17 @@ function validateTarget(target: TargetSurface, findings: Finding[]): TargetValid
   const targetHighCritical = targetFindings.filter(isHighCritical)
   const sharedHighCritical = sharedResidualFindings.filter(isHighCritical)
   const files = [...new Set(targetFindings.map((finding) => finding.filePath))].sort()
+  const targetOnlyAcceptedSharedResiduals =
+    targetFindings.length > 0 &&
+    targetFindings.every(
+      (finding) => sharedResidualOwners.includes(finding.filePath) && isAcceptedSharedContract(finding.filePath)
+    )
 
   let status: ValidationStatus = "PASS"
   if (targetHighCritical.length > 0) {
     status = "FAIL"
+  } else if (targetOnlyAcceptedSharedResiduals) {
+    status = "PASS_WITH_SHARED_RESIDUAL"
   } else if (targetFindings.length > 0) {
     status = "REVIEW"
   } else if (sharedResidualFindings.length > 0 && sharedHighCritical.length === 0) {
