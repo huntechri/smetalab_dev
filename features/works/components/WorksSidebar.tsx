@@ -1,12 +1,14 @@
 'use client';
 
 import * as React from 'react';
-import { ScrollArea } from "@/shared/ui/scroll-area";
-import { Button } from '@/shared/ui/button';
-import { Separator } from "@/shared/ui/separator";
-import { Check, FilterX, Layers, Tag } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Check, Layers, Tag } from "lucide-react";
 import { getWorkPhases, getWorkCategories } from '@/app/actions/works/search';
+import {
+  CatalogFilterButton,
+  CatalogFilterLoadingText,
+  CatalogFilterSection,
+  CatalogFilterSidebar,
+} from '@/features/_shared/guide-catalog';
 
 interface WorksSidebarProps {
   filters: { category?: string; phase?: string };
@@ -52,95 +54,45 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
 
   const hasFilters = !!(filters.category || filters.phase);
 
-  const containerStyles = isMobile 
-    ? "w-full flex-1 flex flex-col bg-transparent overflow-hidden h-full"
-    : "w-64 bg-card border border-border rounded-xl shadow-sm flex flex-col h-[771px] overflow-hidden";
-
-  const scrollHeight = isMobile ? "calc(100vh - 120px)" : "calc(771px - 60px)";
-
   return (
-    <div className={cn(containerStyles, className)}>
-      <div className={cn(
-        "p-4 flex items-center justify-between border-b border-border/50 bg-secondary/10 shrink-0",
-        isMobile && "bg-transparent border-none px-0"
-      )}>
-        <h3 className="text-[14px] font-semibold text-foreground flex items-center gap-2 uppercase tracking-wider">
-          Фильтры
-        </h3>
-        {hasFilters && (
-          <Button 
-            variant="ghost" 
-            onClick={resetFilters}
+    <CatalogFilterSidebar hasFilters={hasFilters} onReset={resetFilters} isMobile={isMobile} className={className}>
+      <CatalogFilterSection icon={Layers} title="Этапы">
+        <CatalogFilterButton onClick={() => handlePhaseSelect(undefined)}>
+          Все этапы
+        </CatalogFilterButton>
+        {phases.map((p) => (
+          <CatalogFilterButton
+            key={p}
+            onClick={() => handlePhaseSelect(p)}
+            selected={filters.phase === p}
+            checkIcon={<Check className="size-3" />}
           >
-            <FilterX className="size-3 mr-1" />
-            Сбросить
-          </Button>
-        )}
-      </div>
+            {p}
+          </CatalogFilterButton>
+        ))}
+        {isLoading && phases.length === 0 ? (
+          <CatalogFilterLoadingText>Загрузка...</CatalogFilterLoadingText>
+        ) : null}
+      </CatalogFilterSection>
 
-      <ScrollArea className="flex-1 overflow-hidden" style={{ height: scrollHeight }}>
-        <div className={cn("p-4 space-y-6 pb-6", isMobile && "px-0 pb-12")}>
-          {/* Phase Section */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 px-2 text-[12px] font-medium text-muted-foreground">
-              <Layers className="size-3.5" />
-              Этапы
-            </div>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant="ghost"
-                onClick={() => handlePhaseSelect(undefined)}
-              >
-                Все этапы
-              </Button>
-              {phases.map((p) => (
-                <Button
-                  key={p}
-                  variant="ghost"
-                  onClick={() => handlePhaseSelect(p)}
-                >
-                  <span className="truncate">{p}</span>
-                  {filters.phase === p && <Check className="size-3 shrink-0 ml-2" />}
-                </Button>
-              ))}
-              {isLoading && phases.length === 0 && (
-                 <div className="px-2 py-1 text-[12px] text-muted-foreground italic">Загрузка...</div>
-              )}
-            </div>
-          </div>
-
-          <Separator className="bg-border/50" />
-
-          {/* Category Section */}
-          <div className="space-y-3">
-            <div className="flex items-center gap-2 px-2 text-[12px] font-medium text-muted-foreground">
-              <Tag className="size-3.5" />
-              Категории
-            </div>
-            <div className="flex flex-col gap-1">
-              <Button
-                variant="ghost"
-                onClick={() => handleCategorySelect(undefined)}
-              >
-                Все категории
-              </Button>
-              {categories.map((c) => (
-                <Button
-                  key={c}
-                  variant="ghost"
-                  onClick={() => handleCategorySelect(c)}
-                >
-                  <span className="truncate">{c}</span>
-                  {filters.category === c && <Check className="size-3 shrink-0 ml-2" />}
-                </Button>
-              ))}
-              {isLoading && categories.length === 0 && (
-                 <div className="px-2 py-1 text-[12px] text-muted-foreground italic">Загрузка...</div>
-              )}
-            </div>
-          </div>
-        </div>
-      </ScrollArea>
-    </div>
+      <CatalogFilterSection icon={Tag} title="Категории" separated>
+        <CatalogFilterButton onClick={() => handleCategorySelect(undefined)}>
+          Все категории
+        </CatalogFilterButton>
+        {categories.map((c) => (
+          <CatalogFilterButton
+            key={c}
+            onClick={() => handleCategorySelect(c)}
+            selected={filters.category === c}
+            checkIcon={<Check className="size-3" />}
+          >
+            {c}
+          </CatalogFilterButton>
+        ))}
+        {isLoading && categories.length === 0 ? (
+          <CatalogFilterLoadingText>Загрузка...</CatalogFilterLoadingText>
+        ) : null}
+      </CatalogFilterSection>
+    </CatalogFilterSidebar>
   );
 }
