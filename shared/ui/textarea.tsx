@@ -1,11 +1,11 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import { cn } from "@/lib/utils"
 import {
   primitiveTextareaBaseClassName,
   primitiveTextareaVariantClassNames,
-} from "@/shared/ui/primitive-density"
+} from "@/lib/ui/primitive-density"
+import { cn } from "@/lib/utils"
 
 const textareaVariants = cva(primitiveTextareaBaseClassName, {
   variants: {
