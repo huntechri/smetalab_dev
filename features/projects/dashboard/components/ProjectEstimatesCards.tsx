@@ -4,14 +4,14 @@ import Link from 'next/link';
 import { CalendarDays, FilePlus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import {
-  CompactCardHeader,
-  CompactCardInlineContent,
-  CompactCardItem,
-  CompactCardRow,
-  CompactCardSurface,
-  CompactCardViewport,
-} from '@/shared/ui/compact-card';
-import { CompactToken } from '@/shared/ui/compact-token';
+  DenseListHeader,
+  DenseListInlineContent,
+  DenseListItem,
+  DenseListRow,
+  DenseListSurface,
+  DenseListToken,
+  DenseListViewport,
+} from '@/shared/ui/dense-list';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
   AlertDialog,
@@ -68,12 +68,12 @@ export function ProjectEstimatesCards({
   const approvedCount = estimates.filter((estimate) => estimate.status === 'approved').length;
 
   return (
-    <CompactCardSurface>
-      <CompactCardHeader>
+    <DenseListSurface>
+      <DenseListHeader>
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className="truncate text-sm font-semibold">Сметы</h2>
-            <CompactToken variant="neutral">{estimates.length}</CompactToken>
+            <DenseListToken variant="neutral">{estimates.length}</DenseListToken>
           </div>
           <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
             <span>Итого: {moneyFormatter.format(total)}</span>
@@ -91,16 +91,16 @@ export function ProjectEstimatesCards({
         >
           <Plus className="size-4" aria-hidden="true" />
         </Button>
-      </CompactCardHeader>
+      </DenseListHeader>
 
       {estimates.length > 0 ? (
-        <CompactCardViewport>
+        <DenseListViewport>
           <div className="space-y-2">
             {estimates.map((estimate) => (
-              <CompactCardItem key={estimate.id}>
-                <CompactCardRow>
+              <DenseListItem key={estimate.id}>
+                <DenseListRow>
                   <div className="min-w-0 flex-1">
-                    <CompactCardInlineContent>
+                    <DenseListInlineContent>
                       <Link
                         href={`/app/projects/${projectSlug}/estimates/${estimate.slug}`}
                         className="min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm"
@@ -114,14 +114,14 @@ export function ProjectEstimatesCards({
                         badgeSize="xs"
                         className="min-w-20 md:min-w-24"
                       />
-                      <CompactToken variant="success">
+                      <DenseListToken variant="success">
                         {moneyFormatter.format(estimate.total)}
-                      </CompactToken>
-                      <CompactToken variant="neutral">
+                      </DenseListToken>
+                      <DenseListToken variant="neutral">
                         <CalendarDays className="size-3" aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
-                      </CompactToken>
-                    </CompactCardInlineContent>
+                      </DenseListToken>
+                    </DenseListInlineContent>
                   </div>
 
                   <AlertDialog>
@@ -155,11 +155,11 @@ export function ProjectEstimatesCards({
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
-                </CompactCardRow>
-              </CompactCardItem>
+                </DenseListRow>
+              </DenseListItem>
             ))}
           </div>
-        </CompactCardViewport>
+        </DenseListViewport>
       ) : (
         <TableEmptyState
           title="Нет смет в проекте"
@@ -172,6 +172,6 @@ export function ProjectEstimatesCards({
           }
         />
       )}
-    </CompactCardSurface>
+    </DenseListSurface>
   );
 }
