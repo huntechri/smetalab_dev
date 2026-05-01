@@ -28,10 +28,9 @@ import {
 } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
 import {
+  DenseListColorIndicator,
   DenseListPickerButton,
   DenseListToken,
-  denseListIndicatorClassName,
-  denseListMutedIndicatorClassName,
   denseListPickerPopoverClassName,
   denseListTableActionsClassName,
   denseListTableAmountClassName,
@@ -84,13 +83,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
-          {disabled ? (
-            <Loader2 className="size-3 animate-spin" />
-          ) : color ? (
-            <span className={denseListIndicatorClassName} style={{ backgroundColor: color }} aria-hidden="true" />
-          ) : (
-            <span className={denseListMutedIndicatorClassName} aria-hidden="true" />
-          )}
+          {disabled ? <Loader2 className="size-3 animate-spin" /> : <DenseListColorIndicator color={color} />}
           {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
         </DenseListPickerButton>
@@ -103,14 +96,14 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
             <CommandGroup>
               {name && (
                 <CommandItem onSelect={() => void handleSelect(null)}>
-                  <span className={denseListMutedIndicatorClassName} />
+                  <DenseListColorIndicator />
                   Снять поставщика
                 </CommandItem>
               )}
               {options.map((supplier) => (
                 <CommandItem key={supplier.id} value={`${supplier.name} ${supplier.color}`} onSelect={() => void handleSelect(supplier.id)}>
                   <Check className={cn('size-4', supplier.id === row.supplierId ? 'opacity-100' : 'opacity-0')} />
-                  <span className={denseListIndicatorClassName} style={{ backgroundColor: supplier.color }} aria-hidden="true" />
+                  <DenseListColorIndicator color={supplier.color} />
                   <span className="truncate">{supplier.name}</span>
                 </CommandItem>
               ))}
