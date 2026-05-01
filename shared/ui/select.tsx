@@ -15,7 +15,7 @@ import {
   primitiveSelectSeparatorClassName,
   primitiveSelectTriggerClassName,
   primitiveSelectViewportClassName,
-} from "@/lib/ui/primitive-density"
+} from "@/shared/ui/primitive-density"
 import { cn } from "@/lib/utils"
 
 function Select({
