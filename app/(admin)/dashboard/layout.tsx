@@ -1,3 +1,4 @@
+import { AdminPageHeader, AdminPageShell } from '@/shared/ui/admin-surface';
 import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/shared/ui/sidebar';
 import { AdminSidebar } from '@/features/admin';
 import { getUser } from '@/lib/data/db/queries';
@@ -24,15 +25,19 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <SidebarProvider>
         <AdminSidebar user={userData} />
         <SidebarInset>
-          <header className="flex h-14 items-center gap-4 border-b bg-background px-6">
-            <SidebarTrigger />
-            <div className="flex-1">
-              <span className="font-semibold text-lg">Admin Dashboard</span>
-            </div>
+          <header className="border-b bg-background">
+            <AdminPageHeader>
+              <div className="flex h-14 items-center gap-4">
+                <SidebarTrigger />
+                <div className="flex-1">
+                  <span className="font-semibold text-lg">Admin Dashboard</span>
+                </div>
+              </div>
+            </AdminPageHeader>
           </header>
-          <main className="flex-1 p-6">
+          <AdminPageShell>
             {children}
-          </main>
+          </AdminPageShell>
         </SidebarInset>
       </SidebarProvider>
     </UserProvider>
