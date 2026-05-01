@@ -30,9 +30,9 @@ export default defineConfig({
         setupFiles: ['./vitest.setup.ts'],
         passWithNoTests: true,
         testTimeout: 30000,
-        fileParallelism: true,
+        fileParallelism: false,
         sequence: {
-            concurrent: true,
+            concurrent: false,
         },
     },
 });
