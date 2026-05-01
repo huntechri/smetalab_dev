@@ -6,6 +6,7 @@ import useSWR, { mutate } from 'swr';
 import { Home, LogOut } from 'lucide-react';
 
 import { signOut } from '@/app/(login)/actions';
+import { AdminHeaderTextLink } from '@/shared/ui/admin-surface';
 import { Button } from '@/shared/ui/button';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import {
@@ -31,8 +32,8 @@ export function AdminUserMenu() {
   if (!user) {
     return (
       <>
-        <Link href="/pricing" className="text-sm font-medium text-gray-700 hover:text-gray-900">
-          Pricing
+        <Link href="/pricing">
+          <AdminHeaderTextLink>Pricing</AdminHeaderTextLink>
         </Link>
         <Button asChild variant="brand">
           <Link href="/sign-up">Sign Up</Link>

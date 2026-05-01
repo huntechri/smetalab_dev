@@ -9,6 +9,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/shared/ui/sidebar';
+import { AdminSidebarBrand } from '@/shared/ui/admin-surface';
 import {
     LayoutDashboard,
     Users,
@@ -63,12 +64,7 @@ export function AdminSidebar({ user }: { user: Pick<AppUser, 'name' | 'email'> |
     return (
         <Sidebar>
             <SidebarHeader>
-                <div className="flex items-center gap-2 px-2 py-4">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-zinc-900 text-white font-bold">
-                        A
-                    </div>
-                    <span className="text-lg font-semibold">Admin Panel</span>
-                </div>
+                <AdminSidebarBrand label="Admin Panel" />
             </SidebarHeader>
             <SidebarContent>
                 <SidebarNav

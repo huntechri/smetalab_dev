@@ -1,9 +1,25 @@
 import { getTeamDetails } from '@/lib/data/db/admin-queries';
 import { notFound } from 'next/navigation';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { Tabs, TabsContent } from '@/shared/ui/tabs';
+import {
+    AdminActivityRecord,
+    AdminEmptyMessage,
+    AdminHeaderActions,
+    AdminInlineMeta,
+    AdminListCard,
+    AdminListItem,
+    AdminMetricCard,
+    AdminMetricGrid,
+    AdminPageHeader,
+    AdminPageHeading,
+    AdminPageShell,
+    AdminPersonAvatar,
+    AdminRecordText,
+    AdminStatusBadge,
+    AdminTabsList,
+    AdminTabsTrigger,
+} from '@/shared/ui/admin-surface';
 import {
     Users,
     Activity,
@@ -33,137 +49,101 @@ export default async function TenantDetailsPage({ params }: PageProps) {
     }
 
     return (
-        <section className="flex-1 p-4 lg:p-8 space-y-6">
-            <div className="flex items-center gap-4">
-                <Link href="/dashboard/tenants">
-                    <Button variant="ghost" size="icon-xs">
-                        <ArrowLeft className="h-5 w-5" />
-                    </Button>
-                </Link>
-                <div>
-                    <h1 className="text-2xl font-bold tracking-tight text-gray-900">{team.name}</h1>
-                    <p className="text-sm text-muted-foreground">ID: {team.id} • Создан {format(team.createdAt, 'PPp', { locale: ru })}</p>
+        <AdminPageShell>
+            <AdminPageHeader
+                actions={(
+                    <>
+                        <AdminStatusBadge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}>
+                            {team.subscriptionStatus || 'free'}
+                        </AdminStatusBadge>
+                        <AdminStatusBadge>{team.planName || 'No Plan'}</AdminStatusBadge>
+                    </>
+                )}
+            >
+                <div className="flex items-center gap-4">
+                    <Link href="/dashboard/tenants">
+                        <Button variant="ghost" size="icon-xs">
+                            <ArrowLeft className="size-5" />
+                        </Button>
+                    </Link>
+                    <AdminPageHeading
+                        title={team.name}
+                        description={`ID: ${team.id} • Создан ${format(team.createdAt, 'PPp', { locale: ru })}`}
+                    />
                 </div>
-                <div className="ml-auto flex items-center gap-2">
-                    <Badge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)} size="xs">
-                        {team.subscriptionStatus || 'free'}
-                    </Badge>
-                    <Badge variant="neutral" size="xs">
-                        {team.planName || 'No Plan'}
-                    </Badge>
-                </div>
-            </div>
+            </AdminPageHeader>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="rounded-2xl shadow-sm border-gray-100">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Пользователи</CardTitle>
-                        <Users className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{team.teamMembers.length}</div>
-                    </CardContent>
-                </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Работы</CardTitle>
-                        <Hammer className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{team.metrics.worksCount}</div>
-                    </CardContent>
-                </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Материалы</CardTitle>
-                        <Package className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{team.metrics.materialsCount}</div>
-                    </CardContent>
-                </Card>
-                <Card className="rounded-2xl shadow-sm border-gray-100">
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Последняя активность</CardTitle>
-                        <Activity className="h-4 w-4 text-muted-foreground" />
-                    </CardHeader>
-                    <CardContent>
-                        <div className="text-sm font-medium">
-                            {team.recentActivity.length > 0
-                                ? format(team.recentActivity[0].timestamp, 'PPp', { locale: ru })
-                                : 'Нет данных'}
-                        </div>
-                    </CardContent>
-                </Card>
-            </div>
+            <AdminMetricGrid>
+                <AdminMetricCard title="Пользователи" value={team.teamMembers.length} icon={Users} />
+                <AdminMetricCard title="Работы" value={team.metrics.worksCount} icon={Hammer} />
+                <AdminMetricCard title="Материалы" value={team.metrics.materialsCount} icon={Package} />
+                <AdminMetricCard
+                    title="Последняя активность"
+                    value={team.recentActivity.length > 0
+                        ? format(team.recentActivity[0].timestamp, 'PPp', { locale: ru })
+                        : 'Нет данных'}
+                    icon={Activity}
+                />
+            </AdminMetricGrid>
 
             <Tabs defaultValue="members" className="w-full">
-                <TabsList className="grid w-full grid-cols-2 lg:w-[400px] rounded-xl">
-                    <TabsTrigger value="members" className="rounded-lg">Участники</TabsTrigger>
-                    <TabsTrigger value="activity" className="rounded-lg">Логи активности</TabsTrigger>
-                </TabsList>
+                <AdminTabsList>
+                    <AdminTabsTrigger value="members">Участники</AdminTabsTrigger>
+                    <AdminTabsTrigger value="activity">Логи активности</AdminTabsTrigger>
+                </AdminTabsList>
 
                 <TabsContent value="members" className="mt-4 space-y-4">
-                    <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
-                        <div className="divide-y divide-gray-100">
-                            {team.teamMembers.map((member) => (
-                                <div key={member.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
-                                    <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold">
-                                            {member.user.name?.[0] || member.user.email[0].toUpperCase()}
-                                        </div>
-                                        <div>
-                                            <p className="font-medium text-gray-900">{member.user.name || 'No name'}</p>
-                                            <p className="text-xs text-muted-foreground">{member.user.email}</p>
-                                        </div>
-                                        <Badge variant={getRoleBadgeVariant(member.role)} size="xs" className="ml-2">
+                    <AdminListCard>
+                        {team.teamMembers.map((member) => (
+                            <AdminListItem key={member.id} interactive>
+                                <div className="flex items-center gap-3">
+                                    <AdminPersonAvatar label={member.user.name?.[0] || member.user.email[0].toUpperCase()} />
+                                    <AdminRecordText
+                                        title={member.user.name || 'No name'}
+                                        description={member.user.email}
+                                    />
+                                    <AdminHeaderActions>
+                                        <AdminStatusBadge variant={getRoleBadgeVariant(member.role)}>
                                             {member.role}
-                                        </Badge>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <ImpersonateButton teamId={team.id} />
-                                    </div>
+                                        </AdminStatusBadge>
+                                    </AdminHeaderActions>
                                 </div>
-                            ))}
-                        </div>
-                    </Card>
+                                <AdminHeaderActions>
+                                    <ImpersonateButton teamId={team.id} />
+                                </AdminHeaderActions>
+                            </AdminListItem>
+                        ))}
+                    </AdminListCard>
                 </TabsContent>
 
                 <TabsContent value="activity" className="mt-4">
-                    <Card className="rounded-2xl shadow-sm border-gray-100 overflow-hidden">
-                        <div className="divide-y divide-gray-100 text-sm">
-                            {team.recentActivity.length === 0 ? (
-                                <div className="p-8 text-center text-muted-foreground italic">
-                                    Нет записей об активности
-                                </div>
-                            ) : (
-                                team.recentActivity.map((log) => (
-                                    <div key={log.id} className="p-4 flex items-start gap-4">
-                                        <div className="p-2 bg-blue-50 text-blue-600 rounded-lg mt-0.5">
-                                            <Clock className="h-4 w-4" />
-                                        </div>
-                                        <div className="flex-1 space-y-1">
-                                            <div className="flex items-center justify-between">
-                                                <p className="font-medium text-gray-900">{log.action}</p>
-                                                <p className="text-xs text-muted-foreground">{format(log.timestamp, 'PPp', { locale: ru })}</p>
-                                            </div>
-                                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                                <span>{log.user?.name || log.user?.email || 'System'}</span>
-                                                {log.ipAddress && (
-                                                    <>
-                                                        <span>•</span>
-                                                        <span>IP: {log.ipAddress}</span>
-                                                    </>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-                    </Card>
+                    <AdminListCard>
+                        {team.recentActivity.length === 0 ? (
+                            <AdminEmptyMessage>Нет записей об активности</AdminEmptyMessage>
+                        ) : (
+                            team.recentActivity.map((log) => (
+                                <AdminActivityRecord
+                                    key={log.id}
+                                    icon={Clock}
+                                    title={log.action}
+                                    timestamp={format(log.timestamp, 'PPp', { locale: ru })}
+                                    meta={(
+                                        <AdminInlineMeta>
+                                            <span>{log.user?.name || log.user?.email || 'System'}</span>
+                                            {log.ipAddress && (
+                                                <>
+                                                    <span>•</span>
+                                                    <span>IP: {log.ipAddress}</span>
+                                                </>
+                                            )}
+                                        </AdminInlineMeta>
+                                    )}
+                                />
+                            ))
+                        )}
+                    </AdminListCard>
                 </TabsContent>
             </Tabs>
-        </section>
+        </AdminPageShell>
     );
 }

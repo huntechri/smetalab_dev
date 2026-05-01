@@ -1,7 +1,12 @@
 import { getAllTeams } from '@/lib/data/db/admin-queries';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
+import {
+    AdminCardGrid,
+    AdminInlineStat,
+    AdminPageShell,
+    AdminStatusBadge,
+    AdminTenantCard,
+} from '@/shared/ui/admin-surface';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { getSubscriptionBadgeVariant } from '@/features/admin';
@@ -12,52 +17,38 @@ export default async function TenantsPage() {
     const teams = await getAllTeams();
 
     return (
-        <section className="flex-1 p-4 lg:p-8 space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-xl font-bold tracking-tight text-gray-900">Управление тенантами</h1>
-                <Badge variant="secondary" className="border-none font-mono text-[10px] uppercase tracking-wide">
-                    Total: {teams.length}
-                </Badge>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <AdminPageShell
+            title="Управление тенантами"
+            actions={<AdminStatusBadge mono>Total: {teams.length}</AdminStatusBadge>}
+        >
+            <AdminCardGrid>
                 {teams.map((team) => (
-                    <Card key={team.id} className="border border-gray-100 shadow-sm hover:shadow-md transition-shadow rounded-2xl overflow-hidden bg-white">
-                        <CardHeader className="pb-2 space-y-0">
-                            <div className="flex items-start justify-between">
-                                <div className="p-2 bg-orange-50 rounded-xl text-orange-600">
-                                    <Building2 className="h-5 w-5" />
-                                </div>
-                                <Badge
-                                    variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}
-                                    size="xs"
-                                >
-                                    {team.subscriptionStatus || 'free'}
-                                </Badge>
-                            </div>
-                            <CardTitle className="text-base font-bold pt-4 line-clamp-1">{team.name}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
-                                <div className="flex items-center gap-1.5">
-                                    <Users className="h-3.5 w-3.5" />
-                                    <span>{team.memberCount} участников</span>
-                                </div>
-                                <div className="flex items-center gap-1.5">
-                                    <span className="font-medium text-gray-900">{team.planName || 'No Plan'}</span>
-                                </div>
-                            </div>
-
+                    <AdminTenantCard
+                        key={team.id}
+                        icon={Building2}
+                        title={team.name}
+                        status={(
+                            <AdminStatusBadge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}>
+                                {team.subscriptionStatus || 'free'}
+                            </AdminStatusBadge>
+                        )}
+                        meta={(
+                            <>
+                                <AdminInlineStat icon={Users}>{team.memberCount} участников</AdminInlineStat>
+                                <AdminInlineStat emphasis>{team.planName || 'No Plan'}</AdminInlineStat>
+                            </>
+                        )}
+                        action={(
                             <Link href={`/dashboard/tenants/${team.id}`}>
                                 <Button variant="outline">
                                     Подробнее
-                                    <ArrowRight className="ml-2 h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                                    <ArrowRight className="ml-2 size-3.5 transition-transform group-hover:translate-x-0.5" />
                                 </Button>
                             </Link>
-                        </CardContent>
-                    </Card>
+                        )}
+                    />
                 ))}
-            </div>
-        </section>
+            </AdminCardGrid>
+        </AdminPageShell>
     );
 }
