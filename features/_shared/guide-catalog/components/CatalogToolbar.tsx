@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Upload, Download, Trash2, Filter } from "lucide-react";
 
+import { catalogToolbarClassNames } from "@/shared/ui/shells/catalog-directory-visual-contracts";
 import { ToolbarButton } from "@/shared/ui/toolbar-button";
 import { cn } from "@/lib/utils";
 import {
@@ -26,15 +27,6 @@ import {
   CatalogFiltersUpdater,
   CatalogSidebarProps,
 } from "@/features/_shared/guide-catalog/types";
-
-const catalogToolbarMobileFilterClassName = "lg:hidden";
-const catalogToolbarDesktopFilterClassName = "hidden lg:block";
-const catalogToolbarSheetClassName = "w-[300px] p-6 focus-visible:ring-0";
-const catalogToolbarSheetHeaderClassName = "mb-4";
-const catalogToolbarSheetTitleClassName = "text-left text-base font-bold uppercase tracking-wider";
-const catalogToolbarSheetBodyClassName = "h-full";
-const catalogToolbarDisabledTriggerClassName = "inline-block outline-none";
-const catalogToolbarDestructiveActionClassName = "bg-destructive text-destructive-foreground hover:bg-destructive/90";
 
 interface CatalogToolbarProps<TFilters> {
   isImporting: boolean;
@@ -77,20 +69,20 @@ export function CatalogToolbar<TFilters>({
 
   return (
     <>
-      <div className={catalogToolbarMobileFilterClassName}>
+      <div className={catalogToolbarClassNames.mobileFilter}>
         <Sheet>
           <SheetTrigger asChild>
             <ToolbarButton variant="outline" size="icon-xs">
               <Filter className="size-4" />
             </ToolbarButton>
           </SheetTrigger>
-          <SheetContent side="left" className={catalogToolbarSheetClassName}>
-            <SheetHeader className={catalogToolbarSheetHeaderClassName}>
-              <SheetTitle className={catalogToolbarSheetTitleClassName}>
+          <SheetContent side="left" className={catalogToolbarClassNames.sheet}>
+            <SheetHeader className={catalogToolbarClassNames.sheetHeader}>
+              <SheetTitle className={catalogToolbarClassNames.sheetTitle}>
                 Параметры
               </SheetTitle>
             </SheetHeader>
-            <div className={catalogToolbarSheetBodyClassName}>
+            <div className={catalogToolbarClassNames.sheetBody}>
               {SidebarComponent && filters && setFilters ? (
                 <SidebarComponent
                   filters={filters}
@@ -103,7 +95,7 @@ export function CatalogToolbar<TFilters>({
         </Sheet>
       </div>
 
-      <div className={catalogToolbarDesktopFilterClassName}>
+      <div className={catalogToolbarClassNames.desktopFilter}>
         <ToolbarButton
           variant="outline"
           size="icon-xs"
@@ -155,7 +147,7 @@ export function CatalogToolbar<TFilters>({
           <TooltipTrigger asChild>
             <span
               tabIndex={isActionDisabled ? 0 : -1}
-              className={catalogToolbarDisabledTriggerClassName}
+              className={catalogToolbarClassNames.disabledTrigger}
             >
               <AlertDialogTrigger asChild>
                 <ToolbarButton
@@ -183,7 +175,7 @@ export function CatalogToolbar<TFilters>({
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               onClick={onDeleteAll}
-              className={catalogToolbarDestructiveActionClassName}
+              className={catalogToolbarClassNames.destructiveAction}
             >
               Удалить всё
             </AlertDialogAction>
