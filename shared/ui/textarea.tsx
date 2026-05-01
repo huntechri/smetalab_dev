@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import {
   primitiveTextareaBaseClassName,
   primitiveTextareaVariantClassNames,
-} from "@/lib/ui/primitive-density"
+} from "@/shared/ui/primitive-density"
 import { cn } from "@/lib/utils"
 
 const textareaVariants = cva(primitiveTextareaBaseClassName, {
