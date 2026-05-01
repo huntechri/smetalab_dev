@@ -6,6 +6,7 @@ import {
   DenseListActionsGrid,
   DenseListBodyRow,
   DenseListEmptyInset,
+  DenseListMaterialGrid,
   DenseListNestedPanel,
   DenseListToken,
 } from '@/shared/ui/dense-list';
@@ -139,11 +140,11 @@ export function EstimateWorkCard({
                 Материалы
               </p>
 
-              <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              <DenseListMaterialGrid>
                 {workNode.materials.map((material) => (
                   <EstimateMaterialCard key={material.id} material={material} props={props} />
                 ))}
-              </div>
+              </DenseListMaterialGrid>
             </>
           ) : (
             <DenseListEmptyInset>
