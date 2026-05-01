@@ -1,3 +1,4 @@
+export * from './components/admin-activity-page';
 export * from './components/admin-sidebar';
 export * from './components/admin-user-menu';
 export * from './components/AdminTerminal';
