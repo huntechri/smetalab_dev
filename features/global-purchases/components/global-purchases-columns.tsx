@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Button } from '@/shared/ui/button';
-import { Badge } from '@/shared/ui/badge';
 import { ColumnDef } from '@tanstack/react-table';
 import { Check, ChevronsUpDown, Loader2, Trash2 } from 'lucide-react';
 import { EditableCell } from '@/shared/ui/cells/editable-cell';
@@ -28,12 +27,21 @@ import {
   CommandList,
 } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
+import {
+  DenseListPickerButton,
+  DenseListToken,
+  denseListIndicatorClassName,
+  denseListMutedIndicatorClassName,
+  denseListPickerPopoverClassName,
+  denseListTableActionsClassName,
+  denseListTableAmountClassName,
+  denseListTableNumericCellClassName,
+  denseListTableTextClassName,
+} from '@/shared/ui/dense-list';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch, SupplierOption } from '@/shared/types/domain/purchase-row';
 
 const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: '2-digit', month: '2-digit', year: 'numeric' });
-const tableCellTextClassName = 'text-[12px]';
-const tableNumericCellTextClassName = `${tableCellTextClassName} tabular-nums text-right`;
 
 type GlobalPurchasesColumnActions = {
   projectOptions: ProjectOption[];
@@ -72,24 +80,22 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost"
-          size="xs"
-          type="button"
+        <DenseListPickerButton
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
           {disabled ? (
             <Loader2 className="size-3 animate-spin" />
           ) : color ? (
-            <span className="size-2.5 rounded-full shrink-0" style={{ backgroundColor: color }} aria-hidden="true" />
+            <span className={denseListIndicatorClassName} style={{ backgroundColor: color }} aria-hidden="true" />
           ) : (
-            <span className="size-2.5 rounded-full bg-muted-foreground/40 shrink-0" aria-hidden="true" />
+            <span className={denseListMutedIndicatorClassName} aria-hidden="true" />
           )}
-          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Поставщик</span>}
+          {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Поставщик</span>}
           <ChevronsUpDown className="size-3 opacity-60" />
-        </Button>
+        </DenseListPickerButton>
       </PopoverTrigger>
-      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+      <PopoverContent className={denseListPickerPopoverClassName} align="start">
         <Command>
           <CommandInput placeholder="Поиск поставщика..." />
           <CommandList>
@@ -97,14 +103,14 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
             <CommandGroup>
               {name && (
                 <CommandItem onSelect={() => void handleSelect(null)}>
-                  <span className="size-2.5 rounded-full bg-muted-foreground/40" />
+                  <span className={denseListMutedIndicatorClassName} />
                   Снять поставщика
                 </CommandItem>
               )}
               {options.map((supplier) => (
                 <CommandItem key={supplier.id} value={`${supplier.name} ${supplier.color}`} onSelect={() => void handleSelect(supplier.id)}>
                   <Check className={cn('size-4', supplier.id === row.supplierId ? 'opacity-100' : 'opacity-0')} />
-                  <span className="size-2.5 rounded-full" style={{ backgroundColor: supplier.color }} aria-hidden="true" />
+                  <span className={denseListIndicatorClassName} style={{ backgroundColor: supplier.color }} aria-hidden="true" />
                   <span className="truncate">{supplier.name}</span>
                 </CommandItem>
               ))}
@@ -146,20 +152,18 @@ const ProjectCell = React.memo(function ProjectCell({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="ghost"
-          size="xs"
-          type="button"
+        <DenseListPickerButton
           disabled={disabled}
           aria-label="Выбрать объект"
         >
           {disabled && (
-            <Loader2 className="size-3 animate-spin mr-1" />
+            <Loader2 className="size-3 animate-spin" />
           )}
-          {name ? <Badge variant="secondary" className="h-5 px-1.5 truncate text-[12px]">{name}</Badge> : <span className="text-[12px]">Без привязки</span>}
-          <ChevronsUpDown className="size-3 opacity-60 ml-auto" />
-        </Button>
+          {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Без привязки</span>}
+          <ChevronsUpDown className="ml-auto size-3 opacity-60" />
+        </DenseListPickerButton>
       </PopoverTrigger>
-      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+      <PopoverContent className={denseListPickerPopoverClassName} align="start">
         <Command>
           <CommandInput placeholder="Поиск объекта..." />
           <CommandList>
@@ -281,7 +285,7 @@ export function getGlobalPurchasesColumns({
               displayValue={displayValue}
               disabled={isPending}
               ariaLabel="Дата закупки"
-                onCommit={async (value: string) => {
+              onCommit={async (value: string) => {
                 try {
                   await onPatchAction(row.original.id, { purchaseDate: value });
                 } catch (_error) {
@@ -343,7 +347,7 @@ export function getGlobalPurchasesColumns({
       size: 80,
       minSize: 75,
       cell: ({ row }) => (
-        <div className={tableNumericCellTextClassName}>
+        <div className={denseListTableNumericCellClassName}>
           <EditableCell
             type="number"
             align="right"
@@ -352,7 +356,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.qty}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Количество"
-            className={tableCellTextClassName}
+            className={denseListTableTextClassName}
             onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { qty: Number(value) });
@@ -370,7 +374,7 @@ export function getGlobalPurchasesColumns({
       size: 90,
       minSize: 85,
       cell: ({ row }) => (
-        <div className={tableNumericCellTextClassName}>
+        <div className={denseListTableNumericCellClassName}>
           <EditableCell
             type="number"
             align="right"
@@ -379,7 +383,7 @@ export function getGlobalPurchasesColumns({
             value={row.original.price}
             disabled={pendingIds.has(row.original.id)}
             ariaLabel="Цена"
-            className={cn(tableCellTextClassName, 'font-bold tracking-tight')}
+            className={cn(denseListTableTextClassName, 'font-bold tracking-tight')}
             onCommit={async (value: string) => {
               try {
                 await onPatchAction(row.original.id, { price: Number(value) });
@@ -396,7 +400,7 @@ export function getGlobalPurchasesColumns({
       header: () => <div className="text-right">Сумма</div>,
       size: 100,
       minSize: 95,
-      cell: ({ row }) => <div className={cn(tableNumericCellTextClassName, 'font-bold tracking-tight pr-2')}>{amountFormatter.format(row.original.amount)} ₽</div>,
+      cell: ({ row }) => <div className={denseListTableAmountClassName}>{amountFormatter.format(row.original.amount)} ₽</div>,
     },
     {
       accessorKey: 'supplierName',
@@ -418,7 +422,7 @@ export function getGlobalPurchasesColumns({
       size: 110,
       minSize: 100,
       cell: ({ row }) => (
-        <div className="flex justify-start pl-2">
+        <div className={denseListTableActionsClassName}>
           <DeleteRowAction
             rowId={row.original.id}
             materialName={row.original.materialName}
