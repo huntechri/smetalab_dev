@@ -1,8 +1,17 @@
 import { Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { DenseCard } from '@/shared/ui/dense-card';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { EditableCell } from '@/shared/ui/cells/editable-cell';
+import {
+  DenseListInlineMetric,
+  DenseListInlineStart,
+  DenseListMetaField,
+  DenseListMetricGroup,
+  DenseListPrimaryCell,
+  DenseListRecordGrid,
+  DenseListTrailingActions,
+  DenseListWrap,
+} from '@/shared/ui/dense-list';
 import { DeletePurchaseAction } from './DeletePurchaseAction';
 import { ProjectPicker } from './ProjectPicker';
 import { PurchaseMetric } from './PurchaseMetric';
@@ -29,9 +38,8 @@ export function GlobalPurchaseCard({
 
   return (
     <DenseCard>
-      <div className="grid grid-cols-1 gap-2.5 p-2 sm:p-2.5 lg:grid-cols-[92px_minmax(0,1fr)_minmax(300px,auto)_minmax(150px,220px)_auto] lg:items-center lg:gap-3">
-        <div className="min-w-0">
-          <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400">Дата</p>
+      <DenseListRecordGrid>
+        <DenseListMetaField label="Дата">
           <EditableCell
             type="date"
             value={row.purchaseDate}
@@ -43,10 +51,10 @@ export function GlobalPurchaseCard({
               await onPatchAction(row.id, { purchaseDate: value });
             }}
           />
-        </div>
+        </DenseListMetaField>
 
-        <div className="min-w-0 space-y-1.5">
-          <div className="flex min-w-0 items-start gap-1.5">
+        <DenseListPrimaryCell>
+          <DenseListInlineStart>
             {isPending ? <Loader2 className="mt-0.5 size-3.5 shrink-0 animate-spin text-muted-foreground" aria-hidden="true" /> : null}
             <EditableCell
               value={row.materialName}
@@ -58,15 +66,14 @@ export function GlobalPurchaseCard({
                 await onPatchAction(row.id, { materialName: value });
               }}
             />
-          </div>
-          <div className="flex flex-wrap items-center gap-1.5">
+          </DenseListInlineStart>
+          <DenseListWrap>
             <ProjectPicker row={row} projectOptions={projectOptions} disabled={isPending} onPatchAction={onPatchAction} />
-          </div>
-        </div>
+          </DenseListWrap>
+        </DenseListPrimaryCell>
 
-        <div className="flex flex-wrap items-center gap-1.5 lg:justify-end">
-          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
-            <span className="shrink-0 opacity-70">Кол-во:</span>
+        <DenseListMetricGroup>
+          <DenseListInlineMetric label="Кол-во">
             <EditableCell
               type="number"
               align="right"
@@ -89,9 +96,8 @@ export function GlobalPurchaseCard({
                 await onPatchAction(row.id, { unit: value });
               }}
             />
-          </div>
-          <div className="inline-flex h-6 whitespace-nowrap items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0 text-[11px] font-semibold leading-none text-slate-600 sm:h-5 sm:text-[10px]">
-            <span className="shrink-0 opacity-70">Цена:</span>
+          </DenseListInlineMetric>
+          <DenseListInlineMetric label="Цена">
             <EditableCell
               type="number"
               align="right"
@@ -100,25 +106,24 @@ export function GlobalPurchaseCard({
               value={row.price}
               disabled={isPending}
               ariaLabel="Цена"
-              className={cn(inlinePriceCellClassName, 'font-bold')}
+              className={inlinePriceCellClassName}
               onCommit={async (value: string) => {
                 await onPatchAction(row.id, { price: Number(value) });
               }}
             />
             <span className="shrink-0">₽</span>
-          </div>
+          </DenseListInlineMetric>
           <PurchaseMetric label="Итого" value={<MoneyCell value={row.amount} />} tone="success" />
-        </div>
+        </DenseListMetricGroup>
 
-        <div className="min-w-0">
-          <p className="mb-1 text-[9px] font-bold uppercase tracking-[0.08em] text-slate-400 lg:text-right">Поставщик</p>
+        <DenseListMetaField label="Поставщик" align="end">
           <SupplierPicker row={row} supplierOptions={supplierOptions} disabled={isPending} onPatchAction={onPatchAction} />
-        </div>
+        </DenseListMetaField>
 
-        <div className="flex items-start justify-end lg:items-center">
+        <DenseListTrailingActions>
           <DeletePurchaseAction row={row} disabled={isPending} onRemoveAction={onRemoveAction} />
-        </div>
-      </div>
+        </DenseListTrailingActions>
+      </DenseListRecordGrid>
     </DenseCard>
   );
 }

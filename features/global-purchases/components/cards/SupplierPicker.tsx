@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/shared/ui/button';
+import {
+  DenseListColorIndicator,
+  DenseListPickerButton,
+  denseListPickerPopoverClassName,
+} from '@/shared/ui/dense-list';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import {
   Command,
@@ -38,28 +42,20 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          type="button"
-          variant="ghost"
-          size="xs"
+        <DenseListPickerButton
           disabled={disabled}
           aria-label="Назначить поставщика"
-          className="h-6 sm:h-5 max-w-full justify-start gap-1 rounded-full border border-slate-200 bg-slate-50 px-1.5 text-[11px] sm:text-[10px] font-semibold text-slate-700 hover:bg-slate-100"
         >
           {disabled ? (
             <Loader2 className="size-3 shrink-0 animate-spin" aria-hidden="true" />
           ) : (
-            <span
-              className="size-2.5 shrink-0 rounded-full bg-muted-foreground/40"
-              style={color ? { backgroundColor: color } : undefined}
-              aria-hidden="true"
-            />
+            <DenseListColorIndicator color={color} />
           )}
           <span className="truncate">{name || 'Без поставщика'}</span>
           <ChevronsUpDown className="size-3 shrink-0 opacity-60" aria-hidden="true" />
-        </Button>
+        </DenseListPickerButton>
       </PopoverTrigger>
-      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+      <PopoverContent className={denseListPickerPopoverClassName} align="start">
         <Command>
           <CommandInput placeholder="Поиск поставщика..." />
           <CommandList>
@@ -67,14 +63,14 @@ export function SupplierPicker({ row, supplierOptions, disabled, onPatchAction }
             <CommandGroup>
               {name ? (
                 <CommandItem onSelect={() => void handleSelect(null)}>
-                  <span className="size-2.5 rounded-full bg-muted-foreground/40" aria-hidden="true" />
+                  <DenseListColorIndicator />
                   Снять поставщика
                 </CommandItem>
               ) : null}
               {supplierOptions.map((supplier) => (
                 <CommandItem key={supplier.id} value={`${supplier.name} ${supplier.color}`} onSelect={() => void handleSelect(supplier.id)}>
                   <Check className={cn('size-4', supplier.id === row.supplierId ? 'opacity-100' : 'opacity-0')} />
-                  <span className="size-2.5 rounded-full" style={{ backgroundColor: supplier.color }} aria-hidden="true" />
+                  <DenseListColorIndicator color={supplier.color} />
                   <span className="truncate">{supplier.name}</span>
                 </CommandItem>
               ))}

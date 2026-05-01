@@ -7,6 +7,11 @@ import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { MaterialCatalogDialog } from '@/features/catalog/components/MaterialCatalogDialog.client';
 import type { CatalogMaterial } from '@/shared/types/domain/catalog';
 import { useAppToast } from '@/components/providers/use-app-toast';
+import {
+    DenseListContentInset,
+    DenseListPanel,
+    DenseListToolbarInset,
+} from '@/shared/ui/dense-list';
 import { useGlobalPurchasesTable } from '../hooks/useGlobalPurchasesTable';
 import type { ProjectOption, PurchaseRow, PurchaseRowPatch, PurchaseRowsRange, SupplierOption } from '@/shared/types/domain/purchase-row';
 
@@ -196,8 +201,8 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
 
     return (
         <div className="space-y-3">
-            <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
-                <div className="p-1.5 sm:p-2 pb-0">
+            <DenseListPanel>
+                <DenseListToolbarInset>
                     <DataTableToolbar
                         actions={(
                             <GlobalPurchasesToolbar
@@ -226,9 +231,9 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
                         setSearchValue={setSearchValue}
                         compactMobileToolbar
                     />
-                </div>
+                </DenseListToolbarInset>
 
-                <div className="pt-1.5 sm:pt-2">
+                <DenseListContentInset>
                     <GlobalPurchasesCardsList
                         rows={cardRows}
                         projectOptions={projectOptions}
@@ -238,8 +243,8 @@ export function GlobalPurchasesView({ initialRows, projectOptions, supplierOptio
                         onPatchAction={handlePatchAction}
                         onRemoveAction={handleRemoveAction}
                     />
-                </div>
-            </section>
+                </DenseListContentInset>
+            </DenseListPanel>
 
             <GlobalPurchasesSummary totalAmount={visibleTotalsAmount} />
 

@@ -1,5 +1,11 @@
-import { cn } from '@/lib/utils';
 import { parseIsoDateSafe } from '../../lib/date';
+import {
+  denseListInlineDateCellClassName,
+  denseListInlinePriceCellClassName,
+  denseListInlineQtyCellClassName,
+  denseListInlineTextCellClassName,
+  denseListInlineUnitCellClassName,
+} from '@/shared/ui/dense-list';
 
 export const amountFormatter = new Intl.NumberFormat('ru-RU', { maximumFractionDigits: 2 });
 
@@ -9,37 +15,11 @@ const dateFormatter = new Intl.DateTimeFormat('ru-RU', {
   year: 'numeric',
 });
 
-const hideInlineEditIconClassName = '[&_svg]:hidden';
-
-export const inlineCellClassName = cn(
-  'h-6 sm:h-5 min-w-0 rounded-sm border-0 bg-transparent px-1 sm:px-0.5 py-0 text-[11px] sm:text-[10px] font-semibold leading-none !shadow-none focus-visible:!ring-0 focus-visible:!ring-offset-0',
-  hideInlineEditIconClassName,
-);
-
-export const inlineQtyCellClassName = cn(
-  inlineCellClassName,
-  'w-14 sm:w-11 justify-end text-right tabular-nums',
-);
-
-export const inlineUnitCellClassName = cn(
-  inlineCellClassName,
-  'w-10 sm:w-8 justify-start text-left font-bold text-slate-700',
-);
-
-export const inlinePriceCellClassName = cn(
-  inlineCellClassName,
-  'min-w-[5.75rem] justify-end text-right tabular-nums',
-);
-
-export const inlineDateCellClassName = cn(
-  inlineCellClassName,
-  'w-[5.75rem] sm:w-[4.9rem] justify-center rounded-full border border-slate-200 bg-slate-50 px-1.5 text-slate-600',
-);
-
-export const inlineTextCellClassName = cn(
-  inlineCellClassName,
-  'h-auto min-h-6 sm:min-h-5 w-full !justify-start !whitespace-normal break-words px-0 text-left text-[11px] sm:text-[11px] font-semibold leading-tight text-slate-800 hover:bg-transparent',
-);
+export const inlineQtyCellClassName = denseListInlineQtyCellClassName;
+export const inlineUnitCellClassName = denseListInlineUnitCellClassName;
+export const inlinePriceCellClassName = denseListInlinePriceCellClassName;
+export const inlineDateCellClassName = denseListInlineDateCellClassName;
+export const inlineTextCellClassName = denseListInlineTextCellClassName;
 
 export function formatPurchaseDate(value: string) {
   try {
