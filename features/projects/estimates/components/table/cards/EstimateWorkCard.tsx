@@ -2,7 +2,13 @@ import { ChevronDown, ChevronRight, Pencil, Settings, Wrench } from 'lucide-reac
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
-import { DenseListToken } from '@/shared/ui/dense-list';
+import {
+  DenseListActionsGrid,
+  DenseListBodyRow,
+  DenseListEmptyInset,
+  DenseListNestedPanel,
+  DenseListToken,
+} from '@/shared/ui/dense-list';
 import type { WorkNode } from '../../../lib/estimate-cards-table';
 import type { EstimateCardsTableProps } from './types';
 import { buildWorkActions } from './actions';
@@ -27,7 +33,7 @@ export function EstimateWorkCard({
 
   return (
     <div className="bg-card">
-      <div className="flex items-start gap-1.5 px-2 py-2.5 sm:gap-2 sm:px-3.5 sm:py-3">
+      <DenseListBodyRow>
         <Button
           variant="outline"
           size="icon-xs"
@@ -123,10 +129,10 @@ export function EstimateWorkCard({
             items={buildWorkActions(work, props)}
           />
         </div>
-      </div>
+      </DenseListBodyRow>
 
       {isWorkOpen ? (
-        <div className="border-t bg-muted/50 px-2 py-2.5 sm:px-3.5 sm:py-3">
+        <DenseListNestedPanel>
           {workNode.materials.length > 0 ? (
             <>
               <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:mb-2">
@@ -140,12 +146,12 @@ export function EstimateWorkCard({
               </div>
             </>
           ) : (
-            <div className="rounded-md border border-dashed bg-card p-3 text-center text-xs text-muted-foreground">
+            <DenseListEmptyInset>
               У работы пока нет материалов.
-            </div>
+            </DenseListEmptyInset>
           )}
 
-          <div className="mt-3 grid grid-cols-3 gap-1.5 sm:mt-4 sm:max-w-[400px] sm:gap-2">
+          <DenseListActionsGrid>
             <Button
               variant="outline"
               size="xs"
@@ -170,8 +176,8 @@ export function EstimateWorkCard({
             >
               Удалить
             </Button>
-          </div>
-        </div>
+          </DenseListActionsGrid>
+        </DenseListNestedPanel>
       ) : null}
     </div>
   );
