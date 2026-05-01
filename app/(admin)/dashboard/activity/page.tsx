@@ -1,3 +1,1 @@
-import { AdminActivityPage } from '@/features/admin';
-
-export default AdminActivityPage;
+export { AdminActivityPage as default } from '@/features/admin';
