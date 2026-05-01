@@ -189,6 +189,10 @@ function DenseListMaterialImageFrame({ className, ...props }: React.ComponentPro
   );
 }
 
+function DenseListTrailingAction({ className, ...props }: React.ComponentProps<'div'>) {
+  return <div className={cn('flex shrink-0 items-start pt-0.5', className)} {...props} />;
+}
+
 export {
   DenseListActionsGrid,
   DenseListBodyRow,
@@ -206,5 +210,6 @@ export {
   DenseListStat,
   DenseListSurface,
   DenseListToken,
+  DenseListTrailingAction,
   DenseListViewport,
 };
