@@ -22,7 +22,7 @@ import { Skeleton } from '@/shared/ui/skeleton';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
 
 type EstimateTabCardLayout = 'execution' | 'procurement';
-type EstimateTabMetricsLayout = 'execution' | 'procurement';
+type EstimateTabMetricsLayoutVariant = 'execution' | 'procurement';
 type EstimateTabMetricTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 type EstimateTabSectionTone = 'plan' | 'fact' | 'delta';
 type EstimateTabState = 'not_started' | 'in_progress' | 'done';
@@ -40,7 +40,7 @@ type EstimateTabCardProps = React.ComponentProps<'article'> & {
   layout: EstimateTabCardLayout;
 };
 type EstimateTabMetricsLayoutProps = React.ComponentProps<'div'> & {
-  layout: EstimateTabMetricsLayout;
+  layout: EstimateTabMetricsLayoutVariant;
 };
 type EstimateTabMetricSectionProps = React.ComponentProps<'section'> & {
   title: string;
@@ -81,7 +81,7 @@ const estimateTabCardLayoutClassName: Record<EstimateTabCardLayout, string> = {
   procurement: 'grid grid-cols-1 gap-4 p-2 sm:p-3 lg:grid-cols-[2.5fr_1fr_1fr_1fr] lg:gap-6',
 };
 
-const estimateTabMetricsLayoutClassName: Record<EstimateTabMetricsLayout, string> = {
+const estimateTabMetricsLayoutClassName: Record<EstimateTabMetricsLayoutVariant, string> = {
   execution: 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:contents',
   procurement: 'grid grid-cols-2 gap-4 sm:grid-cols-3 lg:contents',
 };
