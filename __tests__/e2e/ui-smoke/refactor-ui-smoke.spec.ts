@@ -23,7 +23,9 @@ for (const route of ROUTES) {
 
     expect(response?.status(), `Unexpected HTTP status for ${route}`).toBeLessThan(500)
     await expect(page.locator('body')).toBeVisible()
-    await expect(page.locator('main, [role="main"], form, body')).toHaveCountGreaterThan(0)
+
+    const landmarkCount = await page.locator('main, [role="main"], form').count()
+    expect(landmarkCount, `Expected at least one page landmark on ${route}`).toBeGreaterThan(0)
 
     await page.waitForLoadState('networkidle').catch(() => undefined)
 
