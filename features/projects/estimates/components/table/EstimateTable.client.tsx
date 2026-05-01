@@ -9,6 +9,13 @@ import {
   FileUp,
   FolderTree,
 } from "lucide-react";
+import {
+  EditableDataSurface,
+  EditableDataSurfaceActions,
+  EditableDataSurfaceEmptyInset,
+  EditableDataSurfaceToolbar,
+  EditableDataSurfaceViewport,
+} from "@/shared/ui/editable-data-surface";
 import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { useRouter } from "next/navigation";
 import { useEstimateMutations } from "../../hooks/use-estimate-mutations";
@@ -73,13 +80,13 @@ export function EstimateTable({
       description="Добавьте разделы, работы и материалы или импортируйте готовую смету из Excel"
       icon={FilePlus}
       action={
-        <div className="flex flex-wrap items-center justify-center gap-2">
+        <EditableDataSurfaceActions>
           <Button variant="outline" onClick={() => model.openCreateSectionDialog()}>
-            <FolderTree className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <FolderTree aria-hidden="true" />
             Создать раздел
           </Button>
           <Button variant="outline" onClick={model.openCalculationMode}>
-            <Calculator className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <Calculator aria-hidden="true" />
             Добавить работу
           </Button>
           <Button
@@ -87,19 +94,18 @@ export function EstimateTable({
             onClick={() => void model.importEstimate()}
             disabled={model.isImporting}
           >
-            <FileUp className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+            <FileUp aria-hidden="true" />
             Импорт из Excel
           </Button>
-        </div>
+        </EditableDataSurfaceActions>
       }
     />
   );
 
   return (
-    <div className="space-y-1.5 sm:space-y-2 [--table-height:calc(100vh-250px)] sm:[--table-height:calc(100vh-280px)]">
-      <section className="flex flex-col rounded-lg border border-[#e4e4e7] bg-white text-[#09090b] shadow-none">
-        {/* Тулбар внутри контейнера */}
-        <div className="p-1.5 sm:p-2 pb-0">
+    <>
+      <EditableDataSurface>
+        <EditableDataSurfaceToolbar>
           <DataTableToolbar
             actions={
               <EstimateTableToolbar
@@ -124,12 +130,11 @@ export function EstimateTable({
             setSearchValue={setSearchValue}
             compactMobileToolbar
           />
-        </div>
+        </EditableDataSurfaceToolbar>
 
-        {/* Прокручиваемая область карточек */}
-        <div className="max-h-[var(--table-height)] overflow-y-auto bg-white px-1.5 pb-1.5 pt-1.5 sm:px-4 sm:pt-2">
+        <EditableDataSurfaceViewport size="estimate">
           {model.rows.length === 0 ? (
-            <div className="px-3 py-8">{emptyState}</div>
+            <EditableDataSurfaceEmptyInset>{emptyState}</EditableDataSurfaceEmptyInset>
           ) : (
             <EstimateCardsTable
               rows={model.rows}
@@ -147,8 +152,8 @@ export function EstimateTable({
               onRemoveRow={model.removeRow}
             />
           )}
-        </div>
-      </section>
+        </EditableDataSurfaceViewport>
+      </EditableDataSurface>
 
       <EstimateTableSummary
         worksTotal={currencyFormatter.format(model.totals.works)}
@@ -163,6 +168,6 @@ export function EstimateTable({
         onDeleteDialogChange={setIsDeleteDialogOpen}
         onDeleteConfirm={handleDeleteEstimate}
       />
-    </div>
+    </>
   );
 }
