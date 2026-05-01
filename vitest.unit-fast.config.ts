@@ -23,6 +23,8 @@ export default defineConfig({
         exclude: [
             'node_modules/**/*',
             '__tests__/unit/**/*.tsx',
+            '__tests__/unit/estimate-client-events.test.ts',
+            '__tests__/unit/global-purchases-hook-v2.test.ts',
             '__tests__/unit/lib/data/db/**/*',
             '__tests__/integration/**/*',
             '__tests__/e2e/**/*',
