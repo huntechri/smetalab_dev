@@ -4,6 +4,7 @@ import { Button } from '@/shared/ui/button';
 import { Tabs, TabsContent } from '@/shared/ui/tabs';
 import {
     AdminActivityRecord,
+    AdminEmptyMessage,
     AdminHeaderActions,
     AdminInlineMeta,
     AdminListCard,
@@ -118,9 +119,7 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                 <TabsContent value="activity" className="mt-4">
                     <AdminListCard>
                         {team.recentActivity.length === 0 ? (
-                            <div className="p-8 text-center text-sm italic text-muted-foreground">
-                                Нет записей об активности
-                            </div>
+                            <AdminEmptyMessage>Нет записей об активности</AdminEmptyMessage>
                         ) : (
                             team.recentActivity.map((log) => (
                                 <AdminActivityRecord
