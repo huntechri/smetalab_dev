@@ -1,9 +1,9 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import {
   AdminActivityItem,
   AdminActivityList,
   AdminEmptyState,
   AdminPageShell,
+  AdminSectionCard,
 } from '@/shared/ui/admin-surface';
 import {
   Settings,
@@ -93,43 +93,38 @@ export default async function ActivityPage() {
 
   return (
     <AdminPageShell title="Activity Log">
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Activity</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {logs.length > 0 ? (
-            <AdminActivityList>
-              {logs.map((log) => {
-                const Icon = iconMap[log.action as ActivityType] || Settings;
-                const formattedAction = formatAction(
-                  log.action as ActivityType
-                );
+      <AdminSectionCard title="Recent Activity">
+        {logs.length > 0 ? (
+          <AdminActivityList>
+            {logs.map((log) => {
+              const Icon = iconMap[log.action as ActivityType] || Settings;
+              const formattedAction = formatAction(
+                log.action as ActivityType
+              );
 
-                return (
-                  <AdminActivityItem
-                    key={log.id}
-                    icon={Icon}
-                    title={(
-                      <>
-                        {formattedAction}
-                        {log.ipAddress && ` from IP ${log.ipAddress}`}
-                      </>
-                    )}
-                    description={getRelativeTime(new Date(log.timestamp))}
-                  />
-                );
-              })}
-            </AdminActivityList>
-          ) : (
-            <AdminEmptyState
-              icon={AlertCircle}
-              title="No activity yet"
-              description="When you perform actions like signing in or updating your account, they'll appear here."
-            />
-          )}
-        </CardContent>
-      </Card>
+              return (
+                <AdminActivityItem
+                  key={log.id}
+                  icon={Icon}
+                  title={(
+                    <>
+                      {formattedAction}
+                      {log.ipAddress && ` from IP ${log.ipAddress}`}
+                    </>
+                  )}
+                  description={getRelativeTime(new Date(log.timestamp))}
+                />
+              );
+            })}
+          </AdminActivityList>
+        ) : (
+          <AdminEmptyState
+            icon={AlertCircle}
+            title="No activity yet"
+            description="When you perform actions like signing in or updating your account, they'll appear here."
+          />
+        )}
+      </AdminSectionCard>
     </AdminPageShell>
   );
 }
