@@ -4,6 +4,16 @@ import { pathToFileURL } from "node:url"
 
 type Severity = "critical" | "high" | "medium" | "low"
 type Surface = "app" | "shared-ui" | "feature" | "entity" | "component" | "package" | "style" | "unknown"
+type Ownership =
+  | "canonical-token"
+  | "primitive-contract"
+  | "feature-family-contract"
+  | "compatibility-surface"
+  | "marketing-auth-exception"
+  | "business-runtime-drift"
+  | "unknown"
+
+type ValidationStatus = "PASS" | "PASS_WITH_SHARED_RESIDUAL" | "REVIEW" | "FAIL"
 
 interface Finding {
   filePath: string
@@ -13,6 +23,7 @@ interface Finding {
   token: string
   reason: string
   surface: Surface
+  ownership: Ownership
 }
 
 interface AuditReport {
@@ -24,7 +35,10 @@ interface AuditReport {
   severityCounts: Record<Severity, number>
   categoryCounts: Record<string, number>
   surfaceCounts: Record<Surface, number>
+  ownershipCounts: Record<Ownership, number>
   staleReferences: Array<{ filePath: string; classification: "stale-reference"; reason: string }>
+  acceptedSharedContractOwners: string[]
+  postRefactorValidation: TargetValidation[]
   findings: Finding[]
 }
 
@@ -38,7 +52,26 @@ interface PatternRule {
   defaultSeverity: Severity
   pattern: RegExp
   reason: string
-  getSeverity?: (filePath: string, surface: Surface, token: string) => Severity
+  getSeverity?: (filePath: string, surface: Surface, token: string, ownership: Ownership) => Severity
+}
+
+interface TargetSurface {
+  phase: string
+  title: string
+  expected: string
+  featureMatchers: string[]
+  sharedResidualOwners?: string[]
+}
+
+interface TargetValidation {
+  phase: string
+  title: string
+  expected: string
+  actualFindings: number
+  highCriticalFindings: number
+  status: ValidationStatus
+  files: string[]
+  sharedResidualOwners: string[]
 }
 
 const ROOT = process.cwd()
@@ -69,6 +102,162 @@ const EXCLUDED_SEGMENTS = new Set([
 ])
 
 const TEST_FILE_PATTERN = /(?:^|\/|\.)(test|spec)\.(tsx|ts|jsx|js|mjs|cjs)$/u
+
+const ACCEPTED_PRIMITIVE_CONTRACT_OWNERS = new Set([
+  "shared/ui/primitive-density.ts",
+  "shared/ui/button.tsx",
+  "shared/ui/badge.tsx",
+  "shared/ui/input.tsx",
+  "shared/ui/textarea.tsx",
+  "shared/ui/input-group.tsx",
+  "shared/ui/select.tsx",
+  "shared/ui/tabs.tsx",
+  "shared/ui/dialog.tsx",
+  "shared/ui/alert-dialog.tsx",
+  "shared/ui/sheet.tsx",
+  "shared/ui/sidebar.tsx",
+  "shared/ui/data-table.tsx",
+  "shared/ui/command.tsx",
+  "shared/ui/context-menu.tsx",
+  "shared/ui/dropdown-menu.tsx",
+  "shared/ui/menubar.tsx",
+])
+
+const ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS = new Set([
+  "shared/ui/dense-list.tsx",
+  "shared/ui/dashboard-dynamics-chart.tsx",
+  "shared/ui/workspace-tabs.tsx",
+  "shared/ui/editable-data-surface.tsx",
+  "shared/ui/kpi-card.tsx",
+  "shared/ui/dashboard-layout.tsx",
+  "shared/ui/admin-surface.tsx",
+  "shared/ui/estimate-tab.tsx",
+  "shared/ui/cells/directory-table-cells.tsx",
+  "shared/ui/cells/table-cell-helpers.tsx",
+  "shared/ui/shells/catalog-directory-visual-contracts.ts",
+])
+
+const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
+  ...ACCEPTED_PRIMITIVE_CONTRACT_OWNERS,
+  ...ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS,
+])
+
+const PHASE_TARGETS: TargetSurface[] = [
+  {
+    phase: "#175",
+    title: "ProjectEstimatesCards visual contract",
+    expected: "Feature surface absent from matrix or 0 findings; residuals owned by shared/ui/dense-list.tsx.",
+    featureMatchers: ["features/projects/dashboard/components/ProjectEstimatesCards.tsx"],
+    sharedResidualOwners: ["shared/ui/dense-list.tsx"],
+  },
+  {
+    phase: "#176",
+    title: "Dashboard dynamics charts",
+    expected: "Feature chart files absent from matrix or 0 findings; residuals owned by dashboard-dynamics-chart.",
+    featureMatchers: [
+      "features/projects/dashboard/components/DashboardChart.tsx",
+      "features/dashboard/components/HomeDynamicsChart.tsx",
+    ],
+    sharedResidualOwners: ["shared/ui/dashboard-dynamics-chart.tsx"],
+  },
+  {
+    phase: "#177",
+    title: "Estimate shell and table",
+    expected: "EstimateDetailsShell and EstimateTable absent from matrix or 0 findings.",
+    featureMatchers: [
+      "features/projects/estimates/screens/EstimateDetailsShell.client.tsx",
+      "features/projects/estimates/components/table/EstimateTable.client.tsx",
+    ],
+    sharedResidualOwners: ["shared/ui/workspace-tabs.tsx", "shared/ui/editable-data-surface.tsx"],
+  },
+  {
+    phase: "#178",
+    title: "Project dashboard/KPI surfaces",
+    expected: "ProjectDashboard, DashboardKpiCards and removed DashboardDataTable should not own visual drift.",
+    featureMatchers: [
+      "features/projects/dashboard/screens/ProjectDashboard.tsx",
+      "features/projects/dashboard/components/DashboardKpiCards.tsx",
+      "features/projects/dashboard/components/DashboardDataTable.tsx",
+    ],
+    sharedResidualOwners: ["shared/ui/kpi-card.tsx", "shared/ui/dashboard-layout.tsx"],
+  },
+  {
+    phase: "#179",
+    title: "Global Purchases visual contract",
+    expected: "Global purchases list/card/metric/table files should delegate repeated recipes to dense-list.",
+    featureMatchers: [
+      "features/global-purchases/components/GlobalPurchasesView.client.tsx",
+      "features/global-purchases/components/GlobalPurchasesCardsList.tsx",
+      "features/global-purchases/components/GlobalPurchasesSummary.tsx",
+      "features/global-purchases/components/cards/GlobalPurchaseCard.tsx",
+      "features/global-purchases/components/cards/PurchaseMetric.tsx",
+      "features/global-purchases/components/cards/ProjectPicker.tsx",
+      "features/global-purchases/components/cards/SupplierPicker.tsx",
+      "features/global-purchases/components/global-purchases-columns.tsx",
+    ],
+    sharedResidualOwners: ["shared/ui/dense-list.tsx"],
+  },
+  {
+    phase: "#180",
+    title: "Admin tenant/activity/pricing surfaces",
+    expected: "Admin app/feature files should not contain local visual recipes; residuals owned by admin-surface.",
+    featureMatchers: ["app/(admin)/", "features/admin/"],
+    sharedResidualOwners: ["shared/ui/admin-surface.tsx"],
+  },
+  {
+    phase: "#181",
+    title: "Estimate Execution and Procurement tabs",
+    expected: "Execution and Procurement feature files absent from matrix or 0 findings; residuals owned by estimate-tab.",
+    featureMatchers: [
+      "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+    ],
+    sharedResidualOwners: ["shared/ui/estimate-tab.tsx"],
+  },
+  {
+    phase: "#182",
+    title: "Catalog and directory contracts",
+    expected: "Catalog/directory feature surfaces absent from matrix or 0 findings; residuals owned by catalog-directory contracts.",
+    featureMatchers: [
+      "features/works/components/columns.tsx",
+      "features/materials/components/columns.tsx",
+      "features/works/components/WorksSidebar.tsx",
+      "features/materials/components/MaterialsSidebar.tsx",
+      "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "features/material-suppliers/components/columns.tsx",
+      "features/counterparties/components/columns.tsx",
+      "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+      "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+      "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+    ],
+    sharedResidualOwners: [
+      "shared/ui/cells/directory-table-cells.tsx",
+      "shared/ui/shells/catalog-directory-visual-contracts.ts",
+    ],
+  },
+  {
+    phase: "#183",
+    title: "Shared UI primitive density baseline",
+    expected: "Shared primitive residuals are classified as primitive-contract or feature-family-contract with High/Critical = 0.",
+    featureMatchers: ["shared/ui/primitive-density.ts"],
+    sharedResidualOwners: ["shared/ui/primitive-density.ts"],
+  },
+  {
+    phase: "#184",
+    title: "Auth, landing and low-priority app surfaces",
+    expected: "Auth/landing/global findings are reported as exception candidates, not business runtime blockers.",
+    featureMatchers: [
+      "app/page.tsx",
+      "app/not-found.tsx",
+      "features/auth/",
+      "app/(login)/",
+      "app/login/",
+      "app/forgot-password/",
+      "app/reset-password/",
+      "app/verify-email/",
+    ],
+  },
+]
 
 const TAILWIND_PALETTE_NAMES = [
   "slate",
@@ -132,26 +321,6 @@ function classifySurface(relativePath: string): Surface {
   return "unknown"
 }
 
-function isCanonicalTokenFile(relativePath: string): boolean {
-  return (
-    relativePath === "app/globals.css" ||
-    relativePath.startsWith("styles/tokens/") ||
-    relativePath.startsWith("shared/ui/") ||
-    relativePath.startsWith("components/ui/") ||
-    relativePath.startsWith("packages/ui/")
-  )
-}
-
-function isCanonicalBadgeFile(relativePath: string): boolean {
-  return (
-    relativePath === "shared/ui/badge.tsx" ||
-    relativePath === "components/ui/badge.tsx" ||
-    relativePath === "packages/ui/src/badge.tsx" ||
-    relativePath.endsWith("/shared/ui/badge.tsx") ||
-    relativePath.endsWith("/components/ui/badge.tsx")
-  )
-}
-
 function isMarketingOrAuthSurface(relativePath: string): boolean {
   return (
     relativePath === "app/page.tsx" ||
@@ -173,6 +342,34 @@ function isMarketingOrAuthSurface(relativePath: string): boolean {
   )
 }
 
+function classifyOwnership(relativePath: string, surface: Surface): Ownership {
+  if (relativePath === "app/globals.css" || relativePath === "app/layout.tsx" || relativePath.startsWith("styles/tokens/")) {
+    return "canonical-token"
+  }
+  if (ACCEPTED_PRIMITIVE_CONTRACT_OWNERS.has(relativePath)) return "primitive-contract"
+  if (ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS.has(relativePath)) return "feature-family-contract"
+  if (relativePath.startsWith("components/ui/") || relativePath.startsWith("packages/ui/")) return "compatibility-surface"
+  if (isMarketingOrAuthSurface(relativePath)) return "marketing-auth-exception"
+  if (surface === "app" || surface === "feature" || surface === "entity") return "business-runtime-drift"
+  if (surface === "shared-ui") return "unknown"
+  return "unknown"
+}
+
+function isAcceptedSharedContract(relativePath: string): boolean {
+  return ACCEPTED_SHARED_CONTRACT_OWNERS.has(relativePath)
+}
+
+function isCanonicalTokenFile(relativePath: string): boolean {
+  return (
+    relativePath === "app/globals.css" ||
+    relativePath === "app/layout.tsx" ||
+    relativePath.startsWith("styles/tokens/") ||
+    isAcceptedSharedContract(relativePath) ||
+    relativePath.startsWith("components/ui/") ||
+    relativePath.startsWith("packages/ui/")
+  )
+}
+
 function isBusinessRuntimeSurface(surface: Surface, relativePath: string): boolean {
   if (isMarketingOrAuthSurface(relativePath)) return false
   return surface === "app" || surface === "feature" || surface === "entity"
@@ -185,19 +382,20 @@ function downgradeForMarketingAuth(severity: Severity, relativePath: string): Se
   return severity
 }
 
-function severityForColor(filePath: string, surface: Surface): Severity {
-  if (isCanonicalTokenFile(filePath)) return "low"
+function severityForColor(filePath: string, surface: Surface, _token: string, ownership: Ownership): Severity {
+  if (ownership === "canonical-token" || ownership === "primitive-contract" || ownership === "feature-family-contract") return "low"
   if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth("high", filePath)
   return "medium"
 }
 
-function severityForBorder(filePath: string, surface: Surface): Severity {
-  if (isCanonicalTokenFile(filePath)) return "low"
+function severityForBorder(filePath: string, surface: Surface, _token: string, ownership: Ownership): Severity {
+  if (ownership === "canonical-token" || ownership === "primitive-contract" || ownership === "feature-family-contract") return "low"
   if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth("medium", filePath)
   return "low"
 }
 
-function severityForRadius(filePath: string, surface: Surface): Severity {
+function severityForRadius(filePath: string, surface: Surface, _token: string, ownership: Ownership): Severity {
+  if (ownership === "primitive-contract" || ownership === "feature-family-contract") return "low"
   if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth("high", filePath)
   return "medium"
 }
@@ -216,29 +414,26 @@ function severityForEntrypoint(filePath: string, surface: Surface, token: string
   return "medium"
 }
 
-function severityForBadge(filePath: string, surface: Surface): Severity {
-  if (isCanonicalBadgeFile(filePath)) return "low"
+function severityForBadge(filePath: string, surface: Surface, _token: string, ownership: Ownership): Severity {
+  if (ownership === "primitive-contract" || ownership === "feature-family-contract") return "low"
   if (isCanonicalTokenFile(filePath)) return "low"
   if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth("medium", filePath)
   return "low"
 }
 
-function severityForPadding(filePath: string, surface: Surface, token: string): Severity {
-  if (isCanonicalTokenFile(filePath)) return "low"
+function severityForPadding(filePath: string, surface: Surface, token: string, ownership: Ownership): Severity {
+  if (ownership === "primitive-contract" || ownership === "feature-family-contract" || ownership === "canonical-token") return "low"
   const isCompactPadding = /\b(?:p|px|py|pt|pr|pb|pl)-(?:0|0\.5|1|1\.5|2|\[[^\]]+\])\b/.test(token)
-  if (isBusinessRuntimeSurface(surface, filePath)) {
-    return downgradeForMarketingAuth(isCompactPadding ? "medium" : "low", filePath)
-  }
+  if (isBusinessRuntimeSurface(surface, filePath)) return downgradeForMarketingAuth(isCompactPadding ? "medium" : "low", filePath)
   return "low"
 }
 
-function reasonSuffix(relativePath: string): string {
-  if (isCanonicalTokenFile(relativePath)) {
-    return " Classified as canonical token/primitive or compatibility surface; keep visible but do not treat as immediate business UI drift."
-  }
-  if (isMarketingOrAuthSurface(relativePath)) {
-    return " Marketing/auth surface: reported as an exception candidate with downgraded severity."
-  }
+function reasonSuffix(relativePath: string, ownership: Ownership): string {
+  if (ownership === "canonical-token") return " Classified as canonical token/global ownership surface."
+  if (ownership === "primitive-contract") return " Classified as accepted primitive-level shared UI contract owner."
+  if (ownership === "feature-family-contract") return " Classified as accepted feature-family visual contract owner after #175-#184 cleanup."
+  if (ownership === "compatibility-surface") return " Classified as compatibility surface; keep visible but do not treat as primary runtime drift."
+  if (ownership === "marketing-auth-exception") return " Marketing/auth/landing surface: reported as exception candidate with downgraded severity."
   return ""
 }
 
@@ -311,7 +506,10 @@ const RULES: PatternRule[] = [
     defaultSeverity: "medium",
     pattern: new RegExp(`\\b(?:${COLOR_PREFIXES})-(?:${TAILWIND_PALETTE_NAMES})-(?:50|100|200|300|400|500|600|700|800|900|950)(?:\\/\\d+)?\\b`, "g"),
     reason: "Raw Tailwind palette utility in runtime UI should usually be replaced by semantic tokens or Badge variants.",
-    getSeverity: (filePath, surface) => (isBusinessRuntimeSurface(surface, filePath) ? downgradeForMarketingAuth("medium", filePath) : "low"),
+    getSeverity: (filePath, surface, _token, ownership) => {
+      if (ownership === "primitive-contract" || ownership === "feature-family-contract" || ownership === "canonical-token") return "low"
+      return isBusinessRuntimeSurface(surface, filePath) ? downgradeForMarketingAuth("medium", filePath) : "low"
+    },
   },
   {
     category: "border-overlap",
@@ -339,7 +537,10 @@ const RULES: PatternRule[] = [
     defaultSeverity: "medium",
     pattern: /\btext-\[(?:9|10|11|12|13)px\]|\bleading-\[[^\]]+\]|\btracking-\[[^\]]+\]/g,
     reason: "Dense typography should be reported first, then moved into named table/chip typography contracts where repeated.",
-    getSeverity: (filePath, surface) => (isBusinessRuntimeSurface(surface, filePath) ? downgradeForMarketingAuth("medium", filePath) : "low"),
+    getSeverity: (filePath, surface, _token, ownership) => {
+      if (ownership === "primitive-contract" || ownership === "feature-family-contract") return "low"
+      return isBusinessRuntimeSurface(surface, filePath) ? downgradeForMarketingAuth("medium", filePath) : "low"
+    },
   },
   {
     category: "shadow-overlap",
@@ -391,21 +592,23 @@ function addFinding(findings: Finding[], seen: Set<string>, finding: Finding): v
 
 function scanLine(relativePath: string, line: string, lineNumber: number, findings: Finding[], seen: Set<string>): void {
   const surface = classifySurface(relativePath)
+  const ownership = classifyOwnership(relativePath, surface)
 
   for (const rule of RULES) {
     for (const match of line.matchAll(rule.pattern)) {
       const token = (match[1] || match[2] || match[0]).trim()
       if (!token) continue
 
-      const severity = rule.getSeverity?.(relativePath, surface, token) ?? rule.defaultSeverity
+      const severity = rule.getSeverity?.(relativePath, surface, token, ownership) ?? rule.defaultSeverity
       addFinding(findings, seen, {
         filePath: relativePath,
         line: lineNumber,
         category: rule.category,
         severity,
         token,
-        reason: `${rule.reason}${reasonSuffix(relativePath)}`,
+        reason: `${rule.reason}${reasonSuffix(relativePath, ownership)}`,
         surface,
+        ownership,
       })
     }
   }
@@ -449,6 +652,20 @@ function countBySurface(findings: Finding[]): Record<Surface, number> {
   return counts
 }
 
+function countByOwnership(findings: Finding[]): Record<Ownership, number> {
+  const counts: Record<Ownership, number> = {
+    "canonical-token": 0,
+    "primitive-contract": 0,
+    "feature-family-contract": 0,
+    "compatibility-surface": 0,
+    "marketing-auth-exception": 0,
+    "business-runtime-drift": 0,
+    unknown: 0,
+  }
+  for (const finding of findings) counts[finding.ownership] += 1
+  return counts
+}
+
 function countScannedRoots(files: string[]): Record<string, number> {
   const counts = Object.fromEntries(SCAN_ROOTS.map((root) => [root, 0])) as Record<string, number>
   for (const filePath of files) {
@@ -457,6 +674,45 @@ function countScannedRoots(files: string[]): Record<string, number> {
     counts[rootName] = (counts[rootName] ?? 0) + 1
   }
   return counts
+}
+
+function targetMatches(filePath: string, matcher: string): boolean {
+  return filePath === matcher || filePath.startsWith(matcher)
+}
+
+function isHighCritical(finding: Finding): boolean {
+  return finding.severity === "critical" || finding.severity === "high"
+}
+
+function validateTarget(target: TargetSurface, findings: Finding[]): TargetValidation {
+  const targetFindings = findings.filter((finding) => target.featureMatchers.some((matcher) => targetMatches(finding.filePath, matcher)))
+  const sharedResidualOwners = target.sharedResidualOwners ?? []
+  const sharedResidualFindings = findings.filter((finding) => sharedResidualOwners.includes(finding.filePath))
+  const targetHighCritical = targetFindings.filter(isHighCritical)
+  const sharedHighCritical = sharedResidualFindings.filter(isHighCritical)
+  const files = [...new Set(targetFindings.map((finding) => finding.filePath))].sort()
+
+  let status: ValidationStatus = "PASS"
+  if (targetHighCritical.length > 0) {
+    status = "FAIL"
+  } else if (targetFindings.length > 0) {
+    status = "REVIEW"
+  } else if (sharedResidualFindings.length > 0 && sharedHighCritical.length === 0) {
+    status = "PASS_WITH_SHARED_RESIDUAL"
+  } else if (sharedHighCritical.length > 0) {
+    status = "REVIEW"
+  }
+
+  return {
+    phase: target.phase,
+    title: target.title,
+    expected: target.expected,
+    actualFindings: targetFindings.length,
+    highCriticalFindings: targetHighCritical.length,
+    status,
+    files,
+    sharedResidualOwners,
+  }
 }
 
 function createReport(files: string[], findings: Finding[]): AuditReport {
@@ -469,6 +725,7 @@ function createReport(files: string[], findings: Finding[]): AuditReport {
     severityCounts: countBySeverity(findings),
     categoryCounts: countBy(findings, (finding) => finding.category),
     surfaceCounts: countBySurface(findings),
+    ownershipCounts: countByOwnership(findings),
     staleReferences: [
       {
         filePath: "docs/DESIGN_SYSTEM.md",
@@ -476,6 +733,8 @@ function createReport(files: string[], findings: Finding[]): AuditReport {
         reason: "Issue #173 requires this audit to be generated from runtime source code, not stale design docs.",
       },
     ],
+    acceptedSharedContractOwners: [...ACCEPTED_SHARED_CONTRACT_OWNERS].sort(),
+    postRefactorValidation: PHASE_TARGETS.map((target) => validateTarget(target, findings)),
     findings,
   }
 }
@@ -484,37 +743,61 @@ function formatCounts(counts: Record<string, number>): string {
   const entries = Object.entries(counts).filter(([, count]) => count > 0)
   if (entries.length === 0) return "_None._"
   return entries
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+    .sort((a, b) => b[1] - a[0].localeCompare(b[0]))
     .map(([name, count]) => `- ${name}: ${count}`)
     .join("\n")
+}
+
+function compareFindings(a: Finding, b: Finding): number {
+  const severityOrder: Record<Severity, number> = { critical: 0, high: 1, medium: 2, low: 3 }
+  return severityOrder[a.severity] - severityOrder[b.severity] || a.filePath.localeCompare(b.filePath) || a.line - b.line
 }
 
 function formatFindingTable(findings: Finding[], limit: number): string {
   if (findings.length === 0) return "_None._"
 
   const rows = findings.slice(0, limit).map((finding) => {
-    const reason = finding.reason.replace(/\|/g, "\\|")
     const token = finding.token.replace(/\|/g, "\\|")
-    return `| ${finding.severity} | ${finding.category} | ${finding.surface} | \`${finding.filePath}:${finding.line}\` | \`${token}\` | ${reason} |`
+    return `| ${finding.severity} | ${finding.category} | ${finding.surface} | ${finding.ownership} | \`${finding.filePath}:${finding.line}\` | \`${token}\` |`
   })
 
   const suffix = findings.length > limit ? `\n\n_Showing ${limit} of ${findings.length} findings._` : ""
   return [
-    "| Severity | Category | Surface | Location | Token | Reason |",
+    "| Severity | Category | Surface | Ownership | Location | Token |",
     "| --- | --- | --- | --- | --- | --- |",
     ...rows,
   ].join("\n") + suffix
+}
+
+function formatValidationTable(validations: TargetValidation[]): string {
+  if (validations.length === 0) return "_None._"
+
+  const rows = validations.map((validation) => {
+    const files = validation.files.length > 0 ? validation.files.map((file) => `\`${file}\``).join(", ") : "—"
+    const owners = validation.sharedResidualOwners.length > 0 ? validation.sharedResidualOwners.map((file) => `\`${file}\``).join(", ") : "—"
+    return `| ${validation.phase} | ${validation.title} | ${validation.actualFindings} | ${validation.highCriticalFindings} | ${validation.status} | ${files} | ${owners} |`
+  })
+
+  return [
+    "| Phase | Target | Feature findings | High/Critical | Status | Target files with findings | Accepted shared residual owner(s) |",
+    "| --- | --- | ---: | ---: | --- | --- | --- |",
+    ...rows,
+  ].join("\n")
 }
 
 function writeReports(report: AuditReport): void {
   fs.mkdirSync(path.dirname(REPORT_JSON_PATH), { recursive: true })
   fs.writeFileSync(REPORT_JSON_PATH, `${JSON.stringify(report, null, 2)}\n`)
 
-  const bySeverity = [...report.findings].sort((a, b) => {
-    const order: Record<Severity, number> = { critical: 0, high: 1, medium: 2, low: 3 }
-    return order[a.severity] - order[b.severity] || a.filePath.localeCompare(b.filePath) || a.line - b.line
-  })
-  const highPriority = bySeverity.filter((finding) => finding.severity === "critical" || finding.severity === "high")
+  const sortedFindings = [...report.findings].sort(compareFindings)
+  const highPriority = sortedFindings.filter((finding) => finding.severity === "critical" || finding.severity === "high")
+  const businessRuntimeHighPriority = highPriority.filter((finding) => finding.ownership === "business-runtime-drift")
+  const unclassifiedSharedUi = sortedFindings.filter((finding) => finding.surface === "shared-ui" && finding.ownership === "unknown")
+  const acceptedSharedResiduals = sortedFindings.filter(
+    (finding) => finding.ownership === "primitive-contract" || finding.ownership === "feature-family-contract",
+  )
+  const marketingAuthExceptions = sortedFindings.filter((finding) => finding.ownership === "marketing-auth-exception")
+  const featureAppEntityFindings = sortedFindings.filter((finding) => ["app", "feature", "entity"].includes(finding.surface))
 
   const markdown = `# UI Visual Overlap Audit
 
@@ -543,35 +826,53 @@ ${formatCounts(report.categoryCounts)}
 
 ${formatCounts(report.surfaceCounts)}
 
+## Findings by ownership
+
+${formatCounts(report.ownershipCounts)}
+
 ## Source-of-truth notes
 
 - Runtime source is the source of truth for this audit: app/globals.css, app/layout.tsx, shared/ui/**, features/**, entities/**, components/ui/**, packages/ui/**, styles/**, widgets/**, and existing audit/package scripts.
 - docs/DESIGN_SYSTEM.md is classified as stale-reference for this phase and is not scanned as source of truth.
-- Canonical token/primitive and compatibility surfaces remain reported, but findings there are intentionally lower severity than business runtime drift.
+- Shared UI residuals are split into primitive-contract, feature-family-contract, compatibility-surface, and unknown ownership classes.
 - Marketing/auth surfaces, including app/page.tsx and auth/pricing routes, remain reported as exception candidates with downgraded severity.
 - Test, mock, fixture, build, report, and documentation paths are excluded from visual runtime audit scope.
-- Badge/status/chip surfaces are tracked explicitly through badge-overlap to catch duplicated visual recipes beyond generic color/typography findings.
-- Internal padding is tracked explicitly through padding-overlap to separate dense component sizing from outer layout drift.
 
-## Top high-priority findings
+## Business runtime High/Critical findings
 
-${formatFindingTable(highPriority, 50)}
+${formatFindingTable(businessRuntimeHighPriority, 50)}
 
-## Intended cleanup order
+## Closed phase target validation (#175-#184)
 
-1. Normalize root layout token/font ownership.
-2. Normalize estimate tabs visual contract.
-3. Normalize dashboard compact cards colors, borders, and badges.
-4. Normalize permissions matrix palette, radius, and shadow.
-5. Normalize Badge/status/chip variants and remove feature-local badge recipes.
-6. Normalize internal padding contracts for buttons, tabs, badges, table cells, cards, and sheets.
-7. Deduplicate delete confirmation wrappers.
-8. Introduce dense table typography utilities.
-9. Enable strict UI visual audit gate after baseline cleanup.
+${formatValidationTable(report.postRefactorValidation)}
+
+## Accepted shared contract residuals
+
+${formatFindingTable(acceptedSharedResiduals, 80)}
+
+## Shared UI contracts requiring review
+
+${formatFindingTable(unclassifiedSharedUi, 80)}
+
+## Marketing/auth/landing exceptions
+
+${formatFindingTable(marketingAuthExceptions, 80)}
+
+## Top remaining app/feature/entity findings
+
+${formatFindingTable(featureAppEntityFindings, 120)}
+
+## Suggested next cleanup order after #173-#184
+
+1. Fix any business-runtime High/Critical finding first.
+2. Verify closed phase targets that show REVIEW or FAIL in the validation table.
+3. Classify or split any unknown shared-ui contract with repeated findings.
+4. Review marketing/auth/landing exceptions only if they affect product runtime consistency.
+5. Establish an accepted post-refactor baseline before enabling strict visual audit as a release blocker.
 
 ## All findings by severity
 
-${formatFindingTable(bySeverity, 250)}
+${formatFindingTable(sortedFindings, 300)}
 `
 
   fs.writeFileSync(REPORT_MD_PATH, markdown)
@@ -580,7 +881,7 @@ ${formatFindingTable(bySeverity, 250)}
 function getStrictViolations(findings: Finding[]): Finding[] {
   return findings.filter((finding) => {
     if (finding.severity !== "critical" && finding.severity !== "high") return false
-    if (!isBusinessRuntimeSurface(finding.surface, finding.filePath)) return false
+    if (finding.ownership !== "business-runtime-drift") return false
 
     return (
       finding.category === "ui-entrypoint-overlap" ||
@@ -604,6 +905,11 @@ function main(): void {
 
   console.log(`UI visual audit complete. Scanned ${report.scannedFiles} file(s), found ${report.totalFindings} finding(s).`)
   console.log(`Reports: ${toPosix(path.relative(ROOT, REPORT_JSON_PATH))}, ${toPosix(path.relative(ROOT, REPORT_MD_PATH))}`)
+
+  const failedTargets = report.postRefactorValidation.filter((validation) => validation.status === "FAIL")
+  if (failedTargets.length > 0) {
+    console.warn(`Post-refactor validation found ${failedTargets.length} failed target group(s). See reports/ui-visual-audit.md.`)
+  }
 
   if (options.strict) {
     const strictViolations = getStrictViolations(findings)
