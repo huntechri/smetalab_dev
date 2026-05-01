@@ -9,6 +9,18 @@ interface Finding {
   token: string
   reason: string
   surface: string
+  ownership?: string
+}
+
+interface TargetValidation {
+  phase: string
+  title: string
+  expected: string
+  actualFindings: number
+  highCriticalFindings: number
+  status: "PASS" | "PASS_WITH_SHARED_RESIDUAL" | "REVIEW" | "FAIL"
+  files: string[]
+  sharedResidualOwners: string[]
 }
 
 interface AuditReport {
@@ -20,13 +32,10 @@ interface AuditReport {
   severityCounts: Record<string, number>
   categoryCounts: Record<string, number>
   surfaceCounts: Record<string, number>
+  ownershipCounts?: Record<string, number>
+  acceptedSharedContractOwners?: string[]
+  postRefactorValidation?: TargetValidation[]
   findings: Finding[]
-}
-
-interface FocusArea {
-  id: string
-  title: string
-  matches: (finding: Finding) => boolean
 }
 
 interface ScreenGroup {
@@ -43,23 +52,15 @@ const SEVERITY_ORDER: Record<Finding["severity"], number> = { critical: 0, high:
 const IMPORTANT_CATEGORY_ORDER: Record<string, number> = {
   "ui-entrypoint-overlap": 0,
   "font-overlap": 1,
-  "badge-overlap": 2,
-  "padding-overlap": 3,
-  "color-overlap": 4,
-  "radius-overlap": 5,
+  "radius-overlap": 2,
+  "color-overlap": 3,
+  "badge-overlap": 4,
+  "padding-overlap": 5,
   "border-overlap": 6,
   "shadow-overlap": 7,
   "typography-overlap": 8,
   "inline-style-overlap": 9,
   "arbitrary-layout-overlap": 10,
-}
-
-function includesAny(filePath: string, parts: string[]): boolean {
-  return parts.some((part) => filePath.includes(part))
-}
-
-function lowerPath(finding: Finding): string {
-  return finding.filePath.toLowerCase()
 }
 
 function stripExtension(filePath: string): string {
@@ -79,31 +80,19 @@ function featureAreaFromPath(filePath: string): string {
   const rest = parts.slice(2)
 
   const screenIndex = rest.indexOf("screens")
-  if (screenIndex >= 0 && rest[screenIndex + 1]) {
-    return `${feature}/screen/${stripExtension(rest.slice(screenIndex + 1).join("/"))}`
-  }
+  if (screenIndex >= 0 && rest[screenIndex + 1]) return `${feature}/screen/${stripExtension(rest.slice(screenIndex + 1).join("/"))}`
 
   const tabsIndex = rest.indexOf("tabs")
-  if (tabsIndex >= 0 && rest[tabsIndex + 1]) {
-    return `${feature}/tab/${stripExtension(rest.slice(tabsIndex + 1).join("/"))}`
-  }
-
-  const layoutsIndex = rest.indexOf("layouts")
-  if (layoutsIndex >= 0 && rest[layoutsIndex + 1]) {
-    return `${feature}/layout/${stripExtension(rest.slice(layoutsIndex + 1).join("/"))}`
-  }
+  if (tabsIndex >= 0 && rest[tabsIndex + 1]) return `${feature}/tab/${stripExtension(rest.slice(tabsIndex + 1).join("/"))}`
 
   const componentsIndex = rest.indexOf("components")
-  if (componentsIndex >= 0 && rest[componentsIndex + 1]) {
-    return `${feature}/component/${stripExtension(rest.slice(componentsIndex + 1).join("/"))}`
-  }
+  if (componentsIndex >= 0 && rest[componentsIndex + 1]) return `${feature}/component/${stripExtension(rest.slice(componentsIndex + 1).join("/"))}`
 
   return `${feature}/${stripExtension(rest.join("/")) || "root"}`
 }
 
 function deriveScreenKey(finding: Finding): string {
   const filePath = finding.filePath
-
   if (filePath.startsWith("app/")) return `app route: ${appRouteFromPath(filePath)}`
   if (filePath.startsWith("features/")) return `feature: ${featureAreaFromPath(filePath)}`
   if (filePath.startsWith("entities/")) return `entity: ${stripExtension(filePath.replace(/^entities\//u, ""))}`
@@ -111,167 +100,7 @@ function deriveScreenKey(finding: Finding): string {
   if (filePath.startsWith("components/ui/")) return `compat-ui: ${stripExtension(filePath.replace(/^components\/ui\//u, ""))}`
   if (filePath.startsWith("components/")) return `component: ${stripExtension(filePath.replace(/^components\//u, ""))}`
   if (filePath.startsWith("packages/ui/")) return `package-ui: ${stripExtension(filePath.replace(/^packages\/ui\//u, ""))}`
-
   return `file: ${stripExtension(filePath)}`
-}
-
-function buildScreenGroups(findings: Finding[]): ScreenGroup[] {
-  const groups = new Map<string, ScreenGroup>()
-
-  for (const finding of findings) {
-    const key = deriveScreenKey(finding)
-    const group = groups.get(key) ?? { key, files: new Set<string>(), findings: [] }
-    group.files.add(finding.filePath)
-    group.findings.push(finding)
-    groups.set(key, group)
-  }
-
-  return [...groups.values()].sort(compareScreenGroups)
-}
-
-function isEstimatePath(finding: Finding): boolean {
-  return (
-    finding.filePath.startsWith("features/projects/estimates/") ||
-    finding.filePath.startsWith("features/estimates/") ||
-    /^app\/.*estimates/u.test(finding.filePath)
-  )
-}
-
-function isProjectPath(finding: Finding): boolean {
-  return (
-    finding.filePath.startsWith("features/projects/") ||
-    finding.filePath.startsWith("app/(workspace)/app/projects") ||
-    finding.filePath.startsWith("app/projects")
-  )
-}
-
-function isProjectNonEstimatePath(finding: Finding): boolean {
-  return isProjectPath(finding) && !isEstimatePath(finding)
-}
-
-function isBadgeFinding(finding: Finding): boolean {
-  const target = `${finding.filePath} ${finding.category} ${finding.token}`.toLowerCase()
-  return (
-    finding.category === "badge-overlap" ||
-    target.includes("badge") ||
-    target.includes("chip") ||
-    target.includes("pill") ||
-    target.includes("status") ||
-    target.includes("статус")
-  )
-}
-
-function isPaddingFinding(finding: Finding): boolean {
-  return finding.category === "padding-overlap"
-}
-
-function isDataTableFinding(finding: Finding): boolean {
-  const target = lowerPath(finding)
-  return (
-    target.includes("datatable") ||
-    target.includes("data-table") ||
-    target.includes("table") ||
-    target.includes("columns") ||
-    target.includes("cell") ||
-    target.includes("row")
-  )
-}
-
-function isCardFinding(finding: Finding): boolean {
-  const target = lowerPath(finding)
-  return target.includes("card") || target.includes("cards/") || target.includes("projectcard")
-}
-
-function isFormSheetDialogFinding(finding: Finding): boolean {
-  const target = lowerPath(finding)
-  return (
-    target.includes("sheet") ||
-    target.includes("dialog") ||
-    target.includes("form") ||
-    target.includes("drawer") ||
-    target.includes("modal") ||
-    target.includes("create") ||
-    target.includes("edit")
-  )
-}
-
-const FOCUS_AREAS: FocusArea[] = [
-  { id: "runtime-feature-screens", title: "All runtime feature screens", matches: (finding) => finding.surface === "feature" || finding.surface === "app" || finding.surface === "entity" },
-  { id: "badges-status-chips", title: "Badges / status chips / pills", matches: isBadgeFinding },
-  { id: "internal-padding", title: "Internal padding / component density", matches: isPaddingFinding },
-  { id: "tables-datatables-cells", title: "Tables / DataTables / cells", matches: isDataTableFinding },
-  { id: "cards-compact-surfaces", title: "Cards / compact card surfaces", matches: isCardFinding },
-  { id: "forms-sheets-dialogs", title: "Forms / Sheets / Dialogs", matches: isFormSheetDialogFinding },
-  {
-    id: "admin-all",
-    title: "Admin / all admin surfaces",
-    matches: (finding) => finding.filePath.startsWith("app/(admin)/") || finding.filePath.startsWith("features/admin/"),
-  },
-  { id: "admin-tenants", title: "Admin / tenants", matches: (finding) => finding.filePath.startsWith("app/(admin)/") && lowerPath(finding).includes("tenant") },
-  { id: "admin-activity", title: "Admin / activity", matches: (finding) => finding.filePath.startsWith("app/(admin)/") && lowerPath(finding).includes("activity") },
-  { id: "admin-dashboard", title: "Admin / dashboard", matches: (finding) => finding.filePath.startsWith("app/(admin)/dashboard") },
-  {
-    id: "workspace-shell-navigation",
-    title: "Workspace shell / navigation / layout",
-    matches: (finding) =>
-      includesAny(finding.filePath, ["app/(workspace)/", "components/layout/", "components/navigation/", "components/providers/", "features/navigation/"]) && !isEstimatePath(finding),
-  },
-  {
-    id: "projects-list-cards",
-    title: "Projects list / project cards",
-    matches: (finding) => isProjectNonEstimatePath(finding) && includesAny(lowerPath(finding), ["projectcard", "projects/page", "project-list", "projectslist", "registry", "card"]),
-  },
-  {
-    id: "project-dashboard",
-    title: "Project dashboard",
-    matches: (finding) => isProjectNonEstimatePath(finding) && includesAny(finding.filePath, ["features/projects/dashboard/", "ProjectDashboard", "DashboardChart"]),
-  },
-  { id: "estimate-module", title: "Estimate module / smeta", matches: isEstimatePath },
-  { id: "estimate-padding-density", title: "Estimate internal padding / density", matches: (finding) => isEstimatePath(finding) && isPaddingFinding(finding) },
-  { id: "estimate-badges-status-chips", title: "Estimate badges / statuses / chips", matches: (finding) => isEstimatePath(finding) && isBadgeFinding(finding) },
-  { id: "estimate-shell-tabs-navigation", title: "Estimate shell and tab navigation", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/screens/EstimateDetailsShell", "features/projects/estimates/layouts/EstimateDetailsLayout", "features/projects/estimates/components/EstimateHeader"]) },
-  { id: "estimate-table", title: "Estimate table / Смета tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/table/", "features/projects/estimates/components/EstimateTable", "features/projects/estimates/screens/EstimateDetailsShell"]) && !includesAny(finding.filePath, ["components/tabs/", "EstimateExecution", "EstimateProcurement", "EstimateFinance"]) },
-  { id: "estimate-execution", title: "Estimate Execution / Выполнение tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/tabs/EstimateExecution", "features/projects/estimates/screens/EstimateAccomplishmentScreen", "features/projects/estimates/types/execution"]) },
-  { id: "estimate-procurement", title: "Estimate Procurement / Закупки tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/tabs/EstimateProcurement", "features/projects/estimates/screens/EstimatePurchasesScreen", "features/projects/estimates/types/procurement"]) || (isEstimatePath(finding) && includesAny(lowerPath(finding), ["procurement", "purchase", "purchases"])) },
-  { id: "estimate-finance", title: "Estimate Finance / Финансы tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/tabs/EstimateFinance", "features/projects/estimates/types/finance"]) || (isEstimatePath(finding) && lowerPath(finding).includes("finance")) },
-  { id: "estimate-params", title: "Estimate Params / Параметры tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/tabs/EstimateParams", "features/projects/estimates/screens/EstimateParametersScreen", "features/projects/estimates/types/room-params"]) || (isEstimatePath(finding) && includesAny(lowerPath(finding), ["params", "parameters", "room-params"])) },
-  { id: "estimate-docs", title: "Estimate Docs / Документы tab", matches: (finding) => includesAny(finding.filePath, ["features/projects/estimates/components/tabs/EstimateDocuments", "features/projects/estimates/screens/EstimateDocsScreen"]) || (isEstimatePath(finding) && lowerPath(finding).includes("doc")) },
-  { id: "global-purchases", title: "Global purchases / Закупки", matches: (finding) => finding.filePath.includes("global-purchases") || finding.filePath.includes("GlobalPurchases") },
-  { id: "materials-catalog", title: "Materials catalog / Материалы", matches: (finding) => finding.filePath.startsWith("features/materials/") || includesAny(lowerPath(finding), ["materials/page", "materialsscreen", "materialstable", "material-card"]) },
-  { id: "works-catalog", title: "Works catalog / Работы", matches: (finding) => finding.filePath.startsWith("features/works/") || includesAny(lowerPath(finding), ["works/page", "worksscreen", "workstable"]) },
-  { id: "material-suppliers", title: "Material suppliers / Поставщики материалов", matches: (finding) => finding.filePath.includes("material-suppliers") || finding.filePath.includes("MaterialSupplier") },
-  { id: "counterparties", title: "Counterparties / Контрагенты", matches: (finding) => finding.filePath.includes("counterparties") || finding.filePath.includes("Counterpart") },
-  { id: "shared-directory-catalog-shells", title: "Shared directory/catalog shells", matches: (finding) => includesAny(finding.filePath, ["features/_shared/directories/", "features/_shared/guide-catalog/", "shared/ui/shells/", "DirectoryListScreen", "CatalogScreenShell", "DataTableShell"]) },
-  { id: "dashboard-analytics", title: "Dashboard / analytics widgets", matches: (finding) => includesAny(finding.filePath, ["features/dashboard/", "features/projects/dashboard/"]) || includesAny(lowerPath(finding), ["dashboard", "analytics", "chart"]) },
-  { id: "permissions", title: "Permissions matrix", matches: (finding) => finding.filePath.includes("permissions") },
-  { id: "auth-marketing-landing", title: "Auth / marketing / landing surfaces", matches: (finding) => finding.filePath === "app/page.tsx" || finding.filePath.includes("/(login)/") || finding.filePath.includes("/(marketing)/") || finding.filePath.startsWith("features/auth/") || includesAny(lowerPath(finding), ["login", "register", "sign-in", "sign-up", "pricing", "landing"]) },
-  { id: "shared-ui-primitives", title: "Shared UI primitives / compatibility surfaces", matches: (finding) => finding.filePath.startsWith("shared/ui/") || finding.filePath.startsWith("components/ui/") || finding.filePath.startsWith("components/ui-primitives/") || finding.filePath.startsWith("packages/ui/") },
-]
-
-function formatCounts(counts: Record<string, number> | undefined, options: { includeZeroKeys?: string[] } = {}): string {
-  const merged = { ...(counts ?? {}) }
-  for (const key of options.includeZeroKeys ?? []) merged[key] = merged[key] ?? 0
-
-  const entries = Object.entries(merged)
-    .filter(([key, count]) => count > 0 || (options.includeZeroKeys ?? []).includes(key))
-    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-
-  if (entries.length === 0) return "- none"
-  return entries.map(([name, count]) => `- ${name}: ${count}`).join("\n")
-}
-
-function countBy(findings: Finding[], key: keyof Pick<Finding, "severity" | "category" | "surface">): Record<string, number> {
-  return findings.reduce<Record<string, number>>((acc, finding) => {
-    const value = finding[key]
-    acc[value] = (acc[value] ?? 0) + 1
-    return acc
-  }, {})
-}
-
-function topCategories(findings: Finding[], limit = 3): string {
-  const entries = Object.entries(countBy(findings, "category")).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-  if (entries.length === 0) return "none"
-  return entries.slice(0, limit).map(([category, count]) => `${category}: ${count}`).join(", ")
 }
 
 function highCount(findings: Finding[]): number {
@@ -292,19 +121,63 @@ function compareScreenGroups(a: ScreenGroup, b: ScreenGroup): number {
   return highCount(b.findings) - highCount(a.findings) || b.findings.length - a.findings.length || a.key.localeCompare(b.key)
 }
 
+function buildScreenGroups(findings: Finding[]): ScreenGroup[] {
+  const groups = new Map<string, ScreenGroup>()
+
+  for (const finding of findings) {
+    const key = deriveScreenKey(finding)
+    const group = groups.get(key) ?? { key, files: new Set<string>(), findings: [] }
+    group.files.add(finding.filePath)
+    group.findings.push(finding)
+    groups.set(key, group)
+  }
+
+  return [...groups.values()].sort(compareScreenGroups)
+}
+
+function countBy(findings: Finding[], key: keyof Pick<Finding, "severity" | "category" | "surface" | "ownership">): Record<string, number> {
+  return findings.reduce<Record<string, number>>((acc, finding) => {
+    const value = finding[key] ?? "unknown"
+    acc[value] = (acc[value] ?? 0) + 1
+    return acc
+  }, {})
+}
+
 function escapeCell(value: unknown): string {
   return String(value ?? "").replace(/\|/g, "\\|")
+}
+
+function formatCounts(counts: Record<string, number> | undefined, options: { includeZeroKeys?: string[] } = {}): string {
+  const merged = { ...(counts ?? {}) }
+  for (const key of options.includeZeroKeys ?? []) merged[key] = merged[key] ?? 0
+
+  const entries = Object.entries(merged)
+    .filter(([key, count]) => count > 0 || (options.includeZeroKeys ?? []).includes(key))
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+
+  if (entries.length === 0) return "- none"
+  return entries.map(([name, count]) => `- ${name}: ${count}`).join("\n")
+}
+
+function topCategories(findings: Finding[], limit = 3): string {
+  const entries = Object.entries(countBy(findings, "category")).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  if (entries.length === 0) return "none"
+  return entries.slice(0, limit).map(([category, count]) => `${category}: ${count}`).join(", ")
 }
 
 function formatFindingTable(findings: Finding[], limit: number): string {
   if (findings.length === 0) return "_No findings._"
 
   const rows = findings.slice(0, limit).map((finding) => {
-    return `| ${finding.severity} | ${finding.category} | ${finding.surface} | \`${finding.filePath}:${finding.line}\` | \`${escapeCell(finding.token)}\` |`
+    return `| ${finding.severity} | ${finding.category} | ${finding.surface} | ${finding.ownership ?? "unknown"} | \`${finding.filePath}:${finding.line}\` | \`${escapeCell(finding.token)}\` |`
   })
 
   const suffix = findings.length > limit ? `\n\n_Showing ${limit} of ${findings.length} findings._` : ""
-  return ["| Severity | Category | Surface | Location | Token |", "| --- | --- | --- | --- | --- |", ...rows].join("\n") + suffix
+  return [
+    "| Severity | Category | Surface | Ownership | Location | Token |",
+    "| --- | --- | --- | --- | --- | --- |",
+    ...rows,
+  ].join("\n") + suffix
 }
 
 function formatScreenMatrix(groups: ScreenGroup[]): string {
@@ -317,6 +190,22 @@ function formatScreenMatrix(groups: ScreenGroup[]): string {
   return [
     "| Screen / file surface | Files | Findings | High/Critical | Top categories |",
     "| --- | ---: | ---: | ---: | --- |",
+    ...rows,
+  ].join("\n")
+}
+
+function formatValidationTable(validations: TargetValidation[] | undefined): string {
+  if (!validations || validations.length === 0) return "_No post-refactor validation data in report._"
+
+  const rows = validations.map((validation) => {
+    const files = validation.files.length > 0 ? validation.files.map((file) => `\`${file}\``).join(", ") : "—"
+    const owners = validation.sharedResidualOwners.length > 0 ? validation.sharedResidualOwners.map((file) => `\`${file}\``).join(", ") : "—"
+    return `| ${validation.phase} | ${escapeCell(validation.title)} | ${validation.actualFindings} | ${validation.highCriticalFindings} | ${validation.status} | ${files} | ${owners} |`
+  })
+
+  return [
+    "| Phase | Target | Feature findings | High/Critical | Status | Target files with findings | Accepted shared residual owner(s) |",
+    "| --- | --- | ---: | ---: | --- | --- | --- |",
     ...rows,
   ].join("\n")
 }
@@ -338,32 +227,14 @@ function formatTopScreenDetails(groups: ScreenGroup[], limit: number): string {
 Categories:
 ${formatCounts(countBy(group.findings, "category"))}
 
+Ownership:
+${formatCounts(countBy(group.findings, "ownership"))}
+
 Top findings:
 ${formatFindingTable(findings, 10)}
 `
     })
     .join("\n")
-}
-
-function summarizeFocusArea(area: FocusArea, findings: Finding[]): string {
-  const areaFindings = findings.filter(area.matches).sort(compareFindings)
-  const highPriority = areaFindings.filter((finding) => finding.severity === "critical" || finding.severity === "high")
-  const prioritized = highPriority.length > 0 ? highPriority : areaFindings
-
-  return `### ${area.title}
-
-- Findings: ${areaFindings.length}
-- High/Critical findings: ${highPriority.length}
-
-Severity:
-${formatCounts(countBy(areaFindings, "severity"))}
-
-Categories:
-${formatCounts(countBy(areaFindings, "category"))}
-
-Top findings:
-${formatFindingTable(prioritized, 15)}
-`
 }
 
 function main(): void {
@@ -374,6 +245,11 @@ function main(): void {
   const report = JSON.parse(fs.readFileSync(REPORT_JSON_PATH, "utf8")) as AuditReport
   const findings = [...(report.findings ?? [])].sort(compareFindings)
   const highPriority = findings.filter((finding) => finding.severity === "critical" || finding.severity === "high")
+  const businessRuntimeHighPriority = highPriority.filter((finding) => finding.ownership === "business-runtime-drift")
+  const acceptedSharedResiduals = findings.filter((finding) => finding.ownership === "primitive-contract" || finding.ownership === "feature-family-contract")
+  const unclassifiedSharedUi = findings.filter((finding) => finding.surface === "shared-ui" && (!finding.ownership || finding.ownership === "unknown"))
+  const marketingAuthExceptions = findings.filter((finding) => finding.ownership === "marketing-auth-exception")
+  const appFeatureEntityFindings = findings.filter((finding) => ["app", "feature", "entity"].includes(finding.surface))
   const scanRoots = report.scanRoots ?? []
   const rootsLabel = scanRoots.length > 0 ? scanRoots.map((root) => `\`${root}\``).join(", ") : "_not reported_"
   const screenGroups = buildScreenGroups(findings)
@@ -400,8 +276,32 @@ ${formatCounts(report.categoryCounts)}
 ### Surface counts
 ${formatCounts(report.surfaceCounts)}
 
-### Top high-priority findings
-${formatFindingTable(highPriority, 20)}
+### Ownership counts
+${formatCounts(report.ownershipCounts ?? countBy(findings, "ownership"))}
+
+## Business runtime High/Critical findings
+
+${formatFindingTable(businessRuntimeHighPriority, 20)}
+
+## Closed phase target validation (#175-#184)
+
+${formatValidationTable(report.postRefactorValidation)}
+
+## Accepted shared contract residuals
+
+${formatFindingTable(acceptedSharedResiduals, 40)}
+
+## Shared UI contracts requiring review
+
+${formatFindingTable(unclassifiedSharedUi, 40)}
+
+## Marketing/auth/landing exceptions
+
+${formatFindingTable(marketingAuthExceptions, 40)}
+
+## Top remaining app/feature/entity findings
+
+${formatFindingTable(appFeatureEntityFindings, 40)}
 
 ## Generated screen/file matrix
 
@@ -411,11 +311,7 @@ ${formatScreenMatrix(screenGroups)}
 
 ## Top screen/file details
 
-${formatTopScreenDetails(screenGroups, 30)}
-
-## Focus areas
-
-${FOCUS_AREAS.map((area) => summarizeFocusArea(area, findings)).join("\n")}
+${formatTopScreenDetails(screenGroups, 20)}
 `
 
   fs.mkdirSync(path.dirname(SUMMARY_MD_PATH), { recursive: true })
