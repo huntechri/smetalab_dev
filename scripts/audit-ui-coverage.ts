@@ -61,7 +61,7 @@ const RULES: Rule[] = [
   {
     category: "card-surface-coverage",
     severity: "medium",
-    pattern: /\b(?:Card|CardHeader|CardContent|CardFooter|card|panel|surface|metric|kpi)\b(?=.*\bclassName=)|\b(?:rounded-(?:xl|2xl|3xl|\[[^\]]+\])|shadow(?:-[a-z0-9\[\]]+)?|bg-card|border-border)\b(?=.*\b(?:Card|card|panel|surface|metric|kpi)\b)/gi,
+    pattern: /\b(?:Card|CardHeader|CardContent|CardFooter|card|panel|surface|metric|kpi)\b(?=.*\bclassName=)|\b(?:rounded-(?:xl|2xl|3xl|\[[^\]]+])|shadow(?:-[a-z0-9[\]]+)?|bg-card|border-border)\b(?=.*\b(?:Card|card|panel|surface|metric|kpi)\b)/gi,
     reason: "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
     businessOnly: true,
   },
@@ -75,7 +75,7 @@ const RULES: Rule[] = [
   {
     category: "overlay-interaction-coverage",
     severity: "medium",
-    pattern: /\b(?:Dialog|AlertDialog|Sheet|Popover|DropdownMenu|ContextMenu|Tooltip|Drawer)\b(?=.*\bclassName=)|\b(?:z-\[[^\]]+\]|z-(?:40|50|\d{2,3})|backdrop-blur|fixed inset-0)\b/g,
+    pattern: /\b(?:Dialog|AlertDialog|Sheet|Popover|DropdownMenu|ContextMenu|Tooltip|Drawer)\b(?=.*\bclassName=)|\b(?:z-\[[^\]]+]|z-(?:40|50|\d{2,3})|backdrop-blur|fixed inset-0)\b/g,
     reason: "Overlay and interaction primitives need browser smoke/a11y coverage beyond static visual tokens.",
     businessOnly: true,
   },
