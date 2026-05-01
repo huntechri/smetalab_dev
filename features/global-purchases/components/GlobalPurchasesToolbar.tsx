@@ -11,6 +11,19 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 import { cn } from '@/lib/utils';
+import {
+  denseListPickerPopoverClassName,
+  denseListToolbarActionsClassName,
+  denseListToolbarChevronClassName,
+  denseListToolbarDateLabelClassName,
+  denseListToolbarDividerClassName,
+  denseListToolbarFilterContentClassName,
+  denseListToolbarFilterLabelClassName,
+  denseListToolbarMenuContentClassName,
+  denseListToolbarMenuItemClassName,
+  denseListToolbarMobileActionsClassName,
+  denseListToolbarRowClassName,
+} from '@/shared/ui/dense-list';
 
 import type { ProjectOption, PurchaseRowsRange } from '@/shared/types/domain/purchase-row';
 import { formatLocalDateToIso, parseIsoDateSafe } from '../lib/date';
@@ -42,18 +55,18 @@ function ProjectFilterControl({
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
             <ToolbarButton>
-              <div className="flex items-center gap-2 truncate">
+              <div className={denseListToolbarFilterContentClassName}>
                 <Filter className="size-4 shrink-0 opacity-60" />
-                <span className="truncate hidden lg:inline font-semibold">{activeProjectName}</span>
+                <span className={denseListToolbarFilterLabelClassName}>{activeProjectName}</span>
               </div>
-              <ChevronsUpDown className="size-3.5 opacity-50 shrink-0 ml-1 hidden lg:block" />
+              <ChevronsUpDown className={denseListToolbarChevronClassName} />
             </ToolbarButton>
           </PopoverTrigger>
         </TooltipTrigger>
         <TooltipContent>Фильтровать закупки по объекту</TooltipContent>
       </Tooltip>
 
-      <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+      <PopoverContent className={denseListPickerPopoverClassName} align="start">
         <Command>
           <CommandInput placeholder="Поиск объекта..." />
           <CommandList>
@@ -122,7 +135,7 @@ function DateRangeFilterControl({ range, onRangeChange }: DateRangeFilterControl
           <PopoverTrigger asChild>
             <ToolbarButton type="button">
               <CalendarDays className="size-4 opacity-70" />
-              <span className="flex-1 text-left sm:text-center text-[13px] font-semibold tracking-tight hidden lg:inline">
+              <span className={denseListToolbarDateLabelClassName}>
                 {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
               </span>
             </ToolbarButton>
@@ -179,8 +192,8 @@ export function GlobalPurchasesToolbar({
   onAddCatalog,
 }: GlobalPurchasesToolbarProps) {
   return (
-    <div className="flex flex-row xl:flex-row w-auto xl:w-auto items-center xl:items-center gap-2 xl:gap-2">
-      <div className="flex flex-row items-center gap-2">
+    <div className={denseListToolbarRowClassName}>
+      <div className={denseListToolbarRowClassName}>
         <ProjectFilterControl
           filterProjectId={filterProjectId}
           projectOptions={projectOptions}
@@ -192,9 +205,9 @@ export function GlobalPurchasesToolbar({
         <DateRangeFilterControl range={range} onRangeChange={onRangeChange} />
       </div>
 
-      <div className="hidden xl:block w-px h-6 bg-border mx-1" />
+      <div className={denseListToolbarDividerClassName} />
 
-      <div className="hidden sm:flex flex-row items-center gap-2 overflow-x-auto pb-1 xl:pb-0 scrollbar-hide">
+      <div className={denseListToolbarActionsClassName}>
         <GlobalPurchasesImportExportActions
           importInputRef={importInputRef}
           onExport={onExport}
@@ -235,27 +248,27 @@ export function GlobalPurchasesToolbar({
         </Tooltip>
       </div>
 
-      <div className="sm:hidden ml-auto">
+      <div className={denseListToolbarMobileActionsClassName}>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <ToolbarButton size="icon-xs" aria-label="Действия по закупкам">
               <MoreHorizontal className="size-4" />
             </ToolbarButton>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem className="gap-2" onClick={onImportClick}>
+          <DropdownMenuContent align="end" className={denseListToolbarMenuContentClassName}>
+            <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onImportClick}>
               <Upload className="size-4 text-muted-foreground" />
               <span>Импорт CSV/XLSX</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2" onClick={onExport}>
+            <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onExport}>
               <Download className="size-4 text-muted-foreground" />
               <span>Экспорт XLSX</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2" onClick={onAddManual} disabled={isAddingManual}>
+            <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddManual} disabled={isAddingManual}>
               <Plus className="size-4 text-muted-foreground" />
               <span>{isAddingManual ? 'Добавление...' : 'Вручную'}</span>
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2" onClick={onAddCatalog} disabled={isAddingCatalog}>
+            <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddCatalog} disabled={isAddingCatalog}>
               <BookOpen className="size-4 text-muted-foreground" />
               <span>Из справочника</span>
             </DropdownMenuItem>
