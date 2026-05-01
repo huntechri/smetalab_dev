@@ -10,7 +10,7 @@ import {
   primitiveInputGroupButtonSizeClassNames,
   primitiveInputGroupRootClassName,
   primitiveInputGroupTextClassName,
-} from "@/lib/ui/primitive-density"
+} from "@/shared/ui/primitive-density"
 import { cn } from "@/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"
