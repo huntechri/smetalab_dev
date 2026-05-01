@@ -118,18 +118,18 @@ jobs:
       - name: Run Unit/Isolated Tests
         run: pnpm test
       - name: Generate Vitest timing summary
-        if: always() && hashFiles('test-results/junit.xml') != ''
+        if: always() && hashFiles('test-results/junit*.xml') != ''
         run: pnpm test:diagnostics
       - name: Publish Vitest timing summary
         if: always() && hashFiles('reports/vitest-unit-timing.md') != ''
         run: cat reports/vitest-unit-timing.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload isolated test diagnostics
-        if: always() && (hashFiles('test-results/junit.xml') != '' || hashFiles('reports/vitest-unit-timing.md') != '' || hashFiles('reports/isolated-test-db-boundaries.md') != '')
+        if: always() && (hashFiles('test-results/junit*.xml') != '' || hashFiles('reports/vitest-unit-timing.md') != '' || hashFiles('reports/isolated-test-db-boundaries.md') != '')
         uses: actions/upload-artifact@v4
         with:
           name: isolated-test-diagnostics-${{ github.run_number }}
           path: |
-            test-results/junit.xml
+            test-results/junit*.xml
             reports/vitest-unit-timing.md
             reports/vitest-unit-timing.json
             reports/isolated-test-db-boundaries.md
