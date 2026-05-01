@@ -97,11 +97,8 @@ jobs:
         run: corepack enable
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-      - name: Prepare smoke database
-        run: |
-          pnpm db:reset
-          pnpm db:migrate
-          pnpm db:seed
+      - name: Prepare empty smoke database
+        run: pnpm db:reset
       - name: Install Playwright Chromium
         run: pnpm exec playwright install --with-deps chromium
       - name: Run UI smoke tests
