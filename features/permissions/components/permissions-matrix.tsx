@@ -119,7 +119,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <div className="overflow-hidden rounded-[2rem] border-2 border-zinc-100 bg-white shadow-2xl shadow-zinc-200/50">
+        <div className="overflow-hidden rounded-2xl border-2 border-zinc-100 bg-white shadow-2xl shadow-zinc-200/50">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>
