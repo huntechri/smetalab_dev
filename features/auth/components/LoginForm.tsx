@@ -16,6 +16,7 @@ import { Label } from '@/shared/ui/label';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/app/(login)/actions';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
+import { AuthStatusMessage } from './AuthFormShell';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const searchParams = useSearchParams();
@@ -40,7 +41,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
   return (
     <div className="min-h-[100dvh] bg-[#0B0A0F] text-white">
-      <a href="#auth-card" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
+      <a href="#auth-card" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground">
         Пропустить к форме входа
       </a>
       <div aria-hidden className="pointer-events-none absolute inset-0">
@@ -51,7 +52,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
       <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
         <section className="space-y-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FF6A3D] text-black font-bold">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-brand-foreground font-bold">
               S
             </div>
             <div>
@@ -91,7 +92,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
         <Card id="auth-card" className="w-full border-white/10 bg-[#14121A] text-white shadow-[0_40px_120px_rgba(0,0,0,0.35)]">
           <CardHeader className="text-left">
             <div className="flex items-center gap-3">
-              <CircleIcon className="h-10 w-10 text-[#FF6A3D]" aria-hidden="true" />
+              <CircleIcon className="h-10 w-10 text-brand" aria-hidden="true" />
               <div>
                 <CardTitle className="text-2xl font-semibold text-white">
                   {formTitle}
@@ -105,7 +106,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                       ...(inviteId ? { inviteId } : {}),
                       ...(emailParam ? { email: emailParam } : {}),
                     }).toString()}`}
-                    className="font-medium text-[#FF6A3D] hover:text-[#FF865F]"
+                    className="font-medium text-brand hover:text-brand/80"
                   >
                     {switchText}
                   </Link>
@@ -115,9 +116,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           </CardHeader>
           <CardContent>
             {verifiedState === 'required' && (
-              <div className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-200">
+              <AuthStatusMessage variant="warning" className="mb-4">
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
-              </div>
+              </AuthStatusMessage>
             )}
             <form className="space-y-4" action={formAction}>
               <input type="hidden" name="redirect" value={redirect || ''} />
@@ -164,6 +165,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     size="icon-xs"
                     onClick={() => setShowPassword(!showPassword)}
                     aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                    className="absolute right-1 top-1/2 -translate-y-1/2"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -192,9 +194,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               )}
 
               {state?.error && (
-                <div className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-sm text-red-200" role="alert" aria-live="polite">
+                <AuthStatusMessage variant="error">
                   {state?.error}
-                </div>
+                </AuthStatusMessage>
               )}
 
               <Button
@@ -216,7 +218,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
               {isSignIn && (
                 <div className="text-center text-sm">
-                  <Link href="/forgot-password" className="text-[#FF6A3D] hover:text-[#FF865F]">
+                  <Link href="/forgot-password" className="text-brand hover:text-brand/80">
                     Забыли пароль?
                   </Link>
                 </div>
