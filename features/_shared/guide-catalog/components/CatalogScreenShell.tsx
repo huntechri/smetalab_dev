@@ -1,6 +1,19 @@
 import * as React from "react";
 import { Loader2 } from "lucide-react";
 
+const catalogRootClassName = "space-y-2";
+const catalogHeaderClassName = "mb-2 flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between md:px-0";
+const catalogHeaderContentClassName = "flex items-center gap-3";
+const catalogFrameClassName = "relative flex flex-col items-start gap-6 px-1 transition-all duration-300 md:px-0 lg:flex-row";
+const catalogSidebarClassName = "hidden w-64 shrink-0 animate-in slide-in-from-left sticky top-4 duration-200 lg:block";
+const catalogMainClassName = "relative w-full min-w-0 flex-1";
+const catalogOverlayClassName = "absolute inset-0 z-50 flex items-center justify-center rounded-2xl bg-background/50 backdrop-blur-[1px]";
+const catalogOverlayCardClassName = "flex flex-col items-center gap-3 rounded-xl border bg-card p-6 shadow-xl";
+const catalogOverlayIconClassName = "size-10 animate-spin text-primary";
+const catalogOverlayTextFrameClassName = "flex flex-col items-center gap-1";
+const catalogOverlayTitleClassName = "text-xs font-semibold";
+const catalogOverlayDescriptionClassName = "text-xs font-medium uppercase tracking-wider text-muted-foreground";
+
 interface CatalogScreenShellProps {
   fileInputRef: React.RefObject<HTMLInputElement | null>;
   onFileChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -31,7 +44,7 @@ export function CatalogScreenShell({
   children,
 }: CatalogScreenShellProps) {
   return (
-    <div className="space-y-2">
+    <div className={catalogRootClassName}>
       <input
         type="file"
         ref={fileInputRef}
@@ -42,26 +55,26 @@ export function CatalogScreenShell({
         title={fileInputTitle}
       />
 
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between px-1 md:px-0 mb-2">
-        <div className="flex items-center gap-3">{header}</div>
+      <div className={catalogHeaderClassName}>
+        <div className={catalogHeaderContentClassName}>{header}</div>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-6 items-start relative px-1 md:px-0 transition-all duration-300">
+      <div className={catalogFrameClassName}>
         {showSidebar && sidebar ? (
-          <aside className="hidden lg:block w-64 shrink-0 sticky top-4 animate-in slide-in-from-left duration-200">
+          <aside className={catalogSidebarClassName}>
             {sidebar}
           </aside>
         ) : null}
 
-        <div className="flex-1 min-w-0 w-full relative">
+        <div className={catalogMainClassName}>
           {isOverlayVisible ? (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/50 backdrop-blur-[1px] rounded-2xl">
-              <div className="flex flex-col items-center gap-3 p-6 bg-card border shadow-xl rounded-xl">
-                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <div className="flex flex-col items-center gap-1">
-                  <p className="text-[12px] font-semibold">{overlayTitle}</p>
+            <div className={catalogOverlayClassName}>
+              <div className={catalogOverlayCardClassName}>
+                <Loader2 className={catalogOverlayIconClassName} />
+                <div className={catalogOverlayTextFrameClassName}>
+                  <p className={catalogOverlayTitleClassName}>{overlayTitle}</p>
                   {overlayDescription ? (
-                    <p className="text-[12px] text-muted-foreground uppercase tracking-wider font-medium">
+                    <p className={catalogOverlayDescriptionClassName}>
                       {overlayDescription}
                     </p>
                   ) : null}
