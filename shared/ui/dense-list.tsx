@@ -43,6 +43,10 @@ type DenseListPickerButtonProps = ButtonProps & {
   maxWidth?: DenseListPickerButtonMaxWidth;
 };
 
+type DenseListColorIndicatorProps = Omit<React.ComponentProps<'span'>, 'color'> & {
+  color?: string | null;
+};
+
 const denseListMetricPillToneClassName: Record<DenseListMetricPillTone, string> = {
   neutral: 'border-border bg-muted text-muted-foreground',
   info: 'border-info/30 bg-info/10 text-info',
@@ -83,6 +87,16 @@ export const denseListTableTextClassName = 'text-[12px]';
 export const denseListTableNumericCellClassName = `${denseListTableTextClassName} tabular-nums text-right`;
 export const denseListTableAmountClassName = `${denseListTableNumericCellClassName} font-bold tracking-tight pr-2`;
 export const denseListTableActionsClassName = 'flex justify-start pl-2';
+export const denseListToolbarRowClassName = 'flex w-auto flex-row items-center gap-2';
+export const denseListToolbarFilterContentClassName = 'flex items-center gap-2 truncate';
+export const denseListToolbarFilterLabelClassName = 'hidden truncate font-semibold lg:inline';
+export const denseListToolbarChevronClassName = 'ml-1 hidden size-3.5 shrink-0 opacity-50 lg:block';
+export const denseListToolbarDateLabelClassName = 'hidden flex-1 text-left text-[13px] font-semibold tracking-tight sm:text-center lg:inline';
+export const denseListToolbarDividerClassName = 'mx-1 hidden h-6 w-px bg-border xl:block';
+export const denseListToolbarActionsClassName = 'hidden flex-row items-center gap-2 overflow-x-auto pb-1 sm:flex xl:pb-0';
+export const denseListToolbarMobileActionsClassName = 'ml-auto sm:hidden';
+export const denseListToolbarMenuContentClassName = 'w-56';
+export const denseListToolbarMenuItemClassName = 'gap-2';
 
 const denseListInlineNumberBaseClassName =
   'h-4 min-w-0 flex-none rounded-sm border-0 bg-transparent px-1 py-0 text-right font-semibold leading-none text-foreground !border-0 !shadow-none outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
@@ -353,6 +367,17 @@ function DenseListPickerButton({ maxWidth = 'default', className, ...props }: De
   );
 }
 
+function DenseListColorIndicator({ color, className, style, ...props }: DenseListColorIndicatorProps) {
+  return (
+    <span
+      className={cn(color ? denseListIndicatorClassName : denseListMutedIndicatorClassName, className)}
+      style={color ? { ...style, backgroundColor: color } : style}
+      aria-hidden="true"
+      {...props}
+    />
+  );
+}
+
 function DenseListMaterialGrid({ className, ...props }: React.ComponentProps<'div'>) {
   return <div className={cn('grid gap-2 md:grid-cols-2 xl:grid-cols-3', className)} {...props} />;
 }
@@ -381,6 +406,7 @@ function DenseListTrailingAction({ className, ...props }: React.ComponentProps<'
 export {
   DenseListActionsGrid,
   DenseListBodyRow,
+  DenseListColorIndicator,
   DenseListContentInset,
   DenseListEmptyBlock,
   DenseListEmptyInset,
