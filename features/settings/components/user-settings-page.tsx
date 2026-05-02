@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useMemo, type ReactNode } from 'react';
+import { useActionState, useMemo } from 'react';
 import {
   Bell,
   Building2,
