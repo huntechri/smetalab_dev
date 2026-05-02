@@ -168,7 +168,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                         components={{
                             Footer: () => (
                                 <div className="py-6 text-center text-xs text-muted-foreground opacity-50">
-                                    Отображено {works.length} позиций {selectedCategory !== 'all' ? `в разделе \"${selectedCategory}\"` : ''}
+                                    Отображено {works.length} позиций {selectedCategory !== 'all' ? `в разделе "${selectedCategory}"` : ''}
                                 </div>
                             )
                         }}
