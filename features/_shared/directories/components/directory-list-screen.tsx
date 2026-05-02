@@ -6,6 +6,7 @@ import type { ColumnDef } from '@tanstack/react-table';
 import { Button } from '@/shared/ui/button';
 import { DataTableShell } from '@/shared/ui/shells/data-table-shell';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
+import { ToolbarGroup } from '@/shared/ui/toolbar';
 
 /**
  * Metadata for a directory-style list screen.
@@ -100,7 +101,7 @@ export function DirectoryListScreen<TData, TValue>({
         />
       }
       actions={
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <ToolbarGroup fullWidthOnMobile scroll={false}>
           {canLoadMore ? (
             <Button
               variant="outline"
@@ -120,7 +121,7 @@ export function DirectoryListScreen<TData, TValue>({
             <Plus className="h-4 w-4 mr-1" />
             <span>{addButtonLabel}</span>
           </Button>
-        </div>
+        </ToolbarGroup>
       }
       meta={{
         onEdit,
