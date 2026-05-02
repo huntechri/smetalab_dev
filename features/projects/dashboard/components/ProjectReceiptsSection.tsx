@@ -7,7 +7,7 @@ import { MoreHorizontal, Plus } from 'lucide-react';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { cn } from '@/lib/utils';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Input } from '@/shared/ui/input';
@@ -187,9 +187,9 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
   };
 
   return (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
-        <CardTitle>Фактические поступления</CardTitle>
+    <CardShell>
+      <CardShellHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
+        <h2 className="font-semibold leading-none tracking-tight">Фактические поступления</h2>
         <div className="flex items-center gap-2">
           <StatusBadge tone="neutral">Платежей: {aggregates.confirmedCount}</StatusBadge>
           <StatusBadge tone="neutral">
@@ -200,8 +200,8 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
         </div>
-      </CardHeader>
-      <CardContent className="space-y-3">
+      </CardShellHeader>
+      <CardShellBody className="space-y-3">
         {confirmedRows.length === 0 ? (
           <p className="text-sm text-muted-foreground">Нет подтвержденных поступлений. Добавьте первую запись.</p>
         ) : null}
@@ -247,7 +247,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             ))}
           </TableBody>
         </Table>
-      </CardContent>
+      </CardShellBody>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
@@ -302,6 +302,6 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </Card>
+    </CardShell>
   );
 }
