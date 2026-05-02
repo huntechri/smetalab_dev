@@ -58,58 +58,65 @@ type StatusIndicatorProps = React.ComponentProps<"span"> & {
   pulse?: StatusIndicatorPulse
 }
 
-function StatusIndicator({
-  tone = "neutral",
-  size = "default",
-  pulse = "none",
-  className,
-  ...props
-}: StatusIndicatorProps) {
-  if (pulse === "none") {
+const StatusIndicator = React.forwardRef<HTMLSpanElement, StatusIndicatorProps>(
+  function StatusIndicator(
+    {
+      tone = "neutral",
+      size = "default",
+      pulse = "none",
+      className,
+      ...props
+    },
+    ref
+  ) {
+    if (pulse === "none") {
+      return (
+        <span
+          ref={ref}
+          data-slot="status-indicator"
+          data-tone={tone}
+          data-size={size}
+          className={cn(
+            "inline-flex shrink-0 rounded-full",
+            statusIndicatorSizeClassNames[size],
+            statusIndicatorDotClassNames[tone],
+            className
+          )}
+          {...props}
+        />
+      )
+    }
+
+    const pulseAnimationClassName =
+      pulse === "ping" ? "animate-ping" : pulse === "pulse" ? "animate-pulse" : undefined
+
     return (
       <span
+        ref={ref}
         data-slot="status-indicator"
         data-tone={tone}
         data-size={size}
-        className={cn(
-          "inline-flex shrink-0 rounded-full",
-          statusIndicatorSizeClassNames[size],
-          statusIndicatorDotClassNames[tone],
-          className
-        )}
+        data-pulse={pulse}
+        className={cn("relative inline-flex shrink-0", statusIndicatorSizeClassNames[size], className)}
         {...props}
-      />
+      >
+        <span
+          className={cn(
+            "absolute inline-flex h-full w-full rounded-full",
+            statusIndicatorPulseClassNames[tone],
+            pulseAnimationClassName
+          )}
+        />
+        <span
+          className={cn(
+            "relative inline-flex rounded-full",
+            statusIndicatorSizeClassNames[size],
+            statusIndicatorDotClassNames[tone]
+          )}
+        />
+      </span>
     )
   }
-
-  const pulseAnimationClassName =
-    pulse === "ping" ? "animate-ping" : pulse === "pulse" ? "animate-pulse" : undefined
-
-  return (
-    <span
-      data-slot="status-indicator"
-      data-tone={tone}
-      data-size={size}
-      data-pulse={pulse}
-      className={cn("relative inline-flex shrink-0", statusIndicatorSizeClassNames[size], className)}
-      {...props}
-    >
-      <span
-        className={cn(
-          "absolute inline-flex h-full w-full rounded-full",
-          statusIndicatorPulseClassNames[tone],
-          pulseAnimationClassName
-        )}
-      />
-      <span
-        className={cn(
-          "relative inline-flex rounded-full",
-          statusIndicatorSizeClassNames[size],
-          statusIndicatorDotClassNames[tone]
-        )}
-      />
-    </span>
-  )
-}
+)
 
 export { StatusBadge, StatusIndicator }
