@@ -36,7 +36,7 @@ export function WorksEditDialog({
 }: WorksEditDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent size="sm">
                 <DialogHeader>
                     <DialogTitle>Изменить запись</DialogTitle>
                     <DialogDescription>Внесите изменения и нажмите сохранить.</DialogDescription>
