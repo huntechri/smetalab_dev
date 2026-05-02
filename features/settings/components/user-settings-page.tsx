@@ -27,6 +27,7 @@ import { Label } from '@/shared/ui/label';
 import { Separator } from '@/shared/ui/separator';
 import { Switch } from '@/shared/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
 type PermissionEntry = { code: string; level: 'read' | 'manage' };
@@ -76,12 +77,12 @@ function roleLabel(role?: string | null) {
   return map[role] ?? role;
 }
 
-function permissionBadgeClassName(level: PermissionEntry['level']) {
+function permissionBadgeTone(level: PermissionEntry['level']): StatusTone {
   if (level === 'manage') {
-    return 'border-none bg-emerald-500/12 text-emerald-700';
+    return 'success';
   }
 
-  return 'border-none bg-blue-500/12 text-blue-700';
+  return 'info';
 }
 
 export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
@@ -241,13 +242,12 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     </p>
                   ) : (
                     sortedPermissions.map((permission) => (
-                      <Badge
+                      <StatusBadge
                         key={permission.code}
-                        variant="secondary"
-                        className={permissionBadgeClassName(permission.level)}
+                        tone={permissionBadgeTone(permission.level)}
                       >
                         {permission.code}: {permission.level}
-                      </Badge>
+                      </StatusBadge>
                     ))
                   )}
                 </div>
