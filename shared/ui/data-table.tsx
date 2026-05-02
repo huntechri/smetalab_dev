@@ -15,6 +15,20 @@ import { TooltipProvider } from "@/shared/ui/tooltip"
 import { cn } from "@/lib/utils"
 import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
+import {
+    dataTableAiContainerClassName,
+    dataTableAiOverlayClassName,
+    dataTableBodyRowClassName,
+    dataTableContainerClassName,
+    dataTableEmptyCellClassName,
+    dataTableHeaderCellClassName,
+    dataTableHeaderContentClassName,
+    dataTableHeaderRowClassName,
+    dataTableLoadingBadgeClassName,
+    dataTableLoadingOverlayClassName,
+    dataTableSortableHeaderTriggerClassName,
+    dataTableStaticHeaderTriggerClassName,
+} from "@/shared/ui/table-density"
 
 import { DataTableRow } from "./data-table/data-table-row"
 import { DataTableToolbar } from "./data-table/data-table-toolbar"
@@ -80,7 +94,7 @@ function SortableHeaderTrigger({ children, onClick }: SortableHeaderTriggerProps
     return (
         <button
             type="button"
-            className="flex items-center gap-2 select-none w-full text-left cursor-pointer transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60 rounded-sm"
+            className={dataTableSortableHeaderTriggerClassName}
             onClick={onClick}
             aria-label="Сортировать столбец"
         >
@@ -91,7 +105,7 @@ function SortableHeaderTrigger({ children, onClick }: SortableHeaderTriggerProps
 
 function HeaderCellContent<TData>({ header }: DataTableHeaderCellProps<TData>) {
     const content = (
-        <div className="truncate flex-1 text-xs">
+        <div className={dataTableHeaderContentClassName}>
             {flexRender(
                 header.column.columnDef.header,
                 header.getContext(),
@@ -108,7 +122,7 @@ function HeaderCellContent<TData>({ header }: DataTableHeaderCellProps<TData>) {
     }
 
     return (
-        <div className="flex items-center gap-2 select-none w-full text-left cursor-default">
+        <div className={dataTableStaticHeaderTriggerClassName}>
             {content}
         </div>
     );
@@ -129,7 +143,7 @@ function DataTableHeaderCell<TData>({ header }: DataTableHeaderCellProps<TData>)
         <th
             key={header.id}
             colSpan={header.colSpan}
-            className="h-10 px-3 md:px-4 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground border-b border-border/50 transition-colors bg-muted/20"
+            className={dataTableHeaderCellClassName}
             style={{ width: header.getSize() }}
             aria-sort={ariaSort}
         >
@@ -142,7 +156,7 @@ function DataTableHeaderContent<TData>({ headerGroups }: DataTableHeaderContentP
     return (
         <>
             {headerGroups.map((headerGroup) => (
-                <tr key={headerGroup.id} className="bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]">
+                <tr key={headerGroup.id} className={dataTableHeaderRowClassName}>
                     {headerGroup.headers.map((header) => (
                         <DataTableHeaderCell key={header.id} header={header} />
                     ))}
@@ -225,7 +239,7 @@ export function DataTable<TData, TValue>({
                 <tr
                     {...props}
                     style={style}
-                    className="border-b last:border-0 hover:bg-muted/60 transition-colors group/row cursor-default animate-in fade-in slide-in-from-left-1 duration-300"
+                    className={dataTableBodyRowClassName}
                 />
             ),
             TableBody: React.forwardRef<HTMLTableSectionElement, React.HTMLAttributes<HTMLTableSectionElement>>((props, ref) => (
@@ -272,18 +286,18 @@ export function DataTable<TData, TValue>({
 
                 <div
                     className={cn(
-                        "rounded-2xl border border-border/40 bg-card/50 backdrop-blur-md shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-x-auto relative",
-                        isAiMode && "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20",
+                        dataTableContainerClassName,
+                        isAiMode && dataTableAiContainerClassName,
                         tableContainerClassName,
                     )}
                     style={{ contain: 'layout style paint' }}
                 >
                     {loadingMore && (
-                        <div className="pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/18 backdrop-blur-[1px]">
+                        <div className={dataTableLoadingOverlayClassName}>
                             <div
                                 role="status"
                                 aria-live="polite"
-                                className="flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg"
+                                className={dataTableLoadingBadgeClassName}
                             >
                                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
                                 <span>Загрузка...</span>
@@ -292,7 +306,7 @@ export function DataTable<TData, TValue>({
                     )}
 
                     {isAiMode && (
-                        <div className="absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2 pointer-events-none" />
+                        <div className={dataTableAiOverlayClassName} />
                     )}
 
                     {isLoading || (isSearching && rows.length === 0) ? (
@@ -308,7 +322,7 @@ export function DataTable<TData, TValue>({
                                 <tr>
                                     <td
                                         colSpan={flatHeaders.length}
-                                        className="px-3 py-8 text-center text-sm text-muted-foreground"
+                                        className={dataTableEmptyCellClassName}
                                     >
                                         {emptyState ?? (
                                             <EmptyState
