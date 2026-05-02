@@ -1,0 +1,59 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: UI Changed Visual Ownership Guardrail
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: ["main"]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24
+  NEXT_TELEMETRY_DISABLED: 1
+
+jobs:
+  changed-visual-ownership:
+    name: Changed-file visual ownership
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run changed-file visual ownership guardrail
+        run: |
+          set -euo pipefail
+          BASE_REF="${GITHUB_BASE_REF:-main}"
+          pnpm exec tsx scripts/audit-ui-changed-visual-ownership.ts --base="origin/${BASE_REF}" --head=HEAD
+      - name: Publish changed visual ownership report
+        if: always() && hashFiles('reports/ui-changed-visual-ownership.md') != ''
+        run: cat reports/ui-changed-visual-ownership.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload changed visual ownership report
+        if: always() && hashFiles('reports/ui-changed-visual-ownership.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-changed-visual-ownership-${{ github.run_number }}
+          path: |
+            reports/ui-changed-visual-ownership.json
+            reports/ui-changed-visual-ownership.md
+          if-no-files-found: error
+          retention-days: 14
