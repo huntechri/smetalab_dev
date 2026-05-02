@@ -3,7 +3,12 @@
 import { MaterialRow } from "@/shared/types/domain/material-row"
 import { Button } from '@/shared/ui/button'
 import { Input } from "@/shared/ui/input"
-import { Label } from "@/shared/ui/label"
+import {
+    FieldStack,
+    FormLayout,
+    FormSection,
+    FormStatusMessage,
+} from "@/shared/ui/form-layout"
 import {
     Dialog,
     DialogContent,
@@ -40,64 +45,54 @@ export function MaterialsEditDialog({
                     <DialogDescription>Отредактируйте данные материала.</DialogDescription>
                 </DialogHeader>
                 {data ? (
-                    <form onSubmit={onSubmit}>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 py-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-code">Код</Label>
+                    <FormLayout onSubmit={onSubmit} padding="dialog">
+                        <FormSection columns="two">
+                            <FieldStack label="Код" htmlFor="edit-code">
                                 <Input id="edit-code" value={data.code || ""} onChange={(e) => onFieldChange("code", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-name">Название</Label>
+                            </FieldStack>
+                            <FieldStack label="Название" htmlFor="edit-name">
                                 <Input id="edit-name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-price">Цена</Label>
+                            </FieldStack>
+                            <FieldStack label="Цена" htmlFor="edit-price">
                                 <Input id="edit-price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-unit">Ед.изм.</Label>
+                            </FieldStack>
+                            <FieldStack label="Ед.изм." htmlFor="edit-unit">
                                 <Input id="edit-unit" value={data.unit || ""} onChange={(e) => onFieldChange("unit", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-vendor">Поставщик</Label>
+                            </FieldStack>
+                            <FieldStack label="Поставщик" htmlFor="edit-vendor">
                                 <Input id="edit-vendor" value={data.vendor || ""} onChange={(e) => onFieldChange("vendor", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-weight">Вес (кг)</Label>
+                            </FieldStack>
+                            <FieldStack label="Вес (кг)" htmlFor="edit-weight">
                                 <Input id="edit-weight" value={data.weight || ""} onChange={(e) => onFieldChange("weight", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-cat1">Категория LV1</Label>
+                            </FieldStack>
+                            <FieldStack label="Категория LV1" htmlFor="edit-cat1">
                                 <Input id="edit-cat1" value={data.categoryLv1 || ""} onChange={(e) => onFieldChange("categoryLv1", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-cat2">Категория LV2</Label>
+                            </FieldStack>
+                            <FieldStack label="Категория LV2" htmlFor="edit-cat2">
                                 <Input id="edit-cat2" value={data.categoryLv2 || ""} onChange={(e) => onFieldChange("categoryLv2", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-cat3">Категория LV3</Label>
+                            </FieldStack>
+                            <FieldStack label="Категория LV3" htmlFor="edit-cat3">
                                 <Input id="edit-cat3" value={data.categoryLv3 || ""} onChange={(e) => onFieldChange("categoryLv3", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-cat4">Категория LV4</Label>
+                            </FieldStack>
+                            <FieldStack label="Категория LV4" htmlFor="edit-cat4">
                                 <Input id="edit-cat4" value={data.categoryLv4 || ""} onChange={(e) => onFieldChange("categoryLv4", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-purl">URL товара</Label>
+                            </FieldStack>
+                            <FieldStack label="URL товара" htmlFor="edit-purl">
                                 <Input id="edit-purl" value={data.productUrl || ""} onChange={(e) => onFieldChange("productUrl", e.target.value)} />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="edit-iurl">URL изображения</Label>
+                            </FieldStack>
+                            <FieldStack label="URL изображения" htmlFor="edit-iurl">
                                 <Input id="edit-iurl" value={data.imageUrl || ""} onChange={(e) => onFieldChange("imageUrl", e.target.value)} />
-                            </div>
-                        </div>
+                            </FieldStack>
+                        </FormSection>
                         <DialogFooter>
                             <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
                             <Button type="submit" disabled={isUpdating}>{isUpdating ? "Сохранение..." : "Сохранить"}</Button>
                         </DialogFooter>
-                    </form>
+                    </FormLayout>
                 ) : (
-                    <div className="text-sm text-muted-foreground p-4 text-center">Форма редактирования не настроена</div>
+                    <FormStatusMessage tone="info" className="p-4 text-center">
+                        Форма редактирования не настроена
+                    </FormStatusMessage>
                 )}
             </DialogContent>
         </Dialog>
