@@ -1,7 +1,6 @@
 'use client';
 
-import { Building2, Activity, Wallet, BarChart3 } from 'lucide-react';
-import { KPICard } from '@/shared/ui/kpi-card';
+import { KPICard, KPICardGrid, type KPICardValueTone } from '@/shared/ui/kpi-card';
 import { ProjectListItem } from '../../shared/types';
 
 interface ProjectsStatsCardsProps {
@@ -24,54 +23,51 @@ export function ProjectsStatsCards({ projects }: ProjectsStatsCardsProps) {
         compactDisplay: 'short'
     });
 
-    const stats = [
+    const stats: Array<{
+        title: string;
+        value: string | number;
+        description: string;
+        valueTone: KPICardValueTone;
+    }> = [
         {
             title: 'Всего проектов',
             value: totalProjects,
             description: 'Общее количество',
-            icon: <Building2 className="h-4 w-4" />,
-            trend: 'Total',
-            color: 'text-primary'
+            valueTone: 'positive'
         },
         {
             title: 'В работе',
             value: activeProjects,
             description: 'Активные стадии',
-            icon: <Activity className="h-4 w-4" />,
-            trend: 'Live',
-            color: 'text-emerald-500 dark:text-emerald-400'
+            valueTone: 'positive'
         },
         {
             title: 'Общий бюджет',
             value: currencyFormatter.format(totalBudget),
             description: 'Сумма контрактов',
-            icon: <Wallet className="h-4 w-4" />,
-            trend: 'Budget',
-            color: 'text-amber-500 dark:text-amber-400'
+            valueTone: 'warning'
         },
         {
             title: 'Ср. прогресс',
             value: `${avgProgress}%`,
             description: 'Выполнение работ',
-            icon: <BarChart3 className="h-4 w-4" />,
-            trend: 'Avg',
-            color: 'text-primary'
+            valueTone: 'positive'
         }
     ];
 
     return (
-        <div className="grid gap-2 sm:gap-3 md:gap-4 grid-cols-2 sm:grid-cols-2 xl:grid-cols-4">
+        <KPICardGrid>
             {stats.map((stat, index) => (
                 <KPICard
                     key={index}
                     title={stat.title}
                     value={stat.value}
                     description={stat.description}
-                    valueClassName={stat.color}
-                    className="h-[72px] sm:h-[85px] md:h-[95px] flex flex-col justify-center"
+                    valueTone={stat.valueTone}
+                    density="dashboard"
                 />
             ))}
-        </div>
+        </KPICardGrid>
     );
 }
 

@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent } from '@/shared/ui/card';
+import { CardShell, CardShellBody, CardShellInset } from '@/shared/ui/card-shell';
+import { Section, SectionTitle } from '@/shared/ui/section';
 import { StatusIndicator, type StatusIndicatorPulse, type StatusTone } from '@/shared/ui/status-badge';
 
 const members = [
@@ -15,15 +16,15 @@ const memberStatusIndicator: Record<typeof members[number]['status'], { tone: St
 
 export function TeamWidgetSection() {
     return (
-        <section aria-labelledby="team-title" className="space-y-4 lg:col-span-2">
-            <h2 id="team-title" className="text-lg font-semibold tracking-tight">Команда</h2>
-            <Card className="glass-card border-border/40 bg-background/50 shadow-sm backdrop-blur-md">
-                <CardContent className="space-y-3 p-4">
+        <Section aria-labelledby="team-title" className="lg:col-span-2" density="comfortable">
+            <SectionTitle id="team-title">Команда</SectionTitle>
+            <CardShell variant="glass" shadow="sm">
+                <CardShellBody className="space-y-3" density="compact">
                     {members.map((member) => {
                         const indicator = memberStatusIndicator[member.status];
 
                         return (
-                            <div key={member.name} className="flex cursor-pointer items-center justify-between rounded-xl border border-border/20 bg-muted/10 p-3 transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm">
+                            <CardShellInset key={member.name} className="flex cursor-pointer items-center justify-between transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm" density="compact" variant="subtle">
                                 <div className="flex items-center gap-3">
                                     <Avatar className="h-9 w-9 border border-border/50">
                                         <AvatarFallback className="bg-primary/5 text-[11px] font-bold text-primary">
@@ -39,14 +40,14 @@ export function TeamWidgetSection() {
                                     <StatusIndicator tone={indicator.tone} pulse={indicator.pulse} size="sm" />
                                     <span className="text-[10px] font-medium text-muted-foreground">{member.status}</span>
                                 </div>
-                            </div>
+                            </CardShellInset>
                         );
                     })}
                     <Button variant="outline">
                         Участники
                     </Button>
-                </CardContent>
-            </Card>
-        </section>
+                </CardShellBody>
+            </CardShell>
+        </Section>
     );
 }

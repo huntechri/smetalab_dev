@@ -1,5 +1,6 @@
 import { Badge } from '@/shared/ui/badge';
-import { Card, CardContent } from '@/shared/ui/card';
+import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
+import { Section, SectionHeader, SectionTitle } from '@/shared/ui/section';
 import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
 import { Clock } from 'lucide-react';
 
@@ -16,14 +17,14 @@ const focusItems = [
 
 export function TodayFocusSection() {
     return (
-        <section aria-labelledby="today-title" className="space-y-4 lg:col-span-3">
-            <div className="flex items-center justify-between">
-                <h2 id="today-title" className="text-lg font-semibold tracking-tight">Фокус на сегодня</h2>
+        <Section aria-labelledby="today-title" className="lg:col-span-3" density="comfortable">
+            <SectionHeader align="between">
+                <SectionTitle id="today-title">Фокус на сегодня</SectionTitle>
                 <Badge size="xs">Смена #42</Badge>
-            </div>
+            </SectionHeader>
 
-            <Card className="glass-card overflow-hidden border-border/40 bg-background/50 shadow-sm backdrop-blur-md">
-                <CardContent className="p-0">
+            <CardShell variant="glass" shadow="sm">
+                <CardShellBody className="p-0" density="compact">
                     <div className="h-[200px] divide-y divide-border/20 overflow-y-auto">
                         {focusItems.map((item) => (
                             <div key={item.label} className="group flex cursor-pointer items-center justify-between gap-4 p-4 transition-all hover:bg-muted/20">
@@ -43,8 +44,8 @@ export function TodayFocusSection() {
                             </div>
                         ))}
                     </div>
-                </CardContent>
-            </Card>
-        </section>
+                </CardShellBody>
+            </CardShell>
+        </Section>
     );
 }

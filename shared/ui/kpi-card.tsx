@@ -1,11 +1,6 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import {
-    Card,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/shared/ui/card";
+import { CardShell, CardShellBody } from "@/shared/ui/card-shell";
 import { Skeleton } from "@/shared/ui/skeleton";
 import {
     Tooltip,
@@ -29,7 +24,7 @@ const KPI_CARD_DENSITY_CLASS_NAME: Record<KPICardDensity, string> = {
     dashboard: "min-h-20 sm:min-h-24",
 };
 
-interface KPICardProps extends React.ComponentProps<typeof Card> {
+interface KPICardProps extends Omit<React.ComponentProps<typeof CardShell>, "density"> {
     title: string;
     value: string | number;
     description?: string;
@@ -57,22 +52,24 @@ export function KPICard({
     ...props
 }: KPICardProps) {
     const content = (
-        <Card
+        <CardShell
             className={cn(
-                "overflow-hidden transition-all duration-200 flex flex-col gap-0",
-                isGradient && "bg-linear-to-t from-primary/5 to-card dark:bg-card shadow-sm",
-                !isGradient && "bg-transparent shadow-none",
+                "transition-all duration-200",
+                isGradient && "bg-linear-to-t from-primary/5 to-card dark:bg-card",
                 KPI_CARD_DENSITY_CLASS_NAME[density],
                 className
             )}
+            density="compact"
+            shadow={isGradient ? "sm" : "none"}
+            variant={isGradient ? "card" : "ghost"}
             {...props}
         >
-            <div className="flex flex-col justify-center flex-1 p-2 sm:p-3 md:p-4 min-h-0">
-                <CardHeader className="p-0 space-y-0 relative">
-                    <CardDescription className="text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
+            <CardShellBody className="flex min-h-0 flex-1 flex-col justify-center" density="compact">
+                <div className="relative space-y-0">
+                    <div className="text-[9px] sm:text-[10px] md:text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70 leading-none">
                         {title}
-                    </CardDescription>
-                    <CardTitle
+                    </div>
+                    <div
                         className={cn(
                             "text-base sm:text-lg md:text-2xl lg:text-[24px] font-bold tabular-nums wrap-break-word leading-tight mt-0.5 sm:mt-1 mb-0",
                             KPI_CARD_VALUE_TONE_CLASS_NAME[valueTone],
@@ -80,13 +77,13 @@ export function KPICard({
                         )}
                     >
                         {value}
-                    </CardTitle>
+                    </div>
                     {(badge || icon) && (
                         <div className="absolute right-0 top-0">
                             {badge || (icon && <div className="rounded-md p-1 bg-primary/10 text-primary">{icon}</div>)}
                         </div>
                     )}
-                </CardHeader>
+                </div>
                 {description && (
                     <div className="flex items-center justify-between mt-0.5">
                         <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium opacity-70 leading-none">
@@ -94,8 +91,8 @@ export function KPICard({
                         </span>
                     </div>
                 )}
-            </div>
-        </Card>
+            </CardShellBody>
+        </CardShell>
     );
 
     if (tooltip) {

@@ -3,15 +3,14 @@ import { Building2, CalendarRange, CircleDollarSign, MapPin } from 'lucide-react
 import { ProjectStatusBadge } from '@/entities/project/ui/ProjectStatusBadge';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 import { Badge } from '@/shared/ui/badge';
-import { Progress } from '@/shared/ui/progress';
 import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/shared/ui/card';
+    CardShell,
+    CardShellBody,
+    CardShellFooter,
+    CardShellHeader,
+    CardShellInset,
+} from '@/shared/ui/card-shell';
+import { Progress } from '@/shared/ui/progress';
 import { ProjectListItem } from '../../shared/types';
 import { ProjectActions } from './project-actions';
 import { formatProjectCurrency, formatProjectDate } from '../utils/formatters';
@@ -31,8 +30,13 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
         : 'Сроки не указаны';
 
     return (
-        <Card className="group h-full gap-0 overflow-hidden border-border/80 py-0 shadow-none transition-[border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:border-border hover:shadow-sm">
-            <CardHeader className="flex flex-col gap-2.5 p-3 pb-0 sm:p-4 sm:pb-0">
+        <CardShell
+            className="group h-full gap-0 border-border/80"
+            density="compact"
+            interactive
+            shadow="none"
+        >
+            <CardShellHeader className="flex flex-col gap-2.5 pb-0 sm:pb-0" density="compact">
                 <div className="flex min-w-0 items-start gap-2.5">
                     <div className="pt-1">
                         <ProjectStatusDot status={project.status} />
@@ -42,17 +46,17 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                             <ProjectStatusBadge status={project.status} />
                             <Badge variant="secondary" size="xs">{project.progress}%</Badge>
                         </div>
-                        <CardTitle className="mt-1.5 text-base leading-tight">
+                        <h3 className="mt-1.5 text-base font-semibold leading-tight">
                             <Link
                                 href={`/app/projects/${project.slug}`}
                                 className="line-clamp-2 transition-colors hover:text-foreground/80 hover:underline"
                             >
                                 {project.name}
                             </Link>
-                        </CardTitle>
+                        </h3>
                     </div>
                 </div>
-                <CardDescription className="flex min-w-0 flex-col gap-1.5 text-xs">
+                <div className="flex min-w-0 flex-col gap-1.5 text-xs text-muted-foreground">
                     <div className="flex min-w-0 items-start gap-2">
                         <Building2 className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                         <span className="truncate">{customerLabel}</span>
@@ -61,11 +65,11 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         <MapPin className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                         <span className="line-clamp-1 sm:line-clamp-2">{addressLabel}</span>
                     </div>
-                </CardDescription>
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-3 p-3 sm:p-4">
+                </div>
+            </CardShellHeader>
+            <CardShellBody className="flex flex-1 flex-col gap-3" density="compact">
                 <div className="grid gap-2 sm:grid-cols-2">
-                    <div className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2">
+                    <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
                         <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                             <CircleDollarSign className="size-3.5" aria-hidden="true" />
                             <span>Бюджет</span>
@@ -73,8 +77,8 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         <p className="truncate text-sm font-semibold text-foreground">
                             {formatProjectCurrency(project.contractAmount)}
                         </p>
-                    </div>
-                    <div className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2">
+                    </CardShellInset>
+                    <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
                         <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                             <CalendarRange className="size-3.5" aria-hidden="true" />
                             <span>Сроки</span>
@@ -82,9 +86,9 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         <p className="line-clamp-2 text-sm font-medium text-foreground">
                             {timelineLabel}
                         </p>
-                    </div>
+                    </CardShellInset>
                 </div>
-                <div className="mt-auto rounded-lg border bg-muted/20 px-3 py-2.5">
+                <CardShellInset className="mt-auto py-2.5" density="compact" variant="subtle">
                     <div className="mb-1.5 flex items-center justify-between gap-3">
                         <p className="text-xs font-medium text-muted-foreground">Прогресс проекта</p>
                         <span className="text-sm font-semibold text-foreground">{project.progress}%</span>
@@ -95,9 +99,9 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         className="h-1.5 bg-muted/70"
                         indicatorStyle={{ backgroundImage: getProgressGradient(project.progress) }}
                     />
-                </div>
-            </CardContent>
-            <CardFooter className="mt-auto border-t px-3 py-3 sm:px-4">
+                </CardShellInset>
+            </CardShellBody>
+            <CardShellFooter className="mt-auto" density="compact" divided>
                 <ProjectActions
                     projectId={project.id}
                     projectSlug={project.slug}
@@ -106,7 +110,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                     onEdit={onEdit}
                     density="compact"
                 />
-            </CardFooter>
-        </Card>
+            </CardShellFooter>
+        </CardShell>
     );
 }
