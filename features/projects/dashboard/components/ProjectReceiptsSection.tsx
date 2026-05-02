@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { MoreHorizontal, Plus } from 'lucide-react';
 
 import { useAppToast } from '@/components/providers/use-app-toast';
-import { cn } from '@/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
@@ -14,7 +13,13 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
+import { Table, TableBody, TableHeader } from '@/shared/ui/table';
+import {
+  CompactTableCell,
+  CompactTableHead,
+  CompactTableHeaderRow,
+  CompactTableRow,
+} from '@/shared/ui/table-density';
 import { Textarea } from '@/shared/ui/textarea';
 import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
 import { projectReceiptsActionRepo } from '../repository/project-receipts.actions';
@@ -207,28 +212,30 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
         ) : null}
         <Table>
           <TableHeader>
-            <TableRow className="text-[9px] sm:text-[11px] font-bold uppercase tracking-wider text-muted-foreground/70">
-              <TableHead className="h-8">Дата</TableHead>
-              <TableHead className="h-8">Тип</TableHead>
-              <TableHead className="h-8">Сумма</TableHead>
-              <TableHead className="h-8">Статус</TableHead>
-              <TableHead className="h-8">Комментарий</TableHead>
-              <TableHead className="h-8 w-[40px]" />
-            </TableRow>
+            <CompactTableHeaderRow>
+              <CompactTableHead>Дата</CompactTableHead>
+              <CompactTableHead>Тип</CompactTableHead>
+              <CompactTableHead>Сумма</CompactTableHead>
+              <CompactTableHead>Статус</CompactTableHead>
+              <CompactTableHead>Комментарий</CompactTableHead>
+              <CompactTableHead className="w-[40px]" />
+            </CompactTableHeaderRow>
           </TableHeader>
           <TableBody>
             {rows.map((row) => (
-              <TableRow key={row.id} className="text-[9px] sm:text-[11px]">
-                <TableCell className="py-2">{new Date(row.date).toLocaleDateString('ru-RU')}</TableCell>
-                <TableCell className="py-2">{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
-                <TableCell className={cn('py-2 font-semibold', row.amount < 0 ? 'text-rose-600' : 'text-emerald-600')}>{formatCurrency(row.amount)}</TableCell>
-                <TableCell className="py-2">
+              <CompactTableRow key={row.id}>
+                <CompactTableCell>{new Date(row.date).toLocaleDateString('ru-RU')}</CompactTableCell>
+                <CompactTableCell>{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</CompactTableCell>
+                <CompactTableCell tone={row.amount < 0 ? 'danger' : 'success'} weight="semibold" tabular>
+                  {formatCurrency(row.amount)}
+                </CompactTableCell>
+                <CompactTableCell>
                   <StatusBadge tone={receiptStatusTone[row.status]}>
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
                   </StatusBadge>
-                </TableCell>
-                <TableCell className="py-2 max-w-[320px] truncate text-slate-500">{row.comment || '—'}</TableCell>
-                <TableCell className="py-2">
+                </CompactTableCell>
+                <CompactTableCell className="max-w-[320px]" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
+                <CompactTableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon-sm">
@@ -242,8 +249,8 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                       ) : null}
                     </DropdownMenuContent>
                   </DropdownMenu>
-                </TableCell>
-              </TableRow>
+                </CompactTableCell>
+              </CompactTableRow>
             ))}
           </TableBody>
         </Table>

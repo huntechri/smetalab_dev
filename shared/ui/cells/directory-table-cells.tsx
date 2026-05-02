@@ -7,7 +7,7 @@ import { ChevronRight, Pencil, Settings, Trash } from "lucide-react"
 import { ActionMenu } from "@/shared/ui/action-menu"
 import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
-import { cn } from "@/lib/utils"
+import { TableCellText, TableHeaderLabel } from "@/shared/ui/table-density"
 
 export type DirectoryBadgeTone =
   | "default"
@@ -34,9 +34,9 @@ interface DirectoryIndexCellProps {
 export function DirectoryIndexCell({ index, isPlaceholder }: DirectoryIndexCellProps) {
   return (
     <div className="relative flex h-full min-h-10 items-center justify-center">
-      <div className="text-xs font-medium text-muted-foreground">
+      <TableCellText tone="muted" weight="medium">
         {isPlaceholder ? "..." : index}
-      </div>
+      </TableCellText>
     </div>
   )
 }
@@ -57,12 +57,12 @@ export function DirectoryTextCell({
   const value = children || emptyFallback
 
   return (
-    <span
-      className={cn("text-xs", muted && "text-muted-foreground")}
+    <TableCellText
+      tone={muted ? "muted" : "default"}
       title={title}
     >
       {value}
-    </span>
+    </TableCellText>
   )
 }
 
@@ -80,18 +80,18 @@ export function DirectoryNameCell({
   markerColor,
 }: DirectoryNameCellProps) {
   return (
-    <div className="flex min-w-0 items-center gap-2 text-xs font-normal" title={title}>
+    <div className="flex min-w-0 items-center gap-2 font-normal" title={title}>
       {markerColor ? (
         <svg className="size-2.5 shrink-0" viewBox="0 0 10 10" aria-hidden="true">
           <circle cx="5" cy="5" r="5" fill={markerColor} />
         </svg>
       ) : null}
       <div className="flex min-w-0 flex-col gap-0.5">
-        <span className="truncate">{children}</span>
+        <TableCellText truncate>{children}</TableCellText>
         {secondary ? (
-          <span className="truncate text-xs font-medium uppercase tracking-tight text-foreground/80">
+          <TableCellText tone="default" weight="medium" className="truncate uppercase tracking-tight text-foreground/80">
             {secondary}
-          </span>
+          </TableCellText>
         ) : null}
       </div>
     </div>
@@ -100,8 +100,8 @@ export function DirectoryNameCell({
 
 export function DirectoryCodeCell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="px-2 text-xs font-medium text-muted-foreground">
-      {children}
+    <div className="px-2">
+      <TableCellText tone="muted" weight="medium">{children}</TableCellText>
     </div>
   )
 }
@@ -147,9 +147,9 @@ interface DirectoryStackCellProps {
 export function DirectoryStackCell({ title, primary, trailItems = [] }: DirectoryStackCellProps) {
   return (
     <div className="flex min-w-0 flex-col gap-1.5 py-1.5">
-      <div className="truncate text-xs font-normal" title={title}>
+      <TableCellText as="div" weight="normal" truncate title={title}>
         {primary}
-      </div>
+      </TableCellText>
       <DirectoryBadgeTrail items={trailItems} />
     </div>
   )
@@ -160,12 +160,15 @@ export function DirectoryCategoryCell({ values }: { values: Array<string | null 
 
   return (
     <div className="flex flex-col gap-0.5">
-      <span
-        className="whitespace-normal break-words text-xs font-medium leading-tight text-muted-foreground"
+      <TableCellText
+        as="span"
+        tone="muted"
+        weight="medium"
+        className="whitespace-normal break-words leading-tight"
         title={categories.join("> ")}
       >
         {categories.join(" / ") || "—"}
-      </span>
+      </TableCellText>
     </div>
   )
 }
@@ -193,7 +196,7 @@ export function DirectoryImageCell({ src, alt, emptyLabel = "N/A" }: DirectoryIm
 }
 
 export function DirectoryActionsHeader({ children = "Действия" }: { children?: React.ReactNode }) {
-  return <div className="pr-4 text-right text-xs">{children}</div>
+  return <TableHeaderLabel align="end" className="pr-4 text-xs">{children}</TableHeaderLabel>
 }
 
 interface DirectoryRowActionMenuProps<TData> {

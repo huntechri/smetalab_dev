@@ -2,6 +2,7 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 import { Input, type InputProps } from "@/shared/ui/input"
+import { TableCellText } from "@/shared/ui/table-density"
 
 export function formatCurrencyRu(value: number | string | null | undefined) {
   const parsed = typeof value === "number" ? value : Number.parseFloat(String(value ?? 0))
@@ -64,9 +65,9 @@ type FormattedCurrencyCellProps = {
 
 export function FormattedCurrencyCell({ value, className }: FormattedCurrencyCellProps) {
   return (
-    <div className={cn("text-center font-bold text-[12px] tracking-tight", className)}>
+    <TableCellText align="center" weight="bold" tabular className={cn("tracking-tight", className)}>
       {formatCurrencyRu(value)}
-    </div>
+    </TableCellText>
   )
 }
 
@@ -76,8 +77,8 @@ type CenteredUnitCellProps = React.HTMLAttributes<HTMLDivElement> & {
 
 export function CenteredUnitCell({ value, className, ...props }: CenteredUnitCellProps) {
   return (
-    <div className={cn("text-center text-[12px] text-muted-foreground font-medium", className)} {...props}>
+    <TableCellText as="div" align="center" tone="muted" weight="medium" className={className} {...props}>
       {value}
-    </div>
+    </TableCellText>
   )
 }
