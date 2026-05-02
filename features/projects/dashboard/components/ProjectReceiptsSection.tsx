@@ -12,6 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { EmptyState } from '@/shared/ui/states';
 import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
 import { Table, TableBody, TableHeader } from '@/shared/ui/table';
 import {
@@ -208,7 +209,10 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       </CardShellHeader>
       <CardShellBody className="space-y-3">
         {confirmedRows.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Нет подтвержденных поступлений. Добавьте первую запись.</p>
+          <EmptyState
+            title="Нет подтвержденных поступлений. Добавьте первую запись."
+            className="min-h-24 py-4"
+          />
         ) : null}
         <Table>
           <TableHeader>
