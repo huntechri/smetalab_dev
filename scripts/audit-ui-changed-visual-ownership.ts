@@ -116,6 +116,13 @@ const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
   "shared/ui/table-density.tsx",
   "shared/ui/textarea.tsx",
   "shared/ui/toolbar.tsx",
+  "shared/ui/table-empty-state.tsx",
+  "shared/ui/states/EmptyState.tsx",
+  "shared/ui/states/ErrorState.tsx",
+  "shared/ui/states/ForbiddenState.tsx",
+  "shared/ui/states/LoadingState.tsx",
+  "shared/ui/states/NoResultsState.tsx",
+  "shared/ui/states/StateShell.tsx",
 ])
 
 const ACCEPTED_MARKETING_AUTH_EXCEPTIONS = new Set([
