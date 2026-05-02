@@ -9,6 +9,9 @@ export type TableTextTone = 'default' | 'muted' | 'success' | 'danger';
 export type TableTextWeight = 'normal' | 'medium' | 'semibold' | 'bold';
 export type TableTextSize = 'xs' | 'sm';
 
+type CompactTableHeaderRowProps = React.ComponentPropsWithoutRef<typeof TableRow>;
+type CompactTableRowProps = React.ComponentPropsWithoutRef<typeof TableRow>;
+
 const tableTextAlignClassName: Record<TableTextAlign, string> = {
   start: 'text-left',
   center: 'text-center',
@@ -107,13 +110,9 @@ export function TableCellText({
   );
 }
 
-export interface CompactTableHeaderRowProps extends React.ComponentPropsWithoutRef<typeof TableRow> {}
-
 export function CompactTableHeaderRow({ className, ...props }: CompactTableHeaderRowProps) {
   return <TableRow className={cn('hover:bg-transparent', className)} {...props} />;
 }
-
-export interface CompactTableRowProps extends React.ComponentPropsWithoutRef<typeof TableRow> {}
 
 export function CompactTableRow({ className, ...props }: CompactTableRowProps) {
   return <TableRow className={cn(compactTableCellClassName, className)} {...props} />;
