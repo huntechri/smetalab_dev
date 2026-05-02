@@ -1,5 +1,4 @@
 export const directoryEntitySheetClassNames = {
-  content: "flex max-h-dvh w-full flex-col p-0 sm:max-w-[540px]",
   header: "px-4 pb-3 pt-4 sm:px-6 sm:pb-4 sm:pt-6",
   title: "text-base sm:text-lg",
   description: "text-xs sm:text-sm",
