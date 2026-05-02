@@ -38,7 +38,7 @@ const formLayoutVariants = cva("grid w-full", {
   },
 })
 
-const formSectionVariants = cva("grid", {
+const formSectionVariants = cva("grid w-full", {
   variants: {
     gap: {
       compact: "gap-3",
@@ -51,6 +51,14 @@ const formSectionVariants = cva("grid", {
       three: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
       four: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
     },
+    maxWidth: {
+      none: "",
+      sm: "md:max-w-sm",
+      md: "md:max-w-md",
+      lg: "md:max-w-lg",
+      xl: "md:max-w-xl",
+      "2xl": "md:max-w-2xl",
+    },
     padding: {
       none: "",
       dialog: "py-4",
@@ -59,6 +67,7 @@ const formSectionVariants = cva("grid", {
   defaultVariants: {
     gap: "default",
     columns: "one",
+    maxWidth: "none",
     padding: "none",
   },
 })
@@ -109,11 +118,11 @@ type FormSectionProps = React.ComponentPropsWithoutRef<"div"> &
   VariantProps<typeof formSectionVariants>
 
 const FormSection = React.forwardRef<HTMLDivElement, FormSectionProps>(
-  ({ className, gap, columns, padding, ...props }, ref) => {
+  ({ className, gap, columns, maxWidth, padding, ...props }, ref) => {
     return (
       <div
         ref={ref}
-        className={cn(formSectionVariants({ gap, columns, padding }), className)}
+        className={cn(formSectionVariants({ gap, columns, maxWidth, padding }), className)}
         {...props}
       />
     )
