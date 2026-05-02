@@ -50,6 +50,7 @@ const FilterBarViewport = React.forwardRef<HTMLDivElement, FilterBarViewportProp
     />
   );
 });
+FilterBarViewport.displayName = 'FilterBarViewport';
 
 function FilterBarSkeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
