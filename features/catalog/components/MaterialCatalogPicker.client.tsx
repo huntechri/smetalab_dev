@@ -2,9 +2,10 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus, Sparkles } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/shared/ui/button';
+import { CatalogAiModeIndicator, CatalogToken } from '@/shared/ui/catalog-token';
 import { SearchInput } from '@/shared/ui/search-input';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { Switch } from '@/shared/ui/switch';
@@ -172,12 +173,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         Поиск
                     </Button>
                     <div className="flex items-center gap-2 px-1">
-                        <div className={cn(
-                            'flex items-center justify-center h-8 w-8 rounded-full transition-all duration-300',
-                            isAiMode ? 'bg-primary/10 text-primary animate-pulse' : 'bg-muted text-muted-foreground',
-                        )}>
-                            <Sparkles className="h-4 w-4" />
-                        </div>
+                        <CatalogAiModeIndicator active={isAiMode} />
                         <Switch
                             checked={isAiMode}
                             onCheckedChange={setIsAiMode}
@@ -313,13 +309,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                 </div>
                                                 <div className="space-y-1 min-w-0 flex-1">
                                                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                                                        <span className="text-[10px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/60 px-1.5 py-0.5 rounded leading-none border border-border/40">
+                                                        <CatalogToken tone="code">
                                                             {material.code}
-                                                        </span>
+                                                        </CatalogToken>
                                                         {material.categoryLv1 && (
-                                                            <span className="text-[10px] text-muted-foreground font-medium bg-muted/30 px-1.5 py-0.5 rounded truncate max-w-[120px] leading-none border border-border/20">
+                                                            <CatalogToken tone="category" className="max-w-[120px]">
                                                                 {material.categoryLv1}
-                                                            </span>
+                                                            </CatalogToken>
                                                         )}
                                                     </div>
                                                     <h4 className="text-[13px] sm:text-[14px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
