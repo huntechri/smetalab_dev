@@ -62,9 +62,15 @@ jobs:
       - name: Generate UI Visual Audit domain summary
         if: always() && hashFiles('reports/ui-visual-audit.json') != ''
         run: pnpm exec tsx scripts/summarize-ui-visual-audit.ts
+      - name: Generate UI Visual Audit bug triage
+        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
+        run: pnpm exec tsx scripts/triage-ui-visual-audit.ts
       - name: Publish UI Visual Audit summary
         if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
         run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish UI Visual Audit triage
+        if: always() && hashFiles('reports/ui-visual-audit-triage.md') != ''
+        run: cat reports/ui-visual-audit-triage.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI Visual Audit reports
         if: always() && hashFiles('reports/ui-visual-audit.md') != ''
         uses: actions/upload-artifact@v4
@@ -74,6 +80,8 @@ jobs:
             reports/ui-visual-audit.json
             reports/ui-visual-audit.md
             reports/ui-visual-audit-summary.md
+            reports/ui-visual-audit-triage.json
+            reports/ui-visual-audit-triage.md
           if-no-files-found: error
           retention-days: 14
       - name: Comment UI Visual Audit summary
@@ -85,7 +93,13 @@ jobs:
             const fs = require('node:fs');
             const marker = '<!-- ui-visual-audit-summary -->';
             const summary = fs.readFileSync('reports/ui-visual-audit-summary.md', 'utf8');
-            const body = `${summary.trim()}
+            const triage = fs.existsSync('reports/ui-visual-audit-triage.md')
+              ? fs.readFileSync('reports/ui-visual-audit-triage.md', 'utf8')
+              : '';
+            const triagePreview = triage
+              ? `\n\n---\n\n## UI Visual Audit bug triage preview\n\n${triage.split('\n').slice(0, 80).join('\n')}\n\n_Full triage is available in the artifact: \`ui-visual-audit-${context.runNumber}\`._`
+              : '';
+            const body = `${summary.trim()}${triagePreview}
 
             Artifact: \`ui-visual-audit-${context.runNumber}\``.replace(/^ {12}/gm, '');
             const comments = await github.paginate(github.rest.issues.listComments, {
