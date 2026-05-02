@@ -1,12 +1,11 @@
 'use client';
 
 import type { KeyboardEvent } from 'react';
-import { Sparkles } from 'lucide-react';
-import { SearchInput } from '@/shared/ui/search-input';
-import { WorkCatalogCategories } from './WorkCatalogCategories.client';
-import { Switch } from '@/shared/ui/switch';
 import { Button } from '@/shared/ui/button';
-import { cn } from '@/lib/utils';
+import { CatalogAiModeIndicator } from '@/shared/ui/catalog-token';
+import { SearchInput } from '@/shared/ui/search-input';
+import { Switch } from '@/shared/ui/switch';
+import { WorkCatalogCategories } from './WorkCatalogCategories.client';
 
 interface Props {
     searchQuery: string;
@@ -68,12 +67,7 @@ export function WorkCatalogFilters({
                     )}
                     {onAiModeChange && (
                         <div className="flex items-center gap-2 px-1">
-                            <div className={cn(
-                                'flex items-center justify-center h-8 w-8 rounded-full transition-all duration-300',
-                                isAiMode ? 'bg-primary/10 text-primary animate-pulse' : 'bg-muted text-muted-foreground'
-                            )}>
-                                <Sparkles className="h-4 w-4" />
-                            </div>
+                            <CatalogAiModeIndicator active={Boolean(isAiMode)} />
                             <Switch
                                 checked={isAiMode}
                                 onCheckedChange={onAiModeChange}
