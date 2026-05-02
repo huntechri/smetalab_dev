@@ -1,8 +1,8 @@
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
 import { SearchInput } from '@/shared/ui/search-input';
+import { StatusBadge } from '@/shared/ui/status-badge';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Trash2 } from 'lucide-react';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
@@ -95,7 +95,7 @@ export function TeamMembersCard({
                                 </div>
                             </div>
                             <div className="flex items-center justify-between gap-3 sm:justify-end">
-                                <Badge variant={getRoleBadgeVariant(member.role)} size="xs">{getRoleLabel(member.role)}</Badge>
+                                <StatusBadge tone={getRoleBadgeVariant(member.role)}>{getRoleLabel(member.role)}</StatusBadge>
                                 {canManageMembers && (
                                     <ActionMenu
                                         ariaLabel={`Действия для ${member.user.name || member.user.email}`}
