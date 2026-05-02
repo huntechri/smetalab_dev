@@ -37,7 +37,7 @@ export function DirectoryEntitySheetShell({
 }: DirectoryEntitySheetShellProps) {
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className={cn(directoryEntitySheetClassNames.content, contentClassName)}>
+      <SheetContent size="directory" layout="edge-to-edge" className={contentClassName}>
         <SheetHeader className={directoryEntitySheetClassNames.header}>
           <SheetTitle className={directoryEntitySheetClassNames.title}>{title}</SheetTitle>
           <SheetDescription className={directoryEntitySheetClassNames.description}>
