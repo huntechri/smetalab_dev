@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import { Button } from '@/shared/ui/button';
+import { Button, type ButtonProps } from '@/shared/ui/button';
 import { CatalogAiModeIndicator } from '@/shared/ui/catalog-token';
 import { SearchInput } from '@/shared/ui/search-input';
 import { Switch } from '@/shared/ui/switch';
@@ -19,7 +19,9 @@ type SearchControlProps = {
   loading?: boolean;
   autoLoading?: boolean;
   onSubmit?: () => void;
+  showSubmitButton?: boolean;
   submitLabel?: string;
+  submitSize?: ButtonProps['size'];
   disabled?: boolean;
   isAiMode?: boolean;
   onAiModeChange?: (value: boolean) => void;
@@ -43,7 +45,9 @@ function SearchControl({
   loading = false,
   autoLoading,
   onSubmit,
+  showSubmitButton = Boolean(onSubmit),
   submitLabel = 'Поиск',
+  submitSize,
   disabled = false,
   isAiMode = false,
   onAiModeChange,
@@ -72,11 +76,11 @@ function SearchControl({
         />
       </div>
 
-      {onSubmit ? (
+      {showSubmitButton && onSubmit ? (
         <Button
           type="button"
           variant="outline"
-          size="sm"
+          size={submitSize}
           onClick={onSubmit}
           disabled={disabled || loading}
         >
