@@ -10,6 +10,8 @@ type GuardrailBucket =
   | "table-cell-density"
   | "overlay-layout"
   | "form-layout"
+  | "state-surface"
+  | "action-surface"
 
 type Ownership =
   | "accepted-shared-contract"
@@ -28,8 +30,15 @@ interface Options {
 interface ChangedFilesResult {
   baseRef?: string
   headRef: string
+  range?: string
   files: string[]
   skippedReason?: string
+}
+
+interface AddedLine {
+  filePath: string
+  line: number
+  text: string
 }
 
 interface GuardrailViolation {
@@ -49,7 +58,6 @@ const REPORT_MD_PATH = path.join(ROOT, "reports", "ui-changed-visual-ownership.m
 
 const SCAN_ROOTS = ["app", "components", "entities", "features", "shared", "packages", "styles", "widgets"]
 const EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".css"])
-
 const EXCLUDED_SEGMENTS = new Set([
   "node_modules",
   ".next",
@@ -74,6 +82,7 @@ const EXCLUDED_SEGMENTS = new Set([
 const TEST_FILE_PATTERN = /(?:^|\/|\.)(test|spec)\.(tsx|ts|jsx|js|mjs|cjs)$/u
 
 const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
+  "shared/ui/action-menu.tsx",
   "shared/ui/admin-surface.tsx",
   "shared/ui/badge.tsx",
   "shared/ui/button.tsx",
@@ -92,9 +101,11 @@ const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
   "shared/ui/form-layout.tsx",
   "shared/ui/form.tsx",
   "shared/ui/input.tsx",
+  "shared/ui/kpi-card.tsx",
   "shared/ui/label.tsx",
   "shared/ui/page-shell.tsx",
   "shared/ui/popover.tsx",
+  "shared/ui/primitive-density.ts",
   "shared/ui/search-control.tsx",
   "shared/ui/section.tsx",
   "shared/ui/select.tsx",
@@ -129,6 +140,8 @@ const BUCKET_CONTRACTS: Record<GuardrailBucket, string> = {
   "table-cell-density": "shared/ui/table-density.tsx, shared/ui/data-table.tsx, or shared/ui/cells/*",
   "overlay-layout": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared/ui/popover.tsx semantic layout props",
   "form-layout": "shared/ui/form-layout.tsx and shared form/control primitives",
+  "state-surface": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites",
+  "action-surface": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts",
 }
 
 const TAILWIND_PALETTE_NAMES = [
@@ -169,12 +182,10 @@ const HEIGHT_PATTERN = /\b(?:h|min-h|max-h|size)-(?:6|7|8|9|10|11|12|\[[^\]]+\])
 
 function parseArgs(argv: string[]): Options {
   const options: Options = {}
-
   for (const arg of argv) {
     if (arg.startsWith("--base=")) options.baseRef = arg.slice("--base=".length)
     if (arg.startsWith("--head=")) options.headRef = arg.slice("--head=".length)
   }
-
   return options
 }
 
@@ -188,7 +199,7 @@ function git(args: string[]): string | null {
       cwd: ROOT,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
-    }).trim()
+    }).trimEnd()
   } catch {
     return null
   }
@@ -200,41 +211,30 @@ function gitRefExists(ref: string): boolean {
 
 function resolveBaseRef(options: Options): string | undefined {
   const githubBaseRef = process.env.GITHUB_BASE_REF ? `origin/${process.env.GITHUB_BASE_REF}` : undefined
-  const candidates = [
-    options.baseRef,
-    process.env.UI_CHANGED_VISUAL_BASE_REF,
-    githubBaseRef,
-    "origin/main",
-    "main",
-  ].filter((candidate): candidate is string => Boolean(candidate))
-
+  const candidates = [options.baseRef, process.env.UI_CHANGED_VISUAL_BASE_REF, githubBaseRef, "origin/main", "main"].filter(
+    (candidate): candidate is string => Boolean(candidate)
+  )
   return candidates.find(gitRefExists)
 }
 
 function getChangedFiles(options: Options): ChangedFilesResult {
   const headRef = options.headRef ?? process.env.UI_CHANGED_VISUAL_HEAD_REF ?? "HEAD"
-  const isInsideWorkTree = git(["rev-parse", "--is-inside-work-tree"])
-
-  if (isInsideWorkTree !== "true") {
+  if (git(["rev-parse", "--is-inside-work-tree"]) !== "true") {
     return { headRef, files: [], skippedReason: "Not running inside a git work tree." }
   }
 
   const baseRef = resolveBaseRef(options)
   if (!baseRef) {
-    return {
-      headRef,
-      files: [],
-      skippedReason: "Could not resolve a base ref. Set UI_CHANGED_VISUAL_BASE_REF or pass --base=<ref>.",
-    }
+    return { headRef, files: [], skippedReason: "Could not resolve a base ref. Set UI_CHANGED_VISUAL_BASE_REF or pass --base=<ref>." }
   }
 
-  const ranges = [`${baseRef}...${headRef}`, `${baseRef}..${headRef}`]
-  for (const range of ranges) {
+  for (const range of [`${baseRef}...${headRef}`, `${baseRef}..${headRef}`]) {
     const output = git(["diff", "--name-only", "--diff-filter=ACMR", range])
     if (output !== null) {
       return {
         baseRef,
         headRef,
+        range,
         files: output.split(/\r?\n/u).map((filePath) => filePath.trim()).filter(Boolean),
       }
     }
@@ -262,7 +262,6 @@ function classifyOwnership(relativePath: string): Ownership {
   if (ACCEPTED_SHARED_CONTRACT_OWNERS.has(relativePath)) return "accepted-shared-contract"
   if (ACCEPTED_MARKETING_AUTH_EXCEPTIONS.has(relativePath)) return "accepted-marketing-auth-exception"
   if (CANONICAL_TOKEN_OWNERS.has(relativePath) || relativePath.startsWith("styles/tokens/")) return "canonical-token"
-
   if (
     relativePath.startsWith("app/") ||
     relativePath.startsWith("features/") ||
@@ -271,7 +270,6 @@ function classifyOwnership(relativePath: string): Ownership {
   ) {
     return "business-runtime"
   }
-
   return "out-of-scope"
 }
 
@@ -293,6 +291,43 @@ function hasGap(line: string): boolean {
 
 function hasClassRecipe(line: string): boolean {
   return /\bclassName=|\bcn\(|\bclsx\(|\bcva\(/u.test(line)
+}
+
+function addedLinesFromPatch(changed: ChangedFilesResult, scannedFiles: string[]): AddedLine[] {
+  if (!changed.range || scannedFiles.length === 0) return []
+
+  const patch = git(["diff", "--unified=0", "--diff-filter=ACMR", changed.range, "--", ...scannedFiles])
+  if (patch === null || patch.length === 0) return []
+
+  const addedLines: AddedLine[] = []
+  let currentFile: string | undefined
+  let nextLine = 0
+
+  for (const patchLine of patch.split(/\r?\n/u)) {
+    const fileMatch = /^\+\+\+ b\/(.+)$/u.exec(patchLine)
+    if (fileMatch) {
+      currentFile = toPosix(fileMatch[1])
+      continue
+    }
+
+    const hunkMatch = /^@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@/u.exec(patchLine)
+    if (hunkMatch) {
+      nextLine = Number(hunkMatch[1])
+      continue
+    }
+
+    if (!currentFile || nextLine <= 0) continue
+
+    if (patchLine.startsWith("+") && !patchLine.startsWith("+++")) {
+      addedLines.push({ filePath: currentFile, line: nextLine, text: patchLine.slice(1) })
+      nextLine += 1
+      continue
+    }
+
+    if (patchLine.startsWith(" ")) nextLine += 1
+  }
+
+  return addedLines
 }
 
 function addViolation(
@@ -319,115 +354,77 @@ function addViolation(
   })
 }
 
-function scanLine(filePath: string, line: string, lineNumber: number, findings: GuardrailViolation[], seen: Set<string>): void {
+function scanAddedLine(addedLine: AddedLine, findings: GuardrailViolation[], seen: Set<string>): void {
+  const { filePath, line, text } = addedLine
   if (!shouldScanForBlockingFindings(filePath)) return
 
-  const context = `${filePath} ${line}`
-  const token = line.trim().slice(0, 240)
+  const context = `${filePath} ${text}`
+  const token = text.trim().slice(0, 240)
+  if (!token) return
 
   if (
     /\b(?:Badge|StatusBadge|StatusPill|statusBadge|statusPill|badge|pill|chip|status)\b/iu.test(context) &&
-    (/\b(?:rounded-full|inline-flex|whitespace-nowrap)\b/u.test(line) || /\bborder\b/u.test(line)) &&
-    (hasTailwindColor(line) || hasPadding(line))
+    (/\b(?:rounded-full|inline-flex|whitespace-nowrap)\b/u.test(text) || /\bborder\b/u.test(text)) &&
+    (hasTailwindColor(text) || hasPadding(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "badge-status",
-      token,
-      "Changed runtime code appears to own badge/status pill shape, spacing, or color. Use semantic status/badge shared contracts instead."
-    )
+    addViolation(findings, seen, filePath, line, "badge-status", token, "New runtime code appears to own badge/status pill shape, spacing, or color. Use semantic status/badge shared contracts instead.")
   }
 
   if (
     /\b(?:Card|card|surface|panel|metric|kpi|summary)\b/iu.test(context) &&
-    /\b(?:rounded-xl|rounded-2xl|rounded-3xl|bg-card|shadow|border)\b/u.test(line) &&
-    (hasPadding(line) || /\bshadow(?:-sm|-md|-lg|-xl|-2xl)?\b/u.test(line))
+    /\b(?:rounded-xl|rounded-2xl|rounded-3xl|bg-card|shadow|border)\b/u.test(text) &&
+    (hasPadding(text) || /\bshadow(?:-sm|-md|-lg|-xl|-2xl)?\b/u.test(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "card-surface",
-      token,
-      "Changed runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section."
-    )
+    addViolation(findings, seen, filePath, line, "card-surface", token, "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.")
   }
 
   if (
     /\b(?:Toolbar|toolbar|Filter|filter|Search|search)\b/iu.test(context) &&
-    /\b(?:flex|grid|items-center|justify-between|justify-end|flex-wrap)\b/u.test(line) &&
-    (hasGap(line) || hasPadding(line) || HEIGHT_PATTERN.test(line))
+    /\b(?:flex|grid|items-center|justify-between|justify-end|flex-wrap)\b/u.test(text) &&
+    (hasGap(text) || hasPadding(text) || HEIGHT_PATTERN.test(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "toolbar-filter",
-      token,
-      "Changed runtime code appears to own toolbar/filter/search-row spacing or wrapping. Use Toolbar, FilterBar, or SearchControl."
-    )
+    addViolation(findings, seen, filePath, line, "toolbar-filter", token, "New runtime code appears to own toolbar/filter/search-row spacing or wrapping. Use Toolbar, FilterBar, or SearchControl.")
   }
 
   if (
     /\b(?:Table|DataTable|columns|cell|Cell|td|th|row|Row)\b/iu.test(context) &&
-    (hasPadding(line) || HEIGHT_PATTERN.test(line)) &&
-    (DENSITY_TEXT_PATTERN.test(line) || /\b(?:tabular-nums|text-right|text-center|align-middle)\b/u.test(line))
+    (hasPadding(text) || HEIGHT_PATTERN.test(text)) &&
+    (DENSITY_TEXT_PATTERN.test(text) || /\b(?:tabular-nums|text-right|text-center|align-middle)\b/u.test(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "table-cell-density",
-      token,
-      "Changed runtime code appears to own dense table/cell typography, alignment, or spacing. Use table-density/data-table/cell contracts."
-    )
+    addViolation(findings, seen, filePath, line, "table-cell-density", token, "New runtime code appears to own dense table/cell typography, alignment, or spacing. Use table-density/data-table/cell contracts.")
   }
 
   if (
     /\b(?:DialogContent|SheetContent|PopoverContent|DialogHeader|DialogFooter|SheetHeader|SheetFooter)\b/u.test(context) &&
-    hasClassRecipe(line) &&
-    (/\b(?:max-w-|sm:max-w-|w-\[|p-|px-|py-|gap-|space-y-|overflow-y-)\b/u.test(line) || hasGap(line) || hasPadding(line))
+    hasClassRecipe(text) &&
+    (/\b(?:max-w-|sm:max-w-|w-\[|p-|px-|py-|gap-|space-y-|overflow-y-)\b/u.test(text) || hasGap(text) || hasPadding(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "overlay-layout",
-      token,
-      "Changed runtime code appears to own dialog/sheet/popover width, padding, or scroll layout. Use semantic shared overlay props/contracts."
-    )
+    addViolation(findings, seen, filePath, line, "overlay-layout", token, "New runtime code appears to own dialog/sheet/popover width, padding, or scroll layout. Use semantic shared overlay props/contracts.")
   }
 
   if (
     /\b(?:Form|form|Field|field|Label|label|Input|Textarea|Select)\b/iu.test(context) &&
-    hasClassRecipe(line) &&
-    (hasGap(line) || hasPadding(line) || /\b(?:space-y-|grid-cols-|text-sm|text-xs)\b/u.test(line))
+    hasClassRecipe(text) &&
+    (hasGap(text) || hasPadding(text) || /\b(?:space-y-|grid-cols-|text-sm|text-xs)\b/u.test(text))
   ) {
-    addViolation(
-      findings,
-      seen,
-      filePath,
-      lineNumber,
-      "form-layout",
-      token,
-      "Changed runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts."
-    )
+    addViolation(findings, seen, filePath, line, "form-layout", token, "New runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts.")
   }
-}
 
-function scanFile(relativePath: string, findings: GuardrailViolation[], seen: Set<string>): void {
-  const fullPath = path.join(ROOT, relativePath)
-  if (!fs.existsSync(fullPath)) return
+  if (
+    /\b(?:Empty|empty|Loading|loading|Skeleton|skeleton|ErrorState|No data|no results|not found)\b/u.test(context) &&
+    hasClassRecipe(text) &&
+    (hasPadding(text) || hasGap(text) || hasTailwindColor(text) || /\b(?:text-sm|text-xs|border|rounded-|size-|h-|w-)\b/u.test(text))
+  ) {
+    addViolation(findings, seen, filePath, line, "state-surface", token, "New runtime code appears to own empty/loading/error/no-results state visuals. Move repeated state recipes to shared state contracts.")
+  }
 
-  const lines = fs.readFileSync(fullPath, "utf8").split(/\r?\n/u)
-  lines.forEach((line, index) => scanLine(relativePath, line, index + 1, findings, seen))
+  if (
+    /\b(?:ActionMenu|DropdownMenuItem|IconButton|MoreHorizontal|Trash|Edit|Delete|destructive|confirm)\b/iu.test(context) &&
+    hasClassRecipe(text) &&
+    (HEIGHT_PATTERN.test(text) || hasPadding(text) || hasTailwindColor(text) || /\b(?:text-xs|text-sm|h-\d|w-\d|size-\d)\b/u.test(text))
+  ) {
+    addViolation(findings, seen, filePath, line, "action-surface", token, "New runtime code appears to own action/menu/icon/destructive visual recipes. Use shared action/menu/icon contracts.")
+  }
 }
 
 function countBy<T extends string>(items: GuardrailViolation[], selector: (item: GuardrailViolation) => T): Record<T, number> {
@@ -442,12 +439,10 @@ function formatCode(value: string): string {
   return value.replace(/`/g, "'").replace(/\|/g, "\\|")
 }
 
-function formatMarkdown(findings: GuardrailViolation[], changed: ChangedFilesResult, scannedFiles: string[]): string {
+function formatMarkdown(findings: GuardrailViolation[], changed: ChangedFilesResult, scannedFiles: string[], addedLines: AddedLine[]): string {
   const status = changed.skippedReason ? "skipped" : findings.length > 0 ? "failed" : "passed"
   const findingRows = findings
-    .map((finding) => {
-      return `| ${finding.bucket} | \`${finding.filePath}:${finding.line}\` | \`${formatCode(finding.token)}\` | ${finding.recommendedContract} |`
-    })
+    .map((finding) => `| ${finding.bucket} | \`${finding.filePath}:${finding.line}\` | \`${formatCode(finding.token)}\` | ${finding.recommendedContract} |`)
     .join("\n")
 
   return `# UI Changed-File Visual Ownership Guardrail
@@ -455,23 +450,20 @@ function formatMarkdown(findings: GuardrailViolation[], changed: ChangedFilesRes
 - Status: ${status}
 - Base ref: ${changed.baseRef ?? "not resolved"}
 - Head ref: ${changed.headRef}
+- Diff range: ${changed.range ?? "not resolved"}
 - Changed files: ${changed.files.length}
 - Scanned changed files: ${scannedFiles.length}
+- Scanned added lines: ${addedLines.length}
 - Violations: ${findings.length}
 ${changed.skippedReason ? `- Skipped reason: ${changed.skippedReason}\n` : ""}
 
 ## Behavior
 
-This guardrail scans changed files only. It does not make the historical repository baseline release-blocking. Repository-wide debt remains visible in \`reports/ui-visual-audit.*\`, \`reports/ui-visual-ownership.*\`, and \`reports/ui-coverage-audit.*\`.
+This guardrail scans added lines in changed files only. It does not make the historical repository baseline release-blocking. Repository-wide debt remains visible in \`reports/ui-visual-audit.*\`, \`reports/ui-visual-ownership.*\`, and \`reports/ui-coverage-audit.*\`.
 
 ## Blocking buckets
 
-- badge/status recipes: ${BUCKET_CONTRACTS["badge-status"]}
-- card/surface recipes: ${BUCKET_CONTRACTS["card-surface"]}
-- toolbar/filter recipes: ${BUCKET_CONTRACTS["toolbar-filter"]}
-- table/cell density recipes: ${BUCKET_CONTRACTS["table-cell-density"]}
-- overlay layout recipes: ${BUCKET_CONTRACTS["overlay-layout"]}
-- form layout recipes: ${BUCKET_CONTRACTS["form-layout"]}
+${Object.entries(BUCKET_CONTRACTS).map(([bucket, contract]) => `- ${bucket}: ${contract}`).join("\n")}
 
 ## Violations
 
@@ -489,17 +481,19 @@ ${Array.from(ACCEPTED_MARKETING_AUTH_EXCEPTIONS).sort().map((filePath) => `- \`$
 `
 }
 
-function writeReports(findings: GuardrailViolation[], changed: ChangedFilesResult, scannedFiles: string[]): void {
+function writeReports(findings: GuardrailViolation[], changed: ChangedFilesResult, scannedFiles: string[], addedLines: AddedLine[]): void {
   fs.mkdirSync(path.dirname(REPORT_JSON_PATH), { recursive: true })
   const report = {
     generatedAt: new Date().toISOString(),
-    mode: "changed-file-enforcing",
+    mode: "changed-added-lines-enforcing",
     skipped: Boolean(changed.skippedReason),
     skippedReason: changed.skippedReason,
     baseRef: changed.baseRef,
     headRef: changed.headRef,
+    range: changed.range,
     changedFiles: changed.files,
     scannedChangedFiles: scannedFiles,
+    scannedAddedLineCount: addedLines.length,
     violationCount: findings.length,
     bucketCounts: countBy(findings, (finding) => finding.bucket),
     acceptedSharedContractOwners: Array.from(ACCEPTED_SHARED_CONTRACT_OWNERS).sort(),
@@ -509,19 +503,20 @@ function writeReports(findings: GuardrailViolation[], changed: ChangedFilesResul
   }
 
   fs.writeFileSync(REPORT_JSON_PATH, JSON.stringify(report, null, 2))
-  fs.writeFileSync(REPORT_MD_PATH, formatMarkdown(findings, changed, scannedFiles))
+  fs.writeFileSync(REPORT_MD_PATH, formatMarkdown(findings, changed, scannedFiles, addedLines))
 }
 
 function main(): void {
   const options = parseArgs(process.argv.slice(2))
   const changed = getChangedFiles(options)
   const scannedFiles = changed.files.map(toPosix).filter(isScannableChangedFile)
+  const addedLines = addedLinesFromPatch(changed, scannedFiles)
   const findings: GuardrailViolation[] = []
   const seen = new Set<string>()
 
-  for (const filePath of scannedFiles) scanFile(filePath, findings, seen)
+  for (const addedLine of addedLines) scanAddedLine(addedLine, findings, seen)
 
-  writeReports(findings, changed, scannedFiles)
+  writeReports(findings, changed, scannedFiles, addedLines)
 
   if (changed.skippedReason) {
     console.log(`UI changed-file visual ownership guardrail skipped: ${changed.skippedReason}`)
@@ -536,7 +531,7 @@ function main(): void {
     return
   }
 
-  console.log(`UI changed-file visual ownership guardrail passed. Scanned ${scannedFiles.length} changed file(s).`)
+  console.log(`UI changed-file visual ownership guardrail passed. Scanned ${addedLines.length} added line(s) across ${scannedFiles.length} changed file(s).`)
   console.log(`Report: ${path.relative(ROOT, REPORT_MD_PATH)}`)
 }
 
