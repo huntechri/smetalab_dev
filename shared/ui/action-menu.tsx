@@ -62,12 +62,11 @@ export function ActionIconButton({
   icon,
   variant = 'ghost',
   size = 'icon-sm',
+  'aria-label': ariaLabel,
   ...props
 }: ActionIconButtonProps) {
-  const ariaLabel = props['aria-label'] ?? label;
-
   return (
-    <Button variant={variant} size={size} {...props} aria-label={ariaLabel}>
+    <Button variant={variant} size={size} {...props} aria-label={ariaLabel ?? label}>
       <span className="sr-only">{label}</span>
       {icon}
     </Button>
