@@ -1,4 +1,4 @@
-import { Badge } from '@/shared/ui/badge'
+import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge'
 
 import { getEstimateStatusLabel, type EstimateStatus } from '@/entities/estimate/model/status'
 
@@ -6,7 +6,7 @@ type EstimateStatusBadgeProps = {
   status: EstimateStatus
 }
 
-const statusBadgeVariant: Record<EstimateStatus, "success" | "info" | "warning"> = {
+const statusBadgeTone: Record<EstimateStatus, StatusTone> = {
   draft: 'warning',
   in_progress: 'info',
   approved: 'success',
@@ -14,8 +14,8 @@ const statusBadgeVariant: Record<EstimateStatus, "success" | "info" | "warning">
 
 export function EstimateStatusBadge({ status }: EstimateStatusBadgeProps) {
   return (
-    <Badge variant={statusBadgeVariant[status]} size="xs">
+    <StatusBadge tone={statusBadgeTone[status]}>
       {getEstimateStatusLabel(status)}
-    </Badge>
+    </StatusBadge>
   )
 }

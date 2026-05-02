@@ -3,6 +3,7 @@
 import { Bell } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
+import { StatusBadge } from '@/shared/ui/status-badge';
 import {
     Popover,
     PopoverContent,
@@ -83,7 +84,8 @@ export function NotificationBell() {
                     {unreadCount > 0 && (
                         <Badge
                             variant="destructive"
-                            className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs"
+                            size="count"
+                            className="absolute -right-1 -top-1"
                         >
                             {unreadCount}
                         </Badge>
@@ -94,9 +96,9 @@ export function NotificationBell() {
                 <div className="flex items-center justify-between border-b pb-2 mb-2">
                     <h4 className="font-semibold">Уведомления</h4>
                     {unreadCount > 0 && (
-                        <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
+                        <StatusBadge tone="info">
                             {unreadCount} новых
-                        </Badge>
+                        </StatusBadge>
                     )}
                 </div>
                 <NotificationsList

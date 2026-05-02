@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { StatusIndicator, type StatusIndicatorPulse, type StatusTone } from '@/shared/ui/status-badge'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip'
 
 import { getProjectStatusLabel, type ProjectStatus } from '@/entities/project/model/status'
@@ -9,38 +9,36 @@ type ProjectStatusDotProps = {
   status: ProjectStatus
 }
 
-const STATUS_STYLES: Record<ProjectStatus, { dot: string; pulse: string }> = {
+const STATUS_INDICATOR: Record<ProjectStatus, { tone: StatusTone; pulse: StatusIndicatorPulse }> = {
   active: {
-    dot: 'bg-blue-500',
-    pulse: 'animate-ping bg-blue-500/60',
+    tone: 'info',
+    pulse: 'ping',
   },
   completed: {
-    dot: 'bg-emerald-500',
-    pulse: 'bg-emerald-500/40',
+    tone: 'success',
+    pulse: 'soft',
   },
   planned: {
-    dot: 'bg-brand',
-    pulse: 'animate-pulse bg-brand/50',
+    tone: 'brand',
+    pulse: 'pulse',
   },
   paused: {
-    dot: 'bg-muted-foreground',
-    pulse: 'bg-muted-foreground/40',
+    tone: 'neutral',
+    pulse: 'soft',
   },
 }
 
 export function ProjectStatusDot({ status }: ProjectStatusDotProps) {
-  const style = STATUS_STYLES[status]
+  const indicator = STATUS_INDICATOR[status]
 
   return (
     <Tooltip>
       <TooltipTrigger asChild>
-        <span
-          className="relative inline-flex size-2.5"
+        <StatusIndicator
+          tone={indicator.tone}
+          pulse={indicator.pulse}
           aria-label={`Статус проекта: ${getProjectStatusLabel(status)}`}
-        >
-          <span className={cn('absolute inline-flex h-full w-full rounded-full', style.pulse)} />
-          <span className={cn('relative inline-flex size-2.5 rounded-full', style.dot)} />
-        </span>
+        />
       </TooltipTrigger>
       <TooltipContent>
         <p>{getProjectStatusLabel(status)}</p>
