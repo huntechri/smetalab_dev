@@ -1,5 +1,5 @@
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
+import { StatusBadge, StatusIndicator } from '@/shared/ui/status-badge';
 import { cn } from '@/lib/utils';
 import { NotificationPayload } from '@/features/notifications/components/types';
 
@@ -45,9 +45,9 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <p className="text-sm font-medium">{notification.title}</p>
-            <Badge variant="secondary" className="border-none bg-slate-500/12 text-[10px] uppercase text-slate-700">
+            <StatusBadge tone="neutral">
               Прочитано
-            </Badge>
+            </StatusBadge>
           </div>
           <p className="text-xs text-muted-foreground mt-1">
             {notification.description}
@@ -65,13 +65,13 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       aria-label={`Пометить как прочитанное: ${notification.title}`}
       title="Нажмите, чтобы отметить как прочитанное"
     >
-      <div className="mt-1 h-2 w-2 rounded-full bg-brand shrink-0" aria-hidden="true" />
+      <StatusIndicator tone="brand" size="sm" className="mt-1" aria-hidden="true" />
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className="text-sm font-semibold">{notification.title}</p>
-          <Badge variant="secondary" className="border-none bg-blue-500/12 text-[10px] uppercase text-blue-700">
+          <StatusBadge tone="info">
             Новое
-          </Badge>
+          </StatusBadge>
         </div>
         <p className="text-xs text-muted-foreground mt-1">
           {notification.description}
