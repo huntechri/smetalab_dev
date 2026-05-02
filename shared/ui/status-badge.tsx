@@ -52,6 +52,16 @@ function StatusBadge({ tone = "neutral", size = "xs", ...props }: StatusBadgePro
   return <Badge variant={statusBadgeVariantByTone[tone]} size={size} {...props} />
 }
 
+function StatusBadgeValue({ className, ...props }: React.ComponentProps<"span">) {
+  return (
+    <span
+      data-slot="status-badge-value"
+      className={cn("font-bold tabular-nums normal-case tracking-normal leading-[15px]", className)}
+      {...props}
+    />
+  )
+}
+
 type StatusIndicatorProps = React.ComponentProps<"span"> & {
   tone?: StatusTone
   size?: StatusIndicatorSize
@@ -119,4 +129,4 @@ const StatusIndicator = React.forwardRef<HTMLSpanElement, StatusIndicatorProps>(
   }
 )
 
-export { StatusBadge, StatusIndicator }
+export { StatusBadge, StatusBadgeValue, StatusIndicator }
