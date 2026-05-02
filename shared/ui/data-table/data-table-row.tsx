@@ -3,6 +3,10 @@
 import * as React from "react"
 import { Row, flexRender } from "@tanstack/react-table"
 import { cn } from "@/lib/utils"
+import {
+    dataTableBodyCellClassName,
+    dataTableCellContentClassName,
+} from "@/shared/ui/table-density"
 
 interface DataTableRowProps<TData> {
     row: Row<TData>
@@ -18,13 +22,10 @@ export const DataTableRow = React.memo(<TData,>({
             {row.getVisibleCells().map((cell) => (
                 <td
                     key={cell.id}
-                    className={cn(
-                        "px-3 py-1.5 md:px-4 md:py-2 align-middle border-b transition-colors",
-                        className
-                    )}
+                    className={cn(dataTableBodyCellClassName, className)}
                     style={{ width: cell.column.getSize() }}
                 >
-                    <div className="w-full text-[12px] leading-tight">
+                    <div className={dataTableCellContentClassName}>
                         {flexRender(
                             cell.column.columnDef.cell,
                             cell.getContext()
