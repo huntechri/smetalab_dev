@@ -65,6 +65,49 @@ const VISUAL_CATEGORIES = new Set([
 const PRIORITY_ORDER: Record<MigrationPriority, number> = { P1: 0, P2: 1, P3: 2, P4: 3 }
 const SEVERITY_ORDER: Record<Severity, number> = { critical: 0, high: 1, medium: 2, low: 3 }
 
+const ACCEPTED_PRIMITIVE_SHARED_CONTRACT_OWNERS = new Set([
+  "shared/ui/badge.tsx",
+  "shared/ui/button.tsx",
+  "shared/ui/card.tsx",
+  "shared/ui/data-table.tsx",
+  "shared/ui/dialog.tsx",
+  "shared/ui/input.tsx",
+  "shared/ui/sheet.tsx",
+])
+
+const ACCEPTED_FEATURE_FAMILY_SHARED_CONTRACT_OWNERS = new Set([
+  "shared/ui/admin-surface.tsx",
+  "shared/ui/dense-list.tsx",
+  "shared/ui/estimate-tab.tsx",
+])
+
+const ACCEPTED_SHARED_CONTRACT_PREFIXES = ["shared/ui/shells/"]
+
+function classifySharedContractOwnership(filePath: string, ownership: string): string {
+  if (ownership === "primitive-contract" || ownership === "feature-family-contract" || ownership === "canonical-token") {
+    return ownership
+  }
+
+  if (ACCEPTED_PRIMITIVE_SHARED_CONTRACT_OWNERS.has(filePath)) return "primitive-contract"
+
+  if (
+    ACCEPTED_FEATURE_FAMILY_SHARED_CONTRACT_OWNERS.has(filePath) ||
+    ACCEPTED_SHARED_CONTRACT_PREFIXES.some((prefix) => filePath.startsWith(prefix))
+  ) {
+    return "feature-family-contract"
+  }
+
+  return ownership
+}
+
+function acceptedSharedContractOwners(): string[] {
+  return [
+    ...ACCEPTED_PRIMITIVE_SHARED_CONTRACT_OWNERS,
+    ...ACCEPTED_FEATURE_FAMILY_SHARED_CONTRACT_OWNERS,
+    ...ACCEPTED_SHARED_CONTRACT_PREFIXES.map((prefix) => `${prefix}*`),
+  ].sort()
+}
+
 function countBy<T extends string>(items: Finding[], selector: (finding: Finding) => T | undefined): Record<string, number> {
   return items.reduce<Record<string, number>>((acc, item) => {
     const key = selector(item) ?? "unknown"
@@ -80,10 +123,6 @@ function countSeverities(findings: Finding[]): Record<Severity, number> {
     medium: findings.filter((finding) => finding.severity === "medium").length,
     low: findings.filter((finding) => finding.severity === "low").length,
   }
-}
-
-function highCriticalCount(findings: Finding[]): number {
-  return findings.filter((finding) => finding.severity === "critical" || finding.severity === "high").length
 }
 
 function recommendedSharedContractFor(filePath: string, categories: Record<string, number>): string {
@@ -125,7 +164,8 @@ function recommendedSharedContractFor(filePath: string, categories: Record<strin
 }
 
 function classifyPriority(findings: Finding[]): MigrationPriority {
-  const ownership = findings[0]?.ownership ?? "unknown"
+  const filePath = findings[0]?.filePath ?? "unknown"
+  const ownership = classifySharedContractOwnership(filePath, findings[0]?.ownership ?? "unknown")
   const surface = findings[0]?.surface ?? "unknown"
   const categories = countBy(findings, (finding) => finding.category)
   const hasBusinessRuntimeDrift = ownership === "business-runtime-drift"
@@ -146,7 +186,8 @@ function classifyPriority(findings: Finding[]): MigrationPriority {
 }
 
 function classifyDisposition(findings: Finding[], priority: MigrationPriority): MigrationDisposition {
-  const ownership = findings[0]?.ownership ?? "unknown"
+  const filePath = findings[0]?.filePath ?? "unknown"
+  const ownership = classifySharedContractOwnership(filePath, findings[0]?.ownership ?? "unknown")
   const surface = findings[0]?.surface ?? "unknown"
 
   if (ownership === "business-runtime-drift") return "migrate-to-shared"
@@ -201,6 +242,7 @@ function buildGroups(findings: Finding[]): OwnershipGroup[] {
     .map(([filePath, fileFindings], index) => {
       const categories = countBy(fileFindings, (finding) => finding.category)
       const priority = classifyPriority(fileFindings)
+      const ownership = classifySharedContractOwnership(filePath, fileFindings[0]?.ownership ?? "unknown")
       const baseGroup = {
         id: `UI-OWNERSHIP-${String(index + 1).padStart(3, "0")}`,
         priority,
@@ -208,7 +250,7 @@ function buildGroups(findings: Finding[]): OwnershipGroup[] {
         title: `Visual ownership migration for ${filePath}`,
         filePath,
         surface: fileFindings[0]?.surface ?? "unknown",
-        ownership: fileFindings[0]?.ownership ?? "unknown",
+        ownership,
         findings: [...fileFindings].sort(compareFindings),
         findingCount: fileFindings.length,
         categories,
@@ -312,6 +354,7 @@ function main(): void {
   const migrateFindings = groups
     .filter((group) => group.disposition === "migrate-to-shared")
     .reduce((total, group) => total + group.findingCount, 0)
+  const acceptedOwners = acceptedSharedContractOwners()
 
   const ownershipReport = {
     generatedAt: new Date().toISOString(),
@@ -324,6 +367,7 @@ function main(): void {
     migrateToSharedFindings: migrateFindings,
     priorityCounts: priorities,
     dispositionCounts: dispositions,
+    acceptedSharedContractOwners: acceptedOwners,
     sourceCategoryCounts: report.categoryCounts,
     sourceOwnershipCounts: report.ownershipCounts,
     groups,
@@ -360,6 +404,10 @@ The target architecture is that shared UI contracts own padding, gap, height, ty
 - accepted-shared: ${dispositions["accepted-shared"]}
 - marketing-contract: ${dispositions["marketing-contract"]}
 - observe: ${dispositions.observe}
+
+## Accepted shared contract owners
+
+${acceptedOwners.map((owner) => `- \`${owner}\``).join("\n")}
 
 ## How to read this report
 
