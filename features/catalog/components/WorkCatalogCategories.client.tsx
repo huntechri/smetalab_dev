@@ -3,7 +3,7 @@
 import { useRef, useEffect, useState } from 'react';
 import type { PointerEvent } from 'react';
 import { catalogRepository } from '../repository';
-import { cn } from '@/lib/utils';
+import { FilterBar, FilterBarSkeleton, FilterBarViewport } from '@/shared/ui/filter-bar';
 import { CatalogCategoryButton } from './CatalogCategoryButton';
 
 interface Props {
@@ -72,25 +72,16 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
     }, [loadCategoriesProp]);
 
     if (loading && categories.length === 0) {
-        return (
-            <div className={cn("px-4 py-2 border-b flex gap-2 overflow-hidden", className)}>
-                {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="h-7 w-20 bg-muted animate-pulse rounded-full shrink-0" />
-                ))}
-            </div>
-        );
+        return <FilterBarSkeleton className={className} />;
     }
 
     if (categories.length === 0) return null;
 
     return (
-        <div className={cn("border-b bg-background/50 backdrop-blur-sm sticky top-0 z-10", className)}>
-            <div
+        <FilterBar className={className}>
+            <FilterBarViewport
                 ref={scrollRef}
-                className={cn(
-                    "w-full overflow-x-auto no-scrollbar flex items-center gap-1.5 p-2 px-4 select-none",
-                    isDragging ? "cursor-grabbing" : "cursor-grab"
-                )}
+                dragging={isDragging}
                 onPointerDown={onPointerDown}
                 onPointerMove={onPointerMove}
                 onPointerUp={stopDragging}
@@ -112,7 +103,7 @@ export function WorkCatalogCategories({ selectedCategory, onCategoryChange, clas
                         {category}
                     </CatalogCategoryButton>
                 ))}
-            </div>
-        </div>
+            </FilterBarViewport>
+        </FilterBar>
     );
 }
