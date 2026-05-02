@@ -38,7 +38,7 @@ export function ContentContainer({ width = 'default', className, ...props }: Con
   );
 }
 
-export interface PageHeaderProps extends React.ComponentPropsWithoutRef<'header'> {
+export interface PageHeaderProps extends Omit<React.ComponentPropsWithoutRef<'header'>, 'title'> {
   title?: React.ReactNode;
   description?: React.ReactNode;
   actions?: React.ReactNode;
@@ -83,7 +83,7 @@ export function PageHeader({
   );
 }
 
-export interface PageShellProps extends React.ComponentPropsWithoutRef<'section'> {
+export interface PageShellProps extends Omit<React.ComponentPropsWithoutRef<'section'>, 'title'> {
   density?: PageShellDensity;
   title?: React.ReactNode;
   description?: React.ReactNode;
