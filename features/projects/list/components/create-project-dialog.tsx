@@ -171,7 +171,7 @@ export function CreateProjectDialog({
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+                                            <PopoverContent size="combobox" padding="none" align="start">
                                                 <Command>
                                                     <CommandInput placeholder="Поиск контрагента..." />
                                                     <CommandList>
