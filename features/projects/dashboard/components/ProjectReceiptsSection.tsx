@@ -211,7 +211,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
         {confirmedRows.length === 0 ? (
           <EmptyState
             title="Нет подтвержденных поступлений. Добавьте первую запись."
-            className="min-h-24 py-4"
+            density="compact"
           />
         ) : null}
         <Table>
