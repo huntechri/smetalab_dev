@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Badge } from '@/shared/ui/badge';
+import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -23,7 +23,7 @@ export function EstimateTotals({
     ...props
 }: EstimateTotalsProps) {
     const deltaTotal = planned - actual;
-    const deltaVariant =
+    const deltaTone: StatusTone =
         deltaTotal > 0
             ? 'success'
             : deltaTotal < 0
@@ -32,26 +32,23 @@ export function EstimateTotals({
 
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)} {...props}>
-            <Badge variant="neutral" size="xs">
+            <StatusBadge tone="neutral">
                 <span>План:</span>
-                <span className="font-bold tabular-nums normal-case tracking-normal leading-[15px]">{moneyFormatter.format(planned)}</span>
-            </Badge>
+                <StatusBadgeValue>{moneyFormatter.format(planned)}</StatusBadgeValue>
+            </StatusBadge>
 
-            <Badge variant="neutral" size="xs">
+            <StatusBadge tone="neutral">
                 <span>Факт:</span>
-                <span className="font-bold tabular-nums normal-case tracking-normal leading-[15px]">{moneyFormatter.format(actual)}</span>
-            </Badge>
+                <StatusBadgeValue>{moneyFormatter.format(actual)}</StatusBadgeValue>
+            </StatusBadge>
 
             {showDelta && (
-                <Badge
-                    variant={deltaVariant}
-                    size="xs"
-                >
+                <StatusBadge tone={deltaTone}>
                     <span>Δ:</span>
-                    <span className="font-bold tabular-nums normal-case tracking-normal leading-[15px]">
+                    <StatusBadgeValue>
                         {deltaTotal > 0 ? '+' : ''}{moneyFormatter.format(deltaTotal)}
-                    </span>
-                </Badge>
+                    </StatusBadgeValue>
+                </StatusBadge>
             )}
         </div>
     );
