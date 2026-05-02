@@ -6,7 +6,6 @@ import { MoreHorizontal, Plus } from 'lucide-react';
 
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { cn } from '@/lib/utils';
-import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
@@ -14,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
+import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/shared/ui/table';
 import { Textarea } from '@/shared/ui/textarea';
 import type { ProjectReceiptAggregates, ProjectReceiptRow } from '@/shared/types/project-receipts';
@@ -74,10 +74,10 @@ type ProjectReceiptsSectionProps = {
   initialAggregates: ProjectReceiptAggregates;
 };
 
-const receiptStatusBadgeVariant: Record<ProjectReceiptRow['status'], "success" | "warning" | "neutral"> = {
-  confirmed: "success",
-  pending: "warning",
-  cancelled: "neutral",
+const receiptStatusTone: Record<ProjectReceiptRow['status'], StatusTone> = {
+  confirmed: 'success',
+  pending: 'warning',
+  cancelled: 'neutral',
 };
 
 const dispatchProjectReceiptsMutated = (projectId: string) => {
@@ -191,8 +191,11 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       <CardHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
         <CardTitle>Фактические поступления</CardTitle>
         <div className="flex items-center gap-2">
-          <Badge variant="neutral" size="xs">Платежей: {aggregates.confirmedCount}</Badge>
-          <Badge variant="neutral" size="xs">Подтверждено: {formatCurrency(aggregates.totalConfirmedReceipts)}</Badge>
+          <StatusBadge tone="neutral">Платежей: {aggregates.confirmedCount}</StatusBadge>
+          <StatusBadge tone="neutral">
+            <span>Подтверждено:</span>
+            <StatusBadgeValue>{formatCurrency(aggregates.totalConfirmedReceipts)}</StatusBadgeValue>
+          </StatusBadge>
           <Button onClick={onAddClick}>
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
@@ -220,9 +223,9 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                 <TableCell className="py-2">{receiptTypeOptions.find((option) => option.value === row.type)?.label ?? row.type}</TableCell>
                 <TableCell className={cn('py-2 font-semibold', row.amount < 0 ? 'text-rose-600' : 'text-emerald-600')}>{formatCurrency(row.amount)}</TableCell>
                 <TableCell className="py-2">
-                  <Badge variant={receiptStatusBadgeVariant[row.status]} size="xs">
+                  <StatusBadge tone={receiptStatusTone[row.status]}>
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
-                  </Badge>
+                  </StatusBadge>
                 </TableCell>
                 <TableCell className="py-2 max-w-[320px] truncate text-slate-500">{row.comment || '—'}</TableCell>
                 <TableCell className="py-2">
