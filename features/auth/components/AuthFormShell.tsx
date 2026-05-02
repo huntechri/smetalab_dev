@@ -9,6 +9,14 @@ import {
 } from '@/shared/ui/card';
 import { cn } from '@/lib/utils';
 
+/**
+ * Auth visual ownership note:
+ * this shell is the current auth-only form visual contract. It is intentionally
+ * separate from authenticated runtime app shells and must not be normalized by
+ * changing auth actions, redirects, validation, sessions, email verification, or
+ * password-reset behavior.
+ */
+
 type AuthFormShellProps = {
   title: string;
   description?: ReactNode;
