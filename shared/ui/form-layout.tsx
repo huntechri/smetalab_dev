@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -44,10 +46,10 @@ const formSectionVariants = cva("grid", {
       comfortable: "gap-6",
     },
     columns: {
-      1: "grid-cols-1",
-      2: "grid-cols-1 sm:grid-cols-2",
-      3: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
-      4: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
+      one: "grid-cols-1",
+      two: "grid-cols-1 sm:grid-cols-2",
+      three: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+      four: "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4",
     },
     padding: {
       none: "",
@@ -56,7 +58,7 @@ const formSectionVariants = cva("grid", {
   },
   defaultVariants: {
     gap: "default",
-    columns: 1,
+    columns: "one",
     padding: "none",
   },
 })
