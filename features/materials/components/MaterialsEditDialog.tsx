@@ -34,7 +34,7 @@ export function MaterialsEditDialog({
 }: MaterialsEditDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+            <DialogContent size="lg" scroll>
                 <DialogHeader>
                     <DialogTitle>Изменить материал</DialogTitle>
                     <DialogDescription>Отредактируйте данные материала.</DialogDescription>

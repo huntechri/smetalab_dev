@@ -124,7 +124,7 @@ export function CreateProjectDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent size="project">
                 <DialogHeader>
                     <DialogTitle>{project ? 'Редактировать проект' : 'Создать новый проект'}</DialogTitle>
                     <DialogDescription>
@@ -171,7 +171,7 @@ export function CreateProjectDialog({
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
-                                            <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+                                            <PopoverContent size="combobox" padding="none" align="start">
                                                 <Command>
                                                     <CommandInput placeholder="Поиск контрагента..." />
                                                     <CommandList>
