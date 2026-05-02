@@ -3,7 +3,7 @@
 import { WorkRow } from "@/shared/types/domain/work-row"
 import { Button } from '@/shared/ui/button'
 import { Input } from "@/shared/ui/input"
-import { Label } from "@/shared/ui/label"
+import { FieldRow, FormLayout, FormStatusMessage } from "@/shared/ui/form-layout"
 import { UnitSelect } from "@/features/works/components/UnitSelect"
 import { Loader2 } from "lucide-react"
 import {
@@ -42,43 +42,25 @@ export function WorksEditDialog({
                     <DialogDescription>Внесите изменения и нажмите сохранить.</DialogDescription>
                 </DialogHeader>
                 {data ? (
-                    <form onSubmit={onSubmit} className="grid gap-4 py-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="name" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Название</Label>
-                            <div className="sm:col-span-3">
-                                <Input id="name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} required />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="unit" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Ед. изм.</Label>
-                            <div className="sm:col-span-3">
-                                <UnitSelect value={data.unit || ""} onChange={(val) => onFieldChange("unit", val)} />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-4 items-start sm:items-center gap-2 sm:gap-4">
-                            <Label htmlFor="price" className="sm:text-right text-xs text-muted-foreground sm:text-foreground">Цена</Label>
-                            <div className="sm:col-span-3">
-                                <Input id="price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} required />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="phase" className="text-right">Этап</Label>
-                            <div className="col-span-3">
-                                <Input id="phase" value={data.phase || ""} onChange={(e) => onFieldChange("phase", e.target.value)} />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="category" className="text-right">Категория</Label>
-                            <div className="col-span-3">
-                                <Input id="category" value={data.category || ""} onChange={(e) => onFieldChange("category", e.target.value)} />
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="subcategory" className="text-right">Подкатегория</Label>
-                            <div className="col-span-3">
-                                <Input id="subcategory" value={data.subcategory || ""} onChange={(e) => onFieldChange("subcategory", e.target.value)} />
-                            </div>
-                        </div>
+                    <FormLayout onSubmit={onSubmit} padding="dialog">
+                        <FieldRow label="Название" htmlFor="name">
+                            <Input id="name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} required />
+                        </FieldRow>
+                        <FieldRow label="Ед. изм." htmlFor="unit">
+                            <UnitSelect value={data.unit || ""} onChange={(val) => onFieldChange("unit", val)} />
+                        </FieldRow>
+                        <FieldRow label="Цена" htmlFor="price">
+                            <Input id="price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} required />
+                        </FieldRow>
+                        <FieldRow label="Этап" htmlFor="phase">
+                            <Input id="phase" value={data.phase || ""} onChange={(e) => onFieldChange("phase", e.target.value)} />
+                        </FieldRow>
+                        <FieldRow label="Категория" htmlFor="category">
+                            <Input id="category" value={data.category || ""} onChange={(e) => onFieldChange("category", e.target.value)} />
+                        </FieldRow>
+                        <FieldRow label="Подкатегория" htmlFor="subcategory">
+                            <Input id="subcategory" value={data.subcategory || ""} onChange={(e) => onFieldChange("subcategory", e.target.value)} />
+                        </FieldRow>
                         <DialogFooter>
                             <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
                             <Button type="submit" disabled={isUpdating}>
@@ -86,11 +68,11 @@ export function WorksEditDialog({
                                 Сохранить
                             </Button>
                         </DialogFooter>
-                    </form>
+                    </FormLayout>
                 ) : (
-                    <div className="text-sm text-muted-foreground p-4 text-center">
+                    <FormStatusMessage tone="info" className="p-4 text-center">
                         Форма редактирования не настроена
-                    </div>
+                    </FormStatusMessage>
                 )}
             </DialogContent>
         </Dialog>
