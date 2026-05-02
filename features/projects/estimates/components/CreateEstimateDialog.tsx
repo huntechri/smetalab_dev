@@ -85,7 +85,7 @@ export function CreateEstimateDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent size="sm">
+            <DialogContent size="estimate">
                 <DialogHeader>
                     <DialogTitle>Создать новую смету</DialogTitle>
                     <DialogDescription>
