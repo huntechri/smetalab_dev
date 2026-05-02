@@ -7,7 +7,7 @@ import { XIcon } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/shared/ui/button"
 
-type DialogContentSize = "sm" | "md" | "lg" | "xl" | "catalog-picker"
+type DialogContentSize = "sm" | "md" | "lg" | "xl" | "estimate" | "project" | "catalog-picker"
 type DialogContentLayout = "default" | "edge-to-edge"
 
 const dialogContentSizeClassNames: Record<DialogContentSize, string> = {
@@ -15,6 +15,8 @@ const dialogContentSizeClassNames: Record<DialogContentSize, string> = {
   md: "sm:max-w-lg",
   lg: "sm:max-w-2xl",
   xl: "sm:max-w-4xl",
+  estimate: "sm:max-w-[440px]",
+  project: "sm:max-w-[500px]",
   "catalog-picker":
     "h-[100dvh] w-screen max-w-[1024px] rounded-none sm:h-[80vh] sm:w-[96vw] sm:max-w-[1024px] sm:rounded-xl",
 }
