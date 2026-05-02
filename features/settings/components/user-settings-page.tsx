@@ -21,6 +21,12 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card';
+import {
+  FieldStack,
+  FormLayout,
+  FormSection,
+  FormStatusMessage,
+} from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Separator } from '@/shared/ui/separator';
@@ -134,16 +140,16 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="grid gap-4 md:max-w-xl" action={accountAction}>
-                <Field label="Имя" htmlFor="name">
+              <FormLayout maxWidth="xl" action={accountAction}>
+                <FieldStack label="Имя" htmlFor="name">
                   <Input
                     id="name"
                     name="name"
                     defaultValue={accountState.name ?? user.name ?? ''}
                     required
                   />
-                </Field>
-                <Field label="Email" htmlFor="email">
+                </FieldStack>
+                <FieldStack label="Email" htmlFor="email">
                   <Input
                     id="email"
                     name="email"
@@ -151,10 +157,10 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     type="email"
                     required
                   />
-                </Field>
-                <Field label="Телефон (read-only)" htmlFor="userPhone">
+                </FieldStack>
+                <FieldStack label="Телефон (read-only)" htmlFor="userPhone">
                   <Input id="userPhone" value="Не задано" disabled readOnly />
-                </Field>
+                </FieldStack>
                 <StatusMessage
                   error={accountState.error}
                   success={accountState.success}
@@ -170,7 +176,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   )}
                   Сохранить профиль
                 </Button>
-              </form>
+              </FormLayout>
             </CardContent>
           </Card>
         </TabsContent>
@@ -188,32 +194,32 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid gap-4 md:max-w-xl">
-                <Field label="Организация (тенант)" htmlFor="tenantName">
+              <FormSection maxWidth="xl">
+                <FieldStack label="Организация (тенант)" htmlFor="tenantName">
                   <Input
                     id="tenantName"
                     value={team?.name ?? 'Не выбрана'}
                     readOnly
                     disabled
                   />
-                </Field>
-                <Field label="ID организации" htmlFor="tenantId">
+                </FieldStack>
+                <FieldStack label="ID организации" htmlFor="tenantId">
                   <Input
                     id="tenantId"
                     value={team?.id ? String(team.id) : '—'}
                     readOnly
                     disabled
                   />
-                </Field>
-                <Field label="Роль в организации" htmlFor="tenantRole">
+                </FieldStack>
+                <FieldStack label="Роль в организации" htmlFor="tenantRole">
                   <Input
                     id="tenantRole"
                     value={roleLabel(user.teamRole)}
                     readOnly
                     disabled
                   />
-                </Field>
-              </div>
+                </FieldStack>
+              </FormSection>
 
               <div className="grid gap-3 md:grid-cols-2">
                 <InfoRow
@@ -267,8 +273,8 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <form className="grid gap-4 md:max-w-xl" action={passwordAction}>
-                <Field label="Текущий пароль" htmlFor="currentPassword">
+              <FormLayout maxWidth="xl" action={passwordAction}>
+                <FieldStack label="Текущий пароль" htmlFor="currentPassword">
                   <Input
                     id="currentPassword"
                     name="currentPassword"
@@ -278,8 +284,8 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     maxLength={100}
                     defaultValue={passwordState.currentPassword}
                   />
-                </Field>
-                <Field label="Новый пароль" htmlFor="newPassword">
+                </FieldStack>
+                <FieldStack label="Новый пароль" htmlFor="newPassword">
                   <Input
                     id="newPassword"
                     name="newPassword"
@@ -289,8 +295,8 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     maxLength={100}
                     defaultValue={passwordState.newPassword}
                   />
-                </Field>
-                <Field label="Подтверждение пароля" htmlFor="confirmPassword">
+                </FieldStack>
+                <FieldStack label="Подтверждение пароля" htmlFor="confirmPassword">
                   <Input
                     id="confirmPassword"
                     name="confirmPassword"
@@ -300,7 +306,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     maxLength={100}
                     defaultValue={passwordState.confirmPassword}
                   />
-                </Field>
+                </FieldStack>
                 <StatusMessage
                   error={passwordState.error}
                   success={passwordState.success}
@@ -316,7 +322,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   )}
                   Обновить пароль
                 </Button>
-              </form>
+              </FormLayout>
             </CardContent>
           </Card>
         </TabsContent>
@@ -450,23 +456,6 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   );
 }
 
-function Field({
-  label,
-  htmlFor,
-  children,
-}: {
-  label: string;
-  htmlFor?: string;
-  children: ReactNode;
-}) {
-  return (
-    <div className="space-y-2">
-      <Label htmlFor={htmlFor}>{label}</Label>
-      {children}
-    </div>
-  );
-}
-
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border bg-muted/30 p-3">
@@ -495,11 +484,11 @@ function PreferenceSwitch({
 
 function StatusMessage({ error, success }: { error?: string; success?: string }) {
   if (error) {
-    return <p className="text-sm text-destructive">{error}</p>;
+    return <FormStatusMessage tone="error">{error}</FormStatusMessage>;
   }
 
   if (success) {
-    return <p className="text-sm text-emerald-700">{success}</p>;
+    return <FormStatusMessage tone="success">{success}</FormStatusMessage>;
   }
 
   return null;
