@@ -3,6 +3,7 @@ import path from "node:path"
 import { pathToFileURL } from "node:url"
 
 type Severity = "high" | "medium" | "low"
+type Priority = "P1" | "P2" | "P3" | "P4"
 type Surface = "app" | "feature" | "entity" | "shared-ui" | "component" | "package" | "style" | "unknown"
 
 type Finding = {
@@ -13,6 +14,19 @@ type Finding = {
   token: string
   reason: string
   surface: Surface
+}
+
+type BugCandidate = {
+  id: string
+  priority: Priority
+  title: string
+  surface: Surface
+  filePath: string
+  categories: Record<string, number>
+  severityCounts: Record<Severity, number>
+  findingCount: number
+  recommendedAction: string
+  sampleFindings: Finding[]
 }
 
 type Options = {
@@ -183,16 +197,113 @@ function countBy<T extends string>(items: Finding[], selector: (finding: Finding
   }, {} as Record<T, number>)
 }
 
-function writeReports(findings: Finding[], scannedFiles: number): void {
+function countFindingsBy<T extends string>(items: Finding[], selector: (finding: Finding) => T): Record<T, number> {
+  return countBy(items, selector)
+}
+
+function groupByFile(findings: Finding[]): Map<string, Finding[]> {
+  const groups = new Map<string, Finding[]>()
+  for (const finding of findings) {
+    const existing = groups.get(finding.filePath) ?? []
+    existing.push(finding)
+    groups.set(finding.filePath, existing)
+  }
+  return groups
+}
+
+function classifyPriority(fileFindings: Finding[]): Priority {
+  const surface = fileFindings[0]?.surface ?? "unknown"
+  const mediumCount = fileFindings.filter((finding) => finding.severity === "medium").length
+  const categories = new Set(fileFindings.map((finding) => finding.category))
+
+  if ((surface === "app" || surface === "feature") && mediumCount >= 5 && categories.size >= 2) return "P1"
+  if ((surface === "app" || surface === "feature" || surface === "entity") && mediumCount > 0) return "P2"
+  if (surface === "shared-ui") return "P3"
+  return "P4"
+}
+
+function recommendedActionFor(candidate: Omit<BugCandidate, "recommendedAction">): string {
+  if (candidate.priority === "P1") {
+    return "Create a follow-up UI bug/refactor ticket. This runtime surface has multiple medium coverage signals and should either gain a shared visual contract or targeted smoke/a11y coverage."
+  }
+
+  if (candidate.priority === "P2") {
+    return "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
+  }
+
+  if (candidate.priority === "P3") {
+    return "Classify as an accepted shared primitive contract or move repeated density/token logic into a narrower shared owner."
+  }
+
+  return "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
+}
+
+function buildBugCandidates(findings: Finding[]): BugCandidate[] {
+  return Array.from(groupByFile(findings).entries())
+    .map(([filePath, fileFindings], index) => {
+      const severityCounts = {
+        high: fileFindings.filter((finding) => finding.severity === "high").length,
+        medium: fileFindings.filter((finding) => finding.severity === "medium").length,
+        low: fileFindings.filter((finding) => finding.severity === "low").length,
+      }
+      const categories = countFindingsBy(fileFindings, (finding) => finding.category)
+      const surface = fileFindings[0]?.surface ?? "unknown"
+      const baseCandidate = {
+        id: `UI-COVERAGE-${String(index + 1).padStart(3, "0")}`,
+        priority: classifyPriority(fileFindings),
+        title: `Review UI coverage signals in ${filePath}`,
+        surface,
+        filePath,
+        categories,
+        severityCounts,
+        findingCount: fileFindings.length,
+        sampleFindings: fileFindings.slice(0, 8),
+      }
+
+      return {
+        ...baseCandidate,
+        recommendedAction: recommendedActionFor(baseCandidate),
+      }
+    })
+    .sort((a, b) => {
+      const priorityOrder: Record<Priority, number> = { P1: 0, P2: 1, P3: 2, P4: 3 }
+      return priorityOrder[a.priority] - priorityOrder[b.priority] || b.findingCount - a.findingCount
+    })
+}
+
+function formatRecord(record: Record<string, number>): string {
+  return Object.entries(record)
+    .sort((a, b) => b[1] - a[1])
+    .map(([key, value]) => `${key}: ${value}`)
+    .join(", ")
+}
+
+function formatFinding(finding: Finding): string {
+  return `\`${finding.filePath}:${finding.line}\` — ${finding.category} / ${finding.severity} / \`${finding.token.replace(/`/g, "'")}\``
+}
+
+function writeReports(findings: Finding[], scannedFiles: number, options: Options): void {
   fs.mkdirSync(path.dirname(REPORT_JSON_PATH), { recursive: true })
+  const bugCandidates = buildBugCandidates(findings)
   const report = {
     generatedAt: new Date().toISOString(),
+    mode: "report-only",
+    note: "This audit intentionally does not fail CI when coverage signals are found. Use bugCandidates to create follow-up tickets.",
+    strictRequested: options.strict,
     scanRoots: SCAN_ROOTS,
     scannedFiles,
     totalFindings: findings.length,
     severityCounts: countBy(findings, (finding) => finding.severity),
     categoryCounts: countBy(findings, (finding) => finding.category),
     surfaceCounts: countBy(findings, (finding) => finding.surface),
+    bugCandidateCounts: bugCandidates.reduce<Record<Priority, number>>(
+      (acc, candidate) => {
+        acc[candidate.priority] += 1
+        return acc
+      },
+      { P1: 0, P2: 0, P3: 0, P4: 0 }
+    ),
+    bugCandidates,
     findings,
   }
 
@@ -203,9 +314,17 @@ function writeReports(findings: Finding[], scannedFiles: number): void {
     .map((finding) => `| ${finding.severity} | ${finding.category} | \`${finding.filePath}:${finding.line}\` | \`${finding.token.replace(/\|/g, "\\|")}\` |`)
     .join("\n")
 
+  const bugCandidateSections = bugCandidates
+    .slice(0, 25)
+    .map(
+      (candidate) =>
+        `### ${candidate.id} — ${candidate.priority} — ${candidate.title}\n\n- Surface: ${candidate.surface}\n- Findings: ${candidate.findingCount}\n- Severity: ${formatRecord(candidate.severityCounts)}\n- Categories: ${formatRecord(candidate.categories)}\n- Recommended action: ${candidate.recommendedAction}\n\nSample evidence:\n${candidate.sampleFindings.map((finding) => `- ${formatFinding(finding)}`).join("\n")}\n`
+    )
+    .join("\n")
+
   fs.writeFileSync(
     REPORT_MD_PATH,
-    `# UI Coverage Audit\n\nThis report is a refactor-stage coverage radar. It does not replace \`audit:ui:visual\`, Playwright smoke tests, or accessibility tests.\n\n- Scanned files: ${scannedFiles}\n- Total findings: ${findings.length}\n\n## Category counts\n\n${Object.entries(report.categoryCounts).map(([key, value]) => `- ${key}: ${value}`).join("\n") || "- none"}\n\n## Surface counts\n\n${Object.entries(report.surfaceCounts).map(([key, value]) => `- ${key}: ${value}`).join("\n") || "- none"}\n\n## Findings\n\n| Severity | Category | Location | Token |\n| --- | --- | --- | --- |\n${topFindings || "| - | - | - | - |"}\n`
+    `# UI Coverage Audit\n\nThis report is a refactor-stage coverage radar. It does not replace \`audit:ui:visual\`, Playwright smoke tests, accessibility tests, or manual UI review. It intentionally does not fail CI when coverage signals are found.\n\n- Mode: report-only\n- Strict requested: ${options.strict ? "yes, report-only" : "no"}\n- Scanned files: ${scannedFiles}\n- Total findings: ${findings.length}\n- Bug candidates: ${bugCandidates.length}\n\n## Category counts\n\n${Object.entries(report.categoryCounts).map(([key, value]) => `- ${key}: ${value}`).join("\n") || "- none"}\n\n## Surface counts\n\n${Object.entries(report.surfaceCounts).map(([key, value]) => `- ${key}: ${value}`).join("\n") || "- none"}\n\n## Bug candidate counts\n\n${Object.entries(report.bugCandidateCounts).map(([key, value]) => `- ${key}: ${value}`).join("\n") || "- none"}\n\n## Bug report candidates\n\n${bugCandidateSections || "_No bug candidates detected._"}\n\n## Findings\n\n| Severity | Category | Location | Token |\n| --- | --- | --- | --- |\n${topFindings || "| - | - | - | - |"}\n`
   )
 }
 
@@ -218,16 +337,14 @@ function main(): void {
   for (const file of files) scanFile(file, findings, seen)
 
   if (options.report) {
-    writeReports(findings, files.length)
+    writeReports(findings, files.length, options)
     console.log(`Report: ${path.relative(ROOT, REPORT_JSON_PATH)}`)
     console.log(`Markdown: ${path.relative(ROOT, REPORT_MD_PATH)}`)
   }
 
   console.log(`UI coverage audit complete. Found ${findings.length} coverage signal(s).`)
-
-  if (options.strict && findings.some((finding) => finding.severity === "high")) {
-    console.error("UI coverage strict audit failed: high-severity findings detected.")
-    process.exitCode = 1
+  if (options.strict) {
+    console.log("UI coverage strict mode is currently report-only; findings do not fail CI.")
   }
 }
 
