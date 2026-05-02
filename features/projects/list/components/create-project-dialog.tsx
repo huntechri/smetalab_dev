@@ -124,7 +124,7 @@ export function CreateProjectDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent size="md">
                 <DialogHeader>
                     <DialogTitle>{project ? 'Редактировать проект' : 'Создать новый проект'}</DialogTitle>
                     <DialogDescription>
