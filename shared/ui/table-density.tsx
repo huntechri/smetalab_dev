@@ -11,6 +11,16 @@ export type TableTextSize = 'xs' | 'sm';
 
 type CompactTableHeaderRowProps = React.ComponentPropsWithoutRef<typeof TableRow>;
 type CompactTableRowProps = React.ComponentPropsWithoutRef<typeof TableRow>;
+type CompactTableHeadProps = Omit<React.ComponentPropsWithoutRef<typeof TableHead>, 'align'> & {
+  align?: TableTextAlign;
+};
+type CompactTableCellProps = Omit<React.ComponentPropsWithoutRef<typeof TableCell>, 'align'> & {
+  align?: TableTextAlign;
+  tone?: TableTextTone;
+  weight?: TableTextWeight;
+  truncate?: boolean;
+  tabular?: boolean;
+};
 
 const tableTextAlignClassName: Record<TableTextAlign, string> = {
   start: 'text-left',
@@ -118,20 +128,8 @@ export function CompactTableRow({ className, ...props }: CompactTableRowProps) {
   return <TableRow className={cn(compactTableCellClassName, className)} {...props} />;
 }
 
-export interface CompactTableHeadProps extends React.ComponentPropsWithoutRef<typeof TableHead> {
-  align?: TableTextAlign;
-}
-
 export function CompactTableHead({ align = 'start', className, ...props }: CompactTableHeadProps) {
   return <TableHead className={cn(compactTableHeadClassName, tableTextAlignClassName[align], className)} {...props} />;
-}
-
-export interface CompactTableCellProps extends React.ComponentPropsWithoutRef<typeof TableCell> {
-  align?: TableTextAlign;
-  tone?: TableTextTone;
-  weight?: TableTextWeight;
-  truncate?: boolean;
-  tabular?: boolean;
 }
 
 export function CompactTableCell({
