@@ -140,7 +140,7 @@ export function PageShell({
   );
 }
 
-export interface WorkspaceMainProps extends React.ComponentPropsWithoutRef<'main'> {}
+export type WorkspaceMainProps = React.ComponentPropsWithoutRef<'main'>;
 
 export function WorkspaceMain({ className, ...props }: WorkspaceMainProps) {
   return (
