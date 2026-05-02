@@ -6,6 +6,21 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+type SheetContentSize = "default" | "sm" | "md" | "directory"
+type SheetContentLayout = "default" | "edge-to-edge"
+
+const sheetContentSizeClassNames: Record<SheetContentSize, string> = {
+  default: "w-3/4 sm:max-w-md",
+  sm: "w-3/4 sm:max-w-sm",
+  md: "w-3/4 sm:max-w-md",
+  directory: "w-full sm:max-w-[540px]",
+}
+
+const sheetContentLayoutClassNames: Record<SheetContentLayout, string> = {
+  default: "gap-4 overflow-y-auto",
+  "edge-to-edge": "gap-0 overflow-hidden p-0",
+}
+
 function Sheet({ ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) {
   return <SheetPrimitive.Root data-slot="sheet" {...props} />
 }
@@ -49,10 +64,14 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  size = "default",
+  layout = "default",
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
+  size?: SheetContentSize
+  layout?: SheetContentLayout
 }) {
   return (
     <SheetPortal>
@@ -60,15 +79,17 @@ function SheetContent({
       <SheetPrimitive.Content
         data-slot="sheet-content"
         className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col gap-4 shadow-2xl overflow-y-auto outline-hidden transition duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out fixed z-50 flex flex-col shadow-2xl outline-hidden transition duration-700 ease-[cubic-bezier(0.32,0.72,0,1)]",
+          sheetContentLayoutClassNames[layout],
           side === "right" &&
-          "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full w-3/4 border-l sm:max-w-md",
+          "data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right inset-y-0 right-0 h-full border-l",
           side === "left" &&
-          "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full w-3/4 border-r sm:max-w-sm",
+          "data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left inset-y-0 left-0 h-full border-r",
           side === "top" &&
           "data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top inset-x-0 top-0 h-auto border-b",
           side === "bottom" &&
           "data-[state=closed]:slide-out-to-bottom data-[state=open]:slide-in-from-bottom inset-x-0 bottom-0 h-auto border-t",
+          (side === "right" || side === "left") && sheetContentSizeClassNames[size],
           className
         )}
         {...props}
