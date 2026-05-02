@@ -7,7 +7,6 @@ import { ChevronRight, Pencil, Settings, Trash } from "lucide-react"
 import { ActionMenu } from "@/shared/ui/action-menu"
 import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
-import { cn } from "@/lib/utils"
 import { TableCellText, TableHeaderLabel } from "@/shared/ui/table-density"
 
 export type DirectoryBadgeTone =
