@@ -69,7 +69,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
             </CardShellHeader>
             <CardShellBody className="flex flex-1 flex-col gap-3" density="compact">
                 <div className="grid gap-2 sm:grid-cols-2">
-                    <CardShellInset density="compact" variant="muted" asChild={false} className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2">
+                    <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
                         <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                             <CircleDollarSign className="size-3.5" aria-hidden="true" />
                             <span>Бюджет</span>
@@ -78,7 +78,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                             {formatProjectCurrency(project.contractAmount)}
                         </p>
                     </CardShellInset>
-                    <CardShellInset className="flex min-w-0 flex-col gap-1 rounded-lg border bg-muted/30 px-3 py-2" density="compact">
+                    <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
                         <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
                             <CalendarRange className="size-3.5" aria-hidden="true" />
                             <span>Сроки</span>
@@ -88,7 +88,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         </p>
                     </CardShellInset>
                 </div>
-                <CardShellInset className="mt-auto rounded-lg border bg-muted/20 px-3 py-2.5" density="compact">
+                <CardShellInset className="mt-auto py-2.5" density="compact" variant="subtle">
                     <div className="mb-1.5 flex items-center justify-between gap-3">
                         <p className="text-xs font-medium text-muted-foreground">Прогресс проекта</p>
                         <span className="text-sm font-semibold text-foreground">{project.progress}%</span>
