@@ -5,6 +5,7 @@ import { Download, MoreHorizontal } from 'lucide-react';
 import {
     actionInlineGroupClassName,
     actionMenuContentClassName,
+    ActionIconButton,
     ActionMenuItemContent,
 } from '@/shared/ui/action-menu';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
@@ -25,7 +26,7 @@ export function EstimateExecutionTableActions({
     return (
         <>
             <div className={`hidden sm:flex ${actionInlineGroupClassName}`}>
-                <ToolbarButton onClick={onExport} iconLeft={<Download className="size-4" />}>
+                <ToolbarButton onClick={onExport} iconLeft={<Download />}>
                     Экспорт Excel
                 </ToolbarButton>
                 <EstimateExecutionAddExtraWorkSheet
@@ -37,9 +38,11 @@ export function EstimateExecutionTableActions({
             <div className="sm:hidden">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <ToolbarButton size="icon-xs" aria-label="Действия выполнения">
-                            <MoreHorizontal className="size-4" />
-                        </ToolbarButton>
+                        <ActionIconButton
+                            size="icon-xs"
+                            label="Действия выполнения"
+                            icon={<MoreHorizontal />}
+                        />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className={actionMenuContentClassName}>
                         <DropdownMenuItem onClick={onExport}>
