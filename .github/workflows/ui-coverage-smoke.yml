@@ -104,7 +104,7 @@ jobs:
           pnpm db:migrate
           pnpm db:seed
       - name: Install Playwright Chromium
-        run: pnpm exec playwright install --with-deps chromium
+        run: pnpm exec playwright install chromium
       - name: Run UI smoke tests
         run: pnpm test:ui:smoke
       - name: Upload Playwright report
