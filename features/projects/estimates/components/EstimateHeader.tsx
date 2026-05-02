@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardContent } from '@/shared/ui/card';
+import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
 import { EstimateMeta } from '../types/dto';
 import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
 import { Button } from '@/shared/ui/button';
@@ -35,8 +35,8 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     };
 
     return (
-        <Card className="border-border/40 shadow-sm overflow-hidden">
-            <CardContent className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <CardShell variant="panel" shadow="sm">
+            <CardShellBody className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center" density="comfortable">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
                         <h1 className="sr-only">{meta.name}</h1>
@@ -83,7 +83,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                         </span>
                     </div>
                 </div>
-            </CardContent>
-        </Card>
+            </CardShellBody>
+        </CardShell>
     );
 }
