@@ -62,9 +62,21 @@ jobs:
       - name: Generate UI Visual Audit domain summary
         if: always() && hashFiles('reports/ui-visual-audit.json') != ''
         run: pnpm exec tsx scripts/summarize-ui-visual-audit.ts
+      - name: Generate UI Visual Audit bug triage
+        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
+        run: pnpm exec tsx scripts/triage-ui-visual-audit.ts
+      - name: Generate UI Visual Ownership migration report
+        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
+        run: pnpm exec tsx scripts/triage-ui-visual-ownership.ts
       - name: Publish UI Visual Audit summary
         if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
         run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish UI Visual Audit triage
+        if: always() && hashFiles('reports/ui-visual-audit-triage.md') != ''
+        run: cat reports/ui-visual-audit-triage.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish UI Visual Ownership migration report
+        if: always() && hashFiles('reports/ui-visual-ownership.md') != ''
+        run: cat reports/ui-visual-ownership.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI Visual Audit reports
         if: always() && hashFiles('reports/ui-visual-audit.md') != ''
         uses: actions/upload-artifact@v4
@@ -74,6 +86,10 @@ jobs:
             reports/ui-visual-audit.json
             reports/ui-visual-audit.md
             reports/ui-visual-audit-summary.md
+            reports/ui-visual-audit-triage.json
+            reports/ui-visual-audit-triage.md
+            reports/ui-visual-ownership.json
+            reports/ui-visual-ownership.md
           if-no-files-found: error
           retention-days: 14
       - name: Comment UI Visual Audit summary
@@ -85,7 +101,19 @@ jobs:
             const fs = require('node:fs');
             const marker = '<!-- ui-visual-audit-summary -->';
             const summary = fs.readFileSync('reports/ui-visual-audit-summary.md', 'utf8');
-            const body = `${summary.trim()}
+            const triage = fs.existsSync('reports/ui-visual-audit-triage.md')
+              ? fs.readFileSync('reports/ui-visual-audit-triage.md', 'utf8')
+              : '';
+            const ownership = fs.existsSync('reports/ui-visual-ownership.md')
+              ? fs.readFileSync('reports/ui-visual-ownership.md', 'utf8')
+              : '';
+            const triagePreview = triage
+              ? `\n\n---\n\n## UI Visual Audit bug triage preview\n\n${triage.split('\n').slice(0, 80).join('\n')}\n\n_Full triage is available in the artifact: \`ui-visual-audit-${context.runNumber}\`._`
+              : '';
+            const ownershipPreview = ownership
+              ? `\n\n---\n\n## UI Visual Ownership migration preview\n\n${ownership.split('\n').slice(0, 80).join('\n')}\n\n_Full ownership migration report is available in the artifact: \`ui-visual-audit-${context.runNumber}\`._`
+              : '';
+            const body = `${summary.trim()}${triagePreview}${ownershipPreview}
 
             Artifact: \`ui-visual-audit-${context.runNumber}\``.replace(/^ {12}/gm, '');
             const comments = await github.paginate(github.rest.issues.listComments, {
@@ -110,8 +138,32 @@ jobs:
                 body,
               });
             }
+      - name: Audit isolated test DB boundaries
+        run: pnpm audit:test-db-boundaries
+      - name: Publish isolated test DB boundary summary
+        if: always() && hashFiles('reports/isolated-test-db-boundaries.md') != ''
+        run: cat reports/isolated-test-db-boundaries.md >> "$GITHUB_STEP_SUMMARY"
       - name: Run Unit/Isolated Tests
-        run: pnpm test
+        run: pnpm exec vitest run --config vitest.config.ts
+      - name: Generate Vitest timing summary
+        if: always() && hashFiles('test-results/junit*.xml') != ''
+        run: pnpm test:diagnostics
+      - name: Publish Vitest timing summary
+        if: always() && hashFiles('reports/vitest-unit-timing.md') != ''
+        run: cat reports/vitest-unit-timing.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload isolated test diagnostics
+        if: always() && (hashFiles('test-results/junit*.xml') != '' || hashFiles('reports/vitest-unit-timing.md') != '' || hashFiles('reports/isolated-test-db-boundaries.md') != '')
+        uses: actions/upload-artifact@v4
+        with:
+          name: isolated-test-diagnostics-${{ github.run_number }}
+          path: |
+            test-results/junit*.xml
+            reports/vitest-unit-timing.md
+            reports/vitest-unit-timing.json
+            reports/isolated-test-db-boundaries.md
+            reports/isolated-test-db-boundaries.json
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Build
         run: pnpm build
 

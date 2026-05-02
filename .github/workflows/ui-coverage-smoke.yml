@@ -1,0 +1,130 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: UI Coverage Smoke
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+    branches: ["main"]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: 24
+  NEXT_TELEMETRY_DISABLED: 1
+  AUTH_SECRET: ui-coverage-smoke-test-secret
+  UI_SMOKE_ROUTES: /,/sign-in,/sign-up
+
+jobs:
+  ui-coverage-audit:
+    name: UI Coverage Audit (report-only)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run UI coverage audit
+        run: pnpm audit:ui:coverage
+      - name: Publish UI coverage audit summary
+        if: always() && hashFiles('reports/ui-coverage-audit.md') != ''
+        run: cat reports/ui-coverage-audit.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI coverage audit reports
+        if: always() && hashFiles('reports/ui-coverage-audit.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-coverage-audit-${{ github.run_number }}
+          path: |
+            reports/ui-coverage-audit.json
+            reports/ui-coverage-audit.md
+          if-no-files-found: error
+          retention-days: 14
+
+  ui-smoke:
+    name: UI Smoke Diagnostics (Chromium, report-only)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: smetalab_smoke
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d smetalab_smoke"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      ALLOW_TEST_DB_CLEANUP: "true"
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      TEST_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      POSTGRES_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      LOCAL_DATABASE_URL: postgresql://postgres:postgres@localhost:5432/smetalab_smoke
+      BASE_URL: http://localhost:3000
+      AUTH_TRUST_HOST: true
+      PLAYWRIGHT_WEB_SERVER_COMMAND: pnpm exec next dev --turbopack
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+      - name: Enable Corepack
+        run: corepack enable
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Prepare smoke database
+        run: |
+          pnpm db:reset
+          pnpm db:migrate
+          pnpm db:seed
+      - name: Install Playwright Chromium
+        run: pnpm exec playwright install chromium
+      - name: Run UI smoke diagnostics
+        run: pnpm test:ui:smoke
+      - name: Publish UI smoke diagnostics summary
+        if: always() && hashFiles('reports/ui-smoke-report.md') != ''
+        run: cat reports/ui-smoke-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI smoke diagnostics reports
+        if: always() && hashFiles('reports/ui-smoke-report.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-smoke-diagnostics-${{ github.run_number }}
+          path: |
+            reports/ui-smoke-report.json
+            reports/ui-smoke-report.md
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload Playwright report
+        if: always() && hashFiles('playwright-report/**') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-smoke-playwright-report-${{ github.run_number }}
+          path: playwright-report
+          if-no-files-found: ignore
+          retention-days: 14

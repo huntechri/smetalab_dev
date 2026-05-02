@@ -8,6 +8,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const PORT = process.env.PORT || '3000';
 const BASE_URL = `http://localhost:${PORT}`;
+const WEB_SERVER_COMMAND = process.env.PLAYWRIGHT_WEB_SERVER_COMMAND || 'npm run dev:next';
 
 export default defineConfig({
     testDir: './__tests__/e2e',
@@ -36,7 +37,7 @@ export default defineConfig({
         },
     ],
     webServer: {
-        command: 'npm run dev:next', // Run Next.js directly or via script
+        command: WEB_SERVER_COMMAND,
         url: BASE_URL,
         reuseExistingServer: !process.env.CI,
         timeout: 120 * 1000,
