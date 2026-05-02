@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, FolderOpen, Check } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import { CatalogIndexToken, CatalogToken } from '@/shared/ui/catalog-token';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
@@ -117,18 +118,18 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                     className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 transition-all cursor-default border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden"
                                 >
                                     <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
-                                        <div className="hidden xs:flex shrink-0 items-center justify-center h-8 w-8 rounded-lg bg-muted text-[9px] font-mono text-muted-foreground border border-border/50">
+                                        <CatalogIndexToken className="hidden xs:flex">
                                             {work.code.split('.').pop()}
-                                        </div>
+                                        </CatalogIndexToken>
                                         <div className="space-y-0.5 min-w-0 flex-1">
                                             <div className="flex items-center gap-1.5 flex-wrap">
-                                                <span className="text-[9px] font-mono text-muted-foreground font-medium uppercase tracking-tight bg-muted/80 px-1 py-0.5 rounded leading-none">
+                                                <CatalogToken tone="code" density="compact">
                                                     {work.code}
-                                                </span>
+                                                </CatalogToken>
                                                 {work.category && (
-                                                    <span className="text-[9px] text-muted-foreground font-medium bg-muted/50 px-1 py-0.5 rounded truncate max-w-[80px] sm:max-w-[120px] leading-none">
+                                                    <CatalogToken tone="category" density="compact" className="max-w-[80px] sm:max-w-[120px]">
                                                         {work.category}
-                                                    </span>
+                                                    </CatalogToken>
                                                 )}
                                             </div>
                                             <h4 className="text-[13px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
