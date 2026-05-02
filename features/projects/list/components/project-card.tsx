@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Building2, CalendarRange, CircleDollarSign, MapPin } from 'lucide-react';
-import { getProjectStatusLabel } from '@/entities/project/model/status';
+import { ProjectStatusBadge } from '@/entities/project/ui/ProjectStatusBadge';
 import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 import { Badge } from '@/shared/ui/badge';
 import { Progress } from '@/shared/ui/progress';
@@ -24,7 +24,6 @@ type ProjectCardProps = {
 };
 
 export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
-    const statusLabel = getProjectStatusLabel(project.status);
     const customerLabel = project.customerName?.trim() || 'Заказчик не указан';
     const addressLabel = project.objectAddress?.trim() || 'Адрес объекта не указан';
     const timelineLabel = project.startDate || project.endDate
@@ -40,8 +39,8 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
-                            <Badge variant="outline" className="h-5 px-2 text-[10px]">{statusLabel}</Badge>
-                            <Badge variant="secondary" className="h-5 px-2 text-[10px]">{project.progress}%</Badge>
+                            <ProjectStatusBadge status={project.status} />
+                            <Badge variant="secondary" size="xs">{project.progress}%</Badge>
                         </div>
                         <CardTitle className="mt-1.5 text-base leading-tight">
                             <Link
