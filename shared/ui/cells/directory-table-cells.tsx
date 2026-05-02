@@ -4,9 +4,8 @@ import * as React from "react"
 import Image from "next/image"
 import { ChevronRight, Pencil, Settings, Trash } from "lucide-react"
 
-import { ActionMenu } from "@/shared/ui/action-menu"
+import { ActionIconButton, ActionMenu } from "@/shared/ui/action-menu"
 import { Badge } from "@/shared/ui/badge"
-import { Button } from "@/shared/ui/button"
 import { TableCellText, TableHeaderLabel } from "@/shared/ui/table-density"
 
 export type DirectoryBadgeTone =
@@ -215,20 +214,20 @@ export function DirectoryRowActionMenu<TData>({
       <ActionMenu
         ariaLabel="Открыть меню действий"
         trigger={
-          <Button variant="ghost" size="icon-sm" aria-label="Открыть меню действий">
-            <span className="sr-only">Открыть меню действий</span>
-            <Settings className="size-4" />
-          </Button>
+          <ActionIconButton
+            label="Открыть меню действий"
+            icon={<Settings className="size-4" />}
+          />
         }
         items={[
           {
             label: "Редактировать",
-            icon: <Pencil className="size-4" />,
+            icon: <Pencil />,
             onClick: () => onEdit?.(row),
           },
           {
             label: "Удалить",
-            icon: <Trash className="size-4" />,
+            icon: <Trash />,
             variant: "destructive",
             onClick: () => onDelete?.(row),
           },

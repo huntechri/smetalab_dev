@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button } from '@/shared/ui/button';
+import { ActionMenuItemContent } from '@/shared/ui/action-menu';
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import {
     Sheet,
@@ -40,12 +41,13 @@ export function EstimateExecutionAddExtraWorkSheet({
             <SheetTrigger asChild>
                 {triggerVariant === 'menu-item' ? (
                     <DropdownMenuItem onSelect={(event) => event.preventDefault()}>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Добавить доп. работу
+                        <ActionMenuItemContent icon={<Plus />}>
+                            Добавить доп. работу
+                        </ActionMenuItemContent>
                     </DropdownMenuItem>
                 ) : (
                     <Button variant="primary" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
-                        <Plus className="h-4 w-4" />
+                        <Plus className="size-4" />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>
                 )}

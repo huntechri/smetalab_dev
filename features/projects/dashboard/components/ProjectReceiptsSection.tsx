@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { MoreHorizontal, Plus } from 'lucide-react';
+import { Pencil, Plus, XCircle } from 'lucide-react';
 
 import { useAppToast } from '@/components/providers/use-app-toast';
+import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
@@ -240,19 +240,24 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                 </CompactTableCell>
                 <CompactTableCell className="max-w-[320px]" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
                 <CompactTableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon-sm">
-                        <MoreHorizontal className="size-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onEditClick(row)}>Редактировать</DropdownMenuItem>
-                      {row.status !== 'cancelled' ? (
-                        <DropdownMenuItem onClick={() => void onCancelReceipt(row.id)}>Отменить</DropdownMenuItem>
-                      ) : null}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <ActionMenu
+                    ariaLabel="Действия поступления"
+                    items={[
+                      {
+                        label: 'Редактировать',
+                        icon: <Pencil />,
+                        onClick: () => onEditClick(row),
+                      },
+                      ...(row.status !== 'cancelled'
+                        ? [{
+                            label: 'Отменить',
+                            icon: <XCircle />,
+                            variant: 'destructive' as const,
+                            onClick: () => void onCancelReceipt(row.id),
+                          }]
+                        : []),
+                    ]}
+                  />
                 </CompactTableCell>
               </CompactTableRow>
             ))}

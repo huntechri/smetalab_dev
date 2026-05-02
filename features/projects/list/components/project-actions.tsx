@@ -1,17 +1,13 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Edit, ExternalLink, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/shared/ui/alert-dialog';
+    ActionButtonGroup,
+    actionButtonLabelClassName,
+    actionButtonMobileIconClassName,
+    ConfirmAction,
+} from '@/shared/ui/action-menu';
 
 type ProjectActionsProps = {
     projectId: string;
@@ -23,7 +19,8 @@ type ProjectActionsProps = {
 };
 
 type ProjectActionButtonsProps = Omit<ProjectActionsProps, 'onDelete' | 'density'> & {
-    compact: boolean;
+    density: 'default' | 'compact';
+    deleteTrigger: ReactNode;
 };
 
 function ProjectActionButtons({
@@ -31,19 +28,17 @@ function ProjectActionButtons({
     projectSlug,
     projectName,
     onEdit,
-    compact,
+    density,
+    deleteTrigger,
 }: ProjectActionButtonsProps) {
-    const gridClassName = compact
-        ? 'grid w-full grid-cols-3 gap-1.5 sm:gap-2'
-        : 'grid grid-cols-3 gap-2 pt-2';
-    const buttonSize = compact ? 'xs' : 'default';
+    const buttonSize = density === 'compact' ? 'xs' : 'default';
 
     return (
-        <div className={gridClassName}>
+        <ActionButtonGroup density={density}>
             <Button asChild variant="outline" size={buttonSize}>
                 <Link href={`/app/projects/${projectSlug}`} aria-label={`Открыть ${projectName}`}>
-                    <ExternalLink className="size-4 sm:hidden" />
-                    <span className="hidden sm:inline">Открыть</span>
+                    <ExternalLink className={actionButtonMobileIconClassName} />
+                    <span className={actionButtonLabelClassName}>Открыть</span>
                 </Link>
             </Button>
             <Button
@@ -52,16 +47,11 @@ function ProjectActionButtons({
                 onClick={() => onEdit(projectId)}
                 aria-label={`Изменить ${projectName}`}
             >
-                <Edit className="size-4 sm:hidden" />
-                <span className="hidden sm:inline">Изменить</span>
+                <Edit className={actionButtonMobileIconClassName} />
+                <span className={actionButtonLabelClassName}>Изменить</span>
             </Button>
-            <AlertDialogTrigger asChild>
-                <Button variant="destructive" size={buttonSize} aria-label={`Удалить ${projectName}`}>
-                    <Trash2 className="size-4 sm:hidden hover:text-destructive" />
-                    <span className="hidden sm:inline hover:text-destructive">Удалить</span>
-                </Button>
-            </AlertDialogTrigger>
-        </div>
+            {deleteTrigger}
+        </ActionButtonGroup>
     );
 }
 
@@ -73,29 +63,29 @@ export function ProjectActions({
     onEdit,
     density = 'default',
 }: ProjectActionsProps) {
-    const compact = density === 'compact';
+    const buttonSize = density === 'compact' ? 'xs' : 'default';
 
     return (
-        <AlertDialog>
-            <ProjectActionButtons
-                projectId={projectId}
-                projectSlug={projectSlug}
-                projectName={projectName}
-                onEdit={onEdit}
-                compact={compact}
-            />
-            <AlertDialogContent>
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Удалить проект?</AlertDialogTitle>
-                    <AlertDialogDescription>
-                        {`Это навсегда удалит "${projectName}" из списка.`}
-                    </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel>Отмена</AlertDialogCancel>
-                    <AlertDialogAction onClick={() => onDelete(projectId)}>Удалить</AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
+        <ProjectActionButtons
+            projectId={projectId}
+            projectSlug={projectSlug}
+            projectName={projectName}
+            onEdit={onEdit}
+            density={density}
+            deleteTrigger={
+                <ConfirmAction
+                    title="Удалить проект?"
+                    description={`Это навсегда удалит "${projectName}" из списка.`}
+                    confirmLabel="Удалить"
+                    onConfirm={() => onDelete(projectId)}
+                    trigger={
+                        <Button variant="destructive" size={buttonSize} aria-label={`Удалить ${projectName}`}>
+                            <Trash2 className={actionButtonMobileIconClassName} />
+                            <span className={actionButtonLabelClassName}>Удалить</span>
+                        </Button>
+                    }
+                />
+            }
+        />
     );
 }

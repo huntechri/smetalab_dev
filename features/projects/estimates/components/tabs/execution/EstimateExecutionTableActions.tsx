@@ -2,6 +2,12 @@
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Download, MoreHorizontal } from 'lucide-react';
+import {
+    actionInlineGroupClassName,
+    actionMenuContentClassName,
+    ActionIconButton,
+    ActionMenuItemContent,
+} from '@/shared/ui/action-menu';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { CatalogWork } from '@/shared/types/domain/catalog';
 import { EstimateExecutionAddExtraWorkSheet } from './EstimateExecutionAddExtraWorkSheet';
@@ -19,8 +25,8 @@ export function EstimateExecutionTableActions({
 }: EstimateExecutionTableActionsProps) {
     return (
         <>
-            <div className="hidden items-center gap-2 sm:flex">
-                <ToolbarButton onClick={onExport} iconLeft={<Download className="h-4 w-4" />}>
+            <div className={`hidden sm:flex ${actionInlineGroupClassName}`}>
+                <ToolbarButton onClick={onExport} iconLeft={<Download />}>
                     Экспорт Excel
                 </ToolbarButton>
                 <EstimateExecutionAddExtraWorkSheet
@@ -32,14 +38,17 @@ export function EstimateExecutionTableActions({
             <div className="sm:hidden">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                        <ToolbarButton size="icon-xs" aria-label="Действия выполнения">
-                            <MoreHorizontal className="h-4 w-4" />
-                        </ToolbarButton>
+                        <ActionIconButton
+                            size="icon-xs"
+                            label="Действия выполнения"
+                            icon={<MoreHorizontal />}
+                        />
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="min-w-[220px]">
+                    <DropdownMenuContent align="end" className={actionMenuContentClassName}>
                         <DropdownMenuItem onClick={onExport}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Экспорт Excel
+                            <ActionMenuItemContent icon={<Download />}>
+                                Экспорт Excel
+                            </ActionMenuItemContent>
                         </DropdownMenuItem>
                         <EstimateExecutionAddExtraWorkSheet
                             addedWorkNames={addedWorkNames}

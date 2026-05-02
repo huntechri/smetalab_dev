@@ -17,9 +17,118 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
+  AlertDialogTrigger,
 } from '@/shared/ui/alert-dialog';
-import { Button } from '@/shared/ui/button';
+import { Button, type ButtonProps } from '@/shared/ui/button';
 import { cn } from '@/lib/utils';
+
+export type ActionDensity = 'default' | 'compact';
+
+export const actionMenuTriggerIconClassName = 'size-4';
+export const actionMenuContentClassName = 'min-w-[12rem]';
+export const actionMenuItemClassName = 'gap-2';
+export const actionMenuItemIconClassName =
+  'flex size-4 shrink-0 items-center justify-center text-muted-foreground [&_svg]:size-4 [&_svg]:shrink-0';
+export const actionInlineGroupClassName = 'flex items-center gap-2';
+export const actionButtonLabelClassName = 'hidden sm:inline';
+export const actionButtonMobileIconClassName = 'size-4 sm:hidden';
+
+const actionButtonGroupDensityClassNames = {
+  default: 'grid grid-cols-3 gap-2 pt-2',
+  compact: 'grid w-full grid-cols-3 gap-1.5 sm:gap-2',
+} as const;
+
+export interface ActionMenuItemContentProps {
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}
+
+export function ActionMenuItemContent({ icon, children }: ActionMenuItemContentProps) {
+  return (
+    <>
+      {icon ? <span className={actionMenuItemIconClassName}>{icon}</span> : null}
+      <span>{children}</span>
+    </>
+  );
+}
+
+export interface ActionIconButtonProps extends Omit<ButtonProps, 'children'> {
+  label: string;
+  icon: React.ReactNode;
+}
+
+export function ActionIconButton({
+  label,
+  icon,
+  variant = 'ghost',
+  size = 'icon-sm',
+  'aria-label': ariaLabel,
+  ...props
+}: ActionIconButtonProps) {
+  return (
+    <Button variant={variant} size={size} {...props} aria-label={ariaLabel ?? label}>
+      <span className="sr-only">{label}</span>
+      {icon}
+    </Button>
+  );
+}
+
+export interface ActionButtonGroupProps extends React.ComponentProps<'div'> {
+  density?: ActionDensity;
+}
+
+export function ActionButtonGroup({
+  density = 'default',
+  className,
+  ...props
+}: ActionButtonGroupProps) {
+  return (
+    <div
+      className={cn(actionButtonGroupDensityClassNames[density], className)}
+      {...props}
+    />
+  );
+}
+
+export interface ConfirmActionProps {
+  trigger: React.ReactNode;
+  title: React.ReactNode;
+  description: React.ReactNode;
+  onConfirm: () => void;
+  confirmLabel?: React.ReactNode;
+  cancelLabel?: React.ReactNode;
+  confirmVariant?: ButtonProps['variant'];
+  contentSize?: 'default' | 'sm';
+}
+
+export function ConfirmAction({
+  trigger,
+  title,
+  description,
+  onConfirm,
+  confirmLabel = 'Подтвердить',
+  cancelLabel = 'Отмена',
+  confirmVariant = 'destructive',
+  contentSize = 'default',
+}: ConfirmActionProps) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>{trigger}</AlertDialogTrigger>
+      <AlertDialogContent size={contentSize}>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction variant={confirmVariant} onClick={onConfirm}>
+            {confirmLabel}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 /**
  * Item definition for ActionMenu
@@ -58,6 +167,7 @@ interface ActionMenuProps {
    * Optional custom aria-label for the trigger
    */
   ariaLabel?: string;
+  contentClassName?: string;
 }
 
 /**
@@ -70,6 +180,7 @@ export function ActionMenu({
   align = 'end',
   ariaLabel = 'Действия',
   modal = true,
+  contentClassName,
 }: ActionMenuProps) {
   // We only support one confirmation dialog at a time (standard for menus)
   const [activeConfirmItem, setActiveConfirmItem] = React.useState<ActionMenuItem | null>(
@@ -81,24 +192,19 @@ export function ActionMenu({
       <DropdownMenu modal={modal}>
         <DropdownMenuTrigger asChild>
           {trigger || (
-            <Button
+            <ActionIconButton
               variant="outline"
               size="icon-xs"
-              aria-label={ariaLabel}
-            >
-              <MoreHorizontal className="size-3.5" />
-            </Button>
+              label={ariaLabel}
+              icon={<MoreHorizontal className={actionMenuTriggerIconClassName} />}
+            />
           )}
         </DropdownMenuTrigger>
-        <DropdownMenuContent align={align}>
+        <DropdownMenuContent align={align} className={cn(actionMenuContentClassName, contentClassName)}>
           {items.map((item, index) => {
             const isDestructive = item.variant === 'destructive';
-
             const ItemContent = (
-              <>
-                {item.icon && <span className="mr-2 h-4 w-4 shrink-0">{item.icon}</span>}
-                {item.label}
-              </>
+              <ActionMenuItemContent icon={item.icon}>{item.label}</ActionMenuItemContent>
             );
 
             if (item.requiresConfirmation) {
@@ -109,7 +215,8 @@ export function ActionMenu({
                     queueMicrotask(() => setActiveConfirmItem(item));
                   }}
                   disabled={item.disabled}
-                  className={cn(isDestructive && 'text-destructive focus:text-destructive')}
+                  variant={isDestructive ? 'destructive' : 'default'}
+                  className={actionMenuItemClassName}
                 >
                   {ItemContent}
                 </DropdownMenuItem>
@@ -121,7 +228,8 @@ export function ActionMenu({
                 key={index}
                 onSelect={item.onClick}
                 disabled={item.disabled}
-                className={cn(isDestructive && 'text-destructive focus:text-destructive')}
+                variant={isDestructive ? 'destructive' : 'default'}
+                className={actionMenuItemClassName}
               >
                 {ItemContent}
               </DropdownMenuItem>
@@ -147,10 +255,6 @@ export function ActionMenu({
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
               variant={activeConfirmItem?.variant === 'destructive' ? 'destructive' : 'default'}
-              className={cn(
-                activeConfirmItem?.variant === 'destructive' &&
-                  'bg-destructive text-destructive-foreground hover:bg-destructive/90'
-              )}
               onClick={() => {
                 activeConfirmItem?.onClick();
                 setActiveConfirmItem(null);
