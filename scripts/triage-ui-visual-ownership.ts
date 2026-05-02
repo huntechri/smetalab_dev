@@ -71,8 +71,13 @@ const ACCEPTED_PRIMITIVE_SHARED_CONTRACT_OWNERS = new Set([
   "shared/ui/card.tsx",
   "shared/ui/data-table.tsx",
   "shared/ui/dialog.tsx",
+  "shared/ui/form.tsx",
+  "shared/ui/form-layout.tsx",
   "shared/ui/input.tsx",
+  "shared/ui/label.tsx",
+  "shared/ui/select.tsx",
   "shared/ui/sheet.tsx",
+  "shared/ui/textarea.tsx",
 ])
 
 const ACCEPTED_FEATURE_FAMILY_SHARED_CONTRACT_OWNERS = new Set([
