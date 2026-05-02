@@ -5,10 +5,10 @@ import Image from 'next/image';
 import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/shared/ui/button';
-import { CatalogAiModeIndicator, CatalogToken } from '@/shared/ui/catalog-token';
-import { SearchInput } from '@/shared/ui/search-input';
+import { CatalogToken } from '@/shared/ui/catalog-token';
+import { SearchControl } from '@/shared/ui/search-control';
 import { ScrollArea } from '@/shared/ui/scroll-area';
-import { Switch } from '@/shared/ui/switch';
+import { Toolbar, ToolbarGroup } from '@/shared/ui/toolbar';
 import { cn } from '@/lib/utils';
 import { formatPrice, formatUnit } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
@@ -151,37 +151,22 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
     return (
         <div className="flex flex-col flex-1 min-h-0 h-full bg-background overflow-hidden relative">
-            <div className="p-3 sm:px-4 border-b bg-background shadow-sm z-10">
-                <div className="flex items-center gap-3">
-                    <div className="w-[min(20rem,calc(100vw-2rem))] max-w-full min-w-0">
-                        <SearchInput
-                            placeholder={isAiMode ? 'Опишите, что нужно найти...' : 'Поиск по названию или коду...'}
-                            highlighted={isAiMode}
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            onKeyDown={(event) => {
-                                if (event.key === 'Enter') {
-                                    event.preventDefault();
-                                    submitSearch();
-                                }
-                            }}
-                            loading={loading}
-                            autoLoading={!loading}
-                        />
-                    </div>
-                    <Button type="button" variant="outline" onClick={submitSearch} disabled={loading}>
-                        Поиск
-                    </Button>
-                    <div className="flex items-center gap-2 px-1">
-                        <CatalogAiModeIndicator active={isAiMode} />
-                        <Switch
-                            checked={isAiMode}
-                            onCheckedChange={setIsAiMode}
-                            className="data-[state=checked]:bg-primary"
-                        />
-                    </div>
-                </div>
-            </div>
+            <Toolbar variant="surface" responsive="nowrap" align="start" className="z-10">
+                <ToolbarGroup>
+                    <SearchControl
+                        placeholder="Поиск по названию или коду..."
+                        aiPlaceholder="Опишите, что нужно найти..."
+                        value={searchQuery}
+                        onValueChange={setSearchQuery}
+                        onSubmit={submitSearch}
+                        loading={loading}
+                        autoLoading={!loading}
+                        isAiMode={isAiMode}
+                        onAiModeChange={setIsAiMode}
+                        showAiMode
+                    />
+                </ToolbarGroup>
+            </Toolbar>
 
             <div className="border-b px-3 py-2 lg:hidden">
                 <Button
