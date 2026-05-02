@@ -5,6 +5,7 @@ import { Surface, type SurfaceDensity, type SurfaceProps, type SurfaceVariant } 
 
 export type CardShellDensity = Extract<SurfaceDensity, 'compact' | 'default' | 'comfortable'>;
 export type CardShellVariant = Extract<SurfaceVariant, 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost'>;
+export type CardShellInsetVariant = 'plain' | 'muted' | 'subtle';
 
 const cardShellGapClassName: Record<CardShellDensity, string> = {
   compact: 'gap-3',
@@ -13,9 +14,15 @@ const cardShellGapClassName: Record<CardShellDensity, string> = {
 };
 
 const cardShellInsetClassName: Record<CardShellDensity, string> = {
-  compact: 'p-3 sm:p-4',
-  default: 'p-4 sm:p-5',
-  comfortable: 'p-4 sm:p-6',
+  compact: 'px-3 py-2',
+  default: 'p-3 sm:p-4',
+  comfortable: 'p-4 sm:p-5',
+};
+
+const cardShellInsetVariantClassName: Record<CardShellInsetVariant, string> = {
+  plain: '',
+  muted: 'rounded-lg border border-border bg-muted/30',
+  subtle: 'rounded-lg border border-border bg-muted/20',
 };
 
 const cardShellHeaderClassName: Record<CardShellDensity, string> = {
@@ -64,10 +71,17 @@ export function CardShell({
 
 export interface CardShellInsetProps extends React.ComponentPropsWithoutRef<'div'> {
   density?: CardShellDensity;
+  variant?: CardShellInsetVariant;
 }
 
-export function CardShellInset({ density = 'default', className, ...props }: CardShellInsetProps) {
-  return <div data-slot="card-shell-inset" className={cn(cardShellInsetClassName[density], className)} {...props} />;
+export function CardShellInset({ density = 'default', variant = 'plain', className, ...props }: CardShellInsetProps) {
+  return (
+    <div
+      data-slot="card-shell-inset"
+      className={cn(cardShellInsetVariantClassName[variant], cardShellInsetClassName[density], className)}
+      {...props}
+    />
+  );
 }
 
 export interface CardShellHeaderProps extends React.ComponentPropsWithoutRef<'div'> {
