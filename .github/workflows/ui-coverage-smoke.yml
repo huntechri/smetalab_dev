@@ -18,7 +18,7 @@ env:
   NODE_VERSION: 24
   NEXT_TELEMETRY_DISABLED: 1
   AUTH_SECRET: ui-coverage-smoke-test-secret
-  UI_SMOKE_ROUTES: /
+  UI_SMOKE_ROUTES: /,/sign-in,/sign-up
 
 jobs:
   ui-coverage-audit:
@@ -57,7 +57,7 @@ jobs:
           retention-days: 14
 
   ui-smoke:
-    name: UI Smoke (Chromium, optional)
+    name: UI Smoke Diagnostics (Chromium, report-only)
     runs-on: ubuntu-latest
     continue-on-error: true
     if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
@@ -105,8 +105,21 @@ jobs:
           pnpm db:seed
       - name: Install Playwright Chromium
         run: pnpm exec playwright install chromium
-      - name: Run UI smoke tests
+      - name: Run UI smoke diagnostics
         run: pnpm test:ui:smoke
+      - name: Publish UI smoke diagnostics summary
+        if: always() && hashFiles('reports/ui-smoke-report.md') != ''
+        run: cat reports/ui-smoke-report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI smoke diagnostics reports
+        if: always() && hashFiles('reports/ui-smoke-report.md') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-smoke-diagnostics-${{ github.run_number }}
+          path: |
+            reports/ui-smoke-report.json
+            reports/ui-smoke-report.md
+          if-no-files-found: error
+          retention-days: 14
       - name: Upload Playwright report
         if: always() && hashFiles('playwright-report/**') != ''
         uses: actions/upload-artifact@v4
