@@ -2,12 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
-import { Check, ChevronDown, ChevronUp, FolderOpen, ImageOff, Plus } from 'lucide-react';
+import { Check, ChevronDown, ChevronUp, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/shared/ui/button';
 import { CatalogToken } from '@/shared/ui/catalog-token';
 import { SearchControl } from '@/shared/ui/search-control';
 import { ScrollArea } from '@/shared/ui/scroll-area';
+import { LoadingState, NoResultsState } from '@/shared/ui/states';
 import { Toolbar, ToolbarGroup } from '@/shared/ui/toolbar';
 import { cn } from '@/lib/utils';
 import { formatPrice, formatUnit } from '@/lib/shared/formatters';
@@ -254,15 +255,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
                 <div className="relative min-h-0 overflow-hidden">
                     {loading && filteredMaterials.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mb-2" />
-                            <span className="text-sm">Загрузка материалов...</span>
-                        </div>
+                        <LoadingState
+                            title="Загрузка материалов..."
+                            description={null}
+                            density="compact"
+                        />
                     ) : !loading && filteredMaterials.length === 0 ? (
-                        <div className="m-4 flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
-                            <FolderOpen className="h-8 w-8 mb-2 opacity-20" />
-                            <span className="text-sm">Материалы не найдены</span>
-                        </div>
+                        <NoResultsState title="Материалы не найдены" />
                     ) : (
                         <Virtuoso
                             ref={virtuosoRef}
