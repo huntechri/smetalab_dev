@@ -24,6 +24,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/shared/ui/form';
+import { FormLayout, FormSection } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import {
     Popover,
@@ -133,7 +134,7 @@ export function CreateProjectDialog({
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormLayout onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
                             name="name"
@@ -148,7 +149,7 @@ export function CreateProjectDialog({
                             )}
                         />
 
-                        <div className="space-y-4">
+                        <FormSection>
                             <FormLabel>Заказчик</FormLabel>
 
                             <FormField
@@ -220,7 +221,7 @@ export function CreateProjectDialog({
                                 )}
                             />
 
-                            <div className="grid grid-cols-2 gap-4">
+                            <FormSection columns="two">
                                 <FormField
                                     control={form.control}
                                     name="startDate"
@@ -253,8 +254,8 @@ export function CreateProjectDialog({
                                         </FormItem>
                                     )}
                                 />
-                            </div>
-                        </div>
+                            </FormSection>
+                        </FormSection>
 
                         <DialogFooter>
                             <Button
@@ -270,7 +271,7 @@ export function CreateProjectDialog({
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>
                         </DialogFooter>
-                    </form>
+                    </FormLayout>
                 </Form>
             </DialogContent>
         </Dialog>
