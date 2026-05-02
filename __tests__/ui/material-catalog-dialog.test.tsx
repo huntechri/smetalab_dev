@@ -14,7 +14,21 @@ vi.mock('@/shared/ui/dialog', () => ({
             {children}
         </div>
     ),
-    DialogContent: ({ children, className }: { children: React.ReactNode; className?: string }) => <div data-testid="dialog-content" className={className}>{children}</div>,
+    DialogContent: ({
+        children,
+        className,
+        layout,
+        size,
+    }: {
+        children: React.ReactNode;
+        className?: string;
+        layout?: string;
+        size?: string;
+    }) => (
+        <div data-testid="dialog-content" data-layout={layout} data-size={size} className={className}>
+            {children}
+        </div>
+    ),
     DialogHeader: ({ children, className }: { children: React.ReactNode; className?: string }) => <div data-testid="dialog-header" className={className}>{children}</div>,
     DialogTitle: ({ children, className }: { children: React.ReactNode; className?: string }) => <h2 className={className}>{children}</h2>,
     DialogDescription: ({ children, className }: { children: React.ReactNode; className?: string }) => <p className={className}>{children}</p>,
@@ -32,7 +46,7 @@ vi.mock('@/features/catalog/components/MaterialCatalogPicker.client', () => ({
 }));
 
 describe('MaterialCatalogDialog', () => {
-    it('uses responsive classes for mobile and desktop layouts', () => {
+    it('uses the shared catalog picker layout contract', () => {
         render(
             <MaterialCatalogDialog
                 isOpen
@@ -42,10 +56,11 @@ describe('MaterialCatalogDialog', () => {
             />,
         );
 
-        expect(screen.getByTestId('dialog-content').className).toContain('h-[100dvh]');
-        expect(screen.getByTestId('dialog-content').className).toContain('sm:h-[80vh]');
-        expect(screen.getByTestId('dialog-content').className).toContain('sm:max-w-[1024px]');
-        expect(screen.getByTestId('dialog-content').className).toContain('rounded-none');
+        const content = screen.getByTestId('dialog-content');
+
+        expect(content).toHaveAttribute('data-size', 'catalog-picker');
+        expect(content).toHaveAttribute('data-layout', 'edge-to-edge');
+        expect(content.className).toContain('shadow-2xl');
         expect(screen.getByTestId('dialog-header').className).toContain('p-4');
         expect(screen.getByText(/Добавить материал в:/i).className).toContain('text-base');
     });
