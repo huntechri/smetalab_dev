@@ -12,6 +12,7 @@ export function EmptyState({
     description,
     action,
     className,
+    density,
 }: EmptyStateProps) {
     return (
         <TableEmptyState
@@ -20,6 +21,7 @@ export function EmptyState({
             action={action}
             icon={icon}
             className={className}
+            density={density}
         />
     );
 }

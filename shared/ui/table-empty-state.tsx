@@ -12,13 +12,21 @@ import {
 import { cn } from '@/lib/utils';
 import { LucideIcon } from 'lucide-react';
 
+export type TableEmptyStateDensity = 'default' | 'compact';
+
 export interface TableEmptyStateProps {
   title: string;
   description?: string;
   icon?: LucideIcon;
   action?: React.ReactNode;
   className?: string;
+  density?: TableEmptyStateDensity;
 }
+
+const tableEmptyStateDensityClassName: Record<TableEmptyStateDensity, string> = {
+  default: 'min-h-[300px]',
+  compact: 'min-h-24 py-4',
+};
 
 export function TableEmptyState({
   title,
@@ -26,9 +34,10 @@ export function TableEmptyState({
   icon: Icon,
   action,
   className,
+  density = 'default',
 }: TableEmptyStateProps) {
   return (
-    <Empty className={cn('min-h-[300px] border-none shadow-none', className)}>
+    <Empty className={cn(tableEmptyStateDensityClassName[density], 'border-none shadow-none', className)}>
       <EmptyContent>
         {Icon && (
           <EmptyMedia variant="icon">

@@ -1,8 +1,8 @@
-import { AlertTriangle } from 'lucide-react';
+import { FolderOpen } from 'lucide-react';
 import type { StateShellDensity, StateShellVariant } from './StateShell';
 import { StateShell } from './StateShell';
 
-interface ErrorStateProps {
+interface NoResultsStateProps {
     title?: string;
     description?: string | null;
     action?: React.ReactNode;
@@ -11,20 +11,20 @@ interface ErrorStateProps {
     density?: StateShellDensity;
 }
 
-export function ErrorState({
-    title = 'Произошла ошибка',
-    description = 'Попробуйте обновить страницу или повторить действие позже.',
+export function NoResultsState({
+    title = 'Ничего не найдено',
+    description,
     action,
     className,
-    variant = 'plain',
-    density = 'default',
-}: ErrorStateProps) {
+    variant = 'surface',
+    density = 'compact',
+}: NoResultsStateProps) {
     return (
         <StateShell
             title={title}
             description={description}
             action={action}
-            icon={<AlertTriangle className="h-5 w-5" />}
+            icon={<FolderOpen className="h-5 w-5 opacity-40" />}
             className={className}
             variant={variant}
             density={density}

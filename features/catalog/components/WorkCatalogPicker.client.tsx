@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Plus, FolderOpen, Check } from 'lucide-react';
+import { Plus, Check } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { CatalogIndexToken, CatalogToken } from '@/shared/ui/catalog-token';
+import { LoadingState, NoResultsState } from '@/shared/ui/states';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
@@ -96,15 +97,13 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
 
             <div className="flex-1 relative min-h-0 overflow-hidden">
                 {loading && works.length === 0 ? (
-                    <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary mb-2" />
-                        <span className="text-sm">Загрузка позиций...</span>
-                    </div>
+                    <LoadingState
+                        title="Загрузка позиций..."
+                        description={null}
+                        density="compact"
+                    />
                 ) : !loading && works.length === 0 ? (
-                    <div className="m-4 flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed rounded-lg bg-muted/20">
-                        <FolderOpen className="h-8 w-8 mb-2 opacity-20" />
-                        <span className="text-sm">В этом разделе ничего не найдено</span>
-                    </div>
+                    <NoResultsState title="В этом разделе ничего не найдено" />
                 ) : (
                     <Virtuoso
                         ref={virtuosoRef}
