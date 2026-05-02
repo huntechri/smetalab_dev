@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import Link from 'next/link';
 import { Edit, ExternalLink, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
@@ -19,7 +20,7 @@ type ProjectActionsProps = {
 
 type ProjectActionButtonsProps = Omit<ProjectActionsProps, 'onDelete' | 'density'> & {
     density: 'default' | 'compact';
-    deleteTrigger: React.ReactNode;
+    deleteTrigger: ReactNode;
 };
 
 function ProjectActionButtons({
@@ -65,19 +66,19 @@ export function ProjectActions({
     const buttonSize = density === 'compact' ? 'xs' : 'default';
 
     return (
-        <ConfirmAction
-            title="Удалить проект?"
-            description={`Это навсегда удалит "${projectName}" из списка.`}
-            confirmLabel="Удалить"
-            onConfirm={() => onDelete(projectId)}
-            trigger={
-                <ProjectActionButtons
-                    projectId={projectId}
-                    projectSlug={projectSlug}
-                    projectName={projectName}
-                    onEdit={onEdit}
-                    density={density}
-                    deleteTrigger={
+        <ProjectActionButtons
+            projectId={projectId}
+            projectSlug={projectSlug}
+            projectName={projectName}
+            onEdit={onEdit}
+            density={density}
+            deleteTrigger={
+                <ConfirmAction
+                    title="Удалить проект?"
+                    description={`Это навсегда удалит "${projectName}" из списка.`}
+                    confirmLabel="Удалить"
+                    onConfirm={() => onDelete(projectId)}
+                    trigger={
                         <Button variant="destructive" size={buttonSize} aria-label={`Удалить ${projectName}`}>
                             <Trash2 className={actionButtonMobileIconClassName} />
                             <span className={actionButtonLabelClassName}>Удалить</span>
