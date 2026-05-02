@@ -28,14 +28,18 @@ function FilterBar({ variant = 'surface', className, ...props }: FilterBarProps)
   return <div className={cn(filterBarVariantClassName[variant], className)} {...props} />;
 }
 
-function FilterBarViewport({
-  scroll = 'horizontal',
-  dragging,
-  className,
-  ...props
-}: FilterBarViewportProps) {
+const FilterBarViewport = React.forwardRef<HTMLDivElement, FilterBarViewportProps>(function FilterBarViewport(
+  {
+    scroll = 'horizontal',
+    dragging,
+    className,
+    ...props
+  },
+  ref,
+) {
   return (
     <div
+      ref={ref}
       className={cn(
         filterBarScrollClassName[scroll],
         'p-2 px-4 select-none',
@@ -45,7 +49,7 @@ function FilterBarViewport({
       {...props}
     />
   );
-}
+});
 
 function FilterBarSkeleton({ className, ...props }: React.ComponentProps<'div'>) {
   return (
