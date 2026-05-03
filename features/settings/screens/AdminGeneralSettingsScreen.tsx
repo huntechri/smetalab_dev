@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { updateAccount } from '@/app/(login)/actions';
 import type { AppUserWithPermissions } from '@/shared/types/session';
 
@@ -85,7 +86,7 @@ export function AdminGeneralSettingsScreen() {
           <CardTitle>Account Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" action={formAction}>
+          <FormLayout className="space-y-4" action={formAction}>
             <Suspense fallback={<AccountForm state={state} />}>
               <AccountFormWithData state={state} />
             </Suspense>
@@ -103,7 +104,7 @@ export function AdminGeneralSettingsScreen() {
                 'Save Changes'
               )}
             </Button>
-          </form>
+          </FormLayout>
         </CardContent>
       </Card>
     </section>

@@ -4,6 +4,7 @@ import type { ChangeEvent, RefObject } from 'react';
 import { Download, Upload } from 'lucide-react';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
+import { Input } from '@/shared/ui/input';
 
 interface GlobalPurchasesImportExportActionsProps {
   importInputRef: RefObject<HTMLInputElement | null>;
@@ -20,7 +21,7 @@ export function GlobalPurchasesImportExportActions({
 }: GlobalPurchasesImportExportActionsProps) {
   return (
     <>
-      <input
+      <Input size="xs"
         ref={importInputRef}
         type="file"
         accept=".csv,.xlsx"

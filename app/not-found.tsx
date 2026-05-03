@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { CircleIcon } from 'lucide-react';
 
 import { Button } from '@/shared/ui/button';
+import { StateShell } from '@/shared/ui/states';
 import {
   Card,
   CardContent,
@@ -13,7 +14,8 @@ import {
 export default function NotFound() {
   return (
     <main className="flex min-h-[100dvh] items-center justify-center bg-background px-4 py-8 text-foreground">
-      <Card className="w-full max-w-md text-center">
+      <StateShell>
+        <Card className="w-full max-w-md text-center">
         <CardHeader className="items-center">
           <div className="flex size-12 items-center justify-center rounded-full bg-brand/10 text-brand">
             <CircleIcon className="size-6" aria-hidden="true" />
@@ -25,11 +27,12 @@ export default function NotFound() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Button variant="outline" asChild>
+          <Button size="xs" variant="outline" asChild>
             <Link href="/">Back to Home</Link>
           </Button>
         </CardContent>
-      </Card>
+        </Card>
+      </StateShell>
     </main>
   );
 }

@@ -15,6 +15,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
+import { FormLayout } from '@/shared/ui/form-layout';
 import type { AppUserWithPermissions } from '@/shared/types/session';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -67,12 +68,12 @@ export function AdminUserMenu() {
             <span>Приложение</span>
           </Link>
         </DropdownMenuItem>
-        <form action={handleSignOut} className="w-full">
+        <FormLayout action={handleSignOut} className="w-full">
           <Button type="submit" variant="ghost">
             <LogOut className="mr-2 h-4 w-4" />
             <span>Sign out</span>
           </Button>
-        </form>
+        </FormLayout>
       </DropdownMenuContent>
     </DropdownMenu>
   );

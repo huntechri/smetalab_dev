@@ -24,6 +24,7 @@ import {
     FormMessage,
 } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
+import { FormLayout } from '@/shared/ui/form-layout';
 
 import {
     createEstimateSchema,
@@ -94,7 +95,7 @@ export function CreateEstimateDialog({
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormLayout onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
                         <FormField
                             control={form.control}
                             name="name"
@@ -127,7 +128,7 @@ export function CreateEstimateDialog({
                                 Сохранить
                             </Button>
                         </DialogFooter>
-                    </form>
+                    </FormLayout>
                 </Form>
             </DialogContent>
         </Dialog>

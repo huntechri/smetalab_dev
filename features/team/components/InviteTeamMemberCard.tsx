@@ -3,6 +3,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Mail, Shield } from 'lucide-react';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
 
@@ -38,10 +39,10 @@ export function InviteTeamMemberCard({
                 <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
             </div>
             <div>
-                <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
                         <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
-                        <Input
+                        <Input size="xs"
                             id="email"
                             type="email"
                             placeholder="colleague@company.com"
@@ -54,7 +55,7 @@ export function InviteTeamMemberCard({
                         <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">
+                                <Button size="xs" variant="outline">
                                     {getRoleLabel(role)}
                                     <Shield className="size-3.5 text-muted-foreground opacity-70" />
                                 </Button>
@@ -66,11 +67,11 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" variant="primary" disabled={isInviting}>
+                    <Button size="xs" type="submit" variant="primary" disabled={isInviting}>
                         <Mail className="size-3.5" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
-                </form>
+                </FormLayout>
 
                 {message && (
                     <p

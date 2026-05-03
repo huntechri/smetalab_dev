@@ -170,7 +170,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
             </Toolbar>
 
             <div className="border-b px-3 py-2 lg:hidden">
-                <Button
+                <Button size="xs"
                     data-testid="material-categories-toggle"
                     type="button"
                     variant="outline"

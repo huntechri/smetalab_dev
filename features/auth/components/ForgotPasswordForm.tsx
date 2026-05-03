@@ -7,6 +7,7 @@ import { requestPasswordReset } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
 import { AuthFormShell, AuthStatusMessage } from './AuthFormShell';
 
@@ -21,7 +22,7 @@ export function ForgotPasswordForm() {
       title="Восстановление пароля"
       description="Введите email, и мы отправим ссылку для сброса пароля."
     >
-      <form action={formAction} className="space-y-4">
+      <FormLayout action={formAction} className="space-y-4">
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <Input id="email" name="email" type="email" required autoComplete="email" />
@@ -43,7 +44,7 @@ export function ForgotPasswordForm() {
         >
           Вернуться ко входу
         </Link>
-      </form>
+      </FormLayout>
     </AuthFormShell>
   );
 }

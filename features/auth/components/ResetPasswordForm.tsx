@@ -7,6 +7,7 @@ import { resetPasswordWithToken } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
 import { AuthFormShell, AuthStatusMessage } from './AuthFormShell';
 
@@ -21,8 +22,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
       title="Новый пароль"
       description="Введите новый пароль для аккаунта."
     >
-      <form action={formAction} className="space-y-4">
-        <input type="hidden" name="token" value={token} />
+      <FormLayout action={formAction} className="space-y-4">
+        <Input type="hidden" name="token" value={token} />
         <div className="space-y-2">
           <Label htmlFor="password">Новый пароль</Label>
           <Input
@@ -62,7 +63,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         >
           Перейти ко входу
         </Link>
-      </form>
+      </FormLayout>
     </AuthFormShell>
   );
 }

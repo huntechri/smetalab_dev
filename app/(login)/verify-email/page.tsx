@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { verifyEmail } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
 import { AuthFormShell, AuthStatusMessage } from '@/features/auth/components/AuthFormShell';
+import { ErrorState } from '@/shared/ui/states';
 
 export default async function VerifyEmailPage({
   searchParams,
@@ -23,15 +24,17 @@ export default async function VerifyEmailPage({
     <AuthFormShell title="Подтверждение email" align="center">
       <div className="space-y-4 text-center">
         {hasError ? (
-          <AuthStatusMessage variant="error">
-            {result.error as string}
-          </AuthStatusMessage>
+          <ErrorState
+            title="Не удалось подтвердить email"
+            description={result.error as string}
+            density="compact"
+          />
         ) : (
           <AuthStatusMessage variant="success">
             Email подтвержден. Теперь можно войти.
           </AuthStatusMessage>
         )}
-        <Button variant="outline" asChild>
+        <Button size="xs" variant="outline" asChild>
           <Link href="/sign-in">Перейти ко входу</Link>
         </Button>
       </div>

@@ -51,7 +51,7 @@ function SearchInput({
         <SearchIcon className="size-4" />
         <span className="sr-only">Search</span>
       </div>
-      <Input
+      <Input size="xs"
         type="search"
         value={value}
         {...props}

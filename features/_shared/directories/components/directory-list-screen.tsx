@@ -90,7 +90,7 @@ export function DirectoryListScreen<TData, TValue>({
           description={emptyDescription}
           icon={FilePlus}
           action={
-            <Button
+            <Button size="xs"
               variant="primary"
               onClick={onCreate}
             >
@@ -103,7 +103,7 @@ export function DirectoryListScreen<TData, TValue>({
       actions={
         <ToolbarGroup fullWidthOnMobile scroll={false}>
           {canLoadMore ? (
-            <Button
+            <Button size="xs"
               variant="outline"
               onClick={onLoadMore}
               disabled={isLoadingMore}
@@ -113,7 +113,7 @@ export function DirectoryListScreen<TData, TValue>({
               <span className="sm:hidden">Ещё</span>
             </Button>
           ) : null}
-          <Button
+          <Button size="xs"
             onClick={onCreate}
             variant="primary"
             aria-label={addLabel}

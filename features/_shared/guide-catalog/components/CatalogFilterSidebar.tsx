@@ -106,7 +106,7 @@ export function CatalogFilterButton({
   ...props
 }: CatalogFilterButtonProps) {
   return (
-    <Button variant="ghost" {...props}>
+    <Button size="xs" variant="ghost" {...props}>
       <span className={catalogFilterSidebarClassNames.buttonText}>{children}</span>
       {selected ? <span className={catalogFilterSidebarClassNames.buttonCheck}>{checkIcon}</span> : null}
     </Button>
