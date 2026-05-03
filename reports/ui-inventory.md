@@ -1,11 +1,11 @@
 # UI Inventory Report
 
 ## Top summary
-- real violations count: 2
+- real violations count: 0
 - needs-review count: 61
-- informational count: 686
+- informational count: 688
 - auto-fix candidates count: 0
-- manual review count: 63
+- manual review count: 61
 
 ## UI source-of-truth matrix
 | Component | components/ui | shared/ui | packages/ui / @repo/ui | Runtime imports | Status | Decision |
@@ -25,7 +25,7 @@
 | AlertDialog | false | true | false | 9 | canonical | informational |
 | Sheet | false | true | false | 5 | canonical | informational |
 | Popover | false | true | false | 9 | canonical | informational |
-| DropdownMenu | false | true | true | 12 | canonical | informational, forbidden-runtime |
+| DropdownMenu | false | true | false | 12 | canonical | informational |
 | Tooltip | false | true | false | 12 | canonical | informational |
 | Tabs | false | true | false | 6 | canonical | informational |
 | Sidebar | false | true | false | 2 | canonical | informational |
