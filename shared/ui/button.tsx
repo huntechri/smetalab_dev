@@ -26,7 +26,7 @@ const buttonVariants = cva(primitiveButtonBaseClassName, {
   },
   defaultVariants: {
     variant: "default",
-    size: "xs",
+    size: "default",
   },
 })
 
@@ -56,15 +56,16 @@ function Button({
   ...props
 }: ButtonProps) {
   const resolvedLoading = loading || isLoading
+  const resolvedSize = size ?? "default"
   const Comp = asChild ? Slot : "button"
-  const buttonClassName = cn(buttonVariants({ variant, size }), className)
+  const buttonClassName = cn(buttonVariants({ variant, size: resolvedSize }), className)
 
   if (asChild) {
     return (
       <Comp
         data-slot="button"
         data-variant={variant}
-        data-size={size}
+        data-size={resolvedSize}
         className={buttonClassName}
         {...props}
       >
@@ -77,7 +78,7 @@ function Button({
     <Comp
       data-slot="button"
       data-variant={variant}
-      data-size={size}
+      data-size={resolvedSize}
       className={buttonClassName}
       disabled={disabled || resolvedLoading}
       aria-busy={resolvedLoading || undefined}
