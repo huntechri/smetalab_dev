@@ -117,7 +117,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <Surface variant="card" overflow="hidden" style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1)' }}>
+        <Surface variant="card" overflow="hidden" shadow="md">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>
