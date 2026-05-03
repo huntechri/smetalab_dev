@@ -8,7 +8,7 @@ interface TeamHeaderCardProps {
 
 export function TeamHeaderCard({ teamName, membersCount }: TeamHeaderCardProps) {
     return (
-        <Surface variant="muted" density="comfortable" style={{ boxShadow: 'none' }}>
+        <Surface variant="muted" density="comfortable" shadow="none">
             <div className="flex flex-col space-y-1.5">
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-foreground">
                     {teamName || 'Команда'}
