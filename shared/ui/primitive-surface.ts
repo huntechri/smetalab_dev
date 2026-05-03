@@ -1,3 +1,36 @@
+// ─── Surface tone variants ───────────────────────────────────────────────
+
+export type PrimitiveSurfaceTone = 'default' | 'muted' | 'brand' | 'warning' | 'danger';
+
+export const primitiveSurfaceToneClassNames: Record<PrimitiveSurfaceTone, string> = {
+  default: '',
+  muted: 'bg-muted/30 text-muted-foreground',
+  brand: 'bg-brand/10 text-brand',
+  warning: 'bg-warning/10 text-warning',
+  danger: 'bg-destructive/10 text-destructive',
+} as const;
+
+// ─── Surface elevation variants ───────────────────────────────────────────
+
+export type PrimitiveSurfaceElevation = 'flat' | 'raised' | 'elevated';
+
+export const primitiveSurfaceElevationClassNames: Record<PrimitiveSurfaceElevation, string> = {
+  flat: 'shadow-none',
+  raised: 'shadow-sm',
+  elevated: 'shadow-md',
+} as const;
+
+// ─── Surface border variants ──────────────────────────────────────────────
+
+export type PrimitiveSurfaceBorder = 'none' | 'hairline' | 'thin' | 'thick';
+
+export const primitiveSurfaceBorderClassNames: Record<PrimitiveSurfaceBorder, string> = {
+  none: 'border-0',
+  hairline: 'border border-border/30',
+  thin: 'border border-border/60',
+  thick: 'border border-border',
+} as const;
+
 // ─── Visual surface tokens ────────────────────────────────────────────────
 
 export const primitiveVisualSurfaceClassNames = {
