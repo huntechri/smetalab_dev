@@ -114,7 +114,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
   );
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] space-y-4">
+    <div className="mx-auto w-full max-w-7xl space-y-4">
       <h1 className="sr-only">
         Личный кабинет
       </h1>

@@ -5,7 +5,7 @@ export function CatalogScreenFallback() {
     <div className="space-y-2">
       <Skeleton className="h-8 w-48" />
       <Skeleton className="h-12 w-full" />
-      <Skeleton className="h-[420px] w-full" />
+      <Skeleton className="h-96 w-full" />
     </div>
   );
 }

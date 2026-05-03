@@ -38,13 +38,13 @@ export function EstimateStatusMenu({
           <StatusBadge
             tone={statusToneByStatus[status]}
             size={badgeSize}
-            className={cn('min-w-[88px] cursor-pointer md:min-w-[100px]', className)}
+            className={cn('min-w-20 cursor-pointer md:min-w-24', className)}
           >
             {getEstimateStatusLabel(status)}
           </StatusBadge>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="min-w-[150px] p-1">
+      <DropdownMenuContent align="end" className="min-w-36 p-1">
         {estimateStatusOrder.map((item) => (
           <DropdownMenuItem
             key={item}

@@ -103,7 +103,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <div className="max-h-[420px] overflow-y-auto rounded-md border p-3">
+          <div className="max-h-96 overflow-y-auto rounded-md border p-3">
             {sortedPreviewRows.map((row) => (
               <div key={row.tempKey} className="flex items-center justify-between border-b py-1 text-sm last:border-b-0">
                 <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>

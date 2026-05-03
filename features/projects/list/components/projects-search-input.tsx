@@ -7,7 +7,7 @@ type ProjectsSearchInputProps = {
 
 export function ProjectsSearchInput({ value, onChange }: ProjectsSearchInputProps) {
     return (
-        <div className="w-[min(20rem,calc(100vw-2rem))]">
+        <div className="w-full max-w-xs sm:max-w-sm">
             <SearchInput
                 value={value}
                 onChange={(event) => onChange(event.target.value)}

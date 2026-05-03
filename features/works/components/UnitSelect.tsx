@@ -78,7 +78,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                         value={inputValue}
                         onValueChange={setInputValue}
                     />
-                    <CommandList className="max-h-[200px]">
+                    <CommandList className="max-h-48">
                         <CommandEmpty>
                             <div className="p-1 px-2">
                                 <Button
@@ -97,7 +97,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                                     key={unit}
                                     value={unit}
                                     onSelect={handleSelect}
-                                    className="text-[12px] py-1"
+                                    className="text-xs py-1"
                                 >
                                     <Check
                                         className={cn(

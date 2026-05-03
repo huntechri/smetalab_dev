@@ -222,7 +222,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
               <CompactTableHead>Сумма</CompactTableHead>
               <CompactTableHead>Статус</CompactTableHead>
               <CompactTableHead>Комментарий</CompactTableHead>
-              <CompactTableHead className="w-[40px]" />
+              <CompactTableHead className="w-10" />
             </CompactTableHeaderRow>
           </TableHeader>
           <TableBody>
@@ -238,7 +238,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
                   </StatusBadge>
                 </CompactTableCell>
-                <CompactTableCell className="max-w-[320px]" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
+                <CompactTableCell className="max-w-80" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
                 <CompactTableCell>
                   <ActionMenu
                     ariaLabel="Действия поступления"

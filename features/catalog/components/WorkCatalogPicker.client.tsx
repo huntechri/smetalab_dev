@@ -108,7 +108,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                     <Virtuoso
                         ref={virtuosoRef}
                         data={works}
-                        style={{ height: '100%', width: '100%' }}
+                        className="h-full w-full"
                         className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                         increaseViewportBy={300}
                         itemContent={(index, work) => (
@@ -126,17 +126,17 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                                     {work.code}
                                                 </CatalogToken>
                                                 {work.category && (
-                                                    <CatalogToken tone="category" density="compact" className="max-w-[80px] sm:max-w-[120px]">
+                                                    <CatalogToken tone="category" density="compact" className="max-w-20 sm:max-w-28">
                                                         {work.category}
                                                     </CatalogToken>
                                                 )}
                                             </div>
-                                            <h4 className="text-[13px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                            <h4 className="text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
                                                 {work.name}
                                             </h4>
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
-                                                <span className="text-[12px] font-medium text-foreground">
+                                                <span className="text-xs font-medium text-foreground">
                                                     {formatPrice(work.price)} ₽
                                                 </span>
                                                 <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>

@@ -40,16 +40,16 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     : 'Войти в существующий аккаунт';
 
   return (
-    <div className="min-h-[100dvh] bg-[#0B0A0F] text-white">
+    <div className="min-h-dvh bg-background text-white">
       <a href="#auth-card" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground">
         Пропустить к форме входа
       </a>
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-120px] top-[120px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))] blur-3xl" />
-        <div className="absolute right-[-160px] bottom-[140px] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))] blur-3xl" />
+        <div className="absolute -left-32 top-32 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))] blur-3xl" />
+        <div className="absolute -right-40 bottom-36 h-80 w-80 rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))] blur-3xl" />
       </div>
 
-      <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+      <main className="relative mx-auto grid min-h-dvh w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
         <section className="space-y-8">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-brand-foreground font-bold">
@@ -89,7 +89,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           </div>
         </section>
 
-        <Card id="auth-card" className="w-full border-white/10 bg-[#14121A] text-white shadow-[0_40px_120px_rgba(0,0,0,0.35)]">
+        <Card id="auth-card" className="w-full border-white/10 bg-card text-white shadow-2xl shadow-black/40">
           <CardHeader className="text-left">
             <div className="flex items-center gap-3">
               <CircleIcon className="h-10 w-10 text-brand" aria-hidden="true" />

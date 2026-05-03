@@ -28,10 +28,10 @@ export function TodayFocusSection() {
             </SectionHeader>
 
             <CardShell variant="glass" shadow="sm">
-                <CardShellBody className="p-0" density="compact">
-                    <div className="h-[200px] divide-y divide-border/20 overflow-y-auto">
+                <CardShellBody density="compact">
+                    <div className="h-48 divide-y divide-border/20 overflow-y-auto">
                         {focusItems.map((item) => (
-                            <div key={item.label} className="group flex cursor-pointer items-center justify-between gap-4 p-4 transition-all hover:bg-muted/20">
+                            <div key={item.label} className="group flex cursor-pointer items-center justify-between gap-4 transition-all hover:bg-muted/20">
                                 <div className="flex items-start gap-3">
                                     <StatusIndicator tone="brand" size="sm" pulse="pulse" className="mt-1.5 transition-transform duration-300 group-hover:scale-125" />
                                     <div>

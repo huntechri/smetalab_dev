@@ -266,7 +266,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         <Virtuoso
                             ref={virtuosoRef}
                             data={filteredMaterials}
-                            style={{ height: '100%', width: '100%' }}
+                            className="h-full w-full"
                             className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                             increaseViewportBy={300}
                             itemContent={(_index, material) => {
@@ -297,12 +297,12 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                             {material.code}
                                                         </CatalogToken>
                                                         {material.categoryLv1 && (
-                                                            <CatalogToken tone="category" className="max-w-[120px]">
+                                                            <CatalogToken tone="category" className="max-w-28">
                                                                 {material.categoryLv1}
                                                             </CatalogToken>
                                                         )}
                                                     </div>
-                                                    <h4 className="text-[13px] sm:text-[14px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                                    <h4 className="text-sm sm:text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">

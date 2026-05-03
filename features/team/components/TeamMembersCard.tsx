@@ -49,7 +49,7 @@ export function TeamMembersCard({
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
                             <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
-                            <div className="w-[min(20rem,calc(100vw-2rem))]">
+                            <div className="w-full max-w-xs sm:max-w-sm">
                                 <SearchInput
                                     id="search"
                                     placeholder="Имя или email"

@@ -60,7 +60,7 @@ export function EstimateExecutionAddExtraWorkSheet({
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className="mt-6 h-[calc(100vh-140px)] overflow-hidden">
+                <div className="mt-6 h-[calc(100dvh-140px)] overflow-hidden">
                     <WorkCatalogPicker
                         onAddWork={(work) => void handleAddWork(work)}
                         addedWorkNames={addedWorkNames}

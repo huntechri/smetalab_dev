@@ -72,7 +72,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
           />
         </div>
 
-        <div className="w-[120px] sm:w-48 shrink-0">
+        <div className="w-28 sm:w-48 shrink-0">
           <FormField
             control={form.control}
             name="type"

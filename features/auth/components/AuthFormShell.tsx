@@ -49,7 +49,7 @@ export function AuthFormShell({
   const isCentered = align === 'center';
 
   return (
-    <main className="mx-auto flex min-h-[100dvh] w-full max-w-md items-center px-4 py-8">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md items-center px-4 py-8">
       <Card className={cn('w-full', className)}>
         <CardHeader className={cn(isCentered && 'items-center text-center')}>
           <CardTitle>{title}</CardTitle>

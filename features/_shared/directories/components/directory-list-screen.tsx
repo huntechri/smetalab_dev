@@ -76,7 +76,7 @@ export function DirectoryListScreen<TData, TValue>({
       data={rows}
       desktopHeight={desktopHeight}
       mobileHeight={mobileHeight}
-      className="text-[12px]"
+      className="text-xs"
       filterColumn={filterColumn}
       filterPlaceholder={filterPlaceholder}
       onSearch={onSearch}

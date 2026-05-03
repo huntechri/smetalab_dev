@@ -77,7 +77,7 @@ export function AdminGeneralSettingsScreen() {
 
   return (
     <section className="flex-1 p-4 lg:p-8">
-      <h1 className="text-lg lg:text-2xl font-medium text-gray-900 mb-6">
+      <h1 className="text-lg lg:text-2xl font-medium text-foreground mb-6">
         General Settings
       </h1>
 
@@ -91,8 +91,8 @@ export function AdminGeneralSettingsScreen() {
               <AccountFormWithData state={state} />
             </Suspense>
 
-            {state.error ? <p className="text-red-500 text-sm">{state.error}</p> : null}
-            {state.success ? <p className="text-green-500 text-sm">{state.success}</p> : null}
+            {state.error ? <p className="text-destructive text-sm">{state.error}</p> : null}
+            {state.success ? <p className="text-success text-sm">{state.success}</p> : null}
 
             <Button type="submit" variant="brand" size="default" disabled={isPending}>
               {isPending ? (

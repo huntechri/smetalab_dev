@@ -18,7 +18,7 @@ export function PermissionLevelControl({
   onSetLevel,
 }: PermissionLevelControlProps) {
   return (
-    <div className="flex gap-1 rounded-xl bg-zinc-100 p-1">
+    <div className="flex gap-1 rounded-xl bg-muted p-1">
       <TooltipProvider delayDuration={200}>
         <Tooltip>
           <TooltipTrigger asChild>

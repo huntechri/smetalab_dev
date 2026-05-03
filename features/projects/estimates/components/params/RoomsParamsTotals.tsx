@@ -14,7 +14,7 @@ type Totals = {
 function TotalLine({ label, totals, isGrandTotal = false }: { label: string; totals: Totals; isGrandTotal?: boolean }) {
     return (
         <div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 text-[9px] sm:text-[11px] ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-bold' : 'py-1 text-muted-foreground'}`}>
-            <span className={isGrandTotal ? "text-foreground min-w-[80px]" : "min-w-[120px]"}>{label}</span>
+            <span className={isGrandTotal ? "text-foreground min-w-20" : "min-w-28"}>{label}</span>
             <div className="flex items-center gap-1">
                 <span>Σ S пола:</span>
                 <span className="text-foreground">{format2(totals.floorArea)} м²</span>
