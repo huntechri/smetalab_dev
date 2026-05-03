@@ -33,7 +33,7 @@ import { Label } from '@/shared/ui/label';
 import { Separator } from '@/shared/ui/separator';
 import { Switch } from '@/shared/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
-import { Surface } from '@/shared/ui/surface';
+import { CardShellInset } from '@/shared/ui/card-shell';
 import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
@@ -479,10 +479,10 @@ function PreferenceSwitch({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <Surface variant="card" density="compact" radius="md" shadow="none" className="flex items-center justify-between">
+    <CardShellInset variant="muted" density="compact" className="flex items-center justify-between">
       <Label>{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
-    </Surface>
+    </CardShellInset>
   );
 }
 
