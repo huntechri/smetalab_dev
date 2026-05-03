@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
+import { FormLayout } from '@/shared/ui/form-layout';
 import {
   DEFAULT_DIRECTORY_ENTITY_COLOR,
   DirectoryColorInputFrame,
@@ -134,7 +135,7 @@ export function CreateMaterialSupplierSheet({
       }
     >
       <Form {...form}>
-        <form id="material-supplier-sheet-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormLayout id="material-supplier-sheet-form" onSubmit={form.handleSubmit(onSubmit)}>
           <DirectorySheetForm>
             <FormField
               control={form.control}
@@ -208,7 +209,7 @@ export function CreateMaterialSupplierSheet({
               <FormField control={form.control} name="address" render={({ field }) => <FormItem><DirectoryFormLabel>Адрес</DirectoryFormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
             </DirectorySheetGrid>
           </DirectorySheetForm>
-        </form>
+        </FormLayout>
       </Form>
     </DirectoryEntitySheetShell>
   );

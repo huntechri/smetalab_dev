@@ -14,6 +14,7 @@ import {
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { StateShell } from '@/shared/ui/states';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/app/(login)/actions';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
@@ -121,7 +122,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}
-            <form className="space-y-4" action={formAction}>
+            <FormLayout className="space-y-4" action={formAction}>
               <Input type="hidden" name="redirect" value={redirect || ''} />
               <Input type="hidden" name="priceId" value={priceId || ''} />
               <Input type="hidden" name="inviteId" value={inviteId || ''} />
@@ -226,7 +227,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   </Link>
                 </div>
               )}
-            </form>
+            </FormLayout>
           </CardContent>
         </Card>
       </main>

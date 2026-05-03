@@ -2,10 +2,10 @@
 
 ## Top summary
 - real violations count: 0
-- needs-review count: 58
-- informational count: 695
+- needs-review count: 47
+- informational count: 706
 - auto-fix candidates count: 0
-- manual review count: 58
+- manual review count: 47
 
 ## UI source-of-truth matrix
 | Component | components/ui | shared/ui | packages/ui / @repo/ui | Runtime imports | Status | Decision |
@@ -37,17 +37,7 @@
 | StateShell | false | true | false | 2 | canonical | informational |
 
 ## Raw HTML classification (app/features)
-- features/admin/components/admin-user-menu.tsx: <form> => needs-review
-- features/admin/components/impersonate-button.tsx: <form> => needs-review
-- features/auth/components/ForgotPasswordForm.tsx: <form> => needs-review
-- features/auth/components/LoginForm.tsx: <form> => needs-review
-- features/auth/components/ResetPasswordForm.tsx: <form> => needs-review
-- features/counterparties/components/CreateCounterpartySheet.tsx: <form> => needs-review
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <form> => needs-review
-- features/projects/estimates/components/CreateEstimateDialog.tsx: <form> => needs-review
-- features/settings/screens/AdminGeneralSettingsScreen.tsx: <form> => needs-review
-- features/settings/screens/AdminSecuritySettingsScreen.tsx: <form> => needs-review
-- features/team/components/InviteTeamMemberCard.tsx: <form> => needs-review
+- none
 
 ## Raw HTML classification (shared/ui)
 - shared/ui/admin-surface.tsx: <form> => allowed

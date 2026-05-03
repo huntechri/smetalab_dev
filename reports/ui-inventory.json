@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-05-03T15:31:17.989Z",
+  "generatedAt": "2026-05-03T15:40:00.366Z",
   "summary": {
     "filesScanned": 533,
     "realViolations": 0,
-    "needsReview": 58,
-    "informational": 695,
+    "needsReview": 47,
+    "informational": 706,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
-    "manualReview": 58,
+    "manualReview": 47,
     "mode": "strict"
   },
   "findings": [
@@ -1256,14 +1256,14 @@
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
@@ -1300,6 +1300,17 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
       "source": "lucide-react",
       "importedNames": "ShieldAlert, Loader2",
       "severity": "informational",
@@ -1308,17 +1319,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
@@ -1432,14 +1432,14 @@
     },
     {
       "file": "features/auth/components/ForgotPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/auth/components/ForgotPasswordForm.tsx",
@@ -1520,6 +1520,17 @@
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/LoginForm.tsx",
       "source": "lucide-react",
       "importedNames": "CircleIcon, Loader2, Eye, EyeOff",
       "severity": "informational",
@@ -1528,17 +1539,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/auth/components/LoginForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
@@ -1597,14 +1597,14 @@
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
@@ -1883,14 +1883,14 @@
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
@@ -2840,6 +2840,17 @@
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
       "source": "lucide-react",
       "importedNames": "Loader2",
       "severity": "informational",
@@ -2848,17 +2859,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
@@ -3764,14 +3764,14 @@
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
@@ -5392,14 +5392,14 @@
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
@@ -5480,14 +5480,14 @@
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
@@ -5557,6 +5557,17 @@
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/team/components/InviteTeamMemberCard.tsx",
       "source": "lucide-react",
       "importedNames": "Mail, Shield",
       "severity": "informational",
@@ -5565,17 +5576,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/team/components/InviteTeamMemberCard.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
@@ -9409,6 +9409,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/admin/components/admin-user-menu.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/admin/components/impersonate-button.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
@@ -9423,6 +9434,17 @@
         "file": "features/admin/components/impersonate-button.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9519,6 +9541,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/auth/components/ForgotPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/auth/components/LoginForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
@@ -9575,6 +9608,17 @@
       },
       {
         "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/LoginForm.tsx",
         "source": "lucide-react",
         "importedNames": "CircleIcon, Loader2, Eye, EyeOff",
         "severity": "informational",
@@ -9610,6 +9654,17 @@
         "file": "features/auth/components/ResetPasswordForm.tsx",
         "source": "@/shared/ui/label",
         "importedNames": "Label",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ResetPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9830,6 +9885,17 @@
         "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
         "source": "@/shared/ui/tabs",
         "importedNames": "Tabs, TabsList, TabsTrigger",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10708,6 +10774,17 @@
       },
       {
         "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
         "source": "lucide-react",
         "importedNames": "Loader2",
         "severity": "informational",
@@ -11458,6 +11535,17 @@
         "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12797,6 +12885,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
         "source": "lucide-react",
         "importedNames": "Loader2, Lock, Trash2",
@@ -12852,6 +12951,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/team/components/InviteTeamMemberCard.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
@@ -12888,6 +12998,17 @@
         "file": "features/team/components/InviteTeamMemberCard.tsx",
         "source": "@/shared/ui/dropdown-menu",
         "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/team/components/InviteTeamMemberCard.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -15152,127 +15273,6 @@
       }
     ],
     "rawHtml": [
-      {
-        "file": "features/admin/components/admin-user-menu.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ForgotPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/team/components/InviteTeamMemberCard.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
       {
         "file": "shared/ui/admin-surface.tsx",
         "tag": "<form>",

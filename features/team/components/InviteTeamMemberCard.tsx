@@ -3,6 +3,7 @@ import { Button } from '@/shared/ui/button';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Mail, Shield } from 'lucide-react';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
 
@@ -38,7 +39,7 @@ export function InviteTeamMemberCard({
                 <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
             </div>
             <div>
-                <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+                <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
                         <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
                         <Input
@@ -70,7 +71,7 @@ export function InviteTeamMemberCard({
                         <Mail className="size-3.5" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
-                </form>
+                </FormLayout>
 
                 {message && (
                     <p
