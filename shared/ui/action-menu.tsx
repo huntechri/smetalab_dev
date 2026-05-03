@@ -52,7 +52,7 @@ export function ActionMenuItemContent({ icon, children }: ActionMenuItemContentP
   );
 }
 
-export interface ActionIconButtonProps extends Omit<ButtonProps, 'children'> {
+export interface ActionIconButtonProps extends Omit<Button size="xs"Props, 'children'> {
   label: string;
   icon: React.ReactNode;
 }

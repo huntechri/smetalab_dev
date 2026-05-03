@@ -21,7 +21,7 @@ export function GlobalPurchasesImportExportActions({
 }: GlobalPurchasesImportExportActionsProps) {
   return (
     <>
-      <Input
+      <Input size="xs"
         ref={importInputRef}
         type="file"
         accept=".csv,.xlsx"

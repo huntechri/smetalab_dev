@@ -22,7 +22,7 @@ export const DatePicker = forwardRef<
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
+        <Button size="xs"
           variant={"outline"}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />

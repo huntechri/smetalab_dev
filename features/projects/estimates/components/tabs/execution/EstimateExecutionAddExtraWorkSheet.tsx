@@ -46,7 +46,7 @@ export function EstimateExecutionAddExtraWorkSheet({
                         </ActionMenuItemContent>
                     </DropdownMenuItem>
                 ) : (
-                    <Button variant="primary" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
+                    <Button size="xs" variant="primary" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
                         <Plus className="size-4" />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>

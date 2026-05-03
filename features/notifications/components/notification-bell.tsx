@@ -109,7 +109,7 @@ export function NotificationBell() {
                     emptyDescription="Вы прочитали всё важное"
                 />
                 <div className="border-t pt-2 mt-2">
-                    <Button type="button" variant="ghost" disabled>
+                    <Button size="xs" type="button" variant="ghost" disabled>
                         Показать все уведомления
                     </Button>
                 </div>

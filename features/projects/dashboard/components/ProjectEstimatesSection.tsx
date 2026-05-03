@@ -10,7 +10,7 @@ export function ProjectEstimatesSection({ projectSlug }: { projectSlug: string }
                 <CardDescription>Переход к реестру смет проекта и деталям по каждой смете.</CardDescription>
             </CardHeader>
             <CardContent>
-                <Button asChild>
+                <Button size="xs" asChild>
                     <Link href={`/app/projects/${projectSlug}/estimates`}>Все сметы</Link>
                 </Button>
             </CardContent>

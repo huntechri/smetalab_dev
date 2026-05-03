@@ -35,7 +35,7 @@ export function CatalogScreenShell({
 }: CatalogScreenShellProps) {
   return (
     <div className={catalogScreenShellClassNames.root}>
-      <Input
+      <Input size="xs"
         type="file"
         ref={fileInputRef}
         onChange={onFileChange}

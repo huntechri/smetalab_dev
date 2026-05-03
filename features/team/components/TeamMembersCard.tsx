@@ -62,7 +62,7 @@ export function TeamMembersCard({
                             <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
-                                    <Button
+                                    <Button size="xs"
                                         key={item.value}
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}

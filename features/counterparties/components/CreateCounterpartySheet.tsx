@@ -44,14 +44,14 @@ export function CreateCounterpartySheet({
       description="Заполните данные контрагента и сохраните изменения."
       footer={
         <>
-          <Button
+          <Button size="xs"
             type="button"
             variant="outline"
             onClick={() => onOpenChange(false)}
           >
             Отмена
           </Button>
-          <Button type="submit" form="counterparty-sheet-form" disabled={isPending}>
+          <Button size="xs" type="submit" form="counterparty-sheet-form" disabled={isPending}>
             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {submitLabel}
           </Button>

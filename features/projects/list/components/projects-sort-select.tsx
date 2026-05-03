@@ -49,7 +49,7 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
             <Tooltip>
                 <TooltipTrigger asChild>
                     <PopoverTrigger asChild>
-                        <Button
+                        <Button size="xs"
                             variant="outline"
                         >
                             <div className="flex items-center gap-2 truncate">

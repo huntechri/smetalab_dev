@@ -60,7 +60,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-                <Button
+                <Button size="xs"
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
@@ -80,7 +80,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                     <CommandList className="max-h-[200px]">
                         <CommandEmpty>
                             <div className="p-1 px-2">
-                                <Button
+                                <Button size="xs"
                                     variant="ghost"
                                     onClick={handleCreate}
                                 >
