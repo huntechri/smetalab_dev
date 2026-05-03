@@ -10,13 +10,11 @@ export function CatalogCategoryButton({
     active = false,
     activeVariant = 'primary',
     inactiveVariant = 'ghost',
-    size = 'xs',
     ...props
 }: CatalogCategoryButtonProps) {
     return (
         <Button
             variant={active ? activeVariant : inactiveVariant}
-            size={size}
             {...props}
         />
     );
