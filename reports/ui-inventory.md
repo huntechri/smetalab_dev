@@ -2,10 +2,10 @@
 
 ## Top summary
 - real violations count: 0
-- needs-review count: 61
-- informational count: 688
+- needs-review count: 17
+- informational count: 732
 - auto-fix candidates count: 0
-- manual review count: 61
+- manual review count: 17
 
 ## UI source-of-truth matrix
 | Component | components/ui | shared/ui | packages/ui / @repo/ui | Runtime imports | Status | Decision |
@@ -74,12 +74,12 @@
 - app/(admin)/dashboard/tenants/[tenantId]/page.tsx: <Button> bare => default-control
 - app/(admin)/dashboard/tenants/page.tsx: <Button> bare => default-control
 - app/(admin)/page.tsx: <Button> bare => default-control
-- app/(login)/verify-email/page.tsx: <Button> bare => unknown
-- app/not-found.tsx: <Button> bare => unknown
-- app/page.tsx: <Button> bare => unknown
-- components/layout/user-menu.tsx: <Button> bare => unknown
-- features/_shared/directories/components/directory-list-screen.tsx: <Button> bare => unknown
-- features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: <Button> bare => unknown
+- app/(login)/verify-email/page.tsx: <Button> bare => default-control
+- app/not-found.tsx: <Button> bare => default-control
+- app/page.tsx: <Button> bare => default-control
+- components/layout/user-menu.tsx: <Button> bare => toolbar-action
+- features/_shared/directories/components/directory-list-screen.tsx: <Button> bare => toolbar-action
+- features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: <Button> bare => toolbar-action
 - features/_shared/guide-catalog/components/CatalogTableWrapper.tsx: <Button> bare => table-cell
 - features/admin/components/PricingSubmitButton.tsx: <Button> bare => default-control
 - features/admin/components/admin-user-menu.tsx: <Button> bare => default-control
@@ -91,35 +91,35 @@
 - features/auth/components/LoginForm.tsx: <Input> bare => default-control
 - features/auth/components/ResetPasswordForm.tsx: <Button> bare => default-control
 - features/auth/components/ResetPasswordForm.tsx: <Input> bare => default-control
-- features/catalog/components/CatalogCategoryButton.tsx: <Button> bare => unknown
-- features/catalog/components/MaterialCatalogPicker.client.tsx: <Button> bare => unknown
-- features/catalog/components/WorkCatalogPicker.client.tsx: <Button> bare => unknown
-- features/counterparties/components/CreateCounterpartySheet.tsx: <Button> bare => unknown
-- features/counterparties/components/counterparty-sheet-sections.tsx: <Input> bare => unknown
-- features/dashboard/components/TeamWidgetSection.tsx: <Button> bare => unknown
-- features/global-purchases/components/cards/DeletePurchaseAction.tsx: <Button> bare => unknown
+- features/catalog/components/CatalogCategoryButton.tsx: <Button> bare => toolbar-action
+- features/catalog/components/MaterialCatalogPicker.client.tsx: <Button> bare => compact-candidate
+- features/catalog/components/WorkCatalogPicker.client.tsx: <Button> bare => compact-candidate
+- features/counterparties/components/CreateCounterpartySheet.tsx: <Button> bare => default-control
+- features/counterparties/components/counterparty-sheet-sections.tsx: <Input> bare => default-control
+- features/dashboard/components/TeamWidgetSection.tsx: <Button> bare => toolbar-action
+- features/global-purchases/components/cards/DeletePurchaseAction.tsx: <Button> bare => table-cell
 - features/global-purchases/components/global-purchases-columns.tsx: <Button> bare => table-cell
-- features/guide/screens/GuideScreen.tsx: <Button> bare => unknown
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Button> bare => unknown
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Input> bare => unknown
+- features/guide/screens/GuideScreen.tsx: <Button> bare => toolbar-action
+- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Button> bare => default-control
+- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Input> bare => default-control
 - features/materials/components/MaterialsEditDialog.tsx: <Button> bare => default-control
 - features/materials/components/MaterialsEditDialog.tsx: <Input> bare => default-control
-- features/materials/components/MaterialsSidebar.tsx: <Button> bare => unknown
+- features/materials/components/MaterialsSidebar.tsx: <Button> bare => toolbar-action
 - features/materials/components/columns.tsx: <Button> bare => table-cell
-- features/notifications/components/notification-bell.tsx: <Button> bare => unknown
-- features/notifications/components/notification-item.tsx: <Button> bare => unknown
-- features/patterns/screens/PatternsScreen.tsx: <Button> bare => unknown
-- features/permissions/components/PermissionLevelControl.tsx: <Button> bare => unknown
-- features/projects/dashboard/components/ProjectEstimatesCards.tsx: <Button> bare => unknown
-- features/projects/dashboard/components/ProjectEstimatesSection.tsx: <Button> bare => unknown
-- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Button> bare => unknown
-- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Input> bare => unknown
+- features/notifications/components/notification-bell.tsx: <Button> bare => compact-candidate
+- features/notifications/components/notification-item.tsx: <Button> bare => compact-candidate
+- features/patterns/screens/PatternsScreen.tsx: <Button> bare => toolbar-action
+- features/permissions/components/PermissionLevelControl.tsx: <Button> bare => default-control
+- features/projects/dashboard/components/ProjectEstimatesCards.tsx: <Button> bare => compact-candidate
+- features/projects/dashboard/components/ProjectEstimatesSection.tsx: <Button> bare => toolbar-action
+- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Button> bare => toolbar-action
+- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Input> bare => default-control
 - features/projects/estimates/components/CreateEstimateDialog.tsx: <Button> bare => default-control
 - features/projects/estimates/components/CreateEstimateDialog.tsx: <Input> bare => default-control
-- features/projects/estimates/components/EstimateHeader.tsx: <Button> bare => unknown
+- features/projects/estimates/components/EstimateHeader.tsx: <Button> bare => toolbar-action
 - features/projects/estimates/components/params/RoomsParamsTable.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/params/RoomsParamsTable.tsx: <Input> bare => table-cell
-- features/projects/estimates/components/registry/EstimateStatusMenu.tsx: <Button> bare => unknown
+- features/projects/estimates/components/registry/EstimateStatusMenu.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/registry/EstimatesListTable.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/EstimateTable.client.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/EstimateTableDialogs.tsx: <Button> bare => default-control
@@ -132,11 +132,11 @@
 - features/projects/estimates/components/table/cards/EstimateSectionCard.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/cards/EstimateWorkCard.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/columns.tsx: <Button> bare => table-cell
-- features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx: <Button> bare => unknown
+- features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx: <Button> bare => default-control
 - features/projects/list/components/create-project-dialog.tsx: <Button> bare => default-control
 - features/projects/list/components/create-project-dialog.tsx: <Input> bare => default-control
-- features/projects/list/components/project-actions.tsx: <Button> bare => unknown
-- features/projects/list/components/projects-sort-select.tsx: <Button> bare => unknown
+- features/projects/list/components/project-actions.tsx: <Button> bare => table-cell
+- features/projects/list/components/projects-sort-select.tsx: <Button> bare => toolbar-action
 - features/projects/list/components/projects-toolbar.tsx: <Button> bare => toolbar-action
 - features/settings/components/user-settings-page.tsx: <Button> bare => default-control
 - features/settings/components/user-settings-page.tsx: <Input> bare => default-control
@@ -144,34 +144,34 @@
 - features/settings/screens/AdminGeneralSettingsScreen.tsx: <Input> bare => default-control
 - features/settings/screens/AdminSecuritySettingsScreen.tsx: <Button> bare => default-control
 - features/settings/screens/AdminSecuritySettingsScreen.tsx: <Input> bare => default-control
-- features/team/components/InviteTeamMemberCard.tsx: <Button> bare => unknown
-- features/team/components/InviteTeamMemberCard.tsx: <Input> bare => unknown
-- features/team/components/TeamMembersCard.tsx: <Button> bare => unknown
-- features/works/components/UnitSelect.tsx: <Button> bare => unknown
+- features/team/components/InviteTeamMemberCard.tsx: <Button> bare => default-control
+- features/team/components/InviteTeamMemberCard.tsx: <Input> bare => default-control
+- features/team/components/TeamMembersCard.tsx: <Button> bare => table-cell
+- features/works/components/UnitSelect.tsx: <Button> bare => default-control
 - features/works/components/WorksEditDialog.tsx: <Button> bare => default-control
 - features/works/components/WorksEditDialog.tsx: <Input> bare => default-control
 - features/works/components/columns.tsx: <Button> bare => table-cell
-- shared/ui/action-menu.tsx: <Button> bare => unknown
+- shared/ui/action-menu.tsx: <Button> bare => toolbar-action
 - shared/ui/admin-surface.tsx: <Button> bare => default-control
 - shared/ui/alert-dialog.tsx: <Button> bare => default-control
 - shared/ui/auto-form/fields/array.tsx: <Button> bare => default-control
 - shared/ui/auto-form/fields/input.tsx: <Input> bare => default-control
 - shared/ui/auto-form/fields/number.tsx: <Input> bare => default-control
 - shared/ui/auto-form/index.tsx: <Button> bare => default-control
-- shared/ui/calendar.tsx: <Button> bare => unknown
-- shared/ui/carousel.tsx: <Button> bare => unknown
+- shared/ui/calendar.tsx: <Button> bare => compact-candidate
+- shared/ui/carousel.tsx: <Button> bare => compact-candidate
 - shared/ui/cells/editable-cell.tsx: <Button> bare => table-cell
 - shared/ui/cells/editable-cell.tsx: <Input> bare => table-cell
 - shared/ui/cells/table-cell-helpers.tsx: <Input> bare => table-cell
 - shared/ui/dashboard-dynamics-chart.tsx: <Button> bare => compact-candidate
-- shared/ui/date-picker.tsx: <Button> bare => unknown
-- shared/ui/dense-list/pickers.tsx: <Button> bare => unknown
+- shared/ui/date-picker.tsx: <Button> bare => compact-candidate
+- shared/ui/dense-list/pickers.tsx: <Button> bare => compact-candidate
 - shared/ui/dialog.tsx: <Button> bare => default-control
-- shared/ui/estimate-tab.tsx: <Input> bare => unknown
-- shared/ui/input-group.tsx: <Button> bare => unknown
-- shared/ui/input-group.tsx: <Input> bare => unknown
-- shared/ui/search-control.tsx: <Button> bare => unknown
-- shared/ui/search-input.tsx: <Input> bare => unknown
+- shared/ui/estimate-tab.tsx: <Input> bare => table-cell
+- shared/ui/input-group.tsx: <Button> bare => default-control
+- shared/ui/input-group.tsx: <Input> bare => default-control
+- shared/ui/search-control.tsx: <Button> bare => toolbar-action
+- shared/ui/search-input.tsx: <Input> bare => default-control
 - shared/ui/sidebar.tsx: <Button> bare => compact-candidate
 - shared/ui/sidebar.tsx: <Input> bare => compact-candidate
 - shared/ui/table-actions.tsx: <Button> bare => table-cell
@@ -290,47 +290,4 @@
 - reason: classification-first mode; fix-safe disabled
 
 ## Unknown density surfaces require manual review before #243 auto-fix
-- app/(login)/verify-email/page.tsx: <Button>
-- app/not-found.tsx: <Button>
-- app/page.tsx: <Button>
-- components/layout/user-menu.tsx: <Button>
-- features/_shared/directories/components/directory-list-screen.tsx: <Button>
-- features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: <Button>
-- features/catalog/components/CatalogCategoryButton.tsx: <Button>
-- features/catalog/components/MaterialCatalogPicker.client.tsx: <Button>
-- features/catalog/components/WorkCatalogPicker.client.tsx: <Button>
-- features/counterparties/components/CreateCounterpartySheet.tsx: <Button>
-- features/counterparties/components/counterparty-sheet-sections.tsx: <Input>
-- features/dashboard/components/TeamWidgetSection.tsx: <Button>
-- features/global-purchases/components/cards/DeletePurchaseAction.tsx: <Button>
-- features/guide/screens/GuideScreen.tsx: <Button>
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Button>
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Input>
-- features/materials/components/MaterialsSidebar.tsx: <Button>
-- features/notifications/components/notification-bell.tsx: <Button>
-- features/notifications/components/notification-item.tsx: <Button>
-- features/patterns/screens/PatternsScreen.tsx: <Button>
-- features/permissions/components/PermissionLevelControl.tsx: <Button>
-- features/projects/dashboard/components/ProjectEstimatesCards.tsx: <Button>
-- features/projects/dashboard/components/ProjectEstimatesSection.tsx: <Button>
-- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Button>
-- features/projects/dashboard/components/ProjectReceiptsSection.tsx: <Input>
-- features/projects/estimates/components/EstimateHeader.tsx: <Button>
-- features/projects/estimates/components/registry/EstimateStatusMenu.tsx: <Button>
-- features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx: <Button>
-- features/projects/list/components/project-actions.tsx: <Button>
-- features/projects/list/components/projects-sort-select.tsx: <Button>
-- features/team/components/InviteTeamMemberCard.tsx: <Button>
-- features/team/components/InviteTeamMemberCard.tsx: <Input>
-- features/team/components/TeamMembersCard.tsx: <Button>
-- features/works/components/UnitSelect.tsx: <Button>
-- shared/ui/action-menu.tsx: <Button>
-- shared/ui/calendar.tsx: <Button>
-- shared/ui/carousel.tsx: <Button>
-- shared/ui/date-picker.tsx: <Button>
-- shared/ui/dense-list/pickers.tsx: <Button>
-- shared/ui/estimate-tab.tsx: <Input>
-- shared/ui/input-group.tsx: <Button>
-- shared/ui/input-group.tsx: <Input>
-- shared/ui/search-control.tsx: <Button>
-- shared/ui/search-input.tsx: <Input>
+- none
