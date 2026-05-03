@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-05-03T13:32:24.226Z",
+  "generatedAt": "2026-05-03T16:09:56.851Z",
   "summary": {
     "filesScanned": 533,
-    "realViolations": 2,
+    "realViolations": 0,
     "needsReview": 61,
-    "informational": 686,
+    "informational": 688,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
-    "manualReview": 63,
-    "mode": "default"
+    "manualReview": 61,
+    "mode": "strict"
   },
   "findings": [
     {
@@ -662,23 +662,23 @@
     },
     {
       "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-      "source": "@repo/ui",
+      "source": "@/shared/ui/breadcrumb",
       "importedNames": "Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,",
-      "severity": "real-violation",
+      "severity": "informational",
       "category": "import",
       "owner": "other",
-      "decision": "forbidden-runtime",
+      "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
     },
     {
       "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-      "source": "@repo/ui",
+      "source": "@/shared/ui/dropdown-menu",
       "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
-      "severity": "real-violation",
+      "severity": "informational",
       "category": "import",
       "owner": "other",
-      "decision": "forbidden-runtime",
+      "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
     },
@@ -8827,23 +8827,23 @@
       },
       {
         "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-        "source": "@repo/ui",
+        "source": "@/shared/ui/breadcrumb",
         "importedNames": "Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,",
-        "severity": "real-violation",
+        "severity": "informational",
         "category": "import",
         "owner": "other",
-        "decision": "forbidden-runtime",
+        "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
       },
       {
         "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-        "source": "@repo/ui",
+        "source": "@/shared/ui/dropdown-menu",
         "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
-        "severity": "real-violation",
+        "severity": "informational",
         "category": "import",
         "owner": "other",
-        "decision": "forbidden-runtime",
+        "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
       },
@@ -17839,10 +17839,10 @@
         "Component": "DropdownMenu",
         "components/ui": false,
         "shared/ui": true,
-        "packages/ui / @repo/ui": true,
+        "packages/ui / @repo/ui": false,
         "Runtime imports": 12,
         "Status": "canonical",
-        "Decision": "informational, forbidden-runtime",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
         "importStatus": "imported"
