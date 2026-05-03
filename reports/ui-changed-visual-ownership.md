@@ -7,7 +7,7 @@
 - Changed files: 63
 - Scanned changed files: 52
 - Scanned added lines: 1082
-- Violations: 5
+- Violations: 2
 
 
 ## Behavior
@@ -29,11 +29,8 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| toolbar-filter | `features/projects/list/components/projects-toolbar.tsx:28` | `<div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">` | shared/ui/toolbar.tsx, shared/ui/filter-bar.tsx, or shared/ui/search-control.tsx |
-| card-surface | `features/settings/components/user-settings-page.tsx:482` | `<Surface variant="card" density="compact" radius="md" shadow="none" className="flex items-center justify-between">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| state-surface | `features/settings/screens/AdminSecuritySettingsScreen.tsx:37` | `<Button type="submit" variant="brand" size="default" loading={isPasswordPending} loadingText="Updating..." iconLeft={<Lock className="size-4" />}>Update Password</Button>` | shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites |
-| state-surface | `features/settings/screens/AdminSecuritySettingsScreen.tsx:49` | `<Button type="submit" variant="destructive" size="default" loading={isDeletePending} loadingText="Deleting..." iconLeft={<Trash2 className="size-4" />}>Delete Account</Button>` | shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites |
-| action-surface | `features/settings/screens/AdminSecuritySettingsScreen.tsx:49` | `<Button type="submit" variant="destructive" size="default" loading={isDeletePending} loadingText="Deleting..." iconLeft={<Trash2 className="size-4" />}>Delete Account</Button>` | shared/ui/action-menu.tsx and shared action/icon/confirm contracts |
+| card-surface | `features/settings/components/user-settings-page.tsx:482` | `<Surface variant="card" density="compact" radius="md" shadow="none">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| action-surface | `features/settings/screens/AdminSecuritySettingsScreen.tsx:49` | `<Button type="submit" variant="destructive" size="default" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</> : <><Trash2 className="mr-2 h-4 w-4" />Delete Account</>}</Button>` | shared/ui/action-menu.tsx and shared action/icon/confirm contracts |
 
 ## Exact accepted shared contract owners
 

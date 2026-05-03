@@ -46,7 +46,7 @@ export function AdminSecuritySettingsScreen() {
           <FormLayout action={deleteAction}>
             <div><Label htmlFor="delete-password" className="mb-2">Confirm Password</Label><Input size="default" id="delete-password" name="password" type="password" required minLength={8} maxLength={100} defaultValue={deleteState.password} /></div>
             <FormStatusMessage error={deleteState.error} success={deleteState.success} />
-            <Button type="submit" variant="destructive" size="default" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</> : <><Trash2 className="mr-2 h-4 w-4" />Delete Account</>}</Button>
+            <Button type="submit" variant="destructive" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</> : <><Trash2 className="mr-2 h-4 w-4" />Delete Account</>}</Button>
           </FormLayout>
         </CardContent>
       </Card>
