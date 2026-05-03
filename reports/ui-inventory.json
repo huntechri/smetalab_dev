@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T16:09:56.851Z",
+  "generatedAt": "2026-05-03T16:16:14.431Z",
   "summary": {
     "filesScanned": 533,
     "realViolations": 0,
@@ -8,7 +8,7 @@
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
     "manualReview": 61,
-    "mode": "strict"
+    "mode": "default"
   },
   "findings": [
     {
