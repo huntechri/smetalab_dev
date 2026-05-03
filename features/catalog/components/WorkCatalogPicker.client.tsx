@@ -108,8 +108,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                     <Virtuoso
                         ref={virtuosoRef}
                         data={works}
-                        className="h-full w-full"
-                        className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+                        className="h-full w-full scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                         increaseViewportBy={300}
                         itemContent={(index, work) => (
                             <div className="px-2 py-0.5">

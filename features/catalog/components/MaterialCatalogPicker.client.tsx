@@ -266,8 +266,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                         <Virtuoso
                             ref={virtuosoRef}
                             data={filteredMaterials}
-                            className="h-full w-full"
-                            className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+                            className="h-full w-full scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                             increaseViewportBy={300}
                             itemContent={(_index, material) => {
                                 const isAdding = addingIds.has(material.id);
