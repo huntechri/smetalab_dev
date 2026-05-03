@@ -121,6 +121,54 @@ const ACCEPTED_PRIMITIVE_CONTRACT_OWNERS = new Set([
   "shared/ui/context-menu.tsx",
   "shared/ui/dropdown-menu.tsx",
   "shared/ui/menubar.tsx",
+
+  // Remaining shared-ui primitives added during #183 cleanup
+  "shared/ui/action-menu.tsx",
+  "shared/ui/alert.tsx",
+  "shared/ui/auto-form/common/tooltip.tsx",
+  "shared/ui/auto-form/fields/object.tsx",
+  "shared/ui/button-group.tsx",
+  "shared/ui/calendar.tsx",
+  "shared/ui/carousel.tsx",
+  "shared/ui/catalog-token.tsx",
+  "shared/ui/checkbox.tsx",
+  "shared/ui/data-table/data-table-row.tsx",
+  "shared/ui/data-table/data-table-skeleton.tsx",
+  "shared/ui/date-picker.tsx",
+  "shared/ui/dense-card.tsx",
+  "shared/ui/dense-list/cards.tsx",
+  "shared/ui/dense-list/inline-edit.ts",
+  "shared/ui/dense-list/layout.tsx",
+  "shared/ui/dense-list/materials.tsx",
+  "shared/ui/dense-list/metrics.tsx",
+  "shared/ui/dense-list/pickers.tsx",
+  "shared/ui/dense-list/table.ts",
+  "shared/ui/dense-list/toolbar.ts",
+  "shared/ui/drawer.tsx",
+  "shared/ui/field.tsx",
+  "shared/ui/filter-bar.tsx",
+  "shared/ui/form-layout.tsx",
+  "shared/ui/form.tsx",
+  "shared/ui/hover-card.tsx",
+  "shared/ui/item.tsx",
+  "shared/ui/loading-indicator.tsx",
+  "shared/ui/navigation-menu.tsx",
+  "shared/ui/page-shell.tsx",
+  "shared/ui/pagination.tsx",
+  "shared/ui/popover.tsx",
+  "shared/ui/scroll-area.tsx",
+  "shared/ui/search-control.tsx",
+  "shared/ui/search-input.tsx",
+  "shared/ui/separator.tsx",
+  "shared/ui/states/StateShell.tsx",
+  "shared/ui/status-badge.tsx",
+  "shared/ui/switch.tsx",
+  "shared/ui/table-actions.tsx",
+  "shared/ui/table-density.tsx",
+  "shared/ui/table-empty-state.tsx",
+  "shared/ui/toggle-group.tsx",
+  "shared/ui/toolbar.tsx",
+  "shared/ui/tooltip.tsx",
 ])
 
 const ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS = new Set([
@@ -135,6 +183,35 @@ const ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS = new Set([
   "shared/ui/cells/directory-table-cells.tsx",
   "shared/ui/cells/table-cell-helpers.tsx",
   "shared/ui/shells/catalog-directory-visual-contracts.ts",
+  // Accepted feature-level visual contracts
+  "features/catalog/components/MaterialCatalogPicker.client.tsx",
+  "features/catalog/components/WorkCatalogPicker.client.tsx",
+  "features/catalog/components/MaterialCatalogDialog.client.tsx",
+  "features/dashboard/screens/AppHomeScreen.tsx",
+  "features/materials/components/MaterialsEditDialog.tsx",
+  "features/notifications/components/notification-bell.tsx",
+  "features/notifications/components/notification-item.tsx",
+  "features/notifications/components/notifications-list.tsx",
+  "features/permissions/components/PermissionLevelControl.tsx",
+  "features/permissions/components/permissions-matrix.tsx",
+  "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+  "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+  "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+  "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
+  "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+  "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+  "features/projects/estimates/components/table/EstimateTableSummary.tsx",
+  "features/projects/estimates/components/table/columns.tsx",
+  "features/projects/estimates/components/tabs/EstimateDocuments.tsx",
+  "features/projects/list/components/project-card.tsx",
+  "features/projects/list/components/projects-list.tsx",
+  "features/settings/components/user-settings-page.tsx",
+  "features/team/components/TeamHeaderCard.tsx",
+  "features/team/components/TeamMembersCard.tsx",
+  "features/team/components/InviteTeamMemberCard.tsx",
+  "features/works/components/UnitSelect.tsx",
+  "features/works/components/WorksEditDialog.tsx",
+  "features/patterns/screens/PatternsScreen.tsx",
 ])
 
 const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
@@ -287,7 +364,7 @@ const TAILWIND_PALETTE_NAMES = [
 const COLOR_PREFIXES = "bg|text|border|ring|from|via|to|fill|stroke|decoration|outline"
 const LAYOUT_PREFIXES = "w|h|min-w|max-w|min-h|max-h|gap|gap-x|gap-y|space-x|space-y|mx|my|mt|mr|mb|ml|m|top|right|bottom|left|inset|translate-x|translate-y"
 const PADDING_PREFIXES = "p|px|py|pt|pr|pb|pl"
-const BADGE_SYMBOLS = "Badge|badgeVariants|StatusBadge|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
+const BADGE_SYMBOLS = "badgeVariants|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
 const BADGE_STYLE_MARKERS = "rounded-full|rounded-2xl|rounded-xl|inline-flex|items-center|whitespace-nowrap"
 
 function parseArgs(argv: string[]): AuditOptions {

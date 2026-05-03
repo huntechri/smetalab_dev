@@ -18,19 +18,11 @@ export default async function CounterpartiesPage() {
             <ForbiddenState
                 title="Нет доступа к организации"
                 description="Обратитесь к администратору для добавления в команду."
-                className="min-h-[40vh]"
             />
         )
     }
 
     const { data, count } = await getCounterparties(user.tenantId, { limit: 50, offset: 0 });
 
-    return (
-        <div className="flex-1 w-full flex flex-col">
-            <CounterpartiesScreen
-                initialData={data}
-                totalCount={count}
-            />
-        </div>
-    );
+    return <CounterpartiesScreen initialData={data} totalCount={count} />;
 }

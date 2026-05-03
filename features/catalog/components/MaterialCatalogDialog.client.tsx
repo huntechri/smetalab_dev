@@ -41,7 +41,7 @@ export function MaterialCatalogDialog({
                 onClose();
             }
         }}>
-            <DialogContent size="catalog-picker" layout="edge-to-edge" className="shadow-2xl">
+            <DialogContent size="catalog-picker" layout="edge-to-edge" className="shadow-xl">
                 <DialogHeader className="border-b p-4">
                     <DialogTitle className="pr-8 text-base leading-tight sm:text-lg font-semibold">
                         {isReplaceMode ? `Заменить материал: ${parentWorkName}` : `Добавить материал в: ${parentWorkName}`}

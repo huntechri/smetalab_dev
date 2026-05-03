@@ -27,18 +27,18 @@ export function TeamWidgetSection() {
                             <CardShellInset key={member.name} className="flex cursor-pointer items-center justify-between transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm" density="compact" variant="subtle">
                                 <div className="flex items-center gap-3">
                                     <Avatar className="h-9 w-9 border border-border/50">
-                                        <AvatarFallback className="bg-primary/5 text-[11px] font-bold text-primary">
+                                        <AvatarFallback className="bg-primary/5 text-[0.6875rem] font-bold text-primary">
                                             {member.name[0]}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="leading-tight">
-                                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">{member.role}</p>
+                                        <p className="text-[0.625rem] font-bold uppercase tracking-wider text-muted-foreground">{member.role}</p>
                                         <p className="text-sm font-semibold">{member.name}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <StatusIndicator tone={indicator.tone} pulse={indicator.pulse} size="sm" />
-                                    <span className="text-[10px] font-medium text-muted-foreground">{member.status}</span>
+                                    <span className="text-[0.625rem] font-medium text-muted-foreground">{member.status}</span>
                                 </div>
                             </CardShellInset>
                         );

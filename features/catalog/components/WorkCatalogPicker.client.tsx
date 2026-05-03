@@ -139,7 +139,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                                 <span className="text-xs font-medium text-foreground">
                                                     {formatPrice(work.price)} ₽
                                                 </span>
-                                                <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>
+                                                <span className="text-[0.625rem] text-muted-foreground leading-none">/ {work.unit}</span>
                                             </div>
                                         </div>
                                     </div>

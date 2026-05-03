@@ -198,3 +198,189 @@ export const primitiveVisualSemanticToneClassNames = {
   success: "text-emerald-600 bg-emerald-500/5",
   info: "text-sky-600 bg-sky-500/5",
 } as const
+
+// ─── Surface density tokens ───────────────────────────────────────────────
+
+export type PrimitiveSurfaceDensity = "none" | "compact" | "default" | "comfortable"
+
+export const primitiveSurfaceDensityClassNames: Record<PrimitiveSurfaceDensity, string> = {
+  none: "",
+  compact: "p-3 sm:p-4",
+  default: "p-4 sm:p-5",
+  comfortable: "p-4 sm:p-6",
+} as const
+
+// ─── Card tokens ──────────────────────────────────────────────────────────
+
+export const primitiveCardBasePaddingClassName = "py-6"
+
+export const primitiveCardHeaderPaddingClassName = "px-6 [.border-b]:pb-6"
+
+export const primitiveCardContentPaddingClassName = "px-6"
+
+export const primitiveCardFooterPaddingClassName = "px-6 [.border-t]:pt-6"
+
+export const primitiveCardGapClassName = "gap-6"
+
+// ─── Card shell tokens ────────────────────────────────────────────────────
+
+export type PrimitiveCardShellDensity = "compact" | "default" | "comfortable"
+
+export const primitiveCardShellGapClassNames: Record<PrimitiveCardShellDensity, string> = {
+  compact: "gap-3",
+  default: "gap-4",
+  comfortable: "gap-5",
+} as const
+
+export const primitiveCardShellInsetDensityClassNames: Record<PrimitiveCardShellDensity, string> = {
+  compact: "px-3 py-2",
+  default: "p-3 sm:p-4",
+  comfortable: "p-4 sm:p-5",
+} as const
+
+export const primitiveCardShellHeaderDensityClassNames: Record<PrimitiveCardShellDensity, string> = {
+  compact: "px-3 pt-3 sm:px-4 sm:pt-4",
+  default: "px-4 pt-4 sm:px-5 sm:pt-5",
+  comfortable: "px-4 pt-4 sm:px-6 sm:pt-6",
+} as const
+
+export const primitiveCardShellBodyDensityClassNames: Record<PrimitiveCardShellDensity, string> = {
+  compact: "p-3 sm:p-4",
+  default: "p-4 sm:p-5",
+  comfortable: "p-4 sm:p-6",
+} as const
+
+export const primitiveCardShellFooterDensityClassNames: Record<PrimitiveCardShellDensity, string> = {
+  compact: "px-3 py-3 sm:px-4",
+  default: "px-4 py-4 sm:px-5",
+  comfortable: "px-4 py-4 sm:px-6",
+} as const
+
+// ─── Table data density tokens ────────────────────────────────────────────
+
+export const primitiveDataTableHeaderRowClassName =
+  "bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]"
+
+export const primitiveDataTableHeaderCellClassName =
+  "h-10 border-b border-border/50 bg-muted/20 px-3 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground transition-colors md:px-4"
+
+export const primitiveDataTableBodyRowClassName =
+  "group/row cursor-default animate-in border-b fade-in slide-in-from-left-1 transition-colors duration-300 last:border-0 hover:bg-muted/60"
+
+export const primitiveDataTableBodyCellClassName =
+  "border-b px-3 py-1.5 align-middle transition-colors md:px-4 md:py-2"
+
+export const primitiveDataTableCellContentClassName = "w-full text-[12px] leading-tight"
+
+export const primitiveDataTableContainerClassName =
+  "relative overflow-x-auto rounded-2xl border border-border/40 bg-card/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md"
+
+export const primitiveDataTableAiContainerClassName =
+  "border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20"
+
+export const primitiveDataTableAiOverlayClassName =
+  "pointer-events-none absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2"
+
+export const primitiveDataTableEmptyCellClassName = "px-3 py-8 text-center text-sm text-muted-foreground"
+
+export const primitiveCompactTableHeadClassName =
+  "h-8 text-[9px] font-bold uppercase tracking-wider text-muted-foreground/70 sm:text-[11px]"
+
+export const primitiveCompactTableCellClassName = "py-2 text-[9px] sm:text-[11px]"
+
+// ─── Common page/padding tokens ───────────────────────────────────────────
+
+export const primitivePageShellInnerPaddingClassName = "p-4 md:p-6 lg:p-8"
+
+export const primitivePageShellContainerWidthClassName = "max-w-[1600px]"
+
+// ─── Empty state tokens ───────────────────────────────────────────────────
+
+export const primitiveEmptyBasePaddingClassName = "p-6 md:p-12"
+
+// ─── Chart tooltip tokens ─────────────────────────────────────────────────
+
+export const primitiveChartTooltipContentClassName =
+  "border-border/50 bg-background grid min-w-[8rem] items-start gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs shadow-xl"
+
+export const primitiveChartIndicatorClassName = "shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)"
+
+export const primitiveChartIndicatorDashedClassName = "w-0 border-[1.5px] border-dashed bg-transparent"
+
+export const primitiveChartLegendContentClassName = "flex flex-1 justify-between leading-none"
+
+export const primitiveChartValuePaddingClassName = "pl-2"
+
+export const primitiveChartLegendVerticalClassName = "pt-3"
+
+export const primitiveChartLegendTopClassName = "pb-3"
+
+// ─── Calendar tokens ──────────────────────────────────────────────────────
+
+export const primitiveCalendarNavigationPaddingClassName = "pl-2 pr-1"
+
+export const primitiveCalendarCellPaddingClassName = "p-0"
+
+export const primitiveCalendarGridPaddingClassName = "p-3"
+
+// ─── Chart tokens ─────────────────────────────────────────────────────────
+
+export const primitiveChartLegendItemClassName = "px-2 py-1 min-w-[8rem]"
+
+export const primitiveChartLegendMarkClassName = "border-[1.5px]"
+
+export const primitiveChartContentClassName = "pl-2 pt-3 pb-3"
+
+export const primitiveChartRadiusClassName = "rounded-[2px]"
+
+// ─── Accordion tokens ─────────────────────────────────────────────────────
+
+export const primitiveAccordionItemPaddingClassName = "py-4"
+
+export const primitiveAccordionContentPaddingClassName = "pt-0 pb-4"
+
+// ─── Drawer tokens ───────────────────────────────────────────────────────-
+
+export const primitiveDrawerContentPaddingClassName = "p-4"
+
+export const primitiveDrawerMaxHeightClassName = "max-h-[80vh]"
+
+export const primitiveDrawerHandleWidthClassName = "w-[100px]"
+
+// ─── Toggle tokens ────────────────────────────────────────────────────────
+
+export const primitiveToggleSizes = {
+  default: "h-9 px-2 min-w-9",
+  sm: "h-8 px-1.5 min-w-8",
+  lg: "h-10 px-2.5 min-w-10",
+} as const
+
+// ─── KBD tokens ───────────────────────────────────────────────────────────
+
+export const primitiveKbdPaddingClassName = "px-1"
+
+// ─── Field tokens ─────────────────────────────────────────────────────────
+
+export const primitiveFieldPaddingClassName = "p-4"
+
+export const primitiveFieldDescriptionPaddingClassName = "px-2"
+
+// ─── Table header cell tokens ─────────────────────────────────────────────
+
+export const primitiveTableHeadCellClassName =
+  "h-10 px-2 text-left align-middle font-normal text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+
+export const primitiveTableCellClassName =
+  "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]"
+
+// ─── Catalog token typography tokens ──────────────────────────────────────
+
+export const primitiveCatalogTokenTextClassName = "text-[10px]"
+
+export const primitiveCatalogTokenCompactTextClassName = "text-[9px]"
+
+export const primitiveCatalogIndexTokenTextClassName = "text-[9px]"
+
+export const primitiveCatalogDensePaddingClassName = "px-1"
+
+export const primitiveCatalogTokenBasePaddingClassName = "py-0"

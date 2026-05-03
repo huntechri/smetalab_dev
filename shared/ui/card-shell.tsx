@@ -1,46 +1,24 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import { Surface, type SurfaceDensity, type SurfaceProps, type SurfaceVariant } from '@/shared/ui/surface';
+import { Surface, type SurfaceProps, type SurfaceVariant } from '@/shared/ui/surface';
+import {
+  type PrimitiveCardShellDensity,
+  primitiveCardShellGapClassNames,
+  primitiveCardShellInsetDensityClassNames,
+  primitiveCardShellHeaderDensityClassNames,
+  primitiveCardShellBodyDensityClassNames,
+  primitiveCardShellFooterDensityClassNames,
+} from '@/shared/ui/primitive-density';
 
-export type CardShellDensity = Extract<SurfaceDensity, 'compact' | 'default' | 'comfortable'>;
+export type CardShellDensity = PrimitiveCardShellDensity;
 export type CardShellVariant = Extract<SurfaceVariant, 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost'>;
 export type CardShellInsetVariant = 'plain' | 'muted' | 'subtle';
-
-const cardShellGapClassName: Record<CardShellDensity, string> = {
-  compact: 'gap-3',
-  default: 'gap-4',
-  comfortable: 'gap-5',
-};
-
-const cardShellInsetClassName: Record<CardShellDensity, string> = {
-  compact: 'px-3 py-2',
-  default: 'p-3 sm:p-4',
-  comfortable: 'p-4 sm:p-5',
-};
 
 const cardShellInsetVariantClassName: Record<CardShellInsetVariant, string> = {
   plain: '',
   muted: 'rounded-lg border border-border bg-muted/30',
   subtle: 'rounded-lg border border-border bg-muted/20',
-};
-
-const cardShellHeaderClassName: Record<CardShellDensity, string> = {
-  compact: 'px-3 pt-3 sm:px-4 sm:pt-4',
-  default: 'px-4 pt-4 sm:px-5 sm:pt-5',
-  comfortable: 'px-4 pt-4 sm:px-6 sm:pt-6',
-};
-
-const cardShellBodyClassName: Record<CardShellDensity, string> = {
-  compact: 'p-3 sm:p-4',
-  default: 'p-4 sm:p-5',
-  comfortable: 'p-4 sm:p-6',
-};
-
-const cardShellFooterClassName: Record<CardShellDensity, string> = {
-  compact: 'px-3 py-3 sm:px-4',
-  default: 'px-4 py-4 sm:px-5',
-  comfortable: 'px-4 py-4 sm:px-6',
 };
 
 export interface CardShellProps extends Omit<SurfaceProps, 'density' | 'variant'> {
@@ -61,7 +39,7 @@ export function CardShell({
       variant={variant}
       density="none"
       overflow="hidden"
-      className={cn('flex flex-col', cardShellGapClassName[density], className)}
+      className={cn('flex flex-col', primitiveCardShellGapClassNames[density], className)}
       {...props}
     >
       {children}
@@ -78,7 +56,7 @@ export function CardShellInset({ density = 'default', variant = 'plain', classNa
   return (
     <div
       data-slot="card-shell-inset"
-      className={cn(cardShellInsetVariantClassName[variant], cardShellInsetClassName[density], className)}
+      className={cn(cardShellInsetVariantClassName[variant], primitiveCardShellInsetDensityClassNames[density], className)}
       {...props}
     />
   );
@@ -89,7 +67,7 @@ export interface CardShellHeaderProps extends React.ComponentPropsWithoutRef<'di
 }
 
 export function CardShellHeader({ density = 'default', className, ...props }: CardShellHeaderProps) {
-  return <div data-slot="card-shell-header" className={cn(cardShellHeaderClassName[density], className)} {...props} />;
+  return <div data-slot="card-shell-header" className={cn(primitiveCardShellHeaderDensityClassNames[density], className)} {...props} />;
 }
 
 export interface CardShellBodyProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -97,7 +75,7 @@ export interface CardShellBodyProps extends React.ComponentPropsWithoutRef<'div'
 }
 
 export function CardShellBody({ density = 'default', className, ...props }: CardShellBodyProps) {
-  return <div data-slot="card-shell-body" className={cn(cardShellBodyClassName[density], className)} {...props} />;
+  return <div data-slot="card-shell-body" className={cn(primitiveCardShellBodyDensityClassNames[density], className)} {...props} />;
 }
 
 export interface CardShellFooterProps extends React.ComponentPropsWithoutRef<'div'> {
@@ -109,7 +87,7 @@ export function CardShellFooter({ density = 'default', divided = false, classNam
   return (
     <div
       data-slot="card-shell-footer"
-      className={cn(divided && 'border-t', cardShellFooterClassName[density], className)}
+      className={cn(divided && 'border-t', primitiveCardShellFooterDensityClassNames[density], className)}
       {...props}
     />
   );

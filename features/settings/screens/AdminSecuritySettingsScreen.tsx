@@ -5,6 +5,7 @@ import { Loader2, Lock, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { FormLayout } from '@/shared/ui/form-layout';
+import { WorkspaceMain } from '@/shared/ui/page-shell';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { deleteAccount, updatePassword } from '@/app/(login)/actions';
@@ -23,7 +24,7 @@ export function AdminSecuritySettingsScreen() {
   const [deleteState, deleteAction, isDeletePending] = useActionState<DeleteState, FormData>(deleteAccount, {});
 
   return (
-    <section className="flex-1 p-4 lg:p-8">
+    <WorkspaceMain>
       <h1 className="text-lg lg:text-2xl font-medium bold text-foreground mb-6">Security Settings</h1>
 
       <Card className="mb-8">
@@ -50,6 +51,6 @@ export function AdminSecuritySettingsScreen() {
           </FormLayout>
         </CardContent>
       </Card>
-    </section>
+    </WorkspaceMain>
   );
 }

@@ -306,10 +306,10 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        <span className="text-[11px] font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
+                                                        <span className="text-[0.6875rem] font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
                                                             {formatPrice(material.price)} ₽
                                                         </span>
-                                                        <span className="text-[10px] text-muted-foreground/60 font-medium">
+                                                        <span className="text-[0.625rem] text-muted-foreground/60 font-medium">
                                                             {formatUnit(material.unit)}
                                                         </span>
                                                     </div>

@@ -2,6 +2,12 @@ import * as React from 'react';
 import { Sparkles } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
+import {
+  primitiveCatalogTokenTextClassName,
+  primitiveCatalogTokenCompactTextClassName,
+  primitiveCatalogIndexTokenTextClassName,
+  primitiveCatalogDensePaddingClassName,
+} from '@/shared/ui/primitive-density';
 
 type CatalogTokenTone = 'code' | 'category';
 type CatalogTokenDensity = 'default' | 'compact';
@@ -23,8 +29,8 @@ const catalogTokenToneClassName: Record<CatalogTokenTone, string> = {
 };
 
 const catalogTokenDensityClassName: Record<CatalogTokenDensity, string> = {
-  default: 'px-1.5 text-[10px]',
-  compact: 'px-1 text-[9px]',
+  default: `px-1.5 ${primitiveCatalogTokenTextClassName}`,
+  compact: `${primitiveCatalogDensePaddingClassName} ${primitiveCatalogTokenCompactTextClassName}`,
 };
 
 const catalogTokenSurfaceClassName: Record<CatalogTokenTone, Record<CatalogTokenDensity, string>> = {
@@ -65,7 +71,7 @@ function CatalogIndexToken({ className, children, ...props }: CatalogIndexTokenP
   return (
     <span
       className={cn(
-        'inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border/50 bg-muted text-[9px] font-mono text-muted-foreground',
+        `inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-border/50 bg-muted ${primitiveCatalogIndexTokenTextClassName} font-mono text-muted-foreground`,
         className,
       )}
       {...props}

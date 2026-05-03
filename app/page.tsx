@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Button } from '@/shared/ui/button';
+import { ContentContainer } from '@/shared/ui/content-container';
 import {
     ArrowRight,
     Building2,
@@ -156,7 +157,7 @@ export default function LandingPage() {
                 </div>
 
                 <section className="relative">
-                    <div className="container mx-auto px-4 md:px-8 pt-20 pb-16 md:pt-28 md:pb-24">
+                    <ContentContainer className="pt-20 pb-16 md:pt-28 md:pb-24">
                         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
                             <div className="space-y-8">
                                 <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80">
@@ -225,11 +226,11 @@ export default function LandingPage() {
                                 <div aria-hidden className="absolute -bottom-10 -left-6 h-20 w-40 rounded-full bg-[#B4FF7A]/40 blur-3xl animate-pulse" />
                             </div>
                         </div>
-                    </div>
+                    </ContentContainer>
                 </section>
 
                 <section id="capabilities" className="relative border-t border-white/10 bg-[#0F0E14]">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
+                    <ContentContainer className="py-20">
                         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
                             <div className="space-y-6">
                                 <span className="text-xs uppercase tracking-[0.3em] text-white/75">Capabilities</span>
@@ -251,11 +252,11 @@ export default function LandingPage() {
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </ContentContainer>
                 </section>
 
                 <section id="workflow" className="relative border-t border-white/10">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
+                    <ContentContainer className="py-20">
                         <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
                             <div className="space-y-4">
                                 <span className="text-xs uppercase tracking-[0.3em] text-white/75">Workflow</span>
@@ -273,11 +274,11 @@ export default function LandingPage() {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </ContentContainer>
                 </section>
 
                 <section id="pricing" className="relative border-t border-white/10 bg-[#0F0E14]">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
+                    <ContentContainer className="py-20">
                         <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
                             <div>
                                 <span className="text-xs uppercase tracking-[0.3em] text-white/75">Pricing</span>
@@ -306,11 +307,11 @@ export default function LandingPage() {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </ContentContainer>
                 </section>
 
                 <section className="relative border-t border-white/10">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
+                    <ContentContainer className="py-20">
                         <div className="rounded-[32px] border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14">
                             <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
                                 <div className="space-y-4 rounded-2xl bg-[#0B0A0F] p-4">
@@ -328,12 +329,12 @@ export default function LandingPage() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </ContentContainer>
                 </section>
             </main>
 
             <footer className="border-t border-white/10 bg-[#0B0A0F]">
-                <div className="container mx-auto flex flex-col gap-6 px-4 md:px-8 py-10 md:flex-row md:items-center md:justify-between">
+                <ContentContainer className="flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
                         <span className="text-sm uppercase tracking-[0.4em] text-white/75">Smetalab BuildOS</span>
                         <p className="text-sm text-white/80">© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
@@ -343,7 +344,7 @@ export default function LandingPage() {
                             <Link key={link.href} href={link.href} className={footerNavLinkClassName}>{link.label}</Link>
                         ))}
                     </div>
-                </div>
+                </ContentContainer>
             </footer>
 
         </div>

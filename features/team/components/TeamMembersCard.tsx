@@ -5,6 +5,7 @@ import { SearchInput } from '@/shared/ui/search-input';
 import { StatusBadge } from '@/shared/ui/status-badge';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Trash2 } from 'lucide-react';
+import { Surface } from '@/shared/ui/surface';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
 
@@ -37,7 +38,7 @@ export function TeamMembersCard({
     onRemoveMember,
 }: TeamMembersCardProps) {
     return (
-        <div className="flex flex-col p-6 space-y-4">
+        <Surface variant="card" density="comfortable" shadow="sm" className="flex flex-col space-y-4">
             <div>
                 <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                     <div className="space-y-1">
@@ -48,7 +49,7 @@ export function TeamMembersCard({
                     </div>
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
-                            <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
+                            <Label htmlFor="search" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
                             <div className="w-full max-w-xs sm:max-w-sm">
                                 <SearchInput
                                     id="search"
@@ -59,7 +60,7 @@ export function TeamMembersCard({
                             </div>
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                            <Label className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
                                     <Button
@@ -122,6 +123,6 @@ export function TeamMembersCard({
                     )}
                 </div>
             </div>
-        </div>
+        </Surface>
     );
 }

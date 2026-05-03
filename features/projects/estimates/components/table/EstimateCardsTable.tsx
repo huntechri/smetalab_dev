@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
+import { Surface } from '@/shared/ui/surface';
 import {
   buildSectionNodes,
   filterSectionsByQuery,
@@ -22,9 +23,9 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
 
   if (filteredSections.length === 0) {
     return (
-      <div className="flex min-h-52 items-center justify-center rounded-xl border border-border bg-white p-6 text-sm text-muted-foreground shadow-sm">
+      <Surface density="compact" radius="xl" className="flex min-h-52 items-center justify-center text-sm text-muted-foreground">
         По вашему запросу ничего не найдено.
-      </div>
+      </Surface>
     );
   }
 

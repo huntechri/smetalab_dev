@@ -5,6 +5,7 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Mail, Shield } from 'lucide-react';
+import { Surface } from '@/shared/ui/surface';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
 
 interface InviteTeamMemberCardProps {
@@ -33,7 +34,7 @@ export function InviteTeamMemberCard({
     const parsedMessage = message ? parseDevLinkMessage(message.text) : null;
 
     return (
-        <div className="p-6">
+        <Surface variant="card" density="comfortable" shadow="sm">
             <div className="space-y-1 mb-6">
                 <h2 className="text-base font-medium">Пригласить участника</h2>
                 <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
@@ -41,7 +42,7 @@ export function InviteTeamMemberCard({
             <div>
                 <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
-                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
+                        <Label htmlFor="email" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
                         <Input size="default"
                             id="email"
                             type="email"
@@ -52,7 +53,7 @@ export function InviteTeamMemberCard({
                        />
                     </div>
                     <div className="space-y-1.5 shrink-0">
-                        <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                        <Label className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="default">
@@ -99,6 +100,6 @@ export function InviteTeamMemberCard({
                     </p>
                 )}
             </div>
-        </div>
+        </Surface>
     );
 }

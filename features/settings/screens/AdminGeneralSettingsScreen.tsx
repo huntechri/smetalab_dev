@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { WorkspaceMain } from '@/shared/ui/page-shell';
 import { updateAccount } from '@/app/(login)/actions';
 import type { AppUserWithPermissions } from '@/shared/types/session';
 
@@ -76,7 +77,7 @@ export function AdminGeneralSettingsScreen() {
   );
 
   return (
-    <section className="flex-1 p-4 lg:p-8">
+    <WorkspaceMain>
       <h1 className="text-lg lg:text-2xl font-medium text-foreground mb-6">
         General Settings
       </h1>
@@ -107,6 +108,6 @@ export function AdminGeneralSettingsScreen() {
           </FormLayout>
         </CardContent>
       </Card>
-    </section>
+    </WorkspaceMain>
   );
 }

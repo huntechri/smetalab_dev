@@ -18,16 +18,11 @@ export default async function MaterialSuppliersPage() {
       <ForbiddenState
         title="Нет доступа к организации"
         description="Обратитесь к администратору для добавления в команду."
-        className="min-h-[40vh]"
       />
     );
   }
 
   const { data, count } = await getMaterialSuppliers(user.tenantId, { limit: 50, offset: 0 });
 
-  return (
-    <div className="flex-1 w-full flex flex-col">
-      <MaterialSuppliersScreen initialData={data} totalCount={count} />
-    </div>
-  );
+  return <MaterialSuppliersScreen initialData={data} totalCount={count} />;
 }

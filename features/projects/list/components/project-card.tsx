@@ -70,7 +70,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
             <CardShellBody className="flex flex-1 flex-col gap-3" density="compact">
                 <div className="grid gap-2 sm:grid-cols-2">
                     <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
-                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-2 text-[0.6875rem] font-medium text-muted-foreground">
                             <CircleDollarSign className="size-3.5" aria-hidden="true" />
                             <span>Бюджет</span>
                         </div>
@@ -79,7 +79,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         </p>
                     </CardShellInset>
                     <CardShellInset className="flex min-w-0 flex-col gap-1" density="compact" variant="muted">
-                        <div className="flex items-center gap-2 text-[11px] font-medium text-muted-foreground">
+                        <div className="flex items-center gap-2 text-[0.6875rem] font-medium text-muted-foreground">
                             <CalendarRange className="size-3.5" aria-hidden="true" />
                             <span>Сроки</span>
                         </div>

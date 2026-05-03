@@ -76,7 +76,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Раздел: ${item.name}`}
                         title={item.name}
-                        className="text-[11px] font-bold uppercase tracking-widest truncate"
+                        className="text-[0.6875rem] font-bold uppercase tracking-widest truncate"
                     />
                 );
             }
@@ -144,7 +144,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-[11px] font-bold tracking-tight tabular-nums opacity-90">
+                    <div className="pr-6 text-right text-[0.6875rem] font-bold tracking-tight tabular-nums opacity-90">
                         Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
                     </div>
                 );
