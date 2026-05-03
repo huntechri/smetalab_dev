@@ -36,6 +36,12 @@ jobs:
       - name: Run UI inventory audit
         run: pnpm audit:ui-inventory
 
+      - name: Publish UI inventory report
+        if: always()
+        run: |
+          cat reports/ui-inventory.md
+          cat reports/ui-inventory.md >> "$GITHUB_STEP_SUMMARY"
+
       - name: Upload UI inventory reports
         uses: actions/upload-artifact@v4
         if: always()
