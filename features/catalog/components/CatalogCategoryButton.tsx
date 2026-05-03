@@ -1,6 +1,6 @@
 import { Button, type ButtonProps } from '@/shared/ui/button';
 
-type CatalogCategoryButtonProps = Omit<Button size="xs"Props, 'variant'> & {
+type CatalogCategoryButtonProps = Omit<ButtonProps, 'variant'> & {
     active?: boolean;
     activeVariant?: ButtonProps['variant'];
     inactiveVariant?: ButtonProps['variant'];
@@ -13,7 +13,8 @@ export function CatalogCategoryButton({
     ...props
 }: CatalogCategoryButtonProps) {
     return (
-        <Button size="xs"
+        <Button
+            size="xs"
             variant={active ? activeVariant : inactiveVariant}
             {...props}
         />
