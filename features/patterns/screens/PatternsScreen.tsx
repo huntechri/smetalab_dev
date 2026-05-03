@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Badge } from '@/shared/ui/badge';
 import { Surface } from '@/shared/ui/surface';
@@ -79,22 +79,22 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
       <h1 className="sr-only">Шаблоны смет</h1>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
-          <Card key={item.id}>
-            <CardHeader className="space-y-2">
-              <CardTitle className="text-base">{item.name}</CardTitle>
+          <CardShell key={item.id}>
+            <CardShellHeader>
+              <h3 className="text-base font-semibold">{item.name}</h3>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">{item.worksCount} работ</Badge>
                 <Badge variant="secondary">{item.materialsCount} материалов</Badge>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
+            </CardShellHeader>
+            <CardShellBody className="space-y-3">
               {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
                 <Button variant="outline" size="default" onClick={() => void openPreview(item.id)}>Превью</Button>
                 <Button variant="destructive" size="default" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
-            </CardContent>
-          </Card>
+            </CardShellBody>
+          </CardShell>
         ))}
       </div>
 
@@ -104,7 +104,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <Surface variant="muted" density="compact" radius="md" style={{ boxShadow: 'none' }}>
+          <Surface variant="muted" density="compact" radius="md" shadow="none">
             <div className="space-y-1">
               {sortedPreviewRows.map((row) => (
                 <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">

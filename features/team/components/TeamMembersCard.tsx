@@ -84,9 +84,13 @@ export function TeamMembersCard({
             <div>
                 <div className="space-y-2">
                     {filteredMembers.map((member) => (
-                        <div
+                        <Surface
                             key={member.id}
-                            className="group flex flex-col gap-3 rounded-xl border border-border/40 bg-background hover:bg-muted/30 hover:shadow-sm hover:border-border/60 transition-all px-4 py-3 sm:flex-row sm:items-center sm:justify-between overflow-hidden"
+                            variant="card"
+                            density="compact"
+                            shadow="none"
+                            border="hairline"
+                            className="flex flex-col gap-3 bg-background hover:bg-muted/30 hover:shadow-sm hover:border-border/60 transition-all sm:flex-row sm:items-center sm:justify-between overflow-hidden"
                         >
                             <div className="flex items-center gap-3">
                                 <Avatar className="size-9">
@@ -117,7 +121,7 @@ export function TeamMembersCard({
                                     />
                                 )}
                             </div>
-                        </div>
+                        </Surface>
                     ))}
                     {filteredMembers.length === 0 && (
                         <p className="py-6 text-center text-sm text-muted-foreground">Нет участников, соответствующих фильтрам.</p>
