@@ -1,4 +1,5 @@
 import { Skeleton } from '@/shared/ui/skeleton';
+import { LoadingState } from '@/shared/ui/states';
 import { PageShell } from '@/shared/ui/page-shell';
 
 export default function AppLoading() {
@@ -10,7 +11,7 @@ export default function AppLoading() {
         <Skeleton className="h-32 w-full" />
         <Skeleton className="h-32 w-full" />
       </div>
-      <Skeleton className="h-80 w-full" />
+      <LoadingState height="h-80" />
     </PageShell>
   );
 }

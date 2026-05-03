@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { ErrorState } from '@/shared/ui/states';
 import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
@@ -92,7 +93,7 @@ export function AdminGeneralSettingsScreen() {
               <AccountFormWithData state={state} />
             </Suspense>
 
-            {state.error ? <p className="text-destructive text-sm">{state.error}</p> : null}
+            {state.error ? <ErrorState title={state.error} density="compact" /> : null}
             {state.success ? <p className="text-success text-sm">{state.success}</p> : null}
 
             <Button type="submit" variant="brand" size="default" disabled={isPending}>

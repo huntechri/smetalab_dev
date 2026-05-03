@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/shared/ui/card';
+import { Surface } from '@/shared/ui/surface';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2, toSafeNumber } from '../../lib/room-params-calculations';
 
@@ -45,8 +45,7 @@ function TotalLine({ label, totals, isGrandTotal = false }: { label: string; tot
 
 export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomParamDraft[]; grandTotals: Totals }) {
     return (
-        <Card className="bg-muted/30 border-none shadow-none mt-4">
-            <CardContent className="p-3 space-y-0.5">
+        <Surface variant="muted" radius="md" shadow="none" density="compact" className="mt-4">
                 <div className="font-bold text-[0.5625rem] sm:text-[0.6875rem] mb-2 uppercase tracking-wider text-muted-foreground">Итого:</div>
 
                 {rows.map((row, index) => {
@@ -72,7 +71,6 @@ export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomPar
                     totals={grandTotals}
                     isGrandTotal
                 />
-            </CardContent>
-        </Card>
+        </Surface>
     );
 }

@@ -34,8 +34,8 @@ export function InviteTeamMemberCard({
     const parsedMessage = message ? parseDevLinkMessage(message.text) : null;
 
     return (
-        <Surface variant="card" density="comfortable" shadow="sm">
-            <div className="space-y-1 mb-6">
+        <Surface variant="card" density="comfortable" shadow="sm" className="space-y-1">
+            <div>
                 <h2 className="text-base font-medium">Пригласить участника</h2>
                 <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
             </div>

@@ -38,9 +38,10 @@ export function TeamMembersCard({
     onRemoveMember,
 }: TeamMembersCardProps) {
     return (
-        <Surface variant="card" density="comfortable" shadow="sm" className="flex flex-col space-y-4">
-            <div>
-                <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
+        <Surface variant="card" density="comfortable" shadow="sm">
+            <div className="flex flex-col space-y-4">
+                <div>
+                    <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                     <div className="space-y-1">
                         <h2 className="text-base font-medium">Участники</h2>
                         <p className="text-sm text-muted-foreground">
@@ -123,6 +124,7 @@ export function TeamMembersCard({
                     )}
                 </div>
             </div>
+        </div>
         </Surface>
     );
 }

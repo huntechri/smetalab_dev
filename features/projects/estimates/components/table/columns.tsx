@@ -5,6 +5,15 @@ import { EditableCell } from '@/shared/ui/cells/editable-cell';
 import { ImageCell } from '@/shared/ui/cells/image-cell';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { ActionMenu } from '@/shared/ui/action-menu';
+import {
+    EstimateCodeCell,
+    EstimateNameCellWrapper,
+    EstimateUnitCell,
+    EstimateNumberCell,
+    EstimateSectionSumCell,
+    EstimateSumCell,
+    EstimateExpenseCell,
+} from '@/shared/ui/cells/estimate-table-cells';
 import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
@@ -33,14 +42,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="pl-1">Код</div>,
         cell: ({ row }) => {
             const item = row.original;
-            if (item.kind === 'section') {
-                return <div className="pl-1 tabular-nums text-xs font-semibold">{item.code}</div>;
-            }
-
             if (item.kind === 'work') {
                 const expanded = actions.expandedWorkIds.has(item.id);
                 return (
-                    <div className="flex items-center gap-1">
+                    <EstimateCodeCell code={item.code} kind={item.kind}>
                         <Button
                             variant="ghost"
                             size="icon-xs"
@@ -53,11 +58,10 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 <ChevronRight className="size-3.5 text-muted-foreground transition-transform duration-200" />
                             )}
                         </Button>
-                        <span className="tabular-nums text-xs font-medium">{item.code}</span>
-                    </div>
+                    </EstimateCodeCell>
                 );
             }
-            return <div className="pl-9 tabular-nums text-xs text-muted-foreground/80">{item.code}</div>;
+            return <EstimateCodeCell code={item.code} kind={item.kind} />;
         },
     },
     {
@@ -81,7 +85,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                 );
             }
             return (
-                <div className={item.kind === 'material' ? 'pl-8' : 'pl-3'}>
+                <EstimateNameCellWrapper kind={item.kind}>
                     <EditableCell
                         type="text"
                         cancelOnEmpty
@@ -90,7 +94,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         ariaLabel={`Наименование: ${item.name}`}
                         className={item.kind === 'material' ? 'text-xs italic text-muted-foreground' : 'text-xs font-normal'}
                     />
-                </div>
+                </EstimateNameCellWrapper>
             );
         },
     },
@@ -111,9 +115,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         header: () => <div className="text-center">Ед. изм.</div>,
         size: 70,
         cell: ({ row }) => (
-            <div className={row.original.kind === 'section' ? 'text-center text-xs text-muted-foreground/50' : row.original.kind === 'material' ? 'text-xs italic text-muted-foreground text-center' : 'text-center text-xs text-muted-foreground font-medium'}>
-                {row.original.unit}
-            </div>
+            <EstimateUnitCell unit={row.original.unit} kind={row.original.kind} />
         )
     },
     {
@@ -121,9 +123,9 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 80,
         header: () => <div className="text-right">Кол-во</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <EstimateNumberCell kind={row.original.kind}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.qty} onCommit={(value) => actions.onPatch(row.original.id, 'qty', value)} ariaLabel={`Количество: ${row.original.name}`} />}
-            </div>
+            </EstimateNumberCell>
         )
     },
     {
@@ -131,9 +133,9 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         size: 100,
         header: () => <div className="text-right">Цена</div>,
         cell: ({ row }) => (
-            <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : ''}`}>
+            <EstimateNumberCell kind={row.original.kind}>
                 {row.original.kind === 'section' ? null : <EditableCell type="number" align="right" clearOnFocus cancelOnEmpty value={row.original.price} onCommit={(value) => actions.onPatch(row.original.id, 'price', value)} ariaLabel={`Цена: ${row.original.name}`} />}
-            </div>
+            </EstimateNumberCell>
         )
     },
     {
@@ -144,16 +146,14 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
             if (row.original.kind === 'section') {
                 const sectionTotals = actions.sectionTotalsById.get(row.original.id) ?? { works: 0, materials: 0, total: 0 };
                 return (
-                    <div className="pr-6 text-right text-[0.6875rem] font-bold tracking-tight tabular-nums opacity-90">
-                        Р: {sectionTotals.works.toLocaleString('ru-RU')} · М: {sectionTotals.materials.toLocaleString('ru-RU')}
-                    </div>
+                    <EstimateSectionSumCell works={sectionTotals.works} materials={sectionTotals.materials} />
                 );
             }
 
             return (
-                <div className={`text-right tabular-nums pr-6 text-xs ${row.original.kind === 'material' ? 'italic text-muted-foreground' : 'font-medium text-primary/90'}`}>
+                <EstimateSumCell kind={row.original.kind}>
                     <MoneyCell value={row.original.sum} />
-                </div>
+                </EstimateSumCell>
             );
         }
     },
@@ -161,24 +161,19 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
         accessorKey: 'expense',
         size: 90,
         header: () => <div className="text-right">Расход</div>,
-        cell: ({ row }) => {
-            if (row.original.kind === 'work' || row.original.kind === 'section') {
-                return <div className="text-right tabular-nums pr-6 text-xs" />;
-            }
-            return (
-                <div className="text-right tabular-nums pr-6 text-xs">
-                    <EditableCell
-                        type="number"
-                        align="right"
-                        clearOnFocus
-                        cancelOnEmpty
-                        value={row.original.expense}
-                        onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)}
-                        ariaLabel={`Расход: ${row.original.name}`}
-                    />
-                </div>
-            );
-        }
+        cell: ({ row }) => (
+            <EstimateExpenseCell kind={row.original.kind}>
+                <EditableCell
+                    type="number"
+                    align="right"
+                    clearOnFocus
+                    cancelOnEmpty
+                    value={row.original.expense}
+                    onCommit={(value) => actions.onPatch(row.original.id, 'expense', value)}
+                    ariaLabel={`Расход: ${row.original.name}`}
+                />
+            </EstimateExpenseCell>
+        )
     },
     {
         id: 'actions',

@@ -1,7 +1,7 @@
 'use client';
 
 import { Badge } from '@/shared/ui/badge';
-import { Skeleton } from '@/shared/ui/skeleton';
+import { LoadingState } from '@/shared/ui/states';
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 } from '@/shared/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Building2, Settings2, Users } from 'lucide-react';
+import { Surface } from '@/shared/ui/surface';
 import { PermissionLevelControl } from './PermissionLevelControl';
 import { Permission, usePermissionsMatrix } from '@/features/permissions/hooks/usePermissionsMatrix';
 
@@ -26,7 +27,7 @@ const ROLE_LABELS: Record<string, string> = {
 export function PermissionsMatrix() {
   const { data, loading, updating, setLevel } = usePermissionsMatrix();
 
-  if (loading) return <Skeleton className="h-96 w-full rounded-2xl" />;
+  if (loading) return <LoadingState height="h-96" />;
   if (!data) return null;
 
   const renderMatrix = (
@@ -116,7 +117,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <div className="overflow-hidden rounded-2xl border-2 border-border bg-card shadow-md shadow-black/5">
+        <Surface variant="card" shadow="md" overflow="hidden">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>
@@ -124,7 +125,7 @@ export function PermissionsMatrix() {
           <TabsContent value="platform" className="m-0 overflow-x-auto">
             {renderMatrix('platform', data.platformRoles, data.platformPermissions, data.platformRoleMap)}
           </TabsContent>
-        </div>
+        </Surface>
       </Tabs>
     </div>
   );
