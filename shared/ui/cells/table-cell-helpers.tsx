@@ -24,11 +24,13 @@ export function PlaceholderTextCell({
   value,
   onValueChange,
   placeholder,
+  size = "xs",
   ...props
 }: PlaceholderTextCellProps) {
   return (
     <Input
       placeholder={placeholder}
+      size={size}
       value={value ?? ""}
       onChange={(event) => onValueChange(event.target.value)}
       {...props}
@@ -45,12 +47,14 @@ export function PlaceholderNumberCell({
   value,
   onValueChange,
   placeholder,
+  size = "xs",
   ...props
 }: PlaceholderNumberCellProps) {
   return (
     <Input
       type="number"
       placeholder={placeholder}
+      size={size}
       value={value ?? ""}
       onChange={(event) => onValueChange(Number(event.target.value))}
       {...props}
