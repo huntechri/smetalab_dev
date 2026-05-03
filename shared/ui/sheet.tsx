@@ -6,13 +6,15 @@ import { XIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-type SheetContentSize = "default" | "sm" | "md" | "directory"
+type SheetContentSize = "sm" | "md" | "lg" | "xl" | "full" | "directory"
 type SheetContentLayout = "default" | "edge-to-edge"
 
 const sheetContentSizeClassNames: Record<SheetContentSize, string> = {
-  default: "w-3/4 sm:max-w-md",
   sm: "w-3/4 sm:max-w-sm",
   md: "w-3/4 sm:max-w-md",
+  lg: "w-3/4 sm:max-w-2xl",
+  xl: "w-3/4 sm:max-w-4xl",
+  full: "w-full",
   directory: "w-full sm:max-w-[540px]",
 }
 
@@ -64,7 +66,7 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
-  size = "default",
+  size = "md",
   layout = "default",
   ...props
 }: React.ComponentProps<typeof SheetPrimitive.Content> & {
