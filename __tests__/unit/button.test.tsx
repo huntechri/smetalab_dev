@@ -8,11 +8,19 @@ describe('Button Component', () => {
     expect(screen.getByText('Click me')).toBeInTheDocument();
   });
 
-  it('applies canonical base styles', () => {
+  it('uses regular density by default', () => {
     render(<Button>Test</Button>);
     const button = screen.getByRole('button', { name: 'Test' });
     expect(button).toHaveClass('inline-flex');
+    expect(button).toHaveClass('h-9');
+    expect(button).toHaveAttribute('data-size', 'default');
+  });
+
+  it('keeps compact xs density as an explicit opt-in', () => {
+    render(<Button size="xs">Compact</Button>);
+    const button = screen.getByRole('button', { name: 'Compact' });
     expect(button).toHaveClass('h-7');
+    expect(button).toHaveAttribute('data-size', 'xs');
   });
 
   it('sets variant and size data attributes', () => {
