@@ -34,7 +34,7 @@ export default [
             "no-restricted-imports": [
                 "error",
                 {
-                    patterns: ["@/app/*", "@/features/*", "@/lib/domain/*", "@/lib/data/*", "@/components/ui/*"],
+                    patterns: ["@/app/*", "@/features/*", "@/lib/domain/*", "@/lib/data/*", "@/components/ui/*", "@repo/ui", "@repo/ui/*"],
                 },
             ],
         },
@@ -59,6 +59,10 @@ export default [
                 {
                     paths: [
                         {
+                            name: "@repo/ui",
+                            message: "Import runtime app UI from '@/shared/ui/*'. '@repo/ui' is package compatibility only.",
+                        },
+                        {
                             name: "@/features/guide-catalog",
                             message: "Import shared guide catalog shells from '@/features/_shared/guide-catalog'.",
                         },
@@ -68,6 +72,10 @@ export default [
                         },
                     ],
                     patterns: [
+                        {
+                            group: ["@repo/ui/*"],
+                            message: "Import runtime app UI from '@/shared/ui/*'. '@repo/ui' is package compatibility only.",
+                        },
                         {
                             group: ["@/components/ui/*"],
                             message: "Import from '@/shared/ui/*' instead of '@/components/ui/*'.",
@@ -88,7 +96,17 @@ export default [
             "no-restricted-imports": [
                 "error",
                 {
+                    paths: [
+                        {
+                            name: "@repo/ui",
+                            message: "Import runtime app UI from '@/shared/ui/*'. '@repo/ui' is package compatibility only.",
+                        },
+                    ],
                     patterns: [
+                        {
+                            group: ["@repo/ui/*"],
+                            message: "Import runtime app UI from '@/shared/ui/*'. '@repo/ui' is package compatibility only.",
+                        },
                         {
                             group: ["@radix-ui/*"],
                             message: "Use project primitives from '@/shared/ui/*'. Direct Radix imports belong only in the shared/ui primitive layer.",
