@@ -171,7 +171,7 @@ export function ProjectEstimatesCards({
           description="Создайте первую смету, чтобы начать работу"
           icon={FilePlus}
           action={
-            <Button onClick={onCreateEstimate} variant="brand">
+            <Button onClick={onCreateEstimate} variant="brand" size="xs">
               Создать смету
             </Button>
           }

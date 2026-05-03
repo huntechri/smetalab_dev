@@ -81,15 +81,16 @@ export function EstimateTable({
       icon={FilePlus}
       action={
         <EditableDataSurfaceActions>
-          <Button variant="outline" onClick={() => model.openCreateSectionDialog()}>
+          <Button variant="outline" size="xs" onClick={() => model.openCreateSectionDialog()}>
             <FolderTree aria-hidden="true" />
             Создать раздел
           </Button>
-          <Button variant="outline" onClick={model.openCalculationMode}>
+          <Button variant="outline" size="xs" onClick={model.openCalculationMode}>
             <Calculator aria-hidden="true" />
             Добавить работу
           </Button>
           <Button
+            size="xs"
             variant="outline"
             onClick={() => void model.importEstimate()}
             disabled={model.isImporting}

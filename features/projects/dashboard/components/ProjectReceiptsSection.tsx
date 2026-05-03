@@ -202,7 +202,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             <span>Подтверждено:</span>
             <StatusBadgeValue>{formatCurrency(aggregates.totalConfirmedReceipts)}</StatusBadgeValue>
           </StatusBadge>
-          <Button onClick={onAddClick}>
+          <Button onClick={onAddClick} size="sm">
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
         </div>
