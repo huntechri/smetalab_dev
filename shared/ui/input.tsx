@@ -20,7 +20,7 @@ const inputVariants = cva(primitiveInputBaseClassName, {
   },
   defaultVariants: {
     variant: "default",
-    size: "xs",
+    size: "default",
   },
 })
 
@@ -32,13 +32,15 @@ type InputProps = Omit<React.InputHTMLAttributes<HTMLInputElement>, "className" 
 
 function Input({ type, variant, size, textAlign, numeric, className, ...props }: InputProps) {
   const usesColorPickerStyles = type === "color"
+  const resolvedSize = size ?? "default"
 
   return (
     <input
       type={type}
       data-slot="input"
+      data-size={resolvedSize}
       className={cn(
-        inputVariants({ variant, size, textAlign }),
+        inputVariants({ variant, size: resolvedSize, textAlign }),
         (numeric || type === "number") && "tabular-nums",
         usesColorPickerStyles && "cursor-pointer p-1",
         className
