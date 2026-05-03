@@ -39,6 +39,7 @@ export function EstimateInlineTextCell({
     return (
       <Button
         variant="ghost"
+        size="xs"
         aria-label={ariaLabel}
         title={title}
         className={className}
