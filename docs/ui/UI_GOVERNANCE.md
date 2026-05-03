@@ -1,33 +1,38 @@
 # UI Governance
 
 > **Owner:** Architecture Team
-> **Status:** Active
-> **Applies to:** All UI code in `app/features/`, `shared/ui/`, and related directories.
+> **Status:** Active — Phase 1 baseline (see note below)
+> **Applies to:** All UI code in `app/**`, `features/**`, `components/layout/**`, `components/navigation/**`, `shared/ui/`, and related directories.
 >
 > *Phase 1 — EPIC #275: Transfer visual class ownership to shared/ui.*
 
+> **⚠️ Baseline note:** This document is Phase 1 governance baseline. Some contracts are target contracts and must be enforced only after corresponding migration phases. Until migration is complete, existing visual debt is tracked but not release-blocking.
+
 ---
 
-## Rule 0: App/Features Don't Own Visual Classes
+## Rule 0: Scopes Don't Own Visual Classes
 
-**`app/features/` components must not hold or define visual (Tailwind) classes.**
+**`app/**`, `features/**`, `components/layout/**`, `components/navigation/**` must not hold or define visual (Tailwind) classes.**
 
-Feature components **select** visual presentation via **semantic props only**. The visual implementation — Tailwind utility classes, CSS modules, etc. — belongs exclusively in `shared/ui/`.
+These scopes **select** visual presentation via **semantic props only**. The visual implementation — Tailwind utility classes, CSS modules, etc. — belongs exclusively in `shared/ui/`.
 
-**✅ Allowed in features:**
+**✅ Allowed in scopes:**
 ```tsx
 <Button variant="primary" tone="brand" size="md" />
 <Card variant="elevated" density="compact" />
 <Badge intent="success" />
 ```
 
-**❌ Forbidden in features:**
+**❌ Forbidden in scopes:**
 ```tsx
 <button className="bg-blue-600 text-white px-4 py-2 rounded-md">  {/* visual class ownership violation */}
 <Card className="shadow-lg border-2 border-blue-500">             {/* visual class ownership violation */}
 ```
 
-**Rule 0 applies to all files under `app/features/` and `app/` with the single exception of `app/page.tsx` (marketing).**
+**Rule 0 applies to all files under `app/**`, `features/**`, `components/layout/**`, `components/navigation/**` with the following legacy debt exceptions until Phase 12:**
+
+- `app/page.tsx` — marketing exception, **temporary legacy debt** until Phase 12 (see Marketing section)
+- `features/auth/*` — **temporary legacy debt** until Phase 12 (see Auth section)
 
 ---
 
@@ -39,29 +44,21 @@ Every visual class, component, and token in the codebase must be assigned to exa
 |----------|-------------|------------|
 | `primitive` | Base design tokens (colors, spacing, density, typography). Defined in `shared/ui/primitive-*.ts` and Tailwind config. | `shared/ui` |
 | `semantic-shared` | Standard reusable components owned by platform UI. The default destination for new shared components. | `shared/ui` |
-| `feature-family` | Recognised feature-level visual contracts grouped by domain (estimate, catalog, auth, dashboard). Must be approved by architecture. | `shared/ui` |
+| `feature-family` | Recognised feature-level visual contracts grouped by domain (estimate, catalog, dashboard). Must be approved by architecture. | `shared/ui` |
 | `layout` | Page shells, workspace frames, and content containers. | `shared/ui` |
-| `auth` | Auth-specific components used only by `features/auth/*`. | `shared/ui` |
-| `marketing` | Landing page and marketing sections. Exception: `app/page.tsx` only. | `app/` |
-| `compatibility` | Temporary legacy entrypoints for backwards compatibility. Must include a deprecation target version. | `shared/ui` |
+| `auth` | **Temporary.** Auth-specific visual classes. Target: `shared/ui/auth/*` or shared auth contracts. | `features/auth/*` → `shared/ui/auth/*` |
+| `marketing` | **Temporary.** Landing page visual classes until Phase 12. Target: shared marketing contracts. | `app/page.tsx` → `shared/ui/marketing/*` |
+| `compatibility` | Temporary legacy wrappers for backwards compatibility. Must include a deprecation target version. | `shared/ui` |
 | `deprecated` | Scheduled for removal. Not to be used in new code. | any |
 | `needs-review` | Categories unknown or pending classification. Must be resolved before release. | any |
+
+---
 
 ### Primitive
 
 Base design tokens that all other layers consume. No component logic, no React — pure token maps.
 
 **Location:** `shared/ui/primitive-density.ts` (+ future `primitive-color.ts`, `primitive-spacing.ts`, etc.)
-
-**Example:**
-```ts
-// shared/ui/primitive-density.ts
-export const primitiveDensityMap = {
-  compact: { padding: 'px-2 py-1', gap: 'gap-1', textSize: 'text-sm' },
-  normal:  { padding: 'px-3 py-1.5', gap: 'gap-2', textSize: 'text-sm' },
-  relaxed: { padding: 'px-4 py-2', gap: 'gap-3', textSize: 'text-base' },
-} as const;
-```
 
 **Owner:** Platform Design System
 **Allowed props:** — (tokens, not components)
@@ -74,8 +71,6 @@ Standard, reusable components that any feature can consume. This is the **defaul
 
 **Location:** `shared/ui/*` (excluding components assigned to other categories)
 
-**Examples:** Button, Input, Badge, Card, Surface, Dialog, Sheet, Popover, Toolbar, FilterBar, SearchControl, Tabs, Select, Textarea, DataTable, FormLayout, ActionMenu, StatusBadge, Skeleton, LoadingIndicator, TableEmptyState, Sidebar, Breadcrumb, States (dir), Cells (dir)
-
 **Owner:** Platform UI Team
 **Allowed props:** variant, tone, density, size, layout, intent, overflow, shadow, radius, border, interactive
 
@@ -87,8 +82,6 @@ Recognised feature-level visual contracts. These cross the boundary from generic
 
 **Location:** `shared/ui/*` (domain-named components)
 
-**Examples:** AdminSurface, Chart, EstimateTab, CatalogToken, DashboardLayout, KpiCard
-
 **Owner:** Respective domain team (estimates, catalog, analytics, admin)
 **Allowed props:** variant, tone, density, size, layout, intent, overflow, shadow, radius, border, interactive
 
@@ -96,40 +89,42 @@ Recognised feature-level visual contracts. These cross the boundary from generic
 
 ### Layout
 
-Page-level shells, workspace frames, and content-area containers. These define the structural chrome of the application.
+Page-level shells, workspace frames, and content-area containers.
 
-**Location:** `shared/ui/page-shell.tsx`, etc.
-
-**Examples:** PageShell
+**Location:** `shared/ui/page-shell.tsx`, `shared/ui/admin-surface.tsx`
 
 **Owner:** Platform UI Team
 **Allowed props:** variant, density, layout
 
 ---
 
-### Auth
+### Auth (Temporary Legacy Debt)
 
-Auth-specific visual components used exclusively within the auth flow.
+Auth-specific visual classes currently in `features/auth/*`. **This is temporary legacy debt.** Final target: `shared/ui/auth/*` or shared auth contracts.
 
-**Owner:** Auth Team
-**Allowed props:** variant, tone, size, density
+The `auth` owner category will be removed in Phase 12. All auth visual classes must migrate to shared/ui/auth components.
+
+**Current location:** `features/auth/*`
+**Target location:** `shared/ui/auth/*`
+**Migration:** Phase 12
 
 ---
 
-### Marketing
+### Marketing (Temporary Legacy Debt)
 
-Landing page and marketing sections. **Exception only for `app/page.tsx`** — no other `app/` file may hold visual classes.
+Landing page and marketing section visual classes currently in `app/page.tsx`. **This is temporary legacy debt.** Final target: shared marketing contracts.
 
-**Owner:** Marketing Team
-**Allowed props:** variant, layout, density
+The `marketing` owner category will be removed in Phase 12. All marketing visual classes must migrate to shared marketing components.
+
+**Current location:** `app/page.tsx`
+**Target location:** `shared/ui/marketing/*`
+**Migration:** Phase 12
 
 ---
 
 ### Compatibility
 
 Temporary legacy wrappers that provide backwards-compatible APIs while consumers migrate to the new system.
-
-**Example:** A component with both `className` prop (deprecated) and semantic props.
 
 **Must include:** Target version when the compat layer will be removed.
 
@@ -155,7 +150,7 @@ Visual classes discovered during audit that don't have an owner category. Must b
 
 ## Allowed Semantic Props
 
-`app/features/` code must replace `className` usage with the following semantic props. Props are defined by each component's accepted prop list (see owner contracts below).
+`app/**`, `features/**`, `components/layout/**`, `components/navigation/**` must replace `className` usage with the following semantic props. Props are defined by each component's accepted prop list (see owner contracts below).
 
 | Prop | Purpose | Example values |
 |------|---------|----------------|
@@ -179,18 +174,18 @@ Visual classes discovered during audit that don't have an owner category. Must b
 
 ### Existing Visual Debt
 
-1. **Classify** every className usage found in `app/features/` and `app/` (except `app/page.tsx`).
+1. **Classify** every className usage found in `app/**`, `features/**`, `components/layout/**`, `components/navigation/**` (exceptions: `app/page.tsx` and `features/auth/*` are legacy debt, tracked until Phase 12).
 2. Assign each to an **owner category** based on the component it wraps.
 3. If the target component does not yet accept the required semantic prop(s):
    - Add the prop to the component's accepted props (update owner contract).
    - Implement the prop in the `shared/ui` component.
-4. Replace `className` in the feature component with the equivalent semantic prop(s).
-5. Remove the visual class definition from the feature file.
+4. Replace `className` in the scoped component with the equivalent semantic prop(s).
+5. Remove the visual class definition from the scoped file.
 
 ### New Code
 
 - **All new UI must be built from `shared/ui` components.**
-- Feature code must use only semantic props — zero `className` or direct Tailwind usage.
+- `app/**`, `features/**`, `components/layout/**`, `components/navigation/**` must use only semantic props — zero `className` or direct Tailwind usage.
 - If a needed visual combination doesn't exist, either:
   - Extend the existing `shared/ui` component with a new prop value, or
   - Propose a new `shared/ui` component (assigned `semantic-shared`).
@@ -199,7 +194,7 @@ Visual classes discovered during audit that don't have an owner category. Must b
 
 - Phase 14 will introduce tooling (lint rule, CI check) to enforce Rule 0.
 - Until then, enforcement is by **code review policy**:
-  - PRs with new `className` in `app/features/` or `app/` (excluding `app/page.tsx`) must be rejected.
+  - PRs with new `className` in `app/**`, `features/**`, `components/layout/**`, `components/navigation/**` (excluding legacy debt paths) must be rejected.
   - PRs adding Tailwind classes outside `shared/ui` must be rejected.
 
 ---
@@ -211,6 +206,7 @@ Every component that exposes visual classes must have an **owner contract** docu
 - Who owns the visual implementation
 - Which semantic props are accepted
 - Where visual classes live (and where they don't)
+- Migration path from current state to target state
 
 ### Template
 
@@ -219,8 +215,12 @@ Component: <name>
 File: <relative-path>
 Owner: <owner-category>
 Tokens: <comma-separated list of token/className maps consumed>
-Accepted props: <comma-separated list of semantic props>
-Visual policy: All Tailwind classes defined in <file>. No custom className on the call site.
+
+Current API: <props currently accepted by the component>
+Target API: <props the component should accept after migration>
+Migration required: <yes/no — if yes, link to phase>
+
+Visual policy: <description of where Tailwind classes are defined>
 ```
 
 ---
@@ -234,8 +234,12 @@ Component: Button
 File: shared/ui/button.tsx
 Owner: semantic-shared
 Tokens: primitiveButtonSizeClassNames, primitiveButtonBaseClassName
-Accepted props: variant, size, loading, asChild, iconLeft, iconRight
-Visual policy: All Tailwind classes in button.tsx. No custom className at call site.
+
+Current API: variant, size, loading, asChild, iconLeft, iconRight, className
+Target API: variant, size, loading, asChild, iconLeft, iconRight
+Migration required: yes — remove className prop
+
+Visual policy: All Tailwind classes defined in button.tsx.
 ```
 
 ### Input
@@ -244,9 +248,13 @@ Visual policy: All Tailwind classes in button.tsx. No custom className at call s
 Component: Input
 File: shared/ui/input.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, tone, intent, placeholder
-Visual policy: All Tailwind classes in input.tsx. No custom className at call site.
+Tokens: primitiveInputBaseClassName, primitiveInputSizeClassNames
+
+Current API: variant, size, textAlign, numeric, type, className
+Target API: variant, size, textAlign, numeric, type
+Migration required: yes — remove className prop
+
+Visual policy: All Tailwind classes defined in input.tsx.
 ```
 
 ### Badge
@@ -255,9 +263,13 @@ Visual policy: All Tailwind classes in input.tsx. No custom className at call si
 Component: Badge
 File: shared/ui/badge.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, tone, size, density, intent
-Visual policy: All Tailwind classes in badge.tsx. No custom className at call site.
+Tokens: primitiveBadgeBaseClassName, primitiveBadgeVariantClassNames, primitiveBadgeSizeClassNames
+
+Current API: variant, size, className
+Target API: variant, size
+Migration required: yes — remove className prop
+
+Visual policy: All Tailwind classes defined in badge.tsx.
 ```
 
 ### Card
@@ -266,9 +278,13 @@ Visual policy: All Tailwind classes in badge.tsx. No custom className at call si
 Component: Card
 File: shared/ui/card.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, shadow, radius, border, interactive
-Visual policy: All Tailwind classes in card.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes in card.tsx
+
+Current API: className
+Target API: variant, density, shadow, radius, border, interactive
+Migration required: yes — add semantic props, reduce className dependency
+
+Visual policy: All Tailwind classes defined in card.tsx.
 ```
 
 ### Surface
@@ -277,9 +293,13 @@ Visual policy: All Tailwind classes in card.tsx. No custom className at call sit
 Component: Surface
 File: shared/ui/surface.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, tone, density, shadow, radius, border
-Visual policy: All Tailwind classes in surface.tsx. No custom className at call site.
+Tokens: primitiveSurfaceDensityClassNames
+
+Current API: variant, density, shadow, radius, overflow, className
+Target API: variant, density, shadow, radius, overflow
+Migration required: yes — remove className prop
+
+Visual policy: All Tailwind classes defined in surface.tsx.
 ```
 
 ### Dialog
@@ -288,9 +308,13 @@ Visual policy: All Tailwind classes in surface.tsx. No custom className at call 
 Component: Dialog
 File: shared/ui/dialog.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, shadow
-Visual policy: All Tailwind classes in dialog.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes in dialog.tsx
+
+Current API: size, layout, className
+Target API: variant, size, density, shadow, layout
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in dialog.tsx.
 ```
 
 ### Sheet
@@ -299,9 +323,13 @@ Visual policy: All Tailwind classes in dialog.tsx. No custom className at call s
 Component: Sheet
 File: shared/ui/sheet.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, shadow
-Visual policy: All Tailwind classes in sheet.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes in sheet.tsx
+
+Current API: size, className
+Target API: variant, size, density, shadow
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in sheet.tsx.
 ```
 
 ### Popover
@@ -310,9 +338,13 @@ Visual policy: All Tailwind classes in sheet.tsx. No custom className at call si
 Component: Popover
 File: shared/ui/popover.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, shadow, radius
-Visual policy: All Tailwind classes in popover.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes in popover.tsx
+
+Current API: size, padding, className
+Target API: variant, density, shadow, radius, size, padding
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in popover.tsx.
 ```
 
 ### Toolbar
@@ -321,9 +353,13 @@ Visual policy: All Tailwind classes in popover.tsx. No custom className at call 
 Component: Toolbar
 File: shared/ui/toolbar.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in toolbar.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes in toolbar.tsx
+
+Current API: responsive, align, className
+Target API: variant, density, layout
+Migration required: yes — reduce className dependency
+
+Visual policy: All Tailwind classes defined in toolbar.tsx.
 ```
 
 ### FilterBar
@@ -332,9 +368,13 @@ Visual policy: All Tailwind classes in toolbar.tsx. No custom className at call 
 Component: FilterBar
 File: shared/ui/filter-bar.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in filter-bar.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, density, layout
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in filter-bar.tsx.
 ```
 
 ### SearchControl
@@ -343,9 +383,13 @@ Visual policy: All Tailwind classes in filter-bar.tsx. No custom className at ca
 Component: SearchControl
 File: shared/ui/search-control.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, tone
-Visual policy: All Tailwind classes in search-control.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: size, className
+Target API: variant, size, density, tone
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in search-control.tsx.
 ```
 
 ### Tabs
@@ -354,9 +398,13 @@ Visual policy: All Tailwind classes in search-control.tsx. No custom className a
 Component: Tabs
 File: shared/ui/tabs.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, layout
-Visual policy: All Tailwind classes in tabs.tsx. No custom className at call site.
+Tokens: primitiveTabsRootClassName, primitiveTabsListBaseClassName, primitiveTabsTriggerClassName, primitiveTabsContentClassName
+
+Current API: variant, orientation, className
+Target API: variant, size, density, layout
+Migration required: yes — reduce className dependency
+
+Visual policy: All Tailwind classes defined in tabs.tsx.
 ```
 
 ### Select
@@ -365,9 +413,13 @@ Visual policy: All Tailwind classes in tabs.tsx. No custom className at call sit
 Component: Select
 File: shared/ui/select.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, tone, intent
-Visual policy: All Tailwind classes in select.tsx. No custom className at call site.
+Tokens: primitiveSelectTriggerClassName, primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectLabelClassName
+
+Current API: size, className
+Target API: variant, size, density, tone, intent
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in select.tsx.
 ```
 
 ### Textarea
@@ -376,9 +428,13 @@ Visual policy: All Tailwind classes in select.tsx. No custom className at call s
 Component: Textarea
 File: shared/ui/textarea.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, tone, intent
-Visual policy: All Tailwind classes in textarea.tsx. No custom className at call site.
+Tokens: primitiveTextareaBaseClassName, primitiveTextareaVariantClassNames
+
+Current API: variant, className
+Target API: variant, size, density, tone, intent
+Migration required: yes — add size/density/tone/intent props
+
+Visual policy: All Tailwind classes defined in textarea.tsx.
 ```
 
 ### DataTable
@@ -387,9 +443,14 @@ Visual policy: All Tailwind classes in textarea.tsx. No custom className at call
 Component: DataTable
 File: shared/ui/data-table.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout, overflow
-Visual policy: All Tailwind classes in data-table.tsx. No custom className at call site.
+Tokens: primitiveDataTableHeaderClassName, primitiveDataTableBodyCellClassName, primitiveDataTableContainerClassName
+
+Current API: columns, data, height, filterColumn, filterPlaceholder, actions, emptyState,
+            tableContainerClassName, headerRowClassName, getRowClassName, className
+Target API: variant, density, layout, overflow, columns, data, height
+Migration required: yes — migrate className/containerClassName/rowClassName to semantic props
+
+Visual policy: All Tailwind classes defined in data-table.tsx. Row/cell classes in data-table/*
 ```
 
 ### FormLayout
@@ -398,9 +459,13 @@ Visual policy: All Tailwind classes in data-table.tsx. No custom className at ca
 Component: FormLayout
 File: shared/ui/form-layout.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in form-layout.tsx. No custom className at call site.
+Tokens: formLayoutVariants
+
+Current API: gap, maxWidth, padding, className
+Target API: variant, density, layout, gap, maxWidth
+Migration required: yes — reduce className dependency
+
+Visual policy: All Tailwind classes defined in form-layout.tsx.
 ```
 
 ### ActionMenu
@@ -409,9 +474,13 @@ Visual policy: All Tailwind classes in form-layout.tsx. No custom className at c
 Component: ActionMenu
 File: shared/ui/action-menu.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density
-Visual policy: All Tailwind classes in action-menu.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: variant, size, align, className
+Target API: variant, size, density, align
+Migration required: yes — reduce className dependency
+
+Visual policy: All Tailwind classes defined in action-menu.tsx.
 ```
 
 ### StatusBadge
@@ -420,9 +489,13 @@ Visual policy: All Tailwind classes in action-menu.tsx. No custom className at c
 Component: StatusBadge
 File: shared/ui/status-badge.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, intent
-Visual policy: All Tailwind classes in status-badge.tsx. No custom className at call site.
+Tokens: primitiveBadgeVariantClassNames
+
+Current API: variant, status, size, className
+Target API: variant, size, density, intent
+Migration required: yes — add density/intent, reduce className dependency
+
+Visual policy: All Tailwind classes defined in status-badge.tsx.
 ```
 
 ### Skeleton
@@ -431,9 +504,13 @@ Visual policy: All Tailwind classes in status-badge.tsx. No custom className at 
 Component: Skeleton
 File: shared/ui/skeleton.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density
-Visual policy: All Tailwind classes in skeleton.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, size, density
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in skeleton.tsx.
 ```
 
 ### LoadingIndicator
@@ -442,9 +519,13 @@ Visual policy: All Tailwind classes in skeleton.tsx. No custom className at call
 Component: LoadingIndicator
 File: shared/ui/loading-indicator.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density
-Visual policy: All Tailwind classes in loading-indicator.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, size, density
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in loading-indicator.tsx.
 ```
 
 ### TableEmptyState
@@ -453,9 +534,13 @@ Visual policy: All Tailwind classes in loading-indicator.tsx. No custom classNam
 Component: TableEmptyState
 File: shared/ui/table-empty-state.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in table-empty-state.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, density, layout
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in table-empty-state.tsx.
 ```
 
 ### Sidebar
@@ -464,9 +549,13 @@ Visual policy: All Tailwind classes in table-empty-state.tsx. No custom classNam
 Component: Sidebar
 File: shared/ui/sidebar.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout, interactive
-Visual policy: All Tailwind classes in sidebar.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: variant, collapsible, side, className
+Target API: variant, density, layout, interactive
+Migration required: yes — add density/layout/interactive, reduce className dependency
+
+Visual policy: All Tailwind classes defined in sidebar.tsx.
 ```
 
 ### Breadcrumb
@@ -475,31 +564,88 @@ Visual policy: All Tailwind classes in sidebar.tsx. No custom className at call 
 Component: Breadcrumb
 File: shared/ui/breadcrumb.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density
-Visual policy: All Tailwind classes in breadcrumb.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, size, density
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in breadcrumb.tsx.
 ```
 
-### States (directory)
+### LoadingState
 
 ```
-Component: States (dir)
-File: shared/ui/states/*
+Component: LoadingState
+File: shared/ui/states/LoadingState.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in each file. No custom className at call site.
+Tokens: N/A — composes existing primitives
+
+Current API: title, description, height, className
+Target API: variant, density, size, title, description
+Migration required: yes — add semantic props, reduce className
+
+Visual policy: All Tailwind classes in states/LoadingState.tsx.
 ```
 
-### Cells (directory)
+### EmptyState
 
 ```
-Component: Cells (dir)
-File: shared/ui/cells/*
+Component: EmptyState
+File: shared/ui/states/EmptyState.tsx
 Owner: semantic-shared
-Tokens: primitiveDensityMap
-Accepted props: variant, density, size
-Visual policy: All Tailwind classes in each file. No custom className at call site.
+Tokens: N/A — composes existing primitives
+
+Current API: title, description, action, icon, className
+Target API: variant, density, layout, title, description, action, icon
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes in states/EmptyState.tsx.
+```
+
+### ErrorState
+
+```
+Component: ErrorState
+File: shared/ui/states/ErrorState.tsx
+Owner: semantic-shared
+Tokens: N/A — composes existing primitives
+
+Current API: title, description, action, density, className
+Target API: variant, density, size, title, description, action
+Migration required: yes — add variant/size, reduce className dependency
+
+Visual policy: All Tailwind classes in states/ErrorState.tsx.
+```
+
+### ForbiddenState
+
+```
+Component: ForbiddenState
+File: shared/ui/states/ForbiddenState.tsx
+Owner: semantic-shared
+Tokens: N/A — composes existing primitives
+
+Current API: title, description, action, className
+Target API: variant, density, layout, title, description, action
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes in states/ForbiddenState.tsx.
+```
+
+### EditableCell
+
+```
+Component: EditableCell
+File: shared/ui/cells/editable-cell.tsx
+Owner: semantic-shared
+Tokens: N/A — composes Button and Input
+
+Current API: value, onCommit, type, disabled, align, clearOnFocus, cancelOnEmpty, ariaLabel, title, className
+Target API: value, onCommit, type, disabled, align, clearOnFocus, cancelOnEmpty, ariaLabel, title, size, density
+Migration required: yes — add size/density, reduce className dependency
+
+Visual policy: All Tailwind classes in cells/editable-cell.tsx.
 ```
 
 ### Primitive Density
@@ -519,9 +665,13 @@ Visual policy: Contains all density token maps consumed by semantic-shared compo
 Component: AdminSurface
 File: shared/ui/admin-surface.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout, shadow
-Visual policy: All Tailwind classes in admin-surface.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: variant, density, layout, className
+Target API: variant, density, layout, shadow
+Migration required: yes — add shadow prop, reduce className dependency
+
+Visual policy: All Tailwind classes defined in admin-surface.tsx.
 ```
 
 ### Chart
@@ -530,9 +680,13 @@ Visual policy: All Tailwind classes in admin-surface.tsx. No custom className at
 Component: Chart
 File: shared/ui/chart.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density
-Visual policy: All Tailwind classes in chart.tsx. No custom className at call site.
+Tokens: primitiveChartTooltipClassName, primitiveChartLegendClassName
+
+Current API: className
+Target API: variant, size, density
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in chart.tsx.
 ```
 
 ### EstimateTab
@@ -541,9 +695,13 @@ Visual policy: All Tailwind classes in chart.tsx. No custom className at call si
 Component: EstimateTab
 File: shared/ui/estimate-tab.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, intent
-Visual policy: All Tailwind classes in estimate-tab.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: variant, status, className
+Target API: variant, size, density, intent
+Migration required: yes — add size/density, reduce className dependency
+
+Visual policy: All Tailwind classes defined in estimate-tab.tsx.
 ```
 
 ### CatalogToken
@@ -552,9 +710,13 @@ Visual policy: All Tailwind classes in estimate-tab.tsx. No custom className at 
 Component: CatalogToken
 File: shared/ui/catalog-token.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, size, density, tone, intent
-Visual policy: All Tailwind classes in catalog-token.tsx. No custom className at call site.
+Tokens: primitiveCatalogTokenClassNames
+
+Current API: variant, size, className
+Target API: variant, size, density, tone, intent
+Migration required: yes — add density/tone/intent
+
+Visual policy: All Tailwind classes defined in catalog-token.tsx.
 ```
 
 ### DashboardLayout
@@ -563,9 +725,13 @@ Visual policy: All Tailwind classes in catalog-token.tsx. No custom className at
 Component: DashboardLayout
 File: shared/ui/dashboard-layout.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in dashboard-layout.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, density, layout
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in dashboard-layout.tsx.
 ```
 
 ### KpiCard
@@ -574,9 +740,13 @@ Visual policy: All Tailwind classes in dashboard-layout.tsx. No custom className
 Component: KpiCard
 File: shared/ui/kpi-card.tsx
 Owner: feature-family
-Tokens: primitiveDensityMap
-Accepted props: variant, density, shadow, intent
-Visual policy: All Tailwind classes in kpi-card.tsx. No custom className at call site.
+Tokens: N/A — inline Tailwind classes
+
+Current API: variant, className
+Target API: variant, density, shadow, intent
+Migration required: yes — add density/shadow/intent, reduce className
+
+Visual policy: All Tailwind classes defined in kpi-card.tsx.
 ```
 
 ### PageShell
@@ -585,31 +755,59 @@ Visual policy: All Tailwind classes in kpi-card.tsx. No custom className at call
 Component: PageShell
 File: shared/ui/page-shell.tsx
 Owner: layout
-Tokens: primitiveDensityMap
-Accepted props: variant, density, layout
-Visual policy: All Tailwind classes in page-shell.tsx. No custom className at call site.
+Tokens: legacyPageShellClassName, pageShellWidthClassName, pageShellSpacingClassName
+
+Current API: density, title, description, actions, width, spacing, titleAs, visuallyHiddenTitle, className
+Target API: variant, density, layout, title, description, actions, width, spacing
+Migration required: yes — add variant/layout, reduce className dependency
+
+Visual policy: All Tailwind classes defined in page-shell.tsx.
 ```
 
-### app/page.tsx
+### WorkspaceMain
+
+```
+Component: WorkspaceMain
+File: shared/ui/page-shell.tsx
+Owner: layout
+Tokens: N/A — inline Tailwind classes
+
+Current API: className
+Target API: variant, density, layout
+Migration required: yes — add semantic props
+
+Visual policy: All Tailwind classes defined in page-shell.tsx (WorkspaceMain export).
+```
+
+### app/page.tsx (Legacy Debt Until Phase 12)
 
 ```
 Component: app/page.tsx
 File: app/page.tsx
-Owner: marketing
-Tokens: none — direct visual classes allowed (exception)
-Accepted props: N/A
-Visual policy: Exception from Rule 0. This is the only allowed file outside shared/ui to hold visual classes.
+Owner: marketing (temporary)
+Tokens: none
+
+Current API: N/A — page-level component
+Target API: Composition of shared marketing contracts (MarketingPageShell, MarketingSection, etc.)
+Migration required: yes — Phase 12. This is temporary legacy debt.
+
+Visual policy: Direct visual classes temporarily allowed. Must migrate to shared/ui/marketing/* in Phase 12.
 ```
 
-### Auth components
+### Auth components (Legacy Debt Until Phase 12)
 
 ```
-Component: auth/*
+Component: Auth components
 File: features/auth/*
-Owner: auth
-Tokens: primitiveDensityMap
-Accepted props: variant, tone, size, density
-Visual policy: Auth components may hold visual classes specific to auth flows. No custom className outside features/auth/.
+Owner: auth (temporary)
+Tokens: none
+
+Current API: N/A — auth-specific visual classes
+Target API: Shared/ui/auth/* or shared auth contracts
+Migration required: yes — Phase 12. This is temporary legacy debt.
+
+Visual policy: Auth visual classes temporarily allowed in features/auth/*.
+Must migrate to shared/ui/auth/* in Phase 12.
 ```
 
 ---
@@ -618,9 +816,10 @@ Visual policy: Auth components may hold visual classes specific to auth flows. N
 
 | # | Rule | Enforcement |
 |---|------|-------------|
-| 0 | app/features/ components don't own visual classes | Code review; Phase 14 lint/CI |
+| 0 | `app/**`, `features/**`, `components/layout/**`, `components/navigation/**` don't own visual classes | Code review; Phase 14 lint/CI |
 | 1 | Every visual class has an owner contract | This document |
 | 2 | shared/ui is not a dumping ground | Each component explicitly classified above |
 | 3 | Semantic props replace className | variant, tone, density, size, layout, intent + extras |
 | 4 | New code uses only shared/ui | PR policy |
 | 5 | Existing visual debt must be migrated | Classify → add props → replace → remove |
+| 6 | app/page.tsx and features/auth/* are temporary legacy debt until Phase 12 | Tracked, not permanent |
