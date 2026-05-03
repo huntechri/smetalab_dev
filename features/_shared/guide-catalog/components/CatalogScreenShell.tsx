@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Loader2 } from "lucide-react";
 
+import { FileInput } from "@/shared/ui/file-input";
 import { catalogScreenShellClassNames } from "@/shared/ui/shells/catalog-directory-visual-contracts";
 
 interface CatalogScreenShellProps {
@@ -34,8 +35,7 @@ export function CatalogScreenShell({
 }: CatalogScreenShellProps) {
   return (
     <div className={catalogScreenShellClassNames.root}>
-      <input
-        type="file"
+      <FileInput
         ref={fileInputRef}
         onChange={onFileChange}
         className="hidden"

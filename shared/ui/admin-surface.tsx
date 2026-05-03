@@ -3,6 +3,7 @@ import type { LucideIcon } from "lucide-react"
 import { Check, Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { HiddenInput } from "@/shared/ui/hidden-input"
 import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
@@ -405,7 +406,7 @@ function AdminPricingCard({
           ))}
         </ul>
         <form action={action}>
-          <input type="hidden" name="priceId" value={priceId} />
+          <HiddenInput name="priceId" value={priceId} />
           {submitButton}
         </form>
       </CardContent>

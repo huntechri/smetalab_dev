@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { resetPasswordWithToken } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
 import { FormLayout } from '@/shared/ui/form-layout';
+import { HiddenInput } from '@/shared/ui/hidden-input';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
@@ -23,7 +24,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       description="Введите новый пароль для аккаунта."
     >
       <FormLayout action={formAction}>
-        <Input type="hidden" name="token" value={token} />
+        <HiddenInput name="token" value={token} />
         <div className="space-y-2">
           <Label htmlFor="password">Новый пароль</Label>
           <Input

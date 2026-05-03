@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card';
+import { FormLayout } from '@/shared/ui/form-layout';
+import { HiddenInput } from '@/shared/ui/hidden-input';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
@@ -120,10 +122,10 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}
-            <form className="space-y-4" action={formAction}>
-              <Input type="hidden" name="redirect" value={redirect || ''} />
-              <Input type="hidden" name="priceId" value={priceId || ''} />
-              <Input type="hidden" name="inviteId" value={inviteId || ''} />
+            <FormLayout className="space-y-4" action={formAction}>
+              <HiddenInput name="redirect" value={redirect || ''} />
+              <HiddenInput name="priceId" value={priceId || ''} />
+              <HiddenInput name="inviteId" value={inviteId || ''} />
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -227,7 +229,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                   </Link>
                 </div>
               )}
-            </form>
+            </FormLayout>
           </CardContent>
         </Card>
       </main>
