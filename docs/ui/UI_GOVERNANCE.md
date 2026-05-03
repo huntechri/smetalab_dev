@@ -58,7 +58,17 @@ Every visual class, component, and token in the codebase must be assigned to exa
 
 Base design tokens that all other layers consume. No component logic, no React — pure token maps.
 
-**Location:** `shared/ui/primitive-density.ts` (+ future `primitive-color.ts`, `primitive-spacing.ts`, etc.)
+**Location:** `shared/ui/primitive-*.ts`:
+  - `primitive-controls.ts` — Button, Input, Select, Toggle, KBD, InputGroup, Textarea, Visual icon tokens
+  - `primitive-spacing.ts` — Surface density, Empty state, Calendar, Accordion, Chart layout spacing
+  - `primitive-surface.ts` — Card, CardShell, Visual surface, Visual typography, Semantic tone tokens
+  - `primitive-table.ts` — DataTable, Table, TableDensity, Cell tokens
+  - `primitive-overlay.ts` — Drawer tokens (Dialog, Sheet, Popover — inline)
+  - `primitive-form.ts` — Field padding tokens
+  - `primitive-navigation.ts` — Tabs, PageShell tokens
+  - `primitive-chart.ts` — Chart, Chart legend, Chart indicator tokens
+  - `primitive-badge.ts` — Badge, StatusBadge, CatalogToken tokens
+  - `primitive-density.ts` — **Deprecated barrel file.** Re-exports all domain files for backward compatibility. Import from domain files directly for new code.
 
 **Owner:** Platform Design System
 **Allowed props:** — (tokens, not components)
@@ -648,15 +658,19 @@ Migration required: yes — add size/density, reduce className dependency
 Visual policy: All Tailwind classes in cells/editable-cell.tsx.
 ```
 
-### Primitive Density
+### Primitive Tokens
 
 ```
-Component: Primitive Density
-File: shared/ui/primitive-density.ts
+Component: Primitive Tokens
+File: shared/ui/primitive-controls.ts, primitive-spacing.ts, primitive-surface.ts,
+      primitive-table.ts, primitive-overlay.ts, primitive-form.ts,
+      primitive-navigation.ts, primitive-chart.ts, primitive-badge.ts
 Owner: primitive
 Tokens: N/A — this is the token source
 Accepted props: N/A — not a component
-Visual policy: Contains all density token maps consumed by semantic-shared components.
+Visual policy: Contains all base token maps consumed by semantic-shared components.
+              New imports should target the domain-specific file.
+              The legacy barrel file `primitive-density.ts` is deprecated.
 ```
 
 ### AdminSurface
