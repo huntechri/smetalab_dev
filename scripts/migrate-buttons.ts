@@ -227,10 +227,10 @@ function writeReports(records: ButtonLikeRecord[], changedCount: number) {
     )
   )
 
-  const canonical = fs.readFileSync(path.join(ROOT, "components/ui/button.tsx"), "utf8")
+  const canonical = fs.readFileSync(path.join(ROOT, "shared/ui/button.tsx"), "utf8")
   fs.writeFileSync(
     SPEC_REPORT_PATH,
-    `# Canonical Button Spec\n\nSource: components/ui/button.tsx\n\n\`\`\`tsx\n${canonical}\n\`\`\`\n`
+    `# Canonical Button Spec\n\nSource: shared/ui/button.tsx\n\n\`\`\`tsx\n${canonical}\n\`\`\`\n`
   )
 }
 
