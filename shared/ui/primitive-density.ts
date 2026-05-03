@@ -161,3 +161,40 @@ export const primitiveTabsTriggerClassName = [
 
 export const primitiveTabsContentClassName =
   "flex-1 outline-none data-[state=inactive]:hidden"
+
+export const primitiveVisualTypographyClassNames = {
+  sectionTitle: "truncate text-sm font-semibold",
+  dashboardSectionTitle: "flex items-center gap-2 text-lg font-semibold tracking-tight",
+  itemTitle: "text-sm font-semibold leading-none",
+  itemTitleInteractive:
+    "text-sm font-semibold leading-none text-foreground transition-colors group-hover:text-primary",
+  denseItemTitleLink:
+    "min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm",
+  mutedMeta: "text-xs text-muted-foreground",
+  mutedMetaRow: "mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground",
+} as const
+
+export const primitiveVisualIconSizeClassNames = {
+  xs: "size-3",
+  sm: "size-3.5",
+  md: "size-4",
+  denseAction: "size-3 sm:size-3.5",
+  section: "h-4 w-4",
+  mutedMeta: "h-3.5 w-3.5 text-muted-foreground/60",
+} as const
+
+export const primitiveVisualIconButtonClassNames = {
+  denseAction: "size-6 sm:size-7",
+} as const
+
+export const primitiveVisualSurfaceClassNames = {
+  interactiveGlassCard:
+    "glass-card group cursor-pointer border-border/40 bg-background/50 p-4 shadow-sm backdrop-blur-md transition-all duration-300 hover:border-border/80 hover:shadow",
+  toneIconFrame: "shrink-0 rounded-lg p-2 transition-colors",
+} as const
+
+export const primitiveVisualSemanticToneClassNames = {
+  danger: "text-rose-600 bg-rose-500/5",
+  success: "text-emerald-600 bg-emerald-500/5",
+  info: "text-sky-600 bg-sky-500/5",
+} as const
