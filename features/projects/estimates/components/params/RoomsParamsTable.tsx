@@ -110,7 +110,7 @@ export function RoomsParamsTable({
                                         height={opening.height}
                                         width={opening.width}
                                         onHeight={(value) => onChangeOpening(row.id, 'windows', index, 'height', value)}
-                                        onWidth={(value) => onChangeOpening(row.id, 'windows', index, 'width')}
+                                        onWidth={(value) => onChangeOpening(row.id, 'windows', index, 'width', value)}
                                    />
                                 </TableCell>
                             ))}
