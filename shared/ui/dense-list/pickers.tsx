@@ -14,7 +14,10 @@ const denseListPickerButtonMaxWidthClassName: Record<DenseListPickerButtonMaxWid
   project: 'max-w-[14rem] sm:max-w-[12rem]',
 };
 
-export const denseListPickerPopoverClassName = 'w-80 max-w-[calc(100vw-2rem)] p-0';
+export const denseListPickerPopoverClassName = [
+  'w-[min(20rem,calc(100vw-2rem))]',
+  'p-0',
+].join(' ');
 export const denseListCalendarPopoverClassName = 'w-auto p-0';
 
 function DenseListPickerButton({ maxWidth = 'default', className, ...props }: DenseListPickerButtonProps) {
