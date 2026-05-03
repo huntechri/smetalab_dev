@@ -52,7 +52,7 @@ export function ActionMenuItemContent({ icon, children }: ActionMenuItemContentP
   );
 }
 
-export interface ActionIconButtonProps extends Omit<Button size="xs"Props, 'children'> {
+export interface ActionIconButtonProps extends Omit<ButtonProps, 'children'> {
   label: string;
   icon: React.ReactNode;
 }
@@ -130,18 +130,12 @@ export function ConfirmAction({
   );
 }
 
-/**
- * Item definition for ActionMenu
- */
 export interface ActionMenuItem {
   label: string;
   icon?: React.ReactNode;
   onClick: () => void;
   disabled?: boolean;
   variant?: 'default' | 'destructive';
-  /**
-   * If true, this item will trigger an AlertDialog before executing onClick
-   */
   requiresConfirmation?: boolean;
   confirmTitle?: string;
   confirmDescription?: string;
@@ -150,30 +144,13 @@ export interface ActionMenuItem {
 
 interface ActionMenuProps {
   items: ActionMenuItem[];
-  /**
-   * Custom trigger element. Defaults to a ghost icon button.
-   */
   trigger?: React.ReactNode;
-  /**
-   * Alignment of the dropdown menu
-   */
   align?: 'start' | 'end' | 'center';
-  /**
-   * Whether the menu should be modal (Radix DropdownMenu behavior).
-   * Defaults to true for backward compatibility.
-   */
   modal?: boolean;
-  /**
-   * Optional custom aria-label for the trigger
-   */
   ariaLabel?: string;
   contentClassName?: string;
 }
 
-/**
- * A combined DropdownMenu and AlertDialog component for common action patterns.
- * Supports standard items and items that require confirmation (e.g., delete).
- */
 export function ActionMenu({
   items,
   trigger,
@@ -182,10 +159,7 @@ export function ActionMenu({
   modal = true,
   contentClassName,
 }: ActionMenuProps) {
-  // We only support one confirmation dialog at a time (standard for menus)
-  const [activeConfirmItem, setActiveConfirmItem] = React.useState<ActionMenuItem | null>(
-    null
-  );
+  const [activeConfirmItem, setActiveConfirmItem] = React.useState<ActionMenuItem | null>(null);
 
   return (
     <>
@@ -211,9 +185,7 @@ export function ActionMenu({
               return (
                 <DropdownMenuItem
                   key={index}
-                  onSelect={() => {
-                    queueMicrotask(() => setActiveConfirmItem(item));
-                  }}
+                  onSelect={() => queueMicrotask(() => setActiveConfirmItem(item))}
                   disabled={item.disabled}
                   variant={isDestructive ? 'destructive' : 'default'}
                   className={actionMenuItemClassName}
@@ -238,10 +210,7 @@ export function ActionMenu({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <AlertDialog
-        open={!!activeConfirmItem}
-        onOpenChange={(open) => !open && setActiveConfirmItem(null)}
-      >
+      <AlertDialog open={!!activeConfirmItem} onOpenChange={(open) => !open && setActiveConfirmItem(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
