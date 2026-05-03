@@ -1,4 +1,5 @@
 import { EstimatesRegistryScreen } from '@/features/projects';
+import { PageShell } from '@/shared/ui/page-shell';
 import { getEstimatesByProjectId } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
@@ -35,12 +36,11 @@ export default async function Page({ params }: PageProps) {
     }));
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-6 py-4">
-            <h1 className="sr-only">Реестр смет</h1>
+        <PageShell title="Реестр смет" visuallyHiddenTitle>
             <EstimatesRegistryScreen
                 estimates={mappedEstimates}
                 projectSlug={projectSlug}
             />
-        </div>
+        </PageShell>
     );
 }

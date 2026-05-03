@@ -1,4 +1,5 @@
 import { EstimateDetailsShell } from '@/features/projects';
+import { PageShell } from '@/shared/ui/page-shell';
 import { getEstimateBySlug } from '@/lib/data/estimates/repo';
 import { getProjectBySlug } from '@/lib/data/projects/repo';
 import { getTeamForUser } from '@/lib/data/db/queries';
@@ -52,7 +53,7 @@ export default async function Page({ params }: PageProps) {
     const financeAggregatesPromise: Promise<ProjectReceiptAggregates> = ProjectReceiptsService.getAggregatesByProject(team.id, project.id).then((result) => result.success ? result.data : emptyFinanceAggregates);
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-4 pt-1 pb-0 -mb-4 md:-mb-6 lg:-mb-8">
+        <PageShell title={estimate.name} spacing="flush-bottom" visuallyHiddenTitle>
             <EstimateDetailsShell
                 estimateId={estimate.id}
                 rowsPromise={rowsPromise}
@@ -65,6 +66,6 @@ export default async function Page({ params }: PageProps) {
                 estimate={{ name: estimate.name, slug: estimate.slug }}
                 initialCoefPercent={estimate.coefPercent ?? 0}
             />
-        </div>
+        </PageShell>
     );
 }

@@ -1,4 +1,5 @@
 import { SidebarProvider, SidebarInset } from '@/shared/ui/sidebar';
+import { WorkspaceMain } from '@/shared/ui/page-shell';
 import { AppSidebar } from '@/components/layout/app-sidebar';
 import { AppHeader } from '@/components/layout/app-header';
 import { getUser, getTeamForUser } from '@/lib/data/db/queries';
@@ -24,9 +25,9 @@ export default async function AppLayout({ children }: { children: React.ReactNod
                 <SidebarInset>
                     <ImpersonationBanner />
                     <AppHeader />
-                    <main id="main" className="flex-1 p-4 md:p-6 lg:p-8 min-w-0">
+                    <WorkspaceMain>
                         {children}
-                    </main>
+                    </WorkspaceMain>
                 </SidebarInset>
                 </SidebarProvider>
             </BreadcrumbProvider>

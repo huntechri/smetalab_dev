@@ -1,4 +1,5 @@
 import { ProjectsScreen } from '@/features/projects';
+import { PageShell } from '@/shared/ui/page-shell';
 import { getProjects } from '@/lib/data/projects/repo';
 import { getTeamForUser, getCounterparties } from '@/lib/data/db/queries';
 import { redirect } from 'next/navigation';
@@ -35,12 +36,11 @@ export default async function Page() {
     }));
 
     return (
-        <div className="mx-auto w-full max-w-[1600px] space-y-3 pt-0.5 pb-4">
-            <h1 className="sr-only">Проекты</h1>
+        <PageShell title="Проекты" spacing="compact" visuallyHiddenTitle>
             <ProjectsScreen
                 initialProjects={projects}
                 counterparties={counterparties}
             />
-        </div>
+        </PageShell>
     );
 }
