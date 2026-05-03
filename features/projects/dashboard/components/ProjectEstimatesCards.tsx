@@ -12,6 +12,11 @@ import {
   DenseListToken,
   DenseListViewport,
 } from '@/shared/ui/dense-list';
+import {
+  primitiveVisualIconButtonClassNames,
+  primitiveVisualIconSizeClassNames,
+  primitiveVisualTypographyClassNames,
+} from '@/shared/ui/primitive-density';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
   AlertDialog,
@@ -72,10 +77,10 @@ export function ProjectEstimatesCards({
       <DenseListHeader>
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
-            <h2 className="truncate text-sm font-semibold">Сметы</h2>
+            <h2 className={primitiveVisualTypographyClassNames.sectionTitle}>Сметы</h2>
             <DenseListToken variant="neutral">{estimates.length}</DenseListToken>
           </div>
-          <div className="mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+          <div className={primitiveVisualTypographyClassNames.mutedMetaRow}>
             <span>Итого: {moneyFormatter.format(total)}</span>
             <span aria-hidden="true">·</span>
             <span>Выполнено: {approvedCount}</span>
@@ -89,7 +94,7 @@ export function ProjectEstimatesCards({
           aria-label="Создать смету"
           title="Создать смету"
         >
-          <Plus className="size-4" aria-hidden="true" />
+          <Plus className={primitiveVisualIconSizeClassNames.md} aria-hidden="true" />
         </Button>
       </DenseListHeader>
 
@@ -103,7 +108,7 @@ export function ProjectEstimatesCards({
                     <DenseListInlineContent>
                       <Link
                         href={`/app/projects/${projectSlug}/estimates/${estimate.slug}`}
-                        className="min-w-0 shrink truncate text-xs font-semibold leading-snug hover:underline sm:text-sm"
+                        className={primitiveVisualTypographyClassNames.denseItemTitleLink}
                         title={estimate.name}
                       >
                         {estimate.name}
@@ -118,7 +123,7 @@ export function ProjectEstimatesCards({
                         {moneyFormatter.format(estimate.total)}
                       </DenseListToken>
                       <DenseListToken variant="neutral">
-                        <CalendarDays className="size-3" aria-hidden="true" />
+                        <CalendarDays className={primitiveVisualIconSizeClassNames.xs} aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
                       </DenseListToken>
                     </DenseListInlineContent>
@@ -131,9 +136,9 @@ export function ProjectEstimatesCards({
                         size="icon-xs"
                         title="Удалить смету"
                         aria-label={`Удалить смету ${estimate.name}`}
-                        className="size-6 sm:size-7"
+                        className={primitiveVisualIconButtonClassNames.denseAction}
                       >
-                        <Trash2 className="size-3 sm:size-3.5" aria-hidden="true" />
+                        <Trash2 className={primitiveVisualIconSizeClassNames.denseAction} aria-hidden="true" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent>

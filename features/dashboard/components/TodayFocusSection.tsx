@@ -2,6 +2,10 @@ import { Badge } from '@/shared/ui/badge';
 import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
 import { Section, SectionHeader, SectionTitle } from '@/shared/ui/section';
 import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
+import {
+    primitiveVisualIconSizeClassNames,
+    primitiveVisualTypographyClassNames,
+} from '@/shared/ui/primitive-density';
 import { Clock } from 'lucide-react';
 
 const focusItems = [
@@ -31,10 +35,10 @@ export function TodayFocusSection() {
                                 <div className="flex items-start gap-3">
                                     <StatusIndicator tone="brand" size="sm" pulse="pulse" className="mt-1.5 transition-transform duration-300 group-hover:scale-125" />
                                     <div>
-                                        <p className="text-sm font-semibold leading-none text-foreground transition-colors group-hover:text-primary">{item.label}</p>
+                                        <p className={primitiveVisualTypographyClassNames.itemTitleInteractive}>{item.label}</p>
                                         <div className="mt-2 flex items-center gap-1.5">
-                                            <Clock className="h-3.5 w-3.5 text-muted-foreground/60" />
-                                            <span className="text-xs text-muted-foreground">{item.meta}</span>
+                                            <Clock className={primitiveVisualIconSizeClassNames.mutedMeta} />
+                                            <span className={primitiveVisualTypographyClassNames.mutedMeta}>{item.meta}</span>
                                         </div>
                                     </div>
                                 </div>
