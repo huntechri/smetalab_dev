@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-05-03T18:06:00.240Z",
+  "generatedAt": "2026-05-03T18:49:26.558Z",
   "summary": {
     "filesScanned": 533,
     "realViolations": 0,
-    "needsReview": 17,
-    "informational": 732,
+    "needsReview": 6,
+    "informational": 748,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
-    "manualReview": 17,
+    "manualReview": 6,
     "mode": "default"
   },
   "findings": [
@@ -1212,8 +1212,8 @@
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
-      "source": "@/shared/ui/dropdown-menu",
-      "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1223,14 +1223,14 @@
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/dropdown-menu",
+      "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
@@ -1256,6 +1256,28 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
       "source": "lucide-react",
       "importedNames": "ShieldAlert, Loader2",
       "severity": "informational",
@@ -1267,29 +1289,18 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/admin/components/impersonate-button.tsx",
       "component": "Button",
+      "marker": "bare",
+      "severity": "informational",
+      "category": "density",
+      "owner": "feature",
+      "decision": "default-control",
+      "fixSafe": false,
+      "issueHint": "#243"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
+      "component": "Input",
       "marker": "bare",
       "severity": "informational",
       "category": "density",
@@ -1366,6 +1377,17 @@
     },
     {
       "file": "features/auth/components/ForgotPasswordForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/ForgotPasswordForm.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -1385,17 +1407,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/auth/components/ForgotPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/auth/components/ForgotPasswordForm.tsx",
@@ -1487,17 +1498,6 @@
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/LoginForm.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -1531,6 +1531,17 @@
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/ResetPasswordForm.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -1550,28 +1561,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
@@ -1839,8 +1828,8 @@
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-      "source": "@/shared/ui/tabs",
-      "importedNames": "Tabs, TabsList, TabsTrigger",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1850,14 +1839,14 @@
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/tabs",
+      "importedNames": "Tabs, TabsList, TabsTrigger",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
@@ -2785,6 +2774,17 @@
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -2804,17 +2804,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
@@ -3709,8 +3698,8 @@
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "source": "@/shared/ui/input",
-      "importedNames": "Input",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3720,14 +3709,14 @@
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
@@ -4611,14 +4600,47 @@
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
-      "source": "@/shared/ui/estimate-tab",
-      "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabError, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "source": "@/shared/ui/button",
+      "importedNames": "Button",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "source": "@/shared/ui/estimate-tab",
+      "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "component": "Button",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateParams.tsx",
@@ -4666,14 +4688,47 @@
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
-      "source": "@/shared/ui/estimate-tab",
-      "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabError, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "source": "@/shared/ui/button",
+      "importedNames": "Button",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "source": "@/shared/ui/estimate-tab",
+      "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "component": "Button",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
@@ -5326,6 +5381,17 @@
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -5345,17 +5411,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
@@ -5414,6 +5469,17 @@
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -5433,17 +5499,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
@@ -5471,6 +5526,17 @@
       "file": "features/team/components/InviteTeamMemberCard.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/team/components/InviteTeamMemberCard.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -5521,17 +5587,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/team/components/InviteTeamMemberCard.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
@@ -9322,6 +9377,17 @@
       },
       {
         "file": "features/admin/components/admin-user-menu.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/admin-user-menu.tsx",
         "source": "@/shared/ui/dropdown-menu",
         "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
         "severity": "informational",
@@ -9335,6 +9401,28 @@
         "file": "features/admin/components/impersonate-button.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/input",
+        "importedNames": "Input",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9401,6 +9489,17 @@
         "file": "features/auth/components/ForgotPasswordForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ForgotPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9489,6 +9588,17 @@
         "file": "features/auth/components/ResetPasswordForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ResetPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9720,6 +9830,17 @@
         "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
         "source": "@/shared/ui/form",
         "importedNames": "Form",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10587,6 +10708,17 @@
       },
       {
         "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -11346,6 +11478,17 @@
       },
       {
         "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12039,8 +12182,30 @@
       },
       {
         "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "source": "@/shared/ui/button",
+        "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
         "source": "@/shared/ui/estimate-tab",
-        "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabError, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+        "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12094,8 +12259,30 @@
       },
       {
         "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "source": "@/shared/ui/button",
+        "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
         "source": "@/shared/ui/estimate-tab",
-        "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabError, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+        "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12666,6 +12853,17 @@
       },
       {
         "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12721,6 +12919,17 @@
       },
       {
         "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12745,6 +12954,17 @@
         "file": "features/team/components/InviteTeamMemberCard.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/team/components/InviteTeamMemberCard.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -15054,95 +15274,7 @@
         "issueHint": "#245"
       },
       {
-        "file": "features/admin/components/admin-user-menu.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ForgotPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
         "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
         "tag": "<form>",
         "scope": "app/features",
         "severity": "needs-review",
@@ -15160,61 +15292,6 @@
         "category": "raw-html",
         "owner": "feature",
         "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/team/components/InviteTeamMemberCard.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
         "fixSafe": false,
         "issueHint": "#245"
       },
@@ -15476,6 +15553,17 @@
       {
         "file": "features/admin/components/impersonate-button.tsx",
         "component": "Button",
+        "marker": "bare",
+        "severity": "informational",
+        "category": "density",
+        "owner": "feature",
+        "decision": "default-control",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "component": "Input",
         "marker": "bare",
         "severity": "informational",
         "category": "density",
@@ -16009,6 +16097,28 @@
         "category": "density",
         "owner": "feature",
         "decision": "table-cell",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
         "fixSafe": false,
         "issueHint": "#243"
       },
@@ -16642,6 +16752,17 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "component": "Input",
+        "marker": "bare",
+        "severity": "informational",
+        "category": "density",
+        "owner": "feature",
+        "decision": "default-control",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/admin/components/stop-impersonation-button.tsx",
         "component": "Button",
         "marker": "bare",
@@ -17170,6 +17291,28 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
         "component": "Button",
         "marker": "bare",
@@ -17660,7 +17803,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 79,
+        "Runtime imports": 81,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17672,7 +17815,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 25,
+        "Runtime imports": 26,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17922,14 +18065,14 @@
       {
         "Component": "ErrorState",
         "components/ui": false,
-        "shared/ui": false,
+        "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 0,
-        "Status": "missing",
-        "Decision": "not-imported; file-exists=true; exported=true",
+        "Runtime imports": 2,
+        "Status": "canonical",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
-        "importStatus": "not-imported"
+        "importStatus": "imported"
       },
       {
         "Component": "ForbiddenState",

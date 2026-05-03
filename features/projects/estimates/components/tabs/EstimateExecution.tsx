@@ -4,12 +4,13 @@ import { useMemo, useState } from 'react';
 import { FilePlus } from 'lucide-react';
 
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { Button } from '@/shared/ui/button';
+import { ErrorState } from '@/shared/ui/states';
 import {
   EstimateTabActionsBar,
   EstimateTabCard,
   EstimateTabCodeText,
   EstimateTabEmptyState,
-  EstimateTabError,
   EstimateTabInlineMetric,
   EstimateTabLoading,
   EstimateTabMetaWrap,
@@ -75,6 +76,7 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
     handleExport,
     totals,
     addedWorkNames,
+    reloadRows,
   } = useEstimateExecutionController({ estimateId, initialRows });
 
   const [searchValue, setSearchValue] = useState('');
@@ -98,7 +100,17 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
   }
 
   if (errorMessage) {
-    return <EstimateTabError>{errorMessage}</EstimateTabError>;
+    return (
+      <ErrorState
+        title="Ошибка загрузки"
+        description={errorMessage}
+        action={
+          <Button type="button" onClick={() => reloadRows()}>
+            Повторить
+          </Button>
+        }
+      />
+    );
   }
 
   if (rows.length === 0) {

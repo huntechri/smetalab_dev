@@ -2,16 +2,16 @@
 
 ## Top summary
 - real violations count: 0
-- needs-review count: 17
-- informational count: 732
+- needs-review count: 6
+- informational count: 748
 - auto-fix candidates count: 0
-- manual review count: 17
+- manual review count: 6
 
 ## UI source-of-truth matrix
 | Component | components/ui | shared/ui | packages/ui / @repo/ui | Runtime imports | Status | Decision |
 |---|---|---|---|---|---|---|
-| Button | false | true | false | 79 | canonical | informational |
-| Input | false | true | false | 25 | canonical | informational |
+| Button | false | true | false | 81 | canonical | informational |
+| Input | false | true | false | 26 | canonical | informational |
 | Textarea | false | true | false | 3 | canonical | informational |
 | Select | false | true | false | 3 | canonical | informational |
 | Checkbox | false | true | false | 1 | canonical | informational |
@@ -32,27 +32,14 @@
 | Skeleton | false | true | false | 9 | canonical | informational |
 | LoadingState | false | true | false | 6 | canonical | informational |
 | EmptyState | false | true | false | 3 | canonical | informational |
-| ErrorState | false | false | false | 0 | missing | not-imported; file-exists=true; exported=true |
+| ErrorState | false | true | false | 2 | canonical | informational |
 | ForbiddenState | false | true | false | 2 | canonical | informational |
 | StateShell | false | false | false | 0 | missing | not-imported; file-exists=true; exported=true |
 
 ## Raw HTML classification (app/features)
 - features/_shared/guide-catalog/components/CatalogScreenShell.tsx: <input> => possible-violation
-- features/admin/components/admin-user-menu.tsx: <form> => needs-review
-- features/admin/components/impersonate-button.tsx: <form> => needs-review
-- features/admin/components/impersonate-button.tsx: <input> => possible-violation
-- features/auth/components/ForgotPasswordForm.tsx: <form> => needs-review
 - features/auth/components/LoginForm.tsx: <form> => needs-review
-- features/auth/components/LoginForm.tsx: <input> => possible-violation
-- features/auth/components/ResetPasswordForm.tsx: <form> => needs-review
-- features/auth/components/ResetPasswordForm.tsx: <input> => possible-violation
-- features/counterparties/components/CreateCounterpartySheet.tsx: <form> => needs-review
 - features/global-purchases/components/GlobalPurchasesImportExportActions.tsx: <input> => possible-violation
-- features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <form> => needs-review
-- features/projects/estimates/components/CreateEstimateDialog.tsx: <form> => needs-review
-- features/settings/screens/AdminGeneralSettingsScreen.tsx: <form> => needs-review
-- features/settings/screens/AdminSecuritySettingsScreen.tsx: <form> => needs-review
-- features/team/components/InviteTeamMemberCard.tsx: <form> => needs-review
 
 ## Raw HTML classification (shared/ui)
 - shared/ui/admin-surface.tsx: <form> => allowed
@@ -84,6 +71,7 @@
 - features/admin/components/PricingSubmitButton.tsx: <Button> bare => default-control
 - features/admin/components/admin-user-menu.tsx: <Button> bare => default-control
 - features/admin/components/impersonate-button.tsx: <Button> bare => default-control
+- features/admin/components/impersonate-button.tsx: <Input> bare => default-control
 - features/admin/components/stop-impersonation-button.tsx: <Button> bare => default-control
 - features/auth/components/ForgotPasswordForm.tsx: <Button> bare => default-control
 - features/auth/components/ForgotPasswordForm.tsx: <Input> bare => default-control
@@ -132,6 +120,8 @@
 - features/projects/estimates/components/table/cards/EstimateSectionCard.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/cards/EstimateWorkCard.tsx: <Button> bare => table-cell
 - features/projects/estimates/components/table/columns.tsx: <Button> bare => table-cell
+- features/projects/estimates/components/tabs/EstimateExecution.tsx: <Button> bare => unknown
+- features/projects/estimates/components/tabs/EstimateProcurement.tsx: <Button> bare => unknown
 - features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx: <Button> bare => default-control
 - features/projects/list/components/create-project-dialog.tsx: <Button> bare => default-control
 - features/projects/list/components/create-project-dialog.tsx: <Input> bare => default-control
@@ -178,7 +168,7 @@
 - shared/ui/toolbar-button.tsx: <Button> bare => toolbar-action
 
 ## Density markers count/details
-- count: 105
+- count: 108
 - app/(admin)/dashboard/tenants/[tenantId]/page.tsx: bare
 - app/(admin)/dashboard/tenants/page.tsx: bare
 - app/(admin)/page.tsx: bare
@@ -191,6 +181,7 @@
 - features/_shared/guide-catalog/components/CatalogTableWrapper.tsx: bare
 - features/admin/components/PricingSubmitButton.tsx: bare
 - features/admin/components/admin-user-menu.tsx: bare
+- features/admin/components/impersonate-button.tsx: bare
 - features/admin/components/impersonate-button.tsx: bare
 - features/admin/components/stop-impersonation-button.tsx: bare
 - features/auth/components/ForgotPasswordForm.tsx: bare
@@ -240,6 +231,8 @@
 - features/projects/estimates/components/table/cards/EstimateSectionCard.tsx: bare
 - features/projects/estimates/components/table/cards/EstimateWorkCard.tsx: bare
 - features/projects/estimates/components/table/columns.tsx: bare
+- features/projects/estimates/components/tabs/EstimateExecution.tsx: bare
+- features/projects/estimates/components/tabs/EstimateProcurement.tsx: bare
 - features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx: bare
 - features/projects/list/components/create-project-dialog.tsx: bare
 - features/projects/list/components/create-project-dialog.tsx: bare
@@ -290,4 +283,5 @@
 - reason: classification-first mode; fix-safe disabled
 
 ## Unknown density surfaces require manual review before #243 auto-fix
-- none
+- features/projects/estimates/components/tabs/EstimateExecution.tsx: <Button>
+- features/projects/estimates/components/tabs/EstimateProcurement.tsx: <Button>
