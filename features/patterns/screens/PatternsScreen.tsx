@@ -104,13 +104,15 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <Surface variant="muted" density="compact" radius="md" shadow="none" className="space-y-1">
-            {sortedPreviewRows.map((row) => (
-              <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
-                <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
-                <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
-              </div>
-            ))}
+          <Surface variant="muted" density="compact" radius="md" style={{ boxShadow: 'none' }}>
+            <div className="space-y-1">
+              {sortedPreviewRows.map((row) => (
+                <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
+                  <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
+                  <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
+                </div>
+              ))}
+            </div>
           </Surface>
           <DialogFooter>
             <Button variant="outline" size="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>

@@ -38,7 +38,7 @@ export function TeamMembersCard({
     onRemoveMember,
 }: TeamMembersCardProps) {
     return (
-        <Surface variant="card" density="comfortable" shadow="sm">
+        <Surface variant="card" density="comfortable">
             <div className="flex flex-col space-y-4">
                 <div>
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-6">

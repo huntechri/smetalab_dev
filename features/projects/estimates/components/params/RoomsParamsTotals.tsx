@@ -45,7 +45,8 @@ function TotalLine({ label, totals, isGrandTotal = false }: { label: string; tot
 
 export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomParamDraft[]; grandTotals: Totals }) {
     return (
-        <Surface variant="muted" radius="md" shadow="none" density="compact" className="mt-4">
+        <div className="mt-4">
+            <Surface variant="muted" radius="md" density="compact" style={{ boxShadow: 'none' }}>
                 <div className="font-bold text-[0.5625rem] sm:text-[0.6875rem] mb-2 uppercase tracking-wider text-muted-foreground">Итого:</div>
 
                 {rows.map((row, index) => {
@@ -72,5 +73,6 @@ export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomPar
                     isGrandTotal
                 />
         </Surface>
+        </div>
     );
 }

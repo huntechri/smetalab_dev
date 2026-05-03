@@ -34,12 +34,13 @@ export function InviteTeamMemberCard({
     const parsedMessage = message ? parseDevLinkMessage(message.text) : null;
 
     return (
-        <Surface variant="card" density="comfortable" shadow="sm" className="space-y-1">
-            <div>
-                <h2 className="text-base font-medium">Пригласить участника</h2>
-                <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
-            </div>
-            <div>
+        <Surface variant="card" density="comfortable">
+            <div className="space-y-1">
+                <div>
+                    <h2 className="text-base font-medium">Пригласить участника</h2>
+                    <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
+                </div>
+                <div>
                 <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
                         <Label htmlFor="email" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
@@ -99,6 +100,7 @@ export function InviteTeamMemberCard({
                         )}
                     </p>
                 )}
+            </div>
             </div>
         </Surface>
     );
