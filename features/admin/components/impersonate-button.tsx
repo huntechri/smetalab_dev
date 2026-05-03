@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react';
 import { Button } from '@/shared/ui/button';
+import { Input } from '@/shared/ui/input';
 import { startImpersonation } from '@/app/actions/admin/impersonation';
 import { ShieldAlert, Loader2 } from 'lucide-react';
 import { notify } from '@/lib/infrastructure/notifications/notify';
@@ -23,7 +24,7 @@ export function ImpersonateButton({ teamId }: ImpersonateButtonProps) {
 
     return (
         <form action={formAction}>
-            <input type="hidden" name="targetTeamId" value={teamId} />
+            <Input type="hidden" name="targetTeamId" value={teamId} />
             <Button
                 type="submit"
                 variant="outline"

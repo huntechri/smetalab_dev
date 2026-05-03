@@ -1,17 +1,17 @@
 # UI Inventory Report
 
 ## Top summary
-- real violations count: 2
-- needs-review count: 61
-- informational count: 686
+- real violations count: 0
+- needs-review count: 58
+- informational count: 695
 - auto-fix candidates count: 0
-- manual review count: 63
+- manual review count: 58
 
 ## UI source-of-truth matrix
 | Component | components/ui | shared/ui | packages/ui / @repo/ui | Runtime imports | Status | Decision |
 |---|---|---|---|---|---|---|
 | Button | false | true | false | 79 | canonical | informational |
-| Input | false | true | false | 25 | canonical | informational |
+| Input | false | true | false | 28 | canonical | informational |
 | Textarea | false | true | false | 3 | canonical | informational |
 | Select | false | true | false | 3 | canonical | informational |
 | Checkbox | false | true | false | 1 | canonical | informational |
@@ -25,29 +25,24 @@
 | AlertDialog | false | true | false | 9 | canonical | informational |
 | Sheet | false | true | false | 5 | canonical | informational |
 | Popover | false | true | false | 9 | canonical | informational |
-| DropdownMenu | false | true | true | 12 | canonical | informational, forbidden-runtime |
+| DropdownMenu | false | true | false | 12 | canonical | informational |
 | Tooltip | false | true | false | 12 | canonical | informational |
 | Tabs | false | true | false | 6 | canonical | informational |
 | Sidebar | false | true | false | 2 | canonical | informational |
 | Skeleton | false | true | false | 9 | canonical | informational |
 | LoadingState | false | true | false | 6 | canonical | informational |
 | EmptyState | false | true | false | 3 | canonical | informational |
-| ErrorState | false | false | false | 0 | missing | not-imported; file-exists=true; exported=true |
+| ErrorState | false | true | false | 1 | canonical | informational |
 | ForbiddenState | false | true | false | 2 | canonical | informational |
-| StateShell | false | false | false | 0 | missing | not-imported; file-exists=true; exported=true |
+| StateShell | false | true | false | 2 | canonical | informational |
 
 ## Raw HTML classification (app/features)
-- features/_shared/guide-catalog/components/CatalogScreenShell.tsx: <input> => possible-violation
 - features/admin/components/admin-user-menu.tsx: <form> => needs-review
 - features/admin/components/impersonate-button.tsx: <form> => needs-review
-- features/admin/components/impersonate-button.tsx: <input> => possible-violation
 - features/auth/components/ForgotPasswordForm.tsx: <form> => needs-review
 - features/auth/components/LoginForm.tsx: <form> => needs-review
-- features/auth/components/LoginForm.tsx: <input> => possible-violation
 - features/auth/components/ResetPasswordForm.tsx: <form> => needs-review
-- features/auth/components/ResetPasswordForm.tsx: <input> => possible-violation
 - features/counterparties/components/CreateCounterpartySheet.tsx: <form> => needs-review
-- features/global-purchases/components/GlobalPurchasesImportExportActions.tsx: <input> => possible-violation
 - features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <form> => needs-review
 - features/projects/estimates/components/CreateEstimateDialog.tsx: <form> => needs-review
 - features/settings/screens/AdminGeneralSettingsScreen.tsx: <form> => needs-review
@@ -80,10 +75,12 @@
 - components/layout/user-menu.tsx: <Button> bare => unknown
 - features/_shared/directories/components/directory-list-screen.tsx: <Button> bare => unknown
 - features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: <Button> bare => unknown
+- features/_shared/guide-catalog/components/CatalogScreenShell.tsx: <Input> bare => unknown
 - features/_shared/guide-catalog/components/CatalogTableWrapper.tsx: <Button> bare => table-cell
 - features/admin/components/PricingSubmitButton.tsx: <Button> bare => default-control
 - features/admin/components/admin-user-menu.tsx: <Button> bare => default-control
 - features/admin/components/impersonate-button.tsx: <Button> bare => default-control
+- features/admin/components/impersonate-button.tsx: <Input> bare => default-control
 - features/admin/components/stop-impersonation-button.tsx: <Button> bare => default-control
 - features/auth/components/ForgotPasswordForm.tsx: <Button> bare => default-control
 - features/auth/components/ForgotPasswordForm.tsx: <Input> bare => default-control
@@ -97,6 +94,7 @@
 - features/counterparties/components/CreateCounterpartySheet.tsx: <Button> bare => unknown
 - features/counterparties/components/counterparty-sheet-sections.tsx: <Input> bare => unknown
 - features/dashboard/components/TeamWidgetSection.tsx: <Button> bare => unknown
+- features/global-purchases/components/GlobalPurchasesImportExportActions.tsx: <Input> bare => unknown
 - features/global-purchases/components/cards/DeletePurchaseAction.tsx: <Button> bare => unknown
 - features/global-purchases/components/global-purchases-columns.tsx: <Button> bare => table-cell
 - features/guide/screens/GuideScreen.tsx: <Button> bare => unknown
@@ -178,7 +176,7 @@
 - shared/ui/toolbar-button.tsx: <Button> bare => toolbar-action
 
 ## Density markers count/details
-- count: 105
+- count: 108
 - app/(admin)/dashboard/tenants/[tenantId]/page.tsx: bare
 - app/(admin)/dashboard/tenants/page.tsx: bare
 - app/(admin)/page.tsx: bare
@@ -188,9 +186,11 @@
 - components/layout/user-menu.tsx: bare
 - features/_shared/directories/components/directory-list-screen.tsx: bare
 - features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: bare
+- features/_shared/guide-catalog/components/CatalogScreenShell.tsx: bare
 - features/_shared/guide-catalog/components/CatalogTableWrapper.tsx: bare
 - features/admin/components/PricingSubmitButton.tsx: bare
 - features/admin/components/admin-user-menu.tsx: bare
+- features/admin/components/impersonate-button.tsx: bare
 - features/admin/components/impersonate-button.tsx: bare
 - features/admin/components/stop-impersonation-button.tsx: bare
 - features/auth/components/ForgotPasswordForm.tsx: bare
@@ -205,6 +205,7 @@
 - features/counterparties/components/CreateCounterpartySheet.tsx: bare
 - features/counterparties/components/counterparty-sheet-sections.tsx: bare
 - features/dashboard/components/TeamWidgetSection.tsx: bare
+- features/global-purchases/components/GlobalPurchasesImportExportActions.tsx: bare
 - features/global-purchases/components/cards/DeletePurchaseAction.tsx: bare
 - features/global-purchases/components/global-purchases-columns.tsx: bare
 - features/guide/screens/GuideScreen.tsx: bare
@@ -296,12 +297,14 @@
 - components/layout/user-menu.tsx: <Button>
 - features/_shared/directories/components/directory-list-screen.tsx: <Button>
 - features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx: <Button>
+- features/_shared/guide-catalog/components/CatalogScreenShell.tsx: <Input>
 - features/catalog/components/CatalogCategoryButton.tsx: <Button>
 - features/catalog/components/MaterialCatalogPicker.client.tsx: <Button>
 - features/catalog/components/WorkCatalogPicker.client.tsx: <Button>
 - features/counterparties/components/CreateCounterpartySheet.tsx: <Button>
 - features/counterparties/components/counterparty-sheet-sections.tsx: <Input>
 - features/dashboard/components/TeamWidgetSection.tsx: <Button>
+- features/global-purchases/components/GlobalPurchasesImportExportActions.tsx: <Input>
 - features/global-purchases/components/cards/DeletePurchaseAction.tsx: <Button>
 - features/guide/screens/GuideScreen.tsx: <Button>
 - features/material-suppliers/components/CreateMaterialSupplierSheet.tsx: <Button>

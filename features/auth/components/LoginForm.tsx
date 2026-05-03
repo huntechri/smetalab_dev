@@ -13,6 +13,7 @@ import {
 } from '@/shared/ui/card';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
+import { StateShell } from '@/shared/ui/states';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/app/(login)/actions';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
@@ -121,9 +122,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </AuthStatusMessage>
             )}
             <form className="space-y-4" action={formAction}>
-              <input type="hidden" name="redirect" value={redirect || ''} />
-              <input type="hidden" name="priceId" value={priceId || ''} />
-              <input type="hidden" name="inviteId" value={inviteId || ''} />
+              <Input type="hidden" name="redirect" value={redirect || ''} />
+              <Input type="hidden" name="priceId" value={priceId || ''} />
+              <Input type="hidden" name="inviteId" value={inviteId || ''} />
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -193,11 +194,13 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 </div>
               )}
 
-              {state?.error && (
-                <AuthStatusMessage variant="error">
-                  {state?.error}
-                </AuthStatusMessage>
-              )}
+              {state?.error ? (
+                <StateShell density="compact" className="p-0">
+                  <AuthStatusMessage variant="error">
+                    {state?.error}
+                  </AuthStatusMessage>
+                </StateShell>
+              ) : null}
 
               <Button
                 type="submit"

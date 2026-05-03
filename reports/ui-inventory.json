@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-05-03T13:32:24.226Z",
+  "generatedAt": "2026-05-03T15:31:17.989Z",
   "summary": {
     "filesScanned": 533,
-    "realViolations": 2,
-    "needsReview": 61,
-    "informational": 686,
+    "realViolations": 0,
+    "needsReview": 58,
+    "informational": 695,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
-    "manualReview": 63,
-    "mode": "default"
+    "manualReview": 58,
+    "mode": "strict"
   },
   "findings": [
     {
@@ -244,6 +244,17 @@
     },
     {
       "file": "app/(login)/verify-email/page.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/(login)/verify-email/page.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "needs-review",
@@ -411,6 +422,17 @@
       "file": "app/not-found.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/not-found.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "StateShell",
       "severity": "informational",
       "category": "import",
       "owner": "app",
@@ -662,23 +684,23 @@
     },
     {
       "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-      "source": "@repo/ui",
+      "source": "@/shared/ui/breadcrumb",
       "importedNames": "Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,",
-      "severity": "real-violation",
+      "severity": "informational",
       "category": "import",
       "owner": "other",
-      "decision": "forbidden-runtime",
+      "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
     },
     {
       "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-      "source": "@repo/ui",
+      "source": "@/shared/ui/dropdown-menu",
       "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
-      "severity": "real-violation",
+      "severity": "informational",
       "category": "import",
       "owner": "other",
-      "decision": "forbidden-runtime",
+      "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
     },
@@ -926,14 +948,25 @@
     },
     {
       "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "possible-violation",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+      "component": "Input",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
@@ -1256,6 +1289,17 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
       "source": "lucide-react",
       "importedNames": "ShieldAlert, Loader2",
       "severity": "informational",
@@ -1278,18 +1322,18 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "component": "Button",
+      "marker": "bare",
+      "severity": "informational",
+      "category": "density",
       "owner": "feature",
-      "decision": "possible-violation",
+      "decision": "default-control",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#243"
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
-      "component": "Button",
+      "component": "Input",
       "marker": "bare",
       "severity": "informational",
       "category": "density",
@@ -1465,6 +1509,17 @@
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "StateShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/LoginForm.tsx",
       "source": "lucide-react",
       "importedNames": "CircleIcon, Loader2, Eye, EyeOff",
       "severity": "informational",
@@ -1482,17 +1537,6 @@
       "category": "raw-html",
       "owner": "feature",
       "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/LoginForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
       "fixSafe": false,
       "issueHint": "#245"
     },
@@ -1559,17 +1603,6 @@
       "category": "raw-html",
       "owner": "feature",
       "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
       "fixSafe": false,
       "issueHint": "#245"
     },
@@ -2235,14 +2268,25 @@
     },
     {
       "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "possible-violation",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "component": "Input",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/global-purchases/components/GlobalPurchasesSummary.tsx",
@@ -8452,6 +8496,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "app/(login)/verify-email/page.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "app/(workspace)/app/guide/counterparties/loading.tsx",
         "source": "@/shared/ui/states",
         "importedNames": "LoadingState",
@@ -8609,6 +8664,17 @@
         "file": "app/not-found.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/not-found.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "StateShell",
         "severity": "informational",
         "category": "import",
         "owner": "app",
@@ -8827,23 +8893,23 @@
       },
       {
         "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-        "source": "@repo/ui",
+        "source": "@/shared/ui/breadcrumb",
         "importedNames": "Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator,",
-        "severity": "real-violation",
+        "severity": "informational",
         "category": "import",
         "owner": "other",
-        "decision": "forbidden-runtime",
+        "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
       },
       {
         "file": "components/shadcn-studio/breadcrumb/breadcrumb-07.tsx",
-        "source": "@repo/ui",
+        "source": "@/shared/ui/dropdown-menu",
         "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
-        "severity": "real-violation",
+        "severity": "informational",
         "category": "import",
         "owner": "other",
-        "decision": "forbidden-runtime",
+        "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
       },
@@ -9060,6 +9126,17 @@
         "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
         "source": "@/shared/ui/shells/catalog-directory-visual-contracts",
         "importedNames": "catalogScreenShellClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+        "source": "@/shared/ui/input",
+        "importedNames": "Input",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9344,6 +9421,17 @@
       },
       {
         "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/input",
+        "importedNames": "Input",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
         "source": "lucide-react",
         "importedNames": "ShieldAlert, Loader2",
         "severity": "informational",
@@ -9467,6 +9555,17 @@
         "file": "features/auth/components/LoginForm.tsx",
         "source": "@/shared/ui/label",
         "importedNames": "Label",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "StateShell",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10072,6 +10171,17 @@
         "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
         "source": "@/shared/ui/tooltip",
         "importedNames": "Tooltip, TooltipContent, TooltipTrigger",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+        "source": "@/shared/ui/input",
+        "importedNames": "Input",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -15043,17 +15153,6 @@
     ],
     "rawHtml": [
       {
-        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
         "file": "features/admin/components/admin-user-menu.tsx",
         "tag": "<form>",
         "scope": "app/features",
@@ -15072,17 +15171,6 @@
         "category": "raw-html",
         "owner": "feature",
         "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
         "fixSafe": false,
         "issueHint": "#245"
       },
@@ -15109,17 +15197,6 @@
         "issueHint": "#245"
       },
       {
-        "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
         "file": "features/auth/components/ResetPasswordForm.tsx",
         "tag": "<form>",
         "scope": "app/features",
@@ -15127,17 +15204,6 @@
         "category": "raw-html",
         "owner": "feature",
         "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
         "fixSafe": false,
         "issueHint": "#245"
       },
@@ -15149,17 +15215,6 @@
         "category": "raw-html",
         "owner": "feature",
         "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
         "fixSafe": false,
         "issueHint": "#245"
       },
@@ -15441,6 +15496,17 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+        "component": "Input",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
         "component": "Button",
         "marker": "bare",
@@ -15476,6 +15542,17 @@
       {
         "file": "features/admin/components/impersonate-button.tsx",
         "component": "Button",
+        "marker": "bare",
+        "severity": "informational",
+        "category": "density",
+        "owner": "feature",
+        "decision": "default-control",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "component": "Input",
         "marker": "bare",
         "severity": "informational",
         "category": "density",
@@ -15619,6 +15696,17 @@
       {
         "file": "features/dashboard/components/TeamWidgetSection.tsx",
         "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+        "component": "Input",
         "marker": "bare",
         "severity": "needs-review",
         "category": "density",
@@ -16598,6 +16686,17 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+        "component": "Input",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
         "component": "Button",
         "marker": "bare",
@@ -16633,6 +16732,17 @@
       {
         "file": "features/admin/components/impersonate-button.tsx",
         "component": "Button",
+        "marker": "bare",
+        "severity": "informational",
+        "category": "density",
+        "owner": "feature",
+        "decision": "default-control",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "component": "Input",
         "marker": "bare",
         "severity": "informational",
         "category": "density",
@@ -16776,6 +16886,17 @@
       {
         "file": "features/dashboard/components/TeamWidgetSection.tsx",
         "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+        "component": "Input",
         "marker": "bare",
         "severity": "needs-review",
         "category": "density",
@@ -17672,7 +17793,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 25,
+        "Runtime imports": 28,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17839,10 +17960,10 @@
         "Component": "DropdownMenu",
         "components/ui": false,
         "shared/ui": true,
-        "packages/ui / @repo/ui": true,
+        "packages/ui / @repo/ui": false,
         "Runtime imports": 12,
         "Status": "canonical",
-        "Decision": "informational, forbidden-runtime",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
         "importStatus": "imported"
@@ -17922,14 +18043,14 @@
       {
         "Component": "ErrorState",
         "components/ui": false,
-        "shared/ui": false,
+        "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 0,
-        "Status": "missing",
-        "Decision": "not-imported; file-exists=true; exported=true",
+        "Runtime imports": 1,
+        "Status": "canonical",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
-        "importStatus": "not-imported"
+        "importStatus": "imported"
       },
       {
         "Component": "ForbiddenState",
@@ -17946,14 +18067,14 @@
       {
         "Component": "StateShell",
         "components/ui": false,
-        "shared/ui": false,
+        "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 0,
-        "Status": "missing",
-        "Decision": "not-imported; file-exists=true; exported=true",
+        "Runtime imports": 2,
+        "Status": "canonical",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
-        "importStatus": "not-imported"
+        "importStatus": "imported"
       }
     ],
     "figmaConflicts": [

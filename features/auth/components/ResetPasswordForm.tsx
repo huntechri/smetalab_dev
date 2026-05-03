@@ -22,7 +22,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
       description="Введите новый пароль для аккаунта."
     >
       <form action={formAction} className="space-y-4">
-        <input type="hidden" name="token" value={token} />
+        <Input type="hidden" name="token" value={token} />
         <div className="space-y-2">
           <Label htmlFor="password">Новый пароль</Label>
           <Input
