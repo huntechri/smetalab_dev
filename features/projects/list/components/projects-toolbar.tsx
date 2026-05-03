@@ -25,13 +25,11 @@ export function ProjectsToolbar({
     return (
         <Toolbar responsive="stack" align="between">
             <ToolbarGroup grow scroll>
-                <div className="w-full sm:flex-1">
+                <div className="sm:flex-1">
                     <ProjectsSearchInput value={searchQuery} onChange={onSearchQueryChange} />
                 </div>
-                <div className="flex items-center gap-2">
-                    <div className="flex-1 sm:flex-initial">
-                        <ProjectsSortSelect value={sortOption} onValueChange={onSortOptionChange} />
-                    </div>
+                <div>
+                    <ProjectsSortSelect value={sortOption} onValueChange={onSortOptionChange} />
                 </div>
             </ToolbarGroup>
             <Button

@@ -3,14 +3,22 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 type ToolbarVariant = 'plain' | 'surface' | 'inset';
+type ToolbarDensity = 'compact' | 'default' | 'comfortable';
 type ToolbarResponsive = 'stack' | 'nowrap' | 'wrap';
 type ToolbarAlign = 'start' | 'end' | 'between';
 type ToolbarGroupAlign = 'start' | 'end' | 'between';
+type ToolbarGroupDensity = 'compact' | 'default';
 
 const toolbarVariantClassName: Record<ToolbarVariant, string> = {
   plain: 'px-1 md:px-0',
   surface: 'border-b bg-background/95 p-3 shadow-sm backdrop-blur-sm sm:px-4',
   inset: 'p-1.5 pb-0 sm:p-2',
+};
+
+const toolbarDensityClassName: Record<ToolbarDensity, string> = {
+  compact: 'gap-1',
+  default: 'gap-2',
+  comfortable: 'gap-3',
 };
 
 const toolbarResponsiveClassName: Record<ToolbarResponsive, string> = {
@@ -25,6 +33,11 @@ const toolbarAlignClassName: Record<ToolbarAlign, string> = {
   between: 'justify-between',
 };
 
+const toolbarGroupDensityClassName: Record<ToolbarGroupDensity, string> = {
+  compact: 'gap-1.5',
+  default: 'gap-2',
+};
+
 const toolbarGroupAlignClassName: Record<ToolbarGroupAlign, string> = {
   start: 'justify-start',
   end: 'justify-end',
@@ -33,12 +46,14 @@ const toolbarGroupAlignClassName: Record<ToolbarGroupAlign, string> = {
 
 type ToolbarProps = React.ComponentProps<'div'> & {
   variant?: ToolbarVariant;
+  density?: ToolbarDensity;
   responsive?: ToolbarResponsive;
   align?: ToolbarAlign;
 };
 
 type ToolbarGroupProps = React.ComponentProps<'div'> & {
   align?: ToolbarGroupAlign;
+  density?: ToolbarGroupDensity;
   grow?: boolean;
   scroll?: boolean;
   fullWidthOnMobile?: boolean;
@@ -50,6 +65,7 @@ type ToolbarActionGroupProps = ToolbarGroupProps & {
 
 function Toolbar({
   variant = 'plain',
+  density,
   responsive = 'stack',
   align = 'between',
   className,
@@ -59,6 +75,7 @@ function Toolbar({
     <div
       className={cn(
         toolbarVariantClassName[variant],
+        density && toolbarDensityClassName[density],
         toolbarResponsiveClassName[responsive],
         toolbarAlignClassName[align],
         className,
@@ -70,6 +87,7 @@ function Toolbar({
 
 function ToolbarGroup({
   align = 'start',
+  density = 'default',
   grow = false,
   scroll = false,
   fullWidthOnMobile = false,
@@ -79,7 +97,8 @@ function ToolbarGroup({
   return (
     <div
       className={cn(
-        'flex min-w-0 items-center gap-2',
+        'flex min-w-0 items-center',
+        toolbarGroupDensityClassName[density],
         toolbarGroupAlignClassName[align],
         grow && 'flex-1',
         fullWidthOnMobile && 'w-full sm:w-auto',
@@ -126,6 +145,7 @@ export {
 };
 export type {
   ToolbarActionGroupProps,
+  ToolbarGroupDensity,
   ToolbarGroupProps,
   ToolbarProps,
 };
