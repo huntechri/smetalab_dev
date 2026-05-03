@@ -1,11 +1,12 @@
 {
-  "generatedAt": "2026-05-03T20:40:45.659Z",
+  "generatedAt": "2026-05-03T21:10:51.411Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
   "headRef": "HEAD",
   "range": "origin/main...HEAD",
   "changedFiles": [
+    "__tests__/ui/landing-page.test.tsx",
     "app/(admin)/dashboard/tenants/page.tsx",
     "app/(login)/verify-email/page.tsx",
     "app/(workspace)/app/guide/counterparties/loading.tsx",
@@ -92,6 +93,7 @@
     "reports/ui-visual-ownership-classified.md",
     "reports/ui-visual-ownership-remaining.md",
     "scripts/audit-ui-visual.ts",
+    "scripts/migrate-buttons.ts",
     "shared/ui/accordion.tsx",
     "shared/ui/admin-surface.tsx",
     "shared/ui/auto-form/fields/array.tsx",
