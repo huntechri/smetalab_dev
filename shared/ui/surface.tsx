@@ -2,18 +2,26 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import {
+  primitiveSurfaceBorderClassNames,
   primitiveSurfaceDensityClassNames,
+  primitiveSurfaceToneClassNames,
+  type PrimitiveSurfaceBorder,
   type PrimitiveSurfaceDensity,
+  type PrimitiveSurfaceTone,
 } from '@/shared/ui/primitive-density';
 
 export type SurfaceVariant = 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost';
 export type SurfaceDensity = PrimitiveSurfaceDensity;
+export type SurfaceTone = PrimitiveSurfaceTone;
+export type SurfaceBorder = PrimitiveSurfaceBorder;
 export type SurfaceRadius = 'md' | 'lg' | 'xl';
 export type SurfaceShadow = 'none' | 'sm' | 'md';
 
 export interface SurfaceClassNameOptions {
   variant?: SurfaceVariant;
   density?: SurfaceDensity;
+  tone?: SurfaceTone;
+  border?: SurfaceBorder;
   radius?: SurfaceRadius;
   shadow?: SurfaceShadow;
   interactive?: boolean;
@@ -45,6 +53,8 @@ export function getSurfaceClassName(
   {
     variant = 'card',
     density = 'default',
+    tone = 'default',
+    border = 'thick',
     radius = 'xl',
     shadow = 'sm',
     interactive = false,
@@ -55,6 +65,8 @@ export function getSurfaceClassName(
   return cn(
     surfaceVariantClassName[variant],
     primitiveSurfaceDensityClassNames[density],
+    primitiveSurfaceToneClassNames[tone],
+    primitiveSurfaceBorderClassNames[border],
     surfaceRadiusClassName[radius],
     surfaceShadowClassName[shadow],
     overflow === 'hidden' && 'overflow-hidden',
@@ -69,6 +81,8 @@ export interface SurfaceProps extends React.ComponentPropsWithoutRef<'div'>, Sur
 export function Surface({
   variant = 'card',
   density = 'default',
+  tone = 'default',
+  border = 'thick',
   radius = 'xl',
   shadow = 'sm',
   interactive = false,
@@ -79,7 +93,7 @@ export function Surface({
   return (
     <div
       data-slot="surface"
-      className={getSurfaceClassName({ variant, density, radius, shadow, interactive, overflow }, className)}
+      className={getSurfaceClassName({ variant, density, tone, border, radius, shadow, interactive, overflow }, className)}
       {...props}
     />
   );
