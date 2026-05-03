@@ -1,13 +1,13 @@
 # UI Changed-File Visual Ownership Guardrail
 
-- Status: failed
+- Status: passed
 - Base ref: origin/main
 - Head ref: HEAD
 - Diff range: origin/main...HEAD
 - Changed files: 63
 - Scanned changed files: 52
-- Scanned added lines: 1082
-- Violations: 2
+- Scanned added lines: 1079
+- Violations: 0
 
 
 ## Behavior
@@ -29,8 +29,7 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| card-surface | `features/settings/components/user-settings-page.tsx:482` | `<Surface variant="card" density="compact" radius="md" shadow="none">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| action-surface | `features/settings/screens/AdminSecuritySettingsScreen.tsx:49` | `<Button type="submit" variant="destructive" size="default" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</> : <><Trash2 className="mr-2 h-4 w-4" />Delete Account</>}</Button>` | shared/ui/action-menu.tsx and shared action/icon/confirm contracts |
+| - | - | - | - |
 
 ## Exact accepted shared contract owners
 

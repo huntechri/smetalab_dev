@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T19:09:38.112Z",
+  "generatedAt": "2026-05-03T19:13:16.572Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -124,12 +124,9 @@
     "shared/ui/search-control.tsx",
     "shared/ui/search-input.tsx"
   ],
-  "scannedAddedLineCount": 1082,
-  "violationCount": 2,
-  "bucketCounts": {
-    "card-surface": 1,
-    "action-surface": 1
-  },
+  "scannedAddedLineCount": 1079,
+  "violationCount": 0,
+  "bucketCounts": {},
   "acceptedSharedContractOwners": [
     "shared/ui/action-menu.tsx",
     "shared/ui/admin-surface.tsx",
@@ -195,26 +192,5 @@
     "state-surface": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites",
     "action-surface": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts"
   },
-  "violations": [
-    {
-      "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 482,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"card\" density=\"compact\" radius=\"md\" shadow=\"none\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-      "line": 49,
-      "bucket": "action-surface",
-      "severity": "fail",
-      "token": "<Button type=\"submit\" variant=\"destructive\" size=\"default\" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />Deleting...</> : <><Trash2 className=\"mr-2 h-4 w-4\" />Delete Account</>}</Button>",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own action/menu/icon/destructive visual recipes. Use shared action/menu/icon contracts.",
-      "recommendedContract": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts"
-    }
-  ]
+  "violations": []
 }
