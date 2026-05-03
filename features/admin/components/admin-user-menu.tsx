@@ -9,6 +9,7 @@ import { signOut } from '@/app/(login)/actions';
 import { AdminHeaderTextLink } from '@/shared/ui/admin-surface';
 import { Button } from '@/shared/ui/button';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
+import { FormLayout } from '@/shared/ui/form-layout';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,7 +36,7 @@ export function AdminUserMenu() {
         <Link href="/pricing">
           <AdminHeaderTextLink>Pricing</AdminHeaderTextLink>
         </Link>
-        <Button asChild variant="brand">
+        <Button asChild variant="brand" size="default">
           <Link href="/sign-up">Sign Up</Link>
         </Button>
       </>
@@ -67,12 +68,12 @@ export function AdminUserMenu() {
             <span>Приложение</span>
           </Link>
         </DropdownMenuItem>
-        <form action={handleSignOut} className="w-full">
-          <Button type="submit" variant="ghost">
+        <FormLayout action={handleSignOut} className="w-full">
+          <Button type="submit" variant="ghost" size="default">
             <LogOut className="mr-2 h-4 w-4" />
             <span>Sign out</span>
           </Button>
-        </form>
+        </FormLayout>
       </DropdownMenuContent>
     </DropdownMenu>
   );

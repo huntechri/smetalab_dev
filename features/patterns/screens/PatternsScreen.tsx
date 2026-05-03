@@ -89,8 +89,8 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <CardContent className="space-y-3">
               {item.description ? <p className="text-subtitle">{item.description}</p> : null}
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => void openPreview(item.id)}>Превью</Button>
-                <Button variant="destructive" onClick={() => void removePattern(item.id)}>Удалить</Button>
+                <Button variant="outline" size="default" onClick={() => void openPreview(item.id)}>Превью</Button>
+                <Button variant="destructive" size="default" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
             </CardContent>
           </Card>
@@ -112,7 +112,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             ))}
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
+            <Button variant="outline" size="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

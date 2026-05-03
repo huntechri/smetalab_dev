@@ -116,7 +116,7 @@ export default function LandingPage() {
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
                         {desktopAuthLinks.map((link) => (
-                            <Button key={link.href} variant={link.variant} role="button" asChild>
+                            <Button key={link.href} variant={link.variant} size="default" role="button" asChild>
                                 <Link href={link.href}>{link.label}</Link>
                             </Button>
                         ))}
@@ -137,7 +137,7 @@ export default function LandingPage() {
                                 </nav>
                                 <div className="flex flex-col gap-3">
                                     {mobileAuthLinks.map((link) => (
-                                        <Button key={link.href} variant={link.variant} role="button" asChild>
+                                        <Button key={link.href} variant={link.variant} size="default" role="button" asChild>
                                             <Link href={link.href}>{link.label}</Link>
                                         </Button>
                                     ))}
@@ -298,6 +298,7 @@ export default function LandingPage() {
                                     </ul>
                                     <Button
                                         variant={plan.accent ? 'brand' : 'outline'}
+                                        size="default"
                                         asChild
                                     >
                                         <Link href={plan.href}>{plan.action}</Link>

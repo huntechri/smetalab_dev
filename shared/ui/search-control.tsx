@@ -47,7 +47,7 @@ function SearchControl({
   onSubmit,
   showSubmitButton = Boolean(onSubmit),
   submitLabel = 'Поиск',
-  submitSize,
+  submitSize = 'default',
   disabled = false,
   isAiMode = false,
   onAiModeChange,

@@ -31,7 +31,7 @@ export default async function VerifyEmailPage({
             Email подтвержден. Теперь можно войти.
           </AuthStatusMessage>
         )}
-        <Button variant="outline" asChild>
+        <Button variant="outline" size="default" asChild>
           <Link href="/sign-in">Перейти ко входу</Link>
         </Button>
       </div>

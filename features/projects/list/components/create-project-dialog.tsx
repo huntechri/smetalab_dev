@@ -142,7 +142,7 @@ export function CreateProjectDialog({
                                 <FormItem>
                                     <FormLabel>Название проекта</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="Введите название проекта" {...field} />
+                                        <Input size="default" placeholder="Введите название проекта" {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -214,7 +214,7 @@ export function CreateProjectDialog({
                                     <FormItem>
                                         <FormLabel>Адрес объекта (необязательно)</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Введите адрес объекта" {...field} value={field.value ?? ''} />
+                                            <Input size="default" placeholder="Введите адрес объекта" {...field} value={field.value ?? ''} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -261,12 +261,13 @@ export function CreateProjectDialog({
                             <Button
                                 type="button"
                                 variant="outline"
+                                size="default"
                                 onClick={() => onOpenChange(false)}
                                 disabled={isSubmitting}
                             >
                                 Отменить
                             </Button>
-                            <Button type="submit" variant="brand" disabled={isSubmitting}>
+                            <Button type="submit" variant="brand" size="default" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>

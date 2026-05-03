@@ -142,7 +142,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
             <CardContent>
               <FormLayout maxWidth="xl" action={accountAction}>
                 <FieldStack label="Имя" htmlFor="name">
-                  <Input
+                  <Input size="default"
                     id="name"
                     name="name"
                     defaultValue={accountState.name ?? user.name ?? ''}
@@ -150,7 +150,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="Email" htmlFor="email">
-                  <Input
+                  <Input size="default"
                     id="email"
                     name="email"
                     defaultValue={user.email}
@@ -159,7 +159,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="Телефон (read-only)" htmlFor="userPhone">
-                  <Input id="userPhone" value="Не задано" disabled readOnly />
+                  <Input size="default" id="userPhone" value="Не задано" disabled readOnly />
                 </FieldStack>
                 <StatusMessage
                   error={accountState.error}
@@ -168,6 +168,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                 <Button
                   disabled={isAccountPending}
                   type="submit"
+                  size="default"
                 >
                   {isAccountPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -196,7 +197,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
             <CardContent className="space-y-4">
               <FormSection maxWidth="xl">
                 <FieldStack label="Организация (тенант)" htmlFor="tenantName">
-                  <Input
+                  <Input size="default"
                     id="tenantName"
                     value={team?.name ?? 'Не выбрана'}
                     readOnly
@@ -204,7 +205,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="ID организации" htmlFor="tenantId">
-                  <Input
+                  <Input size="default"
                     id="tenantId"
                     value={team?.id ? String(team.id) : '—'}
                     readOnly
@@ -212,7 +213,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="Роль в организации" htmlFor="tenantRole">
-                  <Input
+                  <Input size="default"
                     id="tenantRole"
                     value={roleLabel(user.teamRole)}
                     readOnly
@@ -229,7 +230,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                 <InfoRow label="ID пользователя" value={String(user.id)} />
               </div>
 
-              <Button variant="outline" asChild>
+              <Button variant="outline" size="default" asChild>
                 <a href="/app/team">
                   Управление организацией
                   <ExternalLink className="ml-2 h-4 w-4" />
@@ -275,7 +276,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
             <CardContent>
               <FormLayout maxWidth="xl" action={passwordAction}>
                 <FieldStack label="Текущий пароль" htmlFor="currentPassword">
-                  <Input
+                  <Input size="default"
                     id="currentPassword"
                     name="currentPassword"
                     type="password"
@@ -286,7 +287,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="Новый пароль" htmlFor="newPassword">
-                  <Input
+                  <Input size="default"
                     id="newPassword"
                     name="newPassword"
                     type="password"
@@ -297,7 +298,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   />
                 </FieldStack>
                 <FieldStack label="Подтверждение пароля" htmlFor="confirmPassword">
-                  <Input
+                  <Input size="default"
                     id="confirmPassword"
                     name="confirmPassword"
                     type="password"
@@ -314,6 +315,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                 <Button
                   disabled={isPasswordPending}
                   type="submit"
+                  size="default"
                 >
                   {isPasswordPending ? (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

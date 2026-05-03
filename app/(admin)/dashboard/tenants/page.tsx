@@ -40,7 +40,7 @@ export default async function TenantsPage() {
                         )}
                         action={(
                             <Link href={`/dashboard/tenants/${team.id}`}>
-                                <Button variant="outline">
+                                <Button variant="outline" size="default">
                                     Подробнее
                                     <ArrowRight className="ml-2 size-3.5 transition-transform group-hover:translate-x-0.5" />
                                 </Button>

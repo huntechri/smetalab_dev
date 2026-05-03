@@ -133,7 +133,7 @@ export const columns: ColumnDef<WorkRow>[] = [
             <TableHeaderActions
                 table={table}
                 trigger={
-                    <Button variant="ghost" aria-label="Действия" title="Действия">
+                    <Button variant="ghost" size="sm" aria-label="Действия" title="Действия">
                         Действия
                     </Button>
                 }

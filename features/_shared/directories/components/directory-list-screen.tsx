@@ -92,6 +92,7 @@ export function DirectoryListScreen<TData, TValue>({
           action={
             <Button
               variant="primary"
+              size="default"
               onClick={onCreate}
             >
               <Plus className="size-3.5 mr-2" />
@@ -105,6 +106,7 @@ export function DirectoryListScreen<TData, TValue>({
           {canLoadMore ? (
             <Button
               variant="outline"
+              size="default"
               onClick={onLoadMore}
               disabled={isLoadingMore}
             >
@@ -116,6 +118,7 @@ export function DirectoryListScreen<TData, TValue>({
           <Button
             onClick={onCreate}
             variant="primary"
+            size="default"
             aria-label={addLabel}
           >
             <Plus className="h-4 w-4 mr-1" />

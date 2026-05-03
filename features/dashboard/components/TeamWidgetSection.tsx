@@ -43,7 +43,7 @@ export function TeamWidgetSection() {
                             </CardShellInset>
                         );
                     })}
-                    <Button variant="outline">
+                    <Button variant="outline" size="default">
                         Участники
                     </Button>
                 </CardShellBody>

@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import { Loader2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { updateAccount } from '@/app/(login)/actions';
@@ -31,7 +32,7 @@ function AccountForm({ state, nameValue = '', emailValue = '' }: AccountFormProp
         <Label htmlFor="name" className="mb-2">
           Name
         </Label>
-        <Input
+        <Input size="default"
           id="name"
           name="name"
           placeholder="Enter your name"
@@ -43,7 +44,7 @@ function AccountForm({ state, nameValue = '', emailValue = '' }: AccountFormProp
         <Label htmlFor="email" className="mb-2">
           Email
         </Label>
-        <Input
+        <Input size="default"
           id="email"
           name="email"
           type="email"
@@ -85,7 +86,7 @@ export function AdminGeneralSettingsScreen() {
           <CardTitle>Account Information</CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4" action={formAction}>
+          <FormLayout action={formAction}>
             <Suspense fallback={<AccountForm state={state} />}>
               <AccountFormWithData state={state} />
             </Suspense>
@@ -93,7 +94,7 @@ export function AdminGeneralSettingsScreen() {
             {state.error ? <p className="text-red-500 text-sm">{state.error}</p> : null}
             {state.success ? <p className="text-green-500 text-sm">{state.success}</p> : null}
 
-            <Button type="submit" variant="brand" disabled={isPending}>
+            <Button type="submit" variant="brand" size="default" disabled={isPending}>
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -103,7 +104,7 @@ export function AdminGeneralSettingsScreen() {
                 'Save Changes'
               )}
             </Button>
-          </form>
+          </FormLayout>
         </CardContent>
       </Card>
     </section>

@@ -121,15 +121,16 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </AuthStatusMessage>
             )}
             <form className="space-y-4" action={formAction}>
-              <input type="hidden" name="redirect" value={redirect || ''} />
-              <input type="hidden" name="priceId" value={priceId || ''} />
-              <input type="hidden" name="inviteId" value={inviteId || ''} />
+              <Input type="hidden" name="redirect" value={redirect || ''} />
+              <Input type="hidden" name="priceId" value={priceId || ''} />
+              <Input type="hidden" name="inviteId" value={inviteId || ''} />
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
+                  size="default"
                   autoComplete="email"
                   defaultValue={state?.email || emailParam || ''}
                   readOnly={!!inviteId && mode === 'signup'}
@@ -148,6 +149,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
+                    size="default"
                     autoComplete={
                       isSignIn ? 'current-password' : 'new-password'
                     }
@@ -186,6 +188,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     id="organizationName"
                     name="organizationName"
                     type="text"
+                    size="default"
                     required={!inviteId}
                     maxLength={100}
                     placeholder="ООО «Северный бетон»"
@@ -202,6 +205,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <Button
                 type="submit"
                 variant="brand"
+                size="default"
                 disabled={pending}
               >
                 {pending ? (

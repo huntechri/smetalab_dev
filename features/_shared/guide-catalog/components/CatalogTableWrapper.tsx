@@ -60,6 +60,7 @@ export function CatalogTableWrapper<TData, TValue>({
           action={
             <Button
               variant="outline"
+              size="sm"
               onClick={() => tableActions.onInsertRequest()}
             >
               <Plus className="size-3.5 mr-2" />

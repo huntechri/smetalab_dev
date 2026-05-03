@@ -12,6 +12,7 @@ export function PricingSubmitButton() {
       type="submit"
       disabled={pending}
       variant="outline"
+      size="default"
     >
       {pending ? (
         <>

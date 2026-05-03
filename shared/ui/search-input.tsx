@@ -53,6 +53,7 @@ function SearchInput({
       </div>
       <Input
         type="search"
+        size="default"
         value={value}
         {...props}
       />

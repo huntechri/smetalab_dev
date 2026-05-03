@@ -100,6 +100,7 @@ export default function AutoFormArray({
         <Button
           type="button"
           variant="secondary"
+          size="default"
           onClick={() => append({})}
         >
           <Plus className="mr-2" size={16} />

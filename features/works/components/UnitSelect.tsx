@@ -62,6 +62,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
+                    size="default"
                     role="combobox"
                     aria-expanded={open}
                     className={className}
@@ -82,6 +83,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                             <div className="p-1 px-2">
                                 <Button
                                     variant="ghost"
+                                    size="default"
                                     onClick={handleCreate}
                                 >
                                     <Plus className="mr-1 h-3 w-3" />

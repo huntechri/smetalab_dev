@@ -66,6 +66,7 @@ export function TeamMembersCard({
                                         key={item.value}
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}
+                                        size="sm"
                                         onClick={() => onRoleFilterChange(item.value)}
                                         aria-pressed={roleFilter === item.value}
                                         aria-label={`Фильтр: ${item.label}`}

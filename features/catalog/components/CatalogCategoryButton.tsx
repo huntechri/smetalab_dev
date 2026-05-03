@@ -15,6 +15,7 @@ export function CatalogCategoryButton({
     return (
         <Button
             variant={active ? activeVariant : inactiveVariant}
+            size="default"
             {...props}
         />
     );

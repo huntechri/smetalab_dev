@@ -31,6 +31,7 @@ function RoomParamNumberInput({ value, onChange, placeholder }: RoomParamNumberI
         <Input
             type="number"
             inputMode="decimal"
+            size="sm"
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder={placeholder}
@@ -93,7 +94,7 @@ export function RoomsParamsTable({
                     {rows.map((row, rowIndex) => (
                         <TableRow key={row.id}>
                             <TableCell>{rowIndex + 1}</TableCell>
-                            <TableCell><div className="min-w-[180px]"><Input value={row.name} onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="min-w-[180px]"><Input value={row.name} size="sm" onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
                             <TableCell><NumericCell value={row.perimeter} onChange={(value) => onChangeCell(row.id, 'perimeter', value)} /></TableCell>
                             <TableCell><NumericCell value={row.height} onChange={(value) => onChangeCell(row.id, 'height', value)} /></TableCell>
                             <TableCell><NumericCell value={row.floorArea} onChange={(value) => onChangeCell(row.id, 'floorArea', value)} /></TableCell>
