@@ -1,0 +1,11 @@
+export const denseListActionIconClassName = 'size-6 sm:size-7';
+export const denseListToolbarRowClassName = 'flex w-auto flex-row items-center gap-2';
+export const denseListToolbarFilterContentClassName = 'flex items-center gap-2 truncate';
+export const denseListToolbarFilterLabelClassName = 'hidden truncate font-semibold lg:inline';
+export const denseListToolbarChevronClassName = 'ml-1 hidden size-3.5 shrink-0 opacity-50 lg:block';
+export const denseListToolbarDateLabelClassName = 'hidden flex-1 text-left text-[13px] font-semibold tracking-tight sm:text-center lg:inline';
+export const denseListToolbarDividerClassName = 'mx-1 hidden h-6 w-px bg-border xl:block';
+export const denseListToolbarActionsClassName = 'hidden flex-row items-center gap-2 overflow-x-auto pb-1 sm:flex xl:pb-0';
+export const denseListToolbarMobileActionsClassName = 'ml-auto sm:hidden';
+export const denseListToolbarMenuContentClassName = 'w-56';
+export const denseListToolbarMenuItemClassName = 'gap-2';
