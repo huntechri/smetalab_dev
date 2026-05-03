@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T20:29:08.037Z",
+  "generatedAt": "2026-05-03T20:33:01.040Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -214,11 +214,9 @@
     "shared/ui/table.tsx",
     "shared/ui/toggle.tsx"
   ],
-  "scannedAddedLineCount": 1999,
-  "violationCount": 6,
-  "bucketCounts": {
-    "card-surface": 6
-  },
+  "scannedAddedLineCount": 2010,
+  "violationCount": 0,
+  "bucketCounts": {},
   "acceptedSharedContractOwners": [
     "shared/ui/action-menu.tsx",
     "shared/ui/admin-surface.tsx",
@@ -284,66 +282,5 @@
     "state-surface": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites",
     "action-surface": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts"
   },
-  "violations": [
-    {
-      "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 107,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"muted\" density=\"compact\" radius=\"md\" shadow=\"none\" className=\"space-y-1\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 120,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"card\" shadow=\"md\" overflow=\"hidden\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
-      "line": 48,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"muted\" radius=\"md\" shadow=\"none\" density=\"compact\" className=\"mt-4\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 37,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"card\" density=\"comfortable\" shadow=\"sm\" className=\"space-y-1\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/team/components/TeamHeaderCard.tsx",
-      "line": 11,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"muted\" density=\"comfortable\" shadow=\"none\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    },
-    {
-      "filePath": "features/team/components/TeamMembersCard.tsx",
-      "line": 41,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<Surface variant=\"card\" density=\"comfortable\" shadow=\"sm\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    }
-  ]
+  "violations": []
 }

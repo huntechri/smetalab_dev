@@ -1,13 +1,13 @@
 # UI Changed-File Visual Ownership Guardrail
 
-- Status: failed
+- Status: passed
 - Base ref: origin/main
 - Head ref: HEAD
 - Diff range: origin/main...HEAD
 - Changed files: 110
 - Scanned changed files: 95
-- Scanned added lines: 1999
-- Violations: 6
+- Scanned added lines: 2010
+- Violations: 0
 
 
 ## Behavior
@@ -29,12 +29,7 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| card-surface | `features/patterns/screens/PatternsScreen.tsx:107` | `<Surface variant="muted" density="compact" radius="md" shadow="none" className="space-y-1">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| card-surface | `features/permissions/components/permissions-matrix.tsx:120` | `<Surface variant="card" shadow="md" overflow="hidden">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| card-surface | `features/projects/estimates/components/params/RoomsParamsTotals.tsx:48` | `<Surface variant="muted" radius="md" shadow="none" density="compact" className="mt-4">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| card-surface | `features/team/components/InviteTeamMemberCard.tsx:37` | `<Surface variant="card" density="comfortable" shadow="sm" className="space-y-1">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| card-surface | `features/team/components/TeamHeaderCard.tsx:11` | `<Surface variant="muted" density="comfortable" shadow="none">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
-| card-surface | `features/team/components/TeamMembersCard.tsx:41` | `<Surface variant="card" density="comfortable" shadow="sm">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| - | - | - | - |
 
 ## Exact accepted shared contract owners
 
