@@ -1,7 +1,7 @@
 'use client';
 
 import { useActionState } from 'react';
-import { Loader2, Lock, Trash2 } from 'lucide-react';
+import { Lock, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
 import { FormLayout } from '@/shared/ui/form-layout';
@@ -34,7 +34,7 @@ export function AdminSecuritySettingsScreen() {
             <div><Label htmlFor="new-password" className="mb-2">New Password</Label><Input size="default" id="new-password" name="newPassword" type="password" autoComplete="new-password" required minLength={8} maxLength={100} defaultValue={passwordState.newPassword} /></div>
             <div><Label htmlFor="confirm-password" className="mb-2">Confirm New Password</Label><Input size="default" id="confirm-password" name="confirmPassword" type="password" required minLength={8} maxLength={100} defaultValue={passwordState.confirmPassword} /></div>
             <FormStatusMessage error={passwordState.error} success={passwordState.success} />
-            <Button type="submit" variant="brand" size="default" disabled={isPasswordPending}>{isPasswordPending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Updating...</> : <><Lock className="mr-2 h-4 w-4" />Update Password</>}</Button>
+            <Button type="submit" variant="brand" size="default" loading={isPasswordPending} loadingText="Updating..." iconLeft={<Lock className="size-4" />}>Update Password</Button>
           </FormLayout>
         </CardContent>
       </Card>
@@ -46,7 +46,7 @@ export function AdminSecuritySettingsScreen() {
           <FormLayout action={deleteAction}>
             <div><Label htmlFor="delete-password" className="mb-2">Confirm Password</Label><Input size="default" id="delete-password" name="password" type="password" required minLength={8} maxLength={100} defaultValue={deleteState.password} /></div>
             <FormStatusMessage error={deleteState.error} success={deleteState.success} />
-            <Button type="submit" variant="destructive" size="default" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" />Deleting...</> : <><Trash2 className="mr-2 h-4 w-4" />Delete Account</>}</Button>
+            <Button type="submit" variant="destructive" size="default" loading={isDeletePending} loadingText="Deleting..." iconLeft={<Trash2 className="size-4" />}>Delete Account</Button>
           </FormLayout>
         </CardContent>
       </Card>

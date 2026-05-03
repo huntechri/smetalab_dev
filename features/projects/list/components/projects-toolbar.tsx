@@ -3,6 +3,7 @@
 import * as React from 'react';
 import { Button } from '@/shared/ui/button';
 import { ProjectsSearchInput } from './projects-search-input';
+import { Toolbar, ToolbarGroup } from '@/shared/ui/toolbar';
 import { ProjectsSortSelect } from './projects-sort-select';
 import { ProjectSortOption } from '../../shared/types';
 
@@ -22,8 +23,9 @@ export function ProjectsToolbar({
     onAddClick,
 }: ProjectsToolbarProps) {
     return (
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
+        <Toolbar responsive="stack" align="between">
+            <ToolbarGroup grow>
+                <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
                 <div className="w-full sm:flex-1">
                     <ProjectsSearchInput value={searchQuery} onChange={onSearchQueryChange} />
                 </div>
@@ -33,6 +35,7 @@ export function ProjectsToolbar({
                     </div>
                 </div>
             </div>
+        </ToolbarGroup>
             <Button
                 onClick={onAddClick}
                 variant="brand"
@@ -40,6 +43,6 @@ export function ProjectsToolbar({
             >
                 Создать проект
             </Button>
-        </div>
+        </Toolbar>
     );
 }

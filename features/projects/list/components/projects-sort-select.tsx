@@ -53,19 +53,17 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
                             variant="outline"
                             size="default"
                         >
-                            <div className="flex items-center gap-2 truncate">
-                                <Filter data-icon="inline-start" className="opacity-60" />
-                                <span className="truncate">
-                                    {selectedLabel}
-                                </span>
-                            </div>
+                            <Filter className="opacity-60" />
+                            <span className="truncate">
+                                {selectedLabel}
+                            </span>
                             <ChevronsUpDown className="size-3.5 opacity-50 shrink-0" />
                         </Button>
                     </PopoverTrigger>
                 </TooltipTrigger>
                 <TooltipContent>Сортировать список проектов</TooltipContent>
             </Tooltip>
-            <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+            <PopoverContent size="combobox" padding="none" align="start">
                 <Command>
                     <CommandInput placeholder="Поиск фильтра..." />
                     <CommandList>

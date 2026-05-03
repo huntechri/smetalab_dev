@@ -23,6 +23,7 @@ import {
 } from '@/shared/ui/card';
 import {
   FieldStack,
+  FormHelperText,
   FormLayout,
   FormSection,
   FormStatusMessage,
@@ -32,6 +33,7 @@ import { Label } from '@/shared/ui/label';
 import { Separator } from '@/shared/ui/separator';
 import { Switch } from '@/shared/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { Surface } from '@/shared/ui/surface';
 import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
@@ -461,7 +463,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border bg-muted/30 p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <FormHelperText>{label}</FormHelperText>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </div>
   );
@@ -477,10 +479,10 @@ function PreferenceSwitch({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center justify-between rounded-md border bg-card p-3">
-      <Label className="text-sm font-normal">{label}</Label>
+    <Surface variant="card" density="compact" radius="md" shadow="none" className="flex items-center justify-between">
+      <Label>{label}</Label>
       <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
-    </div>
+    </Surface>
   );
 }
 
