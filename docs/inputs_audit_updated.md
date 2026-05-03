@@ -1,57 +1,22 @@
 # Updated Input Fields Audit
 
-Total fields found: 119
+Total fields found: 113
 
 ## Breakdown by kind
 - component-command-input: 8
-- component-input: 94
+- component-input: 89
 - component-select: 4
 - component-select-trigger: 4
 - component-textarea: 3
 - html-hidden-input: 1
-- html-input: 4
+- html-input: 3
 - html-textarea: 1
 
 ## Details
 
-File: features/_shared/guide-catalog/components/CatalogScreenShell.tsx
-Kind: html-input
-Type: file
-Classes: hidden
-Inline style: no
--------------------
-
-File: features/admin/components/impersonate-button.tsx
-Kind: component-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
 File: features/auth/components/ForgotPasswordForm.tsx
 Kind: component-input
 Type: email
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: component-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: component-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: component-input
-Type: hidden
 Classes: 
 Inline style: no
 -------------------
@@ -73,13 +38,6 @@ Inline style: no
 File: features/auth/components/LoginForm.tsx
 Kind: component-input
 Type: text
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/ResetPasswordForm.tsx
-Kind: component-input
-Type: hidden
 Classes: 
 Inline style: no
 -------------------
@@ -221,13 +179,6 @@ File: features/counterparties/components/counterparty-sheet-sections.tsx
 Kind: component-input
 Type: default
 Classes: 
-Inline style: no
--------------------
-
-File: features/global-purchases/components/GlobalPurchasesImportExportActions.tsx
-Kind: html-input
-Type: file
-Classes: hidden
 Inline style: no
 -------------------
 
@@ -728,13 +679,6 @@ Classes:
 Inline style: no
 -------------------
 
-File: shared/ui/admin-surface.tsx
-Kind: html-hidden-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
 File: shared/ui/auto-form/fields/enum.tsx
 Kind: component-select
 Type: default
@@ -795,6 +739,20 @@ File: shared/ui/estimate-tab.tsx
 Kind: component-input
 Type: default
 Classes: rounded-md border-border bg-background pl-8
+Inline style: no
+-------------------
+
+File: shared/ui/file-input.tsx
+Kind: html-input
+Type: file
+Classes: 
+Inline style: no
+-------------------
+
+File: shared/ui/hidden-input.tsx
+Kind: html-hidden-input
+Type: hidden
+Classes: 
 Inline style: no
 -------------------
 

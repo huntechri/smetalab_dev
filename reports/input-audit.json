@@ -1,44 +1,8 @@
 {
-  "generatedAt": "2026-05-03T21:09:58.473Z",
-  "total": 119,
+  "generatedAt": "2026-05-03T22:46:35.820Z",
+  "total": 113,
   "changedFiles": 0,
   "records": [
-    {
-      "filePath": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-      "componentName": "CatalogScreenShell.tsx",
-      "kind": "html-input",
-      "propsUsed": [
-        "type",
-        "ref",
-        "onChange",
-        "className",
-        "accept",
-        "aria-label",
-        "title"
-      ],
-      "className": "hidden",
-      "tailwindUtilities": [
-        "hidden"
-      ],
-      "type": "file",
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "hidden"
-    },
-    {
-      "filePath": "features/admin/components/impersonate-button.tsx",
-      "componentName": "impersonate-button.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
     {
       "filePath": "features/auth/components/ForgotPasswordForm.tsx",
       "componentName": "ForgotPasswordForm.tsx",
@@ -53,48 +17,6 @@
       ],
       "tailwindUtilities": [],
       "type": "email",
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
       "hasInlineStyle": false,
       "isHiddenInput": false
     },
@@ -158,20 +80,6 @@
       ],
       "tailwindUtilities": [],
       "type": "text",
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/auth/components/ResetPasswordForm.tsx",
-      "componentName": "ResetPasswordForm.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
       "hasInlineStyle": false,
       "isHiddenInput": false
     },
@@ -441,28 +349,6 @@
       "tailwindUtilities": [],
       "hasInlineStyle": false,
       "isHiddenInput": false
-    },
-    {
-      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-      "componentName": "GlobalPurchasesImportExportActions.tsx",
-      "kind": "html-input",
-      "propsUsed": [
-        "ref",
-        "type",
-        "accept",
-        "className",
-        "aria-label",
-        "title",
-        "onChange"
-      ],
-      "className": "hidden",
-      "tailwindUtilities": [
-        "hidden"
-      ],
-      "type": "file",
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "hidden"
     },
     {
       "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
@@ -1498,20 +1384,6 @@
       "isHiddenInput": false
     },
     {
-      "filePath": "shared/ui/admin-surface.tsx",
-      "componentName": "admin-surface.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
       "filePath": "shared/ui/auto-form/fields/enum.tsx",
       "componentName": "enum.tsx",
       "kind": "component-select",
@@ -1642,6 +1514,37 @@
       "hasInlineStyle": false,
       "isHiddenInput": false,
       "normalizedClassName": "pl-8"
+    },
+    {
+      "filePath": "shared/ui/file-input.tsx",
+      "componentName": "file-input.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "ref",
+        "type",
+        "accept",
+        "onChange",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "type": "file",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/hidden-input.tsx",
+      "componentName": "hidden-input.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "value",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
     },
     {
       "filePath": "shared/ui/input-group.tsx",
