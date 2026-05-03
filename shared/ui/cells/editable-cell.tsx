@@ -57,6 +57,7 @@ export function EditableCell({
             <Button
                 type="button"
                 variant="ghost"
+                size="xs"
                 disabled={disabled}
                 aria-label={ariaLabel}
                 title={title}
@@ -80,6 +81,7 @@ export function EditableCell({
         <Input
             aria-label={ariaLabel}
             autoFocus
+            size="xs"
             className={className}
             textAlign={align}
             numeric={type === 'number'}
