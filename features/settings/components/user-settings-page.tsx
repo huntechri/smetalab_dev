@@ -479,9 +479,11 @@ function PreferenceSwitch({
   onChange: (checked: boolean) => void;
 }) {
   return (
-    <Surface variant="card" density="compact" radius="md" shadow="none" className="flex items-center justify-between">
-      <Label>{label}</Label>
-      <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
+    <Surface variant="card" density="compact" radius="md" shadow="none">
+      <div className="flex items-center justify-between">
+        <Label>{label}</Label>
+        <Switch checked={checked} onCheckedChange={onChange} aria-label={label} />
+      </div>
     </Surface>
   );
 }

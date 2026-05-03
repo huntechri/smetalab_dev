@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-03T19:06:46.740Z",
+  "generatedAt": "2026-05-03T19:07:08.330Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -59,6 +59,8 @@
     "features/works/components/columns.tsx",
     "reports/input-audit.json",
     "reports/input-canonical-spec.md",
+    "reports/ui-changed-visual-ownership.json",
+    "reports/ui-changed-visual-ownership.md",
     "reports/ui-inventory.json",
     "reports/ui-inventory.md",
     "shared/ui/auto-form/fields/array.tsx",
@@ -122,13 +124,12 @@
     "shared/ui/search-control.tsx",
     "shared/ui/search-input.tsx"
   ],
-  "scannedAddedLineCount": 1077,
-  "violationCount": 10,
+  "scannedAddedLineCount": 1082,
+  "violationCount": 5,
   "bucketCounts": {
-    "form-layout": 4,
-    "overlay-layout": 2,
-    "toolbar-filter": 2,
+    "toolbar-filter": 1,
     "card-surface": 1,
+    "state-surface": 2,
     "action-surface": 1
   },
   "acceptedSharedContractOwners": [
@@ -198,48 +199,8 @@
   },
   "violations": [
     {
-      "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 56,
-      "bucket": "form-layout",
-      "severity": "fail",
-      "token": "<div className=\"flex items-center gap-2 truncate\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 68,
-      "bucket": "overlay-layout",
-      "severity": "fail",
-      "token": "<PopoverContent className=\"w-[min(20rem,calc(100vw-2rem))] p-0\" align=\"start\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own dialog/sheet/popover width, padding, or scroll layout. Use semantic shared overlay props/contracts.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared/ui/popover.tsx semantic layout props"
-    },
-    {
-      "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 68,
-      "bucket": "form-layout",
-      "severity": "fail",
-      "token": "<PopoverContent className=\"w-[min(20rem,calc(100vw-2rem))] p-0\" align=\"start\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
       "filePath": "features/projects/list/components/projects-toolbar.tsx",
-      "line": 25,
-      "bucket": "toolbar-filter",
-      "severity": "fail",
-      "token": "<div className=\"flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own toolbar/filter/search-row spacing or wrapping. Use Toolbar, FilterBar, or SearchControl.",
-      "recommendedContract": "shared/ui/toolbar.tsx, shared/ui/filter-bar.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/projects/list/components/projects-toolbar.tsx",
-      "line": 26,
+      "line": 28,
       "bucket": "toolbar-filter",
       "severity": "fail",
       "token": "<div className=\"flex flex-1 flex-col gap-3 sm:flex-row sm:items-center\">",
@@ -249,53 +210,43 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 464,
-      "bucket": "form-layout",
-      "severity": "fail",
-      "token": "<p className=\"text-xs text-muted-foreground\">{label}</p>",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 480,
+      "line": 482,
       "bucket": "card-surface",
       "severity": "fail",
-      "token": "<div className=\"flex items-center justify-between rounded-md border bg-card p-3\">",
+      "token": "<Surface variant=\"card\" density=\"compact\" radius=\"md\" shadow=\"none\" className=\"flex items-center justify-between\">",
       "ownership": "business-runtime",
       "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
       "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
     },
     {
-      "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 481,
-      "bucket": "form-layout",
+      "filePath": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+      "line": 37,
+      "bucket": "state-surface",
       "severity": "fail",
-      "token": "<Label className=\"text-sm font-normal\">{label}</Label>",
+      "token": "<Button type=\"submit\" variant=\"brand\" size=\"default\" loading={isPasswordPending} loadingText=\"Updating...\" iconLeft={<Lock className=\"size-4\" />}>Update Password</Button>",
       "ownership": "business-runtime",
-      "reason": "New runtime code appears to own form/field spacing, label/helper typography, or control layout. Use shared form-layout contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
+      "reason": "New runtime code appears to own empty/loading/error/no-results state visuals. Move repeated state recipes to shared state contracts.",
+      "recommendedContract": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites"
+    },
+    {
+      "filePath": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+      "line": 49,
+      "bucket": "state-surface",
+      "severity": "fail",
+      "token": "<Button type=\"submit\" variant=\"destructive\" size=\"default\" loading={isDeletePending} loadingText=\"Deleting...\" iconLeft={<Trash2 className=\"size-4\" />}>Delete Account</Button>",
+      "ownership": "business-runtime",
+      "reason": "New runtime code appears to own empty/loading/error/no-results state visuals. Move repeated state recipes to shared state contracts.",
+      "recommendedContract": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites"
     },
     {
       "filePath": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
       "line": 49,
       "bucket": "action-surface",
       "severity": "fail",
-      "token": "<Button type=\"submit\" variant=\"destructive\" size=\"default\" disabled={isDeletePending}>{isDeletePending ? <><Loader2 className=\"mr-2 h-4 w-4 animate-spin\" />Deleting...</> : <><Trash2 className=\"mr-2 h-4 w-4\" />Delete Account</>}</Button>",
+      "token": "<Button type=\"submit\" variant=\"destructive\" size=\"default\" loading={isDeletePending} loadingText=\"Deleting...\" iconLeft={<Trash2 className=\"size-4\" />}>Delete Account</Button>",
       "ownership": "business-runtime",
       "reason": "New runtime code appears to own action/menu/icon/destructive visual recipes. Use shared action/menu/icon contracts.",
       "recommendedContract": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts"
-    },
-    {
-      "filePath": "features/works/components/UnitSelect.tsx",
-      "line": 74,
-      "bucket": "overlay-layout",
-      "severity": "fail",
-      "token": "<PopoverContent className=\"w-[min(20rem,calc(100vw-2rem))] p-0\" align=\"start\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own dialog/sheet/popover width, padding, or scroll layout. Use semantic shared overlay props/contracts.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared/ui/popover.tsx semantic layout props"
     }
   ]
 }
