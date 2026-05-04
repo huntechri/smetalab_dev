@@ -104,8 +104,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <CardShell variant="muted" shadow="none" className="rounded-md sm:rounded-lg">
-            <CardShellBody density="compact">
+          <div className="rounded-md sm:rounded-lg border bg-muted/30 shadow-none p-3 sm:p-4">
             <div className="space-y-1">
               {sortedPreviewRows.map((row) => (
                 <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
@@ -114,8 +113,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
                 </div>
               ))}
             </div>
-            </CardShellBody>
-          </CardShell>
+          </div>
           <DialogFooter>
             <Button variant="outline" size="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>
