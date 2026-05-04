@@ -18,6 +18,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench } from 'lucide-react';
 import { VisibleEstimateRow } from '../../lib/rows-visible';
 import { SectionTotals } from '../../lib/section-totals';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 export type EstimateColumnActions = {
     expandedWorkIds: Set<string>;
@@ -80,7 +81,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Раздел: ${item.name}`}
                         title={item.name}
-                        className="text-[0.6875rem] font-bold uppercase tracking-widest truncate"
+                        className={primitiveVisualTypographyClassNames.compactValue}
                     />
                 );
             }
@@ -92,7 +93,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Наименование: ${item.name}`}
-                        className={item.kind === 'material' ? 'text-xs italic text-muted-foreground' : 'text-xs font-normal'}
+                        className={item.kind === 'material' ? `${primitiveVisualTypographyClassNames.compactBody} italic text-muted-foreground` : `${primitiveVisualTypographyClassNames.compactBody} font-normal`}
                     />
                 </EstimateNameCellWrapper>
             );

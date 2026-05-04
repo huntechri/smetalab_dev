@@ -17,6 +17,7 @@ import { catalogRepository } from '../repository';
 import { CatalogMaterial } from '../types/dto';
 import { buildMaterialCategoryTree, filterMaterialsByCategoryPath, MaterialCategorySelection } from '../lib/material-category-tree';
 import { CatalogCategoryButton } from './CatalogCategoryButton';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface MaterialCatalogPickerProps {
     onAddMaterial: (material: CatalogMaterial) => Promise<void>;
@@ -302,14 +303,14 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                             </CatalogToken>
                                                         )}
                                                     </div>
-                                                    <h4 className="text-sm sm:text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                                    <h4 className={`${primitiveVisualTypographyClassNames.catalogItemTitle} text-foreground line-clamp-2 md:line-clamp-none`}>
                                                         {material.name}
                                                     </h4>
                                                     <div className="flex items-center gap-1.5 mt-0.5">
-                                                        <span className="text-[0.6875rem] font-bold tracking-tight text-foreground/90 group-hover:text-primary transition-colors">
+                                                        <span className={`${primitiveVisualTypographyClassNames.catalogItemPrice} text-foreground/90 group-hover:text-primary transition-colors`}>
                                                             {formatPrice(material.price)} ₽
                                                         </span>
-                                                        <span className="text-[0.625rem] text-muted-foreground/60 font-medium">
+                                                        <span className={primitiveVisualTypographyClassNames.catalogItemMeta}>
                                                             {formatUnit(material.unit)}
                                                         </span>
                                                     </div>

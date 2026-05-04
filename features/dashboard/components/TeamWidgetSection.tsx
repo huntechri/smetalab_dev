@@ -3,6 +3,7 @@ import { Button } from '@/shared/ui/button';
 import { CardShell, CardShellBody, CardShellInset } from '@/shared/ui/card-shell';
 import { Section, SectionTitle } from '@/shared/ui/section';
 import { StatusIndicator, type StatusIndicatorPulse, type StatusTone } from '@/shared/ui/status-badge';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 const members = [
     { role: 'PM', name: 'Алина М.', status: 'Онлайн' },
@@ -27,12 +28,12 @@ export function TeamWidgetSection() {
                             <CardShellInset key={member.name} className="flex cursor-pointer items-center justify-between transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm" density="compact" variant="subtle">
                                 <div className="flex items-center gap-3">
                                     <Avatar className="h-9 w-9 border border-border/50">
-                                        <AvatarFallback className="bg-primary/5 text-[0.6875rem] font-bold text-primary">
+                                        <AvatarFallback className={`${primitiveVisualTypographyClassNames.compactAvatarInitials} bg-primary/5`}>
                                             {member.name[0]}
                                         </AvatarFallback>
                                     </Avatar>
                                     <div className="leading-tight">
-                                        <p className="text-[0.625rem] font-bold uppercase tracking-wider text-muted-foreground">{member.role}</p>
+                                        <p className={primitiveVisualTypographyClassNames.compactCaption}>{member.role}</p>
                                         <p className="text-sm font-semibold">{member.name}</p>
                                     </div>
                                 </div>

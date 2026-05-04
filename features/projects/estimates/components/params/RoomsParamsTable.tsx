@@ -12,6 +12,7 @@ import {
 import { Trash2 } from 'lucide-react';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2 } from '../../lib/room-params-calculations';
+import { primitiveCompactTableCellClassName } from '@/shared/ui/primitive-table';
 
 const headers = [
     '№', 'Помещение (Наименование)', 'Периметр (м)', 'Высота (м)', 'S пола (м²)', 'S стен (м²)', 'Откосы (м)',
@@ -85,7 +86,7 @@ export function RoomsParamsTable({
 }) {
     return (
         <CardShell variant="card" className="rounded-md shadow-none overflow-visible gap-0">
-            <Table className="text-[0.5625rem] sm:text-[0.6875rem]">
+            <Table className={primitiveCompactTableCellClassName}>
                 <TableHeader>
                     <TableRow>
                         {headers.map((header) => <TableHead key={header} className="whitespace-nowrap py-2">{header}</TableHead>)}
