@@ -4,10 +4,10 @@
 - Base ref: origin/main
 - Head ref: HEAD
 - Diff range: origin/main...HEAD
-- Changed files: 139
+- Changed files: 140
 - Scanned changed files: 117
 - Scanned added lines: 2688
-- Violations: 1
+- Violations: 3
 
 
 ## Behavior
@@ -29,7 +29,9 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| card-surface | `features/projects/estimates/components/params/RoomsParamsTable.tsx:87` | `<CardShell variant="card" radius="md" shadow="none" overflow="visible" className="gap-0">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/EstimateHeader.tsx:37` | `<div className="rounded-xl border border-border/80 bg-card text-card-foreground shadow-sm flex flex-col overflow-hidden">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/params/RoomsParamsTable.tsx:86` | `<div className="rounded-md border border-border bg-card text-card-foreground shadow-none overflow-visible">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/params/RoomsParamsTotals.tsx:49` | `<div className="rounded-md border border-border bg-muted/30 text-card-foreground shadow-none p-3 sm:p-4">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
 
 ## Exact accepted shared contract owners
 
