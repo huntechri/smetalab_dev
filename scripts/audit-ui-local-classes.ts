@@ -383,22 +383,46 @@ function escapeMarkdownCell(value: string): string {
   return value.replace(/\|/g, "\\|").replace(/\n/g, " ").replace(/`/g, "'")
 }
 
-function formatCountRows(record: Record<string, number>): string {
-  const rows = Object.entries(record)
-    .filter(([, count]) => count > 0)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key, count]) => `| ${key} | ${count} |`)
+function topFiles(findings: LocalClassFinding[], limit: number): Array<{ filePath: string; high: number; medium: number; low: number; total: number }> {
+  const groups = new Map<string, { filePath: string; high: number; medium: number; low: number; total: number }>()
 
-  return rows.length > 0 ? rows.join("\n") : "| - | 0 |"
+  for (const finding of findings) {
+    const row = groups.get(finding.filePath) ?? { filePath: finding.filePath, high: 0, medium: 0, low: 0, total: 0 }
+    row[finding.severity] += 1
+    row.total += 1
+    groups.set(finding.filePath, row)
+  }
+
+  return Array.from(groups.values())
+    .sort((a, b) => b.high - a.high || b.medium - a.medium || b.total - a.total || a.filePath.localeCompare(b.filePath))
+    .slice(0, limit)
 }
 
-function formatBucketRows(bucketCounts: Record<LocalClassBucket, number>): string {
+function formatBucketRows(bucketCounts: Record<LocalClassBucket, number>, limit: number): string {
   const rows = Object.entries(bucketCounts)
     .filter(([, count]) => count > 0)
     .sort((a, b) => b[1] - a[1])
+    .slice(0, limit)
     .map(([bucket, count]) => `| ${bucket} | ${count} | ${RECOMMENDED_CONTRACTS[bucket as LocalClassBucket]} |`)
 
   return rows.length > 0 ? rows.join("\n") : "| - | 0 | - |"
+}
+
+function formatFileRows(findings: LocalClassFinding[]): string {
+  const rows = topFiles(findings, 25).map((row) => `| \`${row.filePath}\` | ${row.high} | ${row.medium} | ${row.low} | ${row.total} |`)
+  return rows.length > 0 ? rows.join("\n") : "| - | 0 | 0 | 0 | 0 |"
+}
+
+function formatSampleRows(findings: LocalClassFinding[]): string {
+  const rows = findings
+    .filter((finding) => finding.severity === "high")
+    .slice(0, 25)
+    .map(
+      (finding) =>
+        `| ${finding.severity} | ${finding.bucket} | \`${finding.filePath}:${finding.line}\` | \`${escapeMarkdownCell(finding.evidence)}\` | ${escapeMarkdownCell(finding.recommendedContract)} |`
+    )
+
+  return rows.length > 0 ? rows.join("\n") : "| - | - | - | - | - |"
 }
 
 function writeReports(findings: LocalClassFinding[], scannedFiles: number): LocalClassesReport {
@@ -424,43 +448,34 @@ function writeReports(findings: LocalClassFinding[], scannedFiles: number): Loca
 
   fs.writeFileSync(REPORT_JSON_PATH, JSON.stringify(report, null, 2))
 
-  const findingRows = findings
-    .slice(0, 500)
-    .map(
-      (finding) =>
-        `| ${finding.severity} | ${finding.bucket} | \`${finding.filePath}:${finding.line}\` | \`${escapeMarkdownCell(finding.evidence)}\` | ${escapeMarkdownCell(finding.recommendedContract)} |`
-    )
-    .join("\n")
-
-  const markdown = `# UI Local Classes Audit
-
-This report intentionally excludes \`shared/ui/**\`, token/global files, tests, mocks, fixtures and reports. It is the actionable cleanup list for local visual ownership in runtime/business layers.
+  const markdown = `# UI Local Classes Fix Summary
 
 - Status: ${severityCounts.high > 0 ? "fail" : findings.length > 0 ? "review" : "pass"}
-- Scanned files: ${scannedFiles}
-- Files with local classes: ${filesWithFindings}
-- Total local class findings: ${findings.length}
-- High priority: ${severityCounts.high}
-- Medium priority: ${severityCounts.medium}
-- Low priority: ${severityCounts.low}
+- Files to touch: ${filesWithFindings}
+- Findings: ${findings.length}
+- High: ${severityCounts.high}
+- Medium: ${severityCounts.medium}
+- Low: ${severityCounts.low}
 
-## Summary by root
+## Fix order: files
 
-| Root | Findings |
-| --- | ---: |
-${formatCountRows(rootCounts)}
+| File | High | Medium | Low | Total |
+| --- | ---: | ---: | ---: | ---: |
+${formatFileRows(findings)}
 
-## Summary by bucket
+## Fix order: buckets
 
-| Bucket | Findings | Recommended shared contract |
+| Bucket | Findings | Move to |
 | --- | ---: | --- |
-${formatBucketRows(bucketCounts)}
+${formatBucketRows(bucketCounts, 12)}
 
-## Findings
+## High-priority examples
 
-| Severity | Bucket | Location | Evidence | Recommended contract |
+| Severity | Bucket | Location | Evidence | Move to |
 | --- | --- | --- | --- | --- |
-${findingRows || "| - | - | - | - | - |"}
+${formatSampleRows(findings)}
+
+Full machine-readable details: \`reports/ui-local-classes.json\`.
 `
 
   fs.writeFileSync(REPORT_MD_PATH, markdown)
@@ -479,25 +494,20 @@ function main(): void {
   const highFindings = report.severityCounts.high
 
   if (options.report) {
-    console.log(`Report: ${path.relative(ROOT, REPORT_JSON_PATH)}`)
-    console.log(`Markdown: ${path.relative(ROOT, REPORT_MD_PATH)}`)
+    console.log(`UI local classes: ${report.totalFindings} finding(s), ${highFindings} high. Fix summary: ${path.relative(ROOT, REPORT_MD_PATH)}`)
   }
 
   if (options.strict && highFindings > 0) {
-    console.error(`UI local classes audit failed with ${highFindings} high finding(s).`)
-    console.error(`Report: ${path.relative(ROOT, REPORT_MD_PATH)}`)
+    console.error(`UI local classes audit failed with ${highFindings} high finding(s). Fix summary: ${path.relative(ROOT, REPORT_MD_PATH)}`)
     process.exitCode = 1
     return
   }
 
   if (options.strict) {
     const reviewOnly = report.severityCounts.medium + report.severityCounts.low
-    console.log(`UI local classes audit passed. Found ${reviewOnly} medium/low local class finding(s).`)
-    console.log(`Report: ${path.relative(ROOT, REPORT_MD_PATH)}`)
+    console.log(`UI local classes audit passed. ${reviewOnly} medium/low finding(s) remain review-only. Fix summary: ${path.relative(ROOT, REPORT_MD_PATH)}`)
     return
   }
-
-  console.log(`UI local classes audit complete. Found ${report.totalFindings} local class finding(s), ${highFindings} high.`)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {
