@@ -1,21 +1,32 @@
 ---
-description: Дизайн-система Smetalab. Справочник по UI-стандартам: кнопки, инпуты, шрифты, тени, layout. Обязательно применять при создании или изменении компонентов и страниц.
+description: Дизайн-система Smetalab. UI ownership model — shared contracts с semantic props. Обязательно прочитай .agents/AGENTS.md перед созданием UI.
 ---
 
-# Smetalab Design System Rules
+# Smetalab UI Ownership Model
 
-При работе с UI компонентами, **обязательно прочитай** полный гайд дизайн-системы:
+После Epic #275 весь UI использует **shared-контракты с semantic props**. Локальные Tailwind-классы в features/app запрещены для визуального стиля.
 
-📖 **`docs/DESIGN_SYSTEM.md`**
+## Перед началом работы
+
+**ОБЯЗАТЕЛЬНО прочитай:** `.agents/AGENTS.md` — полный гайд по UI ownership model
+
+Дополнительно: `docs/ui/UI_GOVERNANCE.md`, `docs/DESIGN_SYSTEM.md`
 
 ## Ключевые правила
 
-1. **Кнопки тулбаров**: `h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95`
-2. **Поля ввода**: `h-9 shadow-sm` в тулбарах
-3. **Отступы**: `space-y-4` между секциями
-4. **Тени**: `shadow-sm` (не `shadow-xs`) для всех интерактивных тулбар-элементов
-5. **Шрифт**: `Manrope` (Google Fonts, `--font-manrope`)
-6. **Иконки**: `lucide-react`, стандартный размер `h-4 w-4`
-7. **Адаптивность**: `flex-col → sm:flex-row`, `text-xs md:text-sm`
-8. **Не создавать** пустые div-обёртки без контента
-9. **Не использовать** `size="sm"` на кнопках тулбаров — прямой `className="h-9"`
+1. **Feature выбирает СМЫСЛ** (variant, tone, density). **Shared/ui владеет классами**.
+2. **CardShell** для карточек (не Surface напрямую, не div с классами)
+3. **Badge / StatusBadge** для бейджей и статусов
+4. **AuthShell / AuthPanel** для страниц логина
+5. **MarketingHero / MarketingSection / MarketingCard** для лендинга
+6. **DashboardPageStack / KPICard** для дашбордов
+7. **Button, Input, Select** — все через shared/ui (не raw HTML)
+8. **Иконки**: `lucide-react`, стандартный размер `h-4 w-4` (через shared, не inline)
+9. **Шрифт**: `Manrope` (наследуется, не задавай локально)
+10. **Не создавать** пустые div-обёртки без контента
+11. **Не писать** raw `<form>/<input>/<button>` в features — используй shared-контракты
+12. **Не использовать** `variant`/`radius`/`shadow`/`overflow` как props на shared-компонентах — передавай через `className`
+
+## Token-файлы
+
+Визуальные примитивы в `shared/ui/primitive-*.ts` (11 доменов). Не добавляй всё в `primitive-density.ts`.

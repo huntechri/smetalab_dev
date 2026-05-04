@@ -3,7 +3,7 @@
 ## Top summary
 - real violations count: 0
 - needs-review count: 4
-- informational count: 792
+- informational count: 804
 - auto-fix candidates count: 0
 - manual review count: 4
 

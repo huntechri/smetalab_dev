@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-04T06:52:27.818Z",
+  "generatedAt": "2026-05-04T09:00:45.402Z",
   "summary": {
-    "filesScanned": 546,
+    "filesScanned": 550,
     "realViolations": 0,
     "needsReview": 4,
-    "informational": 792,
+    "informational": 804,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
     "manualReview": 4,
@@ -235,6 +235,17 @@
       "file": "app/(login)/verify-email/page.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/(login)/verify-email/page.tsx",
+      "source": "@/shared/ui/auth-shell",
+      "importedNames": "AuthShell, AuthPanel, AuthStatusMessage",
       "severity": "informational",
       "category": "import",
       "owner": "app",
@@ -475,8 +486,30 @@
     },
     {
       "file": "app/page.tsx",
+      "source": "@/shared/ui/marketing-shell",
+      "importedNames": "MarketingPageShell, MarketingHero, MarketingSection, MarketingCard, MarketingCTA,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/page.tsx",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/page.tsx",
       "source": "lucide-react",
-      "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck",
+      "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck,",
       "severity": "informational",
       "category": "icon-import",
       "owner": "app",
@@ -532,6 +565,17 @@
       "file": "components/layout/active-team-indicator.tsx",
       "source": "@/shared/ui/tooltip",
       "importedNames": "Tooltip, TooltipContent, TooltipTrigger",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "components/layout/active-team-indicator.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveActiveTeamIndicatorClassName",
       "severity": "informational",
       "category": "import",
       "owner": "other",
@@ -604,6 +648,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "components/layout/app-sidebar.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveAppSidebarSkeletonHeaderClassName, primitiveAppSidebarSkeletonContentClassName, primitiveAppSidebarBrandHeaderClassName, primitiveAppSidebarBrandGradientClassName, primitiveAppSidebarContentClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "components/layout/user-menu.tsx",
@@ -1410,6 +1465,17 @@
     },
     {
       "file": "features/auth/components/AuthFormShell.tsx",
+      "source": "@/shared/ui/auth-shell",
+      "importedNames": "AuthShell, AuthStatusMessage",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/AuthFormShell.tsx",
       "source": "@/shared/ui/card",
       "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
       "severity": "informational",
@@ -1564,6 +1630,17 @@
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveAuthPageBackgroundClassName, primitiveMarketingBgBlobClassNames, primitiveMarketingBgBlobPlacementClassNames, primitiveAuthMarketingGridClassName, primitiveAuthBrandIconClassName, primitiveAuthFeatureCardClassName, primitiveAuthFeatureCardLabelClassName, primitiveAuthFeatureCardValueClassName, primitiveAuthMarketingHeadingClassName, primitiveAuthMarketingSubtextClassName, primitiveAuthFormTitleClassName, primitiveAuthFormDescriptionClassName, primitiveAuthPanelShadowClassName, primitiveAuthPanelBorderClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/LoginForm.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -1709,6 +1786,17 @@
       "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "source": "@/shared/ui/catalog-list-item",
+      "importedNames": "CatalogListItem",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3918,6 +4006,17 @@
     },
     {
       "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -4481,6 +4580,17 @@
       "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
       "source": "@/shared/ui/cells/money-cell",
       "importedNames": "MoneyCell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell, CardShellHeader",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -7932,6 +8042,28 @@
       "issueHint": "#246"
     },
     {
+      "file": "shared/ui/marketing-shell.tsx",
+      "source": "lucide-react",
+      "importedNames": "LucideIcon",
+      "severity": "informational",
+      "category": "icon-import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/marketing-shell.tsx",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveMarketingHeroPaddingClassName, primitiveMarketingSectionPaddingClassName, primitiveMarketingDarkBgClassName, primitiveMarketingCardClassName, primitiveMarketingCardInnerClassName, primitiveMarketingCardAltClassName, primitiveMarketingWorkflowCardClassName, primitiveMarketingCtaBoxClassName, primitiveMarketingPricingCardClassName, primitiveMarketingPricingAccentClassName, primitiveMarketingPillClassName, primitiveMarketingDividerClassName, primitiveMarketingBorderWhite10ClassName, primitiveMarketingH1ClassName, primitiveMarketingH2ClassName, primitiveMarketingH3ClassName, primitiveMarketingBodyClassName, primitiveMarketingHeroTextClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/menubar.tsx",
       "source": "lucide-react",
       "importedNames": "CheckIcon, ChevronRightIcon, CircleIcon",
@@ -8969,6 +9101,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "app/(login)/verify-email/page.tsx",
+        "source": "@/shared/ui/auth-shell",
+        "importedNames": "AuthShell, AuthPanel, AuthStatusMessage",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "app/(workspace)/app/guide/counterparties/loading.tsx",
         "source": "@/shared/ui/states",
         "importedNames": "LoadingState",
@@ -9179,8 +9322,30 @@
       },
       {
         "file": "app/page.tsx",
+        "source": "@/shared/ui/marketing-shell",
+        "importedNames": "MarketingPageShell, MarketingHero, MarketingSection, MarketingCard, MarketingCTA,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/page.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/page.tsx",
         "source": "lucide-react",
-        "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck",
+        "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck,",
         "severity": "informational",
         "category": "icon-import",
         "owner": "app",
@@ -9225,6 +9390,17 @@
         "file": "components/layout/active-team-indicator.tsx",
         "source": "@/shared/ui/tooltip",
         "importedNames": "Tooltip, TooltipContent, TooltipTrigger",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "components/layout/active-team-indicator.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveActiveTeamIndicatorClassName",
         "severity": "informational",
         "category": "import",
         "owner": "other",
@@ -9297,6 +9473,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "components/layout/app-sidebar.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveAppSidebarSkeletonHeaderClassName, primitiveAppSidebarSkeletonContentClassName, primitiveAppSidebarBrandHeaderClassName, primitiveAppSidebarBrandGradientClassName, primitiveAppSidebarContentClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "components/layout/user-menu.tsx",
@@ -10015,6 +10202,17 @@
       },
       {
         "file": "features/auth/components/AuthFormShell.tsx",
+        "source": "@/shared/ui/auth-shell",
+        "importedNames": "AuthShell, AuthStatusMessage",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/AuthFormShell.tsx",
         "source": "@/shared/ui/card",
         "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
         "severity": "informational",
@@ -10146,6 +10344,17 @@
         "issueHint": "#246"
       },
       {
+        "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveAuthPageBackgroundClassName, primitiveMarketingBgBlobClassNames, primitiveMarketingBgBlobPlacementClassNames, primitiveAuthMarketingGridClassName, primitiveAuthBrandIconClassName, primitiveAuthFeatureCardClassName, primitiveAuthFeatureCardLabelClassName, primitiveAuthFeatureCardValueClassName, primitiveAuthMarketingHeadingClassName, primitiveAuthMarketingSubtextClassName, primitiveAuthFormTitleClassName, primitiveAuthFormDescriptionClassName, primitiveAuthPanelShadowClassName, primitiveAuthPanelBorderClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/auth/components/ResetPasswordForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
@@ -10237,6 +10446,17 @@
         "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+        "source": "@/shared/ui/catalog-list-item",
+        "importedNames": "CatalogListItem",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12171,6 +12391,17 @@
       },
       {
         "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12602,6 +12833,17 @@
         "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
         "source": "@/shared/ui/cells/money-cell",
         "importedNames": "MoneyCell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell, CardShellHeader",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -15479,6 +15721,28 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/marketing-shell.tsx",
+        "source": "lucide-react",
+        "importedNames": "LucideIcon",
+        "severity": "informational",
+        "category": "icon-import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/marketing-shell.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveMarketingHeroPaddingClassName, primitiveMarketingSectionPaddingClassName, primitiveMarketingDarkBgClassName, primitiveMarketingCardClassName, primitiveMarketingCardInnerClassName, primitiveMarketingCardAltClassName, primitiveMarketingWorkflowCardClassName, primitiveMarketingCtaBoxClassName, primitiveMarketingPricingCardClassName, primitiveMarketingPricingAccentClassName, primitiveMarketingPillClassName, primitiveMarketingDividerClassName, primitiveMarketingBorderWhite10ClassName, primitiveMarketingH1ClassName, primitiveMarketingH2ClassName, primitiveMarketingH3ClassName, primitiveMarketingBodyClassName, primitiveMarketingHeroTextClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "shared/ui/menubar.tsx",
