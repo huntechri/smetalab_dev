@@ -36,7 +36,7 @@ export function GlobalPurchasesImportExportActions({
             type="button"
             onClick={() => void onExport()}
             aria-label="Экспорт закупок"
-            iconLeft={<Download className="size-4" />}
+            iconLeft={<Download />}
             labelClassName="hidden sm:inline"
           >
             Экспорт XLSX
@@ -51,7 +51,7 @@ export function GlobalPurchasesImportExportActions({
             type="button"
             onClick={onImportClick}
             aria-label="Импорт закупок"
-            iconLeft={<Upload className="size-4" />}
+            iconLeft={<Upload />}
             labelClassName="hidden sm:inline"
           >
             Импорт CSV/XLSX

@@ -42,7 +42,7 @@ export function WorksDeleteDialog({
                             event.preventDefault()
                             onConfirm()
                         }}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                        variant="destructive"
                         disabled={isDeleting}
                     >
                         {isDeleting ? "Удаление..." : "Удалить"}

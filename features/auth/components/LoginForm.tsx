@@ -209,9 +209,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     className="absolute right-1 top-1/2 -translate-y-1/2"
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <EyeOff />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <Eye />
                     )}
                   </Button>
                 </div>

@@ -57,7 +57,7 @@ function ProjectFilterControl({
           <PopoverTrigger asChild>
             <ToolbarButton>
               <div className={denseListToolbarFilterContentClassName}>
-                <Filter className="size-4 shrink-0 opacity-60" />
+                <Filter />
                 <span className={denseListToolbarFilterLabelClassName}>{activeProjectName}</span>
               </div>
               <ChevronsUpDown className={denseListToolbarChevronClassName} />
@@ -135,7 +135,7 @@ function DateRangeFilterControl({ range, onRangeChange }: DateRangeFilterControl
         <TooltipTrigger asChild>
           <PopoverTrigger asChild>
             <ToolbarButton type="button">
-              <CalendarDays className="size-4 opacity-70" />
+              <CalendarDays />
               <span className={denseListToolbarDateLabelClassName}>
                 {range.from === range.to ? range.from : `${range.from} → ${range.to}`}
               </span>
@@ -223,7 +223,7 @@ export function GlobalPurchasesToolbar({
               onClick={onAddManual}
               disabled={isAddingManual}
               aria-label="Добавить строку вручную"
-              iconLeft={<Plus className="size-4" />}
+              iconLeft={<Plus />}
               labelClassName="hidden sm:inline"
             >
               Вручную
@@ -239,7 +239,7 @@ export function GlobalPurchasesToolbar({
               onClick={onAddCatalog}
               disabled={isAddingCatalog}
               aria-label="Добавить из справочника"
-              iconLeft={<BookOpen className="size-4" />}
+              iconLeft={<BookOpen />}
               labelClassName="hidden sm:inline"
             >
               Из справочника
@@ -253,7 +253,7 @@ export function GlobalPurchasesToolbar({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <ToolbarButton size="icon-xs" aria-label="Действия по закупкам">
-              <MoreHorizontal className="size-4" />
+              <MoreHorizontal />
             </ToolbarButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className={denseListToolbarMenuContentClassName}>
@@ -266,11 +266,11 @@ export function GlobalPurchasesToolbar({
               <span>Экспорт XLSX</span>
             </DropdownMenuItem>
             <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddManual} disabled={isAddingManual}>
-              <Plus className="size-4 text-muted-foreground" />
+              <Plus />
               <span>{isAddingManual ? 'Добавление...' : 'Вручную'}</span>
             </DropdownMenuItem>
             <DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddCatalog} disabled={isAddingCatalog}>
-              <BookOpen className="size-4 text-muted-foreground" />
+              <BookOpen />
               <span>Из справочника</span>
             </DropdownMenuItem>
           </DropdownMenuContent>

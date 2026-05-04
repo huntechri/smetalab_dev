@@ -96,7 +96,7 @@ export function DirectoryListScreen<TData, TValue>({
               size="default"
               onClick={onCreate}
             >
-              <Plus className="size-3.5 mr-2" />
+              <Plus />
               {addLabel}
             </Button>
           }
@@ -111,7 +111,7 @@ export function DirectoryListScreen<TData, TValue>({
               onClick={onLoadMore}
               disabled={isLoadingMore}
             >
-              {isLoadingMore ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
+              {isLoadingMore ? <Loader2 /> : null}
               <span className="hidden sm:inline">Загрузить ещё</span>
               <span className="sm:hidden">Ещё</span>
             </Button>
@@ -122,7 +122,7 @@ export function DirectoryListScreen<TData, TValue>({
             size="default"
             aria-label={addLabel}
           >
-            <Plus className="h-4 w-4 mr-1" />
+            <Plus />
             <span>{addButtonLabel}</span>
           </Button>
         </ToolbarGroup>

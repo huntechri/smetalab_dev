@@ -54,7 +54,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                             aria-label={expanded ? 'Свернуть работу' : 'Развернуть работу'}
                         >
                             {expanded ? (
-                                <ChevronDown className="size-3.5 text-muted-foreground transition-transform duration-200" />
+                                <ChevronDown />
                             ) : (
                                 <ChevronRight className="size-3.5 text-muted-foreground transition-transform duration-200" />
                             )}
@@ -231,7 +231,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                       },
                                       {
                                           label: 'Добавить раздел ниже',
-                                          icon: <FolderTree className="size-4" />,
+                                          icon: <FolderTree />,
                                           onClick: () => actions.onRequestCreateSection(item.id),
                                       },
                                   ]
@@ -250,7 +250,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                                 : []),
                             {
                                 label: item.kind === 'section' ? 'Удалить раздел' : 'Удалить',
-                                icon: <Trash2 className="size-4" />,
+                                icon: <Trash2 />,
                                 variant: 'destructive',
                                 onClick: () => void actions.onRemoveRow(item.id),
                             },

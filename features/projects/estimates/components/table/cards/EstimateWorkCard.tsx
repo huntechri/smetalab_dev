@@ -49,7 +49,7 @@ export function EstimateWorkCard({
           onClick={() => props.onToggleExpand(work.id)}
         >
           {isWorkOpen ? (
-            <ChevronDown className="size-4 text-muted-foreground" />
+            <ChevronDown />
           ) : (
             <ChevronRight className="size-4 text-muted-foreground" />
           )}

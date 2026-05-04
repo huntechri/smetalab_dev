@@ -85,7 +85,7 @@ export function RoomsParamsTable({
     onRemove: (rowId: string) => void;
 }) {
     return (
-        <CardShell variant="card" className="rounded-md shadow-none overflow-visible gap-0">
+        <CardShell variant="card" shadow="none" overflow="visible">
             <Table className={primitiveCompactTableCellClassName}>
                 <TableHeader>
                     <TableRow>
@@ -128,7 +128,7 @@ export function RoomsParamsTable({
                             ))}
                             <TableCell>
                                 <Button size="icon-sm" variant="destructive" onClick={() => onRemove(row.id)} aria-label="Удалить помещение">
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 />
                                 </Button>
                             </TableCell>
                         </TableRow>

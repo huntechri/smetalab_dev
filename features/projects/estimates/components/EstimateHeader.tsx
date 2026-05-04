@@ -37,7 +37,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     };
 
     return (
-        <CardShell variant="panel" className="shadow-sm">
+        <CardShell variant="panel">
             <CardShellBody className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center" density="comfortable">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
@@ -62,7 +62,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                                 <AlertDialogFooter>
                                     <AlertDialogCancel>Отмена</AlertDialogCancel>
                                     <AlertDialogAction
-                                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                                        variant="destructive"
                                         onClick={onDelete}
                                     >
                                         Удалить

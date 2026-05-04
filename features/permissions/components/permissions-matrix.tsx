@@ -115,7 +115,7 @@ export function PermissionsMatrix() {
             value="platform"
             className="px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md"
           >
-            <Building2 className="mr-2 h-4 w-4" /> Платформа
+            <Building2 /> Платформа
           </TabsTrigger>
         </TabsList>
 

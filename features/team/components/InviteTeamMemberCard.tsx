@@ -58,7 +58,7 @@ export function InviteTeamMemberCard({
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="default">
                                     {getRoleLabel(role)}
-                                    <Shield className="size-3.5 text-muted-foreground opacity-70" />
+                                    <Shield />
                                 </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="start">
@@ -69,7 +69,7 @@ export function InviteTeamMemberCard({
                         </DropdownMenu>
                     </div>
                     <Button type="submit" variant="primary" size="default" disabled={isInviting}>
-                        <Mail className="size-3.5" />
+                        <Mail />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
                 </FormLayout>

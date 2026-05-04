@@ -83,9 +83,9 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           disabled={disabled}
           aria-label="Назначить поставщика"
         >
-          {disabled ? <Loader2 className="size-3 animate-spin" /> : <DenseListColorIndicator color={color} />}
+          {disabled ? <Loader2 /> : <DenseListColorIndicator color={color} />}
           {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Поставщик</span>}
-          <ChevronsUpDown className="size-3 opacity-60" />
+          <ChevronsUpDown />
         </DenseListPickerButton>
       </PopoverTrigger>
       <PopoverContent className={denseListPickerPopoverClassName} align="start">
@@ -150,7 +150,7 @@ const ProjectCell = React.memo(function ProjectCell({
           aria-label="Выбрать объект"
         >
           {disabled && (
-            <Loader2 className="size-3 animate-spin" />
+            <Loader2 />
           )}
           {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Без привязки</span>}
           <ChevronsUpDown className="ml-auto size-3 opacity-60" />
@@ -200,7 +200,7 @@ const DeleteRowAction = React.memo(function DeleteRowAction({ rowId, onRemoveAct
             disabled={disabled}
             aria-label="Удалить строку"
           >
-            <Trash2 className="size-3.5" />
+            <Trash2 />
           </Button>
         </TooltipTrigger>
         <TooltipContent>Удалить строку закупки</TooltipContent>

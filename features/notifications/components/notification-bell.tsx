@@ -39,7 +39,7 @@ export function NotificationBell() {
     if (!mounted) {
         return (
             <Button type="button" variant="ghost" size="icon-xs" disabled>
-                <Bell className="h-5 w-5" />
+                <Bell />
                 <span className="sr-only">Уведомления</span>
             </Button>
         );
@@ -81,7 +81,7 @@ export function NotificationBell() {
                     type="button"
                     aria-label={unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"}
                 >
-                    <Bell className="h-5 w-5" />
+                    <Bell />
                     {unreadCount > 0 && (
                         <Badge
                             variant="destructive"

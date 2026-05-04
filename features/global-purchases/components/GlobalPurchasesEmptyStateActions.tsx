@@ -19,10 +19,10 @@ export function GlobalPurchasesEmptyStateActions({
 }: GlobalPurchasesEmptyStateActionsProps) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-2">
-      <ToolbarButton variant="brand" onClick={onAddManual} disabled={isAddingManual} iconLeft={<Plus className="size-3.5" />}>
+      <ToolbarButton variant="brand" onClick={onAddManual} disabled={isAddingManual} iconLeft={<Plus />}>
         Добавить вручную
       </ToolbarButton>
-      <ToolbarButton variant="brand" onClick={onOpenCatalog} disabled={isAddingCatalog} iconLeft={<BookOpen className="size-3.5" />}>
+      <ToolbarButton variant="brand" onClick={onOpenCatalog} disabled={isAddingCatalog} iconLeft={<BookOpen />}>
         Из справочника
       </ToolbarButton>
     </div>

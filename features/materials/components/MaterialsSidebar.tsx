@@ -128,7 +128,7 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
             onClick={() => handleCategorySelect(level, node.name, currentPath)}
             title={node.name}
             selected={isSelected}
-            checkIcon={<Check className="size-3" />}
+            checkIcon={<Check />}
           >
             {node.name}
           </CatalogFilterButton>
@@ -142,7 +142,7 @@ export function MaterialsSidebar({ filters, setFilters, className, isMobile }: M
                 toggleExpand(currentPath);
               }}
             >
-              {isExpanded ? <ChevronDown className="size-3.5" /> : <ChevronRight className="size-3.5" />}
+              {isExpanded ? <ChevronDown /> : <ChevronRight className="size-3.5" />}
             </Button>
           )}
         </div>

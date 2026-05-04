@@ -33,9 +33,9 @@ export function ImpersonateButton({ teamId }: ImpersonateButtonProps) {
                 disabled={isPending}
             >
                 {isPending ? (
-                    <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                    <Loader2 />
                 ) : (
-                    <ShieldAlert className="h-3.5 w-3.5" />
+                    <ShieldAlert />
                 )}
                 Имперсонация
             </Button>

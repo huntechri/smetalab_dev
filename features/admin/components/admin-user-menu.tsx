@@ -46,7 +46,7 @@ export function AdminUserMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Avatar className="size-9 cursor-pointer">
+        <Avatar>
           <AvatarFallback>
             {user.email
               .split(' ')
@@ -58,19 +58,19 @@ export function AdminUserMenu() {
       <DropdownMenuContent align="end" className="flex flex-col gap-1">
         <DropdownMenuItem className="cursor-pointer">
           <Link href="/dashboard" className="flex w-full items-center">
-            <Home className="mr-2 h-4 w-4" />
+            <Home />
             <span>Dashboard</span>
           </Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <Link href="/app" className="flex w-full items-center">
-            <Home className="mr-2 h-4 w-4" />
+            <Home />
             <span>Приложение</span>
           </Link>
         </DropdownMenuItem>
         <FormLayout action={handleSignOut} className="w-full">
           <Button type="submit" variant="ghost" size="default">
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut />
             <span>Sign out</span>
           </Button>
         </FormLayout>

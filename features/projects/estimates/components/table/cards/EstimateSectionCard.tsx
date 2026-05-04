@@ -50,7 +50,7 @@ export function EstimateSectionCard({
             onClick={() => onToggleSection(section.id)}
           >
             {isSectionOpen ? (
-              <ChevronDown className="size-4 text-muted-foreground" />
+              <ChevronDown />
             ) : (
               <ChevronRight className="size-4 text-muted-foreground" />
             )}

@@ -64,7 +64,7 @@ export function CatalogTableWrapper<TData, TValue>({
               size="sm"
               onClick={() => tableActions.onInsertRequest()}
             >
-              <Plus className="size-3.5 mr-2" />
+              <Plus />
               {emptyState.addLabel}
             </Button>
           }

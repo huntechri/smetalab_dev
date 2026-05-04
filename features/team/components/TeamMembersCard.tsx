@@ -110,7 +110,7 @@ export function TeamMembersCard({
                                         items={[
                                             {
                                                 label: 'Удалить',
-                                                icon: <Trash2 className="size-4" />,
+                                                icon: <Trash2 />,
                                                 variant: 'destructive',
                                                 requiresConfirmation: true,
                                                 confirmTitle: 'Удалить участника?',

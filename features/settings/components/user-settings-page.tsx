@@ -136,7 +136,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
           <Card className="border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <UserCircle2 className="h-4 w-4" />
+                <UserCircle2 />
                 Профиль пользователя
               </CardTitle>
               <CardDescription>
@@ -175,9 +175,9 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   size="default"
                 >
                   {isAccountPending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 />
                   ) : (
-                    <Save className="mr-2 h-4 w-4" />
+                    <Save />
                   )}
                   Сохранить профиль
                 </Button>
@@ -190,7 +190,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
           <Card className="border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Building2 className="h-4 w-4" />
+                <Building2 />
                 Организация и права
               </CardTitle>
               <CardDescription>
@@ -237,7 +237,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
               <Button variant="outline" size="default" asChild>
                 <a href="/app/team">
                   Управление организацией
-                  <ExternalLink className="ml-2 h-4 w-4" />
+                  <ExternalLink />
                 </a>
               </Button>
 
@@ -270,7 +270,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
           <Card className="border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Shield className="h-4 w-4" />
+                <Shield />
                 Безопасность
               </CardTitle>
               <CardDescription>
@@ -322,9 +322,9 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                   size="default"
                 >
                   {isPasswordPending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 />
                   ) : (
-                    <Lock className="mr-2 h-4 w-4" />
+                    <Lock />
                   )}
                   Обновить пароль
                 </Button>
@@ -337,7 +337,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
           <Card className="border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Bell className="h-4 w-4" />
+                <Bell />
                 Уведомления
               </CardTitle>
               <CardDescription>
@@ -415,7 +415,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
           <Card className="border-border/70">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <MonitorCog className="h-4 w-4" />
+                <MonitorCog />
                 Интерфейс и предпочтения
               </CardTitle>
               <CardDescription>

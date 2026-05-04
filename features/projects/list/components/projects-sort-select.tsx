@@ -57,7 +57,7 @@ export function ProjectsSortSelect({ value, onValueChange }: ProjectsSortSelectP
                             <span className="truncate">
                                 {selectedLabel}
                             </span>
-                            <ChevronsUpDown className="size-3.5 opacity-50 shrink-0" />
+                            <ChevronsUpDown />
                         </Button>
                     </PopoverTrigger>
                 </TooltipTrigger>

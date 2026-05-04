@@ -128,7 +128,7 @@ export function CreateMaterialSupplierSheet({
             Отмена
           </Button>
           <Button type="submit" size="default" form="material-supplier-sheet-form" disabled={isPending}>
-            {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
+            {isPending && <Loader2 />}
             {materialSupplier ? 'Сохранить' : 'Создать'}
           </Button>
         </>

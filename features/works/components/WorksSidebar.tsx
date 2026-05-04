@@ -65,7 +65,7 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
             key={p}
             onClick={() => handlePhaseSelect(p)}
             selected={filters.phase === p}
-            checkIcon={<Check className="size-3" />}
+            checkIcon={<Check />}
           >
             {p}
           </CatalogFilterButton>
@@ -84,7 +84,7 @@ export function WorksSidebar({ filters, setFilters, className, isMobile }: Works
             key={c}
             onClick={() => handleCategorySelect(c)}
             selected={filters.category === c}
-            checkIcon={<Check className="size-3" />}
+            checkIcon={<Check />}
           >
             {c}
           </CatalogFilterButton>

@@ -16,13 +16,13 @@ export function PricingSubmitButton() {
     >
       {pending ? (
         <>
-          <Loader2 className="animate-spin mr-2 h-4 w-4" />
+          <Loader2 />
           Loading...
         </>
       ) : (
         <>
           Get Started
-          <ArrowRight className="ml-2 h-4 w-4" />
+          <ArrowRight />
         </>
       )}
     </Button>

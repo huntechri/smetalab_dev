@@ -156,9 +156,9 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                             }}
                                         >
                                             {addedWorkNames.has(work.name) ? (
-                                                <Check className="h-3.5 w-3.5" />
+                                                <Check />
                                             ) : (
-                                                <Plus className="h-3.5 w-3.5" />
+                                                <Plus />
                                             )}
                                         </Button>
                                     </div>

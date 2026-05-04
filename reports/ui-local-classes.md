@@ -1,11 +1,11 @@
 # UI Local Classes Fix Summary
 
 - Status: fail
-- Files to touch: 106
-- Findings: 770
-- High: 193
-- Medium: 410
-- Low: 167
+- Files to touch: 101
+- Findings: 689
+- High: 165
+- Medium: 381
+- Low: 143
 
 ## Fix order: files
 
@@ -13,46 +13,46 @@
 | --- | ---: | ---: | ---: | ---: |
 | `features/counterparties/components/counterparty-sheet-sections.tsx` | 31 | 20 | 0 | 51 |
 | `app/page.tsx` | 22 | 10 | 35 | 67 |
-| `features/projects/estimates/components/table/EstimateTableToolbar.tsx` | 20 | 6 | 0 | 26 |
-| `features/permissions/components/permissions-matrix.tsx` | 14 | 19 | 5 | 38 |
-| `features/global-purchases/components/GlobalPurchasesToolbar.tsx` | 9 | 3 | 2 | 14 |
+| `features/permissions/components/permissions-matrix.tsx` | 14 | 19 | 4 | 37 |
 | `features/projects/list/components/project-card.tsx` | 7 | 14 | 1 | 22 |
+| `features/global-purchases/components/GlobalPurchasesToolbar.tsx` | 7 | 3 | 0 | 10 |
 | `features/projects/estimates/components/table/EstimateTableDialogs.tsx` | 6 | 26 | 0 | 32 |
-| `features/counterparties/components/CreateCounterpartySheet.tsx` | 5 | 6 | 0 | 11 |
-| `features/admin/components/admin-user-menu.tsx` | 5 | 0 | 4 | 9 |
+| `features/counterparties/components/CreateCounterpartySheet.tsx` | 5 | 5 | 0 | 10 |
 | `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx` | 4 | 8 | 0 | 12 |
 | `features/projects/estimates/components/table/cards/EstimateSectionCard.tsx` | 4 | 6 | 0 | 10 |
+| `features/admin/components/admin-user-menu.tsx` | 4 | 0 | 1 | 5 |
 | `features/_shared/directories/components/directory-entity-sheet-shell.tsx` | 4 | 0 | 0 | 4 |
-| `features/settings/components/user-settings-page.tsx` | 3 | 12 | 17 | 32 |
+| `features/settings/components/user-settings-page.tsx` | 3 | 12 | 7 | 22 |
 | `features/patterns/screens/PatternsScreen.tsx` | 3 | 10 | 2 | 15 |
 | `features/projects/list/components/create-project-dialog.tsx` | 3 | 10 | 0 | 13 |
-| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 3 | 9 | 0 | 12 |
 | `features/dashboard/components/TeamWidgetSection.tsx` | 3 | 8 | 0 | 11 |
-| `features/permissions/components/PermissionLevelControl.tsx` | 3 | 7 | 0 | 10 |
-| `features/catalog/components/MaterialCatalogPicker.client.tsx` | 2 | 14 | 10 | 26 |
-| `features/global-purchases/components/global-purchases-columns.tsx` | 2 | 10 | 0 | 12 |
+| `features/permissions/components/PermissionLevelControl.tsx` | 3 | 6 | 0 | 9 |
+| `features/catalog/components/MaterialCatalogPicker.client.tsx` | 2 | 13 | 10 | 25 |
+| `features/global-purchases/components/global-purchases-columns.tsx` | 2 | 9 | 0 | 11 |
 | `features/projects/dashboard/components/ProjectReceiptsSection.tsx` | 2 | 8 | 0 | 10 |
-| `features/notifications/components/notification-bell.tsx` | 2 | 7 | 0 | 9 |
+| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 2 | 8 | 0 | 10 |
+| `features/notifications/components/notification-bell.tsx` | 2 | 5 | 0 | 7 |
 | `features/projects/estimates/components/tabs/EstimateParams.tsx` | 2 | 4 | 0 | 6 |
 | `features/team/screens/TeamScreen.tsx` | 2 | 4 | 0 | 6 |
-| `features/projects/estimates/components/EstimateHeader.tsx` | 2 | 2 | 7 | 11 |
+| `features/_shared/guide-catalog/components/CatalogToolbar.tsx` | 2 | 1 | 4 | 7 |
+| `features/_shared/guide-catalog/components/CatalogScreenFallback.tsx` | 2 | 0 | 4 | 6 |
 
 ## Fix order: buckets
 
 | Bucket | Findings | Move to |
 | --- | ---: | --- |
-| control | 218 | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
-| surface | 88 | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| dialog-sheet | 86 | shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props |
-| table | 70 | shared/ui/data-table.tsx or shared/ui/table-density.tsx |
-| navigation | 57 | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
-| card | 53 | shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts |
-| form | 50 | shared/ui/form-layout.tsx and shared form/control primitives |
-| spacing | 33 | shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props |
-| table-cell | 31 | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
-| layout | 24 | shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract |
+| control | 182 | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
+| dialog-sheet | 81 | shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props |
+| surface | 76 | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
+| table | 63 | shared/ui/data-table.tsx or shared/ui/table-density.tsx |
+| card | 52 | shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts |
+| navigation | 50 | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
+| form | 48 | shared/ui/form-layout.tsx and shared form/control primitives |
+| table-cell | 30 | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
+| spacing | 29 | shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props |
 | dashboard-chart | 21 | shared/ui/kpi-card.tsx, shared/ui/dashboard-layout.tsx, or shared/ui/dashboard-dynamics-chart.tsx |
 | color | 21 | shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract |
+| layout | 19 | shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract |
 
 ## High-priority examples
 

@@ -46,7 +46,7 @@ export function PermissionLevelControl({
               disabled={isUpdating}
               aria-label={`Включить чтение ${permissionName} для роли ${roleLabel}`}
             >
-              <Eye className="h-4 w-4" />
+              <Eye />
             </Button>
           </TooltipTrigger>
           <TooltipContent className="text-xs">Чтение (только просмотр)</TooltipContent>

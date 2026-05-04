@@ -64,7 +64,7 @@ export function WorksEditDialog({
                         <DialogFooter>
                             <Button variant="outline" size="default" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
                             <Button type="submit" size="default" disabled={isUpdating}>
-                                {isUpdating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isUpdating && <Loader2 />}
                                 Сохранить
                             </Button>
                         </DialogFooter>

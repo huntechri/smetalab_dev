@@ -73,7 +73,7 @@ export function CatalogToolbar<TFilters>({
         <Sheet>
           <SheetTrigger asChild>
             <ToolbarButton variant="outline" size="icon-xs">
-              <Filter className="size-4" />
+              <Filter />
             </ToolbarButton>
           </SheetTrigger>
           <SheetContent side="left" className={catalogToolbarClassNames.sheet}>

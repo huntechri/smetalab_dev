@@ -44,13 +44,13 @@ function DesktopPrimaryActions({
 >) {
   return (
     <div className="hidden sm:flex items-center gap-1.5 sm:gap-2">
-      <ToolbarButton aria-label="Режим расчета" onClick={onOpenCalculationMode} iconLeft={<Calculator className="size-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+      <ToolbarButton aria-label="Режим расчета" onClick={onOpenCalculationMode} iconLeft={<Calculator />} labelClassName="hidden sm:inline">
         Режим расчета
       </ToolbarButton>
-      <ToolbarButton aria-label="Добавить раздел" onClick={onOpenCreateSectionDialog} iconLeft={<FolderTree className="size-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+      <ToolbarButton aria-label="Добавить раздел" onClick={onOpenCreateSectionDialog} iconLeft={<FolderTree />} labelClassName="hidden sm:inline">
         Раздел
       </ToolbarButton>
-      <ToolbarButton aria-label="Сохранить смету" onClick={onOpenSavePattern} iconLeft={<Save className="size-3.5 text-muted-foreground" />} labelClassName="hidden sm:inline">
+      <ToolbarButton aria-label="Сохранить смету" onClick={onOpenSavePattern} iconLeft={<Save />} labelClassName="hidden sm:inline">
         Сохранить
       </ToolbarButton>
     </div>
@@ -77,28 +77,28 @@ function DesktopSecondaryActions({
 >) {
   return (
     <div className="hidden xl:flex items-center gap-1.5">
-      <ToolbarButton onClick={onOpenApplyPattern} iconLeft={<FileStack className="size-3.5 text-muted-foreground" />}>
+      <ToolbarButton onClick={onOpenApplyPattern} iconLeft={<FileStack />}>
         Шаблон
       </ToolbarButton>
-      <ToolbarButton onClick={onOpenCoefficientDialog} iconLeft={<Percent className="size-3.5 text-muted-foreground" />}>
+      <ToolbarButton onClick={onOpenCoefficientDialog} iconLeft={<Percent />}>
         Коэффициент
       </ToolbarButton>
-      <ToolbarButton onClick={onImportEstimate} disabled={isImporting} iconLeft={<FileUp className="size-3.5 text-muted-foreground" />}>
+      <ToolbarButton onClick={onImportEstimate} disabled={isImporting} iconLeft={<FileUp />}>
         {isImporting ? 'Импорт...' : 'Импорт'}
       </ToolbarButton>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <ToolbarButton disabled={isExporting} iconLeft={<FileDown className="size-3.5 text-muted-foreground" />}>
+          <ToolbarButton disabled={isExporting} iconLeft={<FileDown />}>
             {isExporting ? 'Экспорт...' : 'Экспорт'}
           </ToolbarButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem className="gap-2" onClick={onExportXlsx}>
-            <FileDown className="size-4 text-muted-foreground" />
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={onExportXlsx}>
+            <FileDown />
             <span>Экспорт в Excel (.xlsx)</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={onExportPdf}>
-            <FileDown className="size-4 text-muted-foreground" />
+          <DropdownMenuItem onClick={onExportPdf}>
+            <FileDown />
             <span>Экспорт в PDF (.pdf)</span>
           </DropdownMenuItem>
         </DropdownMenuContent>
@@ -129,41 +129,41 @@ function MobileOverflowActions({
             <span className="sr-only">Действия по смете</span>
           </ToolbarButton>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-56">
-          <DropdownMenuItem className="gap-2" onClick={onOpenCalculationMode}>
-            <Calculator className="size-4 text-muted-foreground" />
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={onOpenCalculationMode}>
+            <Calculator />
             <span>Режим расчета</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={onOpenCreateSectionDialog}>
-            <FolderTree className="size-4 text-muted-foreground" />
+          <DropdownMenuItem onClick={onOpenCreateSectionDialog}>
+            <FolderTree />
             <span>Раздел</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={onOpenSavePattern}>
-            <Save className="size-4 text-muted-foreground" />
+          <DropdownMenuItem onClick={onOpenSavePattern}>
+            <Save />
             <span>Сохранить</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={onOpenApplyPattern}>
-            <FileStack className="size-4 text-muted-foreground" />
+          <DropdownMenuItem onClick={onOpenApplyPattern}>
+            <FileStack />
             <span>Шаблон</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" onClick={onOpenCoefficientDialog}>
-            <Percent className="size-4 text-muted-foreground" />
+          <DropdownMenuItem onClick={onOpenCoefficientDialog}>
+            <Percent />
             <span>Коэффициент</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" disabled={isImporting} onClick={onImportEstimate}>
-            <FileUp className="size-4 text-muted-foreground" />
+          <DropdownMenuItem disabled={isImporting} onClick={onImportEstimate}>
+            <FileUp />
             <span>{isImporting ? 'Импорт...' : 'Импорт'}</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={onExportXlsx}>
-            <FileDown className="size-4 text-muted-foreground" />
+          <DropdownMenuItem disabled={isExporting} onClick={onExportXlsx}>
+            <FileDown />
             <span>Экспорт в Excel</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2" disabled={isExporting} onClick={onExportPdf}>
-            <FileDown className="size-4 text-muted-foreground" />
+          <DropdownMenuItem disabled={isExporting} onClick={onExportPdf}>
+            <FileDown />
             <span>Экспорт в PDF</span>
           </DropdownMenuItem>
-          <DropdownMenuItem className="gap-2 text-destructive" onClick={onOpenDeleteDialog}>
-            <Trash2 className="size-4" />
+          <DropdownMenuItem variant="destructive" onClick={onOpenDeleteDialog}>
+            <Trash2 />
             <span>Удалить смету</span>
           </DropdownMenuItem>
         </DropdownMenuContent>

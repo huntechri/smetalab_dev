@@ -179,7 +179,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     onClick={() => setIsCategoryPanelOpen((prev) => !prev)}
                 >
                     <span className="truncate">Категории: {selectedCategoryLabel}</span>
-                    {isCategoryPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    {isCategoryPanelOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown />}
                 </Button>
             </div>
 
@@ -323,7 +323,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     disabled={isAdding || isAlreadyAdded}
                                                     onClick={() => void addMaterial(material)}
                                                 >
-                                                    {isAdding || isAlreadyAdded ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4 sm:h-5 sm:w-5" />}
+                                                    {isAdding || isAlreadyAdded ? <Check /> : <Plus />}
                                                 </Button>
                                             </div>
                                         </CatalogListItem>

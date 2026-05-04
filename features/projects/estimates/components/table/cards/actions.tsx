@@ -28,12 +28,12 @@ export function buildSectionActions(
     },
     {
       label: 'Добавить раздел ниже',
-      icon: <FolderTree className="size-4" />,
+      icon: <FolderTree />,
       onClick: () => props.onRequestCreateSection(section.id),
     },
     {
       label: 'Удалить раздел',
-      icon: <Trash2 className="size-4" />,
+      icon: <Trash2 />,
       variant: 'destructive',
       onClick: () => void props.onRemoveRow(section.id),
     },
@@ -58,7 +58,7 @@ export function buildWorkActions(
     },
     {
       label: 'Добавить раздел ниже',
-      icon: <FolderTree className="size-4" />,
+      icon: <FolderTree />,
       onClick: () => props.onRequestCreateSection(work.id),
     },
     {
@@ -68,7 +68,7 @@ export function buildWorkActions(
     },
     {
       label: 'Удалить',
-      icon: <Trash2 className="size-4" />,
+      icon: <Trash2 />,
       variant: 'destructive',
       onClick: () => void props.onRemoveRow(work.id),
     },
@@ -87,7 +87,7 @@ export function buildMaterialActions(
     },
     {
       label: 'Удалить',
-      icon: <Trash2 className="size-4" />,
+      icon: <Trash2 />,
       variant: 'destructive',
       onClick: () => void props.onRemoveRow(material.id),
     },
