@@ -1,1 +1,3 @@
-export { cn } from "@repo/utils";
+import { cn } from "@/lib/utils/cn";
+
+export { cn };

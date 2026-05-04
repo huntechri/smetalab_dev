@@ -136,6 +136,13 @@ const SHADCN_COMPONENT_NAMES = [
   "ScrollArea",
   "Separator",
   "Avatar",
+  "Skeleton",
+  "FormLayout", "FormLabel", "FormItem", "FormControl", "FormMessage",
+  "Table", "TableHeader", "TableRow", "TableHead", "TableBody", "TableCell", "TableFooter",
+  "Textarea",
+  "Checkbox",
+  "Switch",
+  "RadioGroup",
 ] as const
 
 /** Regex matching a shadcn component JSX opening tag that has a className prop on the same line. */

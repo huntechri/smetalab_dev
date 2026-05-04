@@ -1,9 +1,9 @@
 # UI Local Classes Fix Summary
 
 - Status: fail
-- Files to touch: 98
-- Findings: 603
-- High: 26
+- Files to touch: 106
+- Findings: 770
+- High: 193
 - Medium: 410
 - Low: 167
 
@@ -11,42 +11,42 @@
 
 | File | High | Medium | Low | Total |
 | --- | ---: | ---: | ---: | ---: |
+| `features/counterparties/components/counterparty-sheet-sections.tsx` | 31 | 20 | 0 | 51 |
 | `app/page.tsx` | 22 | 10 | 35 | 67 |
-| `features/catalog/components/MaterialCatalogPicker.client.tsx` | 1 | 14 | 10 | 25 |
-| `features/patterns/screens/PatternsScreen.tsx` | 1 | 10 | 2 | 13 |
-| `features/projects/estimates/components/params/RoomsParamsTotals.tsx` | 1 | 2 | 1 | 4 |
-| `components/layout/app-sidebar.tsx` | 1 | 0 | 12 | 13 |
-| `features/projects/estimates/components/table/EstimateTableDialogs.tsx` | 0 | 26 | 0 | 26 |
-| `features/auth/components/LoginForm.tsx` | 0 | 21 | 0 | 21 |
-| `features/counterparties/components/counterparty-sheet-sections.tsx` | 0 | 20 | 0 | 20 |
-| `features/permissions/components/permissions-matrix.tsx` | 0 | 19 | 5 | 24 |
-| `features/projects/list/components/project-card.tsx` | 0 | 14 | 1 | 15 |
-| `features/team/components/TeamMembersCard.tsx` | 0 | 13 | 0 | 13 |
-| `features/settings/components/user-settings-page.tsx` | 0 | 12 | 17 | 29 |
-| `features/settings/screens/AdminSecuritySettingsScreen.tsx` | 0 | 10 | 1 | 11 |
-| `features/global-purchases/components/global-purchases-columns.tsx` | 0 | 10 | 0 | 10 |
-| `features/projects/list/components/create-project-dialog.tsx` | 0 | 10 | 0 | 10 |
-| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 0 | 9 | 0 | 9 |
-| `features/dashboard/components/TeamWidgetSection.tsx` | 0 | 8 | 0 | 8 |
-| `features/projects/dashboard/components/ProjectReceiptsSection.tsx` | 0 | 8 | 0 | 8 |
-| `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx` | 0 | 8 | 0 | 8 |
-| `features/works/components/UnitSelect.tsx` | 0 | 8 | 0 | 8 |
-| `features/catalog/components/WorkCatalogPicker.client.tsx` | 0 | 7 | 5 | 12 |
-| `features/notifications/components/notification-bell.tsx` | 0 | 7 | 0 | 7 |
-| `features/permissions/components/PermissionLevelControl.tsx` | 0 | 7 | 0 | 7 |
-| `features/projects/estimates/components/table/columns.tsx` | 0 | 7 | 0 | 7 |
-| `features/team/components/InviteTeamMemberCard.tsx` | 0 | 7 | 0 | 7 |
+| `features/projects/estimates/components/table/EstimateTableToolbar.tsx` | 20 | 6 | 0 | 26 |
+| `features/permissions/components/permissions-matrix.tsx` | 14 | 19 | 5 | 38 |
+| `features/global-purchases/components/GlobalPurchasesToolbar.tsx` | 9 | 3 | 2 | 14 |
+| `features/projects/list/components/project-card.tsx` | 7 | 14 | 1 | 22 |
+| `features/projects/estimates/components/table/EstimateTableDialogs.tsx` | 6 | 26 | 0 | 32 |
+| `features/counterparties/components/CreateCounterpartySheet.tsx` | 5 | 6 | 0 | 11 |
+| `features/admin/components/admin-user-menu.tsx` | 5 | 0 | 4 | 9 |
+| `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx` | 4 | 8 | 0 | 12 |
+| `features/projects/estimates/components/table/cards/EstimateSectionCard.tsx` | 4 | 6 | 0 | 10 |
+| `features/_shared/directories/components/directory-entity-sheet-shell.tsx` | 4 | 0 | 0 | 4 |
+| `features/settings/components/user-settings-page.tsx` | 3 | 12 | 17 | 32 |
+| `features/patterns/screens/PatternsScreen.tsx` | 3 | 10 | 2 | 15 |
+| `features/projects/list/components/create-project-dialog.tsx` | 3 | 10 | 0 | 13 |
+| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 3 | 9 | 0 | 12 |
+| `features/dashboard/components/TeamWidgetSection.tsx` | 3 | 8 | 0 | 11 |
+| `features/permissions/components/PermissionLevelControl.tsx` | 3 | 7 | 0 | 10 |
+| `features/catalog/components/MaterialCatalogPicker.client.tsx` | 2 | 14 | 10 | 26 |
+| `features/global-purchases/components/global-purchases-columns.tsx` | 2 | 10 | 0 | 12 |
+| `features/projects/dashboard/components/ProjectReceiptsSection.tsx` | 2 | 8 | 0 | 10 |
+| `features/notifications/components/notification-bell.tsx` | 2 | 7 | 0 | 9 |
+| `features/projects/estimates/components/tabs/EstimateParams.tsx` | 2 | 4 | 0 | 6 |
+| `features/team/screens/TeamScreen.tsx` | 2 | 4 | 0 | 6 |
+| `features/projects/estimates/components/EstimateHeader.tsx` | 2 | 2 | 7 | 11 |
 
 ## Fix order: buckets
 
 | Bucket | Findings | Move to |
 | --- | ---: | --- |
+| control | 218 | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
 | surface | 88 | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | dialog-sheet | 86 | shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props |
 | table | 70 | shared/ui/data-table.tsx or shared/ui/table-density.tsx |
 | navigation | 57 | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
 | card | 53 | shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts |
-| control | 51 | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
 | form | 50 | shared/ui/form-layout.tsx and shared form/control primitives |
 | spacing | 33 | shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props |
 | table-cell | 31 | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
@@ -80,8 +80,8 @@
 | high | surface | `app/page.tsx:309` | `? 'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]'` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | high | surface | `app/page.tsx:310` | `: 'rounded-3xl border border-white/10 bg-[#14121A] p-6'` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | high | surface | `app/page.tsx:349` | `<footer className="border-t border-white/10 bg-[#0B0A0F]">` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| high | surface | `features/catalog/components/MaterialCatalogPicker.client.tsx:281` | `<div className={'relative flex size-9 sm:size-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}'}>` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| high | surface | `features/patterns/screens/PatternsScreen.tsx:108` | `<Surface variant="muted" density="compact" shadow="none">` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| high | table-cell | `features/projects/estimates/components/params/RoomsParamsTotals.tsx:18` | `<div className={'flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? "mt-2 pt-2 border-t border-border/50 " + primitiveVisualTypographyClassNames.compactLabel : 'text-muted-foreground'}'}>` | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
+| high | control | `features/_shared/directories/components/directory-entity-sheet-shell.tsx:40` | `<SheetContent size="directory" layout="edge-to-edge" className={contentClassName}>` | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
+| high | control | `features/_shared/directories/components/directory-entity-sheet-shell.tsx:41` | `<SheetHeader className={directoryEntitySheetClassNames.header}>` | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
+| high | control | `features/_shared/directories/components/directory-entity-sheet-shell.tsx:48` | `<ScrollArea className={directoryEntitySheetClassNames.scrollArea}>` | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
 
 Full machine-readable details: `reports/ui-local-classes.json`.

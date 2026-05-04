@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T21:52:43.180Z",
+  "generatedAt": "2026-05-04T22:59:44.961Z",
   "mode": "local-classes",
   "scannedRoots": [
     "app",
@@ -9,16 +9,16 @@
     "widgets"
   ],
   "scannedFiles": 366,
-  "filesWithFindings": 98,
-  "totalFindings": 603,
+  "filesWithFindings": 106,
+  "totalFindings": 770,
   "severityCounts": {
-    "high": 26,
+    "high": 193,
     "medium": 410,
     "low": 167
   },
   "rootCounts": {
     "app": 89,
-    "features": 483,
+    "features": 650,
     "components": 31
   },
   "bucketCounts": {
@@ -29,7 +29,7 @@
     "table": 70,
     "table-cell": 31,
     "form": 50,
-    "control": 51,
+    "control": 218,
     "badge-status": 0,
     "dialog-sheet": 86,
     "navigation": 57,
@@ -931,6 +931,46 @@
       "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
     },
     {
+      "filePath": "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+      "line": 40,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetContent",
+      "evidence": "<SheetContent size=\"directory\" layout=\"edge-to-edge\" className={contentClassName}>",
+      "reason": "className on shadcn component \"SheetContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+      "line": 41,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetHeader",
+      "evidence": "<SheetHeader className={directoryEntitySheetClassNames.header}>",
+      "reason": "className on shadcn component \"SheetHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+      "line": 48,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea className={directoryEntitySheetClassNames.scrollArea}>",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+      "line": 53,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetFooter",
+      "evidence": "<SheetFooter className={directoryEntitySheetClassNames.footer}>",
+      "reason": "className on shadcn component \"SheetFooter\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
       "filePath": "features/_shared/directories/components/directory-list-screen.tsx",
       "line": 99,
       "severity": "low",
@@ -979,6 +1019,66 @@
       "evidence": "<Plus className=\"h-4 w-4 mr-1\" />",
       "reason": "Runtime code contains local spacing classes. Prefer density/spacing semantic props on shared components.",
       "recommendedContract": "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props"
+    },
+    {
+      "filePath": "features/_shared/directories/components/directory-sheet-form.tsx",
+      "line": 24,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "return <FormLabel className={directorySheetFormClassNames.label}>{children}</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/directories/components/directory-sheet-form.tsx",
+      "line": 44,
+      "severity": "high",
+      "bucket": "control",
+      "token": "RadioGroup",
+      "evidence": "<RadioGroup onValueChange={onValueChange} value={value} className={directorySheetFormClassNames.radioGroup}>",
+      "reason": "className on shadcn component \"RadioGroup\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+      "line": 56,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+      "line": 85,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Separator",
+      "evidence": "{separated ? <Separator className={catalogFilterSidebarClassNames.separator} /> : null}",
+      "reason": "className on shadcn component \"Separator\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
+      "line": 7,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Skeleton",
+      "evidence": "<Skeleton className=\"h-8 w-48\" />",
+      "reason": "className on shadcn component \"Skeleton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
+      "line": 8,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Skeleton",
+      "evidence": "<Skeleton className=\"h-12 w-full\" />",
+      "reason": "className on shadcn component \"Skeleton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
@@ -1039,6 +1139,26 @@
       "evidence": "<Plus className=\"size-3.5 mr-2\" />",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+      "line": 79,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetContent",
+      "evidence": "<SheetContent side=\"left\" className={catalogToolbarClassNames.sheet}>",
+      "reason": "className on shadcn component \"SheetContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+      "line": 80,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetHeader",
+      "evidence": "<SheetHeader className={catalogToolbarClassNames.sheetHeader}>",
+      "reason": "className on shadcn component \"SheetHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
@@ -1172,6 +1292,56 @@
     },
     {
       "filePath": "features/admin/components/admin-user-menu.tsx",
+      "line": 49,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Avatar",
+      "evidence": "<Avatar className=\"size-9 cursor-pointer\">",
+      "reason": "className on shadcn component \"Avatar\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "line": 58,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuContent",
+      "evidence": "<DropdownMenuContent align=\"end\" className=\"flex flex-col gap-1\">",
+      "reason": "className on shadcn component \"DropdownMenuContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "line": 59,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"cursor-pointer\">",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "line": 65,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"cursor-pointer\">",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
+      "line": 71,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLayout",
+      "evidence": "<FormLayout action={handleSignOut} className=\"w-full\">",
+      "reason": "className on shadcn component \"FormLayout\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/admin/components/admin-user-menu.tsx",
       "line": 58,
       "severity": "low",
       "bucket": "navigation",
@@ -1279,6 +1449,16 @@
       "evidence": "className=\"block text-center text-sm text-muted-foreground hover:underline\"",
       "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
       "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
+    },
+    {
+      "filePath": "features/auth/components/LoginForm.tsx",
+      "line": 162,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLayout",
+      "evidence": "<FormLayout className={primitiveAuthFormGapClassName} action={formAction}>",
+      "reason": "className on shadcn component \"FormLayout\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
@@ -1523,6 +1703,16 @@
     {
       "filePath": "features/catalog/components/MaterialCatalogDialog.client.tsx",
       "line": 45,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogHeader",
+      "evidence": "<DialogHeader className=\"border-b p-4\">",
+      "reason": "className on shadcn component \"DialogHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogDialog.client.tsx",
+      "line": 45,
       "severity": "medium",
       "bucket": "dialog-sheet",
       "token": "border-b p-4",
@@ -1549,6 +1739,16 @@
       "evidence": "<DialogDescription className=\"text-xs sm:text-sm\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "line": 193,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea className=\"h-full\">",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/catalog/components/MaterialCatalogPicker.client.tsx",
@@ -1932,6 +2132,56 @@
     },
     {
       "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "line": 67,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Tabs",
+      "evidence": "<Tabs defaultValue=\"general\" className=\"w-full\">",
+      "reason": "className on shadcn component \"Tabs\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "line": 68,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsList",
+      "evidence": "<TabsList className=\"grid w-full grid-cols-3 mb-4 sm:mb-6\">",
+      "reason": "className on shadcn component \"TabsList\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "line": 69,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsTrigger",
+      "evidence": "<TabsTrigger value=\"general\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "line": 72,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsTrigger",
+      "evidence": "<TabsTrigger value=\"details\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
+      "line": 75,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsTrigger",
+      "evidence": "<TabsTrigger value=\"bank\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/CreateCounterpartySheet.tsx",
       "line": 49,
       "severity": "medium",
       "bucket": "dialog-sheet",
@@ -1989,6 +2239,316 @@
       "evidence": "<TabsTrigger value=\"bank\" className=\"text-xs\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 24,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsContent",
+      "evidence": "<TabsContent value=\"general\" className=\"flex flex-col gap-3 sm:gap-4\">",
+      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 30,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Наименование / ФИО</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 45,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 46,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Правовой статус</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 48,
+      "severity": "high",
+      "bucket": "control",
+      "token": "RadioGroup",
+      "evidence": "<RadioGroup",
+      "reason": "className on shadcn component \"RadioGroup\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 53,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex items-center gap-1 sm:gap-2\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 57,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 61,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex items-center gap-1 sm:gap-2\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 65,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 82,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 83,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Тип</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 91,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SelectItem",
+      "evidence": "<SelectItem value=\"customer\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 94,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SelectItem",
+      "evidence": "<SelectItem value=\"contractor\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 97,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SelectItem",
+      "evidence": "<SelectItem value=\"supplier\" className=\"text-xs\">",
+      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 123,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Телефон</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 137,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Email</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 152,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Адрес</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 170,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsContent",
+      "evidence": "<TabsContent value=\"details\" className=\"flex flex-col gap-3 sm:gap-4\">",
+      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 184,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата рождения</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 197,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Серия и номер</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 212,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Кем выдан</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 227,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата выдачи</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 240,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Код подразделения</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 262,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 277,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>КПП</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 290,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ОГРН</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 307,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsContent",
+      "evidence": "<TabsContent value=\"bank\" className=\"flex flex-col gap-3 sm:gap-4\">",
+      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 318,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Название банка</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 332,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Расчетный счет</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 347,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Корр. счет</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
+      "line": 360,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLabel",
+      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН Банка</FormLabel>",
+      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
@@ -2202,6 +2762,36 @@
     },
     {
       "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
+      "line": 23,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellBody",
+      "evidence": "<CardShellBody className=\"space-y-3\" density=\"compact\">",
+      "reason": "className on shadcn component \"CardShellBody\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
+      "line": 28,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellInset",
+      "evidence": "<CardShellInset key={member.name} className=\"flex cursor-pointer items-center justify-between transition-all hover:border-border/40 hover:bg-muted/20 hover:shadow-sm\" density=\"compact\" variant=\"subtle\">",
+      "reason": "className on shadcn component \"CardShellInset\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
+      "line": 30,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Avatar",
+      "evidence": "<Avatar className=\"h-9 w-9 border border-border/50\">",
+      "reason": "className on shadcn component \"Avatar\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
       "line": 22,
       "severity": "medium",
       "bucket": "dashboard-chart",
@@ -2302,6 +2892,26 @@
     },
     {
       "filePath": "features/global-purchases/components/GlobalPurchasesEmptyStateActions.tsx",
+      "line": 22,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton variant=\"brand\" onClick={onAddManual} disabled={isAddingManual} iconLeft={<Plus className=\"size-3.5\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesEmptyStateActions.tsx",
+      "line": 25,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton variant=\"brand\" onClick={onOpenCatalog} disabled={isAddingCatalog} iconLeft={<BookOpen className=\"size-3.5\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesEmptyStateActions.tsx",
       "line": 21,
       "severity": "low",
       "bucket": "state",
@@ -2309,6 +2919,106 @@
       "evidence": "<div className=\"flex flex-wrap items-center justify-center gap-2\">",
       "reason": "Runtime code appears to own empty/loading/error state visuals. Use shared state contracts.",
       "recommendedContract": "shared/ui/states/*"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "line": 50,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 70,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListPickerPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 147,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListCalendarPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 221,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 237,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 259,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuContent",
+      "evidence": "<DropdownMenuContent align=\"end\" className={denseListToolbarMenuContentClassName}>",
+      "reason": "className on shadcn component \"DropdownMenuContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 260,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onImportClick}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 264,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onExport}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 268,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddManual} disabled={isAddingManual}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+      "line": 272,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className={denseListToolbarMenuItemClassName} onClick={onAddCatalog} disabled={isAddingCatalog}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
@@ -2402,6 +3112,16 @@
     },
     {
       "filePath": "features/global-purchases/components/cards/ProjectPicker.tsx",
+      "line": 50,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListPickerPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/cards/ProjectPicker.tsx",
       "line": 47,
       "severity": "medium",
       "bucket": "card",
@@ -2432,6 +3152,16 @@
     },
     {
       "filePath": "features/global-purchases/components/cards/SupplierPicker.tsx",
+      "line": 58,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListPickerPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/cards/SupplierPicker.tsx",
       "line": 55,
       "severity": "medium",
       "bucket": "card",
@@ -2449,6 +3179,26 @@
       "evidence": "<Check className={cn('size-4', supplier.id === row.supplierId ? 'opacity-100' : 'opacity-0')} />",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "line": 91,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListPickerPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
+      "line": 159,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className={denseListPickerPopoverClassName} align=\"start\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/global-purchases/components/global-purchases-columns.tsx",
@@ -2692,6 +3442,26 @@
     },
     {
       "filePath": "features/notifications/components/notification-bell.tsx",
+      "line": 86,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Badge",
+      "evidence": "<Badge",
+      "reason": "className on shadcn component \"Badge\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/notifications/components/notification-bell.tsx",
+      "line": 96,
+      "severity": "high",
+      "bucket": "control",
+      "token": "PopoverContent",
+      "evidence": "<PopoverContent className=\"w-80\" align=\"end\">",
+      "reason": "className on shadcn component \"PopoverContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/notifications/components/notification-bell.tsx",
       "line": 42,
       "severity": "medium",
       "bucket": "layout",
@@ -2803,6 +3573,16 @@
     {
       "filePath": "features/notifications/components/notifications-list.tsx",
       "line": 27,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea className={cn('max-h-80 pr-1', className)}>",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/notifications/components/notifications-list.tsx",
+      "line": 27,
       "severity": "medium",
       "bucket": "spacing",
       "token": "max-h-80 pr-1",
@@ -2859,6 +3639,26 @@
       "evidence": "<p className={`${primitiveVisualTypographyClassNames.mutedMeta} opacity-70 mt-1`}>{emptyDescription}</p>",
       "reason": "Runtime code appears to own empty/loading/error state visuals. Use shared state contracts.",
       "recommendedContract": "shared/ui/states/*"
+    },
+    {
+      "filePath": "features/patterns/screens/PatternsScreen.tsx",
+      "line": 91,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellBody",
+      "evidence": "<CardShellBody className=\"space-y-3\">",
+      "reason": "className on shadcn component \"CardShellBody\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/patterns/screens/PatternsScreen.tsx",
+      "line": 103,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogContent",
+      "evidence": "<DialogContent className=\"sm:max-w-3xl\">",
+      "reason": "className on shadcn component \"DialogContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
@@ -2992,6 +3792,36 @@
     },
     {
       "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "line": 36,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TooltipContent",
+      "evidence": "<TooltipContent className=\"text-xs\">Отключить (скрыть)</TooltipContent>",
+      "reason": "className on shadcn component \"TooltipContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "line": 52,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TooltipContent",
+      "evidence": "<TooltipContent className=\"text-xs\">Чтение (только просмотр)</TooltipContent>",
+      "reason": "className on shadcn component \"TooltipContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
+      "line": 68,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TooltipContent",
+      "evidence": "<TooltipContent className=\"text-xs\">Полный доступ (ред.)</TooltipContent>",
+      "reason": "className on shadcn component \"TooltipContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/PermissionLevelControl.tsx",
       "line": 21,
       "severity": "medium",
       "bucket": "control",
@@ -3058,6 +3888,146 @@
       "token": "text-xs",
       "evidence": "<TooltipContent className=\"text-xs\">Полный доступ (ред.)</TooltipContent>",
       "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 41,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Table",
+      "evidence": "<Table className=\"w-full border-collapse\">",
+      "reason": "className on shadcn component \"Table\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 42,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableHeader",
+      "evidence": "<TableHeader className=\"sticky top-0 z-20 border-b bg-muted/80 backdrop-blur\">",
+      "reason": "className on shadcn component \"TableHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 43,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableRow",
+      "evidence": "<TableRow className=\"hover:bg-transparent\">",
+      "reason": "className on shadcn component \"TableRow\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 44,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableHead",
+      "evidence": "<TableHead className={primitiveVisualTypographyClassNames.mutedMeta}>",
+      "reason": "className on shadcn component \"TableHead\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 48,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableHead",
+      "evidence": "<TableHead key={role} className=\"border-l border-border px-2 py-4 text-center\">",
+      "reason": "className on shadcn component \"TableHead\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 58,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableRow",
+      "evidence": "<TableRow key={perm.id} className=\"border-b transition-colors hover:bg-muted/50\">",
+      "reason": "className on shadcn component \"TableRow\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 59,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableCell",
+      "evidence": "<TableCell className=\"px-6 py-4 align-top\">",
+      "reason": "className on shadcn component \"TableCell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 70,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableCell",
+      "evidence": "<TableCell key={role} className=\"border-l border-border/50 px-2 py-4\">",
+      "reason": "className on shadcn component \"TableCell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 106,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Tabs",
+      "evidence": "<Tabs defaultValue=\"tenant\" className=\"w-full\">",
+      "reason": "className on shadcn component \"Tabs\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 107,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsList",
+      "evidence": "<TabsList className=\"mb-6 h-12 w-full rounded-2xl bg-muted p-1 sm:w-auto\">",
+      "reason": "className on shadcn component \"TabsList\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 108,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsTrigger",
+      "evidence": "<TabsTrigger",
+      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 114,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsTrigger",
+      "evidence": "<TabsTrigger",
+      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 123,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsContent",
+      "evidence": "<TabsContent value=\"tenant\" className=\"m-0 overflow-x-auto\">",
+      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/permissions/components/permissions-matrix.tsx",
+      "line": 127,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsContent",
+      "evidence": "<TabsContent value=\"platform\" className=\"m-0 overflow-x-auto\">",
+      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
       "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
@@ -3302,6 +4272,16 @@
     },
     {
       "filePath": "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+      "line": 136,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
       "line": 94,
       "severity": "medium",
       "bucket": "dashboard-chart",
@@ -3359,6 +4339,26 @@
       "evidence": "<div className=\"space-y-4\">",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "line": 198,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellHeader",
+      "evidence": "<CardShellHeader className=\"flex flex-row items-center justify-between gap-2 space-y-0\">",
+      "reason": "className on shadcn component \"CardShellHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+      "line": 211,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellBody",
+      "evidence": "<CardShellBody className=\"space-y-3\">",
+      "reason": "className on shadcn component \"CardShellBody\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
@@ -3449,6 +4449,26 @@
       "evidence": "{isSubmitting && <Loader2 className={`mr-2 ${primitiveVisualIconSizeClassNames.md} animate-spin`} />}",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
+      "line": 40,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShell",
+      "evidence": "<CardShell variant=\"panel\" className=\"shadow-sm\">",
+      "reason": "className on shadcn component \"CardShell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
+      "line": 41,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellBody",
+      "evidence": "<CardShellBody className=\"flex flex-col justify-between gap-4 sm:flex-row sm:items-center\" density=\"comfortable\">",
+      "reason": "className on shadcn component \"CardShellBody\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
@@ -3549,6 +4569,36 @@
       "evidence": "<div className={cn(\"flex flex-wrap items-center gap-2\", className)} {...props}>",
       "reason": "Runtime code contains local layout classes. Prefer shared shell/layout contracts when the recipe is visual.",
       "recommendedContract": "shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "line": 88,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShell",
+      "evidence": "<CardShell variant=\"card\" className=\"rounded-md shadow-none overflow-visible gap-0\">",
+      "reason": "className on shadcn component \"CardShell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "line": 89,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Table",
+      "evidence": "<Table className={primitiveCompactTableCellClassName}>",
+      "reason": "className on shadcn component \"Table\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "line": 92,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TableHead",
+      "evidence": "{headers.map((header) => <TableHead key={header} className=\"whitespace-nowrap py-2\">{header}</TableHead>)}",
+      "reason": "className on shadcn component \"TableHead\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
@@ -3681,6 +4731,16 @@
       "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
     },
     {
+      "filePath": "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
+      "line": 36,
+      "severity": "high",
+      "bucket": "control",
+      "token": "StatusBadge",
+      "evidence": "<StatusBadge",
+      "reason": "className on shadcn component \"StatusBadge\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
       "filePath": "features/projects/estimates/components/registry/EstimatesListTable.tsx",
       "line": 62,
       "severity": "medium",
@@ -3789,6 +4849,66 @@
       "evidence": "variant=\"outline\"",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 122,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogContent",
+      "evidence": "<DialogContent className=\"sm:max-w-md\">",
+      "reason": "className on shadcn component \"DialogContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 168,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogContent",
+      "evidence": "<DialogContent className=\"sm:max-w-md\">",
+      "reason": "className on shadcn component \"DialogContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 221,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogContent",
+      "evidence": "<DialogContent className=\"sm:max-w-md\">",
+      "reason": "className on shadcn component \"DialogContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 266,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DialogContent",
+      "evidence": "<DialogContent className=\"sm:max-w-3xl\">",
+      "reason": "className on shadcn component \"DialogContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 275,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea className={cn(\"flex flex-col gap-2\", primitiveSurfaceBorderClassNames.thin, primitiveCardShellInsetDensityClassNames.compact)}>",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+      "line": 298,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ScrollArea",
+      "evidence": "<ScrollArea className={cn(primitiveSurfaceBorderClassNames.thin, primitiveCardShellBodyDensityClassNames.compact)}>",
+      "reason": "className on shadcn component \"ScrollArea\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
@@ -4063,6 +5183,206 @@
     {
       "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
       "line": 47,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton aria-label=\"Режим расчета\" onClick={onOpenCalculationMode} iconLeft={<Calculator className=\"size-3.5 text-muted-foreground\" />} labelClassName=\"hidden sm:inline\">",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 50,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton aria-label=\"Добавить раздел\" onClick={onOpenCreateSectionDialog} iconLeft={<FolderTree className=\"size-3.5 text-muted-foreground\" />} labelClassName=\"hidden sm:inline\">",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 53,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton aria-label=\"Сохранить смету\" onClick={onOpenSavePattern} iconLeft={<Save className=\"size-3.5 text-muted-foreground\" />} labelClassName=\"hidden sm:inline\">",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 80,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton onClick={onOpenApplyPattern} iconLeft={<FileStack className=\"size-3.5 text-muted-foreground\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 83,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton onClick={onOpenCoefficientDialog} iconLeft={<Percent className=\"size-3.5 text-muted-foreground\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 86,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton onClick={onImportEstimate} disabled={isImporting} iconLeft={<FileUp className=\"size-3.5 text-muted-foreground\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 91,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton disabled={isExporting} iconLeft={<FileDown className=\"size-3.5 text-muted-foreground\" />}>",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 95,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuContent",
+      "evidence": "<DropdownMenuContent align=\"end\" className=\"w-56\">",
+      "reason": "className on shadcn component \"DropdownMenuContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 96,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onExportXlsx}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 100,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onExportPdf}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 132,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuContent",
+      "evidence": "<DropdownMenuContent align=\"end\" className=\"w-56\">",
+      "reason": "className on shadcn component \"DropdownMenuContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 133,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onOpenCalculationMode}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 137,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onOpenCreateSectionDialog}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 141,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onOpenSavePattern}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 145,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onOpenApplyPattern}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 149,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" onClick={onOpenCoefficientDialog}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 153,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" disabled={isImporting} onClick={onImportEstimate}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 157,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" disabled={isExporting} onClick={onExportXlsx}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 161,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2\" disabled={isExporting} onClick={onExportPdf}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 165,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuItem",
+      "evidence": "<DropdownMenuItem className=\"gap-2 text-destructive\" onClick={onOpenDeleteDialog}>",
+      "reason": "className on shadcn component \"DropdownMenuItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+      "line": 47,
       "severity": "medium",
       "bucket": "table",
       "token": "sm:inline",
@@ -4119,6 +5439,56 @@
       "evidence": "<ToolbarButton variant=\"destructive\" aria-label=\"Удалить смету\" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 />} labelClassName=\"hidden sm:inline\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateInlineNumberCell.tsx",
+      "line": 39,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateInlineNumberCell.tsx",
+      "line": 56,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Input",
+      "evidence": "<Input",
+      "reason": "className on shadcn component \"Input\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateInlineTextCell.tsx",
+      "line": 40,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateInlineTextCell.tsx",
+      "line": 57,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Input",
+      "evidence": "<Input",
+      "reason": "className on shadcn component \"Input\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
+      "line": 108,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
@@ -4182,6 +5552,46 @@
     },
     {
       "filePath": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "line": 38,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShell",
+      "evidence": "<CardShell",
+      "reason": "className on shadcn component \"CardShell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "line": 43,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellHeader",
+      "evidence": "<CardShellHeader className=\"border-b p-0\">",
+      "reason": "className on shadcn component \"CardShellHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "line": 45,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "line": 86,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
       "line": 41,
       "severity": "medium",
       "bucket": "table",
@@ -4239,6 +5649,46 @@
       "evidence": "variant=\"outline\"",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+      "line": 44,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+      "line": 104,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+      "line": 114,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+      "line": 127,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
@@ -4392,6 +5842,26 @@
     },
     {
       "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
+      "line": 63,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton onClick={addRoom} aria-label=\"Добавить помещение\" iconLeft={<Plus className={primitiveVisualIconSizeClassNames.md} />} labelClassName=\"hidden sm:inline\">",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
+      "line": 66,
+      "severity": "high",
+      "bucket": "control",
+      "token": "ToolbarButton",
+      "evidence": "<ToolbarButton variant=\"brand\" onClick={onSave} disabled={isSaving || !hasRows} aria-label=\"Сохранить параметры\" iconLeft={<Save className={primitiveVisualIconSizeClassNames.md} />} labelClassName=\"hidden sm:inline\">",
+      "reason": "className on shadcn component \"ToolbarButton\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
       "line": 61,
       "severity": "medium",
       "bucket": "control",
@@ -4432,6 +5902,16 @@
     },
     {
       "filePath": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
+      "line": 57,
+      "severity": "high",
+      "bucket": "control",
+      "token": "SheetContent",
+      "evidence": "<SheetContent side=\"right\" className=\"w-full sm:max-w-md\">",
+      "reason": "className on shadcn component \"SheetContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
       "line": 53,
       "severity": "medium",
       "bucket": "dialog-sheet",
@@ -4459,6 +5939,16 @@
       "evidence": "<div className=\"mt-6 h-content-fill overflow-hidden\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/projects/estimates/components/tabs/execution/EstimateExecutionTableActions.tsx",
+      "line": 47,
+      "severity": "high",
+      "bucket": "control",
+      "token": "DropdownMenuContent",
+      "evidence": "<DropdownMenuContent align=\"end\" className={actionMenuContentClassName}>",
+      "reason": "className on shadcn component \"DropdownMenuContent\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/estimates/mock/data.ts",
@@ -4549,6 +6039,36 @@
       "evidence": "id: `m-${crypto.randomUUID().slice(0, 8)}`,",
       "reason": "Runtime code contains local spacing classes. Prefer density/spacing semantic props on shared components.",
       "recommendedContract": "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props"
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "line": 160,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex flex-col\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "line": 230,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex flex-col\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/create-project-dialog.tsx",
+      "line": 246,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormItem",
+      "evidence": "<FormItem className=\"flex flex-col\">",
+      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/list/components/create-project-dialog.tsx",
@@ -4669,6 +6189,76 @@
       "evidence": "variant=\"outline\"",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 34,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShell",
+      "evidence": "<CardShell",
+      "reason": "className on shadcn component \"CardShell\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 40,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellHeader",
+      "evidence": "<CardShellHeader className=\"flex flex-col gap-2.5\" density=\"compact\">",
+      "reason": "className on shadcn component \"CardShellHeader\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 71,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellBody",
+      "evidence": "<CardShellBody className=\"flex flex-1 flex-col gap-3\" density=\"compact\">",
+      "reason": "className on shadcn component \"CardShellBody\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 73,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellInset",
+      "evidence": "<CardShellInset className=\"flex min-w-0 flex-col gap-1\" density=\"compact\" variant=\"muted\">",
+      "reason": "className on shadcn component \"CardShellInset\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 82,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellInset",
+      "evidence": "<CardShellInset className=\"flex min-w-0 flex-col gap-1\" density=\"compact\" variant=\"muted\">",
+      "reason": "className on shadcn component \"CardShellInset\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 92,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellInset",
+      "evidence": "<CardShellInset className=\"mt-auto\" density=\"compact\" variant=\"subtle\">",
+      "reason": "className on shadcn component \"CardShellInset\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/projects/list/components/project-card.tsx",
+      "line": 105,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellFooter",
+      "evidence": "<CardShellFooter className=\"mt-auto\" density=\"compact\" divided>",
+      "reason": "className on shadcn component \"CardShellFooter\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/projects/list/components/project-card.tsx",
@@ -4899,6 +6489,36 @@
       "evidence": "<div className=\"space-y-4\">",
       "reason": "Runtime code contains local spacing classes. Prefer density/spacing semantic props on shared components.",
       "recommendedContract": "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props"
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "line": 124,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Tabs",
+      "evidence": "<Tabs defaultValue=\"profile\" className=\"space-y-4\">",
+      "reason": "className on shadcn component \"Tabs\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "line": 126,
+      "severity": "high",
+      "bucket": "control",
+      "token": "TabsList",
+      "evidence": "<TabsList className=\"inline-flex h-auto min-w-max gap-1 p-1\">",
+      "reason": "className on shadcn component \"TabsList\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/settings/components/user-settings-page.tsx",
+      "line": 484,
+      "severity": "high",
+      "bucket": "control",
+      "token": "CardShellInset",
+      "evidence": "<CardShellInset variant=\"muted\" density=\"compact\" className=\"flex items-center justify-between\">",
+      "reason": "className on shadcn component \"CardShellInset\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
@@ -5352,6 +6972,16 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
+      "line": 43,
+      "severity": "high",
+      "bucket": "control",
+      "token": "FormLayout",
+      "evidence": "<FormLayout onSubmit={onSubmit} className=\"flex flex-col gap-3 sm:flex-row sm:items-end\">",
+      "reason": "className on shadcn component \"FormLayout\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
       "line": 37,
       "severity": "medium",
       "bucket": "card",
@@ -5439,6 +7069,16 @@
       "evidence": "<h1 className={`${primitiveVisualTypographyClassNames.dialogTitle} font-semibold text-foreground`}>",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
+    },
+    {
+      "filePath": "features/team/components/TeamMembersCard.tsx",
+      "line": 97,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Avatar",
+      "evidence": "<Avatar className=\"size-9\">",
+      "reason": "className on shadcn component \"Avatar\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/team/components/TeamMembersCard.tsx",
@@ -5572,6 +7212,26 @@
     },
     {
       "filePath": "features/team/screens/TeamScreen.tsx",
+      "line": 54,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Separator",
+      "evidence": "<Separator className=\"bg-border/50\" />",
+      "reason": "className on shadcn component \"Separator\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/team/screens/TeamScreen.tsx",
+      "line": 67,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Separator",
+      "evidence": "<Separator className=\"bg-border/50\" />",
+      "reason": "className on shadcn component \"Separator\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
+    },
+    {
+      "filePath": "features/team/screens/TeamScreen.tsx",
       "line": 40,
       "severity": "medium",
       "bucket": "layout",
@@ -5609,6 +7269,16 @@
       "evidence": "<Separator className=\"bg-border/50\" />",
       "reason": "Runtime code contains local color classes. Prefer semantic tone/variant props on shared components.",
       "recommendedContract": "shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract"
+    },
+    {
+      "filePath": "features/works/components/UnitSelect.tsx",
+      "line": 64,
+      "severity": "high",
+      "bucket": "control",
+      "token": "Button",
+      "evidence": "<Button",
+      "reason": "className on shadcn component \"Button\" overrides internal styling. Remove className and use semantic props instead.",
+      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
     },
     {
       "filePath": "features/works/components/UnitSelect.tsx",

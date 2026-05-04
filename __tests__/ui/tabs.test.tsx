@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/ui';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 
 describe('TabsContent', () => {
   it('hides inactive content even when forceMount is enabled', () => {
