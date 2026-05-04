@@ -1,4 +1,5 @@
 import { Button } from '@/shared/ui/button';
+import { CardShell } from '@/shared/ui/card-shell';
 import { Input } from '@/shared/ui/input';
 import {
     Table,
@@ -83,7 +84,7 @@ export function RoomsParamsTable({
     onRemove: (rowId: string) => void;
 }) {
     return (
-        <div className="w-full overflow-x-auto rounded-md border">
+        <CardShell variant="card" radius="md" shadow="none" overflow="visible" className="gap-0">
             <Table className="text-[0.5625rem] sm:text-[0.6875rem]">
                 <TableHeader>
                     <TableRow>
@@ -133,6 +134,6 @@ export function RoomsParamsTable({
                     ))}
                 </TableBody>
             </Table>
-        </div>
+        </CardShell>
     );
 }

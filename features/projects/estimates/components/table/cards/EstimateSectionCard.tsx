@@ -2,6 +2,7 @@ import { ChevronDown, ChevronRight, Settings } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { CardShell, CardShellHeader } from '@/shared/ui/card-shell';
 import {
   DenseListBodyRow,
   DenseListStat,
@@ -34,11 +35,12 @@ export function EstimateSectionCard({
   const sectionActions = buildSectionActions(section, props);
 
   return (
-    <div
+    <CardShell
       key={section.id}
-      className="overflow-hidden rounded-xl border bg-card shadow-sm"
+      variant="card"
+      className="gap-0 shadow-sm"
     >
-      <div className="border-b bg-card">
+      <CardShellHeader className="border-b p-0">
         <DenseListBodyRow>
           <Button
             variant="ghost"
@@ -94,7 +96,7 @@ export function EstimateSectionCard({
             />
           ) : null}
         </DenseListBodyRow>
-      </div>
+      </CardShellHeader>
 
       {isSectionOpen ? (
         <div className="divide-y">
@@ -113,6 +115,6 @@ export function EstimateSectionCard({
           })}
         </div>
       ) : null}
-    </div>
+    </CardShell>
   );
 }
