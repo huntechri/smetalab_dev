@@ -1,7 +1,7 @@
 // ─── Marketing / landing page tokens ─────────────────────────────────────
 
 /** Dark background for the marketing/landing page */
-export const primitiveMarketingDarkBgClassName = 'bg-[#0B0A0F]';
+export const primitiveMarketingDarkBgClassName = 'bg-marketing-bg';
 
 /** Hero section outer padding */
 export const primitiveMarketingHeroPaddingClassName = 'pt-20 pb-16 md:pt-28 md:pb-24';
@@ -13,15 +13,15 @@ export const primitiveMarketingSectionPaddingClassName = 'py-20';
 
 /** Default marketing card */
 export const primitiveMarketingCardClassName =
-  'rounded-2xl border border-white/10 bg-[#15131B] p-5 transition hover:-translate-y-1 hover:border-white/30';
+  'rounded-2xl border border-white/10 bg-marketing-card p-5 transition hover:-translate-y-1 hover:border-white/30';
 
 /** Inner/details card on marketing */
 export const primitiveMarketingCardInnerClassName =
-  'rounded-2xl border border-white/10 bg-[#15131B] p-4';
+  'rounded-2xl border border-white/10 bg-marketing-card p-4';
 
 /** Alternate card style */
 export const primitiveMarketingCardAltClassName =
-  'rounded-2xl border border-white/10 bg-[#111015] p-4';
+  'rounded-2xl border border-white/10 bg-marketing-card-alt p-4';
 
 /** Workflow step card */
 export const primitiveMarketingWorkflowCardClassName =
@@ -29,19 +29,19 @@ export const primitiveMarketingWorkflowCardClassName =
 
 /** CTA box background */
 export const primitiveMarketingCtaBoxClassName =
-  'rounded-[32px] border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14';
+  'rounded-[32px] border border-white/10 bg-linear-to-br from-marketing-gradient-start via-marketing-gradient-mid to-marketing-bg p-10 md:p-14';
 
 /** Pricing card base */
 export const primitiveMarketingPricingCardClassName =
-  'rounded-3xl border border-white/10 bg-[#14121A] p-6';
+  'rounded-3xl border border-white/10 bg-marketing-pricing-bg p-6';
 
 /** Pricing accent (highlighted) card */
 export const primitiveMarketingPricingAccentClassName =
-  'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]';
+  'rounded-3xl border border-marketing-accent bg-marketing-pricing-accent-bg p-6 shadow-[0_30px_80px_rgba(var(--marketing-accent-rgb),0.2)]';
 
 /** Gradient overlay on marketing card/demo elements */
 export const primitiveMarketingCardGradientClassName =
-  'bg-linear-to-br from-[#FF6A3D]/30 via-[#0B0A0F] to-[#B4FF7A]/30';
+  'bg-linear-to-br from-marketing-accent/30 via-marketing-bg to-marketing-green/30';
 
 /** Demo shell — live project preview */
 export const primitiveMarketingDemoShellClassName =
@@ -49,21 +49,21 @@ export const primitiveMarketingDemoShellClassName =
 
 /** Code-block style element in demo */
 export const primitiveMarketingCodeBlockClassName =
-  'rounded-2xl border border-white/10 bg-[#15131B] p-4';
+  'rounded-2xl border border-white/10 bg-marketing-card p-4';
 
 // ─── Marketing background gradient tokens ────────────────────────────────
 
 /** Orange gradient orb */
 export const primitiveMarketingGradientOrangeClassName =
-  'bg-[radial-gradient(circle,rgba(255,93,42,0.45),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(var(--marketing-orange-rgb),0.45),rgba(var(--marketing-bg-rgb),0))]';
 
 /** Cyan gradient orb */
 export const primitiveMarketingGradientCyanClassName =
-  'bg-[radial-gradient(circle,rgba(127,255,212,0.25),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(var(--marketing-cyan-rgb),0.25),rgba(var(--marketing-bg-rgb),0))]';
 
 /** Purple gradient orb */
 export const primitiveMarketingGradientPurpleClassName =
-  'bg-[radial-gradient(circle,rgba(108,62,255,0.25),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(var(--marketing-purple-rgb),0.25),rgba(var(--marketing-bg-rgb),0))]';
 
 // ─── Marketing pill / label tokens ───────────────────────────────────────
 
@@ -77,7 +77,7 @@ export const primitiveMarketingPillSmallClassName =
 
 /** Extra-small pill — used inside demo */
 export const primitiveMarketingPillXsClassName =
-  'rounded-full bg-[#0B0A0F] px-2 py-0.5 text-xs text-white';
+  'rounded-full bg-marketing-bg px-2 py-0.5 text-xs text-white';
 
 /** Section label */
 export const primitiveMarketingSectionLabelClassName =
@@ -86,7 +86,7 @@ export const primitiveMarketingSectionLabelClassName =
 // ─── Marketing divider tokens ────────────────────────────────────────────
 
 export const primitiveMarketingDividerClassName =
-  'h-[2px] w-16 bg-[#FF6A3D]';
+  'h-[2px] w-16 bg-marketing-accent';
 
 // ─── Marketing border tokens ─────────────────────────────────────────────
 
@@ -124,8 +124,8 @@ export const primitiveMarketingPulseClassName = 'animate-pulse';
 /** Brand-gradient background blobs (auth pages) */
 export const primitiveMarketingBgBlobClassNames = {
   orange:
-    'bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))]',
-  teal: 'bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))]',
+    'bg-[radial-gradient(circle,rgba(var(--marketing-accent-rgb),0.35),rgba(var(--marketing-bg-rgb),0))]',
+  teal: 'bg-[radial-gradient(circle,rgba(var(--marketing-cyan-rgb),0.2),rgba(var(--marketing-bg-rgb),0))]',
 } as const;
 
 /** Sizes / positions for background blobs */

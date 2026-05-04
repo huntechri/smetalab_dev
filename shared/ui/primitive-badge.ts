@@ -12,16 +12,16 @@ export const primitiveBadgeVariantClassNames = {
   ghost: "[a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
   link: "text-primary underline-offset-4 [a&]:hover:underline",
   success:
-    "border-transparent bg-emerald-500/15 text-emerald-700 dark:bg-emerald-500/25 dark:text-emerald-400",
+    "border-transparent bg-[var(--badge-success-bg)] text-[var(--badge-success)]",
   warning:
-    "border-transparent bg-amber-500/15 text-amber-700 dark:bg-amber-500/25 dark:text-amber-400",
-  info: "border-transparent bg-blue-500/15 text-blue-700 dark:bg-blue-500/25 dark:text-blue-400",
+    "border-transparent bg-[var(--badge-warning-bg)] text-[var(--badge-warning)]",
+  info: "border-transparent bg-[var(--badge-info-bg)] text-[var(--badge-info)]",
   neutral:
-    "border-transparent bg-slate-500/15 text-slate-700 dark:bg-slate-500/25 dark:text-slate-400",
+    "border-transparent bg-[var(--badge-neutral-bg)] text-[var(--badge-neutral)]",
   danger:
-    "border-transparent bg-rose-500/15 text-rose-700 dark:bg-rose-500/25 dark:text-rose-400",
+    "border-transparent bg-[var(--badge-danger-bg)] text-[var(--badge-danger)]",
   paused:
-    "border-transparent bg-violet-500/15 text-violet-700 dark:bg-violet-500/25 dark:text-violet-400",
+    "border-transparent bg-[var(--badge-paused-bg)] text-[var(--badge-paused)]",
 } as const
 
 export const primitiveBadgeSizeClassNames = {

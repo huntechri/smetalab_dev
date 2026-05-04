@@ -44,6 +44,28 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --control-height: var(--control-height);
+  --color-marketing-bg: var(--marketing-bg);
+  --color-marketing-card: var(--marketing-card);
+  --color-marketing-card-alt: var(--marketing-card-alt);
+  --color-marketing-accent: var(--marketing-accent);
+  --color-marketing-green: var(--marketing-green);
+  --color-marketing-pricing-bg: var(--marketing-pricing-bg);
+  --color-marketing-pricing-accent-bg: var(--marketing-pricing-accent-bg);
+  --color-marketing-gradient-start: var(--marketing-gradient-start);
+  --color-marketing-gradient-mid: var(--marketing-gradient-mid);
+  --color-marketing-gradient-end: var(--marketing-gradient-end);
+  --color-badge-success: var(--badge-success);
+  --color-badge-success-bg: var(--badge-success-bg);
+  --color-badge-warning: var(--badge-warning);
+  --color-badge-warning-bg: var(--badge-warning-bg);
+  --color-badge-info: var(--badge-info);
+  --color-badge-info-bg: var(--badge-info-bg);
+  --color-badge-neutral: var(--badge-neutral);
+  --color-badge-neutral-bg: var(--badge-neutral-bg);
+  --color-badge-danger: var(--badge-danger);
+  --color-badge-danger-bg: var(--badge-danger-bg);
+  --color-badge-paused: var(--badge-paused);
+  --color-badge-paused-bg: var(--badge-paused-bg);
 }
 
 @layer base {
@@ -78,6 +100,35 @@
     --control-height: 2.25rem;
     --brand: hsl(14 100% 62%);
     --brand-foreground: hsl(0 0% 100%);
+    /* Marketing page tokens */
+    --marketing-bg: #0B0A0F;
+    --marketing-card: #15131B;
+    --marketing-card-alt: #111015;
+    --marketing-accent: #FF6A3D;
+    --marketing-green: #B4FF7A;
+    --marketing-pricing-bg: #14121A;
+    --marketing-pricing-accent-bg: #16131A;
+    --marketing-gradient-start: #1B1822;
+    --marketing-gradient-mid: #111017;
+    --marketing-gradient-end: #0B0A0F;
+    --marketing-accent-rgb: 255, 106, 61;
+    --marketing-orange-rgb: 255, 93, 42;
+    --marketing-cyan-rgb: 127, 255, 212;
+    --marketing-purple-rgb: 108, 62, 255;
+    --marketing-bg-rgb: 11, 10, 15;
+    /* Badge semantic tokens */
+    --badge-success-bg: hsl(142 71% 45% / 0.15);
+    --badge-success: hsl(142 71% 35%);
+    --badge-warning-bg: hsl(38 92% 50% / 0.15);
+    --badge-warning: hsl(28 88% 34%);
+    --badge-info-bg: hsl(217 91% 60% / 0.15);
+    --badge-info: hsl(224 76% 48%);
+    --badge-neutral-bg: hsl(215 16% 47% / 0.15);
+    --badge-neutral: hsl(215 25% 27%);
+    --badge-danger-bg: hsl(349 89% 60% / 0.15);
+    --badge-danger: hsl(343 82% 41%);
+    --badge-paused-bg: hsl(263 88% 64% / 0.15);
+    --badge-paused: hsl(263 70% 50%);
     --sidebar: hsl(240 6.7% 97.3%);
     --sidebar-foreground: hsl(240 5.3% 26.1%);
     --sidebar-primary: hsl(24 100% 50%);
@@ -123,6 +174,19 @@
     --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
     --sidebar-border: hsl(240 3.7% 14%);
     --sidebar-ring: hsl(24 100% 58%);
+    /* Badge semantic — dark mode */
+    --badge-success-bg: hsl(142 70% 58% / 0.25);
+    --badge-success: hsl(142 70% 58%);
+    --badge-warning-bg: hsl(38 92% 55% / 0.25);
+    --badge-warning: hsl(38 92% 55%);
+    --badge-info-bg: hsl(213 94% 68% / 0.25);
+    --badge-info: hsl(213 94% 68%);
+    --badge-neutral-bg: hsl(215 20% 65% / 0.25);
+    --badge-neutral: hsl(215 20% 65%);
+    --badge-danger-bg: hsl(350 94% 70% / 0.25);
+    --badge-danger: hsl(350 94% 70%);
+    --badge-paused-bg: hsl(267 91% 76% / 0.25);
+    --badge-paused: hsl(267 91% 76%);
   }
 
   body {
