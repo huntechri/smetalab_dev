@@ -4,32 +4,32 @@
 export const primitiveMarketingDarkBgClassName = 'bg-[#0B0A0F]';
 
 /** Hero section outer padding */
-export const primitiveMarketingHeroPaddingClassName = 'px-4 py-20 md:px-8 md:py-28';
+export const primitiveMarketingHeroPaddingClassName = 'pt-20 pb-16 md:pt-28 md:pb-24';
 
 /** Section outer padding */
-export const primitiveMarketingSectionPaddingClassName = 'px-4 py-16 md:px-8 md:py-24';
+export const primitiveMarketingSectionPaddingClassName = 'py-20';
 
 // ─── Marketing surface / card tokens ─────────────────────────────────────
 
 /** Default marketing card */
 export const primitiveMarketingCardClassName =
-  'rounded-2xl border border-white/10 bg-[#111015] p-6';
+  'rounded-2xl border border-white/10 bg-[#15131B] p-5 transition hover:-translate-y-1 hover:border-white/30';
 
 /** Inner/details card on marketing */
 export const primitiveMarketingCardInnerClassName =
-  'rounded-2xl border border-white/10 bg-[#0B0A0F] p-4';
+  'rounded-2xl border border-white/10 bg-[#15131B] p-4';
 
 /** Alternate card style */
 export const primitiveMarketingCardAltClassName =
-  'rounded-2xl border border-white/10 bg-white/5 p-4';
+  'rounded-2xl border border-white/10 bg-[#111015] p-4';
 
 /** Workflow step card */
 export const primitiveMarketingWorkflowCardClassName =
-  'relative rounded-2xl border border-white/10 bg-[#111015] p-6';
+  'relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6';
 
 /** CTA box background */
 export const primitiveMarketingCtaBoxClassName =
-  'rounded-3xl border border-white/10 bg-gradient-to-br from-[#1F1C28] via-[#1A1720] to-[#131018] p-6 md:p-10';
+  'rounded-[32px] border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14';
 
 /** Pricing card base */
 export const primitiveMarketingPricingCardClassName =
@@ -41,43 +41,43 @@ export const primitiveMarketingPricingAccentClassName =
 
 /** Gradient overlay on marketing card/demo elements */
 export const primitiveMarketingCardGradientClassName =
-  'bg-gradient-to-br from-white/10 to-transparent';
+  'bg-linear-to-br from-[#FF6A3D]/30 via-[#0B0A0F] to-[#B4FF7A]/30';
 
 /** Demo shell — live project preview */
 export const primitiveMarketingDemoShellClassName =
-  'rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 shadow-2xl backdrop-blur-md';
+  'rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.45)]';
 
 /** Code-block style element in demo */
 export const primitiveMarketingCodeBlockClassName =
-  'rounded-2xl border border-white/10 bg-[#0B0A0F]/80 p-4';
+  'rounded-2xl border border-white/10 bg-[#15131B] p-4';
 
 // ─── Marketing background gradient tokens ────────────────────────────────
 
 /** Orange gradient orb */
 export const primitiveMarketingGradientOrangeClassName =
-  'bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(255,93,42,0.45),rgba(11,10,15,0))]';
 
 /** Cyan gradient orb */
 export const primitiveMarketingGradientCyanClassName =
-  'bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(127,255,212,0.25),rgba(11,10,15,0))]';
 
 /** Purple gradient orb */
 export const primitiveMarketingGradientPurpleClassName =
-  'bg-[radial-gradient(circle,rgba(160,100,255,0.2),rgba(11,10,15,0))]';
+  'bg-[radial-gradient(circle,rgba(108,62,255,0.25),rgba(11,10,15,0))]';
 
 // ─── Marketing pill / label tokens ───────────────────────────────────────
 
 /** Primary pill (badge) — used in hero */
 export const primitiveMarketingPillClassName =
-  'inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#111015] px-4 py-2 text-xs uppercase tracking-[0.25em] text-white/90';
+  'inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80';
 
 /** Small pill token — used in capability tags */
 export const primitiveMarketingPillSmallClassName =
-  'rounded-full border border-white/10 bg-white/5 px-4 py-2';
+  'rounded-full border border-white/20 bg-white/5 px-3 py-1';
 
 /** Extra-small pill — used inside demo */
 export const primitiveMarketingPillXsClassName =
-  'rounded-full bg-[#0B0A0F] px-2 py-1 text-[10px] text-white/75';
+  'rounded-full bg-[#0B0A0F] px-2 py-0.5 text-xs text-white';
 
 /** Section label */
 export const primitiveMarketingSectionLabelClassName =
@@ -86,7 +86,7 @@ export const primitiveMarketingSectionLabelClassName =
 // ─── Marketing divider tokens ────────────────────────────────────────────
 
 export const primitiveMarketingDividerClassName =
-  'border-t border-white/10';
+  'h-[2px] w-16 bg-[#FF6A3D]';
 
 // ─── Marketing border tokens ─────────────────────────────────────────────
 
@@ -98,15 +98,15 @@ export const primitiveMarketingBorderWhite10ClassName =
 
 /** H1 — hero heading */
 export const primitiveMarketingH1ClassName =
-  'text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl';
+  'text-4xl sm:text-5xl md:text-6xl leading-[1.05] font-semibold';
 
 /** H2 — section heading */
 export const primitiveMarketingH2ClassName =
-  'text-3xl font-semibold md:text-4xl';
+  'text-3xl md:text-4xl font-semibold';
 
 /** H3 — card title */
 export const primitiveMarketingH3ClassName =
-  'text-lg font-semibold';
+  'text-xl font-semibold';
 
 /** Body text on marketing pages */
 export const primitiveMarketingBodyClassName =
@@ -114,7 +114,7 @@ export const primitiveMarketingBodyClassName =
 
 /** Hero lead/subtext */
 export const primitiveMarketingHeroTextClassName =
-  'text-lg text-white/80';
+  'text-lg text-white/90';
 
 /** Pulse animation wrapper */
 export const primitiveMarketingPulseClassName = 'animate-pulse';
