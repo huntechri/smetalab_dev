@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { DataTableShell } from '@/shared/ui/shells/data-table-shell';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { ToolbarGroup } from '@/shared/ui/toolbar';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 /**
  * Metadata for a directory-style list screen.
@@ -76,7 +77,7 @@ export function DirectoryListScreen<TData, TValue>({
       data={rows}
       desktopHeight={desktopHeight}
       mobileHeight={mobileHeight}
-      className="text-xs"
+      className={primitiveVisualTypographyClassNames.compactBody}
       filterColumn={filterColumn}
       filterPlaceholder={filterPlaceholder}
       onSearch={onSearch}

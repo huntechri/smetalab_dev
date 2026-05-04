@@ -8,6 +8,7 @@ import { Trash2 } from 'lucide-react';
 import { Surface } from '@/shared/ui/surface';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface TeamMembersCardProps {
     members: TeamMember[];
@@ -50,7 +51,7 @@ export function TeamMembersCard({
                     </div>
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
-                            <Label htmlFor="search" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
+                            <Label htmlFor="search" className={primitiveVisualTypographyClassNames.compactLabel}>Поиск</Label>
                             <div className="w-full max-w-xs sm:max-w-sm">
                                 <SearchInput
                                     id="search"
@@ -61,7 +62,7 @@ export function TeamMembersCard({
                             </div>
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                            <Label className={primitiveVisualTypographyClassNames.compactLabel}>Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
                                     <Button

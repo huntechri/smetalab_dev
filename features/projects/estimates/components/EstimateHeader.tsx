@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEstimateMutations } from '../hooks/use-estimate-mutations';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -77,7 +78,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     <EstimateStatusBadge status={meta.status} />
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
-                        <span className="text-[0.5625rem] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1 sm:text-[0.6875rem]">Итого</span>
+                        <span className={`${primitiveVisualTypographyClassNames.estimateSectionLabel} text-muted-foreground leading-none mb-1`}>Итого</span>
                         <span className="text-lg md:text-xl font-bold text-primary">
                             {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(meta.total)}
                         </span>

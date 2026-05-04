@@ -7,6 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Mail, Shield } from 'lucide-react';
 import { Surface } from '@/shared/ui/surface';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface InviteTeamMemberCardProps {
     email: string;
@@ -43,7 +44,7 @@ export function InviteTeamMemberCard({
                 <div>
                 <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
-                        <Label htmlFor="email" className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
+                        <Label htmlFor="email" className={primitiveVisualTypographyClassNames.compactLabel}>Email</Label>
                         <Input size="default"
                             id="email"
                             type="email"
@@ -54,7 +55,7 @@ export function InviteTeamMemberCard({
                        />
                     </div>
                     <div className="space-y-1.5 shrink-0">
-                        <Label className="text-[0.6875rem] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                        <Label className={primitiveVisualTypographyClassNames.compactLabel}>Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="outline" size="default">

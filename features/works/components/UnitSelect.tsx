@@ -4,6 +4,7 @@ import * as React from "react"
 import { Check, ChevronsUpDown, Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { Button } from '@/shared/ui/button'
 import {
     Command,
@@ -97,7 +98,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                                     key={unit}
                                     value={unit}
                                     onSelect={handleSelect}
-                                    className="text-xs py-1"
+                                    className={`${primitiveVisualTypographyClassNames.compactBody} py-1`}
                                 >
                                     <Check
                                         className={cn(

@@ -10,6 +10,7 @@ import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
 import { CatalogWork } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface Props {
     onAddWork: (work: CatalogWork) => void;
@@ -130,15 +131,17 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                                     </CatalogToken>
                                                 )}
                                             </div>
-                                            <h4 className="text-sm font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                            <h4 className={`${primitiveVisualTypographyClassNames.catalogItemTitle} text-foreground line-clamp-2 md:line-clamp-none`}>
                                                 {work.name}
                                             </h4>
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
-                                                <span className="text-xs font-medium text-foreground">
+                                                <span className={`${primitiveVisualTypographyClassNames.catalogItemPrice} text-foreground`}>
                                                     {formatPrice(work.price)} ₽
                                                 </span>
-                                                <span className="text-[0.625rem] text-muted-foreground leading-none">/ {work.unit}</span>
+                                                <span className={primitiveVisualTypographyClassNames.catalogItemMeta}>
+                                                    / {work.unit}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
