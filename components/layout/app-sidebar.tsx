@@ -19,6 +19,13 @@ import {
 import { usePathname } from 'next/navigation';
 import { usePermissions } from '@/shared/hooks/use-permissions';
 import { SidebarNav } from '@/components/navigation/sidebar-nav';
+import {
+    primitiveAppSidebarSkeletonHeaderClassName,
+    primitiveAppSidebarSkeletonContentClassName,
+    primitiveAppSidebarBrandHeaderClassName,
+    primitiveAppSidebarBrandGradientClassName,
+    primitiveAppSidebarContentClassName,
+} from '@/shared/ui/primitive-navigation';
 
 const mainNavItems = [
     {
@@ -90,13 +97,13 @@ export function AppSidebar() {
         return (
             <Sidebar>
                 <SidebarHeader>
-                    <div className="flex items-center gap-2 px-2 py-4">
+                    <div className={primitiveAppSidebarSkeletonHeaderClassName}>
                         <div className="h-8 w-8 rounded-lg bg-sidebar-accent animate-pulse" />
                         <div className="h-4 w-24 bg-sidebar-accent animate-pulse rounded" />
                     </div>
                 </SidebarHeader>
                 <SidebarContent>
-                    <div className="px-4 py-6 space-y-6">
+                    <div className={primitiveAppSidebarSkeletonContentClassName}>
                         <div className="space-y-2">
                             <div className="h-3 w-16 bg-sidebar-accent animate-pulse rounded" />
                             <div className="space-y-1">
@@ -132,14 +139,14 @@ export function AppSidebar() {
     return (
         <Sidebar className="border-r-sidebar-border bg-sidebar backdrop-blur-sm">
             <SidebarHeader>
-                <div className="flex items-center gap-3 px-3 py-5">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 text-white font-bold shadow-sm ring-1 ring-orange-400/30" aria-hidden="true">
+                <div className={primitiveAppSidebarBrandHeaderClassName}>
+                    <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${primitiveAppSidebarBrandGradientClassName} text-white font-bold shadow-sm ring-1 ring-orange-400/30`} aria-hidden="true">
                         S
                     </div>
                     <span className="text-lg font-bold tracking-tight text-sidebar-foreground">Smetalab</span>
                 </div>
             </SidebarHeader>
-            <SidebarContent className="px-2 space-y-3">
+            <SidebarContent className={primitiveAppSidebarContentClassName}>
                 <SidebarNav
                     label="Навигация"
                     items={filteredMainNavItems}
