@@ -5,7 +5,7 @@ import { Button } from '@/shared/ui/button';
 import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Badge } from '@/shared/ui/badge';
-import { Surface } from '@/shared/ui/surface';
+
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { estimatePatternsActionRepo, type EstimatePatternListItem, type EstimatePatternPreviewRow } from '@/features/projects/estimates';
@@ -104,7 +104,8 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <Surface variant="muted" density="compact" radius="md" shadow="none">
+          <CardShell variant="muted" shadow="none" className="rounded-md sm:rounded-lg">
+            <CardShellBody density="compact">
             <div className="space-y-1">
               {sortedPreviewRows.map((row) => (
                 <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
@@ -113,7 +114,8 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
                 </div>
               ))}
             </div>
-          </Surface>
+            </CardShellBody>
+          </CardShell>
           <DialogFooter>
             <Button variant="outline" size="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>

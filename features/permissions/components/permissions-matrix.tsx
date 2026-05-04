@@ -12,7 +12,7 @@ import {
 } from '@/shared/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Building2, Settings2, Users } from 'lucide-react';
-import { Surface } from '@/shared/ui/surface';
+
 import { PermissionLevelControl } from './PermissionLevelControl';
 import { Permission, usePermissionsMatrix } from '@/features/permissions/hooks/usePermissionsMatrix';
 
@@ -117,7 +117,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <Surface variant="card" overflow="hidden" shadow="md">
+        <CardShell variant="card" shadow="md">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>
@@ -125,7 +125,7 @@ export function PermissionsMatrix() {
           <TabsContent value="platform" className="m-0 overflow-x-auto">
             {renderMatrix('platform', data.platformRoles, data.platformPermissions, data.platformRoleMap)}
           </TabsContent>
-        </Surface>
+        </CardShell>
       </Tabs>
     </div>
   );

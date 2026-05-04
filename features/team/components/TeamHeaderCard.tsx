@@ -1,5 +1,5 @@
 import { Users } from 'lucide-react';
-import { Surface } from '@/shared/ui/surface';
+import { CardShell } from '@/shared/ui/card-shell';
 
 interface TeamHeaderCardProps {
     teamName?: string;
@@ -8,7 +8,7 @@ interface TeamHeaderCardProps {
 
 export function TeamHeaderCard({ teamName, membersCount }: TeamHeaderCardProps) {
     return (
-        <Surface variant="muted" density="comfortable" shadow="none">
+        <CardShell variant="muted" shadow="none" className="p-4 sm:p-6">
             <div className="flex flex-col space-y-1.5">
                 <h1 className="text-xl font-semibold leading-none tracking-tight text-foreground">
                     {teamName || 'Команда'}
@@ -18,6 +18,6 @@ export function TeamHeaderCard({ teamName, membersCount }: TeamHeaderCardProps) 
                     {membersCount} {membersCount === 1 ? 'участник' : membersCount > 1 && membersCount < 5 ? 'участника' : 'участников'}
                 </p>
             </div>
-        </Surface>
+        </CardShell>
     );
 }
