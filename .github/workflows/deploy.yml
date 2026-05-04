@@ -249,7 +249,7 @@ jobs:
         uses: tj-actions/branch-names@v8
       - name: Create Neon preview branch
         id: get_neon_branch
-        uses: neondatabase/create-branch-action@v5
+        uses: neondatabase/create-branch-action@v6
         with:
           project_id: ${{ vars.NEON_PROJECT_ID || 'falling-fire-63341326' }}
           api_key: ${{ secrets.NEON_API_KEY }}
