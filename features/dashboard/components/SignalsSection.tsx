@@ -1,5 +1,6 @@
 import { Card } from '@/shared/ui/card';
 import { cn } from '@/lib/utils';
+import { Section } from '@/shared/ui/section';
 import {
     primitiveVisualIconSizeClassNames,
     primitiveVisualSemanticToneClassNames,
@@ -16,7 +17,7 @@ const signals = [
 
 export function SignalsSection() {
     return (
-        <section aria-labelledby="signals-title" className="space-y-4">
+        <Section density="comfortable" aria-labelledby="signals-title">
             <h2 id="signals-title" className={primitiveVisualTypographyClassNames.dashboardSectionTitle}>
                 <Activity className={cn(primitiveVisualIconSizeClassNames.section, 'text-primary')} />
                 Отклонения
@@ -41,6 +42,6 @@ export function SignalsSection() {
                     </Card>
                 ))}
             </div>
-        </section>
+        </Section>
     );
 }
