@@ -38,6 +38,12 @@ export const primitiveInputVariantClassNames = {
     "rounded-none border-0 bg-transparent shadow-none focus-visible:ring-0 dark:bg-transparent flex-1",
 } as const
 
+// ─── Color picker tokens ────────────────────────────────────────────────
+
+export const primitiveInputColorPickerClassName = "cursor-pointer p-1"
+
+// ─── Input size tokens ───────────────────────────────────────────────────
+
 export const primitiveInputSizeClassNames = {
   default: "h-9 py-1 file:h-5",
   sm: "h-8 py-1 text-xs file:h-4",
