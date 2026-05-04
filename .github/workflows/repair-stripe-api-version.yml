@@ -1,3 +1,4 @@
+# Temporary workflow: remove after Stripe API version literals are repaired.
 name: Repair Stripe API version
 
 on:
