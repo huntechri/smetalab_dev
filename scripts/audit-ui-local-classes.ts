@@ -109,6 +109,7 @@ const RECOMMENDED_CONTRACTS: Record<LocalClassBucket, string> = {
 const VISUAL_CONTEXT_PATTERN = /\b(?:className|cn\(|clsx\(|cva\(|classNames?|classes|styles|variants?|statusClass|badgeClass|chipClass|pillClass|cellClass|rowClass|toolbarClass|cardClass|surfaceClass)\b/u
 const QUOTED_STRING_WITH_DASH_PATTERN = /["'`]([^"'`]*-[^"'`]*)["'`]/u
 const CLASS_MAP_PATTERN = /\b(?:const|let|var)\s+[A-Za-z0-9_$]*(?:class|classes|className|styles|variants|status|badge|pill|chip|cell|row|surface|card)[A-Za-z0-9_$]*\s*=/iu
+const CANDIDATE_TOKEN_PATTERN = new RegExp("[!A-Za-z0-9_:@/\\\\.\\[\\]=#%()-]+", "g")
 
 function parseArgs(argv: string[]): Options {
   const args = new Set(argv)
@@ -165,7 +166,7 @@ function lastVariantSegment(token: string): string {
 }
 
 function extractCandidateTokens(line: string): string[] {
-  const matches = line.match(/[!A-Za-z0-9_:@/\-.\[\]=#%()]+/g) ?? []
+  const matches = line.match(CANDIDATE_TOKEN_PATTERN) ?? []
   return matches.map((token) => token.trim()).filter(Boolean)
 }
 
