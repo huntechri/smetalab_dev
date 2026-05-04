@@ -60,9 +60,9 @@ describe('MaterialCatalogDialog', () => {
 
         expect(content).toHaveAttribute('data-size', 'catalog-picker');
         expect(content).toHaveAttribute('data-layout', 'edge-to-edge');
-        expect(content.className).toContain('shadow-2xl');
-        expect(screen.getByTestId('dialog-header').className).toContain('p-4');
-        expect(screen.getByText(/Добавить материал в:/i).className).toContain('text-base');
+        expect(content.className).toBe('');
+        expect(screen.getByText(/Добавить материал в:/i)).toBeInTheDocument();
+        expect(screen.getByText(/Выберите позицию из справочника материалов/i)).toBeInTheDocument();
     });
 
     it('calls onClose when dialog is dismissed', () => {
