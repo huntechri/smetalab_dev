@@ -61,3 +61,25 @@ export const primitiveAppHeaderInnerClassName = [
   "sm:gap-3 sm:px-4",
   "md:gap-4 md:px-6",
 ].join(" ")
+
+// ─── AppSidebar tokens ─────────────────────────────────────────────────────
+
+export const primitiveAppSidebarSkeletonHeaderClassName =
+  "flex items-center gap-2 px-2 py-4"
+
+export const primitiveAppSidebarSkeletonContentClassName =
+  "px-4 py-6 space-y-6"
+
+export const primitiveAppSidebarBrandHeaderClassName =
+  "flex items-center gap-3 px-3 py-5"
+
+export const primitiveAppSidebarBrandGradientClassName =
+  "bg-gradient-to-br from-orange-500 to-orange-600"
+
+export const primitiveAppSidebarContentClassName =
+  "px-2 space-y-3"
+
+// ─── ActiveTeamIndicator tokens ────────────────────────────────────────────
+
+export const primitiveActiveTeamIndicatorClassName =
+  "max-w-[70px] truncate sm:max-w-none"
