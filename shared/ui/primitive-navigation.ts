@@ -21,8 +21,43 @@ export const primitiveTabsTriggerClassName = [
 export const primitiveTabsContentClassName =
   "flex-1 outline-none data-[state=inactive]:hidden"
 
+// ─── Sidebar tokens ──────────────────────────────────────────────────────────
+
+export const primitiveSidebarGroupClassName = "py-3"
+
+export const primitiveSidebarGroupLabelClassName =
+  "text-xs font-semibold uppercase tracking-widest text-sidebar-foreground/50 mb-3 px-3"
+
+export const primitiveSidebarMenuClassName = "gap-2 px-2"
+
+export const primitiveSidebarMenuButtonClassName = [
+  "h-11 rounded-lg px-4 transition-all duration-200",
+  "hover:bg-sidebar-accent/60",
+  "data-[active=true]:bg-sidebar-primary/12",
+  "data-[active=true]:text-sidebar-primary",
+  "data-[active=true]:font-medium",
+  "border-l-2 border-l-transparent",
+  "data-[active=true]:border-l-sidebar-primary",
+  "data-[active=true]:shadow-sm",
+].join(" ")
+
 // ─── PageShell tokens ──────────────────────────────────────────────────────
 
 export const primitivePageShellInnerPaddingClassName = "p-4 md:p-6 lg:p-8"
 
 export const primitivePageShellContainerWidthClassName = "max-w-[1600px]"
+
+// ─── AppHeader tokens ──────────────────────────────────────────────────────
+
+export const primitiveAppHeaderClassName = [
+  "sticky top-0 z-40",
+  "border-b border-border/40",
+  "bg-background/60 backdrop-blur-xl",
+  "transition-all duration-300",
+].join(" ")
+
+export const primitiveAppHeaderInnerClassName = [
+  "flex h-16 shrink-0 items-center gap-2 px-3",
+  "sm:gap-3 sm:px-4",
+  "md:gap-4 md:px-6",
+].join(" ")

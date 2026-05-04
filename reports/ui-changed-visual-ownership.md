@@ -4,9 +4,9 @@
 - Base ref: origin/main
 - Head ref: HEAD
 - Diff range: origin/main...HEAD
-- Changed files: 112
-- Scanned changed files: 95
-- Scanned added lines: 2010
+- Changed files: 129
+- Scanned changed files: 110
+- Scanned added lines: 2539
 - Violations: 0
 
 
