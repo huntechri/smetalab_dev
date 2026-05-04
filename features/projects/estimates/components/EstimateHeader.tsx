@@ -35,7 +35,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     };
 
     return (
-        <CardShell variant="panel" shadow="sm">
+        <CardShell variant="panel" className="shadow-sm">
             <CardShellBody className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center" density="comfortable">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">

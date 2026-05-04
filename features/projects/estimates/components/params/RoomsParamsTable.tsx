@@ -84,7 +84,7 @@ export function RoomsParamsTable({
     onRemove: (rowId: string) => void;
 }) {
     return (
-        <CardShell variant="card" radius="md" shadow="none" overflow="visible" className="gap-0">
+        <CardShell variant="card" className="rounded-md shadow-none overflow-visible gap-0">
             <Table className="text-[0.5625rem] sm:text-[0.6875rem]">
                 <TableHeader>
                     <TableRow>
