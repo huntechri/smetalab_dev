@@ -17,7 +17,7 @@ function getStripeInstance(): Stripe {
       throw new Error('STRIPE_SECRET_KEY is not defined in environment variables');
     }
     stripeInstance = new Stripe(secretKey, {
-      apiVersion: '2026-01-28.clover'
+      apiVersion: '2026-02-25.clover'
     });
   }
 

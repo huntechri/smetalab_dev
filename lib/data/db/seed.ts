@@ -16,7 +16,7 @@ async function createStripeProducts() {
   }
 
   const stripe = new Stripe(secretKey, {
-    apiVersion: '2026-01-28.clover',
+    apiVersion: '2026-02-25.clover',
   });
 
   const baseProduct = await stripe.products.create({
