@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-05-04T09:00:45.402Z",
+  "generatedAt": "2026-05-04T15:21:03.773Z",
   "summary": {
     "filesScanned": 550,
     "realViolations": 0,
     "needsReview": 4,
-    "informational": 804,
+    "informational": 818,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
     "manualReview": 4,
@@ -498,7 +498,7 @@
     {
       "file": "app/page.tsx",
       "source": "@/shared/ui/primitive-marketing",
-      "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+      "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName, primitiveMarketingSectionLabelClassName, primitiveMarketingH2ClassName, primitiveMarketingBodyClassName,",
       "severity": "informational",
       "category": "import",
       "owner": "app",
@@ -882,6 +882,17 @@
     },
     {
       "file": "features/_shared/directories/components/directory-list-screen.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/_shared/directories/components/directory-list-screen.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -1093,6 +1104,17 @@
       "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
       "source": "@/shared/ui/shells/data-table-shell",
       "importedNames": "DataTableShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1861,6 +1883,17 @@
     },
     {
       "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -1940,6 +1973,17 @@
       "file": "features/catalog/components/WorkCatalogPicker.client.tsx",
       "source": "@/shared/ui/states",
       "importedNames": "LoadingState, NoResultsState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/catalog/components/WorkCatalogPicker.client.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -2248,6 +2292,17 @@
       "file": "features/dashboard/components/TeamWidgetSection.tsx",
       "source": "@/shared/ui/status-badge",
       "importedNames": "StatusIndicator, type StatusIndicatorPulse, type StatusTone",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/dashboard/components/TeamWidgetSection.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3962,6 +4017,17 @@
     },
     {
       "file": "features/projects/estimates/components/EstimateHeader.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/EstimateHeader.tsx",
       "source": "@/shared/ui/alert-dialog",
       "importedNames": "AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,",
       "severity": "informational",
@@ -4050,6 +4116,17 @@
     },
     {
       "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "source": "@/shared/ui/primitive-table",
+      "importedNames": "primitiveCompactTableCellClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -4074,6 +4151,28 @@
       "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
       "source": "@/shared/ui/surface",
       "importedNames": "Surface",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+      "source": "@/shared/ui/primitive-table",
+      "importedNames": "primitiveCompactTableCellClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -4798,6 +4897,17 @@
     },
     {
       "file": "features/projects/estimates/components/table/columns.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/table/columns.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -5306,6 +5416,17 @@
       "file": "features/projects/list/components/project-card.tsx",
       "source": "@/shared/ui/progress",
       "importedNames": "Progress",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/list/components/project-card.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -5887,6 +6008,17 @@
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/team/components/InviteTeamMemberCard.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -6008,6 +6140,17 @@
     },
     {
       "file": "features/team/components/TeamMembersCard.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/team/components/TeamMembersCard.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -6049,6 +6192,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "features/works/components/UnitSelect.tsx",
+      "source": "@/shared/ui/primitive-surface",
+      "importedNames": "primitiveVisualTypographyClassNames",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "features/works/components/UnitSelect.tsx",
@@ -7944,8 +8098,8 @@
     },
     {
       "file": "shared/ui/input.tsx",
-      "source": "@/shared/ui/primitive-density",
-      "importedNames": "primitiveInputBaseClassName, primitiveInputSizeClassNames, primitiveInputVariantClassNames,",
+      "source": "@/shared/ui/primitive-controls",
+      "importedNames": "primitiveInputBaseClassName, primitiveInputColorPickerClassName, primitiveInputSizeClassNames, primitiveInputVariantClassNames,",
       "severity": "informational",
       "category": "import",
       "owner": "shared/ui",
@@ -8758,7 +8912,7 @@
     },
     {
       "file": "shared/ui/textarea.tsx",
-      "source": "@/shared/ui/primitive-density",
+      "source": "@/shared/ui/primitive-controls",
       "importedNames": "primitiveTextareaBaseClassName, primitiveTextareaVariantClassNames,",
       "severity": "informational",
       "category": "import",
@@ -9334,7 +9488,7 @@
       {
         "file": "app/page.tsx",
         "source": "@/shared/ui/primitive-marketing",
-        "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+        "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName, primitiveMarketingSectionLabelClassName, primitiveMarketingH2ClassName, primitiveMarketingBodyClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "app",
@@ -9695,6 +9849,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/_shared/directories/components/directory-list-screen.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/_shared/directories/components/directory-sheet-form.tsx",
         "source": "@/shared/ui/shells/catalog-directory-visual-contracts",
         "importedNames": "DEFAULT_DIRECTORY_ENTITY_COLOR, directorySheetFormClassNames,",
@@ -9885,6 +10050,17 @@
         "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
         "source": "@/shared/ui/shells/data-table-shell",
         "importedNames": "DataTableShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10520,6 +10696,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/catalog/components/WorkCatalogCategories.client.tsx",
         "source": "@/shared/ui/filter-bar",
         "importedNames": "FilterBar, FilterBarSkeleton, FilterBarViewport",
@@ -10589,6 +10776,17 @@
         "file": "features/catalog/components/WorkCatalogPicker.client.tsx",
         "source": "@/shared/ui/states",
         "importedNames": "LoadingState, NoResultsState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/catalog/components/WorkCatalogPicker.client.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10864,6 +11062,17 @@
         "file": "features/dashboard/components/TeamWidgetSection.tsx",
         "source": "@/shared/ui/status-badge",
         "importedNames": "StatusIndicator, type StatusIndicatorPulse, type StatusTone",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/dashboard/components/TeamWidgetSection.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12358,6 +12567,17 @@
       },
       {
         "file": "features/projects/estimates/components/EstimateHeader.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/EstimateHeader.tsx",
         "source": "@/shared/ui/alert-dialog",
         "importedNames": "AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,",
         "severity": "informational",
@@ -12434,9 +12654,42 @@
         "issueHint": "#246"
       },
       {
+        "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+        "source": "@/shared/ui/primitive-table",
+        "importedNames": "primitiveCompactTableCellClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
         "source": "@/shared/ui/surface",
         "importedNames": "Surface",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+        "source": "@/shared/ui/primitive-table",
+        "importedNames": "primitiveCompactTableCellClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -13028,6 +13281,17 @@
         "issueHint": "#246"
       },
       {
+        "file": "features/projects/estimates/components/table/columns.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
         "source": "lucide-react",
         "importedNames": "FilePlus",
@@ -13460,6 +13724,17 @@
         "file": "features/projects/list/components/project-card.tsx",
         "source": "@/shared/ui/progress",
         "importedNames": "Progress",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/list/components/project-card.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -13952,6 +14227,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/team/components/InviteTeamMemberCard.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/team/components/TeamHeaderCard.tsx",
         "source": "lucide-react",
         "importedNames": "Users",
@@ -14051,6 +14337,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/team/components/TeamMembersCard.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/team/screens/TeamScreen.tsx",
         "source": "@/shared/ui/card",
         "importedNames": "Card",
@@ -14082,6 +14379,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "features/works/components/UnitSelect.tsx",
+        "source": "@/shared/ui/primitive-surface",
+        "importedNames": "primitiveVisualTypographyClassNames",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "features/works/components/UnitSelect.tsx",
@@ -15636,8 +15944,8 @@
       },
       {
         "file": "shared/ui/input.tsx",
-        "source": "@/shared/ui/primitive-density",
-        "importedNames": "primitiveInputBaseClassName, primitiveInputSizeClassNames, primitiveInputVariantClassNames,",
+        "source": "@/shared/ui/primitive-controls",
+        "importedNames": "primitiveInputBaseClassName, primitiveInputColorPickerClassName, primitiveInputSizeClassNames, primitiveInputVariantClassNames,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -16351,7 +16659,7 @@
       },
       {
         "file": "shared/ui/textarea.tsx",
-        "source": "@/shared/ui/primitive-density",
+        "source": "@/shared/ui/primitive-controls",
         "importedNames": "primitiveTextareaBaseClassName, primitiveTextareaVariantClassNames,",
         "severity": "informational",
         "category": "import",

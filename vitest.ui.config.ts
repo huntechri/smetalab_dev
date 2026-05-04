@@ -29,7 +29,7 @@ export default defineConfig({
         fileParallelism: true,
         maxWorkers: 2,
         sequence: {
-            concurrent: true,
+            concurrent: false,
         },
     },
 });

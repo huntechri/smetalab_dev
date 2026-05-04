@@ -19,7 +19,7 @@ type CounterpartyDetailsSectionProps = CounterpartySectionProps & {
 
 export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="general" className="space-y-3 sm:space-y-4">
+    <TabsContent value="general" className="flex flex-col gap-3 sm:gap-4">
       <FormField
         control={form.control}
         name="name"
@@ -40,25 +40,25 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             control={form.control}
             name="legalStatus"
             render={({ field }) => (
-              <FormItem className="space-y-1.5">
+              <FormItem className="flex flex-col gap-1.5">
                 <FormLabel className="text-xs">Правовой статус</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="flex flex-row items-center gap-2 sm:gap-4 h-8"
+                    className="flex flex-row items-center gap-2 sm:gap-4"
                   >
-                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                    <FormItem className="flex items-center gap-1 sm:gap-2">
                       <FormControl>
-                        <RadioGroupItem value="individual" className="h-3.5 w-3.5" />
+                        <RadioGroupItem value="individual" className="size-3.5" />
                       </FormControl>
                       <FormLabel className="font-normal text-xs whitespace-nowrap">
                         Физ. лицо
                       </FormLabel>
                     </FormItem>
-                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                    <FormItem className="flex items-center gap-1 sm:gap-2">
                       <FormControl>
-                        <RadioGroupItem value="company" className="h-3.5 w-3.5" />
+                        <RadioGroupItem value="company" className="size-3.5" />
                       </FormControl>
                       <FormLabel className="font-normal text-xs whitespace-nowrap">
                         Юр. лицо
@@ -77,7 +77,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             control={form.control}
             name="type"
             render={({ field }) => (
-              <FormItem className="space-y-1.5">
+              <FormItem className="flex flex-col gap-1.5">
                 <FormLabel className="text-xs">Тип</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
@@ -106,9 +106,9 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
 
       <Separator />
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2 font-medium">
-          <Phone className="w-4 h-4 text-muted-foreground" />
+          <Phone className="size-4 text-muted-foreground" />
           Контактная информация
         </div>
 
@@ -165,11 +165,11 @@ export function CounterpartyDetailsSection({
   legalStatus,
 }: CounterpartyDetailsSectionProps) {
   return (
-    <TabsContent value="details" className="space-y-3 sm:space-y-4">
+    <TabsContent value="details" className="flex flex-col gap-3 sm:gap-4">
       {legalStatus === "individual" ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-medium">
-            <User className="w-4 h-4 text-muted-foreground" />
+            <User className="size-4 text-muted-foreground" />
             Паспортные данные
           </div>
 
@@ -246,9 +246,9 @@ export function CounterpartyDetailsSection({
           </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-medium">
-            <FileText className="w-4 h-4 text-muted-foreground" />
+            <FileText className="size-4 text-muted-foreground" />
             Реквизиты организации
           </div>
 
@@ -302,9 +302,9 @@ export function CounterpartyDetailsSection({
 
 export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="bank" className="space-y-3 sm:space-y-4">
+    <TabsContent value="bank" className="flex flex-col gap-3 sm:gap-4">
       <div className="flex items-center gap-2 font-medium">
-        <Landmark className="w-4 h-4 text-muted-foreground" />
+        <Landmark className="size-4 text-muted-foreground" />
         Банковские реквизиты
       </div>
 

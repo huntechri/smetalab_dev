@@ -59,7 +59,7 @@ export const primitiveVisualTypographyClassNames = {
   mutedMetaRow: "mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground",
   // Compact data typography tokens (for tables, dense lists, metadata)
   compactCaption: "text-[10px] font-medium text-muted-foreground",
-  compactLabel: "text-[11px] font-semibold uppercase tracking-wider text-muted-foreground",
+  compactLabel: "text-[11px] font-semibold uppercase tracking-wide text-muted-foreground",
   compactValue: "text-[11px] font-bold tracking-tight tabular-nums",
   compactBody: "text-[12px]",
   compactAvatarInitials: "text-[11px] font-bold text-primary",
@@ -71,6 +71,8 @@ export const primitiveVisualTypographyClassNames = {
   estimateSectionLabel: "text-[9px] sm:text-[11px] uppercase tracking-wider font-semibold",
   estimateCode: "text-[12px] font-semibold tabular-nums",
   estimateSubCode: "text-[12px] font-medium",
+  // Dialog / Sheet typography
+  dialogTitle: "text-xl md:text-2xl",
 } as const
 
 // ─── Card tokens ──────────────────────────────────────────────────────────
