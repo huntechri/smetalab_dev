@@ -6,6 +6,7 @@ import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Mail, Shield } from 'lucide-react';
 import { Surface } from '@/shared/ui/surface';
+import { cn } from '@/lib/utils';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
 import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
@@ -19,9 +20,6 @@ interface InviteTeamMemberCardProps {
     onSubmit: (event: React.FormEvent) => Promise<void>;
 }
 
-function getStatusMessageClassName(type: TeamMessage['type']) {
-    return type === 'error' ? 'text-destructive' : 'text-success';
-}
 
 export function InviteTeamMemberCard({
     email,
@@ -78,7 +76,7 @@ export function InviteTeamMemberCard({
 
                 {message && (
                     <p
-                        className={`mt-3 text-sm ${getStatusMessageClassName(message.type)}`}
+                        className={cn('mt-3 text-sm', message.type === 'error' && 'text-destructive', message.type !== 'error' && 'text-success')}
                         aria-live="polite"
                         aria-atomic="true"
                    >

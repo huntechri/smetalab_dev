@@ -1,64 +1,63 @@
 # UI Local Classes Fix Summary
 
 - Status: fail
-- Files to touch: 99
-- Findings: 614
-- High: 41
-- Medium: 405
-- Low: 168
+- Files to touch: 98
+- Findings: 603
+- High: 26
+- Medium: 410
+- Low: 167
 
 ## Fix order: files
 
 | File | High | Medium | Low | Total |
 | --- | ---: | ---: | ---: | ---: |
 | `app/page.tsx` | 22 | 10 | 35 | 67 |
-| `features/projects/estimates/components/registry/EstimateStatusMenu.tsx` | 4 | 0 | 0 | 4 |
-| `features/permissions/components/permissions-matrix.tsx` | 3 | 17 | 5 | 25 |
-| `features/auth/components/LoginForm.tsx` | 2 | 21 | 0 | 23 |
-| `features/notifications/components/notification-item.tsx` | 2 | 2 | 1 | 5 |
 | `features/catalog/components/MaterialCatalogPicker.client.tsx` | 1 | 14 | 10 | 25 |
 | `features/patterns/screens/PatternsScreen.tsx` | 1 | 10 | 2 | 13 |
-| `features/dashboard/components/TeamWidgetSection.tsx` | 1 | 8 | 0 | 9 |
-| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 1 | 8 | 0 | 9 |
-| `features/team/components/InviteTeamMemberCard.tsx` | 1 | 6 | 1 | 8 |
 | `features/projects/estimates/components/params/RoomsParamsTotals.tsx` | 1 | 2 | 1 | 4 |
 | `components/layout/app-sidebar.tsx` | 1 | 0 | 12 | 13 |
-| `app/api-docs/page.tsx` | 1 | 0 | 0 | 1 |
-| `features/projects/estimates/components/table/EstimateTableDialogs.tsx` | 0 | 27 | 0 | 27 |
+| `features/projects/estimates/components/table/EstimateTableDialogs.tsx` | 0 | 26 | 0 | 26 |
+| `features/auth/components/LoginForm.tsx` | 0 | 21 | 0 | 21 |
 | `features/counterparties/components/counterparty-sheet-sections.tsx` | 0 | 20 | 0 | 20 |
+| `features/permissions/components/permissions-matrix.tsx` | 0 | 19 | 5 | 24 |
 | `features/projects/list/components/project-card.tsx` | 0 | 14 | 1 | 15 |
 | `features/team/components/TeamMembersCard.tsx` | 0 | 13 | 0 | 13 |
 | `features/settings/components/user-settings-page.tsx` | 0 | 12 | 17 | 29 |
 | `features/settings/screens/AdminSecuritySettingsScreen.tsx` | 0 | 10 | 1 | 11 |
 | `features/global-purchases/components/global-purchases-columns.tsx` | 0 | 10 | 0 | 10 |
 | `features/projects/list/components/create-project-dialog.tsx` | 0 | 10 | 0 | 10 |
+| `features/projects/estimates/components/params/RoomsParamsTable.tsx` | 0 | 9 | 0 | 9 |
+| `features/dashboard/components/TeamWidgetSection.tsx` | 0 | 8 | 0 | 8 |
 | `features/projects/dashboard/components/ProjectReceiptsSection.tsx` | 0 | 8 | 0 | 8 |
 | `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx` | 0 | 8 | 0 | 8 |
 | `features/works/components/UnitSelect.tsx` | 0 | 8 | 0 | 8 |
 | `features/catalog/components/WorkCatalogPicker.client.tsx` | 0 | 7 | 5 | 12 |
+| `features/notifications/components/notification-bell.tsx` | 0 | 7 | 0 | 7 |
+| `features/permissions/components/PermissionLevelControl.tsx` | 0 | 7 | 0 | 7 |
+| `features/projects/estimates/components/table/columns.tsx` | 0 | 7 | 0 | 7 |
+| `features/team/components/InviteTeamMemberCard.tsx` | 0 | 7 | 0 | 7 |
 
 ## Fix order: buckets
 
 | Bucket | Findings | Move to |
 | --- | ---: | --- |
-| surface | 89 | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| dialog-sheet | 87 | shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props |
-| table | 71 | shared/ui/data-table.tsx or shared/ui/table-density.tsx |
+| surface | 88 | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
+| dialog-sheet | 86 | shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props |
+| table | 70 | shared/ui/data-table.tsx or shared/ui/table-density.tsx |
 | navigation | 57 | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
-| form | 51 | shared/ui/form-layout.tsx and shared form/control primitives |
+| card | 53 | shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts |
 | control | 51 | shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx |
-| card | 50 | shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts |
+| form | 50 | shared/ui/form-layout.tsx and shared form/control primitives |
 | spacing | 33 | shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props |
 | table-cell | 31 | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
 | layout | 24 | shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract |
-| color | 23 | shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract |
 | dashboard-chart | 21 | shared/ui/kpi-card.tsx, shared/ui/dashboard-layout.tsx, or shared/ui/dashboard-dynamics-chart.tsx |
+| color | 21 | shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract |
 
 ## High-priority examples
 
 | Severity | Bucket | Location | Evidence | Move to |
 | --- | --- | --- | --- | --- |
-| high | surface | `app/api-docs/page.tsx:10` | `<div className="bg-white min-h-screen">` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | high | navigation | `app/page.tsx:103` | `const navLinkClassNameBase = 'rounded-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';` | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
 | high | navigation | `app/page.tsx:104` | `const headerNavLinkClassName = '${navLinkClassNameBase} px-3 py-2';` | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
 | high | navigation | `app/page.tsx:105` | `const footerNavLinkClassName = '${navLinkClassNameBase} px-2 py-1';` | shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts |
@@ -81,7 +80,8 @@
 | high | surface | `app/page.tsx:309` | `? 'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]'` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | high | surface | `app/page.tsx:310` | `: 'rounded-3xl border border-white/10 bg-[#14121A] p-6'` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
 | high | surface | `app/page.tsx:349` | `<footer className="border-t border-white/10 bg-[#0B0A0F]">` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
-| high | form | `features/auth/components/LoginForm.tsx:66` | `className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"` | shared/ui/form-layout.tsx and shared form/control primitives |
-| high | badge-status | `features/auth/components/LoginForm.tsx:157` | `<AuthStatusMessage variant="warning" className="mb-4">` | shared/ui/badge.tsx or shared/ui/status-badge.tsx |
+| high | surface | `features/catalog/components/MaterialCatalogPicker.client.tsx:281` | `<div className={'relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}'}>` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
+| high | surface | `features/patterns/screens/PatternsScreen.tsx:108` | `<Surface variant="muted" density="compact" shadow="none">` | shared/ui/surface.tsx or shared/ui/card-shell.tsx |
+| high | table-cell | `features/projects/estimates/components/params/RoomsParamsTotals.tsx:18` | `<div className={'flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-semibold' : 'text-muted-foreground'}'}>` | shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers |
 
 Full machine-readable details: `reports/ui-local-classes.json`.

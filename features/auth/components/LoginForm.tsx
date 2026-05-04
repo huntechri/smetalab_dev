@@ -36,6 +36,7 @@ import {
   primitiveAuthFieldGapClassName,
   primitiveAuthPanelShadowClassName,
   primitiveAuthPanelBorderClassName,
+  primitiveAuthSkipLinkClassName,
 } from '@/shared/ui/primitive-marketing';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
@@ -63,7 +64,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     <div className={primitiveAuthPageBackgroundClassName}>
       <a
         href="#auth-card"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+        className={primitiveAuthSkipLinkClassName}
       >
         Пропустить к форме входа
       </a>
@@ -154,7 +155,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           </CardHeader>
           <CardContent>
             {verifiedState === 'required' && (
-              <AuthStatusMessage variant="warning" className="mb-4">
+              <AuthStatusMessage variant="warning">
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}

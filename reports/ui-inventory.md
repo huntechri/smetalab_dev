@@ -3,7 +3,7 @@
 ## Top summary
 - real violations count: 0
 - needs-review count: 4
-- informational count: 818
+- informational count: 843
 - auto-fix candidates count: 0
 - manual review count: 4
 
@@ -18,7 +18,7 @@
 | Switch | false | true | false | 3 | canonical | informational |
 | Label | false | true | false | 13 | canonical | informational |
 | Form | false | true | false | 5 | canonical | informational |
-| Card | false | true | false | 12 | canonical | informational |
+| Card | false | true | false | 11 | canonical | informational |
 | Badge | false | true | false | 11 | canonical | informational |
 | Table | false | true | false | 3 | canonical | informational |
 | Dialog | false | true | false | 9 | canonical | informational |

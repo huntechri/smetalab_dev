@@ -41,7 +41,7 @@ export function PermissionsMatrix() {
     <Table className="w-full border-collapse">
       <TableHeader className="sticky top-0 z-20 border-b bg-muted/80 backdrop-blur">
         <TableRow className="hover:bg-transparent">
-          <TableHead className={`${primitiveVisualTypographyClassNames.mutedMeta} w-1/3 px-6 py-4 text-left font-semibold tracking-wide`}>
+          <TableHead className={primitiveVisualTypographyClassNames.mutedMeta}>
             Функциональная область
           </TableHead>
           {roles.map((role) => (
@@ -107,13 +107,13 @@ export function PermissionsMatrix() {
         <TabsList className="mb-6 h-12 w-full rounded-2xl bg-muted p-1 sm:w-auto">
           <TabsTrigger
             value="tenant"
-            className="rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+            className="px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md"
           >
             <Users className="mr-2 h-4 w-4" /> Роли команды
           </TabsTrigger>
           <TabsTrigger
             value="platform"
-            className="rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md"
+            className="px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md"
           >
             <Building2 className="mr-2 h-4 w-4" /> Платформа
           </TabsTrigger>

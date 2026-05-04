@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T15:21:04.561Z",
+  "generatedAt": "2026-05-04T21:21:37.813Z",
   "mode": "report-only",
   "note": "This audit intentionally does not fail CI when coverage signals are found. Use bugCandidates to create follow-up tickets.",
   "strictRequested": false,
@@ -14,32 +14,32 @@
     "widgets"
   ],
   "scannedFiles": 549,
-  "totalFindings": 95,
+  "totalFindings": 94,
   "severityCounts": {
-    "low": 51,
+    "low": 50,
     "medium": 44
   },
   "categoryCounts": {
     "state-surface-coverage": 7,
     "overlay-interaction-coverage": 12,
     "card-surface-coverage": 25,
-    "icon-action-coverage": 44,
+    "icon-action-coverage": 43,
     "form-control-coverage": 1,
     "table-toolbar-coverage": 6
   },
   "surfaceCounts": {
     "app": 11,
-    "feature": 84
+    "feature": 83
   },
   "bugCandidateCounts": {
     "P1": 1,
-    "P2": 20,
+    "P2": 19,
     "P3": 0,
-    "P4": 35
+    "P4": 34
   },
   "bugCandidates": [
     {
-      "id": "UI-COVERAGE-050",
+      "id": "UI-COVERAGE-049",
       "priority": "P1",
       "title": "Review UI coverage signals in features/settings/components/user-settings-page.tsx",
       "surface": "feature",
@@ -57,7 +57,7 @@
       "sampleFindings": [
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 134,
+          "line": 136,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "Card",
@@ -66,7 +66,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 176,
+          "line": 178,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Loader2",
@@ -75,7 +75,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 188,
+          "line": 190,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "Card",
@@ -84,7 +84,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 199,
+          "line": 201,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "CardContent",
@@ -93,7 +93,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 268,
+          "line": 270,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "Card",
@@ -102,7 +102,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 323,
+          "line": 325,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Loader2",
@@ -111,7 +111,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 335,
+          "line": 337,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "Card",
@@ -120,7 +120,7 @@
         },
         {
           "filePath": "features/settings/components/user-settings-page.tsx",
-          "line": 346,
+          "line": 348,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "CardContent",
@@ -421,7 +421,7 @@
       "sampleFindings": [
         {
           "filePath": "features/auth/components/LoginForm.tsx",
-          "line": 64,
+          "line": 66,
           "category": "overlay-interaction-coverage",
           "severity": "medium",
           "token": "z-50",
@@ -430,7 +430,7 @@
         },
         {
           "filePath": "features/auth/components/LoginForm.tsx",
-          "line": 129,
+          "line": 131,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "CardHeader",
@@ -439,7 +439,7 @@
         },
         {
           "filePath": "features/auth/components/LoginForm.tsx",
-          "line": 249,
+          "line": 251,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Loader2",
@@ -468,7 +468,7 @@
       "sampleFindings": [
         {
           "filePath": "features/permissions/components/permissions-matrix.tsx",
-          "line": 40,
+          "line": 41,
           "category": "table-toolbar-coverage",
           "severity": "medium",
           "token": "Table",
@@ -477,7 +477,7 @@
         },
         {
           "filePath": "features/permissions/components/permissions-matrix.tsx",
-          "line": 41,
+          "line": 42,
           "category": "overlay-interaction-coverage",
           "severity": "medium",
           "token": "z-20",
@@ -486,7 +486,7 @@
         },
         {
           "filePath": "features/permissions/components/permissions-matrix.tsx",
-          "line": 41,
+          "line": 42,
           "category": "overlay-interaction-coverage",
           "severity": "medium",
           "token": "backdrop-blur",
@@ -497,7 +497,7 @@
       "recommendedAction": "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
     },
     {
-      "id": "UI-COVERAGE-052",
+      "id": "UI-COVERAGE-051",
       "priority": "P2",
       "title": "Review UI coverage signals in features/settings/screens/AdminSecuritySettingsScreen.tsx",
       "surface": "feature",
@@ -636,7 +636,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-          "line": 88,
+          "line": 90,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "card",
@@ -645,11 +645,48 @@
         },
         {
           "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-          "line": 89,
+          "line": 91,
           "category": "table-toolbar-coverage",
           "severity": "medium",
           "token": "Table",
           "reason": "Table, toolbar, filter and pagination surfaces need explicit shared density/action contracts.",
+          "surface": "feature"
+        }
+      ],
+      "recommendedAction": "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
+    },
+    {
+      "id": "UI-COVERAGE-038",
+      "priority": "P2",
+      "title": "Review UI coverage signals in features/projects/estimates/components/table/EstimateCardsTable.tsx",
+      "surface": "feature",
+      "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+      "categories": {
+        "card-surface-coverage": 2
+      },
+      "severityCounts": {
+        "high": 0,
+        "medium": 2,
+        "low": 0
+      },
+      "findingCount": 2,
+      "sampleFindings": [
+        {
+          "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+          "line": 26,
+          "category": "card-surface-coverage",
+          "severity": "medium",
+          "token": "Surface",
+          "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
+          "surface": "feature"
+        },
+        {
+          "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+          "line": 26,
+          "category": "card-surface-coverage",
+          "severity": "medium",
+          "token": "card",
+          "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
           "surface": "feature"
         }
       ],
@@ -757,7 +794,7 @@
       "sampleFindings": [
         {
           "filePath": "features/dashboard/components/SignalsSection.tsx",
-          "line": 27,
+          "line": 29,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "Card",
@@ -785,7 +822,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
-          "line": 39,
+          "line": 40,
           "category": "card-surface-coverage",
           "severity": "medium",
           "token": "panel",
@@ -824,35 +861,7 @@
       "recommendedAction": "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
     },
     {
-      "id": "UI-COVERAGE-038",
-      "priority": "P2",
-      "title": "Review UI coverage signals in features/projects/estimates/components/table/EstimateCardsTable.tsx",
-      "surface": "feature",
-      "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
-      "categories": {
-        "card-surface-coverage": 1
-      },
-      "severityCounts": {
-        "high": 0,
-        "medium": 1,
-        "low": 0
-      },
-      "findingCount": 1,
-      "sampleFindings": [
-        {
-          "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
-          "line": 26,
-          "category": "card-surface-coverage",
-          "severity": "medium",
-          "token": "Surface",
-          "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
-          "surface": "feature"
-        }
-      ],
-      "recommendedAction": "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
-    },
-    {
-      "id": "UI-COVERAGE-049",
+      "id": "UI-COVERAGE-048",
       "priority": "P2",
       "title": "Review UI coverage signals in features/projects/list/components/projects-sort-select.tsx",
       "surface": "feature",
@@ -874,34 +883,6 @@
           "severity": "medium",
           "token": "Filter",
           "reason": "Table, toolbar, filter and pagination surfaces need explicit shared density/action contracts.",
-          "surface": "feature"
-        }
-      ],
-      "recommendedAction": "Review in the next UI audit batch. Normalize the local visual recipe or add explicit test coverage for the affected interaction/state surface."
-    },
-    {
-      "id": "UI-COVERAGE-053",
-      "priority": "P2",
-      "title": "Review UI coverage signals in features/team/screens/TeamScreen.tsx",
-      "surface": "feature",
-      "filePath": "features/team/screens/TeamScreen.tsx",
-      "categories": {
-        "card-surface-coverage": 1
-      },
-      "severityCounts": {
-        "high": 0,
-        "medium": 1,
-        "low": 0
-      },
-      "findingCount": 1,
-      "sampleFindings": [
-        {
-          "filePath": "features/team/screens/TeamScreen.tsx",
-          "line": 49,
-          "category": "card-surface-coverage",
-          "severity": "medium",
-          "token": "Card",
-          "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
           "surface": "feature"
         }
       ],
@@ -1240,7 +1221,7 @@
       "sampleFindings": [
         {
           "filePath": "features/catalog/components/WorkCatalogPicker.client.tsx",
-          "line": 162,
+          "line": 161,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Plus",
@@ -1492,7 +1473,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
-          "line": 97,
+          "line": 99,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Plus",
@@ -1520,7 +1501,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
-          "line": 206,
+          "line": 207,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Plus",
@@ -1548,7 +1529,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-          "line": 128,
+          "line": 129,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Loader2",
@@ -1560,34 +1541,6 @@
     },
     {
       "id": "UI-COVERAGE-039",
-      "priority": "P4",
-      "title": "Review UI coverage signals in features/projects/estimates/components/table/EstimateTableToolbar.tsx",
-      "surface": "feature",
-      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
-      "categories": {
-        "icon-action-coverage": 1
-      },
-      "severityCounts": {
-        "high": 0,
-        "medium": 0,
-        "low": 1
-      },
-      "findingCount": 1,
-      "sampleFindings": [
-        {
-          "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
-          "line": 128,
-          "category": "icon-action-coverage",
-          "severity": "low",
-          "token": "MoreHorizontal",
-          "reason": "Icon action sizing should stay consistent across compact action surfaces.",
-          "surface": "feature"
-        }
-      ],
-      "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
-    },
-    {
-      "id": "UI-COVERAGE-040",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
       "surface": "feature",
@@ -1615,7 +1568,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-041",
+      "id": "UI-COVERAGE-040",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
       "surface": "feature",
@@ -1643,7 +1596,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-042",
+      "id": "UI-COVERAGE-041",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
       "surface": "feature",
@@ -1660,7 +1613,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
-          "line": 127,
+          "line": 133,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Settings",
@@ -1671,7 +1624,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-043",
+      "id": "UI-COVERAGE-042",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/table/columns.tsx",
       "surface": "feature",
@@ -1699,7 +1652,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-044",
+      "id": "UI-COVERAGE-043",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/tabs/EstimateParams.tsx",
       "surface": "feature",
@@ -1716,7 +1669,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
-          "line": 62,
+          "line": 63,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Plus",
@@ -1727,7 +1680,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-045",
+      "id": "UI-COVERAGE-044",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
       "surface": "feature",
@@ -1744,7 +1697,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
-          "line": 50,
+          "line": 52,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Plus",
@@ -1755,7 +1708,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-046",
+      "id": "UI-COVERAGE-045",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/list/components/create-project-dialog.tsx",
       "surface": "feature",
@@ -1772,7 +1725,7 @@
       "sampleFindings": [
         {
           "filePath": "features/projects/list/components/create-project-dialog.tsx",
-          "line": 271,
+          "line": 272,
           "category": "icon-action-coverage",
           "severity": "low",
           "token": "Loader2",
@@ -1783,7 +1736,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-047",
+      "id": "UI-COVERAGE-046",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/list/components/project-actions.tsx",
       "surface": "feature",
@@ -1811,7 +1764,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-048",
+      "id": "UI-COVERAGE-047",
       "priority": "P4",
       "title": "Review UI coverage signals in features/projects/list/components/projects-list.tsx",
       "surface": "feature",
@@ -1839,7 +1792,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-051",
+      "id": "UI-COVERAGE-050",
       "priority": "P4",
       "title": "Review UI coverage signals in features/settings/screens/AdminGeneralSettingsScreen.tsx",
       "surface": "feature",
@@ -1867,7 +1820,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-054",
+      "id": "UI-COVERAGE-052",
       "priority": "P4",
       "title": "Review UI coverage signals in features/works/components/UnitSelect.tsx",
       "surface": "feature",
@@ -1895,7 +1848,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-055",
+      "id": "UI-COVERAGE-053",
       "priority": "P4",
       "title": "Review UI coverage signals in features/works/components/WorksEditDialog.tsx",
       "surface": "feature",
@@ -1923,7 +1876,7 @@
       "recommendedAction": "Keep as report-only evidence unless this surface starts producing route-level smoke errors or visual regressions."
     },
     {
-      "id": "UI-COVERAGE-056",
+      "id": "UI-COVERAGE-054",
       "priority": "P4",
       "title": "Review UI coverage signals in features/works/components/WorksHeader.tsx",
       "surface": "feature",
@@ -2188,7 +2141,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 64,
+      "line": 66,
       "category": "overlay-interaction-coverage",
       "severity": "medium",
       "token": "z-50",
@@ -2197,7 +2150,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 129,
+      "line": 131,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "CardHeader",
@@ -2206,7 +2159,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 249,
+      "line": 251,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Loader2",
@@ -2278,7 +2231,7 @@
     },
     {
       "filePath": "features/catalog/components/WorkCatalogPicker.client.tsx",
-      "line": 162,
+      "line": 161,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Plus",
@@ -2305,7 +2258,7 @@
     },
     {
       "filePath": "features/dashboard/components/SignalsSection.tsx",
-      "line": 27,
+      "line": 29,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2449,7 +2402,7 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 40,
+      "line": 41,
       "category": "table-toolbar-coverage",
       "severity": "medium",
       "token": "Table",
@@ -2458,7 +2411,7 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 41,
+      "line": 42,
       "category": "overlay-interaction-coverage",
       "severity": "medium",
       "token": "z-20",
@@ -2467,7 +2420,7 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 41,
+      "line": 42,
       "category": "overlay-interaction-coverage",
       "severity": "medium",
       "token": "backdrop-blur",
@@ -2476,7 +2429,7 @@
     },
     {
       "filePath": "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
-      "line": 97,
+      "line": 99,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Plus",
@@ -2485,7 +2438,7 @@
     },
     {
       "filePath": "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
-      "line": 206,
+      "line": 207,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Plus",
@@ -2494,7 +2447,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "line": 128,
+      "line": 129,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Loader2",
@@ -2503,7 +2456,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
-      "line": 39,
+      "line": 40,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "panel",
@@ -2512,7 +2465,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 88,
+      "line": 90,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "card",
@@ -2521,7 +2474,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 89,
+      "line": 91,
       "category": "table-toolbar-coverage",
       "severity": "medium",
       "token": "Table",
@@ -2547,12 +2500,12 @@
       "surface": "feature"
     },
     {
-      "filePath": "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
-      "line": 128,
-      "category": "icon-action-coverage",
-      "severity": "low",
-      "token": "MoreHorizontal",
-      "reason": "Icon action sizing should stay consistent across compact action surfaces.",
+      "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+      "line": 26,
+      "category": "card-surface-coverage",
+      "severity": "medium",
+      "token": "card",
+      "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
       "surface": "feature"
     },
     {
@@ -2575,7 +2528,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
-      "line": 127,
+      "line": 133,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Settings",
@@ -2593,7 +2546,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/tabs/EstimateParams.tsx",
-      "line": 62,
+      "line": 63,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Plus",
@@ -2602,7 +2555,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
-      "line": 50,
+      "line": 52,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Plus",
@@ -2611,7 +2564,7 @@
     },
     {
       "filePath": "features/projects/list/components/create-project-dialog.tsx",
-      "line": 271,
+      "line": 272,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Loader2",
@@ -2647,7 +2600,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 134,
+      "line": 136,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2656,7 +2609,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 176,
+      "line": 178,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Loader2",
@@ -2665,7 +2618,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 188,
+      "line": 190,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2674,7 +2627,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 199,
+      "line": 201,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "CardContent",
@@ -2683,7 +2636,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 268,
+      "line": 270,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2692,7 +2645,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 323,
+      "line": 325,
       "category": "icon-action-coverage",
       "severity": "low",
       "token": "Loader2",
@@ -2701,7 +2654,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 335,
+      "line": 337,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2710,7 +2663,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 346,
+      "line": 348,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "CardContent",
@@ -2719,7 +2672,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 413,
+      "line": 415,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "Card",
@@ -2728,7 +2681,7 @@
     },
     {
       "filePath": "features/settings/components/user-settings-page.tsx",
-      "line": 424,
+      "line": 426,
       "category": "card-surface-coverage",
       "severity": "medium",
       "token": "CardContent",
@@ -2769,15 +2722,6 @@
       "severity": "low",
       "token": "Loader2",
       "reason": "Icon action sizing should stay consistent across compact action surfaces.",
-      "surface": "feature"
-    },
-    {
-      "filePath": "features/team/screens/TeamScreen.tsx",
-      "line": 49,
-      "category": "card-surface-coverage",
-      "severity": "medium",
-      "token": "Card",
-      "reason": "Card-like surfaces should be reviewed for shared visual contracts instead of feature-local shell recipes.",
       "surface": "feature"
     },
     {

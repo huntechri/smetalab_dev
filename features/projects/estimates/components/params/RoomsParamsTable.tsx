@@ -22,8 +22,6 @@ const headers = [
 
 import { primitiveSurfaceBorderClassNames } from '@/shared/ui/primitive-surface';
 
-const calculatedValueClassName = `h-8 w-24 rounded ${primitiveSurfaceBorderClassNames.hairline} bg-muted/30 px-2 flex items-center`;
-
 type RoomParamNumberInputProps = {
     value: string;
     onChange: (value: string) => void;
@@ -72,7 +70,7 @@ function NumericCell({ value, onChange }: RoomParamNumberInputProps) {
 }
 
 function CalculatedValueCell({ value }: { value: string }) {
-    return <div className={calculatedValueClassName}>{value}</div>;
+    return <div className={`h-8 w-24 ${primitiveSurfaceBorderClassNames.hairline} px-2 flex items-center`}>{value}</div>;
 }
 
 export function RoomsParamsTable({

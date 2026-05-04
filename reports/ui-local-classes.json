@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T20:55:55.263Z",
+  "generatedAt": "2026-05-04T21:30:47.077Z",
   "mode": "local-classes",
   "scannedRoots": [
     "app",
@@ -9,34 +9,34 @@
     "widgets"
   ],
   "scannedFiles": 366,
-  "filesWithFindings": 99,
-  "totalFindings": 614,
+  "filesWithFindings": 98,
+  "totalFindings": 603,
   "severityCounts": {
-    "high": 41,
-    "medium": 405,
-    "low": 168
+    "high": 26,
+    "medium": 410,
+    "low": 167
   },
   "rootCounts": {
     "app": 89,
-    "features": 494,
+    "features": 483,
     "components": 31
   },
   "bucketCounts": {
     "layout": 24,
     "spacing": 33,
-    "surface": 89,
-    "card": 50,
-    "table": 71,
+    "surface": 88,
+    "card": 53,
+    "table": 70,
     "table-cell": 31,
-    "form": 51,
+    "form": 50,
     "control": 51,
-    "badge-status": 8,
-    "dialog-sheet": 87,
+    "badge-status": 0,
+    "dialog-sheet": 86,
     "navigation": 57,
     "state": 15,
     "dashboard-chart": 21,
     "typography": 2,
-    "color": 23,
+    "color": 21,
     "unknown": 1
   },
   "findings": [
@@ -242,13 +242,13 @@
     },
     {
       "filePath": "app/api-docs/page.tsx",
-      "line": 10,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "bg-white min-h-screen",
-      "evidence": "<div className=\"bg-white min-h-screen\">",
+      "line": 11,
+      "severity": "medium",
+      "bucket": "card",
+      "token": "min-h-screen",
+      "evidence": "<Surface variant=\"card\" className=\"min-h-screen\">",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
+      "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
     },
     {
       "filePath": "app/not-found.tsx",
@@ -1282,17 +1282,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 66,
-      "severity": "high",
-      "bucket": "form",
-      "token": "focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:px-4 focus:py-2 focus:text-sm",
-      "evidence": "className=\"sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground\"",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 70,
+      "line": 71,
       "severity": "medium",
       "bucket": "form",
       "token": "absolute inset-0",
@@ -1302,7 +1292,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 72,
+      "line": 73,
       "severity": "medium",
       "bucket": "form",
       "token": "absolute",
@@ -1312,7 +1302,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 75,
+      "line": 76,
       "severity": "medium",
       "bucket": "form",
       "token": "absolute",
@@ -1322,7 +1312,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 80,
+      "line": 81,
       "severity": "medium",
       "bucket": "form",
       "token": "space-y-8",
@@ -1332,7 +1322,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 84,
+      "line": 85,
       "severity": "medium",
       "bucket": "form",
       "token": "text-xs tracking-ultra text-white/70",
@@ -1342,7 +1332,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 87,
+      "line": 88,
       "severity": "medium",
       "bucket": "form",
       "token": "text-sm font-semibold",
@@ -1352,7 +1342,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 91,
+      "line": 92,
       "severity": "medium",
       "bucket": "form",
       "token": "space-y-4",
@@ -1362,7 +1352,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 92,
+      "line": 93,
       "severity": "medium",
       "bucket": "form",
       "token": "text-xs tracking-super text-white/70",
@@ -1372,7 +1362,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 107,
+      "line": 108,
       "severity": "medium",
       "bucket": "form",
       "token": "text-sm text-white/80",
@@ -1382,7 +1372,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 129,
+      "line": 130,
       "severity": "medium",
       "bucket": "form",
       "token": "text-white",
@@ -1392,7 +1382,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 131,
+      "line": 132,
       "severity": "medium",
       "bucket": "form",
       "token": "text-left",
@@ -1402,7 +1392,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 133,
+      "line": 134,
       "severity": "medium",
       "bucket": "form",
       "token": "h-10 w-10 text-brand",
@@ -1412,7 +1402,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 147,
+      "line": 148,
       "severity": "medium",
       "bucket": "form",
       "token": "font-medium text-brand hover:text-brand/80",
@@ -1422,17 +1412,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 157,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "mb-4",
-      "evidence": "<AuthStatusMessage variant=\"warning\" className=\"mb-4\">",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 185,
+      "line": 186,
       "severity": "medium",
       "bucket": "form",
       "token": "relative _input]:pr-10",
@@ -1442,7 +1422,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 208,
+      "line": 209,
       "severity": "medium",
       "bucket": "form",
       "token": "absolute right-1 top-1/2",
@@ -1452,7 +1432,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 211,
+      "line": 212,
       "severity": "medium",
       "bucket": "form",
       "token": "h-4 w-4",
@@ -1462,7 +1442,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 213,
+      "line": 214,
       "severity": "medium",
       "bucket": "form",
       "token": "h-4 w-4",
@@ -1472,7 +1452,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 217,
+      "line": 218,
       "severity": "medium",
       "bucket": "form",
       "token": "text-xs text-white/60",
@@ -1482,7 +1462,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 251,
+      "line": 252,
       "severity": "medium",
       "bucket": "form",
       "token": "mr-2 h-4 w-4",
@@ -1492,7 +1472,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 262,
+      "line": 263,
       "severity": "medium",
       "bucket": "form",
       "token": "text-center text-sm",
@@ -1502,7 +1482,7 @@
     },
     {
       "filePath": "features/auth/components/LoginForm.tsx",
-      "line": 265,
+      "line": 266,
       "severity": "medium",
       "bucket": "form",
       "token": "text-brand hover:text-brand/80",
@@ -1716,7 +1696,7 @@
       "severity": "high",
       "bucket": "surface",
       "token": "relative h-9 w-9 sm:h-10 sm:w-10 rounded-md",
-      "evidence": "<div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted ${primitiveSurfaceBorderClassNames.hairline}`}>",
+      "evidence": "<div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}`}>",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
     },
@@ -2292,16 +2272,6 @@
     },
     {
       "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
-      "line": 42,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "text-[0.625rem] font-medium",
-      "evidence": "<span className=\"text-[0.625rem] font-medium text-muted-foreground\">{member.status}</span>",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
-    },
-    {
-      "filePath": "features/dashboard/components/TeamWidgetSection.tsx",
       "line": 47,
       "severity": "medium",
       "bucket": "control",
@@ -2793,10 +2763,10 @@
     {
       "filePath": "features/notifications/components/notification-item.tsx",
       "line": 37,
-      "severity": "high",
+      "severity": "medium",
       "bucket": "card",
-      "token": "text-left rounded-lg",
-      "evidence": "const baseClasses = `w-full text-left ${primitiveCardShellInsetDensityClassNames.default} rounded-lg transition-colors flex items-start gap-3`;",
+      "token": "text-left",
+      "evidence": "const baseClasses = `w-full text-left ${primitiveCardShellInsetDensityClassNames.default} transition-colors flex items-start gap-3`;",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
     },
@@ -2819,16 +2789,6 @@
       "evidence": "<p className={`${primitiveVisualTypographyClassNames.mutedMeta} mt-1`}>{timeLabel}</p>",
       "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
       "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "features/notifications/components/notification-item.tsx",
-      "line": 69,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "mt-1",
-      "evidence": "<StatusIndicator tone=\"brand\" size=\"sm\" className=\"mt-1\" aria-hidden=\"true\" />",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
     },
     {
       "filePath": "features/notifications/components/notification-item.tsx",
@@ -2902,7 +2862,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 78,
+      "line": 79,
       "severity": "low",
       "bucket": "spacing",
       "token": "space-y-4",
@@ -2912,7 +2872,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 84,
+      "line": 85,
       "severity": "medium",
       "bucket": "color",
       "token": "text-base font-semibold",
@@ -2922,7 +2882,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 85,
+      "line": 86,
       "severity": "medium",
       "bucket": "layout",
       "token": "flex-wrap",
@@ -2932,7 +2892,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 90,
+      "line": 91,
       "severity": "medium",
       "bucket": "card",
       "token": "space-y-3",
@@ -2942,7 +2902,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 91,
+      "line": 92,
       "severity": "medium",
       "bucket": "color",
       "token": "text-sm",
@@ -2952,7 +2912,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 93,
+      "line": 94,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -2962,7 +2922,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 102,
+      "line": 103,
       "severity": "medium",
       "bucket": "dialog-sheet",
       "token": "sm:max-w-3xl",
@@ -2972,17 +2932,17 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 107,
+      "line": 108,
       "severity": "high",
       "bucket": "surface",
-      "token": "rounded-md sm:rounded-lg border shadow-none p-3 sm:p-4",
-      "evidence": "<div className=\"rounded-md sm:rounded-lg border bg-muted/30 shadow-none p-3 sm:p-4\">",
+      "token": "shadow=",
+      "evidence": "<Surface variant=\"muted\" density=\"compact\" shadow=\"none\">",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 108,
+      "line": 109,
       "severity": "low",
       "bucket": "spacing",
       "token": "space-y-1",
@@ -2992,7 +2952,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 110,
+      "line": 111,
       "severity": "medium",
       "bucket": "table",
       "token": "border-b text-sm last:border-b-0",
@@ -3002,7 +2962,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 111,
+      "line": 112,
       "severity": "medium",
       "bucket": "table",
       "token": "pl-4 font-medium",
@@ -3012,7 +2972,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 112,
+      "line": 113,
       "severity": "medium",
       "bucket": "table",
       "token": "text-xs",
@@ -3022,7 +2982,7 @@
     },
     {
       "filePath": "features/patterns/screens/PatternsScreen.tsx",
-      "line": 118,
+      "line": 119,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -3137,16 +3097,6 @@
       "bucket": "table",
       "token": "hover:bg-transparent",
       "evidence": "<TableRow className=\"hover:bg-transparent\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 44,
-      "severity": "high",
-      "bucket": "table",
-      "token": "w-1/3 px-6 py-4 text-left font-semibold tracking-wide",
-      "evidence": "<TableHead className={`${primitiveVisualTypographyClassNames.mutedMeta} w-1/3 px-6 py-4 text-left font-semibold tracking-wide`}>",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
     },
@@ -3293,12 +3243,12 @@
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
       "line": 110,
-      "severity": "high",
-      "bucket": "color",
-      "token": "rounded-xl px-6 text-sm font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md",
-      "evidence": "className=\"rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md\"",
-      "reason": "Runtime code contains local color classes. Prefer semantic tone/variant props on shared components.",
-      "recommendedContract": "shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract"
+      "severity": "medium",
+      "bucket": "card",
+      "token": "px-6 text-sm font-semibold data-[state=active]:shadow-md",
+      "evidence": "className=\"px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md\"",
+      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
+      "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
@@ -3313,12 +3263,12 @@
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
       "line": 116,
-      "severity": "high",
-      "bucket": "color",
-      "token": "rounded-xl px-6 text-sm font-semibold data-[state=active]:bg-white data-[state=active]:shadow-md",
-      "evidence": "className=\"rounded-xl px-6 text-sm font-semibold transition-all data-[state=active]:bg-white data-[state=active]:shadow-md\"",
-      "reason": "Runtime code contains local color classes. Prefer semantic tone/variant props on shared components.",
-      "recommendedContract": "shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract"
+      "severity": "medium",
+      "bucket": "card",
+      "token": "px-6 text-sm font-semibold data-[state=active]:shadow-md",
+      "evidence": "className=\"px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md\"",
+      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
+      "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
@@ -3602,17 +3552,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 25,
-      "severity": "high",
-      "bucket": "table",
-      "token": "h-8 w-24 rounded px-2",
-      "evidence": "const calculatedValueClassName = `h-8 w-24 rounded ${primitiveSurfaceBorderClassNames.hairline} bg-muted/30 px-2 flex items-center`;",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 58,
+      "line": 56,
       "severity": "medium",
       "bucket": "table",
       "token": "min-w-36",
@@ -3622,7 +3562,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 68,
+      "line": 66,
       "severity": "medium",
       "bucket": "table",
       "token": "w-24",
@@ -3632,7 +3572,17 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 90,
+      "line": 73,
+      "severity": "medium",
+      "bucket": "table",
+      "token": "h-8 w-24 px-2",
+      "evidence": "return <div className={`h-8 w-24 ${primitiveSurfaceBorderClassNames.hairline} px-2 flex items-center`}>{value}</div>;",
+      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
+      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "line": 88,
       "severity": "medium",
       "bucket": "table",
       "token": "rounded-md shadow-none",
@@ -3642,7 +3592,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 94,
+      "line": 92,
       "severity": "medium",
       "bucket": "table",
       "token": "whitespace-nowrap py-2",
@@ -3652,7 +3602,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 101,
+      "line": 99,
       "severity": "medium",
       "bucket": "table-cell",
       "token": "min-w-44",
@@ -3662,7 +3612,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 112,
+      "line": 110,
       "severity": "medium",
       "bucket": "table-cell",
       "token": "w-",
@@ -3672,7 +3622,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 122,
+      "line": 120,
       "severity": "medium",
       "bucket": "table-cell",
       "token": "p-",
@@ -3682,7 +3632,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 133,
+      "line": 131,
       "severity": "medium",
       "bucket": "table",
       "token": "h-4 w-4",
@@ -3695,8 +3645,8 @@
       "line": 18,
       "severity": "high",
       "bucket": "table-cell",
-      "token": "flex-row flex-wrap mt-2 pt-2 border-t border-border/50 font-bold py-1",
-      "evidence": "<div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-bold' : 'py-1 text-muted-foreground'}`}>",
+      "token": "flex-row flex-wrap mt-2 pt-2 border-t border-border/50 font-semibold",
+      "evidence": "<div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-semibold' : 'text-muted-foreground'}`}>",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers"
     },
@@ -3729,46 +3679,6 @@
       "evidence": "<div className={`${primitiveVisualTypographyClassNames.estimateSectionLabel} text-muted-foreground mb-2`}>Итого:</div>",
       "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
       "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
-      "line": 38,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "h-auto p-0",
-      "evidence": "<Button type=\"button\" variant=\"ghost\" size=\"sm\" className=\"h-auto p-0\">",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
-      "line": 42,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "min-w-20 md:min-w-24",
-      "evidence": "className={cn('min-w-20 cursor-pointer md:min-w-24', className)}",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
-      "line": 48,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "min-w-36 p-1",
-      "evidence": "<DropdownMenuContent align=\"end\" className=\"min-w-36 p-1\">",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
-      "line": 53,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "mb-0.5 h-8 rounded-md",
-      "evidence": "className=\"mb-0.5 h-8 cursor-pointer rounded-md\"",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
     },
     {
       "filePath": "features/projects/estimates/components/registry/EstimatesListTable.tsx",
@@ -3879,16 +3789,6 @@
       "evidence": "variant=\"outline\"",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
-      "line": 61,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "sm:max-w-xl p-0 flex-col",
-      "evidence": "<SheetContent side=\"right\" className={cn(\"w-full sm:max-w-xl\", \"p-0 flex flex-col\")}>",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
     },
     {
       "filePath": "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
@@ -4152,7 +4052,7 @@
     },
     {
       "filePath": "features/projects/estimates/components/table/EstimateTableSummary.tsx",
-      "line": 13,
+      "line": 12,
       "severity": "medium",
       "bucket": "table",
       "token": "flex-wrap border-t border-border/60 px-1 pt-1",
@@ -4216,7 +4116,7 @@
       "severity": "medium",
       "bucket": "dialog-sheet",
       "token": "sm:inline",
-      "evidence": "<ToolbarButton variant=\"destructive\" aria-label=\"Удалить смету\" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 className=\"size-3.5\" />} labelClassName=\"hidden sm:inline\">",
+      "evidence": "<ToolbarButton variant=\"destructive\" aria-label=\"Удалить смету\" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 />} labelClassName=\"hidden sm:inline\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
     },
@@ -4942,7 +4842,7 @@
     },
     {
       "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 54,
+      "line": 53,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -4952,7 +4852,7 @@
     },
     {
       "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 57,
+      "line": 56,
       "severity": "medium",
       "bucket": "control",
       "token": "opacity-60",
@@ -4962,7 +4862,7 @@
     },
     {
       "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 61,
+      "line": 60,
       "severity": "medium",
       "bucket": "control",
       "token": "opacity-50",
@@ -4972,7 +4872,7 @@
     },
     {
       "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 84,
+      "line": 83,
       "severity": "medium",
       "bucket": "control",
       "token": "mr-2",
@@ -4982,7 +4882,7 @@
     },
     {
       "filePath": "features/projects/list/components/projects-sort-select.tsx",
-      "line": 85,
+      "line": 84,
       "severity": "medium",
       "bucket": "control",
       "token": "opacity-100 opacity-0",
@@ -5452,17 +5352,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 23,
-      "severity": "low",
-      "bucket": "state",
-      "token": "text-success",
-      "evidence": "return type === 'error' ? 'text-destructive' : 'text-success';",
-      "reason": "Runtime code appears to own empty/loading/error state visuals. Use shared state contracts.",
-      "recommendedContract": "shared/ui/states/*"
-    },
-    {
-      "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 39,
+      "line": 37,
       "severity": "medium",
       "bucket": "card",
       "token": "space-y-1",
@@ -5472,7 +5362,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 45,
+      "line": 43,
       "severity": "medium",
       "bucket": "table",
       "token": "flex-col sm:flex-row",
@@ -5482,7 +5372,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 46,
+      "line": 44,
       "severity": "medium",
       "bucket": "card",
       "token": "space-y-1.5",
@@ -5492,7 +5382,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 57,
+      "line": 55,
       "severity": "medium",
       "bucket": "card",
       "token": "space-y-1.5",
@@ -5502,7 +5392,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 61,
+      "line": 59,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -5512,7 +5402,7 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 63,
+      "line": 61,
       "severity": "medium",
       "bucket": "card",
       "token": "opacity-70",
@@ -5522,13 +5412,13 @@
     },
     {
       "filePath": "features/team/components/InviteTeamMemberCard.tsx",
-      "line": 81,
-      "severity": "high",
-      "bucket": "badge-status",
-      "token": "mt-3 text-sm",
-      "evidence": "className={`mt-3 text-sm ${getStatusMessageClassName(message.type)}`}",
-      "reason": "Runtime code appears to own badge/status color, shape, or spacing. Use semantic shared badge/status contracts.",
-      "recommendedContract": "shared/ui/badge.tsx or shared/ui/status-badge.tsx"
+      "line": 79,
+      "severity": "medium",
+      "bucket": "state",
+      "token": "mt-3 text-sm text-success",
+      "evidence": "className={cn('mt-3 text-sm', message.type === 'error' && 'text-destructive', message.type !== 'error' && 'text-success')}",
+      "reason": "Runtime code appears to own empty/loading/error state visuals. Use shared state contracts.",
+      "recommendedContract": "shared/ui/states/*"
     },
     {
       "filePath": "features/team/components/TeamHeaderCard.tsx",

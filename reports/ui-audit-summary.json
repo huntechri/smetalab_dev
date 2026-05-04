@@ -1,0 +1,95 @@
+{
+  "generatedAt": "2026-05-04T21:21:39.202Z",
+  "mode": "ui-audit-summary",
+  "strict": false,
+  "status": "review",
+  "blockingFindings": 0,
+  "totalFindings": 613,
+  "checks": [
+    {
+      "id": "imports",
+      "title": "UI imports",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 0,
+      "actionable": false,
+      "description": "Canonical UI import boundary errors.",
+      "summary": "No JSON report configured."
+    },
+    {
+      "id": "buttons",
+      "title": "Button migration",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 0,
+      "actionable": false,
+      "description": "Button migration errors.",
+      "summary": "No JSON report configured."
+    },
+    {
+      "id": "inputs",
+      "title": "Input migration",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 0,
+      "actionable": false,
+      "description": "Input migration errors.",
+      "summary": "No JSON report configured."
+    },
+    {
+      "id": "visual-ownership",
+      "title": "Visual ownership",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 975,
+      "actionable": false,
+      "reportJson": "reports/ui-visual-audit.json",
+      "reportMd": "reports/ui-visual-audit.md",
+      "description": "Full visual surface. Not shown in fix summary unless it blocks.",
+      "summary": "No blocking visual ownership errors."
+    },
+    {
+      "id": "coverage",
+      "title": "UI coverage radar",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 94,
+      "actionable": false,
+      "reportJson": "reports/ui-coverage-audit.json",
+      "reportMd": "reports/ui-coverage-audit.md",
+      "description": "Report-only coverage radar. Not shown in fix summary unless it blocks.",
+      "summary": "Coverage radar is report-only."
+    },
+    {
+      "id": "inventory",
+      "title": "UI inventory",
+      "status": "pass",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 0,
+      "actionable": false,
+      "reportJson": "reports/ui-inventory.json",
+      "reportMd": "reports/ui-inventory.md",
+      "description": "Report-only inventory diagnostics. Not shown in fix summary unless it blocks.",
+      "summary": "Inventory diagnostics are report-only."
+    },
+    {
+      "id": "local-classes",
+      "title": "Local classes",
+      "status": "review",
+      "exitCode": 0,
+      "blockingFindings": 0,
+      "totalFindings": 613,
+      "actionable": true,
+      "reportJson": "reports/ui-local-classes.json",
+      "reportMd": "reports/ui-local-classes.md",
+      "description": "Local visual classes outside shared/ui that should be migrated.",
+      "summary": "Migrate local visual classes: high 41, medium 404, low 168."
+    }
+  ]
+}

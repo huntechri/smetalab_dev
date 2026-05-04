@@ -34,7 +34,7 @@ function formatRelativeTime(dateString: string) {
 
 export function NotificationItem({ notification, onMarkAsRead }: NotificationItemProps) {
   const timeLabel = formatRelativeTime(notification.createdAt);
-  const baseClasses = `w-full text-left ${primitiveCardShellInsetDensityClassNames.default} rounded-lg transition-colors flex items-start gap-3`;
+  const baseClasses = `w-full text-left ${primitiveCardShellInsetDensityClassNames.default} transition-colors flex items-start gap-3`;
 
   if (notification.read) {
     return (
@@ -66,7 +66,7 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       aria-label={`Пометить как прочитанное: ${notification.title}`}
       title="Нажмите, чтобы отметить как прочитанное"
     >
-      <StatusIndicator tone="brand" size="sm" className="mt-1" aria-hidden="true" />
+      <StatusIndicator tone="brand" size="sm" aria-hidden="true" />
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className={primitiveVisualTypographyClassNames.sectionTitle}>{notification.title}</p>
