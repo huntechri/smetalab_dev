@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Check, ChevronDown, ChevronUp, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/shared/ui/button';
+import { CatalogListItem } from '@/shared/ui/catalog-list-item';
 import { CatalogToken } from '@/shared/ui/catalog-token';
 import { SearchControl } from '@/shared/ui/search-control';
 import { ScrollArea } from '@/shared/ui/scroll-area';
@@ -274,7 +275,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
 
                                 return (
                                     <div className="px-2 sm:px-4 py-1">
-                                        <div className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-xl hover:bg-muted/40 transition-colors border border-border/30 sm:border-transparent hover:shadow-sm hover:border-border/60 w-full overflow-hidden bg-background sm:bg-transparent">
+                                        <CatalogListItem>
                                             <div className="flex-1 min-w-0 flex items-center gap-3 sm:gap-4">
                                                 <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-muted">
                                                     {material.imageUrl ? (
@@ -324,7 +325,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                     {isAdding || isAlreadyAdded ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4 sm:h-5 sm:w-5" />}
                                                 </Button>
                                             </div>
-                                        </div>
+                                        </CatalogListItem>
                                     </div>
                                 );
                             }}
