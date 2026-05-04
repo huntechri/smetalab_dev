@@ -1,64 +1,22 @@
 # Updated Input Fields Audit
 
-Total fields found: 128
+Total fields found: 113
 
 ## Breakdown by kind
 - component-command-input: 8
-- component-input: 92
-- component-select: 7
-- component-select-trigger: 7
+- component-input: 89
+- component-select: 4
+- component-select-trigger: 4
 - component-textarea: 3
-- html-hidden-input: 6
-- html-input: 4
+- html-hidden-input: 1
+- html-input: 3
 - html-textarea: 1
 
 ## Details
 
-File: app/(admin)/pricing/page.tsx
-Kind: html-hidden-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
-File: features/_shared/guide-catalog/components/CatalogScreenShell.tsx
-Kind: html-input
-Type: file
-Classes: hidden
-Inline style: no
--------------------
-
-File: features/admin/components/impersonate-button.tsx
-Kind: html-hidden-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
 File: features/auth/components/ForgotPasswordForm.tsx
 Kind: component-input
 Type: email
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: html-hidden-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: html-hidden-input
-Type: hidden
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/LoginForm.tsx
-Kind: html-hidden-input
-Type: hidden
 Classes: 
 Inline style: no
 -------------------
@@ -80,13 +38,6 @@ Inline style: no
 File: features/auth/components/LoginForm.tsx
 Kind: component-input
 Type: text
-Classes: 
-Inline style: no
--------------------
-
-File: features/auth/components/ResetPasswordForm.tsx
-Kind: html-hidden-input
-Type: hidden
 Classes: 
 Inline style: no
 -------------------
@@ -228,13 +179,6 @@ File: features/counterparties/components/counterparty-sheet-sections.tsx
 Kind: component-input
 Type: default
 Classes: 
-Inline style: no
--------------------
-
-File: features/global-purchases/components/GlobalPurchasesImportExportActions.tsx
-Kind: html-input
-Type: file
-Classes: hidden
 Inline style: no
 -------------------
 
@@ -427,62 +371,6 @@ Classes:
 Inline style: no
 -------------------
 
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select
-Type: default
-Classes: 
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select-trigger
-Type: default
-Classes: w-40 cursor-pointer
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select
-Type: default
-Classes: 
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select-trigger
-Type: default
-Classes: flex w-fit sm:hidden cursor-pointer
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select
-Type: default
-Classes: 
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-select-trigger
-Type: default
-Classes: w-16 tabular-nums
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-input
-Type: default
-Classes: 
-Inline style: no
--------------------
-
-File: features/projects/dashboard/components/DashboardDataTable.tsx
-Kind: component-input
-Type: default
-Classes: 
-Inline style: no
--------------------
-
 File: features/projects/dashboard/components/ProjectReceiptsSection.tsx
 Kind: component-input
 Type: date
@@ -606,20 +494,6 @@ File: features/projects/estimates/components/table/cards/EstimateInlineTextCell.
 Kind: component-input
 Type: default
 Classes: 
-Inline style: no
--------------------
-
-File: features/projects/estimates/components/tabs/EstimateExecution.tsx
-Kind: component-input
-Type: default
-Classes: rounded-md border-border bg-background pl-8
-Inline style: no
--------------------
-
-File: features/projects/estimates/components/tabs/EstimateProcurement.tsx
-Kind: component-input
-Type: default
-Classes: rounded-md border-border bg-background pl-8
 Inline style: no
 -------------------
 
@@ -857,6 +731,27 @@ Inline style: no
 File: shared/ui/cells/table-cell-helpers.tsx
 Kind: component-input
 Type: number
+Classes: 
+Inline style: no
+-------------------
+
+File: shared/ui/estimate-tab.tsx
+Kind: component-input
+Type: default
+Classes: rounded-md border-border bg-background pl-8
+Inline style: no
+-------------------
+
+File: shared/ui/file-input.tsx
+Kind: html-input
+Type: file
+Classes: 
+Inline style: no
+-------------------
+
+File: shared/ui/hidden-input.tsx
+Kind: html-hidden-input
+Type: hidden
 Classes: 
 Inline style: no
 -------------------

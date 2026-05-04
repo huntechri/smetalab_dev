@@ -3,9 +3,10 @@ import { cva, type VariantProps } from "class-variance-authority"
 
 import {
   primitiveInputBaseClassName,
+  primitiveInputColorPickerClassName,
   primitiveInputSizeClassNames,
   primitiveInputVariantClassNames,
-} from "@/shared/ui/primitive-density"
+} from "@/shared/ui/primitive-controls"
 import { cn } from "@/lib/utils"
 
 const inputVariants = cva(primitiveInputBaseClassName, {
@@ -40,7 +41,7 @@ function Input({ type, variant, size, textAlign, numeric, className, ...props }:
       className={cn(
         inputVariants({ variant, size, textAlign }),
         (numeric || type === "number") && "tabular-nums",
-        usesColorPickerStyles && "cursor-pointer p-1",
+        usesColorPickerStyles && primitiveInputColorPickerClassName,
         className
       )}
       {...props}

@@ -4,6 +4,7 @@ import * as React from "react"
 import { Check, ChevronsUpDown, Plus } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { Button } from '@/shared/ui/button'
 import {
     Command,
@@ -62,6 +63,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
             <PopoverTrigger asChild>
                 <Button
                     variant="outline"
+                    size="default"
                     role="combobox"
                     aria-expanded={open}
                     className={className}
@@ -70,18 +72,19 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                     <ChevronsUpDown className="ml-1 h-3 w-3 shrink-0 opacity-50" />
                 </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[min(20rem,calc(100vw-2rem))] p-0" align="start">
+            <PopoverContent size="combobox" padding="none" align="start">
                 <Command>
                     <CommandInput
                         placeholder="Поиск или ввод..."
                         value={inputValue}
                         onValueChange={setInputValue}
                     />
-                    <CommandList className="max-h-[200px]">
+                    <CommandList className="max-h-48">
                         <CommandEmpty>
                             <div className="p-1 px-2">
                                 <Button
                                     variant="ghost"
+                                    size="default"
                                     onClick={handleCreate}
                                 >
                                     <Plus className="mr-1 h-3 w-3" />
@@ -95,7 +98,7 @@ export function UnitSelect({ value, onChange, placeholder = "Ед. изм...", c
                                     key={unit}
                                     value={unit}
                                     onSelect={handleSelect}
-                                    className="text-[12px] py-1"
+                                    className={`${primitiveVisualTypographyClassNames.compactBody} py-1`}
                                 >
                                     <Check
                                         className={cn(

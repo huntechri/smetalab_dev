@@ -1,15 +1,27 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import {
+  primitiveSurfaceBorderClassNames,
+  primitiveSurfaceDensityClassNames,
+  primitiveSurfaceToneClassNames,
+  type PrimitiveSurfaceBorder,
+  type PrimitiveSurfaceDensity,
+  type PrimitiveSurfaceTone,
+} from '@/shared/ui/primitive-density';
 
 export type SurfaceVariant = 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost';
-export type SurfaceDensity = 'none' | 'compact' | 'default' | 'comfortable';
+export type SurfaceDensity = PrimitiveSurfaceDensity;
+export type SurfaceTone = PrimitiveSurfaceTone;
+export type SurfaceBorder = PrimitiveSurfaceBorder;
 export type SurfaceRadius = 'md' | 'lg' | 'xl';
 export type SurfaceShadow = 'none' | 'sm' | 'md';
 
 export interface SurfaceClassNameOptions {
   variant?: SurfaceVariant;
   density?: SurfaceDensity;
+  tone?: SurfaceTone;
+  border?: SurfaceBorder;
   radius?: SurfaceRadius;
   shadow?: SurfaceShadow;
   interactive?: boolean;
@@ -23,13 +35,6 @@ const surfaceVariantClassName: Record<SurfaceVariant, string> = {
   muted: 'border border-border bg-muted/30 text-card-foreground',
   subtle: 'border border-border/60 bg-muted/20 text-card-foreground',
   ghost: 'bg-transparent text-card-foreground',
-};
-
-const surfaceDensityClassName: Record<SurfaceDensity, string> = {
-  none: '',
-  compact: 'p-3 sm:p-4',
-  default: 'p-4 sm:p-5',
-  comfortable: 'p-4 sm:p-6',
 };
 
 const surfaceRadiusClassName: Record<SurfaceRadius, string> = {
@@ -48,6 +53,8 @@ export function getSurfaceClassName(
   {
     variant = 'card',
     density = 'default',
+    tone = 'default',
+    border = 'thick',
     radius = 'xl',
     shadow = 'sm',
     interactive = false,
@@ -57,7 +64,9 @@ export function getSurfaceClassName(
 ) {
   return cn(
     surfaceVariantClassName[variant],
-    surfaceDensityClassName[density],
+    primitiveSurfaceDensityClassNames[density],
+    primitiveSurfaceToneClassNames[tone],
+    primitiveSurfaceBorderClassNames[border],
     surfaceRadiusClassName[radius],
     surfaceShadowClassName[shadow],
     overflow === 'hidden' && 'overflow-hidden',
@@ -72,6 +81,8 @@ export interface SurfaceProps extends React.ComponentPropsWithoutRef<'div'>, Sur
 export function Surface({
   variant = 'card',
   density = 'default',
+  tone = 'default',
+  border = 'thick',
   radius = 'xl',
   shadow = 'sm',
   interactive = false,
@@ -82,7 +93,7 @@ export function Surface({
   return (
     <div
       data-slot="surface"
-      className={getSurfaceClassName({ variant, density, radius, shadow, interactive, overflow }, className)}
+      className={getSurfaceClassName({ variant, density, tone, border, radius, shadow, interactive, overflow }, className)}
       {...props}
     />
   );

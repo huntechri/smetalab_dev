@@ -10,6 +10,7 @@ import { formatPrice } from '@/lib/shared/formatters';
 import { catalogRepository } from '../repository';
 import { CatalogWork } from '../types/dto';
 import { WorkCatalogFilters } from './WorkCatalogFilters.client';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface Props {
     onAddWork: (work: CatalogWork) => void;
@@ -108,8 +109,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                     <Virtuoso
                         ref={virtuosoRef}
                         data={works}
-                        style={{ height: '100%', width: '100%' }}
-                        className="scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
+                        className="h-full w-full scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent"
                         increaseViewportBy={300}
                         itemContent={(index, work) => (
                             <div className="px-2 py-0.5">
@@ -126,20 +126,22 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                                     {work.code}
                                                 </CatalogToken>
                                                 {work.category && (
-                                                    <CatalogToken tone="category" density="compact" className="max-w-[80px] sm:max-w-[120px]">
+                                                    <CatalogToken tone="category" density="compact" className="max-w-20 sm:max-w-28">
                                                         {work.category}
                                                     </CatalogToken>
                                                 )}
                                             </div>
-                                            <h4 className="text-[13px] font-medium leading-snug text-foreground break-words line-clamp-2 md:line-clamp-none">
+                                            <h4 className={`${primitiveVisualTypographyClassNames.catalogItemTitle} text-foreground line-clamp-2 md:line-clamp-none`}>
                                                 {work.name}
                                             </h4>
 
                                             <div className="flex items-center gap-1.5 mt-0.5">
-                                                <span className="text-[12px] font-medium text-foreground">
+                                                <span className={`${primitiveVisualTypographyClassNames.catalogItemPrice} text-foreground`}>
                                                     {formatPrice(work.price)} ₽
                                                 </span>
-                                                <span className="text-[10px] text-muted-foreground leading-none">/ {work.unit}</span>
+                                                <span className={primitiveVisualTypographyClassNames.catalogItemMeta}>
+                                                    / {work.unit}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>

@@ -1,4 +1,5 @@
 import { Button } from '@/shared/ui/button';
+import { CardShell } from '@/shared/ui/card-shell';
 import { Input } from '@/shared/ui/input';
 import {
     Table,
@@ -11,6 +12,7 @@ import {
 import { Trash2 } from 'lucide-react';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2 } from '../../lib/room-params-calculations';
+import { primitiveCompactTableCellClassName } from '@/shared/ui/primitive-table';
 
 const headers = [
     '№', 'Помещение (Наименование)', 'Периметр (м)', 'Высота (м)', 'S пола (м²)', 'S стен (м²)', 'Откосы (м)',
@@ -31,6 +33,7 @@ function RoomParamNumberInput({ value, onChange, placeholder }: RoomParamNumberI
         <Input
             type="number"
             inputMode="decimal"
+            size="sm"
             value={value}
             onChange={(event) => onChange(event.target.value)}
             placeholder={placeholder}
@@ -50,7 +53,7 @@ function OpeningInput({
     onWidth: (value: string) => void;
 }) {
     return (
-        <div className="flex items-center gap-1 min-w-[150px]">
+        <div className="flex items-center gap-1 min-w-36">
             <RoomParamNumberInput value={height} onChange={onHeight} placeholder="В" />
             <span className="text-muted-foreground">×</span>
             <RoomParamNumberInput value={width} onChange={onWidth} placeholder="Ш" />
@@ -82,8 +85,8 @@ export function RoomsParamsTable({
     onRemove: (rowId: string) => void;
 }) {
     return (
-        <div className="w-full overflow-x-auto rounded-md border">
-            <Table className="text-[9px] sm:text-[11px]">
+        <CardShell variant="card" className="rounded-md shadow-none overflow-visible gap-0">
+            <Table className={primitiveCompactTableCellClassName}>
                 <TableHeader>
                     <TableRow>
                         {headers.map((header) => <TableHead key={header} className="whitespace-nowrap py-2">{header}</TableHead>)}
@@ -93,7 +96,7 @@ export function RoomsParamsTable({
                     {rows.map((row, rowIndex) => (
                         <TableRow key={row.id}>
                             <TableCell>{rowIndex + 1}</TableCell>
-                            <TableCell><div className="min-w-[180px]"><Input value={row.name} onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
+                            <TableCell><div className="min-w-44"><Input value={row.name} size="sm" onChange={(event) => onChangeCell(row.id, 'name', event.target.value)} /></div></TableCell>
                             <TableCell><NumericCell value={row.perimeter} onChange={(value) => onChangeCell(row.id, 'perimeter', value)} /></TableCell>
                             <TableCell><NumericCell value={row.height} onChange={(value) => onChangeCell(row.id, 'height', value)} /></TableCell>
                             <TableCell><NumericCell value={row.floorArea} onChange={(value) => onChangeCell(row.id, 'floorArea', value)} /></TableCell>
@@ -132,6 +135,6 @@ export function RoomsParamsTable({
                     ))}
                 </TableBody>
             </Table>
-        </div>
+        </CardShell>
     );
 }

@@ -1,3 +1,6 @@
+> **⚠️ УСТАРЕЛ — см. [`docs/DESIGN_SYSTEM.md`](../../DESIGN_SYSTEM.md)**
+> Этот файл больше не поддерживается. Все актуальные стандарты — в `docs/DESIGN_SYSTEM.md`.
+
 # Design System Master File
 
 > **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.

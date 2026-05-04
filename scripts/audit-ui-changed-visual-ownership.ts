@@ -361,6 +361,22 @@ function addViolation(
   })
 }
 
+const APPROVED_CONTRACT_COMPONENTS: Partial<Record<GuardrailBucket, RegExp>> = {
+  "card-surface": /\b(?:Surface|CardShell|PageShell|Section)\b/u,
+  "badge-status": /\b(?:Badge|StatusBadge|StatusPill)\b/u,
+  "toolbar-filter": /\b(?:Toolbar|FilterBar|SearchControl)\b/u,
+  "table-cell-density": /\b(?:DataTable|TableDensity|CompactTable|DenseTable)\b/u,
+  "overlay-layout": /\b(?:DialogContent|SheetContent|PopoverContent)\b/u,
+  "form-layout": /\b(?:FormLayout|FormSection|FormField)\b/u,
+  "state-surface": /\b(?:LoadingState|EmptyState|ErrorState|ForbiddenState|NoResultsState)\b/u,
+  "action-surface": /\b(?:ActionMenu|ActionIcon|ConfirmDialog)\b/u,
+}
+
+function usesApprovedContract(text: string, bucket: GuardrailBucket): boolean {
+  const pattern = APPROVED_CONTRACT_COMPONENTS[bucket]
+  return pattern ? pattern.test(text) : false
+}
+
 function scanAddedLine(addedLine: AddedLine, findings: GuardrailViolation[], seen: Set<string>): void {
   const { filePath, line, text } = addedLine
   if (!shouldScanForBlockingFindings(filePath)) return
@@ -380,7 +396,8 @@ function scanAddedLine(addedLine: AddedLine, findings: GuardrailViolation[], see
   if (
     /\b(?:Card|card|surface|panel|metric|kpi|summary)\b/iu.test(context) &&
     /\b(?:rounded-xl|rounded-2xl|rounded-3xl|bg-card|shadow|border)\b/u.test(text) &&
-    (hasPadding(text) || /\bshadow(?:-sm|-md|-lg|-xl|-2xl)?\b/u.test(text))
+    (hasPadding(text) || /\bshadow(?:-sm|-md|-lg|-xl|-2xl)?\b/u.test(text)) &&
+    !usesApprovedContract(text, "card-surface")
   ) {
     addViolation(findings, seen, filePath, line, "card-surface", token, "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.")
   }
@@ -523,6 +540,8 @@ function main(): void {
 
   for (const addedLine of addedLines) scanAddedLine(addedLine, findings, seen)
 
+  const blockingFindings = findings.filter(f => f.ownership !== "accepted-shared-contract")
+
   writeReports(findings, changed, scannedFiles, addedLines)
 
   if (changed.skippedReason) {
@@ -531,8 +550,8 @@ function main(): void {
     return
   }
 
-  if (findings.length > 0) {
-    console.error(`UI changed-file visual ownership guardrail failed with ${findings.length} violation(s).`)
+  if (blockingFindings.length > 0) {
+    console.error(`UI changed-file visual ownership guardrail failed with ${blockingFindings.length} blocking violation(s) (${findings.length - blockingFindings.length} accepted-shared-contract excluded).`)
     console.error(`Report: ${path.relative(ROOT, REPORT_MD_PATH)}`)
     process.exitCode = 1
     return

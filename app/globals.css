@@ -196,4 +196,25 @@
     -moz-appearance: textfield;
     appearance: none;
   }
+
+  /* Custom tracking utilities for marketing/auth surfaces */
+  .tracking-ultra {
+    letter-spacing: 0.4em;
+  }
+
+  .tracking-super {
+    letter-spacing: 0.35em;
+  }
+
+  .tracking-mega {
+    letter-spacing: 0.3em;
+  }
+
+  :root {
+    --layout-content-height: calc(100dvh - 140px);
+  }
+
+  .h-content-fill {
+    height: var(--layout-content-height);
+  }
 }

@@ -12,11 +12,11 @@ describe('LandingPage', () => {
 
         const signInButtons = screen.getAllByRole('button', { name: 'Войти' });
         expect(signInButtons[0]).toHaveAttribute('data-variant', 'ghost');
-        expect(signInButtons[0]).not.toHaveAttribute('data-size');
+        expect(signInButtons[0]).toHaveAttribute('data-size', 'default');
 
         const mobileSignInButton = signInButtons[1];
         expect(mobileSignInButton).toHaveAttribute('data-variant', 'outline');
-        expect(mobileSignInButton).not.toHaveAttribute('data-size');
+        expect(mobileSignInButton).toHaveAttribute('data-size', 'default');
 
         const scenarioButton = screen.getByRole('button', { name: 'Сценарий внедрения' });
         expect(scenarioButton).toHaveAttribute('data-variant', 'outline');

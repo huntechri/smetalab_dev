@@ -26,6 +26,12 @@ interface Finding {
   ownership: Ownership
 }
 
+interface OwnerEntry {
+  category: Ownership
+  phase: string
+  domain: string
+}
+
 interface AuditReport {
   generatedAt: string
   scanRoots: string[]
@@ -36,6 +42,8 @@ interface AuditReport {
   categoryCounts: Record<string, number>
   surfaceCounts: Record<Surface, number>
   ownershipCounts: Record<Ownership, number>
+  domainCounts: Record<string, number>
+  domainHighCriticalCounts: Record<string, number>
   staleReferences: Array<{ filePath: string; classification: "stale-reference"; reason: string }>
   acceptedSharedContractOwners: string[]
   postRefactorValidation: TargetValidation[]
@@ -103,44 +111,120 @@ const EXCLUDED_SEGMENTS = new Set([
 
 const TEST_FILE_PATTERN = /(?:^|\/|\.)(test|spec)\.(tsx|ts|jsx|js|mjs|cjs)$/u
 
-const ACCEPTED_PRIMITIVE_CONTRACT_OWNERS = new Set([
-  "shared/ui/primitive-density.ts",
-  "shared/ui/button.tsx",
-  "shared/ui/badge.tsx",
-  "shared/ui/input.tsx",
-  "shared/ui/textarea.tsx",
-  "shared/ui/input-group.tsx",
-  "shared/ui/select.tsx",
-  "shared/ui/tabs.tsx",
-  "shared/ui/dialog.tsx",
-  "shared/ui/alert-dialog.tsx",
-  "shared/ui/sheet.tsx",
-  "shared/ui/sidebar.tsx",
-  "shared/ui/data-table.tsx",
-  "shared/ui/command.tsx",
-  "shared/ui/context-menu.tsx",
-  "shared/ui/dropdown-menu.tsx",
-  "shared/ui/menubar.tsx",
-])
+const STRICT_OWNER_MAP: Record<string, OwnerEntry> = {
+  // ── Primitive contracts (#183 — shared-ui primitives) ──
+  "shared/ui/primitive-density.ts": { category: "primitive-contract", phase: "183", domain: "primitive" },
+  "shared/ui/button.tsx": { category: "primitive-contract", phase: "183", domain: "button" },
+  "shared/ui/badge.tsx": { category: "primitive-contract", phase: "9", domain: "badge-status" },
+  "shared/ui/input.tsx": { category: "primitive-contract", phase: "183", domain: "input" },
+  "shared/ui/textarea.tsx": { category: "primitive-contract", phase: "183", domain: "input" },
+  "shared/ui/input-group.tsx": { category: "primitive-contract", phase: "183", domain: "input" },
+  "shared/ui/select.tsx": { category: "primitive-contract", phase: "183", domain: "select" },
+  "shared/ui/tabs.tsx": { category: "primitive-contract", phase: "183", domain: "tabs" },
+  "shared/ui/dialog.tsx": { category: "primitive-contract", phase: "183", domain: "dialog" },
+  "shared/ui/alert-dialog.tsx": { category: "primitive-contract", phase: "183", domain: "dialog" },
+  "shared/ui/sheet.tsx": { category: "primitive-contract", phase: "183", domain: "sheet" },
+  "shared/ui/sidebar.tsx": { category: "primitive-contract", phase: "183", domain: "sidebar" },
+  "shared/ui/data-table.tsx": { category: "primitive-contract", phase: "183", domain: "data-table" },
+  "shared/ui/command.tsx": { category: "primitive-contract", phase: "183", domain: "command" },
+  "shared/ui/context-menu.tsx": { category: "primitive-contract", phase: "183", domain: "menu" },
+  "shared/ui/dropdown-menu.tsx": { category: "primitive-contract", phase: "183", domain: "menu" },
+  "shared/ui/menubar.tsx": { category: "primitive-contract", phase: "183", domain: "menu" },
 
-const ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS = new Set([
-  "shared/ui/dense-list.tsx",
-  "shared/ui/dashboard-dynamics-chart.tsx",
-  "shared/ui/workspace-tabs.tsx",
-  "shared/ui/editable-data-surface.tsx",
-  "shared/ui/kpi-card.tsx",
-  "shared/ui/dashboard-layout.tsx",
-  "shared/ui/admin-surface.tsx",
-  "shared/ui/estimate-tab.tsx",
-  "shared/ui/cells/directory-table-cells.tsx",
-  "shared/ui/cells/table-cell-helpers.tsx",
-  "shared/ui/shells/catalog-directory-visual-contracts.ts",
-])
+  // Remaining shared-ui primitives added during #183 cleanup
+  "shared/ui/action-menu.tsx": { category: "primitive-contract", phase: "183", domain: "menu" },
+  "shared/ui/alert.tsx": { category: "primitive-contract", phase: "183", domain: "alert" },
+  "shared/ui/auto-form/common/tooltip.tsx": { category: "primitive-contract", phase: "183", domain: "auto-form" },
+  "shared/ui/auto-form/fields/object.tsx": { category: "primitive-contract", phase: "183", domain: "auto-form" },
+  "shared/ui/button-group.tsx": { category: "primitive-contract", phase: "183", domain: "button" },
+  "shared/ui/calendar.tsx": { category: "primitive-contract", phase: "183", domain: "calendar" },
+  "shared/ui/carousel.tsx": { category: "primitive-contract", phase: "183", domain: "carousel" },
+  "shared/ui/catalog-token.tsx": { category: "primitive-contract", phase: "183", domain: "catalog-token" },
+  "shared/ui/checkbox.tsx": { category: "primitive-contract", phase: "183", domain: "checkbox" },
+  "shared/ui/data-table/data-table-row.tsx": { category: "primitive-contract", phase: "183", domain: "data-table" },
+  "shared/ui/data-table/data-table-skeleton.tsx": { category: "primitive-contract", phase: "183", domain: "data-table" },
+  "shared/ui/date-picker.tsx": { category: "primitive-contract", phase: "183", domain: "date-picker" },
+  "shared/ui/dense-card.tsx": { category: "primitive-contract", phase: "183", domain: "dense-card" },
+  "shared/ui/dense-list/cards.tsx": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/inline-edit.ts": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/layout.tsx": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/materials.tsx": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/metrics.tsx": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/pickers.tsx": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/table.ts": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/dense-list/toolbar.ts": { category: "primitive-contract", phase: "183", domain: "dense-list" },
+  "shared/ui/drawer.tsx": { category: "primitive-contract", phase: "183", domain: "drawer" },
+  "shared/ui/field.tsx": { category: "primitive-contract", phase: "183", domain: "field" },
+  "shared/ui/filter-bar.tsx": { category: "primitive-contract", phase: "183", domain: "toolbar" },
+  "shared/ui/form-layout.tsx": { category: "primitive-contract", phase: "183", domain: "form" },
+  "shared/ui/form.tsx": { category: "primitive-contract", phase: "183", domain: "form" },
+  "shared/ui/hover-card.tsx": { category: "primitive-contract", phase: "183", domain: "hover-card" },
+  "shared/ui/item.tsx": { category: "primitive-contract", phase: "183", domain: "item" },
+  "shared/ui/loading-indicator.tsx": { category: "primitive-contract", phase: "183", domain: "loading" },
+  "shared/ui/navigation-menu.tsx": { category: "primitive-contract", phase: "183", domain: "navigation" },
+  "shared/ui/page-shell.tsx": { category: "primitive-contract", phase: "183", domain: "page-shell" },
+  "shared/ui/pagination.tsx": { category: "primitive-contract", phase: "183", domain: "pagination" },
+  "shared/ui/popover.tsx": { category: "primitive-contract", phase: "183", domain: "popover" },
+  "shared/ui/scroll-area.tsx": { category: "primitive-contract", phase: "183", domain: "scroll-area" },
+  "shared/ui/search-control.tsx": { category: "primitive-contract", phase: "183", domain: "search" },
+  "shared/ui/search-input.tsx": { category: "primitive-contract", phase: "183", domain: "search" },
+  "shared/ui/separator.tsx": { category: "primitive-contract", phase: "183", domain: "separator" },
+  "shared/ui/states/StateShell.tsx": { category: "primitive-contract", phase: "183", domain: "state" },
+  "shared/ui/status-badge.tsx": { category: "primitive-contract", phase: "183", domain: "badge-status" },
+  "shared/ui/switch.tsx": { category: "primitive-contract", phase: "183", domain: "switch" },
+  "shared/ui/table-actions.tsx": { category: "primitive-contract", phase: "183", domain: "table" },
+  "shared/ui/table-density.tsx": { category: "primitive-contract", phase: "183", domain: "table" },
+  "shared/ui/table-empty-state.tsx": { category: "primitive-contract", phase: "183", domain: "table" },
+  "shared/ui/toggle-group.tsx": { category: "primitive-contract", phase: "183", domain: "toggle" },
+  "shared/ui/toolbar.tsx": { category: "primitive-contract", phase: "183", domain: "toolbar" },
+  "shared/ui/tooltip.tsx": { category: "primitive-contract", phase: "183", domain: "tooltip" },
 
-const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set([
-  ...ACCEPTED_PRIMITIVE_CONTRACT_OWNERS,
-  ...ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS,
-])
+  // ── Feature-family contracts (#175-#182) ──
+  "shared/ui/dense-list.tsx": { category: "feature-family-contract", phase: "175", domain: "dense-list" },
+  "shared/ui/dashboard-dynamics-chart.tsx": { category: "feature-family-contract", phase: "176", domain: "dashboard-chart" },
+  "shared/ui/workspace-tabs.tsx": { category: "feature-family-contract", phase: "177", domain: "workspace-tabs" },
+  "shared/ui/editable-data-surface.tsx": { category: "feature-family-contract", phase: "177", domain: "editable-data" },
+  "shared/ui/kpi-card.tsx": { category: "feature-family-contract", phase: "178", domain: "kpi-card" },
+  "shared/ui/dashboard-layout.tsx": { category: "feature-family-contract", phase: "178", domain: "dashboard-layout" },
+  "shared/ui/admin-surface.tsx": { category: "feature-family-contract", phase: "180", domain: "admin-surface" },
+  "shared/ui/estimate-tab.tsx": { category: "feature-family-contract", phase: "181", domain: "estimate-tab" },
+  "shared/ui/cells/directory-table-cells.tsx": { category: "feature-family-contract", phase: "182", domain: "directory-cells" },
+  "shared/ui/cells/table-cell-helpers.tsx": { category: "feature-family-contract", phase: "182", domain: "directory-cells" },
+  "shared/ui/shells/catalog-directory-visual-contracts.ts": { category: "feature-family-contract", phase: "182", domain: "catalog-directory" },
+
+  // Accepted feature-level visual contracts
+  "features/catalog/components/MaterialCatalogPicker.client.tsx": { category: "feature-family-contract", phase: "182", domain: "catalog" },
+  "features/catalog/components/WorkCatalogPicker.client.tsx": { category: "feature-family-contract", phase: "182", domain: "catalog" },
+  "features/catalog/components/MaterialCatalogDialog.client.tsx": { category: "feature-family-contract", phase: "182", domain: "catalog" },
+  "features/dashboard/screens/AppHomeScreen.tsx": { category: "feature-family-contract", phase: "178", domain: "dashboard" },
+  "features/materials/components/MaterialsEditDialog.tsx": { category: "feature-family-contract", phase: "182", domain: "materials" },
+  "features/notifications/components/notification-bell.tsx": { category: "feature-family-contract", phase: "184", domain: "notifications" },
+  "features/notifications/components/notification-item.tsx": { category: "feature-family-contract", phase: "184", domain: "notifications" },
+  "features/notifications/components/notifications-list.tsx": { category: "feature-family-contract", phase: "184", domain: "notifications" },
+  "features/permissions/components/PermissionLevelControl.tsx": { category: "feature-family-contract", phase: "184", domain: "permissions" },
+  "features/permissions/components/permissions-matrix.tsx": { category: "feature-family-contract", phase: "184", domain: "permissions" },
+  "features/projects/dashboard/components/ProjectReceiptsSection.tsx": { category: "feature-family-contract", phase: "175", domain: "project-estimate" },
+  "features/projects/estimates/components/params/RoomsParamsTable.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/params/RoomsParamsTotals.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/registry/EstimateStatusMenu.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/registry/EstimatesListTable.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/table/EstimateTableDialogs.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/table/EstimateTableSummary.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/table/columns.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/estimates/components/tabs/EstimateDocuments.tsx": { category: "feature-family-contract", phase: "177", domain: "estimate" },
+  "features/projects/list/components/project-card.tsx": { category: "feature-family-contract", phase: "184", domain: "projects" },
+  "features/projects/list/components/projects-list.tsx": { category: "feature-family-contract", phase: "184", domain: "projects" },
+  "features/settings/components/user-settings-page.tsx": { category: "feature-family-contract", phase: "184", domain: "settings" },
+  "features/team/components/TeamHeaderCard.tsx": { category: "feature-family-contract", phase: "184", domain: "team" },
+  "features/team/components/TeamMembersCard.tsx": { category: "feature-family-contract", phase: "184", domain: "team" },
+  "features/team/components/InviteTeamMemberCard.tsx": { category: "feature-family-contract", phase: "184", domain: "team" },
+  "features/works/components/UnitSelect.tsx": { category: "feature-family-contract", phase: "182", domain: "works" },
+  "features/works/components/WorksEditDialog.tsx": { category: "feature-family-contract", phase: "182", domain: "works" },
+  "features/patterns/screens/PatternsScreen.tsx": { category: "feature-family-contract", phase: "184", domain: "patterns" },
+}
+
+// Derived from STRICT_OWNER_MAP
+const ACCEPTED_SHARED_CONTRACT_OWNERS = new Set(Object.keys(STRICT_OWNER_MAP))
 
 const PHASE_TARGETS: TargetSurface[] = [
   {
@@ -287,7 +371,7 @@ const TAILWIND_PALETTE_NAMES = [
 const COLOR_PREFIXES = "bg|text|border|ring|from|via|to|fill|stroke|decoration|outline"
 const LAYOUT_PREFIXES = "w|h|min-w|max-w|min-h|max-h|gap|gap-x|gap-y|space-x|space-y|mx|my|mt|mr|mb|ml|m|top|right|bottom|left|inset|translate-x|translate-y"
 const PADDING_PREFIXES = "p|px|py|pt|pr|pb|pl"
-const BADGE_SYMBOLS = "Badge|badgeVariants|StatusBadge|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
+const BADGE_SYMBOLS = "badgeVariants|StatusPill|BadgeCell|StatusCell|statusBadge|statusPill|badgeClassName|chipClassName|pillClassName"
 const BADGE_STYLE_MARKERS = "rounded-full|rounded-2xl|rounded-xl|inline-flex|items-center|whitespace-nowrap"
 
 function parseArgs(argv: string[]): AuditOptions {
@@ -342,21 +426,35 @@ function isMarketingOrAuthSurface(relativePath: string): boolean {
   )
 }
 
+function getOwnerEntry(relativePath: string): OwnerEntry | undefined {
+  return STRICT_OWNER_MAP[relativePath]
+}
+
+function isStrictlyOwned(relativePath: string): boolean {
+  return relativePath in STRICT_OWNER_MAP
+}
+
+function getDomain(relativePath: string): string {
+  return STRICT_OWNER_MAP[relativePath]?.domain ?? "unowned"
+}
+
 function classifyOwnership(relativePath: string, surface: Surface): Ownership {
   if (relativePath === "app/globals.css" || relativePath === "app/layout.tsx" || relativePath.startsWith("styles/tokens/")) {
     return "canonical-token"
   }
-  if (ACCEPTED_PRIMITIVE_CONTRACT_OWNERS.has(relativePath)) return "primitive-contract"
-  if (ACCEPTED_FEATURE_FAMILY_CONTRACT_OWNERS.has(relativePath)) return "feature-family-contract"
+
+  // Strict owner map takes precedence
+  const entry = getOwnerEntry(relativePath)
+  if (entry) return entry.category
+
   if (relativePath.startsWith("components/ui/") || relativePath.startsWith("packages/ui/")) return "compatibility-surface"
   if (isMarketingOrAuthSurface(relativePath)) return "marketing-auth-exception"
   if (surface === "app" || surface === "feature" || surface === "entity") return "business-runtime-drift"
-  if (surface === "shared-ui") return "unknown"
   return "unknown"
 }
 
 function isAcceptedSharedContract(relativePath: string): boolean {
-  return ACCEPTED_SHARED_CONTRACT_OWNERS.has(relativePath)
+  return isStrictlyOwned(relativePath)
 }
 
 function isCanonicalTokenFile(relativePath: string): boolean {
@@ -364,7 +462,7 @@ function isCanonicalTokenFile(relativePath: string): boolean {
     relativePath === "app/globals.css" ||
     relativePath === "app/layout.tsx" ||
     relativePath.startsWith("styles/tokens/") ||
-    isAcceptedSharedContract(relativePath) ||
+    isStrictlyOwned(relativePath) ||
     relativePath.startsWith("components/ui/") ||
     relativePath.startsWith("packages/ui/")
   )
@@ -676,6 +774,14 @@ function countScannedRoots(files: string[]): Record<string, number> {
   return counts
 }
 
+/**
+ * Returns true if any finding references a shared-ui file not in STRICT_OWNER_MAP.
+ * These trigger FAIL instead of REVIEW under category-level validation.
+ */
+function hasUnownedSharedContractFindings(findings: Finding[]): boolean {
+  return findings.some((f) => f.surface === "shared-ui" && !isStrictlyOwned(f.filePath))
+}
+
 function targetMatches(filePath: string, matcher: string): boolean {
   return filePath === matcher || filePath.startsWith(matcher)
 }
@@ -697,13 +803,19 @@ function validateTarget(target: TargetSurface, findings: Finding[]): TargetValid
       (finding) => sharedResidualOwners.includes(finding.filePath) && isAcceptedSharedContract(finding.filePath)
     )
 
+  // Phase 14: category-level enforcement — unowned shared-ui contracts fail immediately
+  const hasUnownedPrimitive = hasUnownedSharedContractFindings(targetFindings)
+  const hasUnownedShared = hasUnownedSharedContractFindings(sharedResidualFindings)
+
   let status: ValidationStatus = "PASS"
-  if (targetHighCritical.length > 0) {
+  if (targetHighCritical.length > 0 || hasUnownedPrimitive) {
     status = "FAIL"
   } else if (targetOnlyAcceptedSharedResiduals) {
     status = "PASS_WITH_SHARED_RESIDUAL"
   } else if (targetFindings.length > 0) {
     status = "REVIEW"
+  } else if (hasUnownedShared) {
+    status = "FAIL"
   } else if (sharedResidualFindings.length > 0 && sharedHighCritical.length === 0) {
     status = "PASS_WITH_SHARED_RESIDUAL"
   } else if (sharedHighCritical.length > 0) {
@@ -722,7 +834,19 @@ function validateTarget(target: TargetSurface, findings: Finding[]): TargetValid
   }
 }
 
+function countByDomain(findings: Finding[]): { countMap: Record<string, number>; highCriticalMap: Record<string, number> } {
+  const countMap: Record<string, number> = {}
+  const highCriticalMap: Record<string, number> = {}
+  for (const finding of findings) {
+    const domain = getDomain(finding.filePath)
+    countMap[domain] = (countMap[domain] ?? 0) + 1
+    if (isHighCritical(finding)) highCriticalMap[domain] = (highCriticalMap[domain] ?? 0) + 1
+  }
+  return { countMap, highCriticalMap }
+}
+
 function createReport(files: string[], findings: Finding[]): AuditReport {
+  const { countMap: domainCounts, highCriticalMap: domainHighCriticalCounts } = countByDomain(findings)
   return {
     generatedAt: new Date().toISOString(),
     scanRoots: SCAN_ROOTS,
@@ -733,6 +857,8 @@ function createReport(files: string[], findings: Finding[]): AuditReport {
     categoryCounts: countBy(findings, (finding) => finding.category),
     surfaceCounts: countBySurface(findings),
     ownershipCounts: countByOwnership(findings),
+    domainCounts,
+    domainHighCriticalCounts,
     staleReferences: [
       {
         filePath: "docs/DESIGN_SYSTEM.md",
@@ -744,6 +870,17 @@ function createReport(files: string[], findings: Finding[]): AuditReport {
     postRefactorValidation: PHASE_TARGETS.map((target) => validateTarget(target, findings)),
     findings,
   }
+}
+
+function formatDomainCounts(domainCounts: Record<string, number>, highCriticalCounts: Record<string, number>): string {
+  const entries = Object.entries(domainCounts).filter(([, count]) => count > 0)
+  if (entries.length === 0) return "_None._"
+  entries.sort((a, b) => b[1] - a[0].localeCompare(b[0]))
+  const rows = entries.map(([name, count]) => {
+    const hc = highCriticalCounts[name] ?? 0
+    return `| ${name} | ${count} | ${hc} |`
+  })
+  return ["| Domain | Total | High/Critical |", "| --- | ---: | ---: |", ...rows].join("\n")
 }
 
 function formatCounts(counts: Record<string, number>): string {
@@ -836,6 +973,10 @@ ${formatCounts(report.surfaceCounts)}
 ## Findings by ownership
 
 ${formatCounts(report.ownershipCounts)}
+
+## Findings by domain (Phase 14 strict owner map)
+
+${formatDomainCounts(report.domainCounts, report.domainHighCriticalCounts)}
 
 ## Source-of-truth notes
 

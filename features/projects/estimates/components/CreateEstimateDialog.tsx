@@ -23,6 +23,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/shared/ui/form';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 
 import {
@@ -94,7 +95,7 @@ export function CreateEstimateDialog({
                 </DialogHeader>
 
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                    <FormLayout onSubmit={form.handleSubmit(onSubmit)}>
                         <FormField
                             control={form.control}
                             name="name"
@@ -102,7 +103,7 @@ export function CreateEstimateDialog({
                                 <FormItem>
                                     <FormLabel>Название сметы</FormLabel>
                                     <FormControl>
-                                        <Input
+                                        <Input size="default"
                                             placeholder="Например: Смета на черновые работы"
                                             autoFocus
                                             {...field}
@@ -117,17 +118,18 @@ export function CreateEstimateDialog({
                             <Button
                                 type="button"
                                 variant="ghost"
+                                size="default"
                                 onClick={() => onOpenChange(false)}
                                 disabled={isSubmitting}
                             >
                                 Отменить
                             </Button>
-                            <Button type="submit" disabled={isSubmitting}>
+                            <Button type="submit" size="default" disabled={isSubmitting}>
                                 {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                                 Сохранить
                             </Button>
                         </DialogFooter>
-                    </form>
+                    </FormLayout>
                 </Form>
             </DialogContent>
         </Dialog>

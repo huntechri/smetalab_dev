@@ -38,6 +38,7 @@ export function EstimateInlineNumberCell({
     return (
       <Button
         variant="ghost"
+        size="sm"
         aria-label={ariaLabel}
         className={className}
         onClick={() => {

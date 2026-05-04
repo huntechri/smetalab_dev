@@ -3,10 +3,14 @@ import type { LucideIcon } from "lucide-react"
 import { Check, Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+import { HiddenInput } from "@/shared/ui/hidden-input"
 import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { TabsList, TabsTrigger } from "@/shared/ui/tabs"
+import {
+  primitivePageShellInnerPaddingClassName,
+} from "@/shared/ui/primitive-density"
 
 type AdminBadgeVariant = React.ComponentProps<typeof Badge>["variant"]
 
@@ -25,7 +29,7 @@ function AdminPageShell({
   ...props
 }: AdminPageShellProps) {
   return (
-    <section className={cn("flex-1 space-y-6 p-4 lg:p-8", className)} {...props}>
+    <section className={cn(`flex-1 space-y-6 ${primitivePageShellInnerPaddingClassName}`, className)} {...props}>
       {title || description || actions ? (
         <AdminPageHeader actions={actions}>
           <AdminPageHeading title={title} description={description} />
@@ -402,7 +406,7 @@ function AdminPricingCard({
           ))}
         </ul>
         <form action={action}>
-          <input type="hidden" name="priceId" value={priceId} />
+          <HiddenInput name="priceId" value={priceId} />
           {submitButton}
         </form>
       </CardContent>

@@ -27,6 +27,7 @@ export function StopImpersonationButton() {
     return (
         <Button
             variant="destructive"
+            size="default"
             onClick={handleStop}
             disabled={isPending}
         >

@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui/button';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/ui/form';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import {
   DEFAULT_DIRECTORY_ENTITY_COLOR,
@@ -123,10 +124,10 @@ export function CreateMaterialSupplierSheet({
       description="Укажите данные поставщика и сохраните карточку."
       footer={
         <>
-          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+          <Button type="button" variant="outline" size="default" onClick={() => onOpenChange(false)}>
             Отмена
           </Button>
-          <Button type="submit" form="material-supplier-sheet-form" disabled={isPending}>
+          <Button type="submit" size="default" form="material-supplier-sheet-form" disabled={isPending}>
             {isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
             {materialSupplier ? 'Сохранить' : 'Создать'}
           </Button>
@@ -134,7 +135,7 @@ export function CreateMaterialSupplierSheet({
       }
     >
       <Form {...form}>
-        <form id="material-supplier-sheet-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormLayout id="material-supplier-sheet-form" onSubmit={form.handleSubmit(onSubmit)}>
           <DirectorySheetForm>
             <FormField
               control={form.control}
@@ -142,7 +143,7 @@ export function CreateMaterialSupplierSheet({
               render={({ field }) => (
                 <FormItem>
                   <DirectoryFormLabel>Наименование</DirectoryFormLabel>
-                  <FormControl><Input placeholder="Наименование..." {...field} /></FormControl>
+                  <FormControl><Input size="default" placeholder="Наименование..." {...field} /></FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -156,7 +157,7 @@ export function CreateMaterialSupplierSheet({
                   <FormItem>
                     <DirectoryFormLabel>Цвет метки</DirectoryFormLabel>
                     <FormControl>
-                      <DirectoryColorInputFrame><Input type="color" value={field.value} onChange={field.onChange} /></DirectoryColorInputFrame>
+                      <DirectoryColorInputFrame><Input size="default" type="color" value={field.value} onChange={field.onChange} /></DirectoryColorInputFrame>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -188,27 +189,27 @@ export function CreateMaterialSupplierSheet({
             {legalStatus === 'company' ? (
               <>
                 <DirectorySheetGrid>
-                  <FormField control={form.control} name="inn" render={({ field }) => <FormItem><DirectoryFormLabel>ИНН</DirectoryFormLabel><FormControl><Input placeholder="ИНН..." {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><DirectoryFormLabel>КПП</DirectoryFormLabel><FormControl><Input placeholder="КПП..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="inn" render={({ field }) => <FormItem><DirectoryFormLabel>ИНН</DirectoryFormLabel><FormControl><Input size="default" placeholder="ИНН..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="kpp" render={({ field }) => <FormItem><DirectoryFormLabel>КПП</DirectoryFormLabel><FormControl><Input size="default" placeholder="КПП..." {...field} /></FormControl><FormMessage /></FormItem>} />
                 </DirectorySheetGrid>
                 <DirectorySheetGrid>
-                  <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><DirectoryFormLabel>ОГРН</DirectoryFormLabel><FormControl><Input placeholder="ОГРН..." {...field} /></FormControl><FormMessage /></FormItem>} />
-                  <FormField control={form.control} name="phone" render={({ field }) => <FormItem><DirectoryFormLabel>Телефон</DirectoryFormLabel><FormControl><Input placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="ogrn" render={({ field }) => <FormItem><DirectoryFormLabel>ОГРН</DirectoryFormLabel><FormControl><Input size="default" placeholder="ОГРН..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                  <FormField control={form.control} name="phone" render={({ field }) => <FormItem><DirectoryFormLabel>Телефон</DirectoryFormLabel><FormControl><Input size="default" placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
                 </DirectorySheetGrid>
               </>
             ) : (
               <DirectorySheetGrid>
-                <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><DirectoryFormLabel>Паспорт</DirectoryFormLabel><FormControl><Input placeholder="0000 000000" {...field} /></FormControl><FormMessage /></FormItem>} />
-                <FormField control={form.control} name="phone" render={({ field }) => <FormItem><DirectoryFormLabel>Телефон</DirectoryFormLabel><FormControl><Input placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
+                <FormField control={form.control} name="passportSeriesNumber" render={({ field }) => <FormItem><DirectoryFormLabel>Паспорт</DirectoryFormLabel><FormControl><Input size="default" placeholder="0000 000000" {...field} /></FormControl><FormMessage /></FormItem>} />
+                <FormField control={form.control} name="phone" render={({ field }) => <FormItem><DirectoryFormLabel>Телефон</DirectoryFormLabel><FormControl><Input size="default" placeholder="+7..." {...field} /></FormControl><FormMessage /></FormItem>} />
               </DirectorySheetGrid>
             )}
 
             <DirectorySheetGrid>
-              <FormField control={form.control} name="email" render={({ field }) => <FormItem><DirectoryFormLabel>Email</DirectoryFormLabel><FormControl><Input placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
-              <FormField control={form.control} name="address" render={({ field }) => <FormItem><DirectoryFormLabel>Адрес</DirectoryFormLabel><FormControl><Input placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
+              <FormField control={form.control} name="email" render={({ field }) => <FormItem><DirectoryFormLabel>Email</DirectoryFormLabel><FormControl><Input size="default" placeholder="example@mail.ru" {...field} /></FormControl><FormMessage /></FormItem>} />
+              <FormField control={form.control} name="address" render={({ field }) => <FormItem><DirectoryFormLabel>Адрес</DirectoryFormLabel><FormControl><Input size="default" placeholder="Город, улица, дом..." {...field} /></FormControl><FormMessage /></FormItem>} />
             </DirectorySheetGrid>
           </DirectorySheetForm>
-        </form>
+        </FormLayout>
       </Form>
     </DirectoryEntitySheetShell>
   );

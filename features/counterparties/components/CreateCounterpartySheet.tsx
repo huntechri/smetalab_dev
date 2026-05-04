@@ -3,6 +3,7 @@
 import { Loader2 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { Form } from "@/shared/ui/form";
+import { FormLayout } from "@/shared/ui/form-layout";
 import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
 
 import { DirectoryEntitySheetShell } from "@/features/_shared/directories";
@@ -46,11 +47,12 @@ export function CreateCounterpartySheet({
           <Button
             type="button"
             variant="outline"
+            size="default"
             onClick={() => onOpenChange(false)}
           >
             Отмена
           </Button>
-          <Button type="submit" form="counterparty-sheet-form" disabled={isPending}>
+          <Button type="submit" size="default" form="counterparty-sheet-form" disabled={isPending}>
             {isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
             {submitLabel}
           </Button>
@@ -58,7 +60,7 @@ export function CreateCounterpartySheet({
       }
     >
       <Form {...form}>
-        <form
+        <FormLayout
           id="counterparty-sheet-form"
           onSubmit={form.handleSubmit(onSubmit)}
         >
@@ -82,7 +84,7 @@ export function CreateCounterpartySheet({
             />
             <CounterpartyBankSection form={form} />
           </Tabs>
-        </form>
+        </FormLayout>
       </Form>
     </DirectoryEntitySheetShell>
   );

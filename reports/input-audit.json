@@ -1,58 +1,8 @@
 {
-  "generatedAt": "2026-04-30T17:25:49.194Z",
-  "total": 128,
+  "generatedAt": "2026-05-04T09:00:42.513Z",
+  "total": 113,
   "changedFiles": 0,
   "records": [
-    {
-      "filePath": "app/(admin)/pricing/page.tsx",
-      "componentName": "page.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
-      "filePath": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-      "componentName": "CatalogScreenShell.tsx",
-      "kind": "html-input",
-      "propsUsed": [
-        "type",
-        "ref",
-        "onChange",
-        "className",
-        "accept",
-        "aria-label",
-        "title"
-      ],
-      "className": "hidden",
-      "tailwindUtilities": [
-        "hidden"
-      ],
-      "type": "file",
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "hidden"
-    },
-    {
-      "filePath": "features/admin/components/impersonate-button.tsx",
-      "componentName": "impersonate-button.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
     {
       "filePath": "features/auth/components/ForgotPasswordForm.tsx",
       "componentName": "ForgotPasswordForm.tsx",
@@ -61,6 +11,7 @@
         "id",
         "name",
         "type",
+        "size",
         "required",
         "autoComplete"
       ],
@@ -72,53 +23,12 @@
     {
       "filePath": "features/auth/components/LoginForm.tsx",
       "componentName": "LoginForm.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
-      "filePath": "features/auth/components/LoginForm.tsx",
-      "componentName": "LoginForm.tsx",
       "kind": "component-input",
       "propsUsed": [
         "id",
         "name",
         "type",
+        "size",
         "autoComplete",
         "defaultValue",
         "readOnly",
@@ -141,6 +51,7 @@
         "id",
         "name",
         "type",
+        "size",
         "autoComplete",
         "defaultValue",
         "required",
@@ -162,6 +73,7 @@
         "id",
         "name",
         "type",
+        "size",
         "required",
         "maxLength",
         "placeholder"
@@ -174,25 +86,12 @@
     {
       "filePath": "features/auth/components/ResetPasswordForm.tsx",
       "componentName": "ResetPasswordForm.tsx",
-      "kind": "html-hidden-input",
-      "propsUsed": [
-        "type",
-        "name",
-        "value"
-      ],
-      "tailwindUtilities": [],
-      "type": "hidden",
-      "hasInlineStyle": false,
-      "isHiddenInput": true
-    },
-    {
-      "filePath": "features/auth/components/ResetPasswordForm.tsx",
-      "componentName": "ResetPasswordForm.tsx",
       "kind": "component-input",
       "propsUsed": [
         "id",
         "name",
         "type",
+        "size",
         "required",
         "minLength",
         "maxLength"
@@ -210,6 +109,7 @@
         "id",
         "name",
         "type",
+        "size",
         "required",
         "minLength",
         "maxLength"
@@ -224,6 +124,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -257,6 +158,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -269,6 +171,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -281,6 +184,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -293,6 +197,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "type",
         "...field"
       ],
@@ -306,6 +211,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -318,6 +224,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -330,6 +237,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "type",
         "...field"
       ],
@@ -343,6 +251,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -355,6 +264,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -367,6 +277,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -379,6 +290,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -391,6 +303,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -403,6 +316,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -415,6 +329,7 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -427,34 +342,13 @@
       "componentName": "counterparty-sheet-sections.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
       "tailwindUtilities": [],
       "hasInlineStyle": false,
       "isHiddenInput": false
-    },
-    {
-      "filePath": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-      "componentName": "GlobalPurchasesImportExportActions.tsx",
-      "kind": "html-input",
-      "propsUsed": [
-        "ref",
-        "type",
-        "accept",
-        "className",
-        "aria-label",
-        "title",
-        "onChange"
-      ],
-      "className": "hidden",
-      "tailwindUtilities": [
-        "hidden"
-      ],
-      "type": "file",
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "hidden"
     },
     {
       "filePath": "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
@@ -516,6 +410,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -528,6 +423,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "type",
         "value",
         "onChange"
@@ -542,6 +438,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -554,6 +451,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -566,6 +464,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -578,6 +477,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -590,6 +490,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -602,6 +503,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -614,6 +516,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -626,6 +529,7 @@
       "componentName": "CreateMaterialSupplierSheet.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -638,6 +542,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -651,6 +556,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -664,6 +570,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "type",
         "value",
@@ -679,6 +586,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -692,6 +600,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -705,6 +614,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -718,6 +628,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -731,6 +642,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -744,6 +656,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -757,6 +670,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -770,6 +684,7 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -783,114 +698,10 @@
       "componentName": "MaterialsEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
-      ],
-      "tailwindUtilities": [],
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select",
-      "propsUsed": [],
-      "tailwindUtilities": [],
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select-trigger",
-      "propsUsed": [
-        "className"
-      ],
-      "className": "w-40 cursor-pointer",
-      "tailwindUtilities": [
-        "w-40",
-        "cursor-pointer"
-      ],
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "w-40 cursor-pointer"
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select",
-      "propsUsed": [
-        "defaultValue"
-      ],
-      "tailwindUtilities": [],
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select-trigger",
-      "propsUsed": [
-        "className",
-        "id"
-      ],
-      "className": "flex w-fit sm:hidden cursor-pointer",
-      "tailwindUtilities": [
-        "flex",
-        "w-fit",
-        "sm:hidden",
-        "cursor-pointer"
-      ],
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "flex w-fit sm:hidden cursor-pointer"
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select",
-      "propsUsed": [
-        "value",
-        "onValueChange"
-      ],
-      "tailwindUtilities": [],
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-select-trigger",
-      "propsUsed": [
-        "className"
-      ],
-      "className": "w-16 tabular-nums",
-      "tailwindUtilities": [
-        "w-16",
-        "tabular-nums"
-      ],
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "w-16 tabular-nums"
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "defaultValue"
-      ],
-      "tailwindUtilities": [],
-      "hasInlineStyle": false,
-      "isHiddenInput": false
-    },
-    {
-      "filePath": "features/projects/dashboard/components/DashboardDataTable.tsx",
-      "componentName": "DashboardDataTable.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "defaultValue"
       ],
       "tailwindUtilities": [],
       "hasInlineStyle": false,
@@ -901,6 +712,7 @@
       "componentName": "ProjectReceiptsSection.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "type",
         "value",
@@ -916,6 +728,7 @@
       "componentName": "ProjectReceiptsSection.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "type",
         "value",
@@ -973,6 +786,7 @@
       "componentName": "ProjectReceiptsSection.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -999,6 +813,7 @@
       "componentName": "CreateEstimateDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "autoFocus",
         "...field"
@@ -1014,6 +829,7 @@
       "propsUsed": [
         "type",
         "inputMode",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1029,6 +845,7 @@
       "kind": "component-input",
       "propsUsed": [
         "value",
+        "size",
         "onChange"
       ],
       "tailwindUtilities": [],
@@ -1041,6 +858,7 @@
       "kind": "component-input",
       "propsUsed": [
         "id",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1055,6 +873,7 @@
       "kind": "component-input",
       "propsUsed": [
         "id",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1069,6 +888,7 @@
       "kind": "component-input",
       "propsUsed": [
         "id",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1083,6 +903,7 @@
       "kind": "component-input",
       "propsUsed": [
         "id",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1097,6 +918,7 @@
       "kind": "component-input",
       "propsUsed": [
         "id",
+        "size",
         "value",
         "onChange",
         "placeholder"
@@ -1147,56 +969,11 @@
       "isHiddenInput": false
     },
     {
-      "filePath": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
-      "componentName": "EstimateExecution.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "value",
-        "onChange",
-        "placeholder",
-        "size",
-        "className",
-        "aria-label"
-      ],
-      "className": "rounded-md border-border bg-background pl-8",
-      "tailwindUtilities": [
-        "rounded-md",
-        "border-border",
-        "bg-background",
-        "pl-8"
-      ],
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "pl-8"
-    },
-    {
-      "filePath": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
-      "componentName": "EstimateProcurement.tsx",
-      "kind": "component-input",
-      "propsUsed": [
-        "value",
-        "onChange",
-        "placeholder",
-        "size",
-        "className",
-        "aria-label"
-      ],
-      "className": "rounded-md border-border bg-background pl-8",
-      "tailwindUtilities": [
-        "rounded-md",
-        "border-border",
-        "bg-background",
-        "pl-8"
-      ],
-      "hasInlineStyle": false,
-      "isHiddenInput": false,
-      "normalizedClassName": "pl-8"
-    },
-    {
       "filePath": "features/projects/list/components/create-project-dialog.tsx",
       "componentName": "create-project-dialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field"
       ],
@@ -1220,6 +997,7 @@
       "componentName": "create-project-dialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "placeholder",
         "...field",
         "value"
@@ -1244,6 +1022,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "defaultValue",
@@ -1258,6 +1037,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "defaultValue",
@@ -1274,6 +1054,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "disabled",
@@ -1288,6 +1069,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "readOnly",
@@ -1302,6 +1084,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "readOnly",
@@ -1316,6 +1099,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "readOnly",
@@ -1330,6 +1114,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1348,6 +1133,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1366,6 +1152,7 @@
       "componentName": "user-settings-page.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1384,6 +1171,7 @@
       "componentName": "AdminGeneralSettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "placeholder",
@@ -1399,6 +1187,7 @@
       "componentName": "AdminGeneralSettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1416,6 +1205,7 @@
       "componentName": "AdminSecuritySettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1435,6 +1225,7 @@
       "componentName": "AdminSecuritySettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1454,6 +1245,7 @@
       "componentName": "AdminSecuritySettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1472,6 +1264,7 @@
       "componentName": "AdminSecuritySettingsScreen.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "name",
         "type",
@@ -1490,6 +1283,7 @@
       "componentName": "InviteTeamMemberCard.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "type",
         "placeholder",
@@ -1520,6 +1314,7 @@
       "componentName": "WorksEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange",
@@ -1534,6 +1329,7 @@
       "componentName": "WorksEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "type",
         "value",
@@ -1550,6 +1346,7 @@
       "componentName": "WorksEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -1563,6 +1360,7 @@
       "componentName": "WorksEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -1576,6 +1374,7 @@
       "componentName": "WorksEditDialog.tsx",
       "kind": "component-input",
       "propsUsed": [
+        "size",
         "id",
         "value",
         "onChange"
@@ -1696,6 +1495,58 @@
       "isHiddenInput": false
     },
     {
+      "filePath": "shared/ui/estimate-tab.tsx",
+      "componentName": "estimate-tab.tsx",
+      "kind": "component-input",
+      "propsUsed": [
+        "size",
+        "className",
+        "aria-label",
+        "...props"
+      ],
+      "className": "rounded-md border-border bg-background pl-8",
+      "tailwindUtilities": [
+        "rounded-md",
+        "border-border",
+        "bg-background",
+        "pl-8"
+      ],
+      "hasInlineStyle": false,
+      "isHiddenInput": false,
+      "normalizedClassName": "pl-8"
+    },
+    {
+      "filePath": "shared/ui/file-input.tsx",
+      "componentName": "file-input.tsx",
+      "kind": "html-input",
+      "propsUsed": [
+        "ref",
+        "type",
+        "accept",
+        "onChange",
+        "className",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "type": "file",
+      "hasInlineStyle": false,
+      "isHiddenInput": false
+    },
+    {
+      "filePath": "shared/ui/hidden-input.tsx",
+      "componentName": "hidden-input.tsx",
+      "kind": "html-hidden-input",
+      "propsUsed": [
+        "type",
+        "value",
+        "...props"
+      ],
+      "tailwindUtilities": [],
+      "type": "hidden",
+      "hasInlineStyle": false,
+      "isHiddenInput": true
+    },
+    {
       "filePath": "shared/ui/input-group.tsx",
       "componentName": "input-group.tsx",
       "kind": "component-input",
@@ -1741,6 +1592,7 @@
       "kind": "component-input",
       "propsUsed": [
         "type",
+        "size",
         "value",
         "...props"
       ],

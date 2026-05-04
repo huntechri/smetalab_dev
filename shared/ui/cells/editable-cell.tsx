@@ -57,6 +57,7 @@ export function EditableCell({
             <Button
                 type="button"
                 variant="ghost"
+                size="sm"
                 disabled={disabled}
                 aria-label={ariaLabel}
                 title={title}

@@ -202,7 +202,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             <span>Подтверждено:</span>
             <StatusBadgeValue>{formatCurrency(aggregates.totalConfirmedReceipts)}</StatusBadgeValue>
           </StatusBadge>
-          <Button onClick={onAddClick}>
+          <Button size="default" onClick={onAddClick}>
             <Plus className="mr-1 size-4" /> Добавить
           </Button>
         </div>
@@ -222,7 +222,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
               <CompactTableHead>Сумма</CompactTableHead>
               <CompactTableHead>Статус</CompactTableHead>
               <CompactTableHead>Комментарий</CompactTableHead>
-              <CompactTableHead className="w-[40px]" />
+              <CompactTableHead className="w-10" />
             </CompactTableHeaderRow>
           </TableHeader>
           <TableBody>
@@ -238,7 +238,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
                   </StatusBadge>
                 </CompactTableCell>
-                <CompactTableCell className="max-w-[320px]" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
+                <CompactTableCell className="max-w-80" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
                 <CompactTableCell>
                   <ActionMenu
                     ariaLabel="Действия поступления"
@@ -273,11 +273,11 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
           <div className="grid gap-3 py-2">
             <div className="grid gap-2">
               <Label htmlFor="receipt-date">Дата</Label>
-              <Input id="receipt-date" type="date" value={form.date} onChange={(event) => setForm((current) => ({ ...current, date: event.target.value }))} />
+              <Input size="default" id="receipt-date" type="date" value={form.date} onChange={(event) => setForm((current) => ({ ...current, date: event.target.value }))} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="receipt-amount">Сумма</Label>
-              <Input id="receipt-amount" type="number" value={form.amount} onChange={(event) => setForm((current) => ({ ...current, amount: event.target.value }))} />
+              <Input size="default" id="receipt-amount" type="number" value={form.amount} onChange={(event) => setForm((current) => ({ ...current, amount: event.target.value }))} />
             </div>
             <div className="grid grid-cols-2 gap-2">
               <div className="grid gap-2">
@@ -305,7 +305,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             </div>
             <div className="grid gap-2">
               <Label htmlFor="receipt-source">Основание / источник</Label>
-              <Input id="receipt-source" value={form.source} onChange={(event) => setForm((current) => ({ ...current, source: event.target.value }))} />
+              <Input size="default" id="receipt-source" value={form.source} onChange={(event) => setForm((current) => ({ ...current, source: event.target.value }))} />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="receipt-comment">Комментарий</Label>
@@ -313,8 +313,8 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Отмена</Button>
-            <Button onClick={() => void onSubmit()} disabled={isSaving}>{editingRow ? 'Сохранить' : 'Создать'}</Button>
+            <Button variant="outline" size="default" onClick={() => setIsDialogOpen(false)}>Отмена</Button>
+            <Button size="default" onClick={() => void onSubmit()} disabled={isSaving}>{editingRow ? 'Сохранить' : 'Создать'}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

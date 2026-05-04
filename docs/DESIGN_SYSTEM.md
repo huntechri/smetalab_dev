@@ -31,17 +31,19 @@
 
 ## 3. Кнопки (Button)
 
-### 3.1 Размеры (из `buttonVariants`)
+### 3.1 Размеры (из `primitiveButtonSizeClassNames`)
 
-| Size prop | Высота | Использование |
+| Size prop | Классы | Примечание |
 |---|---|---|
-| `xs` | `h-6` (24px) | Микро-действия, inline-теги |
-| `sm` | `h-7` (28px) | Компактные элементы (внутри таблиц, дропдаунов) |
-| `default` | `h-8` (32px) | Стандартный размер компонента shadcn |
-| `lg` | `h-8` (32px) | С увеличенным padding |
-| `icon` | `size-8` (32px) | Квадратные иконки |
-| `icon-xs` | `size-6` (24px) | Маленькие иконки |
-| `icon-sm` | `size-7` (28px) | Средние иконки |
+| `default` | `h-9 px-4 py-2 has-[>svg]:px-3` | Стандартный |
+| `xs` | `h-7 px-2 py-1 text-xs has-[>svg]:px-1.5 [&_svg:not([class*='size-'])]:size-3` | Микро-действия, inline |
+| `sm` | `h-8 gap-1.5 rounded-md px-3 has-[>svg]:px-2.5` | Компактный |
+| `lg` | `h-10 rounded-md px-6 has-[>svg]:px-4` | Крупный |
+| `xl` | `h-12 rounded-xl px-8 text-base has-[>svg]:px-6` | XL |
+| `icon` | `size-9` | Квадратная иконка |
+| `icon-xs` | `size-7 rounded-md [&_svg:not([class*='size-'])]:size-3` | Маленькая иконка |
+| `icon-sm` | `size-8` | Средняя иконка |
+| `icon-lg` | `size-10` | Большая иконка |
 
 ### 3.2 Стандарт для тулбаров и действий на страницах
 
@@ -67,22 +69,34 @@
 
 ### 3.3 Варианты (variants)
 
-| Variant | Используется для |
-|---|---|
-| `default` / `primary` | Главное действие (Сохранить, Создать) |
-| `outline` | Вторичные действия (Импорт, Экспорт, Добавить, Загрузить ещё) |
-| `ghost` | Иконки в хедерах, меню-действия |
-| `destructive` | Удаление (Удалить всё, Удалить) |
-| `secondary` | Фильтры, переключатели, второстепенные кнопки |
-| `link` | Текстовые ссылки без обрамления |
+| Variant | Реальные классы | Используется для |
+|---|---|---|
+| `default` | `bg-background text-foreground border border-border/70 shadow-sm hover:bg-secondary/80` | Стандартная кнопка |
+| `primary` | `bg-primary text-primary-foreground shadow hover:bg-primary/90` | Главное действие (Сохранить, Создать) |
+| `outline` | `border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground` | Вторичные действия (Импорт, Экспорт, Добавить, Загрузить ещё) |
+| `ghost` | `hover:bg-accent hover:text-accent-foreground` | Иконки в хедерах, меню-действия |
+| `destructive` | `bg-destructive text-destructive-foreground shadow-sm ...` | Удаление (Удалить всё, Удалить) |
+| `secondary` | `bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80` | Фильтры, переключатели, второстепенные кнопки |
+| `link` | `text-primary underline-offset-4 hover:underline` | Текстовые ссылки без обрамления |
+| `brand` | `bg-brand text-brand-foreground shadow-sm hover:bg-brand/90 focus-visible:ring-brand/50` | Брендовые CTA-кнопки |
 
 ---
 
 ## 4. Поля ввода (Input)
 
+### 4.1 Размеры (из `primitiveInputSizeClassNames`)
+
+| Size prop | Классы |
+|---|---|
+| `default` | `h-9 py-1 file:h-5` |
+| `sm` | `h-8 py-1 text-xs file:h-4` |
+| `xs` | `h-7 px-2 py-0.5 text-xs file:h-4` |
+
+### 4.2 Общие свойства
+
 | Свойство | Значение |
 |---|---|
-| **Базовая высота** | `h-8` (32px) — shadcn default |
+| **Базовая высота** | `h-9` (36px) |
 | **В тулбарах** | `h-9` (36px) — для визуального выравнивания с кнопками |
 | **Тень** | `shadow-sm` |
 | **Border** | `border-input` (стандартный) |
@@ -102,10 +116,18 @@
 
 ## 5. Бейдж (Badge)
 
-### Стандартный бейдж для счётчиков записей:
+### 5.1 Размеры (из `primitiveBadgeSizeClassNames`)
+
+| Size prop | Классы |
+|---|---|
+| `default` | `px-2 py-0.5 text-xs` |
+| `xs` | `px-1.5 py-0 text-[9px] sm:text-[10px] font-semibold uppercase tracking-wide` |
+| `count` | `size-5 p-0 text-xs` |
+
+### 5.2 Стандартный бейдж для счётчиков записей:
 
 ```tsx
-<Badge variant="secondary" className="h-7 px-3 text-xs font-semibold shadow-sm">
+<Badge variant="secondary" className="px-2 py-0.5 text-xs font-semibold shadow-sm">
   {count.toLocaleString('ru-RU')} записей
 </Badge>
 ```
@@ -113,7 +135,6 @@
 | Свойство | Значение |
 |---|---|
 | **Позиция** | Рядом с хлебными крошками (справа на desktop, снизу на mobile) |
-| **Высота** | `h-7` (28px) |
 | **Тень** | `shadow-sm` |
 
 > **Примечание:** Используется только на страницах с большими таблицами (Работы, Материалы). Не обязательно для справочников с малым количеством записей (Контрагенты, Поставщики).
@@ -124,23 +145,23 @@
 
 | Свойство | Значение |
 |---|---|
-| **Стиль** | `border-border/70 shadow-sm overflow-hidden` |
-| **Границы округления** | `rounded-xl` (по умолчанию от shadcn) |
-| **Header-подложка** | `bg-muted/20 border-b border-border/50` — для зон с действиями |
+| **Стиль** | `bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm` |
+| **Подкомпоненты** | `<CardHeader>`, `<CardContent>`, `<CardFooter>` — используют `px-6` |
+| **Header-подложка** | `@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-2 px-6` — для зон с действиями |
 
 ### Структура Card для страниц:
 
 ```tsx
-<Card className="border-border/70 shadow-sm overflow-hidden">
+<Card>
   {/* Header zone */}
-  <div className="bg-muted/20 border-b border-border/50 px-4 py-3">
+  <CardHeader>
     <ToolbarContent />
-  </div>
+  </CardHeader>
 
   {/* Content zone */}
-  <div className="p-4">
+  <CardContent>
     <MainContent />
-  </div>
+  </CardContent>
 </Card>
 ```
 
@@ -148,45 +169,128 @@
 
 ---
 
-## 7. Layout страниц справочников
+## 7. Layout-компоненты
+
+Проект использует модульные layout-компоненты из `shared/ui/page-shell.tsx` и `shared/ui/admin-surface.tsx`.
+
+### 7.1 PageShell
+
+Основной контейнер страницы. Управляет отступами, шириной и заголовком.
+
+| Prop | Тип | По умолчанию | Описание |
+|---|---|---|---|
+| `density` | `compact` \| `default` \| `comfortable` | `default` | Вертикальные отступы между дочерними элементами |
+| `title` | `React.ReactNode` | — | Заголовок страницы |
+| `description` | `React.ReactNode` | — | Описание под заголовком |
+| `actions` | `React.ReactNode` | — | Блок экшенов (кнопки справа) |
+| `width` | `default` \| `wide` \| `full` | `wide` | Максимальная ширина контейнера |
+| `spacing` | `default` \| `compact` \| `flush-bottom` | `default` | Отступы контейнера |
+| `titleAs` | `'h1'` \| `'h2'` | `'h1'` | Тег заголовка |
+| `visuallyHiddenTitle` | `boolean` | `false` | Скрыть заголовок визуально (доступность) |
+
+```tsx
+<PageShell
+  title="Материалы"
+  description="Управление справочником материалов"
+  actions={<Button>Создать</Button>}
+>
+  <DataTable columns={columns} data={data} />
+</PageShell>
+```
+
+### 7.2 ContentContainer
+
+Центрированный контейнер с ограничением по ширине.
+
+| Prop | Тип | По умолчанию | Описание |
+|---|---|---|---|
+| `width` | `default` \| `wide` \| `full` | `default` | `default` = `max-w-7xl`, `wide` = `max-w-[1600px]`, `full` = `max-w-none` |
+
+```tsx
+<ContentContainer width="wide">
+  <Content />
+</ContentContainer>
+```
+
+### 7.3 WorkspaceMain
+
+Обёртка `<main>` для контента после sidebar. Устанавливает padding.
+
+| Класс | Значение |
+|---|---|
+| **База** | `min-w-0 flex-1` |
+| **Padding** | `p-4 md:p-6 lg:p-8` |
+
+```tsx
+<WorkspaceMain>
+  <PageShell title="Работы">
+    <DataTable />
+  </PageShell>
+</WorkspaceMain>
+```
+
+### 7.4 PageHeader
+
+Заголовок страницы с заголовком, описанием и блоком действий.
+
+| Prop | Тип | По умолчанию | Описание |
+|---|---|---|---|
+| `title` | `React.ReactNode` | — | Заголовок |
+| `description` | `React.ReactNode` | — | Описание |
+| `actions` | `React.ReactNode` | — | Кнопки справа |
+| `titleAs` | `'h1'` \| `'h2'` | `'h1'` | Тег заголовка |
+
+> **Примечание:** PageHeader не рендерит ничего, если не передан ни title, ни description, ни actions.
+
+### 7.5 AdminPageShell / AdminPageHeader (из `admin-surface.tsx`)
+
+Аналоги PageShell/PageHeader для админ-панели. Используются в `app/(admin)/*`.
+
+---
+
+## 8. Layout страниц справочников
 
 ### Стандартная структура:
 
 ```tsx
-<div className="space-y-4">
-  {/* Хлебные крошки */}
-  <Breadcrumb className="px-1 md:px-0">
-    <BreadcrumbList>
-      <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem><BreadcrumbLink>Раздел</BreadcrumbLink></BreadcrumbItem>
-      <BreadcrumbSeparator />
-      <BreadcrumbItem><BreadcrumbPage>Страница</BreadcrumbPage></BreadcrumbItem>
-    </BreadcrumbList>
-  </Breadcrumb>
-  <h1 className="sr-only">Заголовок</h1>
+<WorkspaceMain>
+  <PageShell
+    title="Материалы"
+    actions={<ToolbarActions />}
+  >
+    {/* Хлебные крошки */}
+    <Breadcrumb className="px-1 md:px-0">
+      <BreadcrumbList>
+        <BreadcrumbItem><BreadcrumbLink href="/app">Главная</BreadcrumbLink></BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem><BreadcrumbLink>Раздел</BreadcrumbLink></BreadcrumbItem>
+        <BreadcrumbSeparator />
+        <BreadcrumbItem><BreadcrumbPage>Страница</BreadcrumbPage></BreadcrumbItem>
+      </BreadcrumbList>
+    </Breadcrumb>
 
-  {/* DataTable с тулбаром */}
-  <DataTable
-    columns={columns}
-    data={data}
-    actions={<ToolbarButtons />}
-  />
-</div>
+    {/* DataTable с тулбаром */}
+    <DataTable
+      columns={columns}
+      data={data}
+      actions={<ToolbarButtons />}
+    />
+  </PageShell>
+</WorkspaceMain>
 ```
 
 ### Ключевые правила:
 
 | Правило | Значение |
 |---|---|
-| **Отступы между секциями** | `space-y-4` |
+| **Отступы между секциями** | `space-y-4` (через `density="comfortable"` в PageShell) |
 | **Padding хлебных крошек** | `px-1 md:px-0` |
-| **Заголовок страницы** | `sr-only` (скрытый, для доступности) |
+| **Заголовок страницы** | `sr-only` (скрытый, для доступности) или через `title` PageShell |
 | **Пустые блоки** | **Запрещены** — не создавать div-обёртки без контента |
 
 ---
 
-## 8. Таблицы (DataTable)
+## 9. Таблицы (DataTable)
 
 | Свойство | Значение |
 |---|---|
@@ -197,20 +301,20 @@
 
 ---
 
-## 9. Отступы и spacing
+## 10. Отступы и spacing
 
 | Контекст | Значение |
 |---|---|
 | **Между секциями страницы** | `space-y-4` (16px) |
-| **Внутри Card** | `p-4` (16px) или `px-4 py-3` (для compact header) |
+| **Внутри Card** | `py-6` / `px-6` (через CardContent / CardHeader) |
 | **Gap между кнопками** | `gap-2` (8px) |
 | **Gap между bread + badge** | `gap-2` (8px) |
 
 ---
 
-## 10. Адаптивность (Responsiveness)
+## 11. Адаптивность (Responsiveness)
 
-### 10.1 Breakpoints
+### 11.1 Breakpoints
 
 | Breakpoint | Ширина | Tailwind-префикс | Использование |
 |---|---|---|---|
@@ -220,14 +324,14 @@
 | Large | `≥ 1024px` | `lg:` | Desktop, sidebar раскрыт полностью |
 | XL | `≥ 1280px` | `xl:` | Широкий desktop |
 
-### 10.2 Общие принципы
+### 11.2 Общие принципы
 
 1. **Mobile-first** — базовые стили пишутся для мобилки, расширяются через `sm:`, `md:`, `lg:`
 2. **Запрещено** скрывать функционал на мобиле — только перестраивать layout
 3. **Текст кнопок** можно сокращать, но кнопка должна остаться доступной
 4. **Минимальный touch-target** — `h-9` (36px) для кнопок и инпутов на мобиле
 
-### 10.3 Тулбары и экшен-зоны
+### 11.3 Тулбары и экшен-зоны
 
 ```tsx
 {/* Mobile: колонка, Desktop: строка */}
@@ -247,26 +351,25 @@
 </Button>
 ```
 
-### 10.4 Хлебные крошки
+### 11.4 Хлебные крошки
 
 ```tsx
 {/* Отступ на мобиле, без отступа на desktop */}
 <Breadcrumb className="px-1 md:px-0">
 ```
 
-### 10.5 Card и контейнеры
+### 11.5 Card и контейнеры
 
 ```tsx
 {/* Полная ширина на мобиле, ограниченная на desktop */}
 <Card className="w-full mx-auto">
-  {/* Padding уменьшен на мобиле */}
-  <div className="p-3 sm:p-4 md:p-6">
+  <CardContent className="p-3 sm:p-4 md:p-6">
     <Content />
-  </div>
+  </CardContent>
 </Card>
 ```
 
-### 10.6 Формы
+### 11.6 Формы
 
 ```tsx
 {/* Одна колонка на мобиле, 2 колонки на desktop */}
@@ -282,7 +385,7 @@
 </div>
 ```
 
-### 10.7 Диалоги и Sheet
+### 11.7 Диалоги и Sheet
 
 ```tsx
 {/* Диалог: на мобиле — на всю ширину */}
@@ -292,7 +395,7 @@
 <SheetContent className="w-full sm:max-w-md overflow-y-auto">
 ```
 
-### 10.8 Таблицы (DataTable)
+### 11.8 Таблицы (DataTable)
 
 | Подход | Реализация |
 |---|---|
@@ -311,14 +414,14 @@
 }
 ```
 
-### 10.9 Навигация (Sidebar)
+### 11.9 Навигация (Sidebar)
 
 | Viewport | Поведение |
 |---|---|
 | Mobile (`< md`) | Sidebar скрыт, открывается как Sheet по нажатию hamburger-иконки |
 | Desktop (`≥ md`) | Sidebar fixирован слева, всегда виден |
 
-### 10.10 Изображения
+### 11.10 Изображения
 
 ```tsx
 {/* Адаптивные размеры изображений */}
@@ -327,7 +430,7 @@
 </div>
 ```
 
-### 10.11 Чеклист адаптивности
+### 11.11 Чеклист адаптивности
 
 При создании любого компонента проверь:
 
@@ -344,7 +447,7 @@
 
 ---
 
-## 11. Цветовая палитра (CSS Variables)
+## 12. Цветовая палитра (CSS Variables)
 
 ### Light Mode
 
@@ -368,7 +471,7 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 12. Тени
+## 13. Тени
 
 | Класс | Использование |
 |---|---|
@@ -380,7 +483,7 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 13. Анимации
+## 14. Анимации
 
 | Эффект | Класс | Использование |
 |---|---|---|
@@ -391,7 +494,7 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 14. Иконки
+## 15. Иконки
 
 | Параметр | Значение |
 |---|---|
@@ -402,7 +505,7 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 15. Sidebar (Боковое меню)
+## 16. Sidebar (Боковое меню)
 
 | Свойство | Значение |
 |---|---|
@@ -412,7 +515,7 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 16. Glass-эффекты
+## 17. Glass-эффекты
 
 | Класс | Стиль |
 |---|---|
@@ -421,13 +524,35 @@ body { @apply bg-gray-50 dark:bg-gray-950; }
 
 ---
 
-## 17. Чеклист для агента
+## 18. Ownership — где какие классы должны жить
+
+### Принцип: классы — это ответственность компонента, не страницы
+
+| Что | Где определять | Комментарий |
+|---|---|---|
+| **Палитра, шрифт, радиусы** | `globals.css` — CSS-переменные | Никогда не дублировать в Tailwind-конфиге |
+| **Размеры кнопок, инпутов, бейджей** | `primitive-density.ts` (классы-константы) | Импортировать через `cn()` в `button.tsx`, `input.tsx`, `badge.tsx` |
+| **Варианты (variants)** | В файле компонента: `cva(...)` или `primitiveXxxVariantClassNames` | `buttonVariants`, `badgeVariants`, `inputVariants` |
+| **Типографика** | `globals.css` или Tailwind-утилиты `.text-{display,title,...}` | Никогда `text-lg font-bold` вручную — используй утилиты |
+| **Layout-компоненты** | `page-shell.tsx`, `admin-surface.tsx` | `PageShell`, `ContentContainer`, `WorkspaceMain`, `PageHeader` |
+| **Страницы** | Файл страницы `app/**/page.tsx` | Использовать компоненты выше, не писать вручную `className="space-y-4"` |
+| **Адаптивность** | На уровне layout-компонентов или в `page.tsx` | Mobile-first через `sm:`, `md:`, `lg:` |
+
+### Что НЕЛЬЗЯ делать
+
+- ❌ Писать хардкодные `h-9`, `px-4` на каждой странице — используй компоненты
+- ❌ Дублировать variant-классы в `className` — используй prop `variant`
+- ❌ Копировать размеры из `primitive-density.ts` в страницу — они принадлежат компоненту
+
+---
+
+## 19. Чеклист для агента
 
 При создании или модификации любого компонента, проверь:
 
 - [ ] Кнопки тулбаров: `h-9 font-semibold tracking-tight shadow-sm transition-all active:scale-95`
 - [ ] Поля ввода в тулбарах: `h-9 shadow-sm`
-- [ ] Отступы между секциями: `space-y-4`
+- [ ] Отступы между секциями: через PageShell (`density`, `spacing`)
 - [ ] Нет пустых div-обёрток без контента
 - [ ] Хлебные крошки: `px-1 md:px-0`
 - [ ] Адаптивность: `flex-col → sm:flex-row`, `text-xs md:text-sm`

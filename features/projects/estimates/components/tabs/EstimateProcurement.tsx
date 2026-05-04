@@ -3,10 +3,11 @@
 import { PackageSearch } from 'lucide-react';
 
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { Button } from '@/shared/ui/button';
+import { ErrorState } from '@/shared/ui/states';
 import {
   EstimateTabCard,
   EstimateTabEmptyState,
-  EstimateTabError,
   EstimateTabExportButton,
   EstimateTabLoading,
   EstimateTabMessage,
@@ -139,6 +140,7 @@ export function EstimateProcurement({ estimateId, initialRows }: { estimateId: s
     totals,
     filteredRows,
     handleExport,
+    reloadRows,
   } = useEstimateProcurementController({ estimateId, initialRows });
 
   if (isLoading) {
@@ -146,7 +148,17 @@ export function EstimateProcurement({ estimateId, initialRows }: { estimateId: s
   }
 
   if (errorMessage) {
-    return <EstimateTabError>{errorMessage}</EstimateTabError>;
+    return (
+      <ErrorState
+        title="Ошибка загрузки"
+        description={errorMessage}
+        action={
+          <Button type="button" onClick={() => reloadRows()}>
+            Повторить
+          </Button>
+        }
+      />
+    );
   }
 
   if (rows.length === 0) {

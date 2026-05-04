@@ -1,10 +1,13 @@
 import { TeamMessage, TeamRole } from '../types';
 import { Button } from '@/shared/ui/button';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/shared/ui/dropdown-menu';
 import { Mail, Shield } from 'lucide-react';
+import { Surface } from '@/shared/ui/surface';
 import { getRoleLabel, parseDevLinkMessage } from '../lib/team-utils';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface InviteTeamMemberCardProps {
     email: string;
@@ -32,16 +35,17 @@ export function InviteTeamMemberCard({
     const parsedMessage = message ? parseDevLinkMessage(message.text) : null;
 
     return (
-        <div className="p-6">
-            <div className="space-y-1 mb-6">
-                <h2 className="text-base font-medium">Пригласить участника</h2>
-                <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
-            </div>
-            <div>
-                <form onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
+        <Surface variant="card" density="comfortable">
+            <div className="space-y-1">
+                <div>
+                    <h2 className="text-base font-medium">Пригласить участника</h2>
+                    <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
+                </div>
+                <div>
+                <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">
                     <div className="flex-1 space-y-1.5">
-                        <Label htmlFor="email" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Email</Label>
-                        <Input
+                        <Label htmlFor="email" className={primitiveVisualTypographyClassNames.compactLabel}>Email</Label>
+                        <Input size="default"
                             id="email"
                             type="email"
                             placeholder="colleague@company.com"
@@ -51,10 +55,10 @@ export function InviteTeamMemberCard({
                        />
                     </div>
                     <div className="space-y-1.5 shrink-0">
-                        <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                        <Label className={primitiveVisualTypographyClassNames.compactLabel}>Роль</Label>
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Button variant="outline">
+                                <Button variant="outline" size="default">
                                     {getRoleLabel(role)}
                                     <Shield className="size-3.5 text-muted-foreground opacity-70" />
                                 </Button>
@@ -66,11 +70,11 @@ export function InviteTeamMemberCard({
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
-                    <Button type="submit" variant="primary" disabled={isInviting}>
+                    <Button type="submit" variant="primary" size="default" disabled={isInviting}>
                         <Mail className="size-3.5" />
                         {isInviting ? 'Отправка...' : 'Пригласить'}
                     </Button>
-                </form>
+                </FormLayout>
 
                 {message && (
                     <p
@@ -98,6 +102,7 @@ export function InviteTeamMemberCard({
                     </p>
                 )}
             </div>
-        </div>
+            </div>
+        </Surface>
     );
 }

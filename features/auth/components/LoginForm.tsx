@@ -11,12 +11,30 @@ import {
   CardHeader,
   CardTitle,
 } from '@/shared/ui/card';
+import { FormLayout } from '@/shared/ui/form-layout';
+import { HiddenInput } from '@/shared/ui/hidden-input';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { CircleIcon, Loader2, Eye, EyeOff } from 'lucide-react';
 import { signIn, signUp } from '@/app/(login)/actions';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
 import { AuthStatusMessage } from './AuthFormShell';
+import {
+  primitiveAuthPageBackgroundClassName,
+  primitiveMarketingBgBlobClassNames,
+  primitiveMarketingBgBlobPlacementClassNames,
+  primitiveAuthMarketingGridClassName,
+  primitiveAuthBrandIconClassName,
+  primitiveAuthFeatureCardClassName,
+  primitiveAuthFeatureCardLabelClassName,
+  primitiveAuthFeatureCardValueClassName,
+  primitiveAuthMarketingHeadingClassName,
+  primitiveAuthMarketingSubtextClassName,
+  primitiveAuthFormTitleClassName,
+  primitiveAuthFormDescriptionClassName,
+  primitiveAuthPanelShadowClassName,
+  primitiveAuthPanelBorderClassName,
+} from '@/shared/ui/primitive-marketing';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
   const searchParams = useSearchParams();
@@ -40,37 +58,44 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     : 'Войти в существующий аккаунт';
 
   return (
-    <div className="min-h-[100dvh] bg-[#0B0A0F] text-white">
-      <a href="#auth-card" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground">
+    <div className={primitiveAuthPageBackgroundClassName}>
+      <a
+        href="#auth-card"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+      >
         Пропустить к форме входа
       </a>
       <div aria-hidden className="pointer-events-none absolute inset-0">
-        <div className="absolute left-[-120px] top-[120px] h-[320px] w-[320px] rounded-full bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))] blur-3xl" />
-        <div className="absolute right-[-160px] bottom-[140px] h-[360px] w-[360px] rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))] blur-3xl" />
+        <div
+          className={`absolute ${primitiveMarketingBgBlobPlacementClassNames.topLeft} ${primitiveMarketingBgBlobClassNames.orange} blur-3xl`}
+        />
+        <div
+          className={`absolute ${primitiveMarketingBgBlobPlacementClassNames.bottomRight} ${primitiveMarketingBgBlobClassNames.teal} blur-3xl`}
+        />
       </div>
 
-      <main className="relative mx-auto grid min-h-[100dvh] w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
+      <main className={primitiveAuthMarketingGridClassName}>
         <section className="space-y-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-brand-foreground font-bold">
-              S
-            </div>
+            <div className={primitiveAuthBrandIconClassName}>S</div>
             <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-white/70">Smetalab</p>
+              <p className="text-xs uppercase tracking-ultra text-white/70">
+                Smetalab
+              </p>
               <p className="text-sm font-semibold">BuildOS</p>
             </div>
           </div>
 
           <div className="space-y-4">
-            <p className="text-xs uppercase tracking-[0.35em] text-white/70">
+            <p className="text-xs uppercase tracking-super text-white/70">
               {isSignIn ? 'Client access' : 'Start building'}
             </p>
-            <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+            <h1 className={primitiveAuthMarketingHeadingClassName}>
               {isSignIn
                 ? 'Возвращайтесь к прозрачной стройке'
                 : 'Запустите цифровой контур управления'}
             </h1>
-            <p className="max-w-lg text-lg text-white/80">
+            <p className={primitiveAuthMarketingSubtextClassName}>
               {isSignIn
                 ? 'Один доступ ко всем объектам, бригадам и поставкам. Войти и продолжить работу.'
                 : 'Создайте команду, настройте роли и получайте контроль над сроками и бюджетом.'}
@@ -78,26 +103,37 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           </div>
 
           <div className="grid gap-3 text-sm text-white/80 sm:grid-cols-2">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70">Безопасность</p>
-              <p className="mt-2 font-semibold">RBAC и аудит действий</p>
+            <div className={primitiveAuthFeatureCardClassName}>
+              <p className={primitiveAuthFeatureCardLabelClassName}>
+                Безопасность
+              </p>
+              <p className={primitiveAuthFeatureCardValueClassName}>
+                RBAC и аудит действий
+              </p>
             </div>
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/70">Команды</p>
-              <p className="mt-2 font-semibold">Роли для всех участников</p>
+            <div className={primitiveAuthFeatureCardClassName}>
+              <p className={primitiveAuthFeatureCardLabelClassName}>
+                Команды
+              </p>
+              <p className={primitiveAuthFeatureCardValueClassName}>
+                Роли для всех участников
+              </p>
             </div>
           </div>
         </section>
 
-        <Card id="auth-card" className="w-full border-white/10 bg-[#14121A] text-white shadow-[0_40px_120px_rgba(0,0,0,0.35)]">
+        <Card
+          id="auth-card"
+          className={`w-full ${primitiveAuthPanelBorderClassName} bg-card text-white ${primitiveAuthPanelShadowClassName}`}
+        >
           <CardHeader className="text-left">
             <div className="flex items-center gap-3">
               <CircleIcon className="h-10 w-10 text-brand" aria-hidden="true" />
               <div>
-                <CardTitle className="text-2xl font-semibold text-white">
+                <CardTitle className={primitiveAuthFormTitleClassName}>
                   {formTitle}
                 </CardTitle>
-                <CardDescription className="text-white/70">
+                <CardDescription className={primitiveAuthFormDescriptionClassName}>
                   {formSubtitle}{' '}
                   <Link
                     href={`${isSignIn ? '/sign-up' : '/sign-in'}?${new URLSearchParams({
@@ -120,16 +156,17 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}
-            <form className="space-y-4" action={formAction}>
-              <input type="hidden" name="redirect" value={redirect || ''} />
-              <input type="hidden" name="priceId" value={priceId || ''} />
-              <input type="hidden" name="inviteId" value={inviteId || ''} />
+            <FormLayout className="space-y-4" action={formAction}>
+              <HiddenInput name="redirect" value={redirect || ''} />
+              <HiddenInput name="priceId" value={priceId || ''} />
+              <HiddenInput name="inviteId" value={inviteId || ''} />
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
                   name="email"
                   type="email"
+                  size="default"
                   autoComplete="email"
                   defaultValue={state?.email || emailParam || ''}
                   readOnly={!!inviteId && mode === 'signup'}
@@ -148,6 +185,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
+                    size="default"
                     autoComplete={
                       isSignIn ? 'current-password' : 'new-password'
                     }
@@ -186,6 +224,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                     id="organizationName"
                     name="organizationName"
                     type="text"
+                    size="default"
                     required={!inviteId}
                     maxLength={100}
                     placeholder="ООО «Северный бетон»"
@@ -202,6 +241,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               <Button
                 type="submit"
                 variant="brand"
+                size="default"
                 disabled={pending}
               >
                 {pending ? (
@@ -218,12 +258,15 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
 
               {isSignIn && (
                 <div className="text-center text-sm">
-                  <Link href="/forgot-password" className="text-brand hover:text-brand/80">
+                  <Link
+                    href="/forgot-password"
+                    className="text-brand hover:text-brand/80"
+                  >
                     Забыли пароль?
                   </Link>
                 </div>
               )}
-            </form>
+            </FormLayout>
           </CardContent>
         </Card>
       </main>

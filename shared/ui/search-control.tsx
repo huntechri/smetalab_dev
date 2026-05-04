@@ -9,6 +9,8 @@ import { Switch } from '@/shared/ui/switch';
 import { cn } from '@/lib/utils';
 
 type SearchControlWidth = 'default' | 'full';
+type SearchControlLayout = 'inline' | 'stack';
+type SearchControlDensity = 'compact' | 'default';
 
 type SearchControlProps = {
   value: string;
@@ -27,6 +29,8 @@ type SearchControlProps = {
   onAiModeChange?: (value: boolean) => void;
   showAiMode?: boolean;
   width?: SearchControlWidth;
+  layout?: SearchControlLayout;
+  density?: SearchControlDensity;
   className?: string;
   inputAriaLabel?: string;
 };
@@ -34,6 +38,21 @@ type SearchControlProps = {
 const searchControlWidthClassName: Record<SearchControlWidth, string> = {
   default: 'w-[min(20rem,calc(100vw-2rem))] max-w-full',
   full: 'w-full',
+};
+
+const searchControlLayoutClassName: Record<SearchControlLayout, string> = {
+  inline: 'flex min-w-0 items-center',
+  stack: 'flex flex-col min-w-0 gap-2',
+};
+
+const searchControlDensityClassName: Record<SearchControlDensity, string> = {
+  compact: 'gap-1.5',
+  default: 'gap-2',
+};
+
+const searchControlAiModeClassName: Record<SearchControlDensity, string> = {
+  compact: 'gap-1',
+  default: 'gap-2',
 };
 
 function SearchControl({
@@ -47,17 +66,26 @@ function SearchControl({
   onSubmit,
   showSubmitButton = Boolean(onSubmit),
   submitLabel = 'Поиск',
-  submitSize,
+  submitSize = 'default',
   disabled = false,
   isAiMode = false,
   onAiModeChange,
   showAiMode = Boolean(onAiModeChange),
   width = 'default',
+  layout = 'inline',
+  density = 'default',
   className,
   inputAriaLabel,
 }: SearchControlProps) {
   return (
-    <div className={cn('flex min-w-0 items-center gap-2', width === 'full' && 'w-full', className)}>
+    <div
+      className={cn(
+        searchControlLayoutClassName[layout],
+        searchControlDensityClassName[density],
+        width === 'full' && 'w-full',
+        className,
+      )}
+    >
       <div className={cn('min-w-0', searchControlWidthClassName[width])}>
         <SearchInput
           aria-label={inputAriaLabel ?? placeholder}
@@ -89,7 +117,13 @@ function SearchControl({
       ) : null}
 
       {showAiMode && onAiModeChange ? (
-        <div className="flex shrink-0 items-center gap-2 px-1">
+        <div
+          className={cn(
+            'flex shrink-0 items-center',
+            searchControlAiModeClassName[density],
+            'px-1',
+          )}
+        >
           <CatalogAiModeIndicator active={Boolean(isAiMode)} />
           <Switch
             checked={Boolean(isAiMode)}
@@ -103,4 +137,4 @@ function SearchControl({
 }
 
 export { SearchControl };
-export type { SearchControlProps };
+export type { SearchControlDensity, SearchControlLayout, SearchControlProps };

@@ -5,8 +5,10 @@ import { SearchInput } from '@/shared/ui/search-input';
 import { StatusBadge } from '@/shared/ui/status-badge';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Trash2 } from 'lucide-react';
+import { Surface } from '@/shared/ui/surface';
 import { getMemberInitials, getRoleBadgeVariant, getRoleLabel } from '../lib/team-utils';
 import { TeamMember, TeamRoleFilter } from '../types';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface TeamMembersCardProps {
     members: TeamMember[];
@@ -37,9 +39,10 @@ export function TeamMembersCard({
     onRemoveMember,
 }: TeamMembersCardProps) {
     return (
-        <div className="flex flex-col p-6 space-y-4">
-            <div>
-                <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
+        <Surface variant="card" density="comfortable">
+            <div className="flex flex-col space-y-4">
+                <div>
+                    <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                     <div className="space-y-1">
                         <h2 className="text-base font-medium">Участники</h2>
                         <p className="text-sm text-muted-foreground">
@@ -48,8 +51,8 @@ export function TeamMembersCard({
                     </div>
                     <div className="flex w-full flex-col gap-3 sm:w-auto xl:flex-row xl:items-end">
                         <div className="space-y-1.5">
-                            <Label htmlFor="search" className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Поиск</Label>
-                            <div className="w-[min(20rem,calc(100vw-2rem))]">
+                            <Label htmlFor="search" className={primitiveVisualTypographyClassNames.compactLabel}>Поиск</Label>
+                            <div className="w-full max-w-xs sm:max-w-sm">
                                 <SearchInput
                                     id="search"
                                     placeholder="Имя или email"
@@ -59,13 +62,14 @@ export function TeamMembersCard({
                             </div>
                         </div>
                         <div className="space-y-1.5">
-                            <Label className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">Роль</Label>
+                            <Label className={primitiveVisualTypographyClassNames.compactLabel}>Роль</Label>
                             <div role="group" aria-label="Фильтр по роли" className="flex flex-wrap gap-2">
                                 {roleFilterItems.map((item) => (
                                     <Button
                                         key={item.value}
                                         type="button"
                                         variant={roleFilter === item.value ? 'secondary' : 'outline'}
+                                        size="sm"
                                         onClick={() => onRoleFilterChange(item.value)}
                                         aria-pressed={roleFilter === item.value}
                                         aria-label={`Фильтр: ${item.label}`}
@@ -81,9 +85,13 @@ export function TeamMembersCard({
             <div>
                 <div className="space-y-2">
                     {filteredMembers.map((member) => (
-                        <div
+                        <Surface
                             key={member.id}
-                            className="group flex flex-col gap-3 rounded-xl border border-border/40 bg-background hover:bg-muted/30 hover:shadow-sm hover:border-border/60 transition-all px-4 py-3 sm:flex-row sm:items-center sm:justify-between overflow-hidden"
+                            variant="card"
+                            density="compact"
+                            shadow="none"
+                            border="hairline"
+                            className="flex flex-col gap-3 bg-background hover:bg-muted/30 hover:shadow-sm hover:border-border/60 transition-all sm:flex-row sm:items-center sm:justify-between overflow-hidden"
                         >
                             <div className="flex items-center gap-3">
                                 <Avatar className="size-9">
@@ -114,7 +122,7 @@ export function TeamMembersCard({
                                     />
                                 )}
                             </div>
-                        </div>
+                        </Surface>
                     ))}
                     {filteredMembers.length === 0 && (
                         <p className="py-6 text-center text-sm text-muted-foreground">Нет участников, соответствующих фильтрам.</p>
@@ -122,5 +130,6 @@ export function TeamMembersCard({
                 </div>
             </div>
         </div>
+        </Surface>
     );
 }

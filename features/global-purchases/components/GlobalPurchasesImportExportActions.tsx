@@ -2,6 +2,7 @@
 
 import type { ChangeEvent, RefObject } from 'react';
 import { Download, Upload } from 'lucide-react';
+import { FileInput } from '@/shared/ui/file-input';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/ui/tooltip';
 
@@ -20,9 +21,8 @@ export function GlobalPurchasesImportExportActions({
 }: GlobalPurchasesImportExportActionsProps) {
   return (
     <>
-      <input
+      <FileInput
         ref={importInputRef}
-        type="file"
         accept=".csv,.xlsx"
         className="hidden"
         aria-label="Импорт закупок из CSV/XLSX"

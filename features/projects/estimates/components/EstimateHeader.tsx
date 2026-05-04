@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEstimateMutations } from '../hooks/use-estimate-mutations';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -35,7 +36,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     };
 
     return (
-        <CardShell variant="panel" shadow="sm">
+        <CardShell variant="panel" className="shadow-sm">
             <CardShellBody className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center" density="comfortable">
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-3">
@@ -77,7 +78,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     <EstimateStatusBadge status={meta.status} />
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
-                        <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold leading-none mb-1 sm:text-[11px]">Итого</span>
+                        <span className={`${primitiveVisualTypographyClassNames.estimateSectionLabel} text-muted-foreground leading-none mb-1`}>Итого</span>
                         <span className="text-lg md:text-xl font-bold text-primary">
                             {new Intl.NumberFormat('ru-RU', { style: 'currency', currency: 'RUB', maximumFractionDigits: 0 }).format(meta.total)}
                         </span>

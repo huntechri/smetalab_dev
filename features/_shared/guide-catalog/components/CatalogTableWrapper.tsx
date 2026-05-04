@@ -5,6 +5,7 @@ import { Plus, FilePlus } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import { TableEmptyState } from "@/shared/ui/table-empty-state";
 import { DataTableShell } from "@/shared/ui/shells/data-table-shell";
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import {
   CatalogEmptyStateConfig,
   CatalogTableActions,
@@ -49,7 +50,7 @@ export function CatalogTableWrapper<TData, TValue>({
       data={data}
       desktopHeight="720px"
       mobileHeight="400px"
-      className="text-[12px]"
+      className={primitiveVisualTypographyClassNames.compactBody}
       filterColumn="name"
       filterPlaceholder={filterPlaceholder}
       emptyState={
@@ -60,6 +61,7 @@ export function CatalogTableWrapper<TData, TValue>({
           action={
             <Button
               variant="outline"
+              size="sm"
               onClick={() => tableActions.onInsertRequest()}
             >
               <Plus className="size-3.5 mr-2" />

@@ -5,7 +5,6 @@ export default function Loading() {
         <LoadingState
             title="Загрузка контрагентов"
             description="Подготавливаем справочник контрагентов..."
-            className="min-h-[40vh]"
         />
     );
 }

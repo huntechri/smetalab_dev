@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import { requestPasswordReset } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
+import { FormLayout } from '@/shared/ui/form-layout';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
@@ -21,10 +22,10 @@ export function ForgotPasswordForm() {
       title="Восстановление пароля"
       description="Введите email, и мы отправим ссылку для сброса пароля."
     >
-      <form action={formAction} className="space-y-4">
+      <FormLayout action={formAction}>
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" required autoComplete="email" />
+          <Input id="email" name="email" type="email" size="default" required autoComplete="email" />
         </div>
 
         {state?.error ? (
@@ -34,7 +35,7 @@ export function ForgotPasswordForm() {
           <AuthStatusMessage variant="success">{state.success}</AuthStatusMessage>
         ) : null}
 
-        <Button type="submit" disabled={pending}>
+        <Button type="submit" size="default" disabled={pending}>
           {pending ? 'Отправка...' : 'Отправить ссылку'}
         </Button>
         <Link
@@ -43,7 +44,7 @@ export function ForgotPasswordForm() {
         >
           Вернуться ко входу
         </Link>
-      </form>
+      </FormLayout>
     </AuthFormShell>
   );
 }

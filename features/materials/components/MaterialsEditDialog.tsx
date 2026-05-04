@@ -48,45 +48,45 @@ export function MaterialsEditDialog({
                     <FormLayout onSubmit={onSubmit} padding="dialog">
                         <FormSection columns="two">
                             <FieldStack label="Код" htmlFor="edit-code">
-                                <Input id="edit-code" value={data.code || ""} onChange={(e) => onFieldChange("code", e.target.value)} />
+                                <Input size="default" id="edit-code" value={data.code || ""} onChange={(e) => onFieldChange("code", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Название" htmlFor="edit-name">
-                                <Input id="edit-name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} />
+                                <Input size="default" id="edit-name" value={data.name || ""} onChange={(e) => onFieldChange("name", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Цена" htmlFor="edit-price">
-                                <Input id="edit-price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} />
+                                <Input size="default" id="edit-price" type="number" value={data.price || ""} onChange={(e) => onFieldChange("price", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Ед.изм." htmlFor="edit-unit">
-                                <Input id="edit-unit" value={data.unit || ""} onChange={(e) => onFieldChange("unit", e.target.value)} />
+                                <Input size="default" id="edit-unit" value={data.unit || ""} onChange={(e) => onFieldChange("unit", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Поставщик" htmlFor="edit-vendor">
-                                <Input id="edit-vendor" value={data.vendor || ""} onChange={(e) => onFieldChange("vendor", e.target.value)} />
+                                <Input size="default" id="edit-vendor" value={data.vendor || ""} onChange={(e) => onFieldChange("vendor", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Вес (кг)" htmlFor="edit-weight">
-                                <Input id="edit-weight" value={data.weight || ""} onChange={(e) => onFieldChange("weight", e.target.value)} />
+                                <Input size="default" id="edit-weight" value={data.weight || ""} onChange={(e) => onFieldChange("weight", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Категория LV1" htmlFor="edit-cat1">
-                                <Input id="edit-cat1" value={data.categoryLv1 || ""} onChange={(e) => onFieldChange("categoryLv1", e.target.value)} />
+                                <Input size="default" id="edit-cat1" value={data.categoryLv1 || ""} onChange={(e) => onFieldChange("categoryLv1", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Категория LV2" htmlFor="edit-cat2">
-                                <Input id="edit-cat2" value={data.categoryLv2 || ""} onChange={(e) => onFieldChange("categoryLv2", e.target.value)} />
+                                <Input size="default" id="edit-cat2" value={data.categoryLv2 || ""} onChange={(e) => onFieldChange("categoryLv2", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Категория LV3" htmlFor="edit-cat3">
-                                <Input id="edit-cat3" value={data.categoryLv3 || ""} onChange={(e) => onFieldChange("categoryLv3", e.target.value)} />
+                                <Input size="default" id="edit-cat3" value={data.categoryLv3 || ""} onChange={(e) => onFieldChange("categoryLv3", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="Категория LV4" htmlFor="edit-cat4">
-                                <Input id="edit-cat4" value={data.categoryLv4 || ""} onChange={(e) => onFieldChange("categoryLv4", e.target.value)} />
+                                <Input size="default" id="edit-cat4" value={data.categoryLv4 || ""} onChange={(e) => onFieldChange("categoryLv4", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="URL товара" htmlFor="edit-purl">
-                                <Input id="edit-purl" value={data.productUrl || ""} onChange={(e) => onFieldChange("productUrl", e.target.value)} />
+                                <Input size="default" id="edit-purl" value={data.productUrl || ""} onChange={(e) => onFieldChange("productUrl", e.target.value)} />
                             </FieldStack>
                             <FieldStack label="URL изображения" htmlFor="edit-iurl">
-                                <Input id="edit-iurl" value={data.imageUrl || ""} onChange={(e) => onFieldChange("imageUrl", e.target.value)} />
+                                <Input size="default" id="edit-iurl" value={data.imageUrl || ""} onChange={(e) => onFieldChange("imageUrl", e.target.value)} />
                             </FieldStack>
                         </FormSection>
                         <DialogFooter>
-                            <Button variant="outline" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
-                            <Button type="submit" disabled={isUpdating}>{isUpdating ? "Сохранение..." : "Сохранить"}</Button>
+                            <Button variant="outline" size="default" onClick={onCancel} disabled={isUpdating}>Отмена</Button>
+                            <Button type="submit" size="default" disabled={isUpdating}>{isUpdating ? "Сохранение..." : "Сохранить"}</Button>
                         </DialogFooter>
                     </FormLayout>
                 ) : (

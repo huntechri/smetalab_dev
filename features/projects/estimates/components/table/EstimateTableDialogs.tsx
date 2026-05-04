@@ -121,6 +121,7 @@ export function EstimateTableDialogs({
             <Label htmlFor="section-code">№ раздела</Label>
             <Input
               id="section-code"
+              size="default"
               value={model.sectionCodeInput}
               onChange={(event) => model.setSectionCodeInput(event.target.value)}
               placeholder="Например: 1.1"
@@ -130,16 +131,17 @@ export function EstimateTableDialogs({
             <Label htmlFor="section-name">Название раздела</Label>
             <Input
               id="section-name"
+              size="default"
               value={model.sectionNameInput}
               onChange={(event) => model.setSectionNameInput(event.target.value)}
               placeholder="Например: Демонтажные работы"
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => model.setIsSectionDialogOpen(false)}>
+            <Button variant="outline" size="default" onClick={() => model.setIsSectionDialogOpen(false)}>
               Отмена
             </Button>
-            <Button variant="brand" onClick={() => void model.createSection()}>
+            <Button variant="brand" size="default" onClick={() => void model.createSection()}>
               Добавить
             </Button>
           </DialogFooter>
@@ -162,6 +164,7 @@ export function EstimateTableDialogs({
             <Label htmlFor="estimate-coef">Коэффициент, %</Label>
             <Input
               id="estimate-coef"
+              size="default"
               value={model.coefInputValue}
               onChange={(event) => model.setCoefInputValue(event.target.value)}
               placeholder="Например: 20"
@@ -173,6 +176,7 @@ export function EstimateTableDialogs({
           <DialogFooter className="gap-2 sm:justify-between">
             <Button
               variant="outline"
+              size="default"
               onClick={() => model.setIsCoefficientDialogOpen(false)}
               disabled={model.isApplyingCoefficient}
             >
@@ -181,6 +185,7 @@ export function EstimateTableDialogs({
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
+                size="default"
                 onClick={() => void model.resetCoefficient()}
                 disabled={model.isApplyingCoefficient || model.coefPercent === 0}
               >
@@ -188,6 +193,7 @@ export function EstimateTableDialogs({
               </Button>
               <Button
                 variant="brand"
+                size="default"
                 onClick={() => void model.applyCoefficient()}
                 disabled={model.isApplyingCoefficient}
               >
@@ -211,6 +217,7 @@ export function EstimateTableDialogs({
             <Label htmlFor="pattern-name">Название</Label>
             <Input
               id="pattern-name"
+              size="default"
               value={model.patternName}
               onChange={(event) => model.setPatternName(event.target.value)}
               placeholder="Например: Квартира 60м² — базовый ремонт"
@@ -220,17 +227,19 @@ export function EstimateTableDialogs({
             <Label htmlFor="pattern-description">Описание (опционально)</Label>
             <Input
               id="pattern-description"
+              size="default"
               value={model.patternDescription}
               onChange={(event) => model.setPatternDescription(event.target.value)}
               placeholder="Краткое описание состава работ"
             />
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => model.setIsSavePatternOpen(false)}>
+            <Button variant="outline" size="default" onClick={() => model.setIsSavePatternOpen(false)}>
               Отмена
             </Button>
             <Button
               variant="brand"
+              size="default"
               onClick={() => void model.savePattern()}
               disabled={model.isPatternSaving}
             >
@@ -304,11 +313,12 @@ export function EstimateTableDialogs({
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => model.setIsApplyPatternOpen(false)}>
+            <Button variant="outline" size="default" onClick={() => model.setIsApplyPatternOpen(false)}>
               Отмена
             </Button>
             <Button
               variant="brand"
+              size="default"
               onClick={() => void model.applyPattern()}
               disabled={model.isPatternApplying || !model.selectedPatternId}
             >
@@ -328,10 +338,10 @@ export function EstimateTableDialogs({
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => onDeleteDialogChange(false)} disabled={isDeleting}>
+            <Button variant="outline" size="default" onClick={() => onDeleteDialogChange(false)} disabled={isDeleting}>
               Отмена
             </Button>
-            <Button variant="destructive" onClick={() => void onDeleteConfirm()} disabled={isDeleting}>
+            <Button variant="destructive" size="default" onClick={() => void onDeleteConfirm()} disabled={isDeleting}>
               {isDeleting ? "Удаление..." : "Удалить смету"}
             </Button>
           </DialogFooter>

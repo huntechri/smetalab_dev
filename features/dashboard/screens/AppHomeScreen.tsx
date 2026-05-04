@@ -5,6 +5,7 @@ import { HomeKpiCards } from '../components/HomeKpiCards';
 import { HomeDashboardKpi, HomePerformanceDynamicsPoint } from '../types';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { useVisibleRouteRefresh } from '@/shared/hooks/use-visible-route-refresh';
+import { DashboardPageStack, DashboardMainContainer } from '@/shared/ui/dashboard-layout';
 
 type AppHomeScreenProps = {
     kpi: HomeDashboardKpi;
@@ -17,11 +18,11 @@ export function AppHomeScreen({ kpi, dynamics, showDynamicsChart }: AppHomeScree
     useVisibleRouteRefresh();
 
     return (
-        <div className="flex flex-col gap-3 sm:gap-4 lg:gap-6 pt-1 pb-3 sm:pb-4 lg:pt-2 lg:pb-6 animate-in fade-in duration-500 ease-out">
-            <div className="@container/main space-y-3 sm:space-y-6 lg:space-y-10">
+        <DashboardPageStack className="animate-in fade-in duration-500 ease-out">
+            <DashboardMainContainer>
                 <HomeKpiCards kpi={kpi} />
                 {showDynamicsChart ? <HomeDynamicsChart data={dynamics} /> : null}
-            </div>
-        </div>
+            </DashboardMainContainer>
+        </DashboardPageStack>
     );
 }

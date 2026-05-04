@@ -1,12 +1,8 @@
 import { Badge } from '@/shared/ui/badge';
 import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
 import { Section, SectionHeader, SectionTitle } from '@/shared/ui/section';
-import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
-import {
-    primitiveVisualIconSizeClassNames,
-    primitiveVisualTypographyClassNames,
-} from '@/shared/ui/primitive-density';
-import { Clock } from 'lucide-react';
+import { DashboardFocusItem } from '@/shared/ui/dashboard-focus-item';
+import type { StatusTone } from '@/shared/ui/status-badge';
 
 const focusItems = [
     { label: 'Закрытие актов «Северный»', meta: 'До 14:00', status: 'Согласование', tone: 'success' },
@@ -28,24 +24,16 @@ export function TodayFocusSection() {
             </SectionHeader>
 
             <CardShell variant="glass" shadow="sm">
-                <CardShellBody className="p-0" density="compact">
-                    <div className="h-[200px] divide-y divide-border/20 overflow-y-auto">
+                <CardShellBody density="compact">
+                    <div className="h-48 divide-y divide-border/20 overflow-y-auto">
                         {focusItems.map((item) => (
-                            <div key={item.label} className="group flex cursor-pointer items-center justify-between gap-4 p-4 transition-all hover:bg-muted/20">
-                                <div className="flex items-start gap-3">
-                                    <StatusIndicator tone="brand" size="sm" pulse="pulse" className="mt-1.5 transition-transform duration-300 group-hover:scale-125" />
-                                    <div>
-                                        <p className={primitiveVisualTypographyClassNames.itemTitleInteractive}>{item.label}</p>
-                                        <div className="mt-2 flex items-center gap-1.5">
-                                            <Clock className={primitiveVisualIconSizeClassNames.mutedMeta} />
-                                            <span className={primitiveVisualTypographyClassNames.mutedMeta}>{item.meta}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <StatusBadge tone={item.tone}>
-                                    {item.status}
-                                </StatusBadge>
-                            </div>
+                            <DashboardFocusItem
+                                key={item.label}
+                                label={item.label}
+                                meta={item.meta}
+                                status={item.status}
+                                tone={item.tone}
+                            />
                         ))}
                     </div>
                 </CardShellBody>

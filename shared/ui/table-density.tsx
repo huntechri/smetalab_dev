@@ -2,6 +2,19 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { TableCell, TableHead, TableRow } from '@/shared/ui/table';
+import {
+  primitiveDataTableHeaderRowClassName,
+  primitiveDataTableHeaderCellClassName,
+  primitiveDataTableBodyRowClassName,
+  primitiveDataTableBodyCellClassName,
+  primitiveDataTableCellContentClassName,
+  primitiveDataTableContainerClassName,
+  primitiveDataTableAiContainerClassName,
+  primitiveDataTableAiOverlayClassName,
+  primitiveDataTableEmptyCellClassName,
+  primitiveCompactTableHeadClassName,
+  primitiveCompactTableCellClassName,
+} from '@/shared/ui/primitive-density';
 
 export type TableDensity = 'compact' | 'default';
 export type TableTextAlign = 'start' | 'center' | 'end';
@@ -47,33 +60,24 @@ const tableTextSizeClassName: Record<TableTextSize, string> = {
   sm: 'text-sm',
 };
 
-const compactTableHeadClassName = 'h-8 text-[9px] font-bold uppercase tracking-wider text-muted-foreground/70 sm:text-[11px]';
-const compactTableCellClassName = 'py-2 text-[9px] sm:text-[11px]';
-
 export const dataTableSortableHeaderTriggerClassName =
   'flex w-full cursor-pointer select-none items-center gap-2 rounded-sm text-left transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/60';
 export const dataTableStaticHeaderTriggerClassName =
   'flex w-full cursor-default select-none items-center gap-2 text-left';
 export const dataTableHeaderContentClassName = 'flex-1 truncate text-xs';
-export const dataTableHeaderRowClassName = 'bg-background shadow-[0_1px_0_0_rgba(0,0,0,0.08)]';
-export const dataTableHeaderCellClassName =
-  'h-10 border-b border-border/50 bg-muted/20 px-3 text-left align-middle text-[11px] font-bold uppercase tracking-widest text-muted-foreground transition-colors md:px-4';
-export const dataTableBodyRowClassName =
-  'group/row cursor-default animate-in border-b fade-in slide-in-from-left-1 transition-colors duration-300 last:border-0 hover:bg-muted/60';
-export const dataTableBodyCellClassName =
-  'border-b px-3 py-1.5 align-middle transition-colors md:px-4 md:py-2';
-export const dataTableCellContentClassName = 'w-full text-[12px] leading-tight';
-export const dataTableContainerClassName =
-  'relative overflow-x-auto rounded-2xl border border-border/40 bg-card/50 shadow-[0_8px_30px_rgb(0,0,0,0.04)] backdrop-blur-md';
-export const dataTableAiContainerClassName =
-  'border-indigo-400/30 shadow-[0_0_30px_-5px_rgba(99,102,241,0.15)] ring-1 ring-indigo-500/20';
-export const dataTableAiOverlayClassName =
-  'pointer-events-none absolute inset-0 bg-linear-to-br from-indigo-500/2 via-transparent to-purple-500/2';
+export const dataTableHeaderRowClassName = primitiveDataTableHeaderRowClassName;
+export const dataTableHeaderCellClassName = primitiveDataTableHeaderCellClassName;
+export const dataTableBodyRowClassName = primitiveDataTableBodyRowClassName;
+export const dataTableBodyCellClassName = primitiveDataTableBodyCellClassName;
+export const dataTableCellContentClassName = primitiveDataTableCellContentClassName;
+export const dataTableContainerClassName = primitiveDataTableContainerClassName;
+export const dataTableAiContainerClassName = primitiveDataTableAiContainerClassName;
+export const dataTableAiOverlayClassName = primitiveDataTableAiOverlayClassName;
 export const dataTableLoadingOverlayClassName =
   'pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/18 backdrop-blur-[1px]';
 export const dataTableLoadingBadgeClassName =
   'flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg';
-export const dataTableEmptyCellClassName = 'px-3 py-8 text-center text-sm text-muted-foreground';
+export const dataTableEmptyCellClassName = primitiveDataTableEmptyCellClassName;
 
 export interface TableHeaderLabelProps extends React.ComponentPropsWithoutRef<'div'> {
   align?: TableTextAlign;
@@ -125,11 +129,11 @@ export function CompactTableHeaderRow({ className, ...props }: CompactTableHeade
 }
 
 export function CompactTableRow({ className, ...props }: CompactTableRowProps) {
-  return <TableRow className={cn(compactTableCellClassName, className)} {...props} />;
+  return <TableRow className={cn(primitiveCompactTableCellClassName, className)} {...props} />;
 }
 
 export function CompactTableHead({ align = 'start', className, ...props }: CompactTableHeadProps) {
-  return <TableHead className={cn(compactTableHeadClassName, tableTextAlignClassName[align], className)} {...props} />;
+  return <TableHead className={cn(primitiveCompactTableHeadClassName, tableTextAlignClassName[align], className)} {...props} />;
 }
 
 export function CompactTableCell({
@@ -144,7 +148,7 @@ export function CompactTableCell({
   return (
     <TableCell
       className={cn(
-        compactTableCellClassName,
+        primitiveCompactTableCellClassName,
         tableTextAlignClassName[align],
         tableTextToneClassName[tone],
         tableTextWeightClassName[weight],

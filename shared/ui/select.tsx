@@ -12,6 +12,7 @@ import {
   primitiveSelectPopperContentClassName,
   primitiveSelectPopperViewportClassName,
   primitiveSelectScrollButtonClassName,
+  primitiveSelectSizeClassNames,
   primitiveSelectSeparatorClassName,
   primitiveSelectTriggerClassName,
   primitiveSelectViewportClassName,
@@ -48,7 +49,7 @@ function SelectTrigger({
     <SelectPrimitive.Trigger
       data-slot="select-trigger"
       data-size={size}
-      className={cn(primitiveSelectTriggerClassName, className)}
+      className={cn(primitiveSelectTriggerClassName, primitiveSelectSizeClassNames[size], className)}
       {...props}
     >
       {children}

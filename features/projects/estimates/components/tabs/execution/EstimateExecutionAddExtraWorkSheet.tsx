@@ -46,7 +46,7 @@ export function EstimateExecutionAddExtraWorkSheet({
                         </ActionMenuItemContent>
                     </DropdownMenuItem>
                 ) : (
-                    <Button variant="primary" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
+                    <Button variant="primary" size="default" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
                         <Plus className="size-4" />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>
@@ -60,7 +60,7 @@ export function EstimateExecutionAddExtraWorkSheet({
                     </SheetDescription>
                 </SheetHeader>
 
-                <div className="mt-6 h-[calc(100vh-140px)] overflow-hidden">
+                <div className="mt-6 h-content-fill overflow-hidden">
                     <WorkCatalogPicker
                         onAddWork={(work) => void handleAddWork(work)}
                         addedWorkNames={addedWorkNames}

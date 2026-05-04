@@ -7,6 +7,7 @@ import { Button } from '@/shared/ui/button';
 import { DataTableShell } from '@/shared/ui/shells/data-table-shell';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import { ToolbarGroup } from '@/shared/ui/toolbar';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 /**
  * Metadata for a directory-style list screen.
@@ -76,7 +77,7 @@ export function DirectoryListScreen<TData, TValue>({
       data={rows}
       desktopHeight={desktopHeight}
       mobileHeight={mobileHeight}
-      className="text-[12px]"
+      className={primitiveVisualTypographyClassNames.compactBody}
       filterColumn={filterColumn}
       filterPlaceholder={filterPlaceholder}
       onSearch={onSearch}
@@ -92,6 +93,7 @@ export function DirectoryListScreen<TData, TValue>({
           action={
             <Button
               variant="primary"
+              size="default"
               onClick={onCreate}
             >
               <Plus className="size-3.5 mr-2" />
@@ -105,6 +107,7 @@ export function DirectoryListScreen<TData, TValue>({
           {canLoadMore ? (
             <Button
               variant="outline"
+              size="default"
               onClick={onLoadMore}
               disabled={isLoadingMore}
             >
@@ -116,6 +119,7 @@ export function DirectoryListScreen<TData, TValue>({
           <Button
             onClick={onCreate}
             variant="primary"
+            size="default"
             aria-label={addLabel}
           >
             <Plus className="h-4 w-4 mr-1" />

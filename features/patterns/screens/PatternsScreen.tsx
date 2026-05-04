@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { Button } from '@/shared/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card';
+import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Badge } from '@/shared/ui/badge';
+
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 import { estimatePatternsActionRepo, type EstimatePatternListItem, type EstimatePatternPreviewRow } from '@/features/projects/estimates';
@@ -78,22 +79,22 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
       <h1 className="sr-only">Шаблоны смет</h1>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
         {items.map((item) => (
-          <Card key={item.id}>
-            <CardHeader className="space-y-2">
-              <CardTitle className="text-base">{item.name}</CardTitle>
+          <CardShell key={item.id}>
+            <CardShellHeader>
+              <h3 className="text-base font-semibold">{item.name}</h3>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="secondary">{item.worksCount} работ</Badge>
                 <Badge variant="secondary">{item.materialsCount} материалов</Badge>
               </div>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {item.description ? <p className="text-subtitle">{item.description}</p> : null}
+            </CardShellHeader>
+            <CardShellBody className="space-y-3">
+              {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
               <div className="flex gap-2">
-                <Button variant="outline" onClick={() => void openPreview(item.id)}>Превью</Button>
-                <Button variant="destructive" onClick={() => void removePattern(item.id)}>Удалить</Button>
+                <Button variant="outline" size="default" onClick={() => void openPreview(item.id)}>Превью</Button>
+                <Button variant="destructive" size="default" onClick={() => void removePattern(item.id)}>Удалить</Button>
               </div>
-            </CardContent>
-          </Card>
+            </CardShellBody>
+          </CardShell>
         ))}
       </div>
 
@@ -103,16 +104,18 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
             <DialogTitle>{selectedName}</DialogTitle>
             <DialogDescription>Превью состава шаблона.</DialogDescription>
           </DialogHeader>
-          <div className="max-h-[420px] overflow-y-auto rounded-md border p-3">
-            {sortedPreviewRows.map((row) => (
-              <div key={row.tempKey} className="flex items-center justify-between border-b py-1 text-sm last:border-b-0">
-                <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
-                <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
-              </div>
-            ))}
+          <div className="rounded-md sm:rounded-lg border bg-muted/30 shadow-none p-3 sm:p-4">
+            <div className="space-y-1">
+              {sortedPreviewRows.map((row) => (
+                <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
+                  <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
+                  <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
+                </div>
+              ))}
+            </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
+            <Button variant="outline" size="default" onClick={() => setIsPreviewOpen(false)}>Закрыть</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

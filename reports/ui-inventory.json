@@ -1,13 +1,13 @@
 {
-  "generatedAt": "2026-05-03T16:59:49.820Z",
+  "generatedAt": "2026-05-04T09:00:45.402Z",
   "summary": {
-    "filesScanned": 533,
+    "filesScanned": 550,
     "realViolations": 0,
-    "needsReview": 17,
-    "informational": 732,
+    "needsReview": 4,
+    "informational": 804,
     "autoFixCandidates": 0,
     "autoFixReason": "classification-first mode; fix-safe disabled",
-    "manualReview": 17,
+    "manualReview": 4,
     "mode": "default"
   },
   "findings": [
@@ -244,6 +244,17 @@
     },
     {
       "file": "app/(login)/verify-email/page.tsx",
+      "source": "@/shared/ui/auth-shell",
+      "importedNames": "AuthShell, AuthPanel, AuthStatusMessage",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/(login)/verify-email/page.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -353,6 +364,28 @@
       "issueHint": "#244"
     },
     {
+      "file": "app/(workspace)/app/loading.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "LoadingState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/(workspace)/app/loading.tsx",
+      "source": "@/shared/ui/page-shell",
+      "importedNames": "PageShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "app/(workspace)/app/projects/[projectId]/estimates/[estimateId]/page.tsx",
       "source": "@/shared/ui/page-shell",
       "importedNames": "PageShell",
@@ -398,17 +431,6 @@
     },
     {
       "file": "app/not-found.tsx",
-      "source": "lucide-react",
-      "importedNames": "CircleIcon",
-      "severity": "informational",
-      "category": "icon-import",
-      "owner": "app",
-      "decision": "informational",
-      "fixSafe": false,
-      "issueHint": "#246"
-    },
-    {
-      "file": "app/not-found.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
       "severity": "informational",
@@ -420,8 +442,8 @@
     },
     {
       "file": "app/not-found.tsx",
-      "source": "@/shared/ui/card",
-      "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
       "severity": "informational",
       "category": "import",
       "owner": "app",
@@ -453,8 +475,41 @@
     },
     {
       "file": "app/page.tsx",
+      "source": "@/shared/ui/content-container",
+      "importedNames": "ContentContainer",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/page.tsx",
+      "source": "@/shared/ui/marketing-shell",
+      "importedNames": "MarketingPageShell, MarketingHero, MarketingSection, MarketingCard, MarketingCTA,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/page.tsx",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "app",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "app/page.tsx",
       "source": "lucide-react",
-      "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck",
+      "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck,",
       "severity": "informational",
       "category": "icon-import",
       "owner": "app",
@@ -518,6 +573,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "components/layout/active-team-indicator.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveActiveTeamIndicatorClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "components/layout/app-header.tsx",
       "source": "@/shared/ui/breadcrumbs",
       "importedNames": "AppBreadcrumbs",
@@ -551,6 +617,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "components/layout/app-header.tsx",
+      "source": "@/shared/ui/app-header",
+      "importedNames": "AppHeaderShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "components/layout/app-sidebar.tsx",
       "source": "@/shared/ui/sidebar",
       "importedNames": "Sidebar, SidebarContent, SidebarFooter, SidebarHeader,",
@@ -571,6 +648,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "components/layout/app-sidebar.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveAppSidebarSkeletonHeaderClassName, primitiveAppSidebarSkeletonContentClassName, primitiveAppSidebarBrandHeaderClassName, primitiveAppSidebarBrandGradientClassName, primitiveAppSidebarContentClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "components/layout/user-menu.tsx",
@@ -641,7 +729,29 @@
     {
       "file": "components/navigation/sidebar-nav.tsx",
       "source": "@/shared/ui/sidebar",
-      "importedNames": "SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,",
+      "importedNames": "SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, useSidebar,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "components/navigation/sidebar-nav.tsx",
+      "source": "@/shared/ui/sidebar-nav-item",
+      "importedNames": "SidebarNavItem",
+      "severity": "informational",
+      "category": "import",
+      "owner": "other",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "components/navigation/sidebar-nav.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveSidebarGroupClassName, primitiveSidebarGroupLabelClassName, primitiveSidebarMenuClassName,",
       "severity": "informational",
       "category": "import",
       "owner": "other",
@@ -903,6 +1013,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "LoadingState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
       "source": "lucide-react",
       "importedNames": "Loader2",
@@ -915,8 +1036,8 @@
     },
     {
       "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-      "source": "@/shared/ui/shells/catalog-directory-visual-contracts",
-      "importedNames": "catalogScreenShellClassNames",
+      "source": "@/shared/ui/file-input",
+      "importedNames": "FileInput",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -926,14 +1047,14 @@
     },
     {
       "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/shells/catalog-directory-visual-contracts",
+      "importedNames": "catalogScreenShellClassNames",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "possible-violation",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
@@ -1212,8 +1333,8 @@
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
-      "source": "@/shared/ui/dropdown-menu",
-      "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1223,14 +1344,14 @@
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/dropdown-menu",
+      "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/admin/components/admin-user-menu.tsx",
@@ -1256,6 +1377,28 @@
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
+      "source": "@/shared/ui/hidden-input",
+      "importedNames": "HiddenInput",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/admin/components/impersonate-button.tsx",
       "source": "lucide-react",
       "importedNames": "ShieldAlert, Loader2",
       "severity": "informational",
@@ -1264,28 +1407,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/admin/components/impersonate-button.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/admin/components/impersonate-button.tsx",
@@ -1344,6 +1465,17 @@
     },
     {
       "file": "features/auth/components/AuthFormShell.tsx",
+      "source": "@/shared/ui/auth-shell",
+      "importedNames": "AuthShell, AuthStatusMessage",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/AuthFormShell.tsx",
       "source": "@/shared/ui/card",
       "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
       "severity": "informational",
@@ -1357,6 +1489,17 @@
       "file": "features/auth/components/ForgotPasswordForm.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/ForgotPasswordForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1385,17 +1528,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/auth/components/ForgotPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/auth/components/ForgotPasswordForm.tsx",
@@ -1434,6 +1566,28 @@
       "file": "features/auth/components/LoginForm.tsx",
       "source": "@/shared/ui/card",
       "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/LoginForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/LoginForm.tsx",
+      "source": "@/shared/ui/hidden-input",
+      "importedNames": "HiddenInput",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1476,25 +1630,14 @@
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveAuthPageBackgroundClassName, primitiveMarketingBgBlobClassNames, primitiveMarketingBgBlobPlacementClassNames, primitiveAuthMarketingGridClassName, primitiveAuthBrandIconClassName, primitiveAuthFeatureCardClassName, primitiveAuthFeatureCardLabelClassName, primitiveAuthFeatureCardValueClassName, primitiveAuthMarketingHeadingClassName, primitiveAuthMarketingSubtextClassName, primitiveAuthFormTitleClassName, primitiveAuthFormDescriptionClassName, primitiveAuthPanelShadowClassName, primitiveAuthPanelBorderClassName,",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/LoginForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/auth/components/LoginForm.tsx",
@@ -1531,6 +1674,28 @@
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/ResetPasswordForm.tsx",
+      "source": "@/shared/ui/hidden-input",
+      "importedNames": "HiddenInput",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/auth/components/ResetPasswordForm.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -1550,28 +1715,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
-    },
-    {
-      "file": "features/auth/components/ResetPasswordForm.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/auth/components/ResetPasswordForm.tsx",
@@ -1643,6 +1786,17 @@
       "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+      "source": "@/shared/ui/catalog-list-item",
+      "importedNames": "CatalogListItem",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1839,8 +1993,8 @@
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-      "source": "@/shared/ui/tabs",
-      "importedNames": "Tabs, TabsList, TabsTrigger",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -1850,14 +2004,14 @@
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/tabs",
+      "importedNames": "Tabs, TabsList, TabsTrigger",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
@@ -2015,6 +2169,17 @@
     },
     {
       "file": "features/dashboard/components/SignalsSection.tsx",
+      "source": "@/shared/ui/section",
+      "importedNames": "Section",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/dashboard/components/SignalsSection.tsx",
       "source": "@/shared/ui/primitive-density",
       "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualSemanticToneClassNames, primitiveVisualSurfaceClassNames, primitiveVisualTypographyClassNames,",
       "severity": "informational",
@@ -2136,8 +2301,19 @@
     },
     {
       "file": "features/dashboard/components/TodayFocusSection.tsx",
+      "source": "@/shared/ui/dashboard-focus-item",
+      "importedNames": "DashboardFocusItem",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/dashboard/components/TodayFocusSection.tsx",
       "source": "@/shared/ui/status-badge",
-      "importedNames": "StatusBadge, StatusIndicator, type StatusTone",
+      "importedNames": "StatusTone",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -2146,26 +2322,15 @@
       "issueHint": "#244"
     },
     {
-      "file": "features/dashboard/components/TodayFocusSection.tsx",
-      "source": "@/shared/ui/primitive-density",
-      "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualTypographyClassNames,",
+      "file": "features/dashboard/screens/AppHomeScreen.tsx",
+      "source": "@/shared/ui/dashboard-layout",
+      "importedNames": "DashboardPageStack, DashboardMainContainer",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/dashboard/components/TodayFocusSection.tsx",
-      "source": "lucide-react",
-      "importedNames": "Clock",
-      "severity": "informational",
-      "category": "icon-import",
-      "owner": "feature",
-      "decision": "informational",
-      "fixSafe": false,
-      "issueHint": "#246"
     },
     {
       "file": "features/global-purchases/components/GlobalPurchasesCardsList.tsx",
@@ -2213,6 +2378,17 @@
     },
     {
       "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+      "source": "@/shared/ui/file-input",
+      "importedNames": "FileInput",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
       "source": "@/shared/ui/toolbar-button",
       "importedNames": "ToolbarButton",
       "severity": "informational",
@@ -2232,17 +2408,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-      "tag": "<input>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "possible-violation",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/global-purchases/components/GlobalPurchasesSummary.tsx",
@@ -2785,6 +2950,17 @@
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -2804,17 +2980,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
-    },
-    {
-      "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
@@ -3203,8 +3368,8 @@
     },
     {
       "file": "features/patterns/screens/PatternsScreen.tsx",
-      "source": "@/shared/ui/card",
-      "importedNames": "Card, CardContent, CardHeader, CardTitle",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell, CardShellBody, CardShellHeader",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3302,8 +3467,19 @@
     },
     {
       "file": "features/permissions/components/permissions-matrix.tsx",
-      "source": "@/shared/ui/skeleton",
-      "importedNames": "Skeleton",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/permissions/components/permissions-matrix.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "LoadingState",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3709,8 +3885,8 @@
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "source": "@/shared/ui/input",
-      "importedNames": "Input",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3720,14 +3896,14 @@
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/input",
+      "importedNames": "Input",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
@@ -3830,6 +4006,17 @@
     },
     {
       "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -3885,8 +4072,8 @@
     },
     {
       "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
-      "source": "@/shared/ui/card",
-      "importedNames": "Card, CardContent",
+      "source": "@/shared/ui/surface",
+      "importedNames": "Surface",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -3992,6 +4179,17 @@
       "decision": "table-cell",
       "fixSafe": false,
       "issueHint": "#243"
+    },
+    {
+      "file": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+      "source": "@/shared/ui/surface",
+      "importedNames": "Surface",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "features/projects/estimates/components/table/EstimateTable.client.tsx",
@@ -4391,6 +4589,17 @@
     },
     {
       "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShell, CardShellHeader",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
       "source": "@/shared/ui/dense-list",
       "importedNames": "DenseListBodyRow, DenseListStat, DenseListToken,",
       "severity": "informational",
@@ -4567,6 +4776,17 @@
     },
     {
       "file": "features/projects/estimates/components/table/columns.tsx",
+      "source": "@/shared/ui/cells/estimate-table-cells",
+      "importedNames": "EstimateCodeCell, EstimateNameCellWrapper, EstimateUnitCell, EstimateNumberCell, EstimateSectionSumCell, EstimateSumCell, EstimateExpenseCell,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/table/columns.tsx",
       "source": "lucide-react",
       "importedNames": "ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench",
       "severity": "informational",
@@ -4611,14 +4831,47 @@
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
-      "source": "@/shared/ui/estimate-tab",
-      "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabError, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "source": "@/shared/ui/button",
+      "importedNames": "Button",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "source": "@/shared/ui/estimate-tab",
+      "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+      "component": "Button",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateParams.tsx",
@@ -4666,14 +4919,47 @@
     },
     {
       "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
-      "source": "@/shared/ui/estimate-tab",
-      "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabError, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "source": "@/shared/ui/button",
+      "importedNames": "Button",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "source": "@/shared/ui/estimate-tab",
+      "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+      "component": "Button",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "feature",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
@@ -5150,6 +5436,17 @@
     },
     {
       "file": "features/projects/list/components/projects-toolbar.tsx",
+      "source": "@/shared/ui/toolbar",
+      "importedNames": "Toolbar, ToolbarGroup",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/projects/list/components/projects-toolbar.tsx",
       "component": "Button",
       "marker": "bare",
       "severity": "informational",
@@ -5195,7 +5492,7 @@
     {
       "file": "features/settings/components/user-settings-page.tsx",
       "source": "@/shared/ui/form-layout",
-      "importedNames": "FieldStack, FormLayout, FormSection, FormStatusMessage,",
+      "importedNames": "FieldStack, FormHelperText, FormLayout, FormSection, FormStatusMessage,",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -5251,6 +5548,17 @@
       "file": "features/settings/components/user-settings-page.tsx",
       "source": "@/shared/ui/tabs",
       "importedNames": "Tabs, TabsContent, TabsList, TabsTrigger",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/components/user-settings-page.tsx",
+      "source": "@/shared/ui/card-shell",
+      "importedNames": "CardShellInset",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -5326,6 +5634,28 @@
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+      "source": "@/shared/ui/states",
+      "importedNames": "ErrorState",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -5348,14 +5678,14 @@
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/page-shell",
+      "importedNames": "WorkspaceMain",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
@@ -5414,6 +5744,28 @@
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+      "source": "@/shared/ui/page-shell",
+      "importedNames": "WorkspaceMain",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
       "source": "@/shared/ui/input",
       "importedNames": "Input",
       "severity": "informational",
@@ -5433,17 +5785,6 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
-    },
-    {
-      "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
-      "owner": "feature",
-      "decision": "needs-review",
-      "fixSafe": false,
-      "issueHint": "#245"
     },
     {
       "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
@@ -5471,6 +5812,17 @@
       "file": "features/team/components/InviteTeamMemberCard.tsx",
       "source": "@/shared/ui/button",
       "importedNames": "Button",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "features/team/components/InviteTeamMemberCard.tsx",
+      "source": "@/shared/ui/form-layout",
+      "importedNames": "FormLayout",
       "severity": "informational",
       "category": "import",
       "owner": "feature",
@@ -5524,14 +5876,14 @@
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
-      "tag": "<form>",
-      "scope": "app/features",
-      "severity": "needs-review",
-      "category": "raw-html",
+      "source": "@/shared/ui/surface",
+      "importedNames": "Surface",
+      "severity": "informational",
+      "category": "import",
       "owner": "feature",
-      "decision": "needs-review",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "features/team/components/InviteTeamMemberCard.tsx",
@@ -5642,6 +5994,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "features/team/components/TeamMembersCard.tsx",
+      "source": "@/shared/ui/surface",
+      "importedNames": "Surface",
+      "severity": "informational",
+      "category": "import",
+      "owner": "feature",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "features/team/components/TeamMembersCard.tsx",
@@ -5919,6 +6282,17 @@
       "issueHint": "#246"
     },
     {
+      "file": "shared/ui/accordion.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveAccordionItemPaddingClassName, primitiveAccordionContentPaddingClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/action-menu.tsx",
       "source": "lucide-react",
       "importedNames": "MoreHorizontal",
@@ -5997,6 +6371,17 @@
     },
     {
       "file": "shared/ui/admin-surface.tsx",
+      "source": "@/shared/ui/hidden-input",
+      "importedNames": "HiddenInput",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/admin-surface.tsx",
       "source": "@/shared/ui/badge",
       "importedNames": "Badge",
       "severity": "informational",
@@ -6041,18 +6426,18 @@
     },
     {
       "file": "shared/ui/admin-surface.tsx",
-      "tag": "<form>",
-      "scope": "shared/ui",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitivePageShellInnerPaddingClassName,",
       "severity": "informational",
-      "category": "raw-html",
+      "category": "import",
       "owner": "shared/ui",
-      "decision": "allowed",
+      "decision": "informational",
       "fixSafe": false,
-      "issueHint": "#245"
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/admin-surface.tsx",
-      "tag": "<input>",
+      "tag": "<form>",
       "scope": "shared/ui",
       "severity": "informational",
       "category": "raw-html",
@@ -6104,6 +6489,17 @@
       "decision": "default-control",
       "fixSafe": false,
       "issueHint": "#243"
+    },
+    {
+      "file": "shared/ui/app-header.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveAppHeaderClassName, primitiveAppHeaderInnerClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/auto-form/common/label.tsx",
@@ -6592,7 +6988,29 @@
     {
       "file": "shared/ui/card-shell.tsx",
       "source": "@/shared/ui/surface",
-      "importedNames": "Surface, type SurfaceDensity, type SurfaceProps, type SurfaceVariant",
+      "importedNames": "Surface, type SurfaceProps, type SurfaceVariant",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/card-shell.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "type PrimitiveCardShellDensity, primitiveCardShellGapClassNames, primitiveCardShellInsetDensityClassNames, primitiveCardShellHeaderDensityClassNames, primitiveCardShellBodyDensityClassNames, primitiveCardShellFooterDensityClassNames,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/card.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveCardBasePaddingClassName, primitiveCardGapClassName, primitiveCardHeaderPaddingClassName, primitiveCardContentPaddingClassName, primitiveCardFooterPaddingClassName,",
       "severity": "informational",
       "category": "import",
       "owner": "shared/ui",
@@ -6643,6 +7061,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/catalog-token.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveCatalogTokenTextClassName, primitiveCatalogTokenCompactTextClassName, primitiveCatalogIndexTokenTextClassName, primitiveCatalogDensePaddingClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/cells/directory-table-cells.tsx",
@@ -6766,6 +7195,17 @@
       "issueHint": "#243"
     },
     {
+      "file": "shared/ui/chart.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveChartTooltipContentClassName, primitiveChartIndicatorClassName, primitiveChartLegendContentClassName, primitiveChartRadiusClassName, primitiveChartValuePaddingClassName, primitiveChartLegendVerticalClassName, primitiveChartLegendTopClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/checkbox.tsx",
       "source": "lucide-react",
       "importedNames": "CheckIcon",
@@ -6885,6 +7325,39 @@
       "decision": "compact-candidate",
       "fixSafe": false,
       "issueHint": "#243"
+    },
+    {
+      "file": "shared/ui/dashboard-focus-item.tsx",
+      "source": "@/shared/ui/status-badge",
+      "importedNames": "StatusBadge, StatusIndicator, type StatusTone",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/dashboard-focus-item.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualTypographyClassNames,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/dashboard-focus-item.tsx",
+      "source": "lucide-react",
+      "importedNames": "Clock",
+      "severity": "informational",
+      "category": "icon-import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#246"
     },
     {
       "file": "shared/ui/dashboard-layout.tsx",
@@ -7140,6 +7613,17 @@
       "issueHint": "#243"
     },
     {
+      "file": "shared/ui/drawer.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveDrawerContentPaddingClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/dropdown-menu.tsx",
       "source": "lucide-react",
       "importedNames": "CheckIcon, ChevronRightIcon, CircleIcon",
@@ -7149,6 +7633,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/empty.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveEmptyBasePaddingClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/estimate-tab.tsx",
@@ -7272,6 +7767,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "shared/ui/file-input.tsx",
+      "tag": "<input>",
+      "scope": "shared/ui",
+      "severity": "informational",
+      "category": "raw-html",
+      "owner": "shared/ui",
+      "decision": "allowed",
+      "fixSafe": false,
+      "issueHint": "#245"
+    },
+    {
       "file": "shared/ui/form-layout.tsx",
       "source": "@/shared/ui/label",
       "importedNames": "Label",
@@ -7336,6 +7842,28 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/hidden-input.tsx",
+      "tag": "<input>",
+      "scope": "shared/ui",
+      "severity": "informational",
+      "category": "raw-html",
+      "owner": "shared/ui",
+      "decision": "allowed",
+      "fixSafe": false,
+      "issueHint": "#245"
+    },
+    {
+      "file": "shared/ui/hidden-input.tsx",
+      "component": "Input",
+      "marker": "bare",
+      "severity": "needs-review",
+      "category": "density",
+      "owner": "shared/ui",
+      "decision": "unknown",
+      "fixSafe": false,
+      "issueHint": "#243"
     },
     {
       "file": "shared/ui/input-group.tsx",
@@ -7459,6 +7987,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "shared/ui/kbd.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveKbdPaddingClassName",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/kpi-card.tsx",
       "source": "@/shared/ui/card-shell",
       "importedNames": "CardShell, CardShellBody",
@@ -7503,6 +8042,28 @@
       "issueHint": "#246"
     },
     {
+      "file": "shared/ui/marketing-shell.tsx",
+      "source": "lucide-react",
+      "importedNames": "LucideIcon",
+      "severity": "informational",
+      "category": "icon-import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/marketing-shell.tsx",
+      "source": "@/shared/ui/primitive-marketing",
+      "importedNames": "primitiveMarketingHeroPaddingClassName, primitiveMarketingSectionPaddingClassName, primitiveMarketingDarkBgClassName, primitiveMarketingCardClassName, primitiveMarketingCardInnerClassName, primitiveMarketingCardAltClassName, primitiveMarketingWorkflowCardClassName, primitiveMarketingCtaBoxClassName, primitiveMarketingPricingCardClassName, primitiveMarketingPricingAccentClassName, primitiveMarketingPillClassName, primitiveMarketingDividerClassName, primitiveMarketingBorderWhite10ClassName, primitiveMarketingH1ClassName, primitiveMarketingH2ClassName, primitiveMarketingH3ClassName, primitiveMarketingBodyClassName, primitiveMarketingHeroTextClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/menubar.tsx",
       "source": "lucide-react",
       "importedNames": "CheckIcon, ChevronRightIcon, CircleIcon",
@@ -7523,6 +8084,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/page-shell.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitivePageShellContainerWidthClassName, primitivePageShellInnerPaddingClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/pagination.tsx",
@@ -7703,7 +8275,7 @@
     {
       "file": "shared/ui/select.tsx",
       "source": "@/shared/ui/primitive-density",
-      "importedNames": "primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectItemIndicatorClassName, primitiveSelectLabelClassName, primitiveSelectPopperContentClassName, primitiveSelectPopperViewportClassName, primitiveSelectScrollButtonClassName, primitiveSelectSeparatorClassName, primitiveSelectTriggerClassName, primitiveSelectViewportClassName,",
+      "importedNames": "primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectItemIndicatorClassName, primitiveSelectLabelClassName, primitiveSelectPopperContentClassName, primitiveSelectPopperViewportClassName, primitiveSelectScrollButtonClassName, primitiveSelectSizeClassNames, primitiveSelectSeparatorClassName, primitiveSelectTriggerClassName, primitiveSelectViewportClassName,",
       "severity": "informational",
       "category": "import",
       "owner": "shared/ui",
@@ -7770,6 +8342,39 @@
       "file": "shared/ui/shells/data-table-shell.tsx",
       "source": "@/shared/ui/data-table",
       "importedNames": "TableMeta",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/sidebar-nav-item.tsx",
+      "source": "lucide-react",
+      "importedNames": "LucideIcon",
+      "severity": "informational",
+      "category": "icon-import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/sidebar-nav-item.tsx",
+      "source": "@/shared/ui/sidebar",
+      "importedNames": "SidebarMenuItem, SidebarMenuButton,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/sidebar-nav-item.tsx",
+      "source": "@/shared/ui/primitive-navigation",
+      "importedNames": "primitiveSidebarMenuButtonClassName,",
       "severity": "informational",
       "category": "import",
       "owner": "shared/ui",
@@ -7976,6 +8581,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "shared/ui/surface.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveSurfaceBorderClassNames, primitiveSurfaceDensityClassNames, primitiveSurfaceToneClassNames, type PrimitiveSurfaceBorder, type PrimitiveSurfaceDensity, type PrimitiveSurfaceTone,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/switch.tsx",
       "tag": "<input>",
       "scope": "shared/ui",
@@ -8064,6 +8680,17 @@
       "issueHint": "#244"
     },
     {
+      "file": "shared/ui/table-density.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveDataTableHeaderRowClassName, primitiveDataTableHeaderCellClassName, primitiveDataTableBodyRowClassName, primitiveDataTableBodyCellClassName, primitiveDataTableCellContentClassName, primitiveDataTableContainerClassName, primitiveDataTableAiContainerClassName, primitiveDataTableAiOverlayClassName, primitiveDataTableEmptyCellClassName, primitiveCompactTableHeadClassName, primitiveCompactTableCellClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
       "file": "shared/ui/table-empty-state.tsx",
       "source": "@/shared/ui/empty",
       "importedNames": "Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia,",
@@ -8084,6 +8711,17 @@
       "decision": "informational",
       "fixSafe": false,
       "issueHint": "#246"
+    },
+    {
+      "file": "shared/ui/table.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveTableHeadCellClassName, primitiveTableCellClassName,",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
     },
     {
       "file": "shared/ui/table.tsx",
@@ -8144,6 +8782,17 @@
       "file": "shared/ui/toggle-group.tsx",
       "source": "@/shared/ui/toggle",
       "importedNames": "toggleVariants",
+      "severity": "informational",
+      "category": "import",
+      "owner": "shared/ui",
+      "decision": "informational",
+      "fixSafe": false,
+      "issueHint": "#244"
+    },
+    {
+      "file": "shared/ui/toggle.tsx",
+      "source": "@/shared/ui/primitive-density",
+      "importedNames": "primitiveToggleSizes",
       "severity": "informational",
       "category": "import",
       "owner": "shared/ui",
@@ -8452,6 +9101,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "app/(login)/verify-email/page.tsx",
+        "source": "@/shared/ui/auth-shell",
+        "importedNames": "AuthShell, AuthPanel, AuthStatusMessage",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "app/(workspace)/app/guide/counterparties/loading.tsx",
         "source": "@/shared/ui/states",
         "importedNames": "LoadingState",
@@ -8551,6 +9211,28 @@
         "issueHint": "#244"
       },
       {
+        "file": "app/(workspace)/app/loading.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "LoadingState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/(workspace)/app/loading.tsx",
+        "source": "@/shared/ui/page-shell",
+        "importedNames": "PageShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "app/(workspace)/app/projects/[projectId]/estimates/[estimateId]/page.tsx",
         "source": "@/shared/ui/page-shell",
         "importedNames": "PageShell",
@@ -8596,17 +9278,6 @@
       },
       {
         "file": "app/not-found.tsx",
-        "source": "lucide-react",
-        "importedNames": "CircleIcon",
-        "severity": "informational",
-        "category": "icon-import",
-        "owner": "app",
-        "decision": "informational",
-        "fixSafe": false,
-        "issueHint": "#246"
-      },
-      {
-        "file": "app/not-found.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
         "severity": "informational",
@@ -8618,8 +9289,8 @@
       },
       {
         "file": "app/not-found.tsx",
-        "source": "@/shared/ui/card",
-        "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
         "severity": "informational",
         "category": "import",
         "owner": "app",
@@ -8640,8 +9311,41 @@
       },
       {
         "file": "app/page.tsx",
+        "source": "@/shared/ui/content-container",
+        "importedNames": "ContentContainer",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/page.tsx",
+        "source": "@/shared/ui/marketing-shell",
+        "importedNames": "MarketingPageShell, MarketingHero, MarketingSection, MarketingCard, MarketingCTA,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/page.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveMarketingGradientOrangeClassName, primitiveMarketingGradientCyanClassName, primitiveMarketingGradientPurpleClassName, primitiveMarketingPillSmallClassName, primitiveMarketingCardGradientClassName, primitiveMarketingPillXsClassName, primitiveMarketingDemoShellClassName, primitiveMarketingCodeBlockClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "app",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "app/page.tsx",
         "source": "lucide-react",
-        "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck",
+        "importedNames": "ArrowRight, Building2, CalendarClock, ChartNoAxesCombined, HardHat, ShieldCheck, Truck,",
         "severity": "informational",
         "category": "icon-import",
         "owner": "app",
@@ -8694,6 +9398,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "components/layout/active-team-indicator.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveActiveTeamIndicatorClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "components/layout/app-header.tsx",
         "source": "@/shared/ui/breadcrumbs",
         "importedNames": "AppBreadcrumbs",
@@ -8727,6 +9442,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "components/layout/app-header.tsx",
+        "source": "@/shared/ui/app-header",
+        "importedNames": "AppHeaderShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "components/layout/app-sidebar.tsx",
         "source": "@/shared/ui/sidebar",
         "importedNames": "Sidebar, SidebarContent, SidebarFooter, SidebarHeader,",
@@ -8747,6 +9473,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "components/layout/app-sidebar.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveAppSidebarSkeletonHeaderClassName, primitiveAppSidebarSkeletonContentClassName, primitiveAppSidebarBrandHeaderClassName, primitiveAppSidebarBrandGradientClassName, primitiveAppSidebarContentClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "components/layout/user-menu.tsx",
@@ -8806,7 +9543,29 @@
       {
         "file": "components/navigation/sidebar-nav.tsx",
         "source": "@/shared/ui/sidebar",
-        "importedNames": "SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,",
+        "importedNames": "SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, useSidebar,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "components/navigation/sidebar-nav.tsx",
+        "source": "@/shared/ui/sidebar-nav-item",
+        "importedNames": "SidebarNavItem",
+        "severity": "informational",
+        "category": "import",
+        "owner": "other",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "components/navigation/sidebar-nav.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveSidebarGroupClassName, primitiveSidebarGroupLabelClassName, primitiveSidebarMenuClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "other",
@@ -9046,6 +9805,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "LoadingState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
         "source": "lucide-react",
         "importedNames": "Loader2",
@@ -9055,6 +9825,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+        "source": "@/shared/ui/file-input",
+        "importedNames": "FileInput",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
@@ -9322,6 +10103,17 @@
       },
       {
         "file": "features/admin/components/admin-user-menu.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/admin-user-menu.tsx",
         "source": "@/shared/ui/dropdown-menu",
         "importedNames": "DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,",
         "severity": "informational",
@@ -9335,6 +10127,28 @@
         "file": "features/admin/components/impersonate-button.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/admin/components/impersonate-button.tsx",
+        "source": "@/shared/ui/hidden-input",
+        "importedNames": "HiddenInput",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9388,6 +10202,17 @@
       },
       {
         "file": "features/auth/components/AuthFormShell.tsx",
+        "source": "@/shared/ui/auth-shell",
+        "importedNames": "AuthShell, AuthStatusMessage",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/AuthFormShell.tsx",
         "source": "@/shared/ui/card",
         "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
         "severity": "informational",
@@ -9401,6 +10226,17 @@
         "file": "features/auth/components/ForgotPasswordForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ForgotPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9445,6 +10281,28 @@
         "file": "features/auth/components/LoginForm.tsx",
         "source": "@/shared/ui/card",
         "importedNames": "Card, CardContent, CardDescription, CardHeader, CardTitle,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/hidden-input",
+        "importedNames": "HiddenInput",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9486,9 +10344,42 @@
         "issueHint": "#246"
       },
       {
+        "file": "features/auth/components/LoginForm.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveAuthPageBackgroundClassName, primitiveMarketingBgBlobClassNames, primitiveMarketingBgBlobPlacementClassNames, primitiveAuthMarketingGridClassName, primitiveAuthBrandIconClassName, primitiveAuthFeatureCardClassName, primitiveAuthFeatureCardLabelClassName, primitiveAuthFeatureCardValueClassName, primitiveAuthMarketingHeadingClassName, primitiveAuthMarketingSubtextClassName, primitiveAuthFormTitleClassName, primitiveAuthFormDescriptionClassName, primitiveAuthPanelShadowClassName, primitiveAuthPanelBorderClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/auth/components/ResetPasswordForm.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ResetPasswordForm.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/auth/components/ResetPasswordForm.tsx",
+        "source": "@/shared/ui/hidden-input",
+        "importedNames": "HiddenInput",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9555,6 +10446,17 @@
         "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/catalog/components/MaterialCatalogPicker.client.tsx",
+        "source": "@/shared/ui/catalog-list-item",
+        "importedNames": "CatalogListItem",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9729,6 +10631,17 @@
       },
       {
         "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
         "source": "@/shared/ui/tabs",
         "importedNames": "Tabs, TabsList, TabsTrigger",
         "severity": "informational",
@@ -9872,6 +10785,17 @@
       },
       {
         "file": "features/dashboard/components/SignalsSection.tsx",
+        "source": "@/shared/ui/section",
+        "importedNames": "Section",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/dashboard/components/SignalsSection.tsx",
         "source": "@/shared/ui/primitive-density",
         "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualSemanticToneClassNames, primitiveVisualSurfaceClassNames, primitiveVisualTypographyClassNames,",
         "severity": "informational",
@@ -9982,8 +10906,19 @@
       },
       {
         "file": "features/dashboard/components/TodayFocusSection.tsx",
+        "source": "@/shared/ui/dashboard-focus-item",
+        "importedNames": "DashboardFocusItem",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/dashboard/components/TodayFocusSection.tsx",
         "source": "@/shared/ui/status-badge",
-        "importedNames": "StatusBadge, StatusIndicator, type StatusTone",
+        "importedNames": "StatusTone",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -9992,26 +10927,15 @@
         "issueHint": "#244"
       },
       {
-        "file": "features/dashboard/components/TodayFocusSection.tsx",
-        "source": "@/shared/ui/primitive-density",
-        "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualTypographyClassNames,",
+        "file": "features/dashboard/screens/AppHomeScreen.tsx",
+        "source": "@/shared/ui/dashboard-layout",
+        "importedNames": "DashboardPageStack, DashboardMainContainer",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
-      },
-      {
-        "file": "features/dashboard/components/TodayFocusSection.tsx",
-        "source": "lucide-react",
-        "importedNames": "Clock",
-        "severity": "informational",
-        "category": "icon-import",
-        "owner": "feature",
-        "decision": "informational",
-        "fixSafe": false,
-        "issueHint": "#246"
       },
       {
         "file": "features/global-purchases/components/GlobalPurchasesCardsList.tsx",
@@ -10056,6 +10980,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+        "source": "@/shared/ui/file-input",
+        "importedNames": "FileInput",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
@@ -10587,6 +11522,17 @@
       },
       {
         "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -10906,8 +11852,8 @@
       },
       {
         "file": "features/patterns/screens/PatternsScreen.tsx",
-        "source": "@/shared/ui/card",
-        "importedNames": "Card, CardContent, CardHeader, CardTitle",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell, CardShellBody, CardShellHeader",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -10983,8 +11929,19 @@
       },
       {
         "file": "features/permissions/components/permissions-matrix.tsx",
-        "source": "@/shared/ui/skeleton",
-        "importedNames": "Skeleton",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/permissions/components/permissions-matrix.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "LoadingState",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -11346,6 +12303,17 @@
       },
       {
         "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -11423,6 +12391,17 @@
       },
       {
         "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -11456,8 +12435,8 @@
       },
       {
         "file": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
-        "source": "@/shared/ui/card",
-        "importedNames": "Card, CardContent",
+        "source": "@/shared/ui/surface",
+        "importedNames": "Surface",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -11535,6 +12514,17 @@
         "file": "features/projects/estimates/components/registry/EstimatesListTable.tsx",
         "source": "@/shared/ui/alert-dialog",
         "importedNames": "AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+        "source": "@/shared/ui/surface",
+        "importedNames": "Surface",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -11852,6 +12842,17 @@
       },
       {
         "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShell, CardShellHeader",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
         "source": "@/shared/ui/dense-list",
         "importedNames": "DenseListBodyRow, DenseListStat, DenseListToken,",
         "severity": "informational",
@@ -12006,6 +13007,17 @@
       },
       {
         "file": "features/projects/estimates/components/table/columns.tsx",
+        "source": "@/shared/ui/cells/estimate-table-cells",
+        "importedNames": "EstimateCodeCell, EstimateNameCellWrapper, EstimateUnitCell, EstimateNumberCell, EstimateSectionSumCell, EstimateSumCell, EstimateExpenseCell,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/table/columns.tsx",
         "source": "lucide-react",
         "importedNames": "ChevronDown, ChevronRight, HardHat, FolderTree, FolderUp, RefreshCw, Settings, Trash2, Wrench",
         "severity": "informational",
@@ -12039,8 +13051,30 @@
       },
       {
         "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "source": "@/shared/ui/button",
+        "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
         "source": "@/shared/ui/estimate-tab",
-        "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabError, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+        "importedNames": "EstimateTabActionsBar, EstimateTabCard, EstimateTabCodeText, EstimateTabEmptyState, EstimateTabInlineMetric, EstimateTabLoading, EstimateTabMetaWrap, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabStateMenu, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12094,8 +13128,30 @@
       },
       {
         "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "source": "@/shared/ui/button",
+        "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
         "source": "@/shared/ui/estimate-tab",
-        "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabError, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
+        "importedNames": "EstimateTabCard, EstimateTabEmptyState, EstimateTabExportButton, EstimateTabLoading, EstimateTabMessage, EstimateTabMetric, EstimateTabMetricSection, EstimateTabMetricsLayout, EstimateTabMetricsWrap, EstimateTabNameText, EstimateTabPanel, EstimateTabPrimaryCell, EstimateTabRoot, EstimateTabSearchField, EstimateTabSourceToken, EstimateTabStack, EstimateTabTitleRow, EstimateTabToken, EstimateTabToolbar, EstimateTabTotalsBar, EstimateTabViewport,",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12522,6 +13578,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "features/projects/list/components/projects-toolbar.tsx",
+        "source": "@/shared/ui/toolbar",
+        "importedNames": "Toolbar, ToolbarGroup",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "features/settings/components/user-settings-page.tsx",
         "source": "lucide-react",
         "importedNames": "Bell, Building2, ExternalLink, Loader2, Lock, MonitorCog, Save, Shield, UserCircle2,",
@@ -12557,7 +13624,7 @@
       {
         "file": "features/settings/components/user-settings-page.tsx",
         "source": "@/shared/ui/form-layout",
-        "importedNames": "FieldStack, FormLayout, FormSection, FormStatusMessage,",
+        "importedNames": "FieldStack, FormHelperText, FormLayout, FormSection, FormStatusMessage,",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12622,6 +13689,17 @@
       },
       {
         "file": "features/settings/components/user-settings-page.tsx",
+        "source": "@/shared/ui/card-shell",
+        "importedNames": "CardShellInset",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/components/user-settings-page.tsx",
         "source": "@/shared/ui/status-badge",
         "importedNames": "StatusBadge, type StatusTone",
         "severity": "informational",
@@ -12666,6 +13744,28 @@
       },
       {
         "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+        "source": "@/shared/ui/states",
+        "importedNames": "ErrorState",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12679,6 +13779,17 @@
         "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
         "source": "@/shared/ui/label",
         "importedNames": "Label",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+        "source": "@/shared/ui/page-shell",
+        "importedNames": "WorkspaceMain",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12721,6 +13832,28 @@
       },
       {
         "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+        "source": "@/shared/ui/page-shell",
+        "importedNames": "WorkspaceMain",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
         "source": "@/shared/ui/input",
         "importedNames": "Input",
         "severity": "informational",
@@ -12745,6 +13878,17 @@
         "file": "features/team/components/InviteTeamMemberCard.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "features/team/components/InviteTeamMemberCard.tsx",
+        "source": "@/shared/ui/form-layout",
+        "importedNames": "FormLayout",
         "severity": "informational",
         "category": "import",
         "owner": "feature",
@@ -12795,6 +13939,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "features/team/components/InviteTeamMemberCard.tsx",
+        "source": "@/shared/ui/surface",
+        "importedNames": "Surface",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "features/team/components/TeamHeaderCard.tsx",
@@ -12883,6 +14038,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "features/team/components/TeamMembersCard.tsx",
+        "source": "@/shared/ui/surface",
+        "importedNames": "Surface",
+        "severity": "informational",
+        "category": "import",
+        "owner": "feature",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "features/team/screens/TeamScreen.tsx",
@@ -13105,6 +14271,17 @@
         "issueHint": "#246"
       },
       {
+        "file": "shared/ui/accordion.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveAccordionItemPaddingClassName, primitiveAccordionContentPaddingClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/action-menu.tsx",
         "source": "lucide-react",
         "importedNames": "MoreHorizontal",
@@ -13172,6 +14349,17 @@
       },
       {
         "file": "shared/ui/admin-surface.tsx",
+        "source": "@/shared/ui/hidden-input",
+        "importedNames": "HiddenInput",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/admin-surface.tsx",
         "source": "@/shared/ui/badge",
         "importedNames": "Badge",
         "severity": "informational",
@@ -13215,6 +14403,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "shared/ui/admin-surface.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitivePageShellInnerPaddingClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/alert-dialog.tsx",
         "source": "@radix-ui/react-alert-dialog",
         "importedNames": "* as AlertDialogPrimitive",
@@ -13229,6 +14428,17 @@
         "file": "shared/ui/alert-dialog.tsx",
         "source": "@/shared/ui/button",
         "importedNames": "Button",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/app-header.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveAppHeaderClassName, primitiveAppHeaderInnerClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -13657,7 +14867,29 @@
       {
         "file": "shared/ui/card-shell.tsx",
         "source": "@/shared/ui/surface",
-        "importedNames": "Surface, type SurfaceDensity, type SurfaceProps, type SurfaceVariant",
+        "importedNames": "Surface, type SurfaceProps, type SurfaceVariant",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/card-shell.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "type PrimitiveCardShellDensity, primitiveCardShellGapClassNames, primitiveCardShellInsetDensityClassNames, primitiveCardShellHeaderDensityClassNames, primitiveCardShellBodyDensityClassNames, primitiveCardShellFooterDensityClassNames,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/card.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveCardBasePaddingClassName, primitiveCardGapClassName, primitiveCardHeaderPaddingClassName, primitiveCardContentPaddingClassName, primitiveCardFooterPaddingClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -13697,6 +14929,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/catalog-token.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveCatalogTokenTextClassName, primitiveCatalogTokenCompactTextClassName, primitiveCatalogIndexTokenTextClassName, primitiveCatalogDensePaddingClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "shared/ui/cells/directory-table-cells.tsx",
@@ -13779,6 +15022,17 @@
         "file": "shared/ui/cells/table-cell-helpers.tsx",
         "source": "@/shared/ui/table-density",
         "importedNames": "TableCellText",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/chart.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveChartTooltipContentClassName, primitiveChartIndicatorClassName, primitiveChartLegendContentClassName, primitiveChartRadiusClassName, primitiveChartValuePaddingClassName, primitiveChartLegendVerticalClassName, primitiveChartLegendTopClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -13895,6 +15149,39 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/dashboard-focus-item.tsx",
+        "source": "@/shared/ui/status-badge",
+        "importedNames": "StatusBadge, StatusIndicator, type StatusTone",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/dashboard-focus-item.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveVisualIconSizeClassNames, primitiveVisualTypographyClassNames,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/dashboard-focus-item.tsx",
+        "source": "lucide-react",
+        "importedNames": "Clock",
+        "severity": "informational",
+        "category": "icon-import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#246"
       },
       {
         "file": "shared/ui/dashboard-layout.tsx",
@@ -14095,6 +15382,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "shared/ui/drawer.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveDrawerContentPaddingClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/dropdown-menu.tsx",
         "source": "lucide-react",
         "importedNames": "CheckIcon, ChevronRightIcon, CircleIcon",
@@ -14104,6 +15402,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/empty.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveEmptyBasePaddingClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "shared/ui/estimate-tab.tsx",
@@ -14359,6 +15668,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "shared/ui/kbd.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveKbdPaddingClassName",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/kpi-card.tsx",
         "source": "@/shared/ui/card-shell",
         "importedNames": "CardShell, CardShellBody",
@@ -14403,6 +15723,28 @@
         "issueHint": "#246"
       },
       {
+        "file": "shared/ui/marketing-shell.tsx",
+        "source": "lucide-react",
+        "importedNames": "LucideIcon",
+        "severity": "informational",
+        "category": "icon-import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/marketing-shell.tsx",
+        "source": "@/shared/ui/primitive-marketing",
+        "importedNames": "primitiveMarketingHeroPaddingClassName, primitiveMarketingSectionPaddingClassName, primitiveMarketingDarkBgClassName, primitiveMarketingCardClassName, primitiveMarketingCardInnerClassName, primitiveMarketingCardAltClassName, primitiveMarketingWorkflowCardClassName, primitiveMarketingCtaBoxClassName, primitiveMarketingPricingCardClassName, primitiveMarketingPricingAccentClassName, primitiveMarketingPillClassName, primitiveMarketingDividerClassName, primitiveMarketingBorderWhite10ClassName, primitiveMarketingH1ClassName, primitiveMarketingH2ClassName, primitiveMarketingH3ClassName, primitiveMarketingBodyClassName, primitiveMarketingHeroTextClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/menubar.tsx",
         "source": "lucide-react",
         "importedNames": "CheckIcon, ChevronRightIcon, CircleIcon",
@@ -14423,6 +15765,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/page-shell.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitivePageShellContainerWidthClassName, primitivePageShellInnerPaddingClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "shared/ui/pagination.tsx",
@@ -14581,7 +15934,7 @@
       {
         "file": "shared/ui/select.tsx",
         "source": "@/shared/ui/primitive-density",
-        "importedNames": "primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectItemIndicatorClassName, primitiveSelectLabelClassName, primitiveSelectPopperContentClassName, primitiveSelectPopperViewportClassName, primitiveSelectScrollButtonClassName, primitiveSelectSeparatorClassName, primitiveSelectTriggerClassName, primitiveSelectViewportClassName,",
+        "importedNames": "primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectItemIndicatorClassName, primitiveSelectLabelClassName, primitiveSelectPopperContentClassName, primitiveSelectPopperViewportClassName, primitiveSelectScrollButtonClassName, primitiveSelectSizeClassNames, primitiveSelectSeparatorClassName, primitiveSelectTriggerClassName, primitiveSelectViewportClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -14648,6 +16001,39 @@
         "file": "shared/ui/shells/data-table-shell.tsx",
         "source": "@/shared/ui/data-table",
         "importedNames": "TableMeta",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/sidebar-nav-item.tsx",
+        "source": "lucide-react",
+        "importedNames": "LucideIcon",
+        "severity": "informational",
+        "category": "icon-import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/sidebar-nav-item.tsx",
+        "source": "@/shared/ui/sidebar",
+        "importedNames": "SidebarMenuItem, SidebarMenuButton,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/sidebar-nav-item.tsx",
+        "source": "@/shared/ui/primitive-navigation",
+        "importedNames": "primitiveSidebarMenuButtonClassName,",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -14821,6 +16207,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "shared/ui/surface.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveSurfaceBorderClassNames, primitiveSurfaceDensityClassNames, primitiveSurfaceToneClassNames, type PrimitiveSurfaceBorder, type PrimitiveSurfaceDensity, type PrimitiveSurfaceTone,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/table-actions.tsx",
         "source": "lucide-react",
         "importedNames": "Check, Pencil, Plus, Settings, Trash, X",
@@ -14887,6 +16284,17 @@
         "issueHint": "#244"
       },
       {
+        "file": "shared/ui/table-density.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveDataTableHeaderRowClassName, primitiveDataTableHeaderCellClassName, primitiveDataTableBodyRowClassName, primitiveDataTableBodyCellClassName, primitiveDataTableCellContentClassName, primitiveDataTableContainerClassName, primitiveDataTableAiContainerClassName, primitiveDataTableAiOverlayClassName, primitiveDataTableEmptyCellClassName, primitiveCompactTableHeadClassName, primitiveCompactTableCellClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
         "file": "shared/ui/table-empty-state.tsx",
         "source": "@/shared/ui/empty",
         "importedNames": "Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia,",
@@ -14907,6 +16315,17 @@
         "decision": "informational",
         "fixSafe": false,
         "issueHint": "#246"
+      },
+      {
+        "file": "shared/ui/table.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveTableHeadCellClassName, primitiveTableCellClassName,",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
       },
       {
         "file": "shared/ui/tabs.tsx",
@@ -14945,6 +16364,17 @@
         "file": "shared/ui/toggle-group.tsx",
         "source": "@/shared/ui/toggle",
         "importedNames": "toggleVariants",
+        "severity": "informational",
+        "category": "import",
+        "owner": "shared/ui",
+        "decision": "informational",
+        "fixSafe": false,
+        "issueHint": "#244"
+      },
+      {
+        "file": "shared/ui/toggle.tsx",
+        "source": "@/shared/ui/primitive-density",
+        "importedNames": "primitiveToggleSizes",
         "severity": "informational",
         "category": "import",
         "owner": "shared/ui",
@@ -15043,195 +16473,8 @@
     ],
     "rawHtml": [
       {
-        "file": "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/admin-user-menu.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/admin/components/impersonate-button.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ForgotPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/LoginForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/auth/components/ResetPasswordForm.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/counterparties/components/CreateCounterpartySheet.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
-        "tag": "<input>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "possible-violation",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/projects/estimates/components/CreateEstimateDialog.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminGeneralSettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/settings/screens/AdminSecuritySettingsScreen.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "features/team/components/InviteTeamMemberCard.tsx",
-        "tag": "<form>",
-        "scope": "app/features",
-        "severity": "needs-review",
-        "category": "raw-html",
-        "owner": "feature",
-        "decision": "needs-review",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
         "file": "shared/ui/admin-surface.tsx",
         "tag": "<form>",
-        "scope": "shared/ui",
-        "severity": "informational",
-        "category": "raw-html",
-        "owner": "shared/ui",
-        "decision": "allowed",
-        "fixSafe": false,
-        "issueHint": "#245"
-      },
-      {
-        "file": "shared/ui/admin-surface.tsx",
-        "tag": "<input>",
         "scope": "shared/ui",
         "severity": "informational",
         "category": "raw-html",
@@ -15274,8 +16517,30 @@
         "issueHint": "#245"
       },
       {
+        "file": "shared/ui/file-input.tsx",
+        "tag": "<input>",
+        "scope": "shared/ui",
+        "severity": "informational",
+        "category": "raw-html",
+        "owner": "shared/ui",
+        "decision": "allowed",
+        "fixSafe": false,
+        "issueHint": "#245"
+      },
+      {
         "file": "shared/ui/form-layout.tsx",
         "tag": "<form>",
+        "scope": "shared/ui",
+        "severity": "informational",
+        "category": "raw-html",
+        "owner": "shared/ui",
+        "decision": "allowed",
+        "fixSafe": false,
+        "issueHint": "#245"
+      },
+      {
+        "file": "shared/ui/hidden-input.tsx",
+        "tag": "<input>",
         "scope": "shared/ui",
         "severity": "informational",
         "category": "raw-html",
@@ -16013,6 +17278,28 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
         "component": "Button",
         "marker": "bare",
@@ -16405,6 +17692,17 @@
         "category": "density",
         "owner": "shared/ui",
         "decision": "table-cell",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "shared/ui/hidden-input.tsx",
+        "component": "Input",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "shared/ui",
+        "decision": "unknown",
         "fixSafe": false,
         "issueHint": "#243"
       },
@@ -17170,6 +18468,28 @@
         "issueHint": "#243"
       },
       {
+        "file": "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
+        "file": "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+        "component": "Button",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "feature",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx",
         "component": "Button",
         "marker": "bare",
@@ -17566,6 +18886,17 @@
         "issueHint": "#243"
       },
       {
+        "file": "shared/ui/hidden-input.tsx",
+        "component": "Input",
+        "marker": "bare",
+        "severity": "needs-review",
+        "category": "density",
+        "owner": "shared/ui",
+        "decision": "unknown",
+        "fixSafe": false,
+        "issueHint": "#243"
+      },
+      {
         "file": "shared/ui/input-group.tsx",
         "component": "Button",
         "marker": "bare",
@@ -17660,7 +18991,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 79,
+        "Runtime imports": 81,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17756,7 +19087,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 15,
+        "Runtime imports": 12,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17888,7 +19219,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 9,
+        "Runtime imports": 8,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17900,7 +19231,7 @@
         "components/ui": false,
         "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 6,
+        "Runtime imports": 9,
         "Status": "canonical",
         "Decision": "informational",
         "componentFileStatus": "exists",
@@ -17922,14 +19253,14 @@
       {
         "Component": "ErrorState",
         "components/ui": false,
-        "shared/ui": false,
+        "shared/ui": true,
         "packages/ui / @repo/ui": false,
-        "Runtime imports": 0,
-        "Status": "missing",
-        "Decision": "not-imported; file-exists=true; exported=true",
+        "Runtime imports": 4,
+        "Status": "canonical",
+        "Decision": "informational",
         "componentFileStatus": "exists",
         "exportStatus": "exported",
-        "importStatus": "not-imported"
+        "importStatus": "imported"
       },
       {
         "Component": "ForbiddenState",

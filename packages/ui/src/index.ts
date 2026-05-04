@@ -1,3 +1,4 @@
+// @deprecated — use @/shared/ui/* directly instead
 export * from "../../../shared/ui/accordion";
 export * from "../../../shared/ui/alert-dialog";
 export * from "../../../shared/ui/alert";

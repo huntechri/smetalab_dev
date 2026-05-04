@@ -1,13 +1,34 @@
 import Link from 'next/link';
 import { Button } from '@/shared/ui/button';
+import { ContentContainer } from '@/shared/ui/content-container';
 import {
-    ArrowRight,
-    Building2,
-    CalendarClock,
-    ChartNoAxesCombined,
-    HardHat,
-    ShieldCheck,
-    Truck
+  MarketingPageShell,
+  MarketingHero,
+  MarketingSection,
+  MarketingCard,
+  MarketingCTA,
+} from '@/shared/ui/marketing-shell';
+import {
+  primitiveMarketingGradientOrangeClassName,
+  primitiveMarketingGradientCyanClassName,
+  primitiveMarketingGradientPurpleClassName,
+  primitiveMarketingPillSmallClassName,
+  primitiveMarketingCardGradientClassName,
+  primitiveMarketingPillXsClassName,
+  primitiveMarketingDemoShellClassName,
+  primitiveMarketingCodeBlockClassName,
+  primitiveMarketingSectionLabelClassName,
+  primitiveMarketingH2ClassName,
+  primitiveMarketingBodyClassName,
+} from '@/shared/ui/primitive-marketing';
+import {
+  ArrowRight,
+  Building2,
+  CalendarClock,
+  ChartNoAxesCombined,
+  HardHat,
+  ShieldCheck,
+  Truck,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -95,7 +116,7 @@ const mobileAuthLinks: AuthLink[] = [
 
 export default function LandingPage() {
     return (
-        <div className="min-h-screen overflow-x-clip bg-[#0B0A0F] text-white font-sans">
+        <MarketingPageShell>
             <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black">
                 Пропустить к содержимому
             </a>
@@ -116,7 +137,7 @@ export default function LandingPage() {
                     </nav>
                     <div className="hidden md:flex items-center gap-3">
                         {desktopAuthLinks.map((link) => (
-                            <Button key={link.href} variant={link.variant} role="button" asChild>
+                            <Button key={link.href} variant={link.variant} size="default" role="button" asChild>
                                 <Link href={link.href}>{link.label}</Link>
                             </Button>
                         ))}
@@ -137,7 +158,7 @@ export default function LandingPage() {
                                 </nav>
                                 <div className="flex flex-col gap-3">
                                     {mobileAuthLinks.map((link) => (
-                                        <Button key={link.href} variant={link.variant} role="button" asChild>
+                                        <Button key={link.href} variant={link.variant} size="default" role="button" asChild>
                                             <Link href={link.href}>{link.label}</Link>
                                         </Button>
                                     ))}
@@ -149,202 +170,195 @@ export default function LandingPage() {
             </header>
 
             <main id="main" className="relative overflow-hidden">
+                {/* Background gradient orbs */}
                 <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className="absolute left-1/2 top-[-260px] h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(255,93,42,0.45),rgba(11,10,15,0))] blur-2xl will-change-transform" />
-                    <div className="absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(127,255,212,0.25),rgba(11,10,15,0))] blur-3xl will-change-transform" />
-                    <div className="absolute left-[-160px] top-[520px] h-[380px] w-[380px] rounded-full bg-[radial-gradient(circle,rgba(108,62,255,0.25),rgba(11,10,15,0))] blur-3xl will-change-transform" />
+                    <div className={['absolute left-1/2 top-[-260px] h-[520px] w-[520px] -translate-x-1/2 rounded-full', primitiveMarketingGradientOrangeClassName, 'blur-2xl will-change-transform'].join(' ')} />
+                    <div className={['absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full', primitiveMarketingGradientCyanClassName, 'blur-3xl will-change-transform'].join(' ')} />
+                    <div className={['absolute left-[-160px] top-[520px] h-[380px] w-[380px] rounded-full', primitiveMarketingGradientPurpleClassName, 'blur-3xl will-change-transform'].join(' ')} />
                 </div>
 
-                <section className="relative">
-                    <div className="container mx-auto px-4 md:px-8 pt-20 pb-16 md:pt-28 md:pb-24">
-                        <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-                            <div className="space-y-8">
-                                <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80">
-                                    <HardHat className="h-4 w-4 text-[#FF6A3D]" aria-hidden="true" />
-                                    Construction command center
+                <MarketingHero
+                    pill={
+                        <>
+                            <HardHat className="h-4 w-4 text-[#FF6A3D]" aria-hidden="true" />
+                            Construction command center
+                        </>
+                    }
+                    heading="Система управления строительством для подрядчиков, которые не терпят хаос."
+                    lead="Планируйте работы, контролируйте закупки, синхронизируйте бригады и держите бюджет под контролем. Все проекты — в одной операционной панели."
+                    actions={
+                        <>
+                            <Button variant="brand" size="xl" asChild>
+                                <Link href="/sign-up">
+                                    Запустить пилот
+                                    <ArrowRight className="ml-2 h-5 w-5" />
+                                </Link>
+                            </Button>
+                            <Button variant="outline" size="xl" role="button" asChild>
+                                <Link href="#workflow">Сценарий внедрения</Link>
+                            </Button>
+                        </>
+                    }
+                    features={
+                        <>
+                            <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#B4FF7A]" aria-hidden="true" /> Контроль доступа и аудита</span>
+                            <span>Единая база материалов</span>
+                            <span>Отчеты для заказчика</span>
+                        </>
+                    }
+                    demo={
+                        <>
+                            <div className={primitiveMarketingDemoShellClassName}>
+                                <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/75">
+                                    <span className={primitiveMarketingPillXsClassName}>Project Control</span>
+                                    <span className={primitiveMarketingPillXsClassName}>Live site</span>
                                 </div>
-                                <h1 className="text-4xl sm:text-5xl md:text-6xl leading-[1.05] font-semibold">
-                                    Система управления строительством для подрядчиков, которые не терпят хаос.
-                                </h1>
-                                <p className="max-w-xl text-lg text-white/90">
-                                    Планируйте работы, контролируйте закупки, синхронизируйте бригады и держите бюджет под контролем.
-                                    Все проекты — в одной операционной панели.
-                                </p>
-                                <div className="flex flex-col gap-4 sm:flex-row">
-                                    <Button variant="brand" size="xl" asChild>
-                                        <Link href="/sign-up">
-                                            Запустить пилот
-                                            <ArrowRight className="ml-2 h-5 w-5" />
-                                        </Link>
-                                    </Button>
-                                    <Button variant="outline" size="xl" role="button" asChild>
-                                        <Link href="#workflow">Сценарий внедрения</Link>
-                                    </Button>
-                                </div>
-                                <div className="flex flex-wrap items-center gap-6 text-sm text-white/75">
-                                    <span className="flex items-center gap-2"><ShieldCheck className="h-4 w-4 text-[#B4FF7A]" aria-hidden="true" /> Контроль доступа и аудита</span>
-                                    <span>Единая база материалов</span>
-                                    <span>Отчеты для заказчика</span>
-                                </div>
-                            </div>
-                            <div className="relative">
-                                <div className="rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.45)]">
-                                    <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/75">
-                                        <span className="rounded-full bg-[#0B0A0F] px-2 py-0.5 text-white">Project Control</span>
-                                        <span className="rounded-full bg-[#0B0A0F] px-2 py-0.5 text-white">Live site</span>
+                                <div className="mt-6 grid gap-4">
+                                    <div className={primitiveMarketingCodeBlockClassName}>
+                                        <p className={primitiveMarketingPillXsClassName}>Статус участка</p>
+                                        <p className="mt-2 font-semibold text-white/95">Жилой комплекс &ldquo;Северный&rdquo;. Прогресс: 62%</p>
                                     </div>
-                                    <div className="mt-6 grid gap-4">
-                                        <div className="rounded-2xl border border-white/10 bg-[#15131B] p-4">
-                                            <p className="inline-flex rounded-full bg-[#0B0A0F] px-2 py-0.5 text-xs text-white">Статус участка</p>
-                                            <p className="mt-2 font-semibold text-white/95">Жилой комплекс “Северный”. Прогресс: 62%</p>
-                                        </div>
-                                        <div className="grid gap-4 sm:grid-cols-2">
-                                            <div className="rounded-2xl border border-white/10 bg-linear-to-br from-[#FF6A3D]/30 via-[#0B0A0F] to-[#B4FF7A]/30 p-4">
-                                                <p className="inline-flex rounded-full bg-[#0B0A0F] px-2 py-0.5 text-xs text-white">Бюджет</p>
-                                                <div className="mt-4 inline-flex rounded-2xl bg-[#0B0A0F] px-3 py-1 text-2xl font-semibold text-white">84.3 млн ₽</div>
-                                                <p className="inline-flex rounded-full bg-[#0B0A0F] px-2 py-0.5 text-xs text-white">Отклонение: −2.1%</p>
-                                            </div>
-                                            <div className="rounded-2xl border border-white/10 bg-[#111015] p-4">
-                                                <p className="text-xs text-white/75">Поставки</p>
-                                                <div className="mt-3 text-xl font-semibold">12/16</div>
-                                                <p className="text-sm text-white/80">в пути</p>
-                                            </div>
+                                    <div className="grid gap-4 sm:grid-cols-2">
+                                        <div className={['rounded-2xl border border-white/10 p-4', primitiveMarketingCardGradientClassName].join(' ')}>
+                                            <p className={primitiveMarketingPillXsClassName}>Бюджет</p>
+                                            <div className="mt-4 inline-flex rounded-2xl bg-[#0B0A0F] px-3 py-1 text-2xl font-semibold text-white">84.3 млн ₽</div>
+                                            <p className={primitiveMarketingPillXsClassName}>Отклонение: −2.1%</p>
                                         </div>
                                         <div className="rounded-2xl border border-white/10 bg-[#111015] p-4">
-                                            <p className="text-xs text-white/75">График работ</p>
-                                            <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
-                                                {scheduleFrames.map((frame) => (
-                                                    <div key={frame} className="relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent">
-                                                        <span className="absolute left-2 top-2 rounded-full bg-[#0B0A0F] px-2 py-0.5 text-[10px] text-white">{frame}</span>
-                                                    </div>
-                                                ))}
-                                            </div>
+                                            <p className="text-xs text-white/75">Поставки</p>
+                                            <div className="mt-3 text-xl font-semibold">12/16</div>
+                                            <p className="text-sm text-white/80">в пути</p>
+                                        </div>
+                                    </div>
+                                    <div className="rounded-2xl border border-white/10 bg-[#111015] p-4">
+                                        <p className="text-xs text-white/75">График работ</p>
+                                        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+                                            {scheduleFrames.map((frame) => (
+                                                <div key={frame} className="relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent">
+                                                    <span className="absolute left-2 top-2 rounded-full bg-[#0B0A0F] px-2 py-0.5 text-[10px] text-white">{frame}</span>
+                                                </div>
+                                            ))}
                                         </div>
                                     </div>
                                 </div>
-                                <div aria-hidden className="absolute -bottom-10 -left-6 h-20 w-40 rounded-full bg-[#B4FF7A]/40 blur-3xl animate-pulse" />
                             </div>
-                        </div>
-                    </div>
-                </section>
+                            <div aria-hidden className="absolute -bottom-10 -left-6 h-20 w-40 rounded-full bg-[#B4FF7A]/40 blur-3xl animate-pulse" />
+                        </>
+                    }
+                />
 
-                <section id="capabilities" className="relative border-t border-white/10 bg-[#0F0E14]">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
-                        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-                            <div className="space-y-6">
-                                <span className="text-xs uppercase tracking-[0.3em] text-white/75">Capabilities</span>
-                                <h2 className="text-3xl md:text-4xl font-semibold">Операционная архитектура стройки</h2>
-                                <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
-                                <div className="flex flex-wrap gap-3 text-xs text-white/80">
-                                    {capabilityTags.map((tag) => (
-                                        <span key={tag} className="rounded-full border border-white/20 bg-white/5 px-3 py-1">{tag}</span>
-                                    ))}
-                                </div>
-                            </div>
-                            <div className="grid gap-4 md:grid-cols-2">
-                                {capabilityCards.map((item) => (
-                                    <div key={item.title} className="rounded-2xl border border-white/10 bg-[#15131B] p-5 transition hover:-translate-y-1 hover:border-white/30">
-                                        <item.icon className="h-6 w-6 text-[#FF6A3D]" aria-hidden="true" />
-                                        <h3 className="mt-4 text-lg font-semibold">{item.title}</h3>
-                                        <p className="mt-2 text-sm text-white/80">{item.text}</p>
-                                    </div>
+                <MarketingSection id="capabilities" className="bg-[#0F0E14]">
+                    <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+                        <div className="space-y-6">
+                            <span className={primitiveMarketingSectionLabelClassName}>Capabilities</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Операционная архитектура стройки</h2>
+                            <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
+                            <div className="flex flex-wrap gap-3 text-xs text-white/80">
+                                {capabilityTags.map((tag) => (
+                                    <span key={tag} className={primitiveMarketingPillSmallClassName}>{tag}</span>
                                 ))}
                             </div>
                         </div>
-                    </div>
-                </section>
-
-                <section id="workflow" className="relative border-t border-white/10">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
-                        <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
-                            <div className="space-y-4">
-                                <span className="text-xs uppercase tracking-[0.3em] text-white/75">Workflow</span>
-                                <h2 className="text-3xl md:text-4xl font-semibold">Три шага до прозрачной стройки</h2>
-                            </div>
-                            <p className="max-w-lg text-white/80">Один контур процесса: план → исполнение → контроль. Без таблиц на стороне.</p>
-                        </div>
-                        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                            {workflowSteps.map((item) => (
-                                <div key={item.step} className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6">
-                                    <div className="absolute right-6 top-6 text-xs text-white/75">{item.step}</div>
-                                    <h3 className="text-xl font-semibold">{item.title}</h3>
-                                    <p className="mt-3 text-sm text-white/80">{item.text}</p>
-                                    <div className="mt-6 h-[2px] w-16 bg-[#FF6A3D]" />
-                                </div>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            {capabilityCards.map((item) => (
+                                <MarketingCard
+                                    key={item.title}
+                                    icon={item.icon}
+                                    title={item.title}
+                                    text={item.text}
+                                />
                             ))}
                         </div>
                     </div>
-                </section>
+                </MarketingSection>
 
-                <section id="pricing" className="relative border-t border-white/10 bg-[#0F0E14]">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
-                        <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
-                            <div>
-                                <span className="text-xs uppercase tracking-[0.3em] text-white/75">Pricing</span>
-                                <h2 className="text-3xl md:text-4xl font-semibold">Тарифы для смелых идей</h2>
-                            </div>
-                            <p className="max-w-md text-white/80">Гибкий старт для подрядчиков и девелоперов, которым нужен прозрачный контроль проектов.</p>
+                <MarketingSection id="workflow">
+                    <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
+                        <div className="space-y-4">
+                            <span className={primitiveMarketingSectionLabelClassName}>Workflow</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Три шага до прозрачной стройки</h2>
                         </div>
-                        <div className="mt-10 grid gap-6 lg:grid-cols-3">
-                            {pricingPlans.map((plan) => (
-                                <div key={plan.name} className={`rounded-3xl border ${plan.accent ? 'border-[#FF6A3D] bg-[#16131A] shadow-[0_30px_80px_rgba(255,106,61,0.2)]' : 'border-white/10 bg-[#14121A]'} p-6`}>
-                                    <span className="text-xs uppercase tracking-[0.3em] text-white/75">{plan.name}</span>
-                                    <div className="mt-6 text-3xl font-semibold">{plan.price}</div>
-                                    <p className="mt-2 text-sm text-white/80">{plan.desc}</p>
-                                    <ul className="mt-6 space-y-2 text-sm text-white/70">
-                                        {pricingFeatures.map((feature) => (
-                                            <li key={feature}>{feature}</li>
-                                        ))}
-                                    </ul>
-                                    <Button
-                                        variant={plan.accent ? 'brand' : 'outline'}
-                                        asChild
-                                    >
-                                        <Link href={plan.href}>{plan.action}</Link>
-                                    </Button>
-                                </div>
-                            ))}
-                        </div>
+                        <p className="max-w-lg text-white/80">Один контур процесса: план → исполнение → контроль. Без таблиц на стороне.</p>
                     </div>
-                </section>
+                    <div className="mt-10 grid gap-6 lg:grid-cols-3">
+                        {workflowSteps.map((item) => (
+                            <MarketingCard
+                                key={item.step}
+                                variant="workflow"
+                                title={item.title}
+                                text={item.text}
+                                step={item.step}
+                            />
+                        ))}
+                    </div>
+                </MarketingSection>
 
-                <section className="relative border-t border-white/10">
-                    <div className="container mx-auto px-4 md:px-8 py-20">
-                        <div className="rounded-[32px] border border-white/10 bg-linear-to-br from-[#1B1822] via-[#111017] to-[#0B0A0F] p-10 md:p-14">
-                            <div className="grid gap-10 md:grid-cols-[1.2fr_0.8fr] md:items-center">
-                                <div className="space-y-4 rounded-2xl bg-[#0B0A0F] p-4">
-                                    <span className="text-xs uppercase tracking-[0.3em] text-white/75">Final Call</span>
-                                    <h2 className="text-3xl md:text-4xl font-semibold">Управляй стройкой как операцией, а не как хаосом.</h2>
-                                    <p className="text-white/80">Покажем вашу картину объекта за 30 минут и составим план внедрения.</p>
-                                </div>
-                                <div className="flex flex-col gap-4">
-                                    <Button size="xl" asChild>
-                                        <Link href="/sign-up">Запросить презентацию</Link>
-                                    </Button>
-                                    <Button variant="outline" size="xl" asChild>
-                                        <Link href="/sign-up">Назначить встречу</Link>
-                                    </Button>
-                                </div>
-                            </div>
+                <MarketingSection id="pricing" className="bg-[#0F0E14]">
+                    <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
+                        <div>
+                            <span className={primitiveMarketingSectionLabelClassName}>Pricing</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Тарифы для смелых идей</h2>
                         </div>
+                        <p className="max-w-md text-white/80">Гибкий старт для подрядчиков и девелоперов, которым нужен прозрачный контроль проектов.</p>
                     </div>
-                </section>
+                    <div className="mt-10 grid gap-6 lg:grid-cols-3">
+                        {pricingPlans.map((plan) => (
+                            <div
+                                key={plan.name}
+                                className={plan.accent
+                                    ? 'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]'
+                                    : 'rounded-3xl border border-white/10 bg-[#14121A] p-6'
+                                }
+                            >
+                                <span className="text-xs uppercase tracking-[0.3em] text-white/75">{plan.name}</span>
+                                <div className="mt-6 text-3xl font-semibold">{plan.price}</div>
+                                <p className="mt-2 text-sm text-white/80">{plan.desc}</p>
+                                <ul className="mt-6 space-y-2 text-sm text-white/70">
+                                    {pricingFeatures.map((feature) => (
+                                        <li key={feature}>{feature}</li>
+                                    ))}
+                                </ul>
+                                <Button
+                                    variant={plan.accent ? 'brand' : 'outline'}
+                                    size="default"
+                                    asChild
+                                >
+                                    <Link href={plan.href}>{plan.action}</Link>
+                                </Button>
+                            </div>
+                        ))}
+                    </div>
+                </MarketingSection>
+
+                <MarketingCTA
+                    heading="Управляй стройкой как операцией, а не как хаосом."
+                    description="Покажем вашу картину объекта за 30 минут и составим план внедрения."
+                    actions={
+                        <>
+                            <Button size="xl" asChild>
+                                <Link href="/sign-up">Запросить презентацию</Link>
+                            </Button>
+                            <Button variant="outline" size="xl" asChild>
+                                <Link href="/sign-up">Назначить встречу</Link>
+                            </Button>
+                        </>
+                    }
+                />
             </main>
 
             <footer className="border-t border-white/10 bg-[#0B0A0F]">
-                <div className="container mx-auto flex flex-col gap-6 px-4 md:px-8 py-10 md:flex-row md:items-center md:justify-between">
+                <ContentContainer className="flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
                         <span className="text-sm uppercase tracking-[0.4em] text-white/75">Smetalab BuildOS</span>
-                        <p className="text-sm text-white/80">© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
+                        <p className={primitiveMarketingBodyClassName}>© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-6 text-sm text-white/80">
                         {navigationLinks.map((link) => (
                             <Link key={link.href} href={link.href} className={footerNavLinkClassName}>{link.label}</Link>
                         ))}
                     </div>
-                </div>
+                </ContentContainer>
             </footer>
-
-        </div>
+        </MarketingPageShell>
     );
 }

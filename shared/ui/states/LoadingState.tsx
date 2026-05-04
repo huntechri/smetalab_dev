@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import type { StateShellDensity, StateShellVariant } from './StateShell';
 import { StateShell } from './StateShell';
 import { LoadingIndicator } from '../loading-indicator';
@@ -8,6 +9,7 @@ interface LoadingStateProps {
     className?: string;
     variant?: StateShellVariant;
     density?: StateShellDensity;
+    height?: string;
 }
 
 export function LoadingState({
@@ -16,15 +18,17 @@ export function LoadingState({
     className,
     variant = 'plain',
     density = 'default',
+    height,
 }: LoadingStateProps) {
     return (
-        <StateShell
-            title={title}
-            description={description}
-            icon={<LoadingIndicator variant="inline" size="sm" showLabel={false} />}
-            className={className}
-            variant={variant}
-            density={density}
-        />
+        <div className={cn(height, className)}>
+            <StateShell
+                title={title}
+                description={description}
+                icon={<LoadingIndicator variant="inline" size="sm" showLabel={false} />}
+                variant={variant}
+                density={density}
+            />
+        </div>
     );
 }

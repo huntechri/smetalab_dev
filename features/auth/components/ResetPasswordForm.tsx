@@ -5,6 +5,8 @@ import Link from 'next/link';
 
 import { resetPasswordWithToken } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
+import { FormLayout } from '@/shared/ui/form-layout';
+import { HiddenInput } from '@/shared/ui/hidden-input';
 import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { ActionState } from '@/lib/infrastructure/auth/middleware';
@@ -21,14 +23,15 @@ export function ResetPasswordForm({ token }: { token: string }) {
       title="Новый пароль"
       description="Введите новый пароль для аккаунта."
     >
-      <form action={formAction} className="space-y-4">
-        <input type="hidden" name="token" value={token} />
+      <FormLayout action={formAction}>
+        <HiddenInput name="token" value={token} />
         <div className="space-y-2">
           <Label htmlFor="password">Новый пароль</Label>
           <Input
             id="password"
             name="password"
             type="password"
+            size="default"
             required
             minLength={8}
             maxLength={100}
@@ -40,6 +43,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             id="confirmPassword"
             name="confirmPassword"
             type="password"
+            size="default"
             required
             minLength={8}
             maxLength={100}
@@ -53,7 +57,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           <AuthStatusMessage variant="success">{state.success}</AuthStatusMessage>
         ) : null}
 
-        <Button type="submit" disabled={pending || !token}>
+        <Button type="submit" size="default" disabled={pending || !token}>
           {pending ? 'Сохраняем...' : 'Обновить пароль'}
         </Button>
         <Link
@@ -62,7 +66,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
         >
           Перейти ко входу
         </Link>
-      </form>
+      </FormLayout>
     </AuthFormShell>
   );
 }

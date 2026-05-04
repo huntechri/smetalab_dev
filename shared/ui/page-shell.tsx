@@ -1,6 +1,10 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import {
+  primitivePageShellContainerWidthClassName,
+  primitivePageShellInnerPaddingClassName,
+} from '@/shared/ui/primitive-density';
 
 export type PageShellDensity = 'compact' | 'default' | 'comfortable';
 export type PageShellWidth = 'default' | 'wide' | 'full';
@@ -14,7 +18,7 @@ const legacyPageShellClassName: Record<PageShellDensity, string> = {
 
 const pageShellWidthClassName: Record<PageShellWidth, string> = {
   default: 'max-w-7xl',
-  wide: 'max-w-[1600px]',
+  wide: primitivePageShellContainerWidthClassName,
   full: 'max-w-none',
 };
 
@@ -147,7 +151,7 @@ export function WorkspaceMain({ className, ...props }: WorkspaceMainProps) {
     <main
       id="main"
       data-slot="workspace-main"
-      className={cn('min-w-0 flex-1 p-4 md:p-6 lg:p-8', className)}
+      className={cn(`min-w-0 flex-1 ${primitivePageShellInnerPaddingClassName}`, className)}
       {...props}
     />
   );
