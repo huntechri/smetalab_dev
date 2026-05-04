@@ -6,8 +6,8 @@
 - Diff range: origin/main...HEAD
 - Changed files: 139
 - Scanned changed files: 117
-- Scanned added lines: 2688
-- Violations: 1
+- Scanned added lines: 2689
+- Violations: 4
 
 
 ## Behavior
@@ -29,7 +29,10 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| card-surface | `features/projects/estimates/components/params/RoomsParamsTable.tsx:87` | `<CardShell variant="card" radius="md" shadow="none" overflow="visible" className="gap-0">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/EstimateHeader.tsx:38` | `<CardShell variant="panel" className="shadow-sm">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/params/RoomsParamsTable.tsx:87` | `<CardShell variant="card" className="rounded-md shadow-none overflow-visible gap-0">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/params/RoomsParamsTotals.tsx:49` | `<Surface variant="muted" className="rounded-md shadow-none p-3 sm:p-4">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| card-surface | `features/projects/estimates/components/table/EstimateCardsTable.tsx:26` | `<Surface className="rounded-xl p-3 sm:p-4 flex min-h-52 items-center justify-center text-sm text-muted-foreground">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
 
 ## Exact accepted shared contract owners
 

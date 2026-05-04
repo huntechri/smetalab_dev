@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T07:13:57.364Z",
+  "generatedAt": "2026-05-04T07:15:30.072Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -265,10 +265,10 @@
     "shared/ui/toggle.tsx",
     "shared/ui/toolbar.tsx"
   ],
-  "scannedAddedLineCount": 2688,
-  "violationCount": 1,
+  "scannedAddedLineCount": 2689,
+  "violationCount": 4,
   "bucketCounts": {
-    "card-surface": 1
+    "card-surface": 4
   },
   "acceptedSharedContractOwners": [
     "shared/ui/action-menu.tsx",
@@ -337,11 +337,41 @@
   },
   "violations": [
     {
+      "filePath": "features/projects/estimates/components/EstimateHeader.tsx",
+      "line": 38,
+      "bucket": "card-surface",
+      "severity": "fail",
+      "token": "<CardShell variant=\"panel\" className=\"shadow-sm\">",
+      "ownership": "business-runtime",
+      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
+      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
+    },
+    {
       "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
       "line": 87,
       "bucket": "card-surface",
       "severity": "fail",
-      "token": "<CardShell variant=\"card\" radius=\"md\" shadow=\"none\" overflow=\"visible\" className=\"gap-0\">",
+      "token": "<CardShell variant=\"card\" className=\"rounded-md shadow-none overflow-visible gap-0\">",
+      "ownership": "business-runtime",
+      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
+      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+      "line": 49,
+      "bucket": "card-surface",
+      "severity": "fail",
+      "token": "<Surface variant=\"muted\" className=\"rounded-md shadow-none p-3 sm:p-4\">",
+      "ownership": "business-runtime",
+      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
+      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
+    },
+    {
+      "filePath": "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+      "line": 26,
+      "bucket": "card-surface",
+      "severity": "fail",
+      "token": "<Surface className=\"rounded-xl p-3 sm:p-4 flex min-h-52 items-center justify-center text-sm text-muted-foreground\">",
       "ownership": "business-runtime",
       "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
       "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
