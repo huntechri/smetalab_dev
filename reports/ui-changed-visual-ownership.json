@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T07:13:57.364Z",
+  "generatedAt": "2026-05-04T07:33:25.317Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -90,6 +90,7 @@
     "features/works/components/UnitSelect.tsx",
     "features/works/components/WorksEditDialog.tsx",
     "features/works/components/columns.tsx",
+    "packages/ui/README.md",
     "packages/ui/package.json",
     "packages/ui/src/index.ts",
     "reports/input-audit.json",
@@ -265,11 +266,9 @@
     "shared/ui/toggle.tsx",
     "shared/ui/toolbar.tsx"
   ],
-  "scannedAddedLineCount": 2688,
-  "violationCount": 1,
-  "bucketCounts": {
-    "card-surface": 1
-  },
+  "scannedAddedLineCount": 2689,
+  "violationCount": 0,
+  "bucketCounts": {},
   "acceptedSharedContractOwners": [
     "shared/ui/action-menu.tsx",
     "shared/ui/admin-surface.tsx",
@@ -335,16 +334,5 @@
     "state-surface": "shared empty/loading/error/no-results contracts when present; otherwise keep state recipes out of runtime call sites",
     "action-surface": "shared/ui/action-menu.tsx and shared action/icon/confirm contracts"
   },
-  "violations": [
-    {
-      "filePath": "features/projects/estimates/components/params/RoomsParamsTable.tsx",
-      "line": 87,
-      "bucket": "card-surface",
-      "severity": "fail",
-      "token": "<CardShell variant=\"card\" radius=\"md\" shadow=\"none\" overflow=\"visible\" className=\"gap-0\">",
-      "ownership": "business-runtime",
-      "reason": "New runtime code appears to own a card/surface recipe. Use Surface, CardShell, PageShell, or Section.",
-      "recommendedContract": "shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx"
-    }
-  ]
+  "violations": []
 }

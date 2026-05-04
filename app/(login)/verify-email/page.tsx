@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import { verifyEmail } from '@/app/(login)/actions';
 import { Button } from '@/shared/ui/button';
-import { AuthFormShell, AuthStatusMessage } from '@/features/auth/components/AuthFormShell';
+import { AuthShell, AuthPanel, AuthStatusMessage } from '@/shared/ui/auth-shell';
 
 export default async function VerifyEmailPage({
   searchParams,
@@ -20,21 +20,24 @@ export default async function VerifyEmailPage({
     typeof result.error === 'string';
 
   return (
-    <AuthFormShell title="Подтверждение email" align="center">
-      <div className="space-y-4 text-center">
-        {hasError ? (
-          <AuthStatusMessage variant="error">
-            {result.error as string}
-          </AuthStatusMessage>
-        ) : (
-          <AuthStatusMessage variant="success">
-            Email подтвержден. Теперь можно войти.
-          </AuthStatusMessage>
-        )}
-        <Button variant="outline" size="default" asChild>
-          <Link href="/sign-in">Перейти ко входу</Link>
-        </Button>
-      </div>
-    </AuthFormShell>
+    <AuthShell>
+      <AuthPanel className="p-8 text-center">
+        <h1 className="mb-6 text-2xl font-semibold">Подтверждение email</h1>
+        <div className="space-y-4">
+          {hasError ? (
+            <AuthStatusMessage variant="error">
+              {result.error as string}
+            </AuthStatusMessage>
+          ) : (
+            <AuthStatusMessage variant="success">
+              Email подтвержден. Теперь можно войти.
+            </AuthStatusMessage>
+          )}
+          <Button variant="outline" size="default" asChild>
+            <Link href="/sign-in">Перейти ко входу</Link>
+          </Button>
+        </div>
+      </AuthPanel>
+    </AuthShell>
   );
 }
