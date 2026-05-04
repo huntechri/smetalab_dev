@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 
+import { AuthShell, AuthStatusMessage } from '@/shared/ui/auth-shell';
 import {
   Card,
   CardContent,
@@ -15,6 +16,9 @@ import { cn } from '@/lib/utils';
  * separate from authenticated runtime app shells and must not be normalized by
  * changing auth actions, redirects, validation, sessions, email verification, or
  * password-reset behavior.
+ *
+ * Uses shared AuthShell for the outer page wrapper and AuthStatusMessage for
+ * feedback to consumers.
  */
 
 type AuthFormShellProps = {
@@ -24,18 +28,6 @@ type AuthFormShellProps = {
   className?: string;
   contentClassName?: string;
   align?: 'left' | 'center';
-};
-
-type AuthStatusMessageProps = {
-  variant: 'error' | 'success' | 'warning';
-  children: ReactNode;
-  className?: string;
-};
-
-const authStatusClassNames: Record<AuthStatusMessageProps['variant'], string> = {
-  error: 'border-destructive/30 bg-destructive/10 text-destructive',
-  success: 'border-success/30 bg-success/10 text-success',
-  warning: 'border-brand/30 bg-brand/10 text-brand',
 };
 
 export function AuthFormShell({
@@ -49,7 +41,7 @@ export function AuthFormShell({
   const isCentered = align === 'center';
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md items-center px-4 py-8">
+    <AuthShell>
       <Card className={cn('w-full', className)}>
         <CardHeader className={cn(isCentered && 'items-center text-center')}>
           <CardTitle>{title}</CardTitle>
@@ -59,26 +51,8 @@ export function AuthFormShell({
         </CardHeader>
         <CardContent className={contentClassName}>{children}</CardContent>
       </Card>
-    </main>
+    </AuthShell>
   );
 }
 
-export function AuthStatusMessage({
-  variant,
-  children,
-  className,
-}: AuthStatusMessageProps) {
-  return (
-    <p
-      className={cn(
-        'rounded-xl border px-3 py-2 text-sm',
-        authStatusClassNames[variant],
-        className
-      )}
-      role={variant === 'error' ? 'alert' : 'status'}
-      aria-live="polite"
-    >
-      {children}
-    </p>
-  );
-}
+export { AuthStatusMessage };

@@ -1,13 +1,13 @@
 # UI Changed-File Visual Ownership Guardrail
 
-- Status: failed
+- Status: passed
 - Base ref: origin/main
 - Head ref: HEAD
 - Diff range: origin/main...HEAD
-- Changed files: 139
+- Changed files: 140
 - Scanned changed files: 117
-- Scanned added lines: 2688
-- Violations: 1
+- Scanned added lines: 2689
+- Violations: 0
 
 
 ## Behavior
@@ -29,7 +29,7 @@ This guardrail scans added lines in changed files only. It does not make the his
 
 | Bucket | Location | Evidence | Expected shared contract |
 | --- | --- | --- | --- |
-| card-surface | `features/projects/estimates/components/params/RoomsParamsTable.tsx:87` | `<CardShell variant="card" radius="md" shadow="none" overflow="visible" className="gap-0">` | shared/ui/surface.tsx, shared/ui/card-shell.tsx, shared/ui/page-shell.tsx, or shared/ui/section.tsx |
+| - | - | - | - |
 
 ## Exact accepted shared contract owners
 

@@ -1,0 +1,201 @@
+// ─── Marketing / landing page tokens ─────────────────────────────────────
+
+/** Dark background for the marketing/landing page */
+export const primitiveMarketingDarkBgClassName = 'bg-[#0B0A0F]';
+
+/** Hero section outer padding */
+export const primitiveMarketingHeroPaddingClassName = 'px-4 py-20 md:px-8 md:py-28';
+
+/** Section outer padding */
+export const primitiveMarketingSectionPaddingClassName = 'px-4 py-16 md:px-8 md:py-24';
+
+// ─── Marketing surface / card tokens ─────────────────────────────────────
+
+/** Default marketing card */
+export const primitiveMarketingCardClassName =
+  'rounded-2xl border border-white/10 bg-[#111015] p-6';
+
+/** Inner/details card on marketing */
+export const primitiveMarketingCardInnerClassName =
+  'rounded-2xl border border-white/10 bg-[#0B0A0F] p-4';
+
+/** Alternate card style */
+export const primitiveMarketingCardAltClassName =
+  'rounded-2xl border border-white/10 bg-white/5 p-4';
+
+/** Workflow step card */
+export const primitiveMarketingWorkflowCardClassName =
+  'relative rounded-2xl border border-white/10 bg-[#111015] p-6';
+
+/** CTA box background */
+export const primitiveMarketingCtaBoxClassName =
+  'rounded-3xl border border-white/10 bg-gradient-to-br from-[#1F1C28] via-[#1A1720] to-[#131018] p-6 md:p-10';
+
+/** Pricing card base */
+export const primitiveMarketingPricingCardClassName =
+  'rounded-3xl border border-white/10 bg-[#14121A] p-6';
+
+/** Pricing accent (highlighted) card */
+export const primitiveMarketingPricingAccentClassName =
+  'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]';
+
+/** Gradient overlay on marketing card/demo elements */
+export const primitiveMarketingCardGradientClassName =
+  'bg-gradient-to-br from-white/10 to-transparent';
+
+/** Demo shell — live project preview */
+export const primitiveMarketingDemoShellClassName =
+  'rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 to-white/5 p-6 shadow-2xl backdrop-blur-md';
+
+/** Code-block style element in demo */
+export const primitiveMarketingCodeBlockClassName =
+  'rounded-2xl border border-white/10 bg-[#0B0A0F]/80 p-4';
+
+// ─── Marketing background gradient tokens ────────────────────────────────
+
+/** Orange gradient orb */
+export const primitiveMarketingGradientOrangeClassName =
+  'bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))]';
+
+/** Cyan gradient orb */
+export const primitiveMarketingGradientCyanClassName =
+  'bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))]';
+
+/** Purple gradient orb */
+export const primitiveMarketingGradientPurpleClassName =
+  'bg-[radial-gradient(circle,rgba(160,100,255,0.2),rgba(11,10,15,0))]';
+
+// ─── Marketing pill / label tokens ───────────────────────────────────────
+
+/** Primary pill (badge) — used in hero */
+export const primitiveMarketingPillClassName =
+  'inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#111015] px-4 py-2 text-xs uppercase tracking-[0.25em] text-white/90';
+
+/** Small pill token — used in capability tags */
+export const primitiveMarketingPillSmallClassName =
+  'rounded-full border border-white/10 bg-white/5 px-4 py-2';
+
+/** Extra-small pill — used inside demo */
+export const primitiveMarketingPillXsClassName =
+  'rounded-full bg-[#0B0A0F] px-2 py-1 text-[10px] text-white/75';
+
+/** Section label */
+export const primitiveMarketingSectionLabelClassName =
+  'text-xs uppercase tracking-[0.3em] text-white/75';
+
+// ─── Marketing divider tokens ────────────────────────────────────────────
+
+export const primitiveMarketingDividerClassName =
+  'border-t border-white/10';
+
+// ─── Marketing border tokens ─────────────────────────────────────────────
+
+/** White/10 border for marketing elements */
+export const primitiveMarketingBorderWhite10ClassName =
+  'border-white/10';
+
+// ─── Marketing typography tokens ─────────────────────────────────────────
+
+/** H1 — hero heading */
+export const primitiveMarketingH1ClassName =
+  'text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl';
+
+/** H2 — section heading */
+export const primitiveMarketingH2ClassName =
+  'text-3xl font-semibold md:text-4xl';
+
+/** H3 — card title */
+export const primitiveMarketingH3ClassName =
+  'text-lg font-semibold';
+
+/** Body text on marketing pages */
+export const primitiveMarketingBodyClassName =
+  'text-sm text-white/80';
+
+/** Hero lead/subtext */
+export const primitiveMarketingHeroTextClassName =
+  'text-lg text-white/80';
+
+/** Pulse animation wrapper */
+export const primitiveMarketingPulseClassName = 'animate-pulse';
+
+// ─── Auth / marketing brand tokens ───────────────────────────────────────
+
+/** Brand-gradient background blobs (auth pages) */
+export const primitiveMarketingBgBlobClassNames = {
+  orange:
+    'bg-[radial-gradient(circle,rgba(255,106,61,0.35),rgba(11,10,15,0))]',
+  teal: 'bg-[radial-gradient(circle,rgba(127,255,212,0.2),rgba(11,10,15,0))]',
+} as const;
+
+/** Sizes / positions for background blobs */
+export const primitiveMarketingBgBlobPlacementClassNames = {
+  topLeft: '-left-32 top-32 h-80 w-80',
+  bottomRight: '-right-40 bottom-36 h-80 w-80',
+} as const;
+
+// ─── Auth-specific surface tokens ────────────────────────────────────────
+
+/** Auth form card shadow (heavy black shadow for dark auth pages) */
+export const primitiveAuthPanelShadowClassName =
+  'shadow-xl shadow-black/40';
+
+/** Auth form card border (subtle white-on-dark) */
+export const primitiveAuthPanelBorderClassName =
+  'border-white/10';
+
+/** Auth background page classNames */
+export const primitiveAuthPageBackgroundClassName =
+  'bg-background text-white';
+
+// ─── Auth feature card tokens ────────────────────────────────────────────
+
+/** Feature card base styling on auth marketing pages */
+export const primitiveAuthFeatureCardClassName =
+  'rounded-2xl border border-white/10 bg-white/5 p-4';
+
+/** Feature card label (uppercase muted) */
+export const primitiveAuthFeatureCardLabelClassName =
+  'text-xs uppercase tracking-mega text-white/70';
+
+/** Feature card value */
+export const primitiveAuthFeatureCardValueClassName =
+  'mt-2 font-semibold';
+
+// ─── Auth branding tokens ────────────────────────────────────────────────
+
+/** Brand icon circle wrapper */
+export const primitiveAuthBrandIconClassName =
+  'flex h-11 w-11 items-center justify-center rounded-2xl bg-brand text-brand-foreground font-bold';
+
+// ─── Auth layout tokens ──────────────────────────────────────────────────
+
+/** Auth marketing two-column grid (split 1.1 / 0.9 on lg) */
+export const primitiveAuthMarketingGridClassName =
+  'relative mx-auto grid min-h-dvh w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8';
+
+// ─── Auth form spacing tokens ────────────────────────────────────────────
+
+/** Standard gap between form fields */
+export const primitiveAuthFormGapClassName = 'space-y-4';
+
+/** Standard gap for a form field group (label + input) */
+export const primitiveAuthFieldGapClassName = 'space-y-2';
+
+// ─── Auth typography tokens ──────────────────────────────────────────────
+
+/** Auth marketing heading (large, prominent) */
+export const primitiveAuthMarketingHeadingClassName =
+  'text-4xl font-semibold leading-tight sm:text-5xl';
+
+/** Auth marketing sub-text */
+export const primitiveAuthMarketingSubtextClassName =
+  'max-w-lg text-lg text-white/80';
+
+/** Auth form title */
+export const primitiveAuthFormTitleClassName =
+  'text-2xl font-semibold text-white';
+
+/** Auth form description / muted text */
+export const primitiveAuthFormDescriptionClassName =
+  'text-white/70';
