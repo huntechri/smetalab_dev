@@ -1,4 +1,4 @@
-
+import { Surface } from '@/shared/ui/surface';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2, toSafeNumber } from '../../lib/room-params-calculations';
 
@@ -46,7 +46,7 @@ function TotalLine({ label, totals, isGrandTotal = false }: { label: string; tot
 export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomParamDraft[]; grandTotals: Totals }) {
     return (
         <div className="mt-4">
-            <div className="rounded-md border border-border bg-muted/30 shadow-none p-3 sm:p-4">
+            <Surface variant="muted" className="rounded-md shadow-none p-3 sm:p-4">
                 <div className="font-bold text-[0.5625rem] sm:text-[0.6875rem] mb-2 uppercase tracking-wider text-muted-foreground">Итого:</div>
 
                 {rows.map((row, index) => {
@@ -72,7 +72,7 @@ export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomPar
                     totals={grandTotals}
                     isGrandTotal
                 />
-        </div>
+        </Surface>
         </div>
     );
 }
