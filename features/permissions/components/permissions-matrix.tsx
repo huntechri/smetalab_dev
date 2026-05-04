@@ -1,6 +1,7 @@
 'use client';
 
 import { Badge } from '@/shared/ui/badge';
+import { CardShell } from '@/shared/ui/card-shell';
 import { LoadingState } from '@/shared/ui/states';
 import {
   Table,
