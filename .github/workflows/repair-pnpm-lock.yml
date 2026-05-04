@@ -1,3 +1,4 @@
+# Temporary workflow: remove after pnpm-lock.yaml is repaired.
 name: Repair pnpm lockfile
 
 on:
