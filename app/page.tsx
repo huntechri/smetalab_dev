@@ -17,6 +17,9 @@ import {
   primitiveMarketingPillXsClassName,
   primitiveMarketingDemoShellClassName,
   primitiveMarketingCodeBlockClassName,
+  primitiveMarketingSectionLabelClassName,
+  primitiveMarketingH2ClassName,
+  primitiveMarketingBodyClassName,
 } from '@/shared/ui/primitive-marketing';
 import {
   ArrowRight,
@@ -247,8 +250,8 @@ export default function LandingPage() {
                 <MarketingSection id="capabilities" className="bg-[#0F0E14]">
                     <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
                         <div className="space-y-6">
-                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Capabilities</span>
-                            <h2 className="text-3xl md:text-4xl font-semibold">Операционная архитектура стройки</h2>
+                            <span className={primitiveMarketingSectionLabelClassName}>Capabilities</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Операционная архитектура стройки</h2>
                             <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
                             <div className="flex flex-wrap gap-3 text-xs text-white/80">
                                 {capabilityTags.map((tag) => (
@@ -272,8 +275,8 @@ export default function LandingPage() {
                 <MarketingSection id="workflow">
                     <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-4">
-                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Workflow</span>
-                            <h2 className="text-3xl md:text-4xl font-semibold">Три шага до прозрачной стройки</h2>
+                            <span className={primitiveMarketingSectionLabelClassName}>Workflow</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Три шага до прозрачной стройки</h2>
                         </div>
                         <p className="max-w-lg text-white/80">Один контур процесса: план → исполнение → контроль. Без таблиц на стороне.</p>
                     </div>
@@ -293,8 +296,8 @@ export default function LandingPage() {
                 <MarketingSection id="pricing" className="bg-[#0F0E14]">
                     <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
                         <div>
-                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Pricing</span>
-                            <h2 className="text-3xl md:text-4xl font-semibold">Тарифы для смелых идей</h2>
+                            <span className={primitiveMarketingSectionLabelClassName}>Pricing</span>
+                            <h2 className={primitiveMarketingH2ClassName}>Тарифы для смелых идей</h2>
                         </div>
                         <p className="max-w-md text-white/80">Гибкий старт для подрядчиков и девелоперов, которым нужен прозрачный контроль проектов.</p>
                     </div>
@@ -347,7 +350,7 @@ export default function LandingPage() {
                 <ContentContainer className="flex flex-col gap-6 py-10 md:flex-row md:items-center md:justify-between">
                     <div className="space-y-2">
                         <span className="text-sm uppercase tracking-[0.4em] text-white/75">Smetalab BuildOS</span>
-                        <p className="text-sm text-white/80">© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
+                        <p className={primitiveMarketingBodyClassName}>© {new Date().getFullYear()} Smetalab. Все права защищены.</p>
                     </div>
                     <div className="flex flex-wrap items-center gap-6 text-sm text-white/80">
                         {navigationLinks.map((link) => (
