@@ -47,7 +47,7 @@ jobs:
         run: cat reports/ui-coverage-audit.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI coverage audit reports
         if: always() && hashFiles('reports/ui-coverage-audit.md') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ui-coverage-audit-${{ github.run_number }}
           path: |
@@ -112,7 +112,7 @@ jobs:
         run: cat reports/ui-smoke-report.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI smoke diagnostics reports
         if: always() && hashFiles('reports/ui-smoke-report.md') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ui-smoke-diagnostics-${{ github.run_number }}
           path: |
@@ -122,7 +122,7 @@ jobs:
           retention-days: 14
       - name: Upload Playwright report
         if: always() && hashFiles('playwright-report/**') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ui-smoke-playwright-report-${{ github.run_number }}
           path: playwright-report

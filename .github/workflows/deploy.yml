@@ -64,7 +64,7 @@ jobs:
         run: cat reports/ui-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload UI Audit reports
         if: always() && hashFiles('reports/ui-audit-summary.md') != ''
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ui-audit-${{ github.run_number }}
           path: |
@@ -127,7 +127,7 @@ jobs:
         run: cat reports/vitest-unit-timing.md >> "$GITHUB_STEP_SUMMARY"
       - name: Upload isolated test diagnostics
         if: always() && (hashFiles('test-results/junit*.xml') != '' || hashFiles('reports/vitest-unit-timing.md') != '' || hashFiles('reports/isolated-test-db-boundaries.md') != '')
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: isolated-test-diagnostics-${{ github.run_number }}
           path: |
