@@ -1,0 +1,44 @@
+name: Repair Stripe API version
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/repair-stripe-api-version.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  repair:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Align Stripe API version literals
+        shell: bash
+        run: |
+          set -euo pipefail
+          perl -0pi -e "s/2026-01-28\.clover/2026-02-25.clover/g" \
+            lib/data/db/seed.ts \
+            lib/infrastructure/payments/stripe.ts
+
+      - name: Commit fix
+        shell: bash
+        run: |
+          if git diff --quiet -- lib/data/db/seed.ts lib/infrastructure/payments/stripe.ts; then
+            echo "No Stripe API version changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add lib/data/db/seed.ts lib/infrastructure/payments/stripe.ts
+          git commit -m "fix: align Stripe API version with SDK types"
+          git push
