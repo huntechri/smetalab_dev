@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T10:01:43.044Z",
+  "generatedAt": "2026-05-04T10:18:54.015Z",
   "mode": "changed-added-lines-enforcing",
   "skipped": false,
   "baseRef": "origin/main",
@@ -29,6 +29,7 @@
     "docs/audits/2026-05-02-ui-dependency-map.md",
     "docs/design-system/smetalab/MASTER.md",
     "docs/inputs_audit_updated.md",
+    "docs/ui/CLEANUP_RESIDUAL.md",
     "docs/ui/PHASE_10_PLAN.md",
     "docs/ui/PHASE_12_PLAN.md",
     "docs/ui/REFACTOR_AUDIT.md",
@@ -49,6 +50,7 @@
     "features/auth/components/LoginForm.tsx",
     "features/auth/components/ResetPasswordForm.tsx",
     "features/catalog/components/CatalogCategoryButton.tsx",
+    "features/catalog/components/MaterialCatalogDialog.client.tsx",
     "features/catalog/components/MaterialCatalogPicker.client.tsx",
     "features/catalog/components/WorkCatalogPicker.client.tsx",
     "features/counterparties/components/CreateCounterpartySheet.tsx",
@@ -189,6 +191,7 @@
     "features/auth/components/LoginForm.tsx",
     "features/auth/components/ResetPasswordForm.tsx",
     "features/catalog/components/CatalogCategoryButton.tsx",
+    "features/catalog/components/MaterialCatalogDialog.client.tsx",
     "features/catalog/components/MaterialCatalogPicker.client.tsx",
     "features/catalog/components/WorkCatalogPicker.client.tsx",
     "features/counterparties/components/CreateCounterpartySheet.tsx",
@@ -283,7 +286,7 @@
     "shared/ui/toggle.tsx",
     "shared/ui/toolbar.tsx"
   ],
-  "scannedAddedLineCount": 3545,
+  "scannedAddedLineCount": 3550,
   "violationCount": 0,
   "bucketCounts": {},
   "acceptedSharedContractOwners": [
