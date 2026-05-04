@@ -203,7 +203,7 @@ function summarizeReport(check: AuditCheck, report: Record<string, unknown> | un
   }
 }
 
-function runCheck(check: AuditCheck): AuditCheckResult {
+function runCheck(check: AuditCheck, options: Options): AuditCheckResult {
   const [command, ...args] = check.command
   const result = spawnSync(command, args, {
     cwd: ROOT,
@@ -221,14 +221,21 @@ function runCheck(check: AuditCheck): AuditCheckResult {
   if (reportMissing) status = "missing-report"
   else if (exitCode !== 0) status = "fail"
   else if (REPORT_ONLY_CHECKS.has(check.id) && reportSummary.totalFindings > 0) status = "review"
-  else if (check.id === "local-classes" && reportSummary.totalFindings > 0) status = reportSummary.blockingFindings > 0 ? "fail" : "review"
+  else if (check.id === "local-classes" && reportSummary.totalFindings > 0) {
+    status = options.strict && reportSummary.blockingFindings > 0 ? "fail" : "review"
+  }
+
+  const blockingFindings =
+    status === "review" && (REPORT_ONLY_CHECKS.has(check.id) || check.id === "local-classes")
+      ? 0
+      : reportSummary.blockingFindings
 
   return {
     id: check.id,
     title: check.title,
     status,
     exitCode,
-    blockingFindings: status === "review" && REPORT_ONLY_CHECKS.has(check.id) ? 0 : reportSummary.blockingFindings,
+    blockingFindings,
     totalFindings: reportSummary.totalFindings,
     reportJson: check.reportJson,
     reportMd: check.reportMd,
@@ -270,6 +277,7 @@ function writeSummary(report: SummaryReport): void {
 
 - \`visual ownership\` includes accepted \`shared/ui\` owners. It is the full visual surface, not the direct cleanup backlog.
 - \`local classes\` is the actionable cleanup report for \`app/features/entities/components/widgets\` outside \`shared/ui\`.
+- Non-strict \`local classes\` findings are review-only. Strict mode fails on high-severity local classes.
 - Report-only checks can return \`review\` without blocking release by themselves.
 
 ## Checks
@@ -285,7 +293,7 @@ ${rows || "| - | - | 0 | 0 | - | - | - |"}
 function main(): void {
   const options = parseArgs(process.argv.slice(2))
   const checks = buildChecks(options)
-  const results = checks.map(runCheck)
+  const results = checks.map((check) => runCheck(check, options))
   const status = aggregateStatus(results)
   const blockingFindings = results.reduce((sum, result) => sum + result.blockingFindings, 0)
   const totalFindings = results.reduce((sum, result) => sum + result.totalFindings, 0)
