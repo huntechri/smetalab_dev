@@ -249,12 +249,12 @@ jobs:
         uses: tj-actions/branch-names@v8
       - name: Create Neon preview branch
         id: get_neon_branch
-        uses: neondatabase/create-branch-action@v5
+        uses: neondatabase/create-branch-action@v6
         with:
           project_id: ${{ vars.NEON_PROJECT_ID || 'falling-fire-63341326' }}
           api_key: ${{ secrets.NEON_API_KEY }}
           branch_name: preview/pr-${{ github.event.pull_request.number }}-${{ steps.branch_name.outputs.current_branch }}
-          username: neondb_owner
+          role: neondb_owner
           database: neondb
       - name: Set up pnpm
         uses: pnpm/action-setup@v4
@@ -273,12 +273,12 @@ jobs:
         id: deploy_preview
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          DATABASE_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
-          POSTGRES_URL: ${{ steps.get_neon_branch.outputs.db_url_with_pooler }}
+          DATABASE_URL: ${{ steps.get_neon_branch.outputs.db_url_pooled }}
+          POSTGRES_URL: ${{ steps.get_neon_branch.outputs.db_url_pooled }}
         run: |
           set -euo pipefail
           BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
-          NEON_DB_URL="${{ steps.get_neon_branch.outputs.db_url_with_pooler }}"
+          NEON_DB_URL="${{ steps.get_neon_branch.outputs.db_url_pooled }}"
           vercel pull --yes --environment preview --git-branch "$BRANCH_NAME" --token="$VERCEL_TOKEN"
           DATABASE_URL="$NEON_DB_URL" pnpm db:migrate
           DATABASE_URL="$NEON_DB_URL" pnpm db:seed:permissions
