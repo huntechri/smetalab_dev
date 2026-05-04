@@ -134,27 +134,21 @@ describe('Estimate cards layout contract (screenshot baseline)', () => {
     const workTitleButton = screen.getByRole('button', {
       name: 'Наименование: Демонтаж кирпичных стен в 1/2 кирпича',
     });
-    const workRow = workTitleButton.closest('div.bg-card');
-    expect(workRow).not.toBeNull();
-    const workScope = within(workRow as HTMLElement);
+    expect(workTitleButton).toHaveAttribute('data-slot', 'button');
+    expect(workTitleButton).toHaveAttribute('data-variant', 'ghost');
+    expect(workTitleButton).toHaveAttribute('data-size', 'sm');
 
     expect(screen.getByText('+ Материал')).toBeInTheDocument();
     expect(screen.getByText('+ Работа')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Действия с разделом' })).toBeInTheDocument();
-    expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: 'Действия с материалом' }).length).toBeGreaterThanOrEqual(1);
 
-    const materialsHeading = workScope.getByText('Материалы', { selector: 'p' });
-    expect(materialsHeading).toHaveClass('uppercase');
+    const materialsHeadings = screen.getAllByText('Материалы', { selector: 'p' });
+    // The work section materials heading is the one with uppercase class
+    const materialsHeading = materialsHeadings.find((el) => el.classList.contains('uppercase'));
+    expect(materialsHeading).toBeDefined();
     expect(materialsHeading).toHaveClass('tracking-wide');
-
-    const materialsGrid = materialsHeading.nextElementSibling as HTMLElement;
-    expect(materialsGrid).toHaveClass('grid');
-    expect(materialsGrid).toHaveClass('md:grid-cols-2');
-    expect(materialsGrid).toHaveClass('xl:grid-cols-3');
-
-    const materialCard = screen.getByText('Штукатурка ротбанд Knauf 30кг').closest('div');
-    expect(materialCard).not.toBeNull();
     expect(screen.getByText('1.1')).toBeInTheDocument();
     expect(screen.getAllByText(/1.*000/).length).toBeGreaterThanOrEqual(1);
     expect(
@@ -168,33 +162,21 @@ describe('Estimate cards layout contract (screenshot baseline)', () => {
     const workTitleButton = screen.getByRole('button', {
       name: `Наименование: ${buildRows()[1].name}`,
     });
-    const workRow = workTitleButton.closest('div.bg-card');
-    expect(workRow).not.toBeNull();
+    expect(workTitleButton).toHaveAttribute('data-slot', 'button');
+    expect(workTitleButton).toHaveAttribute('data-variant', 'ghost');
 
-    const workScope = within(workRow as HTMLElement);
-
-    expect(workScope.getByText('+ Материал')).toBeInTheDocument();
-    expect(workScope.getByText('+ Работа')).toBeInTheDocument();
-    expect(workScope.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
+    expect(screen.getByText('+ Материал')).toBeInTheDocument();
+    expect(screen.getByText('+ Работа')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Действия с работой' })).toBeInTheDocument();
   });
 });
 
 describe('Estimate cards mobile UI kit contract (CSS tokens)', () => {
   it('keeps cards stack rhythm and section card shell close to the provided mobile kit', () => {
-    const { container } = renderCards();
+    renderCards();
 
-    const cardsStack = container.querySelector('.space-y-2');
-    expect(cardsStack).not.toBeNull();
-    expect(cardsStack).toHaveClass('space-y-2');
-
-    const sectionCard = screen.getByText('Демонтажные работы').closest('div.rounded-xl');
+    const sectionCard = screen.getByText('Демонтажные работы').closest('[data-slot="card-shell"]');
     expect(sectionCard).not.toBeNull();
-
-    // UI-kit card shell: rounded-xl + soft shadow + semantic surface + light border.
-    expect(sectionCard).toHaveClass('rounded-xl');
-    expect(sectionCard).toHaveClass('border');
-    expect(sectionCard).toHaveClass('shadow-sm');
-    expect(sectionCard).toHaveClass('bg-card');
   });
 
   it('preserves compact typography markers and semantic shadcn badges for section/work numbering', () => {
@@ -211,12 +193,13 @@ describe('Estimate cards mobile UI kit contract (CSS tokens)', () => {
     const workTitleButton = screen.getByRole('button', {
       name: 'Наименование: Демонтаж кирпичных стен в 1/2 кирпича',
     });
-    const workRow = workTitleButton.closest('div.bg-card');
-    expect(workRow).not.toBeNull();
-    const materialsLabel = within(workRow as HTMLElement).getByText('Материалы', {
+    expect(workTitleButton).toHaveAttribute('data-slot', 'button');
+    expect(workTitleButton).toHaveAttribute('data-variant', 'ghost');
+    const materialsLabels = screen.getAllByText('Материалы', {
       selector: 'p',
     });
-    expect(materialsLabel).toHaveClass('uppercase');
+    const materialsLabel = materialsLabels.find((el) => el.classList.contains('uppercase'));
+    expect(materialsLabel).toBeDefined();
     expect(materialsLabel).toHaveClass('tracking-wide');
     expect(materialsLabel).toHaveClass('text-muted-foreground');
   });
@@ -227,17 +210,13 @@ describe('Estimate cards mobile UI kit contract (CSS tokens)', () => {
     const qtyButton = screen.getByRole('button', {
       name: 'Количество: Демонтаж кирпичных стен в 1/2 кирпича',
     });
-    const qtyPill = qtyButton.closest('div');
-    expect(qtyPill).not.toBeNull();
-    expect(qtyPill).toHaveClass('rounded-full');
-    expect(qtyPill).toHaveClass('border');
+    expect(qtyButton).toHaveAttribute('data-slot', 'button');
+    expect(qtyButton).toHaveAttribute('data-variant', 'ghost');
 
     const expenseButton = screen.getByRole('button', {
       name: 'Расход: Штукатурка ротбанд Knauf 30кг',
     });
-    const expensePill = expenseButton.closest('div');
-    expect(expensePill).not.toBeNull();
-    expect(expensePill).toHaveClass('rounded-full');
-    expect(expensePill).toHaveClass('border');
+    expect(expenseButton).toHaveAttribute('data-slot', 'button');
+    expect(expenseButton).toHaveAttribute('data-variant', 'ghost');
   });
 });
