@@ -3,6 +3,7 @@ import { NotificationItem } from '@/features/notifications/components/notificati
 import { NotificationPayload } from '@/features/notifications/components/types';
 import { LoadingIndicator } from '@/shared/ui/loading-indicator';
 import { ScrollArea } from '@/shared/ui/scroll-area';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { cn } from '@/lib/utils';
 
 interface NotificationsListProps {
@@ -31,9 +32,9 @@ export function NotificationsList({
           </div>
         ) : !notifications || notifications.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-muted-foreground text-center">
-            <BellOff className="h-10 w-10 mb-3 opacity-20" />
-            <p className="text-sm font-medium">{emptyTitle}</p>
-            <p className="text-xs opacity-70 mt-1">{emptyDescription}</p>
+            <BellOff className="size-10 mb-3 opacity-20" />
+            <p className={primitiveVisualTypographyClassNames.denseItemTitleLink}>{emptyTitle}</p>
+            <p className={`${primitiveVisualTypographyClassNames.mutedMeta} opacity-70 mt-1`}>{emptyDescription}</p>
           </div>
         ) : (
           notifications.map((notification) => (

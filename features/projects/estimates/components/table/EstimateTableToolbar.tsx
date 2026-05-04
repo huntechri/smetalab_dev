@@ -125,7 +125,7 @@ function MobileOverflowActions({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <ToolbarButton size="icon-xs" aria-label="Действия по смете">
-            <MoreHorizontal className="size-4" />
+            <MoreHorizontal />
             <span className="sr-only">Действия по смете</span>
           </ToolbarButton>
         </DropdownMenuTrigger>
@@ -190,7 +190,7 @@ export function EstimateTableToolbar(props: EstimateTableToolbarProps) {
         onExportPdf={props.onExportPdf}
       />
       <div className="hidden xl:flex">
-        <ToolbarButton variant="destructive" aria-label="Удалить смету" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 className="size-3.5" />} labelClassName="hidden sm:inline">
+        <ToolbarButton variant="destructive" aria-label="Удалить смету" onClick={props.onOpenDeleteDialog} iconLeft={<Trash2 />} labelClassName="hidden sm:inline">
           Удалить
         </ToolbarButton>
       </div>

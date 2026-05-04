@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
 import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { cn } from '@/lib/utils';
 import type { EstimateStatus } from '../../types/dto';
@@ -53,7 +54,7 @@ export function EstimateStatusMenu({
           >
             <div className="flex w-full items-center gap-2">
               <StatusIndicator tone={statusToneByStatus[item]} size="sm" />
-              <span className="text-xs font-medium md:text-sm">
+              <span className={primitiveVisualTypographyClassNames.denseItemTitleLink}>
                 {getEstimateStatusLabel(item)}
               </span>
             </div>

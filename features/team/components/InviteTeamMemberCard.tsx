@@ -38,8 +38,8 @@ export function InviteTeamMemberCard({
         <Surface variant="card" density="comfortable">
             <div className="space-y-1">
                 <div>
-                    <h2 className="text-base font-medium">Пригласить участника</h2>
-                    <p className="text-sm text-muted-foreground">Введите email и выберите роль.</p>
+                    <h2 className={primitiveVisualTypographyClassNames.itemTitle}>Пригласить участника</h2>
+                    <p className={primitiveVisualTypographyClassNames.mutedMeta}>Введите email и выберите роль.</p>
                 </div>
                 <div>
                 <FormLayout onSubmit={onSubmit} className="flex flex-col gap-3 sm:flex-row sm:items-end">

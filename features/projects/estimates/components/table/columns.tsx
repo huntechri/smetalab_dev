@@ -93,7 +93,7 @@ export const getEstimateColumns = (actions: EstimateColumnActions): ColumnDef<Vi
                         value={item.name}
                         onCommit={(value) => actions.onPatch(item.id, 'name', value)}
                         ariaLabel={`Наименование: ${item.name}`}
-                        className={item.kind === 'material' ? `${primitiveVisualTypographyClassNames.compactBody} italic text-muted-foreground` : `${primitiveVisualTypographyClassNames.compactBody} font-normal`}
+                        className={item.kind === 'material' ? `${primitiveVisualTypographyClassNames.compactBody} italic text-muted-foreground` : `${primitiveVisualTypographyClassNames.compactBody}`}
                     />
                 </EstimateNameCellWrapper>
             );

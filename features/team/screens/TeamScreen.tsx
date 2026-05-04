@@ -5,7 +5,7 @@ import { InviteTeamMemberCard } from '../components/InviteTeamMemberCard';
 import { TeamHeaderCard } from '../components/TeamHeaderCard';
 import { TeamMembersCard } from '../components/TeamMembersCard';
 import { useTeamPage } from '../hooks/useTeamPage';
-import { Card } from '@/shared/ui/card';
+import { CardShell } from '@/shared/ui/card-shell';
 import { Separator } from '@/shared/ui/separator';
 import { useBreadcrumbs } from '@/components/providers/breadcrumb-provider';
 
@@ -46,7 +46,7 @@ export function TeamScreen() {
     const canManageMembers = hasPermission('team', 'manage');
 
     return (
-        <Card className="overflow-hidden border-border/70 shadow-sm bg-background">
+        <CardShell variant="card" shadow="sm">
             <TeamHeaderCard teamName={team?.name} membersCount={members.length} />
 
             {canManageMembers && (
@@ -75,6 +75,6 @@ export function TeamScreen() {
                 onSearchQueryChange={setSearchQuery}
                 onRemoveMember={handleRemove}
             />
-        </Card>
+        </CardShell>
     );
 }

@@ -14,6 +14,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Building2, Settings2, Users } from 'lucide-react';
 
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { PermissionLevelControl } from './PermissionLevelControl';
 import { Permission, usePermissionsMatrix } from '@/features/permissions/hooks/usePermissionsMatrix';
 
@@ -40,7 +41,7 @@ export function PermissionsMatrix() {
     <Table className="w-full border-collapse">
       <TableHeader className="sticky top-0 z-20 border-b bg-muted/80 backdrop-blur">
         <TableRow className="hover:bg-transparent">
-          <TableHead className="text-xs text-muted-foreground w-1/3 px-6 py-4 text-left font-semibold tracking-wide">
+          <TableHead className={`${primitiveVisualTypographyClassNames.mutedMeta} w-1/3 px-6 py-4 text-left font-semibold tracking-wide`}>
             Функциональная область
           </TableHead>
           {roles.map((role) => (
@@ -58,7 +59,7 @@ export function PermissionsMatrix() {
             <TableCell className="px-6 py-4 align-top">
               <div className="flex flex-col">
                 <span className="text-sm font-semibold tracking-tight text-foreground">{perm.name}</span>
-                <p className="text-xs text-muted-foreground mt-1 max-w-xs text-muted-foreground">{perm.description}</p>
+                <p className={`${primitiveVisualTypographyClassNames.mutedMeta} mt-1 max-w-xs`}>{perm.description}</p>
               </div>
             </TableCell>
             {roles.map((role) => {
@@ -94,7 +95,7 @@ export function PermissionsMatrix() {
           <h2 className="text-base font-semibold flex items-center gap-2 bg-transparent text-foreground">
             <Settings2 className="h-5 w-5" /> Контроль доступа
           </h2>
-          <p className="text-xs text-muted-foreground">
+          <p className={primitiveVisualTypographyClassNames.mutedMeta}>
             Модель прав 3-го уровня: <span className="font-bold text-muted-foreground/60">Выкл</span> /{' '}
             <span className="font-bold text-primary">Чтение</span> /{' '}
             <span className="font-bold text-brand">Полный</span>
@@ -118,7 +119,7 @@ export function PermissionsMatrix() {
           </TabsTrigger>
         </TabsList>
 
-        <CardShell className="shadow-md">
+        <CardShell shadow="md">
           <TabsContent value="tenant" className="m-0 overflow-x-auto">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>

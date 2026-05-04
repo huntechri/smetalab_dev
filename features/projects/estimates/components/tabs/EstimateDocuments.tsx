@@ -1,3 +1,10 @@
+import { Surface } from '@/shared/ui/surface';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
+
 export function EstimateDocuments() {
-    return <div className="rounded-md border p-4 text-sm text-muted-foreground">Документы (заглушка).</div>;
+    return (
+        <Surface variant="card" density="default">
+            <p className={primitiveVisualTypographyClassNames.mutedMeta}>Документы (заглушка).</p>
+        </Surface>
+    );
 }

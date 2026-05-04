@@ -97,7 +97,7 @@ export function EstimatesListTable({
     },
     {
       id: 'actions',
-      header: () => <div className="pr-1 text-right">Действие</div>,
+      header: () => <div className="text-right">Действие</div>,
       size: createInBodyAction ? 112 : 78,
       cell: ({ row }) => {
         return (
@@ -111,7 +111,7 @@ export function EstimatesListTable({
                   size="icon-xs"
                   title="Удалить смету"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 />
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>

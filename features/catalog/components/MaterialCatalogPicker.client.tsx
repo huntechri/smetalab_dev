@@ -17,7 +17,7 @@ import { catalogRepository } from '../repository';
 import { CatalogMaterial } from '../types/dto';
 import { buildMaterialCategoryTree, filterMaterialsByCategoryPath, MaterialCategorySelection } from '../lib/material-category-tree';
 import { CatalogCategoryButton } from './CatalogCategoryButton';
-import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
+import { primitiveVisualTypographyClassNames, primitiveCardShellInsetDensityClassNames, primitiveSurfaceBorderClassNames } from '@/shared/ui/primitive-surface';
 
 interface MaterialCatalogPickerProps {
     onAddMaterial: (material: CatalogMaterial) => Promise<void>;
@@ -171,7 +171,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                 </ToolbarGroup>
             </Toolbar>
 
-            <div className="border-b px-3 py-2 lg:hidden">
+            <div className={`border-b ${primitiveCardShellInsetDensityClassNames.compact} lg:hidden`}>
                 <Button
                     data-testid="material-categories-toggle"
                     type="button"
@@ -189,7 +189,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                     isCategoryPanelOpen ? 'block' : 'hidden',
                     'lg:block',
                 )}>
-                    <div className="px-4 py-3 border-b text-xs font-semibold text-muted-foreground uppercase tracking-wider">Категории L1–L4</div>
+                    <div className={`px-4 py-3 border-b ${primitiveVisualTypographyClassNames.compactLabel}`}>Категории L1–L4</div>
                     <ScrollArea className="h-full">
                         <div className="p-2 space-y-1">
                             <CatalogCategoryButton
@@ -278,7 +278,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                     <div className="px-2 sm:px-4 py-1">
                                         <CatalogListItem>
                                             <div className="flex-1 min-w-0 flex items-center gap-3 sm:gap-4">
-                                                <div className="relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border/50 bg-muted">
+                                                <div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md bg-muted ${primitiveSurfaceBorderClassNames.hairline}`}>
                                                     {material.imageUrl ? (
                                                         <Image
                                                             src={material.imageUrl}
@@ -332,7 +332,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                             }}
                             components={{
                                 Footer: () => (
-                                    <div className="py-6 text-center text-xs text-muted-foreground opacity-50">
+                                    <div className={`py-6 text-center opacity-50 ${primitiveVisualTypographyClassNames.mutedMeta}`}>
                                         Отображено {filteredMaterials.length} материалов
                                     </div>
                                 ),

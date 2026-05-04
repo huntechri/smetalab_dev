@@ -15,8 +15,10 @@ import {
 import {
   primitiveVisualIconButtonClassNames,
   primitiveVisualIconSizeClassNames,
+} from '@/shared/ui/primitive-controls';
+import {
   primitiveVisualTypographyClassNames,
-} from '@/shared/ui/primitive-density';
+} from '@/shared/ui/primitive-surface';
 import { TableEmptyState } from '@/shared/ui/table-empty-state';
 import {
   AlertDialog,

@@ -20,7 +20,9 @@ const headers = [
     'Окно 1 (В×Ш)', 'Окно 2 (В×Ш)', 'Окно 3 (В×Ш)', 'Портал 1 (В×Ш)', 'Портал 2 (В×Ш)', 'Портал 3 (В×Ш)', 'Действия',
 ];
 
-const calculatedValueClassName = 'h-8 w-24 rounded border bg-muted/30 px-2 flex items-center';
+import { primitiveSurfaceBorderClassNames } from '@/shared/ui/primitive-surface';
+
+const calculatedValueClassName = `h-8 w-24 rounded ${primitiveSurfaceBorderClassNames.hairline} bg-muted/30 px-2 flex items-center`;
 
 type RoomParamNumberInputProps = {
     value: string;

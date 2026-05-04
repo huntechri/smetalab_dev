@@ -7,6 +7,7 @@ import { Pencil, Plus, XCircle } from 'lucide-react';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import { CardShell, CardShellBody, CardShellHeader } from '@/shared/ui/card-shell';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/shared/ui/dialog';
 import { Input } from '@/shared/ui/input';
@@ -203,7 +204,7 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
             <StatusBadgeValue>{formatCurrency(aggregates.totalConfirmedReceipts)}</StatusBadgeValue>
           </StatusBadge>
           <Button size="default" onClick={onAddClick}>
-            <Plus className="mr-1 size-4" /> Добавить
+            <Plus className={`mr-1 ${primitiveVisualIconSizeClassNames.md}`} /> Добавить
           </Button>
         </div>
       </CardShellHeader>

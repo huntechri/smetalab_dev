@@ -1,6 +1,7 @@
 import { Button } from '@/shared/ui/button';
 import { StatusBadge, StatusIndicator } from '@/shared/ui/status-badge';
 import { cn } from '@/lib/utils';
+import { primitiveVisualTypographyClassNames, primitiveCardShellInsetDensityClassNames } from '@/shared/ui/primitive-surface';
 import { NotificationPayload } from '@/features/notifications/components/types';
 
 interface NotificationItemProps {
@@ -33,7 +34,7 @@ function formatRelativeTime(dateString: string) {
 
 export function NotificationItem({ notification, onMarkAsRead }: NotificationItemProps) {
   const timeLabel = formatRelativeTime(notification.createdAt);
-  const baseClasses = 'w-full text-left p-3 rounded-lg transition-colors flex items-start gap-3';
+  const baseClasses = `w-full text-left ${primitiveCardShellInsetDensityClassNames.default} rounded-lg transition-colors flex items-start gap-3`;
 
   if (notification.read) {
     return (
@@ -44,15 +45,15 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       >
         <div className="min-w-0">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium">{notification.title}</p>
+            <p className={primitiveVisualTypographyClassNames.itemTitle}>{notification.title}</p>
             <StatusBadge tone="neutral">
               Прочитано
             </StatusBadge>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className={primitiveVisualTypographyClassNames.mutedMeta}>
             {notification.description}
           </p>
-          <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
+          <p className={`${primitiveVisualTypographyClassNames.mutedMeta} mt-1`}>{timeLabel}</p>
         </div>
       </div>
     );
@@ -68,15 +69,15 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       <StatusIndicator tone="brand" size="sm" className="mt-1" aria-hidden="true" />
       <div className="min-w-0">
         <div className="flex items-center gap-2">
-          <p className="text-sm font-semibold">{notification.title}</p>
+          <p className={primitiveVisualTypographyClassNames.sectionTitle}>{notification.title}</p>
           <StatusBadge tone="info">
             Новое
           </StatusBadge>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
+        <p className={primitiveVisualTypographyClassNames.mutedMeta}>
           {notification.description}
         </p>
-        <p className="text-xs text-muted-foreground mt-2">{timeLabel}</p>
+        <p className={`${primitiveVisualTypographyClassNames.mutedMeta} mt-1`}>{timeLabel}</p>
       </div>
     </Button>
   );

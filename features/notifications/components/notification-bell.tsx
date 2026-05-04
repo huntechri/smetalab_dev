@@ -4,6 +4,7 @@ import { Bell } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
 import { StatusBadge } from '@/shared/ui/status-badge';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import {
     Popover,
     PopoverContent,
@@ -93,8 +94,8 @@ export function NotificationBell() {
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-80" align="end">
-                <div className="flex items-center justify-between border-b pb-2 mb-2">
-                    <h4 className="font-semibold">Уведомления</h4>
+                <div className="flex items-center justify-between gap-2 border-b border-border/30 pb-2 mb-2">
+                    <h4 className={`${primitiveVisualTypographyClassNames.dialogTitle} font-semibold`}>Уведомления</h4>
                     {unreadCount > 0 && (
                         <StatusBadge tone="info">
                             {unreadCount} новых
@@ -108,7 +109,7 @@ export function NotificationBell() {
                     emptyTitle="Нет новых уведомлений"
                     emptyDescription="Вы прочитали всё важное"
                 />
-                <div className="border-t pt-2 mt-2">
+                <div className="flex items-center justify-center border-t border-border/30 pt-2 mt-2">
                     <Button type="button" variant="ghost" size="default" disabled>
                         Показать все уведомления
                     </Button>

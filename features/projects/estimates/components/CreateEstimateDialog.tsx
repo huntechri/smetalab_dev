@@ -7,6 +7,7 @@ import { Loader2 } from 'lucide-react';
 
 import { notify } from '@/lib/infrastructure/notifications/notify';
 import { Button } from '@/shared/ui/button';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import {
     Dialog,
     DialogContent,
@@ -125,7 +126,7 @@ export function CreateEstimateDialog({
                                 Отменить
                             </Button>
                             <Button type="submit" size="default" disabled={isSubmitting}>
-                                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isSubmitting && <Loader2 className={`mr-2 ${primitiveVisualIconSizeClassNames.md} animate-spin`} />}
                                 Сохранить
                             </Button>
                         </DialogFooter>

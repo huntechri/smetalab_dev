@@ -2,7 +2,7 @@ import { Surface } from '@/shared/ui/surface';
 import { EstimateRoomParamDraft } from '../../types/room-params.dto';
 import { calcSlopes, calcWallsArea, format2, toSafeNumber } from '../../lib/room-params-calculations';
 import { primitiveCompactTableCellClassName } from '@/shared/ui/primitive-table';
-import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
+import { primitiveVisualTypographyClassNames, primitiveCardShellInsetDensityClassNames } from '@/shared/ui/primitive-surface';
 
 type Totals = {
     floorArea: number;
@@ -48,7 +48,7 @@ function TotalLine({ label, totals, isGrandTotal = false }: { label: string; tot
 export function RoomsParamsTotals({ rows, grandTotals }: { rows: EstimateRoomParamDraft[]; grandTotals: Totals }) {
     return (
         <div className="mt-4">
-            <Surface variant="muted" className="rounded-md shadow-none p-3 sm:p-4">
+            <Surface variant="muted" className={primitiveCardShellInsetDensityClassNames.compact}>
                 <div className={`${primitiveVisualTypographyClassNames.estimateSectionLabel} text-muted-foreground mb-2`}>Итого:</div>
 
                 {rows.map((row, index) => {

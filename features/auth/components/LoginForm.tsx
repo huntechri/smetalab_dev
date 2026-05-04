@@ -32,6 +32,8 @@ import {
   primitiveAuthMarketingSubtextClassName,
   primitiveAuthFormTitleClassName,
   primitiveAuthFormDescriptionClassName,
+  primitiveAuthFormGapClassName,
+  primitiveAuthFieldGapClassName,
   primitiveAuthPanelShadowClassName,
   primitiveAuthPanelBorderClassName,
 } from '@/shared/ui/primitive-marketing';
@@ -156,11 +158,11 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}
-            <FormLayout className="space-y-4" action={formAction}>
+            <FormLayout className={primitiveAuthFormGapClassName} action={formAction}>
               <HiddenInput name="redirect" value={redirect || ''} />
               <HiddenInput name="priceId" value={priceId || ''} />
               <HiddenInput name="inviteId" value={inviteId || ''} />
-              <div className="space-y-2">
+              <div className={primitiveAuthFieldGapClassName}>
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -178,7 +180,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className={primitiveAuthFieldGapClassName}>
                 <Label htmlFor="password">Пароль</Label>
                 <div className="relative [&_input]:pr-10">
                   <Input
@@ -218,7 +220,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </div>
 
               {mode === 'signup' && !inviteId && (
-                <div className="space-y-2">
+                <div className={primitiveAuthFieldGapClassName}>
                   <Label htmlFor="organizationName">Название организации</Label>
                   <Input
                     id="organizationName"

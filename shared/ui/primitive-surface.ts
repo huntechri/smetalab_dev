@@ -73,6 +73,9 @@ export const primitiveVisualTypographyClassNames = {
   estimateSubCode: "text-[12px] font-medium",
   // Dialog / Sheet typography
   dialogTitle: "text-xl md:text-2xl",
+  // Form label typography
+  formLabel: "text-xs font-medium",
+  formLabelNormal: "text-xs font-normal",
 } as const
 
 // ─── Card tokens ──────────────────────────────────────────────────────────
@@ -102,6 +105,8 @@ export const primitiveCardShellInsetDensityClassNames: Record<PrimitiveCardShell
   default: "p-3 sm:p-4",
   comfortable: "p-4 sm:p-5",
 } as const
+
+export const primitiveCardShellInsetDensityP3 = "p-3"
 
 export const primitiveCardShellHeaderDensityClassNames: Record<PrimitiveCardShellDensity, string> = {
   compact: "px-3 pt-3 sm:px-4 sm:pt-4",

@@ -58,7 +58,7 @@ export function EstimateTableDialogs({
         onOpenChange={model.handleWorkCatalogOpenChange}
       >
         {/* p-0 resets SheetContent default padding; header handles padding via primitiveCardHeaderPaddingClassName */}
-        <SheetContent side="right" className={cn("w-full sm:max-w-xl", "p-0 flex flex-col")}>
+        <SheetContent side="right">
           {/* border-b triggers parent-conditional padding in primitiveCardHeaderPaddingClassName */}
           <div className={cn("border-b", primitiveSurfaceBorderClassNames.hairline)}>
             <div className={cn(primitiveCardHeaderPaddingClassName, "pt-6")}>
@@ -186,7 +186,7 @@ export function EstimateTableDialogs({
               Допустимый диапазон: от {ESTIMATE_COEF_MIN}% до {ESTIMATE_COEF_MAX}%.
             </p>
           </div>
-          <DialogFooter className="gap-3 sm:justify-between">
+          <DialogFooter>
             <Button
               variant="outline"
               size="default"
