@@ -117,6 +117,32 @@ const COMMON_UTILITY_CLASSES = new Set([
   "bg-muted",
 ])
 
+const SHADCN_COMPONENT_NAMES = [
+  "Button",
+  "Input",
+  "CardShell", "CardShellBody", "CardShellHeader", "CardShellInset", "CardShellFooter",
+  "SheetContent", "SheetHeader", "SheetFooter",
+  "DialogFooter", "DialogHeader", "DialogContent",
+  "ToolbarButton",
+  "Badge", "StatusBadge",
+  "Select", "SelectTrigger", "SelectContent", "SelectItem",
+  "Tabs", "TabsList", "TabsTrigger", "TabsContent",
+  "Dialog",
+  "Sheet",
+  "Drawer",
+  "Popover", "PopoverContent", "PopoverTrigger",
+  "DropdownMenu", "DropdownMenuContent", "DropdownMenuItem",
+  "Tooltip", "TooltipContent", "TooltipTrigger",
+  "ScrollArea",
+  "Separator",
+  "Avatar",
+] as const
+
+/** Regex matching a shadcn component JSX opening tag that has a className prop on the same line. */
+const SHADCN_COMPONENT_CLASSNAME_REGEX = new RegExp(
+  `<(${SHADCN_COMPONENT_NAMES.join("|")})\\b[^>]*\\bclassName\\s*(?:=|{)`
+)
+
 const UTILITY_CLASS_PATTERN =
   /^(?:gap|gap-x|gap-y|items|justify|content|self|place|grid-cols|grid-rows|line-clamp|overflow|overflow-x|overflow-y|size|col-span|col-start|col-end|row-span|row-start|row-end|basis|order)-/u
 
@@ -346,7 +372,41 @@ function reasonFor(bucket: LocalClassBucket): string {
 
 function scanFile(filePath: string, findings: LocalClassFinding[], seen: Set<string>): void {
   const relativePath = toPosix(path.relative(ROOT, filePath))
-  const lines = fs.readFileSync(filePath, "utf8").split(/\r?\n/u)
+  const fileContent = fs.readFileSync(filePath, "utf8")
+  const lines = fileContent.split(/\r?\n/u)
+
+  // NEW: File-wide regex check for className on shadcn components in features/
+  // [^>]* matches across newlines in JS regex, so this handles multi-line JSX like:
+  //   <Button\n    variant="outline"\n    className="...">
+  // It also catches iconLeft={<Icon className="..." />} within a shadcn component tag.
+  if (relativePath.startsWith("features/")) {
+    const regex = new RegExp(SHADCN_COMPONENT_CLASSNAME_REGEX.source, "g")
+    let shadcnMatch: RegExpExecArray | null
+    while ((shadcnMatch = regex.exec(fileContent)) !== null) {
+      const componentName = shadcnMatch[1]
+      // Calculate 1-based line number from match position
+      const lineNumber = fileContent.substring(0, shadcnMatch.index).split("\n").length
+      // Extract the actual line for evidence
+      const lineStart = fileContent.lastIndexOf("\n", shadcnMatch.index) + 1
+      const lineEnd = fileContent.indexOf("\n", shadcnMatch.index)
+      const evidenceLine = (lineEnd >= 0 ? fileContent.substring(lineStart, lineEnd) : fileContent.substring(lineStart)).trim().slice(0, 260)
+
+      const key = `${relativePath}:${lineNumber}:shadcn-override:${componentName}`
+      if (!seen.has(key)) {
+        seen.add(key)
+        findings.push({
+          filePath: relativePath,
+          line: lineNumber,
+          severity: "high",
+          bucket: "control",
+          token: componentName,
+          evidence: evidenceLine,
+          reason: `className on shadcn component "${componentName}" overrides internal styling. Remove className and use semantic props instead.`,
+          recommendedContract: RECOMMENDED_CONTRACTS["control"],
+        })
+      }
+    }
+  }
 
   lines.forEach((line, index) => {
     if (!hasLocalVisualContext(line)) return
