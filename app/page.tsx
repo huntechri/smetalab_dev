@@ -244,9 +244,10 @@ export default function LandingPage() {
                     }
                 />
 
-                <MarketingSection id="capabilities" label="Capabilities" className="bg-[#0F0E14]">
+                <MarketingSection id="capabilities" className="bg-[#0F0E14]">
                     <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
                         <div className="space-y-6">
+                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Capabilities</span>
                             <h2 className="text-3xl md:text-4xl font-semibold">Операционная архитектура стройки</h2>
                             <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
                             <div className="flex flex-wrap gap-3 text-xs text-white/80">
@@ -268,9 +269,10 @@ export default function LandingPage() {
                     </div>
                 </MarketingSection>
 
-                <MarketingSection id="workflow" label="Workflow">
+                <MarketingSection id="workflow">
                     <div className="flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-4">
+                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Workflow</span>
                             <h2 className="text-3xl md:text-4xl font-semibold">Три шага до прозрачной стройки</h2>
                         </div>
                         <p className="max-w-lg text-white/80">Один контур процесса: план → исполнение → контроль. Без таблиц на стороне.</p>
@@ -288,9 +290,10 @@ export default function LandingPage() {
                     </div>
                 </MarketingSection>
 
-                <MarketingSection id="pricing" label="Pricing" className="bg-[#0F0E14]">
+                <MarketingSection id="pricing" className="bg-[#0F0E14]">
                     <div className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
                         <div>
+                            <span className="text-xs uppercase tracking-[0.3em] text-white/75">Pricing</span>
                             <h2 className="text-3xl md:text-4xl font-semibold">Тарифы для смелых идей</h2>
                         </div>
                         <p className="max-w-md text-white/80">Гибкий старт для подрядчиков и девелоперов, которым нужен прозрачный контроль проектов.</p>

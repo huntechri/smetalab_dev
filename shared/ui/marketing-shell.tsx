@@ -15,7 +15,6 @@ import {
   primitiveMarketingPricingCardClassName,
   primitiveMarketingPricingAccentClassName,
   primitiveMarketingPillClassName,
-  primitiveMarketingSectionLabelClassName,
   primitiveMarketingDividerClassName,
   primitiveMarketingBorderWhite10ClassName,
   primitiveMarketingH1ClassName,
@@ -29,10 +28,7 @@ import {
 
 export type MarketingPageShellProps = React.ComponentPropsWithoutRef<'div'>;
 
-export interface MarketingSectionProps extends React.ComponentPropsWithoutRef<'section'> {
-  label?: string;
-  labelWide?: boolean;
-}
+export type MarketingSectionProps = React.ComponentPropsWithoutRef<'section'>;
 
 export interface MarketingHeroProps extends React.ComponentPropsWithoutRef<'section'> {
   /** Optional label/badge above the heading */
@@ -88,8 +84,6 @@ export function MarketingPageShell({ className, children, ...props }: MarketingP
  * Standard marketing section with optional label and border.
  */
 export function MarketingSection({
-  label,
-  labelWide,
   className,
   children,
   ...props
@@ -104,11 +98,6 @@ export function MarketingSection({
       {...props}
     >
       <div className={cn('mx-auto w-full max-w-7xl', primitiveMarketingSectionPaddingClassName)}>
-        {label ? (
-          <span className={labelWide ? primitiveMarketingSectionLabelClassName : primitiveMarketingSectionLabelClassName}>
-            {label}
-          </span>
-        ) : null}
         {children}
       </div>
     </section>
