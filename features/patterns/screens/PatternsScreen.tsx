@@ -88,7 +88,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
               </div>
             </CardShellHeader>
             <CardShellBody className="space-y-3">
-              {item.description ? <p className="text-subtitle">{item.description}</p> : null}
+              {item.description ? <p className="text-sm text-muted-foreground">{item.description}</p> : null}
               <div className="flex gap-2">
                 <Button variant="outline" size="default" onClick={() => void openPreview(item.id)}>Превью</Button>
                 <Button variant="destructive" size="default" onClick={() => void removePattern(item.id)}>Удалить</Button>
