@@ -52,7 +52,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
                       <FormControl>
                         <RadioGroupItem value="individual" className="h-3.5 w-3.5" />
                       </FormControl>
-                      <FormLabel className="font-normal text-[0.625rem] sm:text-xs whitespace-nowrap">
+                      <FormLabel className="font-normal text-xs whitespace-nowrap">
                         Физ. лицо
                       </FormLabel>
                     </FormItem>
@@ -60,7 +60,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
                       <FormControl>
                         <RadioGroupItem value="company" className="h-3.5 w-3.5" />
                       </FormControl>
-                      <FormLabel className="font-normal text-[0.625rem] sm:text-xs whitespace-nowrap">
+                      <FormLabel className="font-normal text-xs whitespace-nowrap">
                         Юр. лицо
                       </FormLabel>
                     </FormItem>
