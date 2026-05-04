@@ -87,6 +87,45 @@ const NON_VISUAL_ALLOWED_CLASSES = new Set([
   "pointer-events-auto",
 ])
 
+/** Classes we consciously allow inline — layout/flex/grid utilities, semantic tokens. */
+const COMMON_UTILITY_CLASSES = new Set([
+  // Layout primitives
+  "flex",
+  "inline-flex",
+  "grid",
+  "inline-grid",
+  "block",
+  "inline-block",
+  "truncate",
+  "flex-1",
+  "flex-none",
+  "shrink",
+  "shrink-0",
+  "grow",
+  "w-full",
+  "h-full",
+  "max-w-full",
+  "min-w-0",
+  "min-h-0",
+  // Semantic colours — safe to use directly
+  "text-muted-foreground",
+  "text-primary",
+  "text-destructive",
+  "text-foreground",
+  "bg-card",
+  "bg-background",
+  "bg-muted",
+])
+
+const UTILITY_CLASS_PATTERN =
+  /^(?:gap|gap-x|gap-y|items|justify|content|self|place|grid-cols|grid-rows|line-clamp|overflow|overflow-x|overflow-y|size|col-span|col-start|col-end|row-span|row-start|row-end|basis|order)-/u
+
+function isCommonUtilityClass(base: string): boolean {
+  // Strip Tailwind opacity/value modifier before checking (e.g. bg-muted/80 → bg-muted)
+  const clean = base.replace(/\/\d+$/, "")
+  return COMMON_UTILITY_CLASSES.has(clean) || UTILITY_CLASS_PATTERN.test(clean)
+}
+
 const RECOMMENDED_CONTRACTS: Record<LocalClassBucket, string> = {
   layout: "shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract",
   spacing: "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props",
@@ -206,6 +245,9 @@ function isVisualClassToken(token: string): boolean {
   const base = lastVariantSegment(token)
   if (!base || NON_VISUAL_ALLOWED_CLASSES.has(base)) return false
 
+  // Layout/flex/grid utilities and semantic tokens are consciously allowed inline
+  if (isCommonUtilityClass(base)) return false
+
   return (
     isSpacingClass(base) ||
     isSizeClass(base) ||
@@ -259,11 +301,12 @@ function classifyBucket(filePath: string, line: string, tokens: string[]): Local
 function classifySeverity(bucket: LocalClassBucket, line: string, tokens: string[]): Severity {
   if (/\bcva\(/u.test(line)) return "high"
   if (CLASS_MAP_PATTERN.test(line) && tokens.length >= 2) return "high"
-  if (["badge-status", "card", "table", "table-cell", "dialog-sheet", "dashboard-chart"].includes(bucket)) return "high"
+  if (bucket === "badge-status") return "high"
   if (bucket === "surface" && tokens.some((token) => /^(?:rounded|rounded-|border|border-|shadow|shadow-|bg-|ring|ring-)/u.test(lastVariantSegment(token)))) return "high"
   if (tokens.length >= 6) return "high"
   if (/\b(?:cn|clsx)\(/u.test(line) && tokens.length >= 2) return "medium"
-  if (["form", "control", "spacing", "layout", "color", "typography"].includes(bucket)) return "medium"
+  if (["card", "table", "table-cell", "dialog-sheet", "dashboard-chart", "form", "control", "layout", "color", "typography"].includes(bucket)) return "medium"
+  // spacing bucket — most useful classes (gap) filtered by isCommonUtilityClass, residual goes to low
   return "low"
 }
 

@@ -33,7 +33,9 @@ import { Label } from '@/shared/ui/label';
 import { Separator } from '@/shared/ui/separator';
 import { Switch } from '@/shared/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
+import { cn } from '@/lib/utils';
 import { CardShellInset } from '@/shared/ui/card-shell';
+import { primitiveCardShellInsetDensityP3 } from '@/shared/ui/primitive-surface';
 import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
@@ -462,7 +464,7 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
 
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border bg-muted/30 p-3">
+    <div className={cn("rounded-md border bg-muted/30", primitiveCardShellInsetDensityP3)}>
       <FormHelperText>{label}</FormHelperText>
       <p className="mt-1 text-sm font-medium">{value}</p>
     </div>

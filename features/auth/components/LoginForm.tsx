@@ -32,8 +32,11 @@ import {
   primitiveAuthMarketingSubtextClassName,
   primitiveAuthFormTitleClassName,
   primitiveAuthFormDescriptionClassName,
+  primitiveAuthFormGapClassName,
+  primitiveAuthFieldGapClassName,
   primitiveAuthPanelShadowClassName,
   primitiveAuthPanelBorderClassName,
+  primitiveAuthSkipLinkClassName,
 } from '@/shared/ui/primitive-marketing';
 
 export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
@@ -61,7 +64,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
     <div className={primitiveAuthPageBackgroundClassName}>
       <a
         href="#auth-card"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground"
+        className={primitiveAuthSkipLinkClassName}
       >
         Пропустить к форме входа
       </a>
@@ -152,15 +155,15 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           </CardHeader>
           <CardContent>
             {verifiedState === 'required' && (
-              <AuthStatusMessage variant="warning" className="mb-4">
+              <AuthStatusMessage variant="warning">
                 Подтвердите email перед входом. Мы отправили письмо со ссылкой для подтверждения.
               </AuthStatusMessage>
             )}
-            <FormLayout className="space-y-4" action={formAction}>
+            <FormLayout className={primitiveAuthFormGapClassName} action={formAction}>
               <HiddenInput name="redirect" value={redirect || ''} />
               <HiddenInput name="priceId" value={priceId || ''} />
               <HiddenInput name="inviteId" value={inviteId || ''} />
-              <div className="space-y-2">
+              <div className={primitiveAuthFieldGapClassName}>
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
@@ -178,7 +181,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 />
               </div>
 
-              <div className="space-y-2">
+              <div className={primitiveAuthFieldGapClassName}>
                 <Label htmlFor="password">Пароль</Label>
                 <div className="relative [&_input]:pr-10">
                   <Input
@@ -218,7 +221,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
               </div>
 
               {mode === 'signup' && !inviteId && (
-                <div className="space-y-2">
+                <div className={primitiveAuthFieldGapClassName}>
                   <Label htmlFor="organizationName">Название организации</Label>
                   <Input
                     id="organizationName"

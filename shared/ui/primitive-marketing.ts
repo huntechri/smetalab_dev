@@ -174,6 +174,12 @@ export const primitiveAuthBrandIconClassName =
 export const primitiveAuthMarketingGridClassName =
   'relative mx-auto grid min-h-dvh w-full max-w-6xl items-center gap-10 px-4 py-16 lg:grid-cols-[1.1fr_0.9fr] lg:px-8';
 
+// ─── Auth a11y tokens ────────────────────────────────────────────────────
+
+/** Skip-link (skip to main content) — sr-only until focused */
+export const primitiveAuthSkipLinkClassName =
+  'sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-background focus:px-4 focus:py-2 focus:text-sm focus:text-foreground';
+
 // ─── Auth form spacing tokens ────────────────────────────────────────────
 
 /** Standard gap between form fields */

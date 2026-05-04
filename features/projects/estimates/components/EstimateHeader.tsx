@@ -8,6 +8,7 @@ import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEstimateMutations } from '../hooks/use-estimate-mutations';
 import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -48,7 +49,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                                     size="icon-sm"
                                     title="Удалить смету"
                                 >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className={primitiveVisualIconSizeClassNames.md} />
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

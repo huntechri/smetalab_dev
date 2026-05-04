@@ -7,6 +7,7 @@ import { Check, ChevronsUpDown, Loader2 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 import { notify } from '@/lib/infrastructure/notifications/notify';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import { Button } from '@/shared/ui/button';
 import {
     Dialog,
@@ -168,7 +169,7 @@ export function CreateProjectDialog({
                                                         {field.value
                                                             ? counterparties.find((c) => c.id === field.value)?.name
                                                             : 'Выберите контрагента'}
-                                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                        <ChevronsUpDown className={`ml-2 ${primitiveVisualIconSizeClassNames.md} shrink-0 opacity-50`} />
                                                     </Button>
                                                 </FormControl>
                                             </PopoverTrigger>
@@ -188,7 +189,7 @@ export function CreateProjectDialog({
                                                                 >
                                                                     <Check
                                                                         className={cn(
-                                                                            'mr-2 h-4 w-4',
+                                                                            `mr-2 ${primitiveVisualIconSizeClassNames.md}`,
                                                                             counterparty.id === field.value
                                                                                 ? 'opacity-100'
                                                                                 : 'opacity-0'
@@ -268,7 +269,7 @@ export function CreateProjectDialog({
                                 Отменить
                             </Button>
                             <Button type="submit" variant="brand" size="default" disabled={isSubmitting}>
-                                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {isSubmitting && <Loader2 className={`mr-2 ${primitiveVisualIconSizeClassNames.md} animate-spin`} />}
                                 {project ? 'Сохранить изменения' : 'Создать проект'}
                             </Button>
                         </DialogFooter>

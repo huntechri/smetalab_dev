@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { useAppToast } from '@/components/providers/use-app-toast';
 import { Plus, Save } from 'lucide-react';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import { RoomsParamsTable } from '../params/RoomsParamsTable';
 import { RoomsParamsTotals } from '../params/RoomsParamsTotals';
 import { EstimateRoomParam } from '../../types/room-params.dto';
@@ -59,10 +60,10 @@ export function EstimateParams({ estimateId, initialRows }: { estimateId: string
     return (
         <div className="space-y-3">
             <div className="flex flex-wrap items-center justify-end gap-1.5 md:gap-2">
-                <ToolbarButton onClick={addRoom} aria-label="Добавить помещение" iconLeft={<Plus className="h-4 w-4" />} labelClassName="hidden sm:inline">
+                <ToolbarButton onClick={addRoom} aria-label="Добавить помещение" iconLeft={<Plus className={primitiveVisualIconSizeClassNames.md} />} labelClassName="hidden sm:inline">
                     Добавить помещение
                 </ToolbarButton>
-                <ToolbarButton variant="brand" onClick={onSave} disabled={isSaving || !hasRows} aria-label="Сохранить параметры" iconLeft={<Save className="h-4 w-4" />} labelClassName="hidden sm:inline">
+                <ToolbarButton variant="brand" onClick={onSave} disabled={isSaving || !hasRows} aria-label="Сохранить параметры" iconLeft={<Save className={primitiveVisualIconSizeClassNames.md} />} labelClassName="hidden sm:inline">
                     {isSaving ? 'Сохранение...' : 'Сохранить'}
                 </ToolbarButton>
             </div>

@@ -22,6 +22,8 @@ interface EstimateExecutionAddExtraWorkSheetProps {
     triggerVariant?: 'button' | 'menu-item';
 }
 
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
+
 export function EstimateExecutionAddExtraWorkSheet({
     addedWorkNames,
     onAddWork,
@@ -47,7 +49,7 @@ export function EstimateExecutionAddExtraWorkSheet({
                     </DropdownMenuItem>
                 ) : (
                     <Button variant="primary" size="default" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
-                        <Plus className="size-4" />
+                        <Plus className={primitiveVisualIconSizeClassNames.md} />
                         <span className="hidden sm:inline">Добавить доп. работу</span>
                     </Button>
                 )}

@@ -3,10 +3,12 @@ import { cn } from '@/lib/utils';
 import { Section } from '@/shared/ui/section';
 import {
     primitiveVisualIconSizeClassNames,
+} from '@/shared/ui/primitive-controls';
+import {
     primitiveVisualSemanticToneClassNames,
     primitiveVisualSurfaceClassNames,
     primitiveVisualTypographyClassNames,
-} from '@/shared/ui/primitive-density';
+} from '@/shared/ui/primitive-surface';
 import { Activity, AlertTriangle, Clock } from 'lucide-react';
 
 const signals = [

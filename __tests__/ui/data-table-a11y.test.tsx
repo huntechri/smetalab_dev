@@ -38,7 +38,10 @@ describe('DataTable a11y interactions', () => {
         const sortButton = screen.getByRole('button', { name: 'Сортировать столбец' });
         expect(sortButton).toBeInTheDocument();
 
-        expect(sortButton).not.toHaveAttribute('data-slot', 'button');
+        // Table header sort buttons are semantic elements — not styled as action buttons
+        expect(sortButton).not.toHaveAttribute('data-variant');
+
+        // Initially no sort is applied
         expect(sortButton).not.toHaveClass('bg-primary');
 
         const headerCell = sortButton.closest('th');

@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import { Button } from "@/shared/ui/button";
 import {
   Dialog,
@@ -24,6 +25,14 @@ import {
   ESTIMATE_COEF_MIN,
 } from "@/lib/utils/estimate-coefficient";
 import type { EstimateTableController } from "../../hooks/use-estimate-table-controller";
+import { ScrollArea } from "@/shared/ui/scroll-area";
+import {
+  primitiveCardHeaderPaddingClassName,
+  primitiveSurfaceBorderClassNames,
+  primitiveCardShellInsetDensityClassNames,
+  primitiveCardShellBodyDensityClassNames,
+  primitiveVisualTypographyClassNames,
+} from "@/shared/ui/primitive-surface";
 
 interface EstimateTableDialogsProps {
   model: EstimateTableController;
@@ -48,32 +57,36 @@ export function EstimateTableDialogs({
         open={model.isCalculationModeOpen || Boolean(model.activeWorkForReplace)}
         onOpenChange={model.handleWorkCatalogOpenChange}
       >
-        <SheetContent side="right" className="w-full sm:max-w-xl p-0 flex flex-col">
-          <div className="p-6 border-b">
-            <SheetTitle className="text-xl md:text-2xl">
-              {model.activeWorkForReplace ? "Замена работы" : "Справочник работ"}
-            </SheetTitle>
-            <SheetDescription className="text-sm space-y-1">
-              {model.activeWorkForReplace ? (
-                <>
-                  <span>Выберите новую работу для замены текущей.</span>
-                  <span className="block text-primary font-medium">
-                    Заменяемая позиция: {model.activeWorkForReplace.name}
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span>
-                    Выберите необходимые позиции для автоматического добавления в смету.
-                  </span>
-                  {model.pendingInsertAfterWork ? (
-                    <span className="block text-primary font-medium">
-                      Режим вставки: ниже работы «{model.pendingInsertAfterWork.name}»
+        {/* p-0 resets SheetContent default padding; header handles padding via primitiveCardHeaderPaddingClassName */}
+        <SheetContent side="right">
+          {/* border-b triggers parent-conditional padding in primitiveCardHeaderPaddingClassName */}
+          <div className={cn("border-b", primitiveSurfaceBorderClassNames.hairline)}>
+            <div className={cn(primitiveCardHeaderPaddingClassName, "pt-6")}>
+              <SheetTitle className={primitiveVisualTypographyClassNames.dialogTitle}>
+                {model.activeWorkForReplace ? "Замена работы" : "Справочник работ"}
+              </SheetTitle>
+              <SheetDescription className="flex flex-col gap-1">
+                {model.activeWorkForReplace ? (
+                  <>
+                    <span>Выберите новую работу для замены текущей.</span>
+                    <div className="text-primary font-medium">
+                      Заменяемая позиция: {model.activeWorkForReplace.name}
+                    </div>  {/* TODO(#visual-cleanup): font-medium — заменить на примитив из primitiveVisualTypographyClassNames */}
+                  </>
+                ) : (
+                  <>
+                    <span>
+                      Выберите необходимые позиции для автоматического добавления в смету.
                     </span>
-                  ) : null}
-                </>
-              )}
-            </SheetDescription>
+                    {model.pendingInsertAfterWork ? (
+                      <div className="text-primary font-medium">
+                        Режим вставки: ниже работы «{model.pendingInsertAfterWork.name}»
+                      </div>
+                    ) : null}  {/* TODO(#visual-cleanup): font-medium — заменить на примитив из primitiveVisualTypographyClassNames */}
+                  </>
+                )}
+              </SheetDescription>
+            </div>
           </div>
           <div className="flex-1 overflow-hidden flex flex-col">
             <WorkCatalogPicker
@@ -117,7 +130,7 @@ export function EstimateTableDialogs({
                   : "Раздел будет добавлен в конец сметы."}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="section-code">№ раздела</Label>
             <Input
               id="section-code"
@@ -127,7 +140,7 @@ export function EstimateTableDialogs({
               placeholder="Например: 1.1"
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="section-name">Название раздела</Label>
             <Input
               id="section-name"
@@ -160,7 +173,7 @@ export function EstimateTableDialogs({
               изменяются.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="estimate-coef">Коэффициент, %</Label>
             <Input
               id="estimate-coef"
@@ -169,11 +182,11 @@ export function EstimateTableDialogs({
               onChange={(event) => model.setCoefInputValue(event.target.value)}
               placeholder="Например: 20"
             />
-            <p className="text-xs text-muted-foreground">
+            <p className={primitiveVisualTypographyClassNames.mutedMeta}>
               Допустимый диапазон: от {ESTIMATE_COEF_MIN}% до {ESTIMATE_COEF_MAX}%.
             </p>
           </div>
-          <DialogFooter className="gap-2 sm:justify-between">
+          <DialogFooter>
             <Button
               variant="outline"
               size="default"
@@ -213,7 +226,7 @@ export function EstimateTableDialogs({
               применения в других сметах.
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="pattern-name">Название</Label>
             <Input
               id="pattern-name"
@@ -223,7 +236,7 @@ export function EstimateTableDialogs({
               placeholder="Например: Квартира 60м² — базовый ремонт"
             />
           </div>
-          <div className="space-y-2">
+          <div className="flex flex-col gap-2">
             <Label htmlFor="pattern-description">Описание (опционально)</Label>
             <Input
               id="pattern-description"
@@ -258,13 +271,13 @@ export function EstimateTableDialogs({
               текущей смете.
             </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 md:grid-cols-[280px_1fr]">
-            <div className="space-y-2 border rounded-md p-2 max-h-80 overflow-y-auto">
+          <div className="grid gap-4 md:grid-cols-[theme(spacing.72)_1fr]">
+            <ScrollArea className={cn("flex flex-col gap-2", primitiveSurfaceBorderClassNames.thin, primitiveCardShellInsetDensityClassNames.compact)}>
               {model.isPatternsLoading ? (
-                <p className="text-sm text-muted-foreground">Загрузка шаблонов...</p>
+                <p className={primitiveVisualTypographyClassNames.mutedMeta}>Загрузка шаблонов...</p>
               ) : null}
               {!model.isPatternsLoading && model.patterns.length === 0 ? (
-                <p className="text-sm text-muted-foreground">Шаблоны еще не созданы.</p>
+                <p className={primitiveVisualTypographyClassNames.mutedMeta}>Шаблоны еще не созданы.</p>
               ) : null}
               {model.patterns.map((pattern) => (
                 <Button
@@ -273,44 +286,44 @@ export function EstimateTableDialogs({
                   size="sm"
                   onClick={() => void model.previewPattern(pattern.id)}
                 >
-                  <div className="text-left">
-                    <div className="font-medium text-sm">{pattern.name}</div>
-                    <div className="text-xs text-muted-foreground">
+                  <div className="text-left">  {/* TODO(#visual-cleanup): text-left is layout align */}
+                    <div className={primitiveVisualTypographyClassNames.sectionTitle}>{pattern.name}</div>
+                    <div className={primitiveVisualTypographyClassNames.mutedMeta}>
                       {pattern.worksCount} работ / {pattern.materialsCount} материалов
                     </div>
                   </div>
                 </Button>
               ))}
-            </div>
-            <div className="border rounded-md p-3 max-h-80 overflow-y-auto">
+            </ScrollArea>
+            <ScrollArea className={cn(primitiveSurfaceBorderClassNames.thin, primitiveCardShellBodyDensityClassNames.compact)}>
               {model.previewRows.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
+                <p className={primitiveVisualTypographyClassNames.mutedMeta}>
                   Выберите шаблон слева, чтобы посмотреть превью.
                 </p>
               ) : (
-                <div className="space-y-1 text-sm">
+                <ul className="divide-y divide-border *:py-1">
                   {model.previewRows.map((row) => (
-                    <div
+                    <li
                       key={row.tempKey}
-                      className="flex items-center justify-between gap-3 py-1 border-b last:border-b-0"
+                      className="flex items-center justify-between gap-3"
                     >
                       <div
                         className={
                           row.kind === "material"
-                            ? "pl-4 text-muted-foreground"
-                            : "font-medium"
+                            ? "pl-4 text-muted-foreground"  /* TODO(#visual-cleanup): pl-4 — заменить на semantic padding primitive */
+                            : "font-medium"  /* TODO(#visual-cleanup): font-medium — заменить на примитив из primitiveVisualTypographyClassNames */
                         }
                       >
                         {row.code} {row.name}
                       </div>
-                      <div className="text-xs text-muted-foreground">
+                      <div className={primitiveVisualTypographyClassNames.mutedMeta}>
                         {row.qty} {row.unit} × {row.price.toLocaleString("ru-RU")}
                       </div>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               )}
-            </div>
+            </ScrollArea>
           </div>
           <DialogFooter>
             <Button variant="outline" size="default" onClick={() => model.setIsApplyPatternOpen(false)}>

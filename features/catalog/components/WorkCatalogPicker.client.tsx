@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Plus, Check } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import { CatalogListItem } from '@/shared/ui/catalog-list-item';
 import { CatalogIndexToken, CatalogToken } from '@/shared/ui/catalog-token';
 import { LoadingState, NoResultsState } from '@/shared/ui/states';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
@@ -113,9 +114,7 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                         increaseViewportBy={300}
                         itemContent={(index, work) => (
                             <div className="px-2 py-0.5">
-                                <div
-                                    className="group relative flex items-center justify-between gap-3 p-2 sm:p-3 rounded-lg hover:bg-muted/50 transition-all cursor-default border border-border/40 sm:border-transparent hover:border-border/60 w-full overflow-hidden"
-                                >
+                                <CatalogListItem>
                                     <div className="flex-1 min-w-0 flex items-center gap-2 sm:gap-3">
                                         <CatalogIndexToken className="hidden xs:flex">
                                             {work.code.split('.').pop()}
@@ -163,12 +162,12 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                             )}
                                         </Button>
                                     </div>
-                                </div>
+                                </CatalogListItem>
                             </div>
                         )}
                         components={{
                             Footer: () => (
-                                <div className="py-6 text-center text-xs text-muted-foreground opacity-50">
+                                <div className={`py-6 text-center ${primitiveVisualTypographyClassNames.mutedMeta} opacity-50`}>
                                     Отображено {works.length} позиций {selectedCategory !== 'all' ? `в разделе "${selectedCategory}"` : ''}
                                 </div>
                             )

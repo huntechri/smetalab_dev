@@ -20,7 +20,7 @@ const headers = [
     'Окно 1 (В×Ш)', 'Окно 2 (В×Ш)', 'Окно 3 (В×Ш)', 'Портал 1 (В×Ш)', 'Портал 2 (В×Ш)', 'Портал 3 (В×Ш)', 'Действия',
 ];
 
-const calculatedValueClassName = 'h-8 w-24 rounded border bg-muted/30 px-2 flex items-center';
+import { primitiveSurfaceBorderClassNames } from '@/shared/ui/primitive-surface';
 
 type RoomParamNumberInputProps = {
     value: string;
@@ -70,7 +70,7 @@ function NumericCell({ value, onChange }: RoomParamNumberInputProps) {
 }
 
 function CalculatedValueCell({ value }: { value: string }) {
-    return <div className={calculatedValueClassName}>{value}</div>;
+    return <div className={`h-8 w-24 ${primitiveSurfaceBorderClassNames.hairline} px-2 flex items-center`}>{value}</div>;
 }
 
 export function RoomsParamsTable({

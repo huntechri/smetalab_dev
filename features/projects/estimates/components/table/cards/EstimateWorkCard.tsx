@@ -10,6 +10,12 @@ import {
   DenseListNestedPanel,
   DenseListToken,
 } from '@/shared/ui/dense-list';
+import {
+  primitiveVisualIconSizeClassNames,
+} from '@/shared/ui/primitive-controls';
+import {
+  primitiveVisualTypographyClassNames,
+} from '@/shared/ui/primitive-surface';
 import type { WorkNode } from '../../../lib/estimate-cards-table';
 import type { EstimateCardsTableProps } from './types';
 import { buildWorkActions } from './actions';
@@ -38,7 +44,7 @@ export function EstimateWorkCard({
         <Button
           variant="outline"
           size="icon-xs"
-          className="mt-0.5 size-5 sm:size-6"
+          className="size-5 sm:size-6"
           aria-label={isWorkOpen ? 'Свернуть работу' : 'Развернуть работу'}
           onClick={() => props.onToggleExpand(work.id)}
         >
@@ -52,7 +58,7 @@ export function EstimateWorkCard({
         <div className="min-w-0 flex-1">
           <div className="flex flex-col gap-1 sm:gap-1.5 xl:flex-row xl:items-baseline xl:gap-2">
             <div className="flex items-baseline gap-1.5 min-w-0">
-              <span className="shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              <span className={`shrink-0 ${primitiveVisualTypographyClassNames.compactLabel}`}>
                 {work.code}
               </span>
               <div className="min-w-0 flex-1">
@@ -69,7 +75,7 @@ export function EstimateWorkCard({
             <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
               <DenseListToken variant="neutral">{work.unit}</DenseListToken>
               <EstimateMetricPill>
-                <span className="text-xs">Кол-во</span>
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>Кол-во</span>
                 <EstimateInlineNumberCell
                   value={work.qty}
                   onCommit={(value) => props.onPatch(work.id, 'qty', value)}
@@ -78,14 +84,14 @@ export function EstimateWorkCard({
                 />
               </EstimateMetricPill>
               <EstimateMetricPill>
-                <span className="text-xs">Цена</span>
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>Цена</span>
                 <EstimateInlineNumberCell
                   value={work.price}
                   onCommit={(value) => props.onPatch(work.id, 'price', value)}
                   ariaLabel={`Цена: ${work.name}`}
                   className={WORK_NUMBER_CLASS}
                 />
-                <span className="text-xs">₽</span>
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>₽</span>
               </EstimateMetricPill>
               <DenseListToken variant="success">
                 <MoneyCell value={work.sum} />
@@ -103,7 +109,7 @@ export function EstimateWorkCard({
             title="Добавить материал"
             aria-label="Добавить материал"
           >
-            <Pencil className="size-3 sm:size-3.5" />
+            <Pencil className={primitiveVisualIconSizeClassNames.denseAction} />
           </Button>
           <Button
             size="icon-xs"
@@ -113,7 +119,7 @@ export function EstimateWorkCard({
             title="Добавить работу ниже"
             aria-label="Добавить работу ниже"
           >
-            <Wrench className="size-3 sm:size-3.5" />
+            <Wrench className={primitiveVisualIconSizeClassNames.denseAction} />
           </Button>
           <ActionMenu
             ariaLabel="Действия с работой"
@@ -124,7 +130,7 @@ export function EstimateWorkCard({
                 className={ESTIMATE_CARD_ICON_ACTION_CLASS}
                 aria-label="Действия с работой"
               >
-                <Settings className="size-3 sm:size-3.5" />
+                <Settings className={primitiveVisualIconSizeClassNames.denseAction} />
               </Button>
             }
             items={buildWorkActions(work, props)}
@@ -136,7 +142,7 @@ export function EstimateWorkCard({
         <DenseListNestedPanel>
           {workNode.materials.length > 0 ? (
             <>
-              <p className="mb-1.5 text-xs font-semibold uppercase tracking-wide text-muted-foreground sm:mb-2">
+              <p className={primitiveVisualTypographyClassNames.compactLabel}>
                 Материалы
               </p>
 

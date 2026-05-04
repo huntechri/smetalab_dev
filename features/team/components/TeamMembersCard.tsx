@@ -44,8 +44,8 @@ export function TeamMembersCard({
                 <div>
                     <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
                     <div className="space-y-1">
-                        <h2 className="text-base font-medium">Участники</h2>
-                        <p className="text-sm text-muted-foreground">
+                        <h2 className={primitiveVisualTypographyClassNames.sectionTitle}>Участники</h2>
+                        <p className={primitiveVisualTypographyClassNames.mutedMeta}>
                             {filteredMembers.length} из {members.length}
                         </p>
                     </div>
@@ -98,8 +98,8 @@ export function TeamMembersCard({
                                     <AvatarFallback>{getMemberInitials(member.user.name, member.user.email)}</AvatarFallback>
                                 </Avatar>
                                 <div className="space-y-0.5">
-                                    <p className="text-sm font-medium text-foreground">{member.user.name || member.user.email}</p>
-                                    <p className="text-xs text-muted-foreground">{member.user.email}</p>
+                                    <p className={primitiveVisualTypographyClassNames.itemTitle}>{member.user.name || member.user.email}</p>
+                                    <p className={primitiveVisualTypographyClassNames.mutedMeta}>{member.user.email}</p>
                                 </div>
                             </div>
                             <div className="flex items-center justify-between gap-3 sm:justify-end">
@@ -125,7 +125,7 @@ export function TeamMembersCard({
                         </Surface>
                     ))}
                     {filteredMembers.length === 0 && (
-                        <p className="py-6 text-center text-sm text-muted-foreground">Нет участников, соответствующих фильтрам.</p>
+                        <p className={`py-6 text-center ${primitiveVisualTypographyClassNames.mutedMeta}`}>Нет участников, соответствующих фильтрам.</p>
                     )}
                 </div>
             </div>

@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/shared/ui/separator";
 import { TabsContent } from "@/shared/ui/tabs";
 
+import { primitiveVisualTypographyClassNames } from "@/shared/ui/primitive-surface";
+
 import type { CounterpartyFormValues } from "@/features/counterparties/schemas/counterparty-form.schema";
 
 type CounterpartySectionProps = {
@@ -19,13 +21,13 @@ type CounterpartyDetailsSectionProps = CounterpartySectionProps & {
 
 export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="general" className="space-y-3 sm:space-y-4">
+    <TabsContent value="general" className="flex flex-col gap-3 sm:gap-4">
       <FormField
         control={form.control}
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs">Наименование / ФИО</FormLabel>
+            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Наименование / ФИО</FormLabel>
             <FormControl>
               <Input size="default" placeholder="Введите название..." {...field} />
             </FormControl>
@@ -40,27 +42,27 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             control={form.control}
             name="legalStatus"
             render={({ field }) => (
-              <FormItem className="space-y-1.5">
-                <FormLabel className="text-xs">Правовой статус</FormLabel>
+              <FormItem className="flex flex-col gap-1.5">
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Правовой статус</FormLabel>
                 <FormControl>
                   <RadioGroup
                     onValueChange={field.onChange}
                     defaultValue={field.value}
-                    className="flex flex-row items-center gap-2 sm:gap-4 h-8"
+                    className="flex flex-row items-center gap-2 sm:gap-4"
                   >
-                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                    <FormItem className="flex items-center gap-1 sm:gap-2">
                       <FormControl>
-                        <RadioGroupItem value="individual" className="h-3.5 w-3.5" />
+                        <RadioGroupItem value="individual" className="size-3.5" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs whitespace-nowrap">
+                      <FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + " whitespace-nowrap"}>
                         Физ. лицо
                       </FormLabel>
                     </FormItem>
-                    <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
+                    <FormItem className="flex items-center gap-1 sm:gap-2">
                       <FormControl>
-                        <RadioGroupItem value="company" className="h-3.5 w-3.5" />
+                        <RadioGroupItem value="company" className="size-3.5" />
                       </FormControl>
-                      <FormLabel className="font-normal text-xs whitespace-nowrap">
+                      <FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + " whitespace-nowrap"}>
                         Юр. лицо
                       </FormLabel>
                     </FormItem>
@@ -77,8 +79,8 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             control={form.control}
             name="type"
             render={({ field }) => (
-              <FormItem className="space-y-1.5">
-                <FormLabel className="text-xs">Тип</FormLabel>
+              <FormItem className="flex flex-col gap-1.5">
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Тип</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -106,9 +108,9 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
 
       <Separator />
 
-      <div className="space-y-4">
+      <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2 font-medium">
-          <Phone className="w-4 h-4 text-muted-foreground" />
+          <Phone className="size-4 text-muted-foreground" />
           Контактная информация
         </div>
 
@@ -118,7 +120,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Телефон</FormLabel>
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Телефон</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="+7..." {...field} />
                 </FormControl>
@@ -132,7 +134,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Email</FormLabel>
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Email</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="example@mail.ru" {...field} />
                 </FormControl>
@@ -147,7 +149,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Адрес</FormLabel>
+              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Адрес</FormLabel>
               <FormControl>
                 <Input size="default" placeholder="Город, улица, дом..." {...field} />
               </FormControl>
@@ -165,11 +167,11 @@ export function CounterpartyDetailsSection({
   legalStatus,
 }: CounterpartyDetailsSectionProps) {
   return (
-    <TabsContent value="details" className="space-y-3 sm:space-y-4">
+    <TabsContent value="details" className="flex flex-col gap-3 sm:gap-4">
       {legalStatus === "individual" ? (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-medium">
-            <User className="w-4 h-4 text-muted-foreground" />
+            <User className="size-4 text-muted-foreground" />
             Паспортные данные
           </div>
 
@@ -179,7 +181,7 @@ export function CounterpartyDetailsSection({
               name="birthDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Дата рождения</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата рождения</FormLabel>
                   <FormControl>
                     <Input size="default" type="date" {...field} />
                   </FormControl>
@@ -192,7 +194,7 @@ export function CounterpartyDetailsSection({
               name="passportSeriesNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Серия и номер</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Серия и номер</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="0000 000000" {...field} />
                   </FormControl>
@@ -207,7 +209,7 @@ export function CounterpartyDetailsSection({
             name="passportIssuedBy"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Кем выдан</FormLabel>
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Кем выдан</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="УФМС..." {...field} />
                 </FormControl>
@@ -222,7 +224,7 @@ export function CounterpartyDetailsSection({
               name="passportIssuedDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Дата выдачи</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата выдачи</FormLabel>
                   <FormControl>
                     <Input size="default" type="date" {...field} />
                   </FormControl>
@@ -235,7 +237,7 @@ export function CounterpartyDetailsSection({
               name="departmentCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Код подразделения</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Код подразделения</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="000-000" {...field} />
                   </FormControl>
@@ -246,9 +248,9 @@ export function CounterpartyDetailsSection({
           </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="flex flex-col gap-4">
           <div className="flex items-center gap-2 font-medium">
-            <FileText className="w-4 h-4 text-muted-foreground" />
+            <FileText className="size-4 text-muted-foreground" />
             Реквизиты организации
           </div>
 
@@ -257,7 +259,7 @@ export function CounterpartyDetailsSection({
             name="inn"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">ИНН</FormLabel>
+                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="ИНН" {...field} />
                 </FormControl>
@@ -272,7 +274,7 @@ export function CounterpartyDetailsSection({
               name="kpp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">КПП</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>КПП</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="КПП" {...field} />
                   </FormControl>
@@ -285,7 +287,7 @@ export function CounterpartyDetailsSection({
               name="ogrn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">ОГРН</FormLabel>
+                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ОГРН</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="ОГРН" {...field} />
                   </FormControl>
@@ -302,9 +304,9 @@ export function CounterpartyDetailsSection({
 
 export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="bank" className="space-y-3 sm:space-y-4">
+    <TabsContent value="bank" className="flex flex-col gap-3 sm:gap-4">
       <div className="flex items-center gap-2 font-medium">
-        <Landmark className="w-4 h-4 text-muted-foreground" />
+        <Landmark className="size-4 text-muted-foreground" />
         Банковские реквизиты
       </div>
 
@@ -313,7 +315,7 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
         name="bankName"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs">Название банка</FormLabel>
+            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Название банка</FormLabel>
             <FormControl>
               <Input size="default" placeholder="ПАО Сбербанк..." {...field} />
             </FormControl>
@@ -327,7 +329,7 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
         name="bankAccount"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs">Расчетный счет</FormLabel>
+            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Расчетный счет</FormLabel>
             <FormControl>
               <Input size="default" placeholder="407..." {...field} />
             </FormControl>
@@ -342,7 +344,7 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
           name="corrAccount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">Корр. счет</FormLabel>
+              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Корр. счет</FormLabel>
               <FormControl>
                 <Input size="default" placeholder="301..." {...field} />
               </FormControl>
@@ -355,7 +357,7 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
           name="bankInn"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">ИНН Банка</FormLabel>
+              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН Банка</FormLabel>
               <FormControl>
                 <Input size="default" placeholder="ИНН банка" {...field} />
               </FormControl>

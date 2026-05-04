@@ -160,35 +160,31 @@ describe('EditableCell', () => {
         expect(button).toMatchSnapshot();
     });
 
-    it('pencil icon carries keyboard-focus and hover visibility classes', () => {
+    it('display button carries semantic attributes indicating editable ghost button', () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
-        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
+        render(<EditableCell value="Cell" onCommit={onCommit} />);
 
-        const pencilIcon = container.querySelector('svg');
-        expect(pencilIcon).not.toBeNull();
-        expect(pencilIcon).toHaveClass('group-focus-visible:opacity-40');
-        expect(pencilIcon).toHaveClass('group-hover:opacity-40');
+        const button = screen.getByRole('button', { name: 'Cell' });
+        expect(button).toHaveAttribute('data-slot', 'button');
+        expect(button).toHaveAttribute('data-variant', 'ghost');
+        expect(button).toHaveAttribute('data-size', 'sm');
+        expect(button).not.toBeDisabled();
     });
 
-    it('pencil icon starts hidden via opacity-0 in display mode', () => {
+    it('pencil icon renders inside Button component in display mode', () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
         const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
 
         const pencilIcon = container.querySelector('svg');
         expect(pencilIcon).not.toBeNull();
-        expect(pencilIcon).toHaveClass('opacity-0');
-    });
 
-    it('pencil icon carries transition-opacity in display mode', () => {
-        const onCommit = vi.fn().mockResolvedValue(undefined);
-
-        const { container } = render(<EditableCell value="Test" onCommit={onCommit} />);
-
-        const pencilIcon = container.querySelector('svg');
-        expect(pencilIcon).not.toBeNull();
-        expect(pencilIcon).toHaveClass('transition-opacity');
+        const displayButton = screen.getByRole('button', { name: 'Test' });
+        expect(displayButton).toHaveAttribute('data-slot', 'button');
+        expect(displayButton).toHaveAttribute('data-variant', 'ghost');
+        expect(displayButton).toHaveAttribute('data-size', 'sm');
+        expect(displayButton.contains(pencilIcon)).toBe(true);
     });
 
     it('pencil icon is absent in edit mode', async () => {
@@ -216,39 +212,15 @@ describe('EditableCell', () => {
         expect(onCommit).not.toHaveBeenCalled();
     });
 
-    it('display button carries all focus-visible Tailwind classes for keyboard users', () => {
+    it('display button uses ghost variant Button with sm size', () => {
         const onCommit = vi.fn().mockResolvedValue(undefined);
 
         render(<EditableCell value="Cell" onCommit={onCommit} />);
 
         const button = screen.getByRole('button', { name: 'Cell' });
-        expect(button).toHaveClass('focus-visible:bg-accent');
-        expect(button).toHaveClass('focus-visible:text-accent-foreground');
-        expect(button).toHaveClass('focus-visible:underline');
-        expect(button).toHaveClass('focus-visible:decoration-dashed');
-        expect(button).toHaveClass('focus-visible:underline-offset-2');
-    });
-
-    it('display button carries the group class so pencil hover animation works', () => {
-        const onCommit = vi.fn().mockResolvedValue(undefined);
-
-        render(<EditableCell value="Test" onCommit={onCommit} />);
-
-        const button = screen.getByRole('button', { name: 'Test' });
-        expect(button).toHaveClass('group');
-    });
-
-    it('display button carries all hover Tailwind classes for mouse users', () => {
-        const onCommit = vi.fn().mockResolvedValue(undefined);
-
-        render(<EditableCell value="Cell" onCommit={onCommit} />);
-
-        const button = screen.getByRole('button', { name: 'Cell' });
-        expect(button).toHaveClass('hover:bg-accent');
-        expect(button).toHaveClass('hover:text-accent-foreground');
-        expect(button).toHaveClass('hover:underline');
-        expect(button).toHaveClass('hover:decoration-dashed');
-        expect(button).toHaveClass('hover:underline-offset-2');
+        expect(button).toHaveAttribute('data-slot', 'button');
+        expect(button).toHaveAttribute('data-variant', 'ghost');
+        expect(button).toHaveAttribute('data-size', 'sm');
     });
 
     it('display button carries aria-label from ariaLabel prop before any click', () => {

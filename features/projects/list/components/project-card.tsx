@@ -32,14 +32,14 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
 
     return (
         <CardShell
-            className="group h-full gap-0 border-border/80"
+            className="group"
             density="compact"
             interactive
             shadow="none"
         >
-            <CardShellHeader className="flex flex-col gap-2.5 pb-0 sm:pb-0" density="compact">
+            <CardShellHeader className="flex flex-col gap-2.5" density="compact">
                 <div className="flex min-w-0 items-start gap-2.5">
-                    <div className="pt-1">
+                    <div>
                         <ProjectStatusDot status={project.status} />
                     </div>
                     <div className="min-w-0 flex-1">
@@ -47,7 +47,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                             <ProjectStatusBadge status={project.status} />
                             <Badge variant="secondary" size="xs">{project.progress}%</Badge>
                         </div>
-                        <h3 className="mt-1.5 text-base font-semibold leading-tight">
+                        <h3 className={`mt-1.5 ${primitiveVisualTypographyClassNames.itemTitle}`}>
                             <Link
                                 href={`/app/projects/${project.slug}`}
                                 className="line-clamp-2 transition-colors hover:text-foreground/80 hover:underline"
@@ -57,7 +57,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                         </h3>
                     </div>
                 </div>
-                <div className="flex min-w-0 flex-col gap-1.5 text-xs text-muted-foreground">
+                <div className={`flex min-w-0 flex-col gap-1.5 ${primitiveVisualTypographyClassNames.compactBody} text-muted-foreground`}>
                     <div className="flex min-w-0 items-start gap-2">
                         <Building2 className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                         <span className="truncate">{customerLabel}</span>
@@ -75,7 +75,7 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                             <CircleDollarSign className="size-3.5" aria-hidden="true" />
                             <span>Бюджет</span>
                         </div>
-                        <p className="truncate text-sm font-semibold text-foreground">
+                        <p className={`${primitiveVisualTypographyClassNames.itemTitle} truncate text-foreground`}>
                             {formatProjectCurrency(project.contractAmount)}
                         </p>
                     </CardShellInset>
@@ -84,15 +84,15 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                             <CalendarRange className="size-3.5" aria-hidden="true" />
                             <span>Сроки</span>
                         </div>
-                        <p className="line-clamp-2 text-sm font-medium text-foreground">
+                        <p className={`line-clamp-2 ${primitiveVisualTypographyClassNames.catalogItemTitle} text-foreground`}>
                             {timelineLabel}
                         </p>
                     </CardShellInset>
                 </div>
-                <CardShellInset className="mt-auto py-2.5" density="compact" variant="subtle">
+                <CardShellInset className="mt-auto" density="compact" variant="subtle">
                     <div className="mb-1.5 flex items-center justify-between gap-3">
-                        <p className="text-xs font-medium text-muted-foreground">Прогресс проекта</p>
-                        <span className="text-sm font-semibold text-foreground">{project.progress}%</span>
+                        <p className={`${primitiveVisualTypographyClassNames.compactBody} font-medium text-muted-foreground`}>Прогресс проекта</p>
+                        <span className={`${primitiveVisualTypographyClassNames.itemTitle} text-foreground`}>{project.progress}%</span>
                     </div>
                     <Progress
                         value={project.progress}

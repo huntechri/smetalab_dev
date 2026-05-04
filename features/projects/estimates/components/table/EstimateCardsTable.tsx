@@ -23,8 +23,8 @@ export function EstimateCardsTable(props: EstimateCardsTableProps) {
 
   if (filteredSections.length === 0) {
     return (
-      <Surface className="rounded-xl p-3 sm:p-4 flex min-h-52 items-center justify-center text-sm text-muted-foreground">
-        По вашему запросу ничего не найдено.
+      <Surface variant="card" density="compact" className="flex min-h-52 items-center justify-center">
+        <p className="text-sm text-muted-foreground">По вашему запросу ничего не найдено.</p>
       </Surface>
     );
   }

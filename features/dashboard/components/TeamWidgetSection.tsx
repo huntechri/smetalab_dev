@@ -39,7 +39,7 @@ export function TeamWidgetSection() {
                                 </div>
                                 <div className="flex items-center gap-1.5">
                                     <StatusIndicator tone={indicator.tone} pulse={indicator.pulse} size="sm" />
-                                    <span className="text-[0.625rem] font-medium text-muted-foreground">{member.status}</span>
+                                    <span className={primitiveVisualTypographyClassNames.compactCaption}>{member.status}</span>
                                 </div>
                             </CardShellInset>
                         );
