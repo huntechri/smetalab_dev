@@ -4,19 +4,7 @@ import * as React from "react"
 import * as SelectPrimitive from "@radix-ui/react-select"
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react"
 
-import {
-  primitiveSelectContentClassName,
-  primitiveSelectItemClassName,
-  primitiveSelectItemIndicatorClassName,
-  primitiveSelectLabelClassName,
-  primitiveSelectPopperContentClassName,
-  primitiveSelectPopperViewportClassName,
-  primitiveSelectScrollButtonClassName,
-  primitiveSelectSizeClassNames,
-  primitiveSelectSeparatorClassName,
-  primitiveSelectTriggerClassName,
-  primitiveSelectViewportClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveSelectContentClassName, primitiveSelectItemClassName, primitiveSelectItemIndicatorClassName, primitiveSelectLabelClassName, primitiveSelectPopperContentClassName, primitiveSelectPopperViewportClassName, primitiveSelectScrollButtonClassName, primitiveSelectSeparatorClassName, primitiveSelectSizeClassNames, primitiveSelectTriggerClassName, primitiveSelectViewportClassName } from '@/shared/ui/primitive-controls'
 import { cn } from "@/lib/utils"
 
 function Select({

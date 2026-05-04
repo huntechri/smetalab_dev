@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority"
 
 import { cn } from "@/lib/utils"
-import { primitiveEmptyBasePaddingClassName } from "@/shared/ui/primitive-density"
+import { primitiveEmptyBasePaddingClassName } from '@/shared/ui/primitive-spacing'
 
 function Empty({ className, ...props }: React.ComponentProps<"div">) {
   return (

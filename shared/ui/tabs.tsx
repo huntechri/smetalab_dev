@@ -4,13 +4,7 @@ import * as React from "react"
 import * as TabsPrimitive from "@radix-ui/react-tabs"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import {
-  primitiveTabsContentClassName,
-  primitiveTabsListBaseClassName,
-  primitiveTabsListVariantClassNames,
-  primitiveTabsRootClassName,
-  primitiveTabsTriggerClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveTabsContentClassName, primitiveTabsListBaseClassName, primitiveTabsListVariantClassNames, primitiveTabsRootClassName, primitiveTabsTriggerClassName } from '@/shared/ui/primitive-navigation'
 import { cn } from "@/lib/utils"
 
 function Tabs({

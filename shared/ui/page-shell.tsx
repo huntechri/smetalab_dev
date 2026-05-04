@@ -1,10 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import {
-  primitivePageShellContainerWidthClassName,
-  primitivePageShellInnerPaddingClassName,
-} from '@/shared/ui/primitive-density';
+import { primitivePageShellContainerWidthClassName, primitivePageShellInnerPaddingClassName } from '@/shared/ui/primitive-navigation';
 
 export type PageShellDensity = 'compact' | 'default' | 'comfortable';
 export type PageShellWidth = 'default' | 'wide' | 'full';

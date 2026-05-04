@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils"
-import { primitiveKbdPaddingClassName } from "@/shared/ui/primitive-density"
+import { primitiveKbdPaddingClassName } from '@/shared/ui/primitive-controls'
 
 function Kbd({ className, ...props }: React.ComponentProps<"kbd">) {
   return (

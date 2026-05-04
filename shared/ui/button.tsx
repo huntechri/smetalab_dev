@@ -4,10 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { Loader2 } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import {
-  primitiveButtonBaseClassName,
-  primitiveButtonSizeClassNames,
-} from "@/shared/ui/primitive-density"
+import { primitiveButtonBaseClassName, primitiveButtonSizeClassNames } from '@/shared/ui/primitive-controls'
 
 const buttonVariants = cva(primitiveButtonBaseClassName, {
   variants: {

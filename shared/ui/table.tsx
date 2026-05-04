@@ -3,10 +3,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import {
-  primitiveTableHeadCellClassName,
-  primitiveTableCellClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveTableCellClassName, primitiveTableHeadCellClassName } from '@/shared/ui/primitive-table'
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {
     return (

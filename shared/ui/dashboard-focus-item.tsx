@@ -1,8 +1,6 @@
 import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
-import {
-    primitiveVisualIconSizeClassNames,
-    primitiveVisualTypographyClassNames,
-} from '@/shared/ui/primitive-density';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
+import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import { Clock } from 'lucide-react';
 import type { ReactNode } from 'react';
 

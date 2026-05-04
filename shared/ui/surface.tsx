@@ -1,14 +1,10 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
-import {
-  primitiveSurfaceBorderClassNames,
-  primitiveSurfaceDensityClassNames,
-  primitiveSurfaceToneClassNames,
-  type PrimitiveSurfaceBorder,
-  type PrimitiveSurfaceDensity,
-  type PrimitiveSurfaceTone,
-} from '@/shared/ui/primitive-density';
+import { type PrimitiveSurfaceBorder, type PrimitiveSurfaceTone } from '@/shared/ui/primitive-surface'
+import { type PrimitiveSurfaceDensity } from '@/shared/ui/primitive-spacing'
+import { primitiveSurfaceBorderClassNames, primitiveSurfaceToneClassNames } from '@/shared/ui/primitive-surface'
+import { primitiveSurfaceDensityClassNames } from '@/shared/ui/primitive-spacing';
 
 export type SurfaceVariant = 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost';
 export type SurfaceDensity = PrimitiveSurfaceDensity;

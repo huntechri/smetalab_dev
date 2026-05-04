@@ -4,15 +4,8 @@ import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
 import { cn } from "@/lib/utils"
-import {
-  primitiveChartTooltipContentClassName,
-  primitiveChartIndicatorClassName,
-  primitiveChartLegendContentClassName,
-  primitiveChartRadiusClassName,
-  primitiveChartValuePaddingClassName,
-  primitiveChartLegendVerticalClassName,
-  primitiveChartLegendTopClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveChartIndicatorClassName, primitiveChartLegendContentClassName, primitiveChartRadiusClassName, primitiveChartTooltipContentClassName } from '@/shared/ui/primitive-chart'
+import { primitiveChartLegendTopClassName, primitiveChartLegendVerticalClassName, primitiveChartValuePaddingClassName } from '@/shared/ui/primitive-spacing'
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const

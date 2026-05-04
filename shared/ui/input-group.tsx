@@ -3,14 +3,7 @@
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import {
-  primitiveInputGroupAddonAlignClassNames,
-  primitiveInputGroupAddonBaseClassName,
-  primitiveInputGroupButtonBaseClassName,
-  primitiveInputGroupButtonSizeClassNames,
-  primitiveInputGroupRootClassName,
-  primitiveInputGroupTextClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveInputGroupAddonAlignClassNames, primitiveInputGroupAddonBaseClassName, primitiveInputGroupButtonBaseClassName, primitiveInputGroupButtonSizeClassNames, primitiveInputGroupRootClassName, primitiveInputGroupTextClassName } from '@/shared/ui/primitive-controls'
 import { cn } from "@/lib/utils"
 import { Button } from "@/shared/ui/button"
 import { Input } from "@/shared/ui/input"

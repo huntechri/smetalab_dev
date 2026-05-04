@@ -2,19 +2,7 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { TableCell, TableHead, TableRow } from '@/shared/ui/table';
-import {
-  primitiveDataTableHeaderRowClassName,
-  primitiveDataTableHeaderCellClassName,
-  primitiveDataTableBodyRowClassName,
-  primitiveDataTableBodyCellClassName,
-  primitiveDataTableCellContentClassName,
-  primitiveDataTableContainerClassName,
-  primitiveDataTableAiContainerClassName,
-  primitiveDataTableAiOverlayClassName,
-  primitiveDataTableEmptyCellClassName,
-  primitiveCompactTableHeadClassName,
-  primitiveCompactTableCellClassName,
-} from '@/shared/ui/primitive-density';
+import { primitiveCompactTableCellClassName, primitiveCompactTableHeadClassName, primitiveDataTableAiContainerClassName, primitiveDataTableAiOverlayClassName, primitiveDataTableBodyCellClassName, primitiveDataTableBodyRowClassName, primitiveDataTableCellContentClassName, primitiveDataTableContainerClassName, primitiveDataTableEmptyCellClassName, primitiveDataTableHeaderCellClassName, primitiveDataTableHeaderRowClassName } from '@/shared/ui/primitive-table';
 
 export type TableDensity = 'compact' | 'default';
 export type TableTextAlign = 'start' | 'center' | 'end';

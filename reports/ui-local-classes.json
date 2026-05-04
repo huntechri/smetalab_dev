@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T21:30:47.077Z",
+  "generatedAt": "2026-05-04T21:52:43.180Z",
   "mode": "local-classes",
   "scannedRoots": [
     "app",
@@ -1695,8 +1695,8 @@
       "line": 281,
       "severity": "high",
       "bucket": "surface",
-      "token": "relative h-9 w-9 sm:h-10 sm:w-10 rounded-md",
-      "evidence": "<div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}`}>",
+      "token": "relative rounded-md",
+      "evidence": "<div className={`relative flex size-9 sm:size-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}`}>",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
     },
@@ -3645,8 +3645,8 @@
       "line": 18,
       "severity": "high",
       "bucket": "table-cell",
-      "token": "flex-row flex-wrap mt-2 pt-2 border-t border-border/50 font-semibold",
-      "evidence": "<div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? 'mt-2 pt-2 border-t border-border/50 font-semibold' : 'text-muted-foreground'}`}>",
+      "token": "flex-row flex-wrap mt-2 pt-2 border-t border-border/50",
+      "evidence": "<div className={`flex flex-row flex-wrap items-center gap-x-4 gap-y-1 ${primitiveCompactTableCellClassName} ${isGrandTotal ? \"mt-2 pt-2 border-t border-border/50 \" + primitiveVisualTypographyClassNames.compactLabel : 'text-muted-foreground'}`}>",
       "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
       "recommendedContract": "shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers"
     },

@@ -2,11 +2,7 @@ import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
 
-import {
-  primitiveBadgeBaseClassName,
-  primitiveBadgeSizeClassNames,
-  primitiveBadgeVariantClassNames,
-} from "@/shared/ui/primitive-density"
+import { primitiveBadgeBaseClassName, primitiveBadgeSizeClassNames, primitiveBadgeVariantClassNames } from '@/shared/ui/primitive-badge'
 import { cn } from "@/lib/utils"
 
 const badgeVariants = cva(primitiveBadgeBaseClassName, {

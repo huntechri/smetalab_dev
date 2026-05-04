@@ -278,7 +278,7 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                     <div className="px-2 sm:px-4 py-1">
                                         <CatalogListItem>
                                             <div className="flex-1 min-w-0 flex items-center gap-3 sm:gap-4">
-                                                <div className={`relative flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}`}>
+                                                <div className={`relative flex size-9 sm:size-10 shrink-0 items-center justify-center overflow-hidden rounded-md ${primitiveSurfaceBorderClassNames.hairline}`}>
                                                     {material.imageUrl ? (
                                                         <Image
                                                             src={material.imageUrl}

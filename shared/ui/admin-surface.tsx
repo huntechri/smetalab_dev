@@ -8,9 +8,7 @@ import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { TabsList, TabsTrigger } from "@/shared/ui/tabs"
-import {
-  primitivePageShellInnerPaddingClassName,
-} from "@/shared/ui/primitive-density"
+import { primitivePageShellInnerPaddingClassName } from '@/shared/ui/primitive-navigation'
 
 type AdminBadgeVariant = React.ComponentProps<typeof Badge>["variant"]
 

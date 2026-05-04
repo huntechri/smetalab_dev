@@ -2,14 +2,8 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 import { Surface, type SurfaceProps, type SurfaceVariant } from '@/shared/ui/surface';
-import {
-  type PrimitiveCardShellDensity,
-  primitiveCardShellGapClassNames,
-  primitiveCardShellInsetDensityClassNames,
-  primitiveCardShellHeaderDensityClassNames,
-  primitiveCardShellBodyDensityClassNames,
-  primitiveCardShellFooterDensityClassNames,
-} from '@/shared/ui/primitive-density';
+import type { PrimitiveCardShellDensity } from '@/shared/ui/primitive-surface'
+import { primitiveCardShellBodyDensityClassNames, primitiveCardShellFooterDensityClassNames, primitiveCardShellGapClassNames, primitiveCardShellHeaderDensityClassNames, primitiveCardShellInsetDensityClassNames } from '@/shared/ui/primitive-surface';
 
 export type CardShellDensity = PrimitiveCardShellDensity;
 export type CardShellVariant = Extract<SurfaceVariant, 'card' | 'panel' | 'glass' | 'muted' | 'subtle' | 'ghost'>;

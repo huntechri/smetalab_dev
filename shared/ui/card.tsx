@@ -1,13 +1,7 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
-import {
-  primitiveCardBasePaddingClassName,
-  primitiveCardGapClassName,
-  primitiveCardHeaderPaddingClassName,
-  primitiveCardContentPaddingClassName,
-  primitiveCardFooterPaddingClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveCardBasePaddingClassName, primitiveCardContentPaddingClassName, primitiveCardFooterPaddingClassName, primitiveCardGapClassName, primitiveCardHeaderPaddingClassName } from '@/shared/ui/primitive-surface'
 
 function Card({ className, ...props }: React.ComponentProps<"div">) {
   return (

@@ -2,12 +2,8 @@ import * as React from 'react';
 import { Sparkles } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
-import {
-  primitiveCatalogTokenTextClassName,
-  primitiveCatalogTokenCompactTextClassName,
-  primitiveCatalogIndexTokenTextClassName,
-  primitiveCatalogDensePaddingClassName,
-} from '@/shared/ui/primitive-density';
+import { primitiveCatalogDensePaddingClassName, primitiveCatalogIndexTokenTextClassName } from '@/shared/ui/primitive-badge'
+import { primitiveCatalogTokenCompactTextClassName, primitiveCatalogTokenTextClassName } from '@/shared/ui/primitive-badge';
 
 type CatalogTokenTone = 'code' | 'category';
 type CatalogTokenDensity = 'default' | 'compact';

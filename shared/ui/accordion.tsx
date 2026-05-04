@@ -5,10 +5,7 @@ import { ChevronDownIcon } from "lucide-react"
 import { Accordion as AccordionPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
-import {
-  primitiveAccordionItemPaddingClassName,
-  primitiveAccordionContentPaddingClassName,
-} from "@/shared/ui/primitive-density"
+import { primitiveAccordionContentPaddingClassName, primitiveAccordionItemPaddingClassName } from '@/shared/ui/primitive-spacing'
 
 function Accordion({
   ...props
