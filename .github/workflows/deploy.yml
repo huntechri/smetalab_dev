@@ -59,63 +59,37 @@ jobs:
         run: pnpm type-check
       - name: UI Audit
         run: pnpm audit:ui
-      - name: Generate UI Visual Audit domain summary
-        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
-        run: pnpm exec tsx scripts/summarize-ui-visual-audit.ts
-      - name: Generate UI Visual Audit bug triage
-        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
-        run: pnpm exec tsx scripts/triage-ui-visual-audit.ts
-      - name: Generate UI Visual Ownership migration report
-        if: always() && hashFiles('reports/ui-visual-audit.json') != ''
-        run: pnpm exec tsx scripts/triage-ui-visual-ownership.ts
-      - name: Publish UI Visual Audit summary
-        if: always() && hashFiles('reports/ui-visual-audit-summary.md') != ''
-        run: cat reports/ui-visual-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Publish UI Visual Audit triage
-        if: always() && hashFiles('reports/ui-visual-audit-triage.md') != ''
-        run: cat reports/ui-visual-audit-triage.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Publish UI Visual Ownership migration report
-        if: always() && hashFiles('reports/ui-visual-ownership.md') != ''
-        run: cat reports/ui-visual-ownership.md >> "$GITHUB_STEP_SUMMARY"
-      - name: Upload UI Visual Audit reports
-        if: always() && hashFiles('reports/ui-visual-audit.md') != ''
+      - name: Publish UI Audit fix summary
+        if: always() && hashFiles('reports/ui-audit-summary.md') != ''
+        run: cat reports/ui-audit-summary.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Upload UI Audit reports
+        if: always() && hashFiles('reports/ui-audit-summary.md') != ''
         uses: actions/upload-artifact@v4
         with:
-          name: ui-visual-audit-${{ github.run_number }}
+          name: ui-audit-${{ github.run_number }}
           path: |
+            reports/ui-audit-summary.json
+            reports/ui-audit-summary.md
+            reports/ui-local-classes.json
+            reports/ui-local-classes.md
             reports/ui-visual-audit.json
             reports/ui-visual-audit.md
-            reports/ui-visual-audit-summary.md
-            reports/ui-visual-audit-triage.json
-            reports/ui-visual-audit-triage.md
-            reports/ui-visual-ownership.json
-            reports/ui-visual-ownership.md
-          if-no-files-found: error
+            reports/ui-coverage-audit.json
+            reports/ui-coverage-audit.md
+            reports/ui-inventory.json
+            reports/ui-inventory.md
+          if-no-files-found: ignore
           retention-days: 14
-      - name: Comment UI Visual Audit summary
-        if: always() && github.event_name == 'pull_request' && hashFiles('reports/ui-visual-audit-summary.md') != ''
+      - name: Comment UI Audit fix summary
+        if: always() && github.event_name == 'pull_request' && hashFiles('reports/ui-audit-summary.md') != ''
         continue-on-error: true
         uses: actions/github-script@v8
         with:
           script: |
             const fs = require('node:fs');
             const marker = '<!-- ui-visual-audit-summary -->';
-            const summary = fs.readFileSync('reports/ui-visual-audit-summary.md', 'utf8');
-            const triage = fs.existsSync('reports/ui-visual-audit-triage.md')
-              ? fs.readFileSync('reports/ui-visual-audit-triage.md', 'utf8')
-              : '';
-            const ownership = fs.existsSync('reports/ui-visual-ownership.md')
-              ? fs.readFileSync('reports/ui-visual-ownership.md', 'utf8')
-              : '';
-            const triagePreview = triage
-              ? `\n\n---\n\n## UI Visual Audit bug triage preview\n\n${triage.split('\n').slice(0, 80).join('\n')}\n\n_Full triage is available in the artifact: \`ui-visual-audit-${context.runNumber}\`._`
-              : '';
-            const ownershipPreview = ownership
-              ? `\n\n---\n\n## UI Visual Ownership migration preview\n\n${ownership.split('\n').slice(0, 80).join('\n')}\n\n_Full ownership migration report is available in the artifact: \`ui-visual-audit-${context.runNumber}\`._`
-              : '';
-            const body = `${summary.trim()}${triagePreview}${ownershipPreview}
-
-            Artifact: \`ui-visual-audit-${context.runNumber}\``.replace(/^ {12}/gm, '');
+            const summary = fs.readFileSync('reports/ui-audit-summary.md', 'utf8').trim();
+            const body = `${marker}\n${summary}\n\nArtifact: \`ui-audit-${context.runNumber}\``;
             const comments = await github.paginate(github.rest.issues.listComments, {
               owner: context.repo.owner,
               repo: context.repo.repo,
