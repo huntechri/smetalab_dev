@@ -232,6 +232,36 @@ const FormStatusMessage = React.forwardRef<HTMLParagraphElement, FormStatusMessa
 )
 FormStatusMessage.displayName = "FormStatusMessage"
 
+// ─── FormSectionHeader ─────────────────────────────────────────────────────
+
+export type FormSectionHeaderProps = React.ComponentPropsWithoutRef<'div'> & {
+  icon?: React.ReactNode;
+  title: string;
+};
+
+/** Section header with icon (e.g., Phone, User, FileText, Landmark) */
+export function FormSectionHeader({ icon, title, className, ...props }: FormSectionHeaderProps) {
+  return (
+    <div className={cn('flex items-center gap-2 font-medium', className)} {...props}>
+      {icon ? <span className="text-muted-foreground">{icon}</span> : null}
+      {title}
+    </div>
+  );
+}
+
+// ─── RadioGroupRow ───────────────────────────────────────────────────────────────
+
+export type RadioGroupRowProps = React.ComponentPropsWithoutRef<'div'>;
+
+/** Inline flex row for RadioGroup items */
+export function RadioGroupRow({ className, children, ...props }: RadioGroupRowProps) {
+  return (
+    <div className={cn('flex flex-row items-center gap-2 sm:gap-4', className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
 export {
   FieldRow,
   FieldStack,

@@ -53,6 +53,7 @@
   --color-marketing-pricing-accent-bg: var(--marketing-pricing-accent-bg);
   --color-marketing-gradient-start: var(--marketing-gradient-start);
   --color-marketing-gradient-mid: var(--marketing-gradient-mid);
+  --color-marketing-section-bg: var(--marketing-section-bg);
   --color-marketing-gradient-end: var(--marketing-gradient-end);
   --color-badge-success: var(--badge-success);
   --color-badge-success-bg: var(--badge-success-bg);
@@ -110,6 +111,7 @@
     --marketing-pricing-accent-bg: #16131A;
     --marketing-gradient-start: #1B1822;
     --marketing-gradient-mid: #111017;
+    --marketing-section-bg: #0F0E14;
     --marketing-gradient-end: #0B0A0F;
     --marketing-accent-rgb: 255, 106, 61;
     --marketing-orange-rgb: 255, 93, 42;

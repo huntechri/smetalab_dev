@@ -6,8 +6,8 @@ import { RadioGroup, RadioGroupItem } from "@/shared/ui/radio-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 import { Separator } from "@/shared/ui/separator";
 import { TabsContent } from "@/shared/ui/tabs";
-
-import { primitiveVisualTypographyClassNames } from "@/shared/ui/primitive-surface";
+import { FormSectionHeader, RadioGroupRow } from "@/shared/ui/form-layout";
+import { FormSection } from "@/shared/ui/form-layout";
 
 import type { CounterpartyFormValues } from "@/features/counterparties/schemas/counterparty-form.schema";
 
@@ -21,106 +21,102 @@ type CounterpartyDetailsSectionProps = CounterpartySectionProps & {
 
 export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="general" className="flex flex-col gap-3 sm:gap-4">
-      <FormField
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Наименование / ФИО</FormLabel>
-            <FormControl>
-              <Input size="default" placeholder="Введите название..." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+    <TabsContent value="general">
+      <FormSection gap="compact" padding="dialog">
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Наименование / ФИО</FormLabel>
+              <FormControl>
+                <Input size="default" placeholder="Введите название..." {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <div className="flex flex-row gap-3 sm:gap-6 items-start">
-        <div className="flex-1 min-w-0">
-          <FormField
-            control={form.control}
-            name="legalStatus"
-            render={({ field }) => (
-              <FormItem className="flex flex-col gap-1.5">
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Правовой статус</FormLabel>
-                <FormControl>
-                  <RadioGroup
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    className="flex flex-row items-center gap-2 sm:gap-4"
-                  >
-                    <FormItem className="flex items-center gap-1 sm:gap-2">
-                      <FormControl>
-                        <RadioGroupItem value="individual" className="size-3.5" />
-                      </FormControl>
-                      <FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + " whitespace-nowrap"}>
-                        Физ. лицо
-                      </FormLabel>
-                    </FormItem>
-                    <FormItem className="flex items-center gap-1 sm:gap-2">
-                      <FormControl>
-                        <RadioGroupItem value="company" className="size-3.5" />
-                      </FormControl>
-                      <FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + " whitespace-nowrap"}>
-                        Юр. лицо
-                      </FormLabel>
-                    </FormItem>
-                  </RadioGroup>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="w-28 sm:w-48 shrink-0">
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem className="flex flex-col gap-1.5">
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Тип</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+        <div className="flex flex-row gap-3 sm:gap-6 items-start">
+          <div className="flex-1 min-w-0">
+            <FormField
+              control={form.control}
+              name="legalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Правовой статус</FormLabel>
                   <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Тип" />
-                    </SelectTrigger>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <RadioGroupRow>
+                        <FormItem variant="inline">
+                          <RadioGroupItem value="individual" className="size-3.5" />
+                          <FormLabel>
+                            Физ. лицо
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem variant="inline">
+                          <RadioGroupItem value="company" className="size-3.5" />
+                          <FormLabel>
+                            Юр. лицо
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroupRow>
+                    </RadioGroup>
                   </FormControl>
-                  <SelectContent>
-                    <SelectItem value="customer" className="text-xs">
-                      Заказчик
-                    </SelectItem>
-                    <SelectItem value="contractor" className="text-xs">
-                      Подрядчик
-                    </SelectItem>
-                    <SelectItem value="supplier" className="text-xs">
-                      Поставщик
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="w-28 sm:w-48 shrink-0">
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Тип</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Тип" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="customer">
+                        Заказчик
+                      </SelectItem>
+                      <SelectItem value="contractor">
+                        Подрядчик
+                      </SelectItem>
+                      <SelectItem value="supplier">
+                        Поставщик
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
         </div>
-      </div>
 
-      <Separator />
+        <Separator />
+      </FormSection>
 
-      <div className="flex flex-col gap-4">
-        <div className="flex items-center gap-2 font-medium">
-          <Phone className="size-4 text-muted-foreground" />
-          Контактная информация
-        </div>
+      <FormSection gap="compact" padding="dialog">
+        <FormSectionHeader icon={<Phone className="size-4" />} title="Контактная информация" />
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <FormSection columns="two" gap="compact">
           <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Телефон</FormLabel>
+                <FormLabel>Телефон</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="+7..." {...field} />
                 </FormControl>
@@ -134,7 +130,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Email</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="example@mail.ru" {...field} />
                 </FormControl>
@@ -142,14 +138,14 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
               </FormItem>
             )}
           />
-        </div>
+        </FormSection>
 
         <FormField
           control={form.control}
           name="address"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Адрес</FormLabel>
+              <FormLabel>Адрес</FormLabel>
               <FormControl>
                 <Input size="default" placeholder="Город, улица, дом..." {...field} />
               </FormControl>
@@ -157,7 +153,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
             </FormItem>
           )}
         />
-      </div>
+      </FormSection>
     </TabsContent>
   );
 }
@@ -167,21 +163,18 @@ export function CounterpartyDetailsSection({
   legalStatus,
 }: CounterpartyDetailsSectionProps) {
   return (
-    <TabsContent value="details" className="flex flex-col gap-3 sm:gap-4">
+    <TabsContent value="details">
       {legalStatus === "individual" ? (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 font-medium">
-            <User className="size-4 text-muted-foreground" />
-            Паспортные данные
-          </div>
+        <FormSection gap="compact" padding="dialog">
+          <FormSectionHeader icon={<User className="size-4" />} title="Паспортные данные" />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormSection columns="two" gap="compact">
             <FormField
               control={form.control}
               name="birthDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата рождения</FormLabel>
+                  <FormLabel>Дата рождения</FormLabel>
                   <FormControl>
                     <Input size="default" type="date" {...field} />
                   </FormControl>
@@ -194,7 +187,7 @@ export function CounterpartyDetailsSection({
               name="passportSeriesNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Серия и номер</FormLabel>
+                  <FormLabel>Серия и номер</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="0000 000000" {...field} />
                   </FormControl>
@@ -202,14 +195,14 @@ export function CounterpartyDetailsSection({
                 </FormItem>
               )}
             />
-          </div>
+          </FormSection>
 
           <FormField
             control={form.control}
             name="passportIssuedBy"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Кем выдан</FormLabel>
+                <FormLabel>Кем выдан</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="УФМС..." {...field} />
                 </FormControl>
@@ -218,13 +211,13 @@ export function CounterpartyDetailsSection({
             )}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormSection columns="two" gap="compact">
             <FormField
               control={form.control}
               name="passportIssuedDate"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата выдачи</FormLabel>
+                  <FormLabel>Дата выдачи</FormLabel>
                   <FormControl>
                     <Input size="default" type="date" {...field} />
                   </FormControl>
@@ -237,7 +230,7 @@ export function CounterpartyDetailsSection({
               name="departmentCode"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Код подразделения</FormLabel>
+                  <FormLabel>Код подразделения</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="000-000" {...field} />
                   </FormControl>
@@ -245,21 +238,18 @@ export function CounterpartyDetailsSection({
                 </FormItem>
               )}
             />
-          </div>
-        </div>
+          </FormSection>
+        </FormSection>
       ) : (
-        <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-2 font-medium">
-            <FileText className="size-4 text-muted-foreground" />
-            Реквизиты организации
-          </div>
+        <FormSection gap="compact" padding="dialog">
+          <FormSectionHeader icon={<FileText className="size-4" />} title="Реквизиты организации" />
 
           <FormField
             control={form.control}
             name="inn"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН</FormLabel>
+                <FormLabel>ИНН</FormLabel>
                 <FormControl>
                   <Input size="default" placeholder="ИНН" {...field} />
                 </FormControl>
@@ -268,13 +258,13 @@ export function CounterpartyDetailsSection({
             )}
           />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <FormSection columns="two" gap="compact">
             <FormField
               control={form.control}
               name="kpp"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>КПП</FormLabel>
+                  <FormLabel>КПП</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="КПП" {...field} />
                   </FormControl>
@@ -287,7 +277,7 @@ export function CounterpartyDetailsSection({
               name="ogrn"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ОГРН</FormLabel>
+                  <FormLabel>ОГРН</FormLabel>
                   <FormControl>
                     <Input size="default" placeholder="ОГРН" {...field} />
                   </FormControl>
@@ -295,8 +285,8 @@ export function CounterpartyDetailsSection({
                 </FormItem>
               )}
             />
-          </div>
-        </div>
+          </FormSection>
+        </FormSection>
       )}
     </TabsContent>
   );
@@ -304,68 +294,67 @@ export function CounterpartyDetailsSection({
 
 export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
   return (
-    <TabsContent value="bank" className="flex flex-col gap-3 sm:gap-4">
-      <div className="flex items-center gap-2 font-medium">
-        <Landmark className="size-4 text-muted-foreground" />
-        Банковские реквизиты
-      </div>
+    <TabsContent value="bank">
+      <FormSection gap="compact" padding="dialog">
+        <FormSectionHeader icon={<Landmark className="size-4" />} title="Банковские реквизиты" />
 
-      <FormField
-        control={form.control}
-        name="bankName"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Название банка</FormLabel>
-            <FormControl>
-              <Input size="default" placeholder="ПАО Сбербанк..." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="bankAccount"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Расчетный счет</FormLabel>
-            <FormControl>
-              <Input size="default" placeholder="407..." {...field} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <FormField
           control={form.control}
-          name="corrAccount"
+          name="bankName"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Корр. счет</FormLabel>
+              <FormLabel>Название банка</FormLabel>
               <FormControl>
-                <Input size="default" placeholder="301..." {...field} />
+                <Input size="default" placeholder="ПАО Сбербанк..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
-          name="bankInn"
+          name="bankAccount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН Банка</FormLabel>
+              <FormLabel>Расчетный счет</FormLabel>
               <FormControl>
-                <Input size="default" placeholder="ИНН банка" {...field} />
+                <Input size="default" placeholder="407..." {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-      </div>
+
+        <FormSection columns="two" gap="compact">
+          <FormField
+            control={form.control}
+            name="corrAccount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Корр. счет</FormLabel>
+                <FormControl>
+                  <Input size="default" placeholder="301..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="bankInn"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>ИНН Банка</FormLabel>
+                <FormControl>
+                  <Input size="default" placeholder="ИНН банка" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </FormSection>
+      </FormSection>
     </TabsContent>
   );
 }

@@ -77,15 +77,20 @@ const FormItemContext = React.createContext<FormItemContextValue>(
     {} as FormItemContextValue
 )
 
+const formItemVariantClassNames: Record<string, string> = {
+    default: fieldStackClassName,
+    inline: 'flex items-center gap-1 sm:gap-2',
+} as const
+
 const FormItem = React.forwardRef<
     HTMLDivElement,
-    React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
+    React.HTMLAttributes<HTMLDivElement> & { variant?: string }
+>(({ className, variant = 'default', ...props }, ref) => {
     const id = React.useId()
 
     return (
         <FormItemContext.Provider value={{ id }}>
-            <div ref={ref} className={cn(fieldStackClassName, className)} {...props} />
+            <div ref={ref} className={cn(formItemVariantClassNames[variant] ?? fieldStackClassName, className)} {...props} />
         </FormItemContext.Provider>
     )
 })
@@ -100,7 +105,7 @@ const FormLabel = React.forwardRef<
     return (
         <Label
             ref={ref}
-            className={cn(error && "text-destructive", className)}
+            className={cn('text-xs font-medium whitespace-nowrap', error && 'text-destructive', className)}
             htmlFor={formItemId}
             {...props}
         />

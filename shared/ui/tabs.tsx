@@ -61,14 +61,20 @@ function TabsTrigger({
   )
 }
 
+const tabsContentVariants: Record<string, string> = {
+  default: primitiveTabsContentClassName,
+  scroll: 'm-0 overflow-x-auto flex-1 outline-none data-[state=inactive]:hidden',
+} as const
+
 function TabsContent({
   className,
+  variant = 'default',
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.Content>) {
+}: React.ComponentProps<typeof TabsPrimitive.Content> & { variant?: string }) {
   return (
     <TabsPrimitive.Content
       data-slot="tabs-content"
-      className={cn(primitiveTabsContentClassName, className)}
+      className={cn(tabsContentVariants[variant] ?? tabsContentVariants.default, className)}
       {...props}
     />
   )

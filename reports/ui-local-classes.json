@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-04T23:32:47.659Z",
+  "generatedAt": "2026-05-05T06:03:18.597Z",
   "mode": "local-classes",
   "scannedRoots": [
     "app",
@@ -10,29 +10,29 @@
   ],
   "scannedFiles": 366,
   "filesWithFindings": 101,
-  "totalFindings": 689,
+  "totalFindings": 586,
   "severityCounts": {
-    "high": 165,
-    "medium": 381,
-    "low": 143
+    "high": 98,
+    "medium": 351,
+    "low": 137
   },
   "rootCounts": {
-    "app": 89,
-    "features": 569,
+    "app": 60,
+    "features": 495,
     "components": 31
   },
   "bucketCounts": {
-    "layout": 19,
+    "layout": 20,
     "spacing": 29,
-    "surface": 76,
-    "card": 52,
-    "table": 63,
-    "table-cell": 30,
-    "form": 48,
-    "control": 182,
+    "surface": 56,
+    "card": 50,
+    "table": 58,
+    "table-cell": 28,
+    "form": 43,
+    "control": 135,
     "badge-status": 0,
-    "dialog-sheet": 81,
-    "navigation": 50,
+    "dialog-sheet": 63,
+    "navigation": 45,
     "state": 14,
     "dashboard-chart": 21,
     "typography": 2,
@@ -262,7 +262,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 64,
+      "line": 78,
       "severity": "low",
       "bucket": "surface",
       "token": "outline",
@@ -272,37 +272,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 103,
-      "severity": "high",
-      "bucket": "navigation",
-      "token": "rounded-md hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60",
-      "evidence": "const navLinkClassNameBase = 'rounded-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';",
-      "reason": "Runtime code appears to own navigation/header/sidebar visual layout. Use shared navigation/layout contracts.",
-      "recommendedContract": "shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 104,
-      "severity": "high",
-      "bucket": "navigation",
-      "token": "px-3 py-2",
-      "evidence": "const headerNavLinkClassName = `${navLinkClassNameBase} px-3 py-2`;",
-      "reason": "Runtime code appears to own navigation/header/sidebar visual layout. Use shared navigation/layout contracts.",
-      "recommendedContract": "shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 105,
-      "severity": "high",
-      "bucket": "navigation",
-      "token": "px-2 py-1",
-      "evidence": "const footerNavLinkClassName = `${navLinkClassNameBase} px-2 py-1`;",
-      "reason": "Runtime code appears to own navigation/header/sidebar visual layout. Use shared navigation/layout contracts.",
-      "recommendedContract": "shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 113,
+      "line": 123,
       "severity": "medium",
       "bucket": "form",
       "token": "outline",
@@ -312,117 +282,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 120,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black",
-      "evidence": "<a href=\"#main\" className=\"sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 124,
-      "severity": "high",
-      "bucket": "navigation",
-      "token": "sticky top-0 z-40 border-b border-white/10 bg-[#0B0A0F]",
-      "evidence": "<header className=\"sticky top-0 z-40 border-b border-white/10 bg-[#0B0A0F]\">",
-      "reason": "Runtime code appears to own navigation/header/sidebar visual layout. Use shared navigation/layout contracts.",
-      "recommendedContract": "shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 125,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "mx-auto h-16 px-4 md:px-8",
-      "evidence": "<div className=\"container mx-auto flex h-16 items-center justify-between gap-4 px-4 md:px-8\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 127,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "h-9 w-9 rounded-xl bg-[#FF6A3D] text-black font-bold",
-      "evidence": "<div className=\"flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6A3D] text-black font-bold\">S</div>",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 128,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "leading-none",
-      "evidence": "<div className=\"leading-none\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 129,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "text-xs tracking-[0.4em] text-white/80",
-      "evidence": "<span className=\"block text-xs uppercase tracking-[0.4em] text-white/80\">Smetalab</span>",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 130,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "text-sm font-semibold",
-      "evidence": "<span className=\"block text-sm font-semibold\">BuildOS</span>",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 133,
-      "severity": "medium",
-      "bucket": "form",
-      "token": "text-sm text-white/90",
-      "evidence": "<nav className=\"hidden md:flex items-center gap-4 text-sm text-white/90\" aria-label=\"Основная навигация\">",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 148,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60",
-      "evidence": "className=\"list-none rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 [&::-webkit-details-marker]:hidden\"",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 152,
-      "severity": "high",
-      "bucket": "navigation",
-      "token": "absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl",
-      "evidence": "<div id=\"mobile-navigation-panel\" className=\"absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-[#0B0A0F] shadow-2xl\">",
-      "reason": "Runtime code appears to own navigation/header/sidebar visual layout. Use shared navigation/layout contracts.",
-      "recommendedContract": "shared/ui/sidebar.tsx, shared/ui/page-shell.tsx, or shared navigation contracts"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 153,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "mx-auto flex-col px-4 py-6",
-      "evidence": "<div className=\"container mx-auto flex flex-col gap-4 px-4 py-6\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 154,
+      "line": 141,
       "severity": "medium",
       "bucket": "form",
       "token": "flex-col text-sm text-white/90",
@@ -432,7 +292,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 159,
+      "line": 148,
       "severity": "low",
       "bucket": "surface",
       "token": "flex-col",
@@ -442,7 +302,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 172,
+      "line": 170,
       "severity": "low",
       "bucket": "surface",
       "token": "relative",
@@ -452,47 +312,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 174,
-      "severity": "low",
-      "bucket": "surface",
-      "token": "absolute inset-0",
-      "evidence": "<div aria-hidden className=\"pointer-events-none absolute inset-0 overflow-hidden\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 175,
-      "severity": "high",
-      "bucket": "form",
-      "token": "absolute left-1/2 top-[-260px] h-[520px] w-[520px] rounded-full",
-      "evidence": "<div className={['absolute left-1/2 top-[-260px] h-[520px] w-[520px] -translate-x-1/2 rounded-full', primitiveMarketingGradientOrangeClassName, 'blur-2xl will-change-transform'].join(' ')} />",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "app/page.tsx",
       "line": 176,
-      "severity": "high",
-      "bucket": "form",
-      "token": "absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full",
-      "evidence": "<div className={['absolute right-[-120px] top-[220px] h-[420px] w-[420px] rounded-full', primitiveMarketingGradientCyanClassName, 'blur-3xl will-change-transform'].join(' ')} />",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 177,
-      "severity": "high",
-      "bucket": "form",
-      "token": "absolute left-[-160px] top-[520px] h-[380px] w-[380px] rounded-full",
-      "evidence": "<div className={['absolute left-[-160px] top-[520px] h-[380px] w-[380px] rounded-full', primitiveMarketingGradientPurpleClassName, 'blur-3xl will-change-transform'].join(' ')} />",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 183,
       "severity": "low",
       "bucket": "surface",
       "token": "h-4 w-4 text-[#FF6A3D]",
@@ -502,7 +322,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 194,
+      "line": 187,
       "severity": "medium",
       "bucket": "table",
       "token": "ml-2 h-5 w-5",
@@ -512,7 +332,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 197,
+      "line": 190,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -522,7 +342,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 204,
+      "line": 197,
       "severity": "low",
       "bucket": "surface",
       "token": "h-4 w-4 text-[#B4FF7A]",
@@ -532,7 +352,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 212,
+      "line": 205,
       "severity": "low",
       "bucket": "surface",
       "token": "text-xs tracking-[0.35em] text-white/75",
@@ -542,7 +362,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 216,
+      "line": 209,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-6",
@@ -552,7 +372,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 219,
+      "line": 212,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-2 font-semibold text-white/95",
@@ -562,37 +382,17 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 222,
+      "line": 215,
       "severity": "medium",
       "bucket": "card",
       "token": "rounded-2xl border border-white/10 p-4",
-      "evidence": "<div className={['rounded-2xl border border-white/10 p-4', primitiveMarketingCardGradientClassName].join(' ')}>",
+      "evidence": "<div className={cn('rounded-2xl border border-white/10 p-4', primitiveMarketingCardGradientClassName)}>",
       "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
       "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
     },
     {
       "filePath": "app/page.tsx",
-      "line": 224,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "mt-4 rounded-2xl bg-[#0B0A0F] px-3 py-1 text-2xl font-semibold text-white",
-      "evidence": "<div className=\"mt-4 inline-flex rounded-2xl bg-[#0B0A0F] px-3 py-1 text-2xl font-semibold text-white\">84.3 млн ₽</div>",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 227,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "rounded-2xl border border-white/10 bg-[#111015] p-4",
-      "evidence": "<div className=\"rounded-2xl border border-white/10 bg-[#111015] p-4\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 228,
+      "line": 221,
       "severity": "low",
       "bucket": "surface",
       "token": "text-xs text-white/75",
@@ -602,7 +402,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 229,
+      "line": 222,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-3 text-xl font-semibold",
@@ -612,7 +412,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 230,
+      "line": 223,
       "severity": "low",
       "bucket": "surface",
       "token": "text-sm text-white/80",
@@ -622,17 +422,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 233,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "rounded-2xl border border-white/10 bg-[#111015] p-4",
-      "evidence": "<div className=\"rounded-2xl border border-white/10 bg-[#111015] p-4\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 234,
+      "line": 227,
       "severity": "low",
       "bucket": "surface",
       "token": "text-xs text-white/75",
@@ -642,7 +432,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 235,
+      "line": 228,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-3",
@@ -652,47 +442,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 237,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent",
-      "evidence": "<div key={frame} className=\"relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 238,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "absolute left-2 top-2 rounded-full bg-[#0B0A0F] px-2 py-0.5 text-[10px] text-white",
-      "evidence": "<span className=\"absolute left-2 top-2 rounded-full bg-[#0B0A0F] px-2 py-0.5 text-[10px] text-white\">{frame}</span>",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
       "line": 245,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "absolute h-20 w-40 rounded-full bg-[#B4FF7A]/40",
-      "evidence": "<div aria-hidden className=\"absolute -bottom-10 -left-6 h-20 w-40 rounded-full bg-[#B4FF7A]/40 blur-3xl animate-pulse\" />",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 250,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "bg-[#0F0E14]",
-      "evidence": "<MarketingSection id=\"capabilities\" className=\"bg-[#0F0E14]\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 252,
       "severity": "low",
       "bucket": "surface",
       "token": "space-y-6",
@@ -702,7 +452,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 255,
+      "line": 248,
       "severity": "low",
       "bucket": "surface",
       "token": "text-white/80",
@@ -712,7 +462,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 256,
+      "line": 249,
       "severity": "low",
       "bucket": "surface",
       "token": "flex-wrap text-xs text-white/80",
@@ -722,7 +472,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 276,
+      "line": 269,
       "severity": "medium",
       "bucket": "table",
       "token": "flex-col md:flex-row",
@@ -732,7 +482,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 277,
+      "line": 270,
       "severity": "low",
       "bucket": "surface",
       "token": "space-y-4",
@@ -742,7 +492,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 281,
+      "line": 274,
       "severity": "low",
       "bucket": "surface",
       "token": "max-w-lg text-white/80",
@@ -752,7 +502,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 283,
+      "line": 276,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-10",
@@ -762,17 +512,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 296,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "bg-[#0F0E14]",
-      "evidence": "<MarketingSection id=\"pricing\" className=\"bg-[#0F0E14]\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 297,
+      "line": 290,
       "severity": "medium",
       "bucket": "table",
       "token": "flex-col md:flex-row",
@@ -782,7 +522,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 302,
+      "line": 295,
       "severity": "low",
       "bucket": "surface",
       "token": "max-w-md text-white/80",
@@ -792,7 +532,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 304,
+      "line": 297,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-10",
@@ -802,27 +542,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 309,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255",
-      "evidence": "? 'rounded-3xl border border-[#FF6A3D] bg-[#16131A] p-6 shadow-[0_30px_80px_rgba(255,106,61,0.2)]'",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 310,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "rounded-3xl border border-white/10 bg-[#14121A] p-6",
-      "evidence": ": 'rounded-3xl border border-white/10 bg-[#14121A] p-6'",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 313,
+      "line": 306,
       "severity": "low",
       "bucket": "surface",
       "token": "text-xs tracking-[0.3em] text-white/75",
@@ -832,7 +552,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 314,
+      "line": 307,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-6 text-3xl font-semibold",
@@ -842,7 +562,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 315,
+      "line": 308,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-2 text-sm text-white/80",
@@ -852,7 +572,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 316,
+      "line": 309,
       "severity": "low",
       "bucket": "surface",
       "token": "mt-6 space-y-2 text-sm text-white/70",
@@ -862,7 +582,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 322,
+      "line": 315,
       "severity": "low",
       "bucket": "surface",
       "token": "outline",
@@ -872,7 +592,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 341,
+      "line": 334,
       "severity": "medium",
       "bucket": "control",
       "token": "outline",
@@ -882,17 +602,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 349,
-      "severity": "high",
-      "bucket": "surface",
-      "token": "border-t border-white/10 bg-[#0B0A0F]",
-      "evidence": "<footer className=\"border-t border-white/10 bg-[#0B0A0F]\">",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/surface.tsx or shared/ui/card-shell.tsx"
-    },
-    {
-      "filePath": "app/page.tsx",
-      "line": 350,
+      "line": 343,
       "severity": "medium",
       "bucket": "table",
       "token": "flex-col py-10 md:flex-row",
@@ -902,7 +612,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 351,
+      "line": 344,
       "severity": "low",
       "bucket": "surface",
       "token": "space-y-2",
@@ -912,7 +622,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 352,
+      "line": 345,
       "severity": "low",
       "bucket": "surface",
       "token": "text-sm tracking-[0.4em] text-white/75",
@@ -922,7 +632,7 @@
     },
     {
       "filePath": "app/page.tsx",
-      "line": 355,
+      "line": 348,
       "severity": "low",
       "bucket": "surface",
       "token": "flex-wrap text-sm text-white/80",
@@ -2052,327 +1762,7 @@
     },
     {
       "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 24,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsContent",
-      "evidence": "<TabsContent value=\"general\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 30,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Наименование / ФИО</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 45,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormItem",
-      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
-      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 46,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Правовой статус</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 48,
-      "severity": "high",
-      "bucket": "control",
-      "token": "RadioGroup",
-      "evidence": "<RadioGroup",
-      "reason": "className on shadcn component \"RadioGroup\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 53,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormItem",
-      "evidence": "<FormItem className=\"flex items-center gap-1 sm:gap-2\">",
-      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 57,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 61,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormItem",
-      "evidence": "<FormItem className=\"flex items-center gap-1 sm:gap-2\">",
-      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 65,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 82,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormItem",
-      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
-      "reason": "className on shadcn component \"FormItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 83,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Тип</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 91,
-      "severity": "high",
-      "bucket": "control",
-      "token": "SelectItem",
-      "evidence": "<SelectItem value=\"customer\" className=\"text-xs\">",
-      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 94,
-      "severity": "high",
-      "bucket": "control",
-      "token": "SelectItem",
-      "evidence": "<SelectItem value=\"contractor\" className=\"text-xs\">",
-      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 97,
-      "severity": "high",
-      "bucket": "control",
-      "token": "SelectItem",
-      "evidence": "<SelectItem value=\"supplier\" className=\"text-xs\">",
-      "reason": "className on shadcn component \"SelectItem\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 123,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Телефон</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 137,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Email</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 152,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Адрес</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 170,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsContent",
-      "evidence": "<TabsContent value=\"details\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 184,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата рождения</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 197,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Серия и номер</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 212,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Кем выдан</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 227,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Дата выдачи</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 240,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Код подразделения</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 262,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 277,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>КПП</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 290,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ОГРН</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 307,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsContent",
-      "evidence": "<TabsContent value=\"bank\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 318,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Название банка</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 332,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Расчетный счет</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 347,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>Корр. счет</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 360,
-      "severity": "high",
-      "bucket": "control",
-      "token": "FormLabel",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabel}>ИНН Банка</FormLabel>",
-      "reason": "className on shadcn component \"FormLabel\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 24,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<TabsContent value=\"general\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 39,
+      "line": 40,
       "severity": "medium",
       "bucket": "dialog-sheet",
       "token": "flex-row",
@@ -2382,181 +1772,11 @@
     },
     {
       "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 45,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 51,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-row",
-      "evidence": "className=\"flex flex-row items-center gap-2 sm:gap-4\"",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 57,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "whitespace-nowrap",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 65,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "whitespace-nowrap",
-      "evidence": "<FormLabel className={primitiveVisualTypographyClassNames.formLabelNormal + \" whitespace-nowrap\"}>",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 77,
+      "line": 75,
       "severity": "medium",
       "bucket": "dialog-sheet",
       "token": "w-28 sm:w-48",
       "evidence": "<div className=\"w-28 sm:w-48 shrink-0\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 82,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<FormItem className=\"flex flex-col gap-1.5\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 91,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "text-xs",
-      "evidence": "<SelectItem value=\"customer\" className=\"text-xs\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 94,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "text-xs",
-      "evidence": "<SelectItem value=\"contractor\" className=\"text-xs\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 97,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "text-xs",
-      "evidence": "<SelectItem value=\"supplier\" className=\"text-xs\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 111,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<div className=\"flex flex-col gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 112,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "font-medium",
-      "evidence": "<div className=\"flex items-center gap-2 font-medium\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 170,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<TabsContent value=\"details\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 172,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<div className=\"flex flex-col gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 173,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "font-medium",
-      "evidence": "<div className=\"flex items-center gap-2 font-medium\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 251,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<div className=\"flex flex-col gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 252,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "font-medium",
-      "evidence": "<div className=\"flex items-center gap-2 font-medium\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 307,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "flex-col",
-      "evidence": "<TabsContent value=\"bank\" className=\"flex flex-col gap-3 sm:gap-4\">",
-      "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
-      "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
-    },
-    {
-      "filePath": "features/counterparties/components/counterparty-sheet-sections.tsx",
-      "line": 308,
-      "severity": "medium",
-      "bucket": "dialog-sheet",
-      "token": "font-medium",
-      "evidence": "<div className=\"flex items-center gap-2 font-medium\">",
       "reason": "Runtime code appears to own overlay width, padding, or scroll layout. Use shared dialog/sheet semantic sizes.",
       "recommendedContract": "shared/ui/dialog.tsx, shared/ui/sheet.tsx, or shared overlay semantic props"
     },
@@ -3572,146 +2792,6 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 41,
-      "severity": "high",
-      "bucket": "control",
-      "token": "Table",
-      "evidence": "<Table className=\"w-full border-collapse\">",
-      "reason": "className on shadcn component \"Table\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 42,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableHeader",
-      "evidence": "<TableHeader className=\"sticky top-0 z-20 border-b bg-muted/80 backdrop-blur\">",
-      "reason": "className on shadcn component \"TableHeader\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 43,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableRow",
-      "evidence": "<TableRow className=\"hover:bg-transparent\">",
-      "reason": "className on shadcn component \"TableRow\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 44,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableHead",
-      "evidence": "<TableHead className={primitiveVisualTypographyClassNames.mutedMeta}>",
-      "reason": "className on shadcn component \"TableHead\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 48,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableHead",
-      "evidence": "<TableHead key={role} className=\"border-l border-border px-2 py-4 text-center\">",
-      "reason": "className on shadcn component \"TableHead\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 58,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableRow",
-      "evidence": "<TableRow key={perm.id} className=\"border-b transition-colors hover:bg-muted/50\">",
-      "reason": "className on shadcn component \"TableRow\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 59,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableCell",
-      "evidence": "<TableCell className=\"px-6 py-4 align-top\">",
-      "reason": "className on shadcn component \"TableCell\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 70,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TableCell",
-      "evidence": "<TableCell key={role} className=\"border-l border-border/50 px-2 py-4\">",
-      "reason": "className on shadcn component \"TableCell\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 106,
-      "severity": "high",
-      "bucket": "control",
-      "token": "Tabs",
-      "evidence": "<Tabs defaultValue=\"tenant\" className=\"w-full\">",
-      "reason": "className on shadcn component \"Tabs\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 107,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsList",
-      "evidence": "<TabsList className=\"mb-6 h-12 w-full rounded-2xl bg-muted p-1 sm:w-auto\">",
-      "reason": "className on shadcn component \"TabsList\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 108,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsTrigger",
-      "evidence": "<TabsTrigger",
-      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 114,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsTrigger",
-      "evidence": "<TabsTrigger",
-      "reason": "className on shadcn component \"TabsTrigger\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 123,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsContent",
-      "evidence": "<TabsContent value=\"tenant\" className=\"m-0 overflow-x-auto\">",
-      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 127,
-      "severity": "high",
-      "bucket": "control",
-      "token": "TabsContent",
-      "evidence": "<TabsContent value=\"platform\" className=\"m-0 overflow-x-auto\">",
-      "reason": "className on shadcn component \"TabsContent\" overrides internal styling. Remove className and use semantic props instead.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
       "line": 32,
       "severity": "low",
       "bucket": "state",
@@ -3719,66 +2799,6 @@
       "evidence": "if (loading) return <LoadingState height=\"h-96\" />;",
       "reason": "Runtime code appears to own empty/loading/error state visuals. Use shared state contracts.",
       "recommendedContract": "shared/ui/states/*"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 41,
-      "severity": "medium",
-      "bucket": "table",
-      "token": "border-collapse",
-      "evidence": "<Table className=\"w-full border-collapse\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 42,
-      "severity": "medium",
-      "bucket": "table",
-      "token": "sticky top-0 z-20 border-b backdrop-blur",
-      "evidence": "<TableHeader className=\"sticky top-0 z-20 border-b bg-muted/80 backdrop-blur\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 43,
-      "severity": "medium",
-      "bucket": "table",
-      "token": "hover:bg-transparent",
-      "evidence": "<TableRow className=\"hover:bg-transparent\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 48,
-      "severity": "medium",
-      "bucket": "table",
-      "token": "border-l border-border px-2 py-4 text-center",
-      "evidence": "<TableHead key={role} className=\"border-l border-border px-2 py-4 text-center\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 58,
-      "severity": "medium",
-      "bucket": "table",
-      "token": "border-b",
-      "evidence": "<TableRow key={perm.id} className=\"border-b transition-colors hover:bg-muted/50\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/data-table.tsx or shared/ui/table-density.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 59,
-      "severity": "medium",
-      "bucket": "table-cell",
-      "token": "px-6 py-4",
-      "evidence": "<TableCell className=\"px-6 py-4 align-top\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers"
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
@@ -3812,31 +2832,21 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 70,
-      "severity": "medium",
-      "bucket": "table-cell",
-      "token": "border-l border-border/50 px-2 py-4",
-      "evidence": "<TableCell key={role} className=\"border-l border-border/50 px-2 py-4\">",
-      "reason": "Runtime code appears to own table/cell density, alignment, or typography. Use shared table/cell contracts.",
-      "recommendedContract": "shared/ui/cells/*, shared/ui/table-density.tsx, or shared table cell helpers"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
       "line": 92,
-      "severity": "low",
-      "bucket": "spacing",
-      "token": "space-y-4",
-      "evidence": "<div className=\"space-y-4\">",
-      "reason": "Runtime code contains local spacing classes. Prefer density/spacing semantic props on shared components.",
-      "recommendedContract": "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props"
+      "severity": "medium",
+      "bucket": "layout",
+      "token": "flex-col",
+      "evidence": "<div className=\"flex flex-col gap-4\">",
+      "reason": "Runtime code contains local layout classes. Prefer shared shell/layout contracts when the recipe is visual.",
+      "recommendedContract": "shared/ui/page-shell.tsx, shared/ui/section.tsx, or a narrower shared layout contract"
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
       "line": 95,
       "severity": "medium",
       "bucket": "color",
-      "token": "text-base font-semibold bg-transparent",
-      "evidence": "<h2 className=\"text-base font-semibold flex items-center gap-2 bg-transparent text-foreground\">",
+      "token": "text-base font-semibold",
+      "evidence": "<h2 className=\"flex items-center gap-2 text-base font-semibold text-foreground\">",
       "reason": "Runtime code contains local color classes. Prefer semantic tone/variant props on shared components.",
       "recommendedContract": "shared/ui primitive token, semantic variant/tone prop, or status/badge/card contract"
     },
@@ -3882,27 +2892,7 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 107,
-      "severity": "medium",
-      "bucket": "control",
-      "token": "mb-6 h-12 rounded-2xl p-1 sm:w-auto",
-      "evidence": "<TabsList className=\"mb-6 h-12 w-full rounded-2xl bg-muted p-1 sm:w-auto\">",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 110,
-      "severity": "medium",
-      "bucket": "card",
-      "token": "px-6 text-sm font-semibold data-[state=active]:shadow-md",
-      "evidence": "className=\"px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md\"",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 112,
+      "line": 109,
       "severity": "low",
       "bucket": "spacing",
       "token": "mr-2 h-4 w-4",
@@ -3912,33 +2902,13 @@
     },
     {
       "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 116,
-      "severity": "medium",
-      "bucket": "card",
-      "token": "px-6 text-sm font-semibold data-[state=active]:shadow-md",
-      "evidence": "className=\"px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md\"",
-      "reason": "Runtime code appears to own card/surface visual recipe. Move this to a shared visual contract or semantic props.",
-      "recommendedContract": "shared/ui/card-shell.tsx, shared/ui/surface.tsx, or shared dashboard/card contracts"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 123,
-      "severity": "medium",
-      "bucket": "control",
-      "token": "m-0",
-      "evidence": "<TabsContent value=\"tenant\" className=\"m-0 overflow-x-auto\">",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/button.tsx, shared/ui/input.tsx, shared/ui/select.tsx, or shared/ui/search-control.tsx"
-    },
-    {
-      "filePath": "features/permissions/components/permissions-matrix.tsx",
-      "line": 127,
-      "severity": "medium",
-      "bucket": "form",
-      "token": "m-0",
-      "evidence": "<TabsContent value=\"platform\" className=\"m-0 overflow-x-auto\">",
-      "reason": "Runtime code appears to own form/control layout or sizing. Use shared form/control contracts.",
-      "recommendedContract": "shared/ui/form-layout.tsx and shared form/control primitives"
+      "line": 112,
+      "severity": "low",
+      "bucket": "spacing",
+      "token": "mr-2 h-4 w-4",
+      "evidence": "<Building2 className=\"mr-2 h-4 w-4\" /> Платформа",
+      "reason": "Runtime code contains local spacing classes. Prefer density/spacing semantic props on shared components.",
+      "recommendedContract": "shared/ui/primitive-spacing.ts, shared/ui/primitive-density.ts, or component semantic density props"
     },
     {
       "filePath": "features/projects/dashboard/components/ProjectEstimatesCards.tsx",

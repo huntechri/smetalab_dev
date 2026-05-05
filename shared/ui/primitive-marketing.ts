@@ -3,6 +3,9 @@
 /** Dark background for the marketing/landing page */
 export const primitiveMarketingDarkBgClassName = 'bg-marketing-bg';
 
+/** Section alternate background (slightly lighter than main bg) */
+export const primitiveMarketingSectionBgClassName = 'bg-marketing-section-bg';
+
 /** Hero section outer padding */
 export const primitiveMarketingHeroPaddingClassName = 'pt-20 pb-16 md:pt-28 md:pb-24';
 
@@ -118,6 +121,64 @@ export const primitiveMarketingHeroTextClassName =
 
 /** Pulse animation wrapper */
 export const primitiveMarketingPulseClassName = 'animate-pulse';
+
+// ─── Marketing brand / logo tokens ────────────────────────────────────────
+
+/** Brand icon circle wrapper */
+export const primitiveMarketingBrandIconClassName =
+  'flex h-9 w-9 items-center justify-center rounded-xl bg-[#FF6A3D] text-black font-bold';
+
+// ─── Marketing nav link tokens ────────────────────────────────────────────
+
+/** Base nav link style for marketing pages */
+export const primitiveMarketingNavLinkBaseClassName =
+  'rounded-md transition-colors hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60';
+
+/** Header nav link style */
+export const primitiveMarketingHeaderNavLinkClassName =
+  `${primitiveMarketingNavLinkBaseClassName} px-3 py-2`;
+
+/** Footer nav link style */
+export const primitiveMarketingFooterNavLinkClassName =
+  `${primitiveMarketingNavLinkBaseClassName} px-2 py-1`;
+
+// ─── Marketing header / footer tokens ────────────────────────────────────
+
+export const primitiveMarketingHeaderClassName =
+  'sticky top-0 z-40 border-b border-white/10 bg-marketing-bg';
+
+export const primitiveMarketingMobileSummaryClassName =
+  'list-none rounded-full border border-white/20 px-4 py-2 text-sm text-white/90 transition hover:border-white/40 hover:bg-white/10 focus-visible:ring-2 focus-visible:ring-white/60 [&::-webkit-details-marker]:hidden';
+
+export const primitiveMarketingMobilePanelClassName =
+  'absolute left-0 right-0 top-16 z-50 border-t border-white/10 bg-marketing-bg shadow-2xl';
+
+export const primitiveMarketingFooterClassName =
+  'border-t border-white/10 bg-marketing-bg';
+
+// ─── Marketing skip-link token ────────────────────────────────────────────
+
+/** Skip-to-main-content link — sr-only until focused */
+export const primitiveMarketingSkipLinkClassName =
+  'sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-black';
+
+// ─── Marketing demo section tokens ────────────────────────────────────────
+
+/** Budget value badge in demo */
+export const primitiveMarketingDemoBudgetClassName =
+  'mt-4 inline-flex rounded-2xl bg-marketing-bg px-3 py-1 text-2xl font-semibold text-white';
+
+/** Schedule frame slot */
+export const primitiveMarketingDemoFrameClassName =
+  'relative h-20 rounded-xl border border-white/10 bg-linear-to-br from-white/10 to-transparent';
+
+/** Schedule frame label */
+export const primitiveMarketingDemoFrameLabelClassName =
+  'absolute left-2 top-2 rounded-full bg-marketing-bg px-2 py-0.5 text-[10px] text-white';
+
+/** Glowing accent glow */
+export const primitiveMarketingDemoGlowClassName =
+  'absolute -bottom-10 -left-6 h-20 w-40 rounded-full bg-[#B4FF7A]/40 blur-3xl animate-pulse';
 
 // ─── Auth / marketing brand tokens ───────────────────────────────────────
 

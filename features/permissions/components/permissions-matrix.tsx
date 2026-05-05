@@ -8,8 +8,8 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableHeader,
   TableRow,
+  StickyTableHeader,
 } from '@/shared/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { Building2, Settings2, Users } from 'lucide-react';
@@ -38,25 +38,25 @@ export function PermissionsMatrix() {
     permissions: Permission[],
     roleMap: Record<string, Record<number, string>>
   ) => (
-    <Table className="w-full border-collapse">
-      <TableHeader className="sticky top-0 z-20 border-b bg-muted/80 backdrop-blur">
-        <TableRow className="hover:bg-transparent">
-          <TableHead className={primitiveVisualTypographyClassNames.mutedMeta}>
+    <Table>
+      <StickyTableHeader>
+        <TableRow variant="header">
+          <TableHead variant="mutedMeta">
             Функциональная область
           </TableHead>
           {roles.map((role) => (
-            <TableHead key={role} className="border-l border-border px-2 py-4 text-center">
+            <TableHead key={role} variant="roleLabel">
               <Badge variant="neutral" size="xs">
                 {ROLE_LABELS[role]}
               </Badge>
             </TableHead>
           ))}
         </TableRow>
-      </TableHeader>
+      </StickyTableHeader>
       <TableBody>
         {permissions.map((perm) => (
-          <TableRow key={perm.id} className="border-b transition-colors hover:bg-muted/50">
-            <TableCell className="px-6 py-4 align-top">
+          <TableRow key={perm.id} variant="body">
+            <TableCell variant="body">
               <div className="flex flex-col">
                 <span className="text-sm font-semibold tracking-tight text-foreground">{perm.name}</span>
                 <p className={`${primitiveVisualTypographyClassNames.mutedMeta} mt-1 max-w-xs`}>{perm.description}</p>
@@ -67,7 +67,7 @@ export function PermissionsMatrix() {
               const isUpdating = updating === `${type}-${role}-${perm.id}`;
 
               return (
-                <TableCell key={role} className="border-l border-border/50 px-2 py-4">
+                <TableCell key={role} variant="roleControl">
                   <div className="flex items-center justify-center">
                     <PermissionLevelControl
                       currentLevel={currentLevel}
@@ -89,10 +89,10 @@ export function PermissionsMatrix() {
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-base font-semibold flex items-center gap-2 bg-transparent text-foreground">
+          <h2 className="flex items-center gap-2 text-base font-semibold text-foreground">
             <Settings2 className="h-5 w-5" /> Контроль доступа
           </h2>
           <p className={primitiveVisualTypographyClassNames.mutedMeta}>
@@ -103,28 +103,22 @@ export function PermissionsMatrix() {
         </div>
       </div>
 
-      <Tabs defaultValue="tenant" className="w-full">
-        <TabsList className="mb-6 h-12 w-full rounded-2xl bg-muted p-1 sm:w-auto">
-          <TabsTrigger
-            value="tenant"
-            className="px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md"
-          >
+      <Tabs defaultValue="tenant">
+        <TabsList>
+          <TabsTrigger value="tenant">
             <Users className="mr-2 h-4 w-4" /> Роли команды
           </TabsTrigger>
-          <TabsTrigger
-            value="platform"
-            className="px-6 text-sm font-semibold transition-all data-[state=active]:bg-card data-[state=active]:shadow-md"
-          >
-            <Building2 /> Платформа
+          <TabsTrigger value="platform">
+            <Building2 className="mr-2 h-4 w-4" /> Платформа
           </TabsTrigger>
         </TabsList>
 
         <CardShell shadow="md">
-          <TabsContent value="tenant" className="m-0 overflow-x-auto">
+          <TabsContent value="tenant" variant="scroll">
             {renderMatrix('tenant', data.tenantRoles, data.tenantPermissions, data.tenantRoleMap)}
           </TabsContent>
 
-          <TabsContent value="platform" className="m-0 overflow-x-auto">
+          <TabsContent value="platform" variant="scroll">
             {renderMatrix('platform', data.platformRoles, data.platformPermissions, data.platformRoleMap)}
           </TabsContent>
         </CardShell>
