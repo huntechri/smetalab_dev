@@ -1,6 +1,6 @@
 # UI Component Overlap Audit
 
-**Generated:** 2026-05-05T07:33:29.832Z
+**Generated:** 2026-05-05T07:49:11.385Z
 **Total categories:** 16
 **Components found:** 395
 **Deprecated candidates:** 61
