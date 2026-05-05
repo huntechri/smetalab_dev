@@ -27,10 +27,10 @@ import {
   CommandList,
 } from '@/shared/ui/command';
 import { cn } from '@/lib/utils';
+import { Badge } from '@/shared/ui/badge';
 import {
   DenseListColorIndicator,
   DenseListPickerButton,
-  DenseListToken,
   denseListPickerPopoverClassName,
   denseListTableActionsClassName,
   denseListTableAmountClassName,
@@ -84,7 +84,7 @@ const SupplierBadgePicker = React.memo(function SupplierBadgePicker({
           aria-label="Назначить поставщика"
         >
           {disabled ? <Loader2 /> : <DenseListColorIndicator color={color} />}
-          {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Поставщик</span>}
+          {name ? <Badge variant="secondary" size="xs">{name}</Badge> : <span>Поставщик</span>}
           <ChevronsUpDown />
         </DenseListPickerButton>
       </PopoverTrigger>
@@ -152,7 +152,7 @@ const ProjectCell = React.memo(function ProjectCell({
           {disabled && (
             <Loader2 />
           )}
-          {name ? <DenseListToken variant="secondary">{name}</DenseListToken> : <span>Без привязки</span>}
+          {name ? <Badge variant="secondary" size="xs">{name}</Badge> : <span>Без привязки</span>}
           <ChevronsUpDown className="ml-auto size-3 opacity-60" />
         </DenseListPickerButton>
       </PopoverTrigger>

@@ -3,10 +3,10 @@ import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { CardShell, CardShellHeader } from '@/shared/ui/card-shell';
+import { Badge } from '@/shared/ui/badge';
 import {
   DenseListBodyRow,
   DenseListStat,
-  DenseListToken,
 } from '@/shared/ui/dense-list';
 import type { SectionNode } from '../../../lib/estimate-cards-table';
 import type { SectionTotals } from '../../../lib/section-totals';
@@ -58,9 +58,9 @@ export function EstimateSectionCard({
 
           <div className="min-w-0 flex-1">
             <div className="flex min-w-0 items-center gap-2">
-              <DenseListToken variant="neutral">
+              <Badge variant="neutral" size="xs">
                 {section.code}
-              </DenseListToken>
+              </Badge>
               <p
                 className="min-w-0 truncate text-xs font-semibold leading-snug text-foreground"
                 title={section.name}

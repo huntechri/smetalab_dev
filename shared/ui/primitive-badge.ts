@@ -32,12 +32,4 @@ export const primitiveBadgeSizeClassNames = {
 
 // ─── CatalogToken tokens ─────────────────────────────────────────────────
 
-export const primitiveCatalogTokenTextClassName = "text-[10px]"
-
-export const primitiveCatalogTokenCompactTextClassName = "text-[9px]"
-
 export const primitiveCatalogIndexTokenTextClassName = "text-[9px]"
-
-export const primitiveCatalogDensePaddingClassName = "px-1"
-
-export const primitiveCatalogTokenBasePaddingClassName = "py-0"

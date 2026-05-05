@@ -2,8 +2,8 @@ import { Loader2 } from 'lucide-react';
 import { DenseCard } from '@/shared/ui/dense-card';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { EditableCell } from '@/shared/ui/cells/editable-cell';
+import { Badge } from '@/shared/ui/badge';
 import {
-  DenseListInlineMetric,
   DenseListInlineStart,
   DenseListMetaField,
   DenseListMetricGroup,
@@ -73,7 +73,8 @@ export function GlobalPurchaseCard({
         </DenseListPrimaryCell>
 
         <DenseListMetricGroup>
-          <DenseListInlineMetric label="Кол-во">
+          <Badge variant="outline" size="xs" className="tabular-nums">
+            <span>Кол-во:</span>
             <EditableCell
               type="number"
               align="right"
@@ -96,8 +97,9 @@ export function GlobalPurchaseCard({
                 await onPatchAction(row.id, { unit: value });
               }}
             />
-          </DenseListInlineMetric>
-          <DenseListInlineMetric label="Цена">
+          </Badge>
+          <Badge variant="outline" size="xs" className="tabular-nums">
+            <span>Цена:</span>
             <EditableCell
               type="number"
               align="right"
@@ -112,7 +114,7 @@ export function GlobalPurchaseCard({
               }}
             />
             <span className="shrink-0">₽</span>
-          </DenseListInlineMetric>
+          </Badge>
           <PurchaseMetric label="Итого" value={<MoneyCell value={row.amount} />} tone="success" />
         </DenseListMetricGroup>
 

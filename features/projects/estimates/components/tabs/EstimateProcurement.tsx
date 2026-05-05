@@ -5,13 +5,13 @@ import { PackageSearch } from 'lucide-react';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { Button } from '@/shared/ui/button';
 import { ErrorState } from '@/shared/ui/states';
+import { Badge } from '@/shared/ui/badge';
 import {
   EstimateTabCard,
   EstimateTabEmptyState,
   EstimateTabExportButton,
   EstimateTabLoading,
   EstimateTabMessage,
-  EstimateTabMetric,
   EstimateTabMetricSection,
   EstimateTabMetricsLayout,
   EstimateTabMetricsWrap,
@@ -20,10 +20,8 @@ import {
   EstimateTabPrimaryCell,
   EstimateTabRoot,
   EstimateTabSearchField,
-  EstimateTabSourceToken,
   EstimateTabStack,
   EstimateTabTitleRow,
-  EstimateTabToken,
   EstimateTabToolbar,
   EstimateTabTotalsBar,
   EstimateTabViewport,
@@ -82,43 +80,59 @@ function ProcurementCard({ row }: { row: EstimateProcurementRow }) {
       <EstimateTabPrimaryCell>
         <EstimateTabTitleRow>
           <EstimateTabNameText title={row.materialName}>{row.materialName}</EstimateTabNameText>
-          <EstimateTabToken>{row.unit}</EstimateTabToken>
+          <Badge size="xs" variant="neutral">{row.unit}</Badge>
         </EstimateTabTitleRow>
 
         {row.source === 'fact_only' ? (
-          <EstimateTabSourceToken>Только факт</EstimateTabSourceToken>
+          <Badge size="xs" variant="warning">Только факт</Badge>
         ) : null}
       </EstimateTabPrimaryCell>
 
       <EstimateTabMetricsLayout layout="procurement">
         <EstimateTabMetricSection tone="plan" title="План">
           <EstimateTabMetricsWrap>
-            <EstimateTabMetric label="Кол-во" value={numberFormatter.format(row.plannedQty)} />
-            <EstimateTabMetric label="Цена" value={moneyFormatter.format(row.plannedPrice)} />
-            <EstimateTabMetric label="Итого" value={<MoneyCell value={row.plannedAmount} />} tone="info" />
+            <Badge size="xs" variant="neutral" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Кол-во:</span>
+              <span className="ml-0.5">{numberFormatter.format(row.plannedQty)}</span>
+            </Badge>
+            <Badge size="xs" variant="neutral" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Цена:</span>
+              <span className="ml-0.5">{moneyFormatter.format(row.plannedPrice)}</span>
+            </Badge>
+            <Badge size="xs" variant="info" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Итого:</span>
+              <span className="ml-0.5"><MoneyCell value={row.plannedAmount} /></span>
+            </Badge>
           </EstimateTabMetricsWrap>
         </EstimateTabMetricSection>
 
         <EstimateTabMetricSection tone="fact" title="Факт">
           <EstimateTabMetricsWrap>
-            <EstimateTabMetric label="Кол-во" value={numberFormatter.format(row.actualQty)} />
-            <EstimateTabMetric label="Цена" value={moneyFormatter.format(row.actualAvgPrice)} />
-            <EstimateTabMetric label="Итого" value={<MoneyCell value={row.actualAmount} />} tone="success" />
+            <Badge size="xs" variant="neutral" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Кол-во:</span>
+              <span className="ml-0.5">{numberFormatter.format(row.actualQty)}</span>
+            </Badge>
+            <Badge size="xs" variant="neutral" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Цена:</span>
+              <span className="ml-0.5">{moneyFormatter.format(row.actualAvgPrice)}</span>
+            </Badge>
+            <Badge size="xs" variant="success" className="tabular-nums">
+              <span className="shrink-0 opacity-70">Итого:</span>
+              <span className="ml-0.5"><MoneyCell value={row.actualAmount} /></span>
+            </Badge>
           </EstimateTabMetricsWrap>
         </EstimateTabMetricSection>
 
         <EstimateTabMetricSection tone="delta" title="Откл.">
           <EstimateTabMetricsWrap>
-            <EstimateTabMetric
-              label="Кол-во"
-              value={formatDelta(row.qtyDelta, numberFormatter)}
-              tone={getDeltaTone(row.qtyDelta)}
-            />
-            <EstimateTabMetric
-              label="Итого"
-              value={formatDelta(row.amountDelta, moneyFormatter)}
-              tone={getDeltaTone(row.amountDelta)}
-            />
+            <Badge size="xs" variant={getDeltaTone(row.qtyDelta)} className="tabular-nums">
+              <span className="shrink-0 opacity-70">Кол-во:</span>
+              <span className="ml-0.5">{formatDelta(row.qtyDelta, numberFormatter)}</span>
+            </Badge>
+            <Badge size="xs" variant={getDeltaTone(row.amountDelta)} className="tabular-nums">
+              <span className="shrink-0 opacity-70">Итого:</span>
+              <span className="ml-0.5">{formatDelta(row.amountDelta, moneyFormatter)}</span>
+            </Badge>
           </EstimateTabMetricsWrap>
         </EstimateTabMetricSection>
       </EstimateTabMetricsLayout>

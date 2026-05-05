@@ -6,15 +6,14 @@ import { FilePlus } from 'lucide-react';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
 import { Button } from '@/shared/ui/button';
 import { ErrorState } from '@/shared/ui/states';
+import { Badge } from '@/shared/ui/badge';
 import {
   EstimateTabActionsBar,
   EstimateTabCard,
   EstimateTabCodeText,
   EstimateTabEmptyState,
-  EstimateTabInlineMetric,
   EstimateTabLoading,
   EstimateTabMetaWrap,
-  EstimateTabMetric,
   EstimateTabMetricSection,
   EstimateTabMetricsLayout,
   EstimateTabMetricsWrap,
@@ -23,11 +22,9 @@ import {
   EstimateTabPrimaryCell,
   EstimateTabRoot,
   EstimateTabSearchField,
-  EstimateTabSourceToken,
   EstimateTabStack,
   EstimateTabStateMenu,
   EstimateTabTitleRow,
-  EstimateTabToken,
   EstimateTabToolbar,
   EstimateTabTotalsBar,
   EstimateTabViewport,
@@ -161,12 +158,12 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                     <EstimateTabTitleRow>
                       {row.code ? <EstimateTabCodeText>{row.code}</EstimateTabCodeText> : null}
                       <EstimateTabNameText title={row.name}>{row.name}</EstimateTabNameText>
-                      <EstimateTabToken>{row.unit}</EstimateTabToken>
+                      <Badge size="xs" variant="neutral">{row.unit}</Badge>
                     </EstimateTabTitleRow>
 
                     <EstimateTabMetaWrap>
                       {row.source === 'extra' ? (
-                        <EstimateTabSourceToken>Доп. работа</EstimateTabSourceToken>
+                        <Badge size="xs" variant="warning">Доп. работа</Badge>
                       ) : null}
                       <ExecutionStateControl
                         currentState={row.status}
@@ -178,15 +175,25 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                   <EstimateTabMetricsLayout layout="execution">
                     <EstimateTabMetricSection tone="plan" title="План">
                       <EstimateTabMetricsWrap>
-                        <EstimateTabMetric label="Кол-во" value={numberFormatter.format(row.plannedQty)} />
-                        <EstimateTabMetric label="Цена" value={moneyFormatter.format(row.plannedPrice)} />
-                        <EstimateTabMetric label="Итого" value={<MoneyCell value={row.plannedSum} />} tone="info" />
+                        <Badge size="xs" variant="neutral" className="tabular-nums">
+                          <span className="shrink-0 opacity-70">Кол-во:</span>
+                          <span className="ml-0.5">{numberFormatter.format(row.plannedQty)}</span>
+                        </Badge>
+                        <Badge size="xs" variant="neutral" className="tabular-nums">
+                          <span className="shrink-0 opacity-70">Цена:</span>
+                          <span className="ml-0.5">{moneyFormatter.format(row.plannedPrice)}</span>
+                        </Badge>
+                        <Badge size="xs" variant="info" className="tabular-nums">
+                          <span className="shrink-0 opacity-70">Итого:</span>
+                          <span className="ml-0.5"><MoneyCell value={row.plannedSum} /></span>
+                        </Badge>
                       </EstimateTabMetricsWrap>
                     </EstimateTabMetricSection>
 
                     <EstimateTabMetricSection tone="fact" title="Факт">
                       <EstimateTabMetricsWrap>
-                        <EstimateTabInlineMetric label="Кол-во">
+                        <Badge size="xs" variant="outline" className="tabular-nums">
+                          <span>Кол-во:</span>
                           <EstimateInlineNumberCell
                             value={row.actualQty}
                             onCommit={async (val) => {
@@ -198,8 +205,9 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                             ariaLabel={`Количество: ${row.name}`}
                             className={WORK_NUMBER_CLASS}
                           />
-                        </EstimateTabInlineMetric>
-                        <EstimateTabInlineMetric label="Цена" suffix="₽">
+                        </Badge>
+                        <Badge size="xs" variant="outline" className="tabular-nums">
+                          <span>Цена:</span>
                           <EstimateInlineNumberCell
                             value={row.actualPrice}
                             onCommit={async (val) => {
@@ -211,10 +219,11 @@ export function EstimateExecution({ estimateId, initialRows }: { estimateId: str
                             ariaLabel={`Цена: ${row.name}`}
                             className={WORK_NUMBER_CLASS}
                           />
-                        </EstimateTabInlineMetric>
-                        <EstimateTabToken variant="success">
+                          <span>₽</span>
+                        </Badge>
+                        <Badge variant="success" size="xs">
                           <MoneyCell value={row.actualSum} />
-                        </EstimateTabToken>
+                        </Badge>
                       </EstimateTabMetricsWrap>
                     </EstimateTabMetricSection>
                   </EstimateTabMetricsLayout>

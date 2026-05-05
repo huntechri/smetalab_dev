@@ -5,8 +5,8 @@ import Image from 'next/image';
 import { Check, ChevronDown, ChevronUp, ImageOff, Plus } from 'lucide-react';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 import { Button } from '@/shared/ui/button';
+import { Badge } from '@/shared/ui/badge';
 import { CatalogListItem } from '@/shared/ui/catalog-list-item';
-import { CatalogToken } from '@/shared/ui/catalog-token';
 import { SearchControl } from '@/shared/ui/search-control';
 import { ScrollArea } from '@/shared/ui/scroll-area';
 import { LoadingState, NoResultsState } from '@/shared/ui/states';
@@ -294,13 +294,13 @@ export function MaterialCatalogPicker({ onAddMaterial, addedMaterialNames = new 
                                                 </div>
                                                 <div className="space-y-1 min-w-0 flex-1">
                                                     <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                                                        <CatalogToken tone="code">
+                                                        <Badge variant="outline" size="xs" className="font-mono uppercase tracking-tight">
                                                             {material.code}
-                                                        </CatalogToken>
+                                                        </Badge>
                                                         {material.categoryLv1 && (
-                                                            <CatalogToken tone="category" className="max-w-28">
+                                                            <Badge variant="outline" size="xs" className="truncate tracking-normal max-w-28">
                                                                 {material.categoryLv1}
-                                                            </CatalogToken>
+                                                            </Badge>
                                                         )}
                                                     </div>
                                                     <h4 className={`${primitiveVisualTypographyClassNames.catalogItemTitle} text-foreground line-clamp-2 md:line-clamp-none`}>

@@ -7,9 +7,7 @@ import { cn } from '@/lib/utils';
 import { Badge } from '@/shared/ui/badge';
 import { DenseCard } from '@/shared/ui/dense-card';
 import {
-  DenseListMetricPill,
   DenseListPanel,
-  DenseListToken,
 } from '@/shared/ui/dense-list';
 import {
   DropdownMenu,
@@ -23,7 +21,6 @@ import { ToolbarButton } from '@/shared/ui/toolbar-button';
 
 type EstimateTabCardLayout = 'execution' | 'procurement';
 type EstimateTabMetricsLayoutVariant = 'execution' | 'procurement';
-type EstimateTabMetricTone = 'neutral' | 'info' | 'success' | 'warning' | 'danger';
 type EstimateTabSectionTone = 'plan' | 'fact' | 'delta';
 type EstimateTabState = 'not_started' | 'in_progress' | 'done';
 
@@ -46,16 +43,6 @@ type EstimateTabMetricSectionProps = React.ComponentProps<'section'> & {
   title: string;
   tone: EstimateTabSectionTone;
 };
-type EstimateTabMetricProps = {
-  label: string;
-  value: React.ReactNode;
-  tone?: EstimateTabMetricTone;
-};
-type EstimateTabInlineMetricProps = React.ComponentProps<'div'> & {
-  label: string;
-  suffix?: React.ReactNode;
-};
-type EstimateTabTokenProps = Omit<React.ComponentProps<typeof Badge>, 'size'>;
 type EstimateTabTextProps = React.ComponentProps<'span'>;
 type EstimateTabStateMenuProps = {
   currentState: EstimateTabState;
@@ -98,13 +85,7 @@ const estimateTabSectionMarkerClassName: Record<EstimateTabSectionTone, string> 
   delta: 'bg-brand',
 };
 
-const estimateTabMetricToneClassName: Record<EstimateTabMetricTone, string> = {
-  neutral: 'border-border bg-muted text-muted-foreground',
-  info: 'border-brand/30 bg-brand/10 text-brand',
-  success: 'border-success/30 bg-success/10 text-success',
-  warning: 'border-brand/30 bg-brand/10 text-brand',
-  danger: 'border-destructive/30 bg-destructive/10 text-destructive',
-};
+// Tone maps directly to Badge variant
 
 const estimateTabStateMeta: Record<
   EstimateTabState,
@@ -231,21 +212,7 @@ function EstimateTabNameText({ className, ...props }: EstimateTabTextProps) {
   );
 }
 
-function EstimateTabToken({ className, children, variant = 'neutral', ...props }: EstimateTabTokenProps) {
-  return (
-    <DenseListToken variant={variant} className={className} {...props}>
-      {children}
-    </DenseListToken>
-  );
-}
 
-function EstimateTabSourceToken({ children, ...props }: Omit<EstimateTabTokenProps, 'variant'>) {
-  return (
-    <EstimateTabToken variant="warning" {...props}>
-      {children}
-    </EstimateTabToken>
-  );
-}
 
 function EstimateTabMetaWrap({ className, ...props }: React.ComponentProps<'div'>) {
   return <div className={cn('mt-2 flex flex-wrap gap-1.5', className)} {...props} />;
@@ -273,32 +240,8 @@ function EstimateTabMetricSection({
   );
 }
 
-function EstimateTabMetric({ label, value, tone = 'neutral' }: EstimateTabMetricProps) {
-  return (
-    <span
-      className={cn(
-        'inline-flex h-4 items-center gap-1 rounded-full border px-1.5 py-0 text-xs sm:h-5 sm:px-2',
-        estimateTabMetricToneClassName[tone],
-      )}
-    >
-      <span className="shrink-0 opacity-70">{label}:</span>
-      <span className="ml-0.5 tabular-nums">{value}</span>
-    </span>
-  );
-}
-
 function EstimateTabMetricsWrap({ className, ...props }: React.ComponentProps<'div'>) {
   return <div className={cn('flex flex-wrap items-center gap-2', className)} {...props} />;
-}
-
-function EstimateTabInlineMetric({ label, suffix, className, children, ...props }: EstimateTabInlineMetricProps) {
-  return (
-    <DenseListMetricPill className={className} {...props}>
-      <span>{label}</span>
-      {children}
-      {suffix ? <span>{suffix}</span> : null}
-    </DenseListMetricPill>
-  );
 }
 
 function EstimateTabStateMenu({ currentState, onStateChange }: EstimateTabStateMenuProps) {
@@ -397,10 +340,8 @@ export {
   EstimateTabEmptyState,
   EstimateTabError,
   EstimateTabExportButton,
-  EstimateTabInlineMetric,
   EstimateTabMessage,
   EstimateTabMetaWrap,
-  EstimateTabMetric,
   EstimateTabMetricSection,
   EstimateTabMetricsLayout,
   EstimateTabMetricsWrap,
@@ -409,11 +350,9 @@ export {
   EstimateTabPrimaryCell,
   EstimateTabRoot,
   EstimateTabSearchField,
-  EstimateTabSourceToken,
   EstimateTabStack,
   EstimateTabStateMenu,
   EstimateTabTitleRow,
-  EstimateTabToken,
   EstimateTabToolbar,
   EstimateTabTotalsBar,
   EstimateTabViewport,

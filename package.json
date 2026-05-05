@@ -57,6 +57,7 @@
     "audit:ui:local-classes:strict": "tsx scripts/audit-ui-local-classes.ts --strict",
     "audit:lib-feature-imports": "node scripts/audit-lib-feature-imports.mjs",
     "audit:legacy-compat-imports": "node scripts/audit-legacy-compat-imports.mjs",
+    "audit:ui:overlap": "tsx scripts/audit-ui-overlap.ts",
     "verify:release": "pnpm lint && pnpm type-check && pnpm audit:ui && pnpm audit:lib-feature-imports && pnpm audit:legacy-compat-imports && pnpm test && pnpm build"
   },
   "dependencies": {

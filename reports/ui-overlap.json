@@ -1,0 +1,2701 @@
+{
+  "generatedAt": "2026-05-05T06:26:13.526Z",
+  "summary": {
+    "totalCategories": 16,
+    "totalOverlapComponents": 154,
+    "totalCanonical": 46,
+    "totalDeprecated": 50,
+    "hasDuplicates": true
+  },
+  "categories": {
+    "1": {
+      "name": "Badge / Token / Pill",
+      "components": [
+        {
+          "file": "badge.tsx",
+          "componentName": "Badge",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 6,
+          "usageFiles": [
+            "features/dashboard/components/TodayFocusSection.tsx",
+            "features/notifications/components/notification-bell.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/permissions/components/permissions-matrix.tsx",
+            "features/projects/list/components/project-card.tsx",
+            "components/layout/active-team-indicator.tsx"
+          ]
+        },
+        {
+          "file": "status-badge.tsx",
+          "componentName": "StatusBadge",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 9,
+          "usageFiles": [
+            "features/notifications/components/notification-bell.tsx",
+            "features/notifications/components/notification-item.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/EstimateTotals.tsx",
+            "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
+            "features/projects/estimates/components/table/EstimateTableSummary.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/team/components/TeamMembersCard.tsx",
+            "components/layout/active-team-indicator.tsx"
+          ]
+        },
+        {
+          "file": "status-badge.tsx",
+          "componentName": "StatusIndicator",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/notifications/components/notification-item.tsx",
+            "features/projects/estimates/components/registry/EstimateStatusMenu.tsx"
+          ]
+        },
+        {
+          "file": "catalog-token.tsx",
+          "componentName": "CatalogToken",
+          "hasFile": true,
+          "variants": "code, default",
+          "variantCount": 2,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx"
+          ]
+        },
+        {
+          "file": "catalog-token.tsx",
+          "componentName": "CatalogIndexToken",
+          "hasFile": true,
+          "variants": "code, default",
+          "variantCount": 2,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/catalog/components/WorkCatalogPicker.client.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/tokens.tsx",
+          "componentName": "DenseListToken",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 6,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesSummary.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/metrics.tsx",
+          "componentName": "DenseListMetricPill",
+          "hasFile": true,
+          "variants": "neutral, work, default",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/components/table/cards/EstimateMetricPill.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/metrics.tsx",
+          "componentName": "DenseListInlineMetric",
+          "hasFile": true,
+          "variants": "neutral, work, default",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/global-purchases/components/cards/GlobalPurchaseCard.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/metrics.tsx",
+          "componentName": "DenseListStat",
+          "hasFile": true,
+          "variants": "neutral, work, default",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabToken",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabSourceToken",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabMetric",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabInlineMetric",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Badge / Token / Pill\" обнаружено 13 компонентов. 7 из них — обёртки над другими UI-компонентами. 9 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Badge, StatusBadge, CatalogToken, DenseListToken и EstimateTabToken — все делают одно и то же: цветная пилюля с текстом. StatusBadge — обёртка над Badge, DenseListToken — обёртка над Badge с size=xs. Остальные — raw-реализации.",
+      "recommendation": "**Канон:** badge.tsx#Badge. \n**Deprecated:**\n- dense-list/tokens.tsx#DenseListToken → Badge size=xs\n- dense-list/metrics.tsx#DenseListMetricPill → Badge variant=pill\n- dense-list/metrics.tsx#DenseListInlineMetric → Badge variant=inline-metric\n- dense-list/metrics.tsx#DenseListStat → Badge variant=stat\n- estimate-tab.tsx#EstimateTabToken → Badge size=xs\n- estimate-tab.tsx#EstimateTabSourceToken → Badge variant=source\n- estimate-tab.tsx#EstimateTabMetric → Badge variant=metric-pill\n- estimate-tab.tsx#EstimateTabInlineMetric → Badge variant=metric-inline\n- catalog-token.tsx#CatalogToken → Badge variant=catalog | catalog-compact",
+      "canonical": [
+        "badge.tsx#Badge"
+      ],
+      "deprecated": [
+        "dense-list/tokens.tsx#DenseListToken → Badge size=xs",
+        "dense-list/metrics.tsx#DenseListMetricPill → Badge variant=pill",
+        "dense-list/metrics.tsx#DenseListInlineMetric → Badge variant=inline-metric",
+        "dense-list/metrics.tsx#DenseListStat → Badge variant=stat",
+        "estimate-tab.tsx#EstimateTabToken → Badge size=xs",
+        "estimate-tab.tsx#EstimateTabSourceToken → Badge variant=source",
+        "estimate-tab.tsx#EstimateTabMetric → Badge variant=metric-pill",
+        "estimate-tab.tsx#EstimateTabInlineMetric → Badge variant=metric-inline",
+        "catalog-token.tsx#CatalogToken → Badge variant=catalog | catalog-compact"
+      ]
+    },
+    "2": {
+      "name": "Button",
+      "components": [
+        {
+          "file": "button.tsx",
+          "componentName": "Button",
+          "hasFile": true,
+          "variants": "default, hover, primary, destructive, visible, dark, outline, secondary, ghost, link, brand, active",
+          "variantCount": 12,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 63,
+          "usageFiles": [
+            "app/(admin)/dashboard/tenants/[tenantId]/page.tsx",
+            "app/(admin)/dashboard/tenants/page.tsx",
+            "app/(admin)/page.tsx",
+            "app/(login)/verify-email/page.tsx",
+            "app/not-found.tsx",
+            "app/page.tsx",
+            "features/_shared/directories/components/directory-list-screen.tsx",
+            "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+            "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+            "features/admin/components/PricingSubmitButton.tsx",
+            "features/admin/components/admin-user-menu.tsx",
+            "features/admin/components/impersonate-button.tsx",
+            "features/admin/components/stop-impersonation-button.tsx",
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx",
+            "features/catalog/components/CatalogCategoryButton.tsx",
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx",
+            "features/counterparties/components/CreateCounterpartySheet.tsx",
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/global-purchases/components/cards/DeletePurchaseAction.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/guide/screens/GuideScreen.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/materials/components/MaterialsSidebar.tsx",
+            "features/materials/components/columns.tsx",
+            "features/notifications/components/notification-bell.tsx",
+            "features/notifications/components/notification-item.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/permissions/components/PermissionLevelControl.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesSection.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+            "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+            "features/projects/estimates/components/table/EstimateTable.client.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineNumberCell.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineTextCell.tsx",
+            "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+            "features/projects/estimates/components/table/columns.tsx",
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+            "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx"
+          ]
+        },
+        {
+          "file": "button.tsx",
+          "componentName": "Button",
+          "hasFile": true,
+          "variants": "default, hover, primary, destructive, visible, dark, outline, secondary, ghost, link, brand, active",
+          "variantCount": 12,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 63,
+          "usageFiles": [
+            "app/(admin)/dashboard/tenants/[tenantId]/page.tsx",
+            "app/(admin)/dashboard/tenants/page.tsx",
+            "app/(admin)/page.tsx",
+            "app/(login)/verify-email/page.tsx",
+            "app/not-found.tsx",
+            "app/page.tsx",
+            "features/_shared/directories/components/directory-list-screen.tsx",
+            "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+            "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+            "features/admin/components/PricingSubmitButton.tsx",
+            "features/admin/components/admin-user-menu.tsx",
+            "features/admin/components/impersonate-button.tsx",
+            "features/admin/components/stop-impersonation-button.tsx",
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx",
+            "features/catalog/components/CatalogCategoryButton.tsx",
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx",
+            "features/counterparties/components/CreateCounterpartySheet.tsx",
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/global-purchases/components/cards/DeletePurchaseAction.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/guide/screens/GuideScreen.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/materials/components/MaterialsSidebar.tsx",
+            "features/materials/components/columns.tsx",
+            "features/notifications/components/notification-bell.tsx",
+            "features/notifications/components/notification-item.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/permissions/components/PermissionLevelControl.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesSection.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+            "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+            "features/projects/estimates/components/table/EstimateTable.client.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineNumberCell.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineTextCell.tsx",
+            "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+            "features/projects/estimates/components/table/columns.tsx",
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+            "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx"
+          ]
+        },
+        {
+          "file": "toolbar-button.tsx",
+          "componentName": "ToolbarButton",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 7,
+          "usageFiles": [
+            "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+            "features/global-purchases/components/GlobalPurchasesEmptyStateActions.tsx",
+            "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+            "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+            "features/projects/estimates/components/table/EstimateTableToolbar.tsx",
+            "features/projects/estimates/components/tabs/EstimateParams.tsx",
+            "features/projects/estimates/components/tabs/execution/EstimateExecutionTableActions.tsx"
+          ]
+        },
+        {
+          "file": "toggle.tsx",
+          "componentName": "Toggle",
+          "hasFile": true,
+          "variants": "default, outline, hover",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "toggle-group.tsx",
+          "componentName": "ToggleGroup",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "button-group.tsx",
+          "componentName": "ButtonGroup",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/separator",
+          "usageCount": 0,
+          "usageFiles": []
+        }
+      ],
+      "overlap": "В категории \"Button\" обнаружено 6 компонентов. 2 из них — обёртки над другими UI-компонентами. ",
+      "recommendation": "**Канон:** button.tsx#Button. \n**Deprecated:**\n- toolbar-button.tsx#ToolbarButton → Button variant=outline size=xs + shadow-sm\n- toggle.tsx#Toggle → separate primitive (not button)\n- toggle-group.tsx#ToggleGroup → separate primitive (not button)",
+      "canonical": [
+        "button.tsx#Button"
+      ],
+      "deprecated": [
+        "toolbar-button.tsx#ToolbarButton → Button variant=outline size=xs + shadow-sm",
+        "toggle.tsx#Toggle → separate primitive (not button)",
+        "toggle-group.tsx#ToggleGroup → separate primitive (not button)"
+      ]
+    },
+    "3": {
+      "name": "Input",
+      "components": [
+        {
+          "file": "input.tsx",
+          "componentName": "Input",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/input",
+          "usageCount": 18,
+          "usageFiles": [
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx",
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineNumberCell.tsx",
+            "features/projects/estimates/components/table/cards/EstimateInlineTextCell.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+            "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+            "features/team/components/InviteTeamMemberCard.tsx",
+            "features/works/components/WorksEditDialog.tsx"
+          ]
+        },
+        {
+          "file": "search-input.tsx",
+          "componentName": "SearchInput",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/input",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/list/components/projects-search-input.tsx",
+            "features/team/components/TeamMembersCard.tsx"
+          ]
+        },
+        {
+          "file": "search-control.tsx",
+          "componentName": "SearchControl",
+          "hasFile": true,
+          "variants": "compact, default, inline",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogFilters.client.tsx"
+          ]
+        },
+        {
+          "file": "input-group.tsx",
+          "componentName": "InputGroup",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button, input, textarea",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "hidden-input.tsx",
+          "componentName": "HiddenInput",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/input",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/admin/components/impersonate-button.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx"
+          ]
+        },
+        {
+          "file": "file-input.tsx",
+          "componentName": "FileInput",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/input",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/_shared/guide-catalog/components/CatalogScreenShell.tsx",
+            "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx"
+          ]
+        },
+        {
+          "file": "textarea.tsx",
+          "componentName": "Textarea",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/textarea",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        },
+        {
+          "file": "select.tsx",
+          "componentName": "Select",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Input\" обнаружено 8 компонентов. 7 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** input.tsx#Input, select.tsx#Select, textarea.tsx#Textarea. \n**Deprecated:**\n- search-input.tsx#SearchInput → Input type=search\n- search-control.tsx#SearchControl → Input type=search + decoration\n- hidden-input.tsx#HiddenInput → raw <input type=hidden>\n- file-input.tsx#FileInput → Input type=file\n- input-group.tsx#InputGroup → FormLayout FieldRow",
+      "canonical": [
+        "input.tsx#Input",
+        "select.tsx#Select",
+        "textarea.tsx#Textarea"
+      ],
+      "deprecated": [
+        "search-input.tsx#SearchInput → Input type=search",
+        "search-control.tsx#SearchControl → Input type=search + decoration",
+        "hidden-input.tsx#HiddenInput → raw <input type=hidden>",
+        "file-input.tsx#FileInput → Input type=file",
+        "input-group.tsx#InputGroup → FormLayout FieldRow"
+      ]
+    },
+    "4": {
+      "name": "Card / Surface",
+      "components": [
+        {
+          "file": "card.tsx",
+          "componentName": "Card",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 9,
+          "usageFiles": [
+            "features/auth/components/AuthFormShell.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/dashboard/components/SignalsSection.tsx",
+            "features/guide/screens/GuideScreen.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesSection.tsx",
+            "features/projects/estimates/screens/EstimatesRegistryScreen.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+            "features/settings/screens/AdminSecuritySettingsScreen.tsx"
+          ]
+        },
+        {
+          "file": "card-shell.tsx",
+          "componentName": "CardShell",
+          "hasFile": true,
+          "variants": "plain",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/surface, primitive-surface",
+          "usageCount": 10,
+          "usageFiles": [
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/dashboard/components/TodayFocusSection.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/permissions/components/permissions-matrix.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTable.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/list/components/project-card.tsx",
+            "features/team/screens/TeamScreen.tsx"
+          ]
+        },
+        {
+          "file": "card-shell.tsx",
+          "componentName": "CardShellHeader",
+          "hasFile": true,
+          "variants": "plain",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/surface, primitive-surface",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/list/components/project-card.tsx"
+          ]
+        },
+        {
+          "file": "card-shell.tsx",
+          "componentName": "CardShellBody",
+          "hasFile": true,
+          "variants": "plain",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/surface, primitive-surface",
+          "usageCount": 6,
+          "usageFiles": [
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/dashboard/components/TodayFocusSection.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/list/components/project-card.tsx"
+          ]
+        },
+        {
+          "file": "card-shell.tsx",
+          "componentName": "CardShellFooter",
+          "hasFile": true,
+          "variants": "plain",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/surface, primitive-surface",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/list/components/project-card.tsx"
+          ]
+        },
+        {
+          "file": "card-shell.tsx",
+          "componentName": "CardShellInset",
+          "hasFile": true,
+          "variants": "plain",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/surface, primitive-surface",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/projects/list/components/project-card.tsx",
+            "features/settings/components/user-settings-page.tsx"
+          ]
+        },
+        {
+          "file": "surface.tsx",
+          "componentName": "Surface",
+          "hasFile": true,
+          "variants": "card",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 8,
+          "usageFiles": [
+            "app/api-docs/page.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+            "features/projects/estimates/components/table/EstimateCardsTable.tsx",
+            "features/projects/estimates/components/tabs/EstimateDocuments.tsx",
+            "features/team/components/InviteTeamMemberCard.tsx",
+            "features/team/components/TeamHeaderCard.tsx",
+            "features/team/components/TeamMembersCard.tsx"
+          ]
+        },
+        {
+          "file": "dense-card.tsx",
+          "componentName": "DenseCard",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/global-purchases/components/cards/GlobalPurchaseCard.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/cards.tsx",
+          "componentName": "DenseCardTitle",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "dense-list/cards.tsx",
+          "componentName": "DenseCardIcon",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "dense-list/cards.tsx",
+          "componentName": "DenseCardRowLabel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "kpi-card.tsx",
+          "componentName": "KPICard",
+          "hasFile": true,
+          "variants": "default",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/dashboard/components/HomeKpiCards.tsx",
+            "features/projects/dashboard/components/DashboardKpiCards.tsx",
+            "features/projects/list/components/projects-kpi-placeholders.tsx"
+          ]
+        },
+        {
+          "file": "editable-data-surface.tsx",
+          "componentName": "editable-data-surface",
+          "hasFile": true,
+          "variants": "estimate",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabCard",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Card / Surface\" обнаружено 14 компонентов. 7 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Card (shadcn), CardShell, Surface, DenseCard, KPICard, EditableDataSurface — 6 способов сделать карточку. CardShell — обёртка над Surface. DenseCard — raw Tailwind. Остальные — обёртки с разными variant/density пропсами.",
+      "recommendation": "**Канон:** card.tsx#Card, surface.tsx#Surface, card-shell.tsx#CardShell. \n**Deprecated:**\n- dense-card.tsx#DenseCard → CardShell variant=card density=compact\n- dense-list/cards.tsx#DenseCardTitle → CardShell + CardTitle\n- dense-list/cards.tsx#DenseCardIcon → CardShell + icon slot\n- dense-list/cards.tsx#DenseCardRowLabel → CardShell + label slot\n- kpi-card.tsx#KPICard → CardShell variant=card + data display cells\n- editable-data-surface.tsx → CardShell variant=card + inline edit\n- estimate-tab.tsx#EstimateTabCard → CardShell variant=card density=compact",
+      "canonical": [
+        "card.tsx#Card",
+        "surface.tsx#Surface",
+        "card-shell.tsx#CardShell"
+      ],
+      "deprecated": [
+        "dense-card.tsx#DenseCard → CardShell variant=card density=compact",
+        "dense-list/cards.tsx#DenseCardTitle → CardShell + CardTitle",
+        "dense-list/cards.tsx#DenseCardIcon → CardShell + icon slot",
+        "dense-list/cards.tsx#DenseCardRowLabel → CardShell + label slot",
+        "kpi-card.tsx#KPICard → CardShell variant=card + data display cells",
+        "editable-data-surface.tsx → CardShell variant=card + inline edit",
+        "estimate-tab.tsx#EstimateTabCard → CardShell variant=card density=compact"
+      ]
+    },
+    "5": {
+      "name": "Panel / Layout",
+      "components": [
+        {
+          "file": "page-shell.tsx",
+          "componentName": "PageShell",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 5,
+          "usageFiles": [
+            "app/(workspace)/app/loading.tsx",
+            "app/(workspace)/app/projects/[projectId]/estimates/[estimateId]/page.tsx",
+            "app/(workspace)/app/projects/[projectId]/estimates/page.tsx",
+            "app/(workspace)/app/projects/page.tsx",
+            "features/global-purchases/screens/GlobalPurchasesScreen.tsx"
+          ]
+        },
+        {
+          "file": "page-shell.tsx",
+          "componentName": "ContentContainer",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "page-shell.tsx",
+          "componentName": "WorkspaceMain",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 3,
+          "usageFiles": [
+            "app/(workspace)/app/layout.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+            "features/settings/screens/AdminSecuritySettingsScreen.tsx"
+          ]
+        },
+        {
+          "file": "page-shell.tsx",
+          "componentName": "PageHeader",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "section.tsx",
+          "componentName": "Section",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/dashboard/components/SignalsSection.tsx",
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/dashboard/components/TodayFocusSection.tsx"
+          ]
+        },
+        {
+          "file": "section.tsx",
+          "componentName": "SectionHeader",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/dashboard/components/TodayFocusSection.tsx"
+          ]
+        },
+        {
+          "file": "section.tsx",
+          "componentName": "SectionTitle",
+          "hasFile": true,
+          "variants": "compact",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/dashboard/components/TodayFocusSection.tsx"
+          ]
+        },
+        {
+          "file": "dense-list/layout.tsx",
+          "componentName": "DenseListPanel",
+          "hasFile": true,
+          "variants": "default",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesView.client.tsx"
+          ]
+        },
+        {
+          "file": "dashboard-layout.tsx",
+          "componentName": "DashboardPanel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/screens/ProjectDashboard.tsx"
+          ]
+        },
+        {
+          "file": "dashboard-layout.tsx",
+          "componentName": "DashboardPageStack",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/dashboard/screens/AppHomeScreen.tsx",
+            "features/projects/dashboard/screens/ProjectDashboard.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabPanel",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "auth-shell.tsx",
+          "componentName": "AuthPanel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/(login)/verify-email/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingSection",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "content-container.tsx",
+          "componentName": "ContentContainer",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "app-header.tsx",
+          "componentName": "AppHeaderShell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "components/layout/app-header.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Panel / Layout\" обнаружено 15 компонентов. 3 из них — обёртки над другими UI-компонентами. 8 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** page-shell.tsx#PageShell, section.tsx#Section. \n**Deprecated:**\n- dense-list/layout.tsx#DenseListPanel → Section variant=compact\n- dashboard-layout.tsx#DashboardPanel → Section variant=card\n- dashboard-layout.tsx#DashboardPageStack → PageShell variant=dashboard\n- estimate-tab.tsx#EstimateTabPanel → Section variant=estimates",
+      "canonical": [
+        "page-shell.tsx#PageShell",
+        "section.tsx#Section"
+      ],
+      "deprecated": [
+        "dense-list/layout.tsx#DenseListPanel → Section variant=compact",
+        "dashboard-layout.tsx#DashboardPanel → Section variant=card",
+        "dashboard-layout.tsx#DashboardPageStack → PageShell variant=dashboard",
+        "estimate-tab.tsx#EstimateTabPanel → Section variant=estimates"
+      ]
+    },
+    "6": {
+      "name": "Table",
+      "components": [
+        {
+          "file": "table.tsx",
+          "componentName": "Table",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/primitive-table",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/permissions/components/permissions-matrix.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTable.tsx"
+          ]
+        },
+        {
+          "file": "data-table.tsx",
+          "componentName": "DataTable",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button, table",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/components/registry/EstimatesListTable.tsx"
+          ]
+        },
+        {
+          "file": "table-density.tsx",
+          "componentName": "CompactTableRow",
+          "hasFile": true,
+          "variants": "compact, default, xs",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        },
+        {
+          "file": "table-density.tsx",
+          "componentName": "CompactTableHeaderRow",
+          "hasFile": true,
+          "variants": "compact, default, xs",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        },
+        {
+          "file": "table-density.tsx",
+          "componentName": "CompactTableHead",
+          "hasFile": true,
+          "variants": "compact, default, xs",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        },
+        {
+          "file": "table-density.tsx",
+          "componentName": "CompactTableCell",
+          "hasFile": true,
+          "variants": "compact, default, xs",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx"
+          ]
+        },
+        {
+          "file": "table-actions.tsx",
+          "componentName": "TableRowActions",
+          "hasFile": true,
+          "variants": "icon-xs",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/materials/components/columns.tsx",
+            "features/works/components/columns.tsx"
+          ]
+        },
+        {
+          "file": "table-actions.tsx",
+          "componentName": "TableHeaderActions",
+          "hasFile": true,
+          "variants": "icon-xs",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/materials/components/columns.tsx",
+            "features/works/components/columns.tsx"
+          ]
+        },
+        {
+          "file": "data-table/data-table-row.tsx",
+          "componentName": "DataTableRow",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "data-table/data-table-skeleton.tsx",
+          "componentName": "DataTableSkeleton",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "data-table/data-table-toolbar.tsx",
+          "componentName": "DataTableToolbar",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesView.client.tsx",
+            "features/projects/estimates/components/table/EstimateTable.client.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabCodeText",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabNameText",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabTitleRow",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Table\" обнаружено 14 компонентов. 8 из них — обёртки над другими UI-компонентами. 7 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Две параллельные табличные системы: shadcn Table (table.tsx) для простых случаев и DataTable (@tanstack/react-table + react-virtuoso) для сложных. TableDensity (table-density.tsx) — обёртка над shadcn Table с type-safe пропсами. DataTable частично дублирует table-density.",
+      "recommendation": "**Канон:** table.tsx#Table, table-density.tsx#CompactTableCell, table-density.tsx#CompactTableHead. \n**Deprecated:**\n- data-table.tsx#DataTable → uses table-density (fine as is)\n- data-table/data-table-row.tsx#DataTableRow → merge into table-density\n- data-table/data-table-skeleton.tsx#DataTableSkeleton → merge into table-density\n- data-table/data-table-toolbar.tsx#DataTableToolbar → merge into table-density\n- estimate-tab.tsx#EstimateTabCodeText → CompactTableCell variant=code\n- estimate-tab.tsx#EstimateTabNameText → CompactTableCell variant=name\n- estimate-tab.tsx#EstimateTabTitleRow → CompactTableRow variant=title",
+      "canonical": [
+        "table.tsx#Table",
+        "table-density.tsx#CompactTableCell",
+        "table-density.tsx#CompactTableHead"
+      ],
+      "deprecated": [
+        "data-table.tsx#DataTable → uses table-density (fine as is)",
+        "data-table/data-table-row.tsx#DataTableRow → merge into table-density",
+        "data-table/data-table-skeleton.tsx#DataTableSkeleton → merge into table-density",
+        "data-table/data-table-toolbar.tsx#DataTableToolbar → merge into table-density",
+        "estimate-tab.tsx#EstimateTabCodeText → CompactTableCell variant=code",
+        "estimate-tab.tsx#EstimateTabNameText → CompactTableCell variant=name",
+        "estimate-tab.tsx#EstimateTabTitleRow → CompactTableRow variant=title"
+      ]
+    },
+    "7": {
+      "name": "Form",
+      "components": [
+        {
+          "file": "form.tsx",
+          "componentName": "FormItem",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/label",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx"
+          ]
+        },
+        {
+          "file": "form.tsx",
+          "componentName": "FormLabel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/label",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/_shared/directories/components/directory-sheet-form.tsx",
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx"
+          ]
+        },
+        {
+          "file": "form.tsx",
+          "componentName": "FormMessage",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/label",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx"
+          ]
+        },
+        {
+          "file": "form.tsx",
+          "componentName": "FormControl",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/label",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx"
+          ]
+        },
+        {
+          "file": "form-layout.tsx",
+          "componentName": "FormLayout",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/form, label",
+          "usageCount": 15,
+          "usageFiles": [
+            "features/admin/components/admin-user-menu.tsx",
+            "features/admin/components/impersonate-button.tsx",
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx",
+            "features/counterparties/components/CreateCounterpartySheet.tsx",
+            "features/material-suppliers/components/CreateMaterialSupplierSheet.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+            "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+            "features/team/components/InviteTeamMemberCard.tsx",
+            "features/works/components/WorksEditDialog.tsx"
+          ]
+        },
+        {
+          "file": "form-layout.tsx",
+          "componentName": "FormSection",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/form, label",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/settings/components/user-settings-page.tsx"
+          ]
+        },
+        {
+          "file": "form-layout.tsx",
+          "componentName": "FieldStack",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/form, label",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/settings/components/user-settings-page.tsx"
+          ]
+        },
+        {
+          "file": "form-layout.tsx",
+          "componentName": "FieldRow",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/form, label",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/works/components/WorksEditDialog.tsx"
+          ]
+        },
+        {
+          "file": "form-layout.tsx",
+          "componentName": "FormSectionHeader",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/form, label",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/counterparties/components/counterparty-sheet-sections.tsx"
+          ]
+        },
+        {
+          "file": "field.tsx",
+          "componentName": "FieldGroup",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/label, separator",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "label.tsx",
+          "componentName": "Label",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 10,
+          "usageFiles": [
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx",
+            "features/settings/screens/AdminSecuritySettingsScreen.tsx",
+            "features/team/components/InviteTeamMemberCard.tsx",
+            "features/team/components/TeamMembersCard.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Form\" обнаружено 11 компонентов. 10 из них — обёртки над другими UI-компонентами. 5 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** form.tsx#FormItem, form-layout.tsx#FormLayout, form-layout.tsx#FieldStack. \n**Deprecated:**\n- field.tsx#FieldGroup → FormLayout FieldStack\n- label.tsx#Label → standalone, fine as separate",
+      "canonical": [
+        "form.tsx#FormItem",
+        "form-layout.tsx#FormLayout",
+        "form-layout.tsx#FieldStack"
+      ],
+      "deprecated": [
+        "field.tsx#FieldGroup → FormLayout FieldStack",
+        "label.tsx#Label → standalone, fine as separate"
+      ]
+    },
+    "8": {
+      "name": "Typography / Text",
+      "components": [
+        {
+          "file": "primitive-surface.ts",
+          "componentName": "primitiveVisualTypographyClassNames",
+          "hasFile": true,
+          "variants": "default, compact",
+          "variantCount": 2,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 23,
+          "usageFiles": [
+            "features/_shared/directories/components/directory-list-screen.tsx",
+            "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx",
+            "features/dashboard/components/SignalsSection.tsx",
+            "features/dashboard/components/TeamWidgetSection.tsx",
+            "features/notifications/components/notification-bell.tsx",
+            "features/notifications/components/notification-item.tsx",
+            "features/notifications/components/notifications-list.tsx",
+            "features/permissions/components/permissions-matrix.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/estimates/components/params/RoomsParamsTotals.tsx",
+            "features/projects/estimates/components/registry/EstimateStatusMenu.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+            "features/projects/estimates/components/table/columns.tsx",
+            "features/projects/estimates/components/tabs/EstimateDocuments.tsx",
+            "features/projects/list/components/project-card.tsx",
+            "features/team/components/InviteTeamMemberCard.tsx",
+            "features/team/components/TeamHeaderCard.tsx",
+            "features/team/components/TeamMembersCard.tsx",
+            "features/works/components/UnitSelect.tsx"
+          ]
+        },
+        {
+          "file": "primitive-badge.ts",
+          "componentName": "primitiveBadgeVariantClassNames",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "estimate-tab.tsx",
+          "componentName": "EstimateTabText",
+          "hasFile": true,
+          "variants": "execution, neutral, plan",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/badge",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-density.ts",
+          "componentName": "primitive-density",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-controls.ts",
+          "componentName": "primitive-controls",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        }
+      ],
+      "overlap": "В категории \"Typography / Text\" обнаружено 5 компонентов. 1 из них — обёртки над другими UI-компонентами. ",
+      "recommendation": "**Канон:** primitive-surface.ts#primitiveVisualTypographyClassNames. \n**Deprecated:**\n- Raw text classes in features/ → use consistent typography tokens from primitives",
+      "canonical": [
+        "primitive-surface.ts#primitiveVisualTypographyClassNames"
+      ],
+      "deprecated": [
+        "Raw text classes in features/ → use consistent typography tokens from primitives"
+      ]
+    },
+    "9": {
+      "name": "Navigation / Tabs",
+      "components": [
+        {
+          "file": "tabs.tsx",
+          "componentName": "Tabs",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 4,
+          "usageFiles": [
+            "app/(admin)/dashboard/tenants/[tenantId]/page.tsx",
+            "features/counterparties/components/CreateCounterpartySheet.tsx",
+            "features/permissions/components/permissions-matrix.tsx",
+            "features/settings/components/user-settings-page.tsx"
+          ]
+        },
+        {
+          "file": "workspace-tabs.tsx",
+          "componentName": "WorkspaceTabs",
+          "hasFile": true,
+          "variants": "panel",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/estimates/screens/EstimateDetailsShell.client.tsx"
+          ]
+        },
+        {
+          "file": "sidebar.tsx",
+          "componentName": "Sidebar",
+          "hasFile": true,
+          "variants": "default, hover, outline",
+          "variantCount": 3,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button, input, sheet, separator, skeleton",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/admin/components/admin-sidebar.tsx",
+            "components/layout/app-sidebar.tsx"
+          ]
+        },
+        {
+          "file": "app-header.tsx",
+          "componentName": "AppHeaderShell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "components/layout/app-header.tsx"
+          ]
+        },
+        {
+          "file": "breadcrumbs.tsx",
+          "componentName": "AppBreadcrumbs",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "components/layout/app-header.tsx"
+          ]
+        },
+        {
+          "file": "navigation-menu.tsx",
+          "componentName": "NavigationMenu",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingHeader",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingFooter",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingMobileMenu",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Navigation / Tabs\" обнаружено 9 компонентов. 2 из них — обёртки над другими UI-компонентами. 5 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** tabs.tsx#Tabs, sidebar.tsx#Sidebar, breadcrumbs.tsx#AppBreadcrumbs. \n**Deprecated:**\n- workspace-tabs.tsx#WorkspaceTabs → Tabs variant=workspace\n- navigation-menu.tsx#NavigationMenu → Sidebar or standalone (fine as is, different purpose)",
+      "canonical": [
+        "tabs.tsx#Tabs",
+        "sidebar.tsx#Sidebar",
+        "breadcrumbs.tsx#AppBreadcrumbs"
+      ],
+      "deprecated": [
+        "workspace-tabs.tsx#WorkspaceTabs → Tabs variant=workspace",
+        "navigation-menu.tsx#NavigationMenu → Sidebar or standalone (fine as is, different purpose)"
+      ]
+    },
+    "10": {
+      "name": "Overlay",
+      "components": [
+        {
+          "file": "dialog.tsx",
+          "componentName": "Dialog",
+          "hasFile": true,
+          "variants": "sm",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 8,
+          "usageFiles": [
+            "features/catalog/components/MaterialCatalogDialog.client.tsx",
+            "features/materials/components/MaterialsEditDialog.tsx",
+            "features/patterns/screens/PatternsScreen.tsx",
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/components/CreateEstimateDialog.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/works/components/WorksEditDialog.tsx"
+          ]
+        },
+        {
+          "file": "drawer.tsx",
+          "componentName": "Drawer",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "sheet.tsx",
+          "componentName": "Sheet",
+          "hasFile": true,
+          "variants": "sm",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 4,
+          "usageFiles": [
+            "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+            "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx",
+            "features/projects/estimates/components/tabs/execution/EstimateExecutionAddExtraWorkSheet.tsx"
+          ]
+        },
+        {
+          "file": "popover.tsx",
+          "componentName": "Popover",
+          "hasFile": true,
+          "variants": "sm",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 8,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+            "features/global-purchases/components/cards/ProjectPicker.tsx",
+            "features/global-purchases/components/cards/SupplierPicker.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/notifications/components/notification-bell.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/projects/list/components/projects-sort-select.tsx",
+            "features/works/components/UnitSelect.tsx"
+          ]
+        },
+        {
+          "file": "hover-card.tsx",
+          "componentName": "HoverCard",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "alert-dialog.tsx",
+          "componentName": "AlertDialog",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 8,
+          "usageFiles": [
+            "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+            "features/global-purchases/components/cards/DeletePurchaseAction.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/materials/components/MaterialsDeleteDialog.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/estimates/components/EstimateHeader.tsx",
+            "features/projects/estimates/components/registry/EstimatesListTable.tsx",
+            "features/works/components/WorksDeleteDialog.tsx"
+          ]
+        },
+        {
+          "file": "tooltip.tsx",
+          "componentName": "Tooltip",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 8,
+          "usageFiles": [
+            "features/_shared/guide-catalog/components/CatalogToolbar.tsx",
+            "features/global-purchases/components/GlobalPurchasesImportExportActions.tsx",
+            "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+            "features/global-purchases/components/cards/DeletePurchaseAction.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/permissions/components/PermissionLevelControl.tsx",
+            "features/projects/list/components/projects-sort-select.tsx",
+            "components/layout/active-team-indicator.tsx"
+          ]
+        },
+        {
+          "file": "context-menu.tsx",
+          "componentName": "ContextMenu",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "command.tsx",
+          "componentName": "Command",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/dialog",
+          "usageCount": 7,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+            "features/global-purchases/components/cards/ProjectPicker.tsx",
+            "features/global-purchases/components/cards/SupplierPicker.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/projects/list/components/projects-sort-select.tsx",
+            "features/works/components/UnitSelect.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Overlay\" обнаружено 9 компонентов. 3 из них — обёртки над другими UI-компонентами. 4 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** dialog.tsx#Dialog, sheet.tsx#Sheet, drawer.tsx#Drawer, popover.tsx#Popover. Все компоненты имеют разное назначение, дублирования не обнаружено.",
+      "canonical": [
+        "dialog.tsx#Dialog",
+        "sheet.tsx#Sheet",
+        "drawer.tsx#Drawer",
+        "popover.tsx#Popover"
+      ],
+      "deprecated": []
+    },
+    "11": {
+      "name": "State / Loading",
+      "components": [
+        {
+          "file": "states/index.ts",
+          "componentName": "LoadingState",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 9,
+          "usageFiles": [
+            "app/(workspace)/app/guide/counterparties/loading.tsx",
+            "app/(workspace)/app/guide/material-suppliers/loading.tsx",
+            "app/(workspace)/app/guide/materials/loading.tsx",
+            "app/(workspace)/app/guide/works/loading.tsx",
+            "app/(workspace)/app/loading.tsx",
+            "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx",
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx",
+            "features/permissions/components/permissions-matrix.tsx"
+          ]
+        },
+        {
+          "file": "states/index.ts",
+          "componentName": "EmptyState",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/projects/dashboard/components/ProjectReceiptsSection.tsx",
+            "features/projects/estimates/screens/EstimateSectionPlaceholderScreen.tsx"
+          ]
+        },
+        {
+          "file": "states/index.ts",
+          "componentName": "ErrorState",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 4,
+          "usageFiles": [
+            "app/not-found.tsx",
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx",
+            "features/settings/screens/AdminGeneralSettingsScreen.tsx"
+          ]
+        },
+        {
+          "file": "states/index.ts",
+          "componentName": "ForbiddenState",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "app/(workspace)/app/guide/counterparties/page.tsx",
+            "app/(workspace)/app/guide/material-suppliers/page.tsx"
+          ]
+        },
+        {
+          "file": "states/index.ts",
+          "componentName": "NoResultsState",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/catalog/components/WorkCatalogPicker.client.tsx"
+          ]
+        },
+        {
+          "file": "states/index.ts",
+          "componentName": "StateShell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "spinner.tsx",
+          "componentName": "Spinner",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "skeleton.tsx",
+          "componentName": "Skeleton",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "app/(workspace)/app/loading.tsx",
+            "features/_shared/guide-catalog/components/CatalogScreenFallback.tsx"
+          ]
+        },
+        {
+          "file": "loading-indicator.tsx",
+          "componentName": "LoadingIndicator",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/notifications/components/notifications-list.tsx"
+          ]
+        },
+        {
+          "file": "data-table/data-table-skeleton.tsx",
+          "componentName": "DataTableSkeleton",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "table-empty-state.tsx",
+          "componentName": "TableEmptyState",
+          "hasFile": true,
+          "variants": "default",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 5,
+          "usageFiles": [
+            "features/_shared/directories/components/directory-list-screen.tsx",
+            "features/_shared/guide-catalog/components/CatalogTableWrapper.tsx",
+            "features/global-purchases/components/GlobalPurchasesView.client.tsx",
+            "features/projects/dashboard/components/ProjectEstimatesCards.tsx",
+            "features/projects/estimates/components/table/EstimateTable.client.tsx"
+          ]
+        },
+        {
+          "file": "empty.tsx",
+          "componentName": "Empty",
+          "hasFile": true,
+          "variants": "default, icon, _svg",
+          "variantCount": 3,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "features/projects/list/components/projects-list.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"State / Loading\" обнаружено 12 компонентов. 1 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** states/index.ts#LoadingState, states/index.ts#EmptyState, states/index.ts#ErrorState. \n**Deprecated:**\n- spinner.tsx#Spinner → LoadingState variant=spinner\n- loading-indicator.tsx#LoadingIndicator → LoadingState variant=indicator\n- data-table/data-table-skeleton.tsx#DataTableSkeleton → LoadingState variant=table-skeleton\n- table-empty-state.tsx#TableEmptyState → EmptyState variant=table\n- empty.tsx#Empty → EmptyState variant=generic",
+      "canonical": [
+        "states/index.ts#LoadingState",
+        "states/index.ts#EmptyState",
+        "states/index.ts#ErrorState"
+      ],
+      "deprecated": [
+        "spinner.tsx#Spinner → LoadingState variant=spinner",
+        "loading-indicator.tsx#LoadingIndicator → LoadingState variant=indicator",
+        "data-table/data-table-skeleton.tsx#DataTableSkeleton → LoadingState variant=table-skeleton",
+        "table-empty-state.tsx#TableEmptyState → EmptyState variant=table",
+        "empty.tsx#Empty → EmptyState variant=generic"
+      ]
+    },
+    "12": {
+      "name": "Inline Editors (Input Cells)",
+      "components": [
+        {
+          "file": "dense-list/inline-edit.ts",
+          "componentName": "useDenseListInlineEdit",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "cells/editable-cell.tsx",
+          "componentName": "EditableCell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button, input",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/global-purchases/components/cards/GlobalPurchaseCard.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/projects/estimates/components/table/columns.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Inline Editors (Input Cells)\" обнаружено 2 компонентов. 1 из них — обёртки над другими UI-компонентами. 1 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** cells/editable-cell.tsx#EditableCell. \n**Deprecated:**\n- dense-list/inline-edit.ts#useDenseListInlineEdit → EditableCell hook",
+      "canonical": [
+        "cells/editable-cell.tsx#EditableCell"
+      ],
+      "deprecated": [
+        "dense-list/inline-edit.ts#useDenseListInlineEdit → EditableCell hook"
+      ]
+    },
+    "13": {
+      "name": "Layout Constants (.ts files with Tailwind strings)",
+      "components": [
+        {
+          "file": "dense-list/toolbar.ts",
+          "componentName": "toolbar",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "dense-list/table.ts",
+          "componentName": "table",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "dense-list/pickers.tsx",
+          "componentName": "PickersConstants",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-surface.ts",
+          "componentName": "primitive-surface",
+          "hasFile": true,
+          "variants": "default, compact",
+          "variantCount": 2,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-spacing.ts",
+          "componentName": "primitive-spacing",
+          "hasFile": true,
+          "variants": "none",
+          "variantCount": 1,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-density.ts",
+          "componentName": "primitive-density",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-controls.ts",
+          "componentName": "primitive-controls",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-navigation.ts",
+          "componentName": "primitive-navigation",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-table.ts",
+          "componentName": "primitive-table",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-badge.ts",
+          "componentName": "primitive-badge",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-form.ts",
+          "componentName": "primitive-form",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-overlay.ts",
+          "componentName": "primitive-overlay",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-chart.ts",
+          "componentName": "primitive-chart",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "primitive-marketing.ts",
+          "componentName": "primitive-marketing",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        }
+      ],
+      "overlap": "В категории \"Layout Constants (.ts files with Tailwind strings)\" обнаружено 14 компонентов. 1 из них — обёртки над другими UI-компонентами. ",
+      "recommendation": "**Канон:** primitive-surface.ts, primitive-spacing.ts, primitive-density.ts, primitive-controls.ts, primitive-navigation.ts, primitive-table.ts, primitive-badge.ts, primitive-form.ts, primitive-overlay.ts, primitive-chart.ts, primitive-marketing.ts. \n**Deprecated:**\n- dense-list/toolbar.ts → merge into primitive-navigation.ts\n- dense-list/table.ts → merge into primitive-table.ts\n- dense-list/pickers.tsx → merge into primitive-controls.ts",
+      "canonical": [
+        "primitive-surface.ts",
+        "primitive-spacing.ts",
+        "primitive-density.ts",
+        "primitive-controls.ts",
+        "primitive-navigation.ts",
+        "primitive-table.ts",
+        "primitive-badge.ts",
+        "primitive-form.ts",
+        "primitive-overlay.ts",
+        "primitive-chart.ts",
+        "primitive-marketing.ts"
+      ],
+      "deprecated": [
+        "dense-list/toolbar.ts → merge into primitive-navigation.ts",
+        "dense-list/table.ts → merge into primitive-table.ts",
+        "dense-list/pickers.tsx → merge into primitive-controls.ts"
+      ]
+    },
+    "14": {
+      "name": "Data Display",
+      "components": [
+        {
+          "file": "cells/money-cell.tsx",
+          "componentName": "MoneyCell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 7,
+          "usageFiles": [
+            "features/global-purchases/components/cards/GlobalPurchaseCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateSectionCard.tsx",
+            "features/projects/estimates/components/table/cards/EstimateWorkCard.tsx",
+            "features/projects/estimates/components/table/columns.tsx",
+            "features/projects/estimates/components/tabs/EstimateExecution.tsx",
+            "features/projects/estimates/components/tabs/EstimateProcurement.tsx"
+          ]
+        },
+        {
+          "file": "cells/editable-cell.tsx",
+          "componentName": "EditableCell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button, input",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/global-purchases/components/cards/GlobalPurchaseCard.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/projects/estimates/components/table/columns.tsx"
+          ]
+        },
+        {
+          "file": "cells/currency-cell.tsx",
+          "componentName": "CurrencyCell",
+          "hasFile": false,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "kpi-card.tsx",
+          "componentName": "KPICard",
+          "hasFile": true,
+          "variants": "default",
+          "variantCount": 1,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/skeleton",
+          "usageCount": 3,
+          "usageFiles": [
+            "features/dashboard/components/HomeKpiCards.tsx",
+            "features/projects/dashboard/components/DashboardKpiCards.tsx",
+            "features/projects/list/components/projects-kpi-placeholders.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Data Display\" обнаружено 4 компонентов. 2 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** cells/money-cell.tsx#MoneyCell, kpi-card.tsx#KPICard. Все компоненты имеют разное назначение, дублирования не обнаружено.",
+      "canonical": [
+        "cells/money-cell.tsx#MoneyCell",
+        "kpi-card.tsx#KPICard"
+      ],
+      "deprecated": []
+    },
+    "15": {
+      "name": "Marketing",
+      "components": [
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingShell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingHeader",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingHero",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingFeatureGrid",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingFooter",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "marketing-shell.tsx",
+          "componentName": "MarketingMobileMenu",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/page.tsx"
+          ]
+        },
+        {
+          "file": "auth-shell.tsx",
+          "componentName": "AuthShell",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 2,
+          "usageFiles": [
+            "app/(login)/verify-email/page.tsx",
+            "features/auth/components/AuthFormShell.tsx"
+          ]
+        },
+        {
+          "file": "auth-shell.tsx",
+          "componentName": "AuthPanel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 1,
+          "usageFiles": [
+            "app/(login)/verify-email/page.tsx"
+          ]
+        },
+        {
+          "file": "auth-shell.tsx",
+          "componentName": "AuthFeatureCard",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "auth-shell.tsx",
+          "componentName": "AuthStatusMessage",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 5,
+          "usageFiles": [
+            "app/(login)/verify-email/page.tsx",
+            "features/auth/components/AuthFormShell.tsx",
+            "features/auth/components/ForgotPasswordForm.tsx",
+            "features/auth/components/LoginForm.tsx",
+            "features/auth/components/ResetPasswordForm.tsx"
+          ]
+        },
+        {
+          "file": "primitive-marketing.ts",
+          "componentName": "primitiveMarketingClassNames",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        }
+      ],
+      "overlap": "В категории \"Marketing\" обнаружено 11 компонентов. 7 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** marketing-shell.tsx#MarketingShell, auth-shell.tsx#AuthShell. \n**Deprecated:**\n- primitive-marketing.ts#primitiveMarketingClassNames → marketing-shell.tsx",
+      "canonical": [
+        "marketing-shell.tsx#MarketingShell",
+        "auth-shell.tsx#AuthShell"
+      ],
+      "deprecated": [
+        "primitive-marketing.ts#primitiveMarketingClassNames → marketing-shell.tsx"
+      ]
+    },
+    "16": {
+      "name": "Containers / Helpers",
+      "components": [
+        {
+          "file": "separator.tsx",
+          "componentName": "Separator",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 5,
+          "usageFiles": [
+            "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+            "features/counterparties/components/counterparty-sheet-sections.tsx",
+            "features/settings/components/user-settings-page.tsx",
+            "features/team/screens/TeamScreen.tsx",
+            "components/layout/app-header.tsx"
+          ]
+        },
+        {
+          "file": "scroll-area.tsx",
+          "componentName": "ScrollArea",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 5,
+          "usageFiles": [
+            "features/_shared/directories/components/directory-entity-sheet-shell.tsx",
+            "features/_shared/guide-catalog/components/CatalogFilterSidebar.tsx",
+            "features/catalog/components/MaterialCatalogPicker.client.tsx",
+            "features/notifications/components/notifications-list.tsx",
+            "features/projects/estimates/components/table/EstimateTableDialogs.tsx"
+          ]
+        },
+        {
+          "file": "accordion.tsx",
+          "componentName": "Accordion",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "carousel.tsx",
+          "componentName": "Carousel",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/button",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "resizable.tsx",
+          "componentName": "Resizable",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "collapsible.tsx",
+          "componentName": "Collapsible",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": false,
+          "isWrapper": false,
+          "wrapsWhat": "",
+          "usageCount": 0,
+          "usageFiles": []
+        },
+        {
+          "file": "command.tsx",
+          "componentName": "Command",
+          "hasFile": true,
+          "variants": "unknown",
+          "variantCount": 0,
+          "usesRawClasses": true,
+          "isWrapper": true,
+          "wrapsWhat": "@/shared/ui/dialog",
+          "usageCount": 7,
+          "usageFiles": [
+            "features/global-purchases/components/GlobalPurchasesToolbar.tsx",
+            "features/global-purchases/components/cards/ProjectPicker.tsx",
+            "features/global-purchases/components/cards/SupplierPicker.tsx",
+            "features/global-purchases/components/global-purchases-columns.tsx",
+            "features/projects/list/components/create-project-dialog.tsx",
+            "features/projects/list/components/projects-sort-select.tsx",
+            "features/works/components/UnitSelect.tsx"
+          ]
+        }
+      ],
+      "overlap": "В категории \"Containers / Helpers\" обнаружено 7 компонентов. 2 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. ",
+      "recommendation": "**Канон:** scroll-area.tsx#ScrollArea, separator.tsx#Separator, accordion.tsx#Accordion. Все компоненты имеют разное назначение, дублирования не обнаружено.",
+      "canonical": [
+        "scroll-area.tsx#ScrollArea",
+        "separator.tsx#Separator",
+        "accordion.tsx#Accordion"
+      ],
+      "deprecated": []
+    }
+  }
+}

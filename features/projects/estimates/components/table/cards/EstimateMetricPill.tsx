@@ -1,5 +1,6 @@
+import { cn } from '@/lib/utils';
+import { Badge } from '@/shared/ui/badge';
 import type { ReactNode } from 'react';
-import { DenseListMetricPill } from '@/shared/ui/dense-list';
 
 type EstimateMetricPillTone = 'neutral' | 'info';
 type EstimateMetricPillDensity = 'work' | 'material';
@@ -18,8 +19,17 @@ export function EstimateMetricPill({
   className,
 }: EstimateMetricPillProps) {
   return (
-    <DenseListMetricPill tone={tone} density={density} className={className}>
+    <Badge
+      variant={tone}
+      size="xs"
+      className={cn(
+        density === 'material'
+          ? 'gap-0.5 px-1 sm:px-1.5'
+          : 'gap-1 px-1.5 sm:px-2',
+        className,
+      )}
+    >
       {children}
-    </DenseListMetricPill>
+    </Badge>
   );
 }

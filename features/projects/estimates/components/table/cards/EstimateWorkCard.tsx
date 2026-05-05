@@ -2,13 +2,13 @@ import { ChevronDown, ChevronRight, Pencil, Settings, Wrench } from 'lucide-reac
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { Badge } from '@/shared/ui/badge';
 import {
   DenseListActionsGrid,
   DenseListBodyRow,
   DenseListEmptyInset,
   DenseListMaterialGrid,
   DenseListNestedPanel,
-  DenseListToken,
 } from '@/shared/ui/dense-list';
 import {
   primitiveVisualIconSizeClassNames,
@@ -73,7 +73,7 @@ export function EstimateWorkCard({
             </div>
 
             <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
-              <DenseListToken variant="neutral">{work.unit}</DenseListToken>
+              <Badge variant="neutral" size="xs">{work.unit}</Badge>
               <EstimateMetricPill>
                 <span className={primitiveVisualTypographyClassNames.compactCaption}>Кол-во</span>
                 <EstimateInlineNumberCell
@@ -93,9 +93,9 @@ export function EstimateWorkCard({
                 />
                 <span className={primitiveVisualTypographyClassNames.compactCaption}>₽</span>
               </EstimateMetricPill>
-              <DenseListToken variant="success">
+              <Badge variant="success" size="xs">
                 <MoneyCell value={work.sum} />
-              </DenseListToken>
+              </Badge>
             </div>
           </div>
         </div>

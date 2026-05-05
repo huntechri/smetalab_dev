@@ -1,6 +1,7 @@
 'use client';
 
-import { DenseListSummaryRail, DenseListToken } from '@/shared/ui/dense-list';
+import { Badge } from '@/shared/ui/badge';
+import { DenseListSummaryRail } from '@/shared/ui/dense-list';
 import { formatCurrency } from '@/lib/shared/formatters';
 
 interface GlobalPurchasesSummaryProps {
@@ -10,9 +11,9 @@ interface GlobalPurchasesSummaryProps {
 export function GlobalPurchasesSummary({ totalAmount }: GlobalPurchasesSummaryProps) {
   return (
     <DenseListSummaryRail>
-      <DenseListToken variant="info">
+      <Badge variant="info" size="xs">
         Итого закупки: {formatCurrency(totalAmount)}
-      </DenseListToken>
+      </Badge>
     </DenseListSummaryRail>
   );
 }

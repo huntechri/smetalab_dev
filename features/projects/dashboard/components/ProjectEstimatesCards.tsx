@@ -3,13 +3,13 @@
 import Link from 'next/link';
 import { CalendarDays, FilePlus, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
+import { Badge } from '@/shared/ui/badge';
 import {
   DenseListHeader,
   DenseListInlineContent,
   DenseListItem,
   DenseListRow,
   DenseListSurface,
-  DenseListToken,
   DenseListViewport,
 } from '@/shared/ui/dense-list';
 import {
@@ -80,7 +80,7 @@ export function ProjectEstimatesCards({
         <div className="min-w-0">
           <div className="flex min-w-0 items-center gap-2">
             <h2 className={primitiveVisualTypographyClassNames.sectionTitle}>Сметы</h2>
-            <DenseListToken variant="neutral">{estimates.length}</DenseListToken>
+            <Badge variant="neutral" size="xs">{estimates.length}</Badge>
           </div>
           <div className={primitiveVisualTypographyClassNames.mutedMetaRow}>
             <span>Итого: {moneyFormatter.format(total)}</span>
@@ -121,13 +121,13 @@ export function ProjectEstimatesCards({
                         badgeSize="xs"
                         className="min-w-20 md:min-w-24"
                       />
-                      <DenseListToken variant="success">
+                      <Badge variant="success" size="xs">
                         {moneyFormatter.format(estimate.total)}
-                      </DenseListToken>
-                      <DenseListToken variant="neutral">
+                      </Badge>
+                      <Badge variant="neutral" size="xs">
                         <CalendarDays className={primitiveVisualIconSizeClassNames.xs} aria-hidden="true" />
                         {formatDate(estimate.createdAt)}
-                      </DenseListToken>
+                      </Badge>
                     </DenseListInlineContent>
                   </div>
 

@@ -3,11 +3,11 @@ import { Settings } from 'lucide-react';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Button } from '@/shared/ui/button';
 import { MoneyCell } from '@/shared/ui/cells/money-cell';
+import { Badge } from '@/shared/ui/badge';
 import {
   DenseListMaterialImageFrame,
   DenseListMaterialMeta,
   DenseListMaterialRow,
-  DenseListToken,
   DenseListTrailingAction,
 } from '@/shared/ui/dense-list';
 import type { EstimateRow } from '../../../types/dto';
@@ -66,7 +66,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
                   </span>
                 )}
               </DenseListMaterialImageFrame>
-              <DenseListToken variant="neutral">{material.unit}</DenseListToken>
+              <Badge variant="neutral" size="xs">{material.unit}</Badge>
             </div>
 
             <div className="flex items-center gap-1 shrink-0">
@@ -94,9 +94,9 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
               <span className="tabular-nums">
                 {INTEGER_FORMATTER.format(material.price)} ₽/ед
               </span>
-              <DenseListToken variant="success">
+              <Badge variant="success" size="xs">
                 <MoneyCell value={material.sum} />
-              </DenseListToken>
+              </Badge>
             </div>
           </DenseListMaterialMeta>
         </div>
