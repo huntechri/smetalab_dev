@@ -1,4 +1,3 @@
-import { cn } from '@/lib/utils';
 import { Badge } from '@/shared/ui/badge';
 import type { ReactNode } from 'react';
 
@@ -22,12 +21,7 @@ export function EstimateMetricPill({
     <Badge
       variant={tone}
       size="xs"
-      className={cn(
-        density === 'material'
-          ? 'gap-0.5 px-1 sm:px-1.5'
-          : 'gap-1 px-1.5 sm:px-2',
-        className,
-      )}
+      className={className}
     >
       {children}
     </Badge>
