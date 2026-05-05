@@ -5,11 +5,6 @@ permissions:
   contents: read
 
 on:
-  push:
-    branches: ["main"]
-  pull_request:
-    branches: ["main"]
-    types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
 
 concurrency:
@@ -24,9 +19,9 @@ env:
 
 jobs:
   ci:
-    name: PR Gate (Lint + Typecheck + Unit + Build)
+    name: Manual Gate (Lint + Typecheck + Unit + Build)
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
       issues: write
@@ -82,7 +77,7 @@ jobs:
   integration-tests:
     name: Integration Tests (local Postgres, optional)
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+    if: github.event_name == 'workflow_dispatch'
     services:
       postgres:
         image: pgvector/pgvector:pg16
