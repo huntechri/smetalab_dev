@@ -22,7 +22,7 @@ import { buildWorkActions } from './actions';
 import { EstimateMaterialCard } from './EstimateMaterialCard';
 import { EstimateInlineNumberCell } from './EstimateInlineNumberCell';
 import { EstimateInlineTextCell } from './EstimateInlineTextCell';
-import { EstimateMetricPill } from './EstimateMetricPill';
+
 import { ESTIMATE_CARD_ICON_ACTION_CLASS, WORK_NAME_CLASS, WORK_NUMBER_CLASS } from './constants';
 
 interface EstimateWorkCardProps {
@@ -74,7 +74,7 @@ export function EstimateWorkCard({
 
             <div className="flex flex-wrap items-center gap-1 sm:gap-1.5">
               <Badge variant="neutral" size="xs">{work.unit}</Badge>
-              <EstimateMetricPill>
+              <Badge variant="neutral" size="xs">
                 <span className={primitiveVisualTypographyClassNames.compactCaption}>Кол-во</span>
                 <EstimateInlineNumberCell
                   value={work.qty}
@@ -82,8 +82,8 @@ export function EstimateWorkCard({
                   ariaLabel={`Количество: ${work.name}`}
                   className={WORK_NUMBER_CLASS}
                 />
-              </EstimateMetricPill>
-              <EstimateMetricPill>
+              </Badge>
+              <Badge variant="neutral" size="xs">
                 <span className={primitiveVisualTypographyClassNames.compactCaption}>Цена</span>
                 <EstimateInlineNumberCell
                   value={work.price}
@@ -92,7 +92,7 @@ export function EstimateWorkCard({
                   className={WORK_NUMBER_CLASS}
                 />
                 <span className={primitiveVisualTypographyClassNames.compactCaption}>₽</span>
-              </EstimateMetricPill>
+              </Badge>
               <Badge variant="success" size="xs">
                 <MoneyCell value={work.sum} />
               </Badge>

@@ -58,7 +58,7 @@ export const primitiveVisualTypographyClassNames = {
   mutedMeta: "text-xs text-muted-foreground",
   mutedMetaRow: "mt-1 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground",
   // Compact data typography tokens (for tables, dense lists, metadata)
-  compactCaption: "text-[10px] font-medium text-muted-foreground",
+  compactCaption: "text-[9px] sm:text-[11px] font-medium text-muted-foreground",
   compactLabel: "text-[11px] font-semibold uppercase tracking-wide text-muted-foreground",
   compactValue: "text-[11px] font-bold tracking-tight tabular-nums",
   compactBody: "text-[12px]",

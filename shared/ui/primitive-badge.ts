@@ -26,7 +26,7 @@ export const primitiveBadgeVariantClassNames = {
 
 export const primitiveBadgeSizeClassNames = {
   default: "px-2 py-0.5 text-xs",
-  xs: "px-1.5 py-0 text-[9px] sm:text-[10px] font-semibold",
+  xs: "px-1.5 py-0 text-[9px] sm:text-[11px] font-semibold",
   count: "size-5 p-0 text-xs",
 } as const
 

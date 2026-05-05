@@ -37,7 +37,7 @@ export function LoadingIndicator({
     <div className={containerClassName}>
       <div className={contentClassName}>
         <Loader2 className={cn('animate-spin text-muted-foreground', sizeMap[size])} />
-        {showLabel && <span className="text-xs text-muted-foreground">{label}</span>}
+        {showLabel && <span className="text-sm text-muted-foreground">{label}</span>}
       </div>
     </div>
   );

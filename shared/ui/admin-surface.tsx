@@ -164,7 +164,7 @@ function AdminTenantCard({
         <CardTitle className="line-clamp-1 pt-4 text-base font-bold">{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mb-4 flex items-center gap-4 text-xs text-muted-foreground">
+        <div className="mb-4 flex items-center gap-4 text-sm text-muted-foreground">
           {meta}
         </div>
         {action}
@@ -238,13 +238,13 @@ function AdminRecordText({
   return (
     <div className="min-w-0 space-y-1">
       <p className="font-medium text-foreground">{title}</p>
-      {description ? <p className="text-xs text-muted-foreground">{description}</p> : null}
+      {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
     </div>
   )
 }
 
 function AdminInlineMeta({ children }: { children: React.ReactNode }) {
-  return <div className="flex items-center gap-2 text-xs text-muted-foreground">{children}</div>
+  return <div className="flex items-center gap-2 text-sm text-muted-foreground">{children}</div>
 }
 
 function AdminActivityRecord({
@@ -265,7 +265,7 @@ function AdminActivityRecord({
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-center justify-between gap-4">
             <p className="font-medium text-foreground">{title}</p>
-            {timestamp ? <p className="text-xs text-muted-foreground">{timestamp}</p> : null}
+            {timestamp ? <p className="text-sm text-muted-foreground">{timestamp}</p> : null}
           </div>
           {meta}
         </div>
@@ -288,7 +288,7 @@ function AdminActivityItem({
       <AdminIconFrame icon={Icon} tone="brand" rounded="full" />
       <div className="min-w-0 flex-1">
         <p className="text-sm font-medium text-foreground">{title}</p>
-        {description ? <p className="text-xs text-muted-foreground">{description}</p> : null}
+        {description ? <p className="text-sm text-muted-foreground">{description}</p> : null}
       </div>
     </li>
   )
@@ -549,7 +549,7 @@ function AdminImpersonationBannerView({
         </span>
       </div>
       <div className="flex items-center gap-4">
-        <span className="hidden text-xs text-muted-foreground md:inline">Все действия логируются</span>
+        <span className="hidden text-sm text-muted-foreground md:inline">Все действия логируются</span>
         {action}
       </div>
     </div>

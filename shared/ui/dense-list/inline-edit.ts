@@ -2,9 +2,9 @@ import { cn } from '@/lib/utils';
 
 const denseListInlineNumberBaseClassName =
   'h-4 min-w-0 flex-none rounded-sm border-0 bg-transparent px-1 py-0 text-right font-semibold leading-none text-foreground !border-0 !shadow-none outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0';
-export const denseListWorkNumberClassName = `${denseListInlineNumberBaseClassName} w-10 text-xs sm:w-14`;
-export const denseListMaterialQtyClassName = `${denseListInlineNumberBaseClassName} w-8 text-xs sm:w-10`;
-export const denseListMaterialExpenseClassName = `${denseListInlineNumberBaseClassName} w-8 text-xs sm:w-9`;
+export const denseListWorkNumberClassName = `${denseListInlineNumberBaseClassName} w-10 text-[9px] sm:text-[11px] sm:w-14`;
+export const denseListMaterialQtyClassName = `${denseListInlineNumberBaseClassName} w-8 text-[9px] sm:text-[11px] sm:w-10`;
+export const denseListMaterialExpenseClassName = `${denseListInlineNumberBaseClassName} w-8 text-[9px] sm:text-[11px] sm:w-9`;
 
 const denseListInlineTextBaseClassName =
   'min-w-0 rounded-sm border-0 bg-transparent !border-0 !shadow-none outline-none focus-visible:!ring-0 focus-visible:!ring-offset-0';

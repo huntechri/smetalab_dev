@@ -110,7 +110,7 @@ export function PatternsScreen({ initialItems }: PatternsScreenProps) {
               {sortedPreviewRows.map((row) => (
                 <div key={row.tempKey} className="flex items-center justify-between border-b text-sm last:border-b-0">
                   <div className={row.kind === 'material' ? 'pl-4 text-muted-foreground' : 'font-medium'}>{row.code} {row.name}</div>
-                  <div className="text-xs text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
+                  <div className="text-sm text-muted-foreground">{row.qty} {row.unit} × {row.price.toLocaleString('ru-RU')}</div>
                 </div>
               ))}
             </div>

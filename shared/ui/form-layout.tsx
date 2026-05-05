@@ -186,7 +186,7 @@ const FieldRow = React.forwardRef<HTMLDivElement, FieldRowProps>(
       <div ref={ref} className={cn(fieldRowVariants({ align }), className)} {...props}>
         <Label
           htmlFor={htmlFor}
-          className={cn("text-xs text-muted-foreground sm:text-right sm:text-foreground", labelClassName)}
+          className={cn("text-sm text-muted-foreground sm:text-right sm:text-foreground", labelClassName)}
         >
           {label}
         </Label>

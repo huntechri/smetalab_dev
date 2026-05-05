@@ -13,7 +13,7 @@ function DenseListMaterialRow({ className, ...props }: React.ComponentProps<'div
 }
 
 function DenseListMaterialMeta({ className, ...props }: React.ComponentProps<'div'>) {
-  return <div className={cn('mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-xs text-muted-foreground sm:mt-0.5', className)} {...props} />;
+  return <div className={cn('mt-1 flex flex-wrap items-center gap-x-2 gap-y-1.5 text-sm text-muted-foreground sm:mt-0.5', className)} {...props} />;
 }
 
 function DenseListMaterialImageFrame({ className, ...props }: React.ComponentProps<'div'>) {

@@ -93,7 +93,7 @@ export function EstimatesListTable({
       accessorKey: 'createdAt',
       header: 'Дата создания',
       size: 130,
-      cell: ({ row }) => <span className="text-xs md:text-sm text-muted-foreground">{new Date(row.original.createdAt).toLocaleDateString('ru-RU')}</span>,
+      cell: ({ row }) => <span className="text-sm text-muted-foreground">{new Date(row.original.createdAt).toLocaleDateString('ru-RU')}</span>,
     },
     {
       id: 'actions',

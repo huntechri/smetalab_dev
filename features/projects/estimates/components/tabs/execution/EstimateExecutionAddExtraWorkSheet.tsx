@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Button } from '@/shared/ui/button';
+import { ToolbarButton } from '@/shared/ui/toolbar-button';
 import { ActionMenuItemContent } from '@/shared/ui/action-menu';
 import { DropdownMenuItem } from '@/shared/ui/dropdown-menu';
 import {
@@ -48,10 +48,9 @@ export function EstimateExecutionAddExtraWorkSheet({
                         </ActionMenuItemContent>
                     </DropdownMenuItem>
                 ) : (
-                    <Button variant="primary" size="default" title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу">
-                        <Plus className={primitiveVisualIconSizeClassNames.md} />
+                    <ToolbarButton title="Добавить дополнительную работу" aria-label="Добавить дополнительную работу" iconLeft={<Plus className={primitiveVisualIconSizeClassNames.md} />}>
                         <span className="hidden sm:inline">Добавить доп. работу</span>
-                    </Button>
+                    </ToolbarButton>
                 )}
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md">

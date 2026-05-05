@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { cn } from '@/lib/utils';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 type DenseListStatProps = React.ComponentProps<'div'> & {
   label: string;
@@ -21,7 +22,7 @@ function DenseListStat({
 }: DenseListStatProps) {
   return (
     <div className={cn('text-right min-w-[60px] sm:min-w-[80px]', className)} {...props}>
-      <p className="text-xs font-medium text-muted-foreground">{label}</p>
+      <p className={primitiveVisualTypographyClassNames.compactCaption}>{label}</p>
       <p className={cn('text-sm font-bold tabular-nums', denseListStatValueClassName[valueTone])}>
         {children}
       </p>

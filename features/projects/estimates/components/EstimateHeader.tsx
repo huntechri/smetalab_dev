@@ -78,7 +78,7 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                             </AlertDialogContent>
                         </AlertDialog>
                     </div>
-                    <p className="text-xs md:text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground">
                         Обновлено: {new Date(meta.updatedAt).toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' })}
                     </p>
                 </div>

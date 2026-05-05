@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 
 import { cn } from '@/lib/utils';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 // ─── AuthShell ────────────────────────────────────────────────────────────
 
@@ -73,7 +74,7 @@ export function AuthFeatureCard({
         className
       )}
     >
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">
+      <p className={primitiveVisualTypographyClassNames.compactLabel}>
         {label}
       </p>
       <p className="mt-2 font-semibold">{children}</p>

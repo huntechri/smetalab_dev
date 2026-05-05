@@ -181,7 +181,7 @@ interface DirectoryImageCellProps {
 export function DirectoryImageCell({ src, alt, emptyLabel = "N/A" }: DirectoryImageCellProps) {
   if (!src) {
     return (
-      <div className="flex size-6 items-center justify-center rounded bg-muted/30 text-xs text-muted-foreground/50">
+      <div className="flex size-6 items-center justify-center rounded bg-muted/30 text-sm text-muted-foreground/50">
         {emptyLabel}
       </div>
     )

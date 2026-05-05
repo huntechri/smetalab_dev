@@ -1,3 +1,5 @@
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface'
+
 export const directoryEntitySheetClassNames = {
   header: "px-4 pb-3 pt-4 sm:px-6 sm:pb-4 sm:pt-6",
   title: "text-base sm:text-lg",
@@ -32,14 +34,14 @@ export const catalogFilterSidebarClassNames = {
   body: "space-y-6 p-4 pb-6",
   mobileBody: "px-0 pb-12",
   section: "space-y-3",
-  sectionTitle: "flex items-center gap-2 px-2 text-xs font-medium text-muted-foreground",
+  sectionTitle: `flex items-center gap-2 px-2 ${primitiveVisualTypographyClassNames.compactCaption}`,
   sectionIcon: "size-3.5",
   sectionBody: "flex flex-col gap-1",
   separator: "bg-border/50",
   buttonText: "block truncate whitespace-normal break-words",
   buttonCheck: "ml-auto shrink-0 self-center",
-  loadingText: "px-2 py-1 text-xs italic text-muted-foreground",
-  emptyText: "px-2 py-4 text-center text-xs italic text-muted-foreground/60",
+  loadingText: `px-2 py-1 italic ${primitiveVisualTypographyClassNames.compactCaption}`,
+  emptyText: `px-2 py-4 text-center italic ${primitiveVisualTypographyClassNames.compactCaption} opacity-60`,
   loadingFrame: "flex flex-col items-center gap-2 px-2 py-4",
   loadingSpinner: "size-4 animate-spin rounded-full border-2 border-primary/30 border-t-primary",
   loadingLabel: "animate-pulse text-[11px] text-muted-foreground",
@@ -58,7 +60,7 @@ export const catalogScreenShellClassNames = {
   overlayIcon: "size-10 animate-spin text-primary",
   overlayTextFrame: "flex flex-col items-center gap-1",
   overlayTitle: "text-xs font-semibold",
-  overlayDescription: "text-xs font-medium uppercase tracking-wider text-muted-foreground",
+  overlayDescription: `${primitiveVisualTypographyClassNames.compactLabel}`,
 } as const
 
 export const catalogToolbarClassNames = {

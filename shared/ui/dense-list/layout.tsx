@@ -63,7 +63,7 @@ function DenseListEmptyBlock({ className, ...props }: React.ComponentProps<'div'
 function DenseListEmptyInset({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div
-      className={cn('rounded-md border border-dashed bg-card p-3 text-center text-xs text-muted-foreground', className)}
+      className={cn('rounded-md border border-dashed bg-card p-3 text-center text-sm text-muted-foreground', className)}
       {...props}
     />
   );

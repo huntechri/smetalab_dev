@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils';
 import type { ReactNode } from 'react';
+import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 
 interface EstimateCodeCellProps {
     code: string;
@@ -25,7 +26,7 @@ export function EstimateCodeCell({ code, kind, children, className }: EstimateCo
         );
     }
     return (
-        <div className={cn('pl-9 tabular-nums text-xs text-muted-foreground/80', className)}>
+        <div className={cn('pl-9 tabular-nums text-sm text-muted-foreground/80', className)}>
             {code}
         </div>
     );
@@ -49,20 +50,20 @@ interface EstimateUnitCellProps {
 export function EstimateUnitCell({ unit, kind }: EstimateUnitCellProps) {
     if (kind === 'section') {
         return (
-            <div className="text-center text-xs text-muted-foreground/50">
+            <div className="text-center text-sm text-muted-foreground/50">
                 {unit}
             </div>
         );
     }
     if (kind === 'material') {
         return (
-            <div className="text-xs italic text-muted-foreground text-center">
+            <div className={`italic text-center ${primitiveVisualTypographyClassNames.compactCaption}`}>
                 {unit}
             </div>
         );
     }
     return (
-        <div className="text-center text-xs text-muted-foreground font-medium">
+        <div className="text-center text-sm text-muted-foreground font-medium">
             {unit}
         </div>
     );

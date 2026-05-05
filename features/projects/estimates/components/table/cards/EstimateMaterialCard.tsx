@@ -23,7 +23,10 @@ import {
 } from './constants';
 import { EstimateInlineNumberCell } from './EstimateInlineNumberCell';
 import { EstimateInlineTextCell } from './EstimateInlineTextCell';
-import { EstimateMetricPill } from './EstimateMetricPill';
+
+import {
+  primitiveVisualTypographyClassNames,
+} from '@/shared/ui/primitive-surface';
 
 interface EstimateMaterialCardProps {
   material: EstimateRow;
@@ -36,7 +39,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
       <DenseListMaterialRow>
         <div className="min-w-0 overflow-hidden">
           <div className="flex min-w-0 items-start gap-1.5">
-            <span className="mt-1 shrink-0 text-xs font-semibold text-muted-foreground">
+            <span className={`mt-1 shrink-0 ${primitiveVisualTypographyClassNames.compactLabel}`}>
               {material.code}
             </span>
             <EstimateInlineTextCell
@@ -61,7 +64,7 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
                     unoptimized
                   />
                 ) : (
-                  <span className="text-xs font-medium text-muted-foreground">
+                  <span className={primitiveVisualTypographyClassNames.compactCaption}>
                     —
                   </span>
                 )}
@@ -69,31 +72,34 @@ export function EstimateMaterialCard({ material, props }: EstimateMaterialCardPr
               <Badge variant="neutral" size="xs">{material.unit}</Badge>
             </div>
 
-            <div className="flex items-center gap-1 shrink-0">
-              <EstimateMetricPill density="material">
-                <span className="opacity-70 text-xs">Кол:</span>
+            <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 shrink-0">
+              <Badge variant="neutral" size="xs">
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>Кол:</span>
                 <EstimateInlineNumberCell
                   value={material.qty}
                   onCommit={(value) => props.onPatch(material.id, 'qty', value)}
                   ariaLabel={`Количество: ${material.name}`}
                   className={MATERIAL_QTY_CLASS}
                 />
-              </EstimateMetricPill>
-              <EstimateMetricPill density="material" tone="info">
-                <span className="opacity-70 text-xs">Расх:</span>
+              </Badge>
+              <Badge variant="info" size="xs">
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>Расх:</span>
                 <EstimateInlineNumberCell
                   value={material.expense}
                   onCommit={(value) => props.onPatch(material.id, 'expense', value)}
                   ariaLabel={`Расход: ${material.name}`}
                   className={MATERIAL_EXPENSE_CLASS}
                 />
-              </EstimateMetricPill>
+              </Badge>
             </div>
 
             <div className="flex items-center gap-1.5 shrink-0 ml-auto sm:ml-0">
-              <span className="tabular-nums">
-                {INTEGER_FORMATTER.format(material.price)} ₽/ед
-              </span>
+              <Badge variant="neutral" size="xs">
+                <span className="tabular-nums">
+                  {INTEGER_FORMATTER.format(material.price)}
+                </span>
+                <span className={primitiveVisualTypographyClassNames.compactCaption}>₽/ед</span>
+              </Badge>
               <Badge variant="success" size="xs">
                 <MoneyCell value={material.sum} />
               </Badge>
