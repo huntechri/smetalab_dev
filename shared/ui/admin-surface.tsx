@@ -4,13 +4,10 @@ import { Check, Copy } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { HiddenInput } from "@/shared/ui/hidden-input"
-import { Badge } from "@/shared/ui/badge"
 import { Button } from "@/shared/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/ui/card"
 import { TabsList, TabsTrigger } from "@/shared/ui/tabs"
 import { primitivePageShellInnerPaddingClassName } from '@/shared/ui/primitive-navigation'
-
-type AdminBadgeVariant = React.ComponentProps<typeof Badge>["variant"]
 
 type AdminPageShellProps = React.ComponentProps<"section"> & {
   title?: React.ReactNode
@@ -94,26 +91,6 @@ function AdminPublicHeader({
         <div className="flex items-center gap-4 [&_[aria-hidden=true]]:h-9">{actions}</div>
       </div>
     </header>
-  )
-}
-
-function AdminStatusBadge({
-  children,
-  variant = "neutral",
-  mono = false,
-}: {
-  children: React.ReactNode
-  variant?: AdminBadgeVariant
-  mono?: boolean
-}) {
-  return (
-    <Badge
-      variant={variant}
-      size="xs"
-      className={cn(mono && "border-none font-mono")}
-    >
-      {children}
-    </Badge>
   )
 }
 
@@ -646,7 +623,7 @@ export {
   AdminRecordText,
   AdminSectionCard,
   AdminSidebarBrand,
-  AdminStatusBadge,
+
   AdminTabsList,
   AdminTabsTrigger,
   AdminTenantCard,

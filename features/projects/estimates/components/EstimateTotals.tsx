@@ -1,6 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
 
 const moneyFormatter = new Intl.NumberFormat('ru-RU', {
     style: 'currency',
@@ -23,7 +23,7 @@ export function EstimateTotals({
     ...props
 }: EstimateTotalsProps) {
     const deltaTotal = planned - actual;
-    const deltaTone: StatusTone =
+    const deltaVariant: 'success' | 'danger' | 'neutral' =
         deltaTotal > 0
             ? 'success'
             : deltaTotal < 0
@@ -32,23 +32,23 @@ export function EstimateTotals({
 
     return (
         <div className={cn("flex flex-wrap items-center gap-2", className)} {...props}>
-            <StatusBadge tone="neutral">
+            <Badge variant="neutral" size="xs" className="tabular-nums">
                 <span>План:</span>
-                <StatusBadgeValue>{moneyFormatter.format(planned)}</StatusBadgeValue>
-            </StatusBadge>
+                <span className="font-bold">{moneyFormatter.format(planned)}</span>
+            </Badge>
 
-            <StatusBadge tone="neutral">
+            <Badge variant="neutral" size="xs" className="tabular-nums">
                 <span>Факт:</span>
-                <StatusBadgeValue>{moneyFormatter.format(actual)}</StatusBadgeValue>
-            </StatusBadge>
+                <span className="font-bold">{moneyFormatter.format(actual)}</span>
+            </Badge>
 
             {showDelta && (
-                <StatusBadge tone={deltaTone}>
+                <Badge variant={deltaVariant} size="xs" className="tabular-nums">
                     <span>Δ:</span>
-                    <StatusBadgeValue>
+                    <span className="font-bold">
                         {deltaTotal > 0 ? '+' : ''}{moneyFormatter.format(deltaTotal)}
-                    </StatusBadgeValue>
-                </StatusBadge>
+                    </span>
+                </Badge>
             )}
         </div>
     );

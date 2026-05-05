@@ -3,7 +3,6 @@
 import { Bell } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { Badge } from '@/shared/ui/badge';
-import { StatusBadge } from '@/shared/ui/status-badge';
 import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import {
     Popover,
@@ -97,9 +96,9 @@ export function NotificationBell() {
                 <div className="flex items-center justify-between gap-2 border-b border-border/30 pb-2 mb-2">
                     <h4 className={`${primitiveVisualTypographyClassNames.dialogTitle} font-semibold`}>Уведомления</h4>
                     {unreadCount > 0 && (
-                        <StatusBadge tone="info">
+                        <Badge variant="info" size="xs">
                             {unreadCount} новых
-                        </StatusBadge>
+                        </Badge>
                     )}
                 </div>
                 <NotificationsList

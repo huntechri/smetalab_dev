@@ -1,34 +1,32 @@
-# UI Component Overlap Inventory
+# UI Component Overlap Audit
 
-**Generated:** 2026-05-05T06:26:13.526Z
+**Generated:** 2026-05-05T07:33:29.832Z
 **Total categories:** 16
-**Total components audited:** 154
-**Total canonical components:** 46
-**Total deprecated candidates:** 50
-**Has overlapping duplicates:** ⚠️ **Да**
+**Components found:** 395
+**Deprecated candidates:** 61
 
 ---
 
-## Индекс
+## Index
 
-| # | Категория | Компонентов | Overlap |
-|---|-----------|------------:|---------|
-| 1 | Badge / Token / Pill | 13 | ⚠️ 9 deprecated |
-| 2 | Button | 6 | ⚠️ 3 deprecated |
-| 3 | Input | 8 | ⚠️ 5 deprecated |
-| 4 | Card / Surface | 14 | ⚠️ 7 deprecated |
-| 5 | Panel / Layout | 15 | ⚠️ 4 deprecated |
-| 6 | Table | 14 | ⚠️ 7 deprecated |
-| 7 | Form | 11 | ⚠️ 2 deprecated |
-| 8 | Typography / Text | 5 | ⚠️ 1 deprecated |
-| 9 | Navigation / Tabs | 9 | ⚠️ 2 deprecated |
-| 10 | Overlay | 9 | ✅ OK |
-| 11 | State / Loading | 12 | ⚠️ 5 deprecated |
-| 12 | Inline Editors (Input Cells) | 2 | ⚠️ 1 deprecated |
-| 13 | Layout Constants (.ts files with Tailwind strings) | 14 | ⚠️ 3 deprecated |
-| 14 | Data Display | 4 | ✅ OK |
-| 15 | Marketing | 11 | ⚠️ 1 deprecated |
-| 16 | Containers / Helpers | 7 | ✅ OK |
+| # | Category | Components | Overlap |
+|---|----------|----------:|---------|
+| 1 | Badge / Token / Pill | 7 | ⚠️ 1 deprecated |
+| 2 | Button | 8 | ⚠️ 6 deprecated |
+| 3 | Input | 22 | ⚠️ 7 deprecated |
+| 4 | Card / Surface | 36 | ⚠️ 1 deprecated |
+| 5 | Panel / Layout | 24 | ⚠️ 1 deprecated |
+| 6 | Table | 26 | ⚠️ 13 deprecated |
+| 7 | Form | 26 | ⚠️ 10 deprecated |
+| 8 | Navigation / Tabs | 44 | ⚠️ 7 deprecated |
+| 9 | Overlay | 96 | ⚠️ 4 deprecated |
+| 10 | State / Loading | 16 | ⚠️ 3 deprecated |
+| 11 | Marketing | 15 | ✅ OK |
+| 12 | Data Display | 25 | ⚠️ 1 deprecated |
+| 13 | Containers / Helpers | 34 | ⚠️ 7 deprecated |
+| 14 | Layout Constants (.ts files) | 14 | ✅ OK |
+| 15 | Inline Editors | 1 | ✅ OK |
+| 16 | Shells / Wrappers | 1 | ✅ OK |
 
 ---
 
@@ -36,55 +34,29 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Badge | `badge.tsx` | unknown | 6 мест | Нет | Нет |
-| StatusBadge | `status-badge.tsx` | unknown | 9 мест | Нет | Да → @/shared/ui/badge |
-| StatusIndicator | `status-badge.tsx` | unknown | 3 мест | Нет | Да → @/shared/ui/badge |
-| CatalogToken | `catalog-token.tsx` | code, default | 2 мест | Да ⚠️ | Нет |
-| CatalogIndexToken | `catalog-token.tsx` | code, default | 1 мест | Да ⚠️ | Нет |
-| DenseListToken | `dense-list/tokens.tsx` | unknown | 6 мест | Нет | Да → @/shared/ui/badge |
-| DenseListMetricPill | `dense-list/metrics.tsx` | neutral, work, default | 1 мест | Да ⚠️ | Нет |
-| DenseListInlineMetric | `dense-list/metrics.tsx` | neutral, work, default | 1 мест | Да ⚠️ | Нет |
-| DenseListStat | `dense-list/metrics.tsx` | neutral, work, default | 1 мест | Да ⚠️ | Нет |
-| EstimateTabToken | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| EstimateTabSourceToken | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| EstimateTabMetric | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| EstimateTabInlineMetric | `estimate-tab.tsx` | execution, neutral, plan | 1 мест | Да ⚠️ | Да → @/shared/ui/badge |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Badge | badge.tsx | ✅ да | 28 | канон |
+| StatusIndicator | status-badge.tsx | ✅ да | 3 | — |
+| CatalogIndexToken | catalog-token.tsx | ✅ да | 1 | — |
+| CatalogAiModeIndicator | catalog-token.tsx | ✅ да | 0 | 0 usage |
+| DenseListColorIndicator | dense-list/tokens.tsx | ✅ да | 2 | — |
+| DenseListStat | dense-list/metrics.tsx | ✅ да | 1 | — |
+| DenseListSummaryRail | dense-list/metrics.tsx | ✅ да | 1 | — |
 
 ### Overlap
 
-В категории "Badge / Token / Pill" обнаружено 13 компонентов. 7 из них — обёртки над другими UI-компонентами. 9 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Badge, StatusBadge, CatalogToken, DenseListToken и EstimateTabToken — все делают одно и то же: цветная пилюля с текстом. StatusBadge — обёртка над Badge, DenseListToken — обёртка над Badge с size=xs. Остальные — raw-реализации.
+В категории "Badge / Token / Pill" обнаружено 7 компонентов. 1 из них — обёртки. 1 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** badge.tsx#Badge. 
-**Deprecated:**
-- dense-list/tokens.tsx#DenseListToken → Badge size=xs
-- dense-list/metrics.tsx#DenseListMetricPill → Badge variant=pill
-- dense-list/metrics.tsx#DenseListInlineMetric → Badge variant=inline-metric
-- dense-list/metrics.tsx#DenseListStat → Badge variant=stat
-- estimate-tab.tsx#EstimateTabToken → Badge size=xs
-- estimate-tab.tsx#EstimateTabSourceToken → Badge variant=source
-- estimate-tab.tsx#EstimateTabMetric → Badge variant=metric-pill
-- estimate-tab.tsx#EstimateTabInlineMetric → Badge variant=metric-inline
-- catalog-token.tsx#CatalogToken → Badge variant=catalog | catalog-compact
+**Канон:** badge.tsx#Badge.
+**Deprecated кандидаты:**
+- catalog-token.tsx#CatalogAiModeIndicator → 0 usage
 
 
-### Файлы, требующие миграции (первые 30)
-
-- `features/global-purchases/components/GlobalPurchasesSummary.tsx`
-- `features/global-purchases/components/global-purchases-columns.tsx`
-- `features/projects/dashboard/components/ProjectEstimatesCards.tsx`
-- `features/projects/estimates/components/table/cards/EstimateMaterialCard.tsx`
-- `features/projects/estimates/components/table/cards/EstimateSectionCard.tsx`
-- `features/projects/estimates/components/table/cards/EstimateWorkCard.tsx`
-- `features/projects/estimates/components/table/cards/EstimateMetricPill.tsx`
-- `features/global-purchases/components/cards/GlobalPurchaseCard.tsx`
-- `features/projects/estimates/components/tabs/EstimateExecution.tsx`
-- `features/projects/estimates/components/tabs/EstimateProcurement.tsx`
-- `features/catalog/components/MaterialCatalogPicker.client.tsx`
-- `features/catalog/components/WorkCatalogPicker.client.tsx`
+### Файлы для миграции
+(empty)
 
 ---
 
@@ -92,37 +64,35 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Button | `button.tsx` | default, hover, primary, destructive, visible, dark, outline, secondary, ghost, link, brand, active | 63 мест | Нет | Нет |
-| Button | `button.tsx` | default, hover, primary, destructive, visible, dark, outline, secondary, ghost, link, brand, active | 63 мест | Нет | Нет |
-| ToolbarButton | `toolbar-button.tsx` | unknown | 7 мест | Нет | Да → @/shared/ui/button |
-| Toggle | `toggle.tsx` | default, outline, hover | 0 мест | Нет | Нет |
-| ToggleGroup | `toggle-group.tsx` | unknown | 0 мест | Нет | Нет |
-| ButtonGroup | `button-group.tsx` | unknown | 0 мест | Нет | Да → @/shared/ui/separator |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Button | button.tsx | ✅ да | 62 | канон |
+| ToolbarButton | toolbar-button.tsx | ✅ да | 7 | — |
+| Toggle | toggle.tsx | ✅ да | 0 | 0 usage |
+| ToggleGroup | toggle-group.tsx | ✅ да | 0 | 0 usage |
+| ToggleGroupItem | toggle-group.tsx | ✅ да | 0 | 0 usage |
+| ButtonGroup | button-group.tsx | ✅ да | 0 | 0 usage |
+| ButtonGroupText | button-group.tsx | ✅ да | 0 | 0 usage |
+| ButtonGroupSeparator | button-group.tsx | ✅ да | 0 | 0 usage |
 
 ### Overlap
 
-В категории "Button" обнаружено 6 компонентов. 2 из них — обёртки над другими UI-компонентами. 
+В категории "Button" обнаружено 8 компонентов. 1 из них — обёртки. 6 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** button.tsx#Button. 
-**Deprecated:**
-- toolbar-button.tsx#ToolbarButton → Button variant=outline size=xs + shadow-sm
-- toggle.tsx#Toggle → separate primitive (not button)
-- toggle-group.tsx#ToggleGroup → separate primitive (not button)
+**Канон:** button.tsx#Button.
+**Deprecated кандидаты:**
+- toggle.tsx#Toggle → 0 usage
+- toggle-group.tsx#ToggleGroup → 0 usage
+- toggle-group.tsx#ToggleGroupItem → 0 usage
+- button-group.tsx#ButtonGroup → 0 usage
+- button-group.tsx#ButtonGroupText → 0 usage
+- button-group.tsx#ButtonGroupSeparator → 0 usage
 
 
-### Файлы, требующие миграции (первые 30)
-
-- `features/_shared/guide-catalog/components/CatalogToolbar.tsx`
-- `features/global-purchases/components/GlobalPurchasesEmptyStateActions.tsx`
-- `features/global-purchases/components/GlobalPurchasesImportExportActions.tsx`
-- `features/global-purchases/components/GlobalPurchasesToolbar.tsx`
-- `features/projects/estimates/components/table/EstimateTableToolbar.tsx`
-- `features/projects/estimates/components/tabs/EstimateParams.tsx`
-- `features/projects/estimates/components/tabs/execution/EstimateExecutionTableActions.tsx`
+### Файлы для миграции
+(empty)
 
 ---
 
@@ -130,43 +100,52 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Input | `input.tsx` | unknown | 18 мест | Нет | Да → @/shared/ui/input |
-| SearchInput | `search-input.tsx` | unknown | 2 мест | Да ⚠️ | Да → @/shared/ui/input |
-| SearchControl | `search-control.tsx` | compact, default, inline | 2 мест | Да ⚠️ | Да → @/shared/ui/button |
-| InputGroup | `input-group.tsx` | unknown | 0 мест | Нет | Да → @/shared/ui/button, input, textarea |
-| HiddenInput | `hidden-input.tsx` | unknown | 3 мест | Нет | Да → @/shared/ui/input |
-| FileInput | `file-input.tsx` | unknown | 2 мест | Нет | Да → @/shared/ui/input |
-| Textarea | `textarea.tsx` | unknown | 1 мест | Нет | Да → @/shared/ui/textarea |
-| Select | `select.tsx` | unknown | 2 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Input | input.tsx | ✅ да | 18 | канон |
+| SearchInput | search-input.tsx | ✅ да | 2 | обёртка |
+| SearchControl | search-control.tsx | ✅ да | 2 | — |
+| InputGroup | input-group.tsx | ✅ да | 0 | обёртка |
+| InputGroupAddon | input-group.tsx | ✅ да | 0 | обёртка |
+| InputGroupButton | input-group.tsx | ✅ да | 0 | обёртка |
+| InputGroupText | input-group.tsx | ✅ да | 0 | обёртка |
+| InputGroupInput | input-group.tsx | ✅ да | 0 | обёртка |
+| InputGroupTextarea | input-group.tsx | ✅ да | 0 | обёртка |
+| HiddenInput | hidden-input.tsx | ✅ да | 3 | — |
+| FileInput | file-input.tsx | ✅ да | 2 | — |
+| Textarea | textarea.tsx | ✅ да | 1 | канон |
+| Select | select.tsx | ✅ да | 2 | канон |
+| SelectGroup | select.tsx | ✅ да | 0 | Radix |
+| SelectValue | select.tsx | ✅ да | 2 | ✅ Radix |
+| SelectTrigger | select.tsx | ✅ да | 2 | ✅ Radix |
+| SelectContent | select.tsx | ✅ да | 2 | ✅ Radix |
+| SelectLabel | select.tsx | ✅ да | 0 | Radix |
+| SelectItem | select.tsx | ✅ да | 2 | ✅ Radix |
+| SelectSeparator | select.tsx | ✅ да | 0 | Radix |
+| SelectScrollUpButton | select.tsx | ✅ да | 0 | Radix |
+| SelectScrollDownButton | select.tsx | ✅ да | 0 | Radix |
 
 ### Overlap
 
-В категории "Input" обнаружено 8 компонентов. 7 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Input" обнаружено 22 компонентов. 8 из них — обёртки. 7 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** input.tsx#Input, select.tsx#Select, textarea.tsx#Textarea. 
-**Deprecated:**
-- search-input.tsx#SearchInput → Input type=search
-- search-control.tsx#SearchControl → Input type=search + decoration
-- hidden-input.tsx#HiddenInput → raw <input type=hidden>
-- file-input.tsx#FileInput → Input type=file
-- input-group.tsx#InputGroup → FormLayout FieldRow
+**Канон:** input.tsx#Input, select.tsx#Select, textarea.tsx#Textarea.
+**Deprecated кандидаты:**
+- search-input.tsx#SearchInput → обёртка над Input
+- input-group.tsx#InputGroup → обёртка над Input, Textarea
+- input-group.tsx#InputGroupAddon → обёртка над Input, Textarea
+- input-group.tsx#InputGroupButton → обёртка над Input, Textarea
+- input-group.tsx#InputGroupText → обёртка над Input, Textarea
+- input-group.tsx#InputGroupInput → обёртка над Input, Textarea
+- input-group.tsx#InputGroupTextarea → обёртка над Input, Textarea
 
 
-### Файлы, требующие миграции (первые 30)
+### Файлы для миграции
 
 - `features/projects/list/components/projects-search-input.tsx`
 - `features/team/components/TeamMembersCard.tsx`
-- `features/catalog/components/MaterialCatalogPicker.client.tsx`
-- `features/catalog/components/WorkCatalogFilters.client.tsx`
-- `features/admin/components/impersonate-button.tsx`
-- `features/auth/components/LoginForm.tsx`
-- `features/auth/components/ResetPasswordForm.tsx`
-- `features/_shared/guide-catalog/components/CatalogScreenShell.tsx`
-- `features/global-purchases/components/GlobalPurchasesImportExportActions.tsx`
 
 ---
 
@@ -174,48 +153,59 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Card | `card.tsx` | unknown | 9 мест | Нет | Нет |
-| CardShell | `card-shell.tsx` | plain | 10 мест | Нет | Да → @/shared/ui/surface, primitive-surface |
-| CardShellHeader | `card-shell.tsx` | plain | 4 мест | Нет | Да → @/shared/ui/surface, primitive-surface |
-| CardShellBody | `card-shell.tsx` | plain | 6 мест | Нет | Да → @/shared/ui/surface, primitive-surface |
-| CardShellFooter | `card-shell.tsx` | plain | 1 мест | Нет | Да → @/shared/ui/surface, primitive-surface |
-| CardShellInset | `card-shell.tsx` | plain | 3 мест | Нет | Да → @/shared/ui/surface, primitive-surface |
-| Surface | `surface.tsx` | card | 8 мест | Нет | Нет |
-| DenseCard | `dense-card.tsx` | unknown | 1 мест | Нет | Нет |
-| DenseCardTitle | `dense-list/cards.tsx` | unknown | 0 мест | Нет | Нет |
-| DenseCardIcon | `dense-list/cards.tsx` | unknown | 0 мест | Нет | Нет |
-| DenseCardRowLabel | `dense-list/cards.tsx` | unknown | 0 мест | Нет | Нет |
-| KPICard | `kpi-card.tsx` | default | 3 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
-| editable-data-surface | `editable-data-surface.tsx` | estimate | 0 мест | Нет | Нет |
-| EstimateTabCard | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Card | card.tsx | ✅ да | 9 | канон |
+| CardHeader | card.tsx | ✅ да | 8 | — |
+| CardTitle | card.tsx | ✅ да | 8 | — |
+| CardDescription | card.tsx | ✅ да | 5 | — |
+| CardAction | card.tsx | ✅ да | 0 | — |
+| CardContent | card.tsx | ✅ да | 8 | — |
+| CardFooter | card.tsx | ✅ да | 0 | — |
+| CardShell | card-shell.tsx | ✅ да | 10 | — |
+| CardShellInset | card-shell.tsx | ✅ да | 3 | — |
+| CardShellHeader | card-shell.tsx | ✅ да | 4 | — |
+| CardShellBody | card-shell.tsx | ✅ да | 6 | — |
+| CardShellFooter | card-shell.tsx | ✅ да | 1 | — |
+| Surface | surface.tsx | ✅ да | 8 | канон |
+| DenseCard | dense-card.tsx | ✅ да | 1 | — |
+| DenseListItem | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListRow | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListRecordGrid | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListMetaField | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListPrimaryCell | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListInlineStart | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListWrap | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListMetricGroup | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListTrailingActions | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListInlineContent | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListBodyRow | dense-list/cards.tsx | ✅ да | 2 | — |
+| DenseListNestedPanel | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListActionsGrid | dense-list/cards.tsx | ✅ да | 1 | — |
+| DenseListTrailingAction | dense-list/cards.tsx | ✅ да | 1 | — |
+| KPICard | kpi-card.tsx | ✅ да | 3 | — |
+| KPICardGrid | kpi-card.tsx | ✅ да | 3 | — |
+| KPICardGridSkeleton | kpi-card.tsx | ✅ да | 1 | обёртка |
+| EditableDataSurface | editable-data-surface.tsx | ✅ да | 1 | — |
+| EditableDataSurfaceToolbar | editable-data-surface.tsx | ✅ да | 1 | — |
+| EditableDataSurfaceViewport | editable-data-surface.tsx | ✅ да | 1 | — |
+| EditableDataSurfaceEmptyInset | editable-data-surface.tsx | ✅ да | 1 | — |
+| EditableDataSurfaceActions | editable-data-surface.tsx | ✅ да | 1 | — |
 
 ### Overlap
 
-В категории "Card / Surface" обнаружено 14 компонентов. 7 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Card (shadcn), CardShell, Surface, DenseCard, KPICard, EditableDataSurface — 6 способов сделать карточку. CardShell — обёртка над Surface. DenseCard — raw Tailwind. Остальные — обёртки с разными variant/density пропсами.
+В категории "Card / Surface" обнаружено 36 компонентов. 8 из них — обёртки. 1 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** card.tsx#Card, surface.tsx#Surface, card-shell.tsx#CardShell. 
-**Deprecated:**
-- dense-card.tsx#DenseCard → CardShell variant=card density=compact
-- dense-list/cards.tsx#DenseCardTitle → CardShell + CardTitle
-- dense-list/cards.tsx#DenseCardIcon → CardShell + icon slot
-- dense-list/cards.tsx#DenseCardRowLabel → CardShell + label slot
-- kpi-card.tsx#KPICard → CardShell variant=card + data display cells
-- editable-data-surface.tsx → CardShell variant=card + inline edit
-- estimate-tab.tsx#EstimateTabCard → CardShell variant=card density=compact
+**Канон:** card.tsx#Card, surface.tsx#Surface.
+**Deprecated кандидаты:**
+- kpi-card.tsx#KPICardGridSkeleton → обёртка над CardShell, CardShellBody
 
 
-### Файлы, требующие миграции (первые 30)
+### Файлы для миграции
 
-- `features/global-purchases/components/cards/GlobalPurchaseCard.tsx`
-- `features/dashboard/components/HomeKpiCards.tsx`
-- `features/projects/dashboard/components/DashboardKpiCards.tsx`
-- `features/projects/list/components/projects-kpi-placeholders.tsx`
-- `features/projects/estimates/components/tabs/EstimateExecution.tsx`
-- `features/projects/estimates/components/tabs/EstimateProcurement.tsx`
+- `features/projects/dashboard/screens/ProjectDashboard.tsx`
 
 ---
 
@@ -223,45 +213,46 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| PageShell | `page-shell.tsx` | compact | 5 мест | Да ⚠️ | Нет |
-| ContentContainer | `page-shell.tsx` | compact | 1 мест | Да ⚠️ | Нет |
-| WorkspaceMain | `page-shell.tsx` | compact | 3 мест | Да ⚠️ | Нет |
-| PageHeader | `page-shell.tsx` | compact | 0 мест | Да ⚠️ | Нет |
-| Section | `section.tsx` | compact | 3 мест | Нет | Нет |
-| SectionHeader | `section.tsx` | compact | 1 мест | Нет | Нет |
-| SectionTitle | `section.tsx` | compact | 2 мест | Нет | Нет |
-| DenseListPanel | `dense-list/layout.tsx` | default | 1 мест | Нет | Нет |
-| DashboardPanel | `dashboard-layout.tsx` | unknown | 1 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
-| DashboardPageStack | `dashboard-layout.tsx` | unknown | 2 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
-| EstimateTabPanel | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| AuthPanel | `auth-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingSection | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| ContentContainer | `content-container.tsx` | unknown | 1 мест | Нет | Нет |
-| AppHeaderShell | `app-header.tsx` | unknown | 1 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| ContentContainer | page-shell.tsx | ✅ да | 1 | канон |
+| PageHeader | page-shell.tsx | ✅ да | 0 | — |
+| PageShell | page-shell.tsx | ✅ да | 5 | — |
+| WorkspaceMain | page-shell.tsx | ✅ да | 3 | — |
+| Section | section.tsx | ✅ да | 3 | канон |
+| SectionHeader | section.tsx | ✅ да | 1 | — |
+| SectionTitle | section.tsx | ✅ да | 2 | — |
+| DenseListSurface | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListPanel | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListToolbarInset | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListContentInset | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListHeader | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListViewport | dense-list/layout.tsx | ✅ да | 2 | — |
+| DenseListStack | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListEmptyBlock | dense-list/layout.tsx | ✅ да | 1 | — |
+| DenseListEmptyInset | dense-list/layout.tsx | ✅ да | 1 | — |
+| DashboardPageStack | dashboard-layout.tsx | ✅ да | 2 | — |
+| DashboardSectionStack | dashboard-layout.tsx | ✅ да | 1 | — |
+| DashboardMainContainer | dashboard-layout.tsx | ✅ да | 2 | — |
+| DashboardResponsiveColumns | dashboard-layout.tsx | ✅ да | 1 | — |
+| DashboardSingleColumn | dashboard-layout.tsx | ✅ да | 1 | — |
+| DashboardPanel | dashboard-layout.tsx | ✅ да | 1 | — |
+| DashboardChartSkeleton | dashboard-layout.tsx | ✅ да | 1 | — |
+| AppHeaderShell | app-header.tsx | ✅ да | 0 | 0 usage |
 
 ### Overlap
 
-В категории "Panel / Layout" обнаружено 15 компонентов. 3 из них — обёртки над другими UI-компонентами. 8 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Panel / Layout" обнаружено 24 компонентов. 1 кандидатов на удаление. (1 файлов содержат только константы/типы.)
 
 ### Рекомендация
 
-**Канон:** page-shell.tsx#PageShell, section.tsx#Section. 
-**Deprecated:**
-- dense-list/layout.tsx#DenseListPanel → Section variant=compact
-- dashboard-layout.tsx#DashboardPanel → Section variant=card
-- dashboard-layout.tsx#DashboardPageStack → PageShell variant=dashboard
-- estimate-tab.tsx#EstimateTabPanel → Section variant=estimates
+**Канон:** page-shell.tsx#ContentContainer, section.tsx#Section.
+**Deprecated кандидаты:**
+- app-header.tsx#AppHeaderShell → 0 usage
 
 
-### Файлы, требующие миграции (первые 30)
-
-- `features/global-purchases/components/GlobalPurchasesView.client.tsx`
-- `features/projects/dashboard/screens/ProjectDashboard.tsx`
-- `features/dashboard/screens/AppHomeScreen.tsx`
-- `features/projects/estimates/components/tabs/EstimateExecution.tsx`
-- `features/projects/estimates/components/tabs/EstimateProcurement.tsx`
+### Файлы для миграции
+(empty)
 
 ---
 
@@ -269,47 +260,61 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Table | `table.tsx` | unknown | 3 мест | Да ⚠️ | Да → @/shared/ui/primitive-table |
-| DataTable | `data-table.tsx` | unknown | 1 мест | Да ⚠️ | Да → @/shared/ui/button, table |
-| CompactTableRow | `table-density.tsx` | compact, default, xs | 1 мест | Нет | Нет |
-| CompactTableHeaderRow | `table-density.tsx` | compact, default, xs | 1 мест | Нет | Нет |
-| CompactTableHead | `table-density.tsx` | compact, default, xs | 1 мест | Нет | Нет |
-| CompactTableCell | `table-density.tsx` | compact, default, xs | 1 мест | Нет | Нет |
-| TableRowActions | `table-actions.tsx` | icon-xs | 2 мест | Да ⚠️ | Да → @/shared/ui/button |
-| TableHeaderActions | `table-actions.tsx` | icon-xs | 2 мест | Да ⚠️ | Да → @/shared/ui/button |
-| DataTableRow | `data-table/data-table-row.tsx` | unknown | 0 мест | Нет | Нет |
-| DataTableSkeleton | `data-table/data-table-skeleton.tsx` | unknown | 0 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
-| DataTableToolbar | `data-table/data-table-toolbar.tsx` | unknown | 2 мест | Нет | Нет |
-| EstimateTabCodeText | `estimate-tab.tsx` | execution, neutral, plan | 1 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| EstimateTabNameText | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| EstimateTabTitleRow | `estimate-tab.tsx` | execution, neutral, plan | 2 мест | Да ⚠️ | Да → @/shared/ui/badge |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Table | table.tsx | ✅ да | 3 | канон |
+| TableHeader | table.tsx | ✅ да | 2 | — |
+| StickyTableHeader | table.tsx | ✅ да | 1 | — |
+| TableBody | table.tsx | ✅ да | 3 | — |
+| TableFooter | table.tsx | ✅ да | 0 | — |
+| TableRow | table.tsx | ✅ да | 2 | — |
+| TableHead | table.tsx | ✅ да | 2 | — |
+| TableCell | table.tsx | ✅ да | 2 | — |
+| TableCaption | table.tsx | ✅ да | 0 | — |
+| SortableHeaderTrigger | data-table.tsx | ❌ нет | 0 | 0 usage |
+| HeaderCellContent | data-table.tsx | ❌ нет | 0 | 0 usage |
+| DataTableHeaderCell | data-table.tsx | ❌ нет | 0 | 0 usage |
+| DataTableHeaderContent | data-table.tsx | ❌ нет | 0 | 0 usage |
+| DataTable | data-table.tsx | ✅ да | 1 | — |
+| TableHeaderLabel | table-density.tsx | ✅ да | 0 | обёртка |
+| TableCellText | table-density.tsx | ✅ да | 0 | обёртка |
+| CompactTableHeaderRow | table-density.tsx | ✅ да | 1 | обёртка |
+| CompactTableRow | table-density.tsx | ✅ да | 1 | обёртка |
+| CompactTableHead | table-density.tsx | ✅ да | 1 | обёртка |
+| CompactTableCell | table-density.tsx | ✅ да | 1 | обёртка |
+| TablePlaceholderRowActions | table-actions.tsx | ✅ да | 0 | 0 usage |
+| TableRowActions | table-actions.tsx | ✅ да | 2 | — |
+| TableHeaderActions | table-actions.tsx | ✅ да | 2 | — |
+| DataTableRow | data-table/data-table-row.tsx | ✅ да | 0 | 0 usage |
+| DataTableSkeleton | data-table/data-table-skeleton.tsx | ✅ да | 0 | 0 usage |
+| DataTableToolbar | data-table/data-table-toolbar.tsx | ✅ да | 2 | — |
 
 ### Overlap
 
-В категории "Table" обнаружено 14 компонентов. 8 из них — обёртки над другими UI-компонентами. 7 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. Две параллельные табличные системы: shadcn Table (table.tsx) для простых случаев и DataTable (@tanstack/react-table + react-virtuoso) для сложных. TableDensity (table-density.tsx) — обёртка над shadcn Table с type-safe пропсами. DataTable частично дублирует table-density.
+В категории "Table" обнаружено 26 компонентов. 6 из них — обёртки. 13 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** table.tsx#Table, table-density.tsx#CompactTableCell, table-density.tsx#CompactTableHead. 
-**Deprecated:**
-- data-table.tsx#DataTable → uses table-density (fine as is)
-- data-table/data-table-row.tsx#DataTableRow → merge into table-density
-- data-table/data-table-skeleton.tsx#DataTableSkeleton → merge into table-density
-- data-table/data-table-toolbar.tsx#DataTableToolbar → merge into table-density
-- estimate-tab.tsx#EstimateTabCodeText → CompactTableCell variant=code
-- estimate-tab.tsx#EstimateTabNameText → CompactTableCell variant=name
-- estimate-tab.tsx#EstimateTabTitleRow → CompactTableRow variant=title
+**Канон:** table.tsx#Table.
+**Deprecated кандидаты:**
+- data-table.tsx#SortableHeaderTrigger → 0 usage
+- data-table.tsx#HeaderCellContent → 0 usage
+- data-table.tsx#DataTableHeaderCell → 0 usage
+- data-table.tsx#DataTableHeaderContent → 0 usage
+- table-density.tsx#TableHeaderLabel → обёртка над TableCell, TableHead, TableRow
+- table-density.tsx#TableCellText → обёртка над TableCell, TableHead, TableRow
+- table-density.tsx#CompactTableHeaderRow → обёртка над TableCell, TableHead, TableRow
+- table-density.tsx#CompactTableRow → обёртка над TableCell, TableHead, TableRow
+- table-density.tsx#CompactTableHead → обёртка над TableCell, TableHead, TableRow
+- table-density.tsx#CompactTableCell → обёртка над TableCell, TableHead, TableRow
+- table-actions.tsx#TablePlaceholderRowActions → 0 usage
+- data-table/data-table-row.tsx#DataTableRow → 0 usage
+- data-table/data-table-skeleton.tsx#DataTableSkeleton → 0 usage
 
 
-### Файлы, требующие миграции (первые 30)
+### Файлы для миграции
 
-- `features/projects/estimates/components/registry/EstimatesListTable.tsx`
-- `features/global-purchases/components/GlobalPurchasesView.client.tsx`
-- `features/projects/estimates/components/table/EstimateTable.client.tsx`
-- `features/projects/estimates/components/tabs/EstimateExecution.tsx`
-- `features/projects/estimates/components/tabs/EstimateProcurement.tsx`
+- `features/projects/dashboard/components/ProjectReceiptsSection.tsx`
 
 ---
 
@@ -317,313 +322,515 @@
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| FormItem | `form.tsx` | unknown | 4 мест | Нет | Да → @/shared/ui/label |
-| FormLabel | `form.tsx` | unknown | 4 мест | Нет | Да → @/shared/ui/label |
-| FormMessage | `form.tsx` | unknown | 4 мест | Нет | Да → @/shared/ui/label |
-| FormControl | `form.tsx` | unknown | 4 мест | Нет | Да → @/shared/ui/label |
-| FormLayout | `form-layout.tsx` | unknown | 15 мест | Да ⚠️ | Да → @/shared/ui/form, label |
-| FormSection | `form-layout.tsx` | unknown | 4 мест | Да ⚠️ | Да → @/shared/ui/form, label |
-| FieldStack | `form-layout.tsx` | unknown | 2 мест | Да ⚠️ | Да → @/shared/ui/form, label |
-| FieldRow | `form-layout.tsx` | unknown | 1 мест | Да ⚠️ | Да → @/shared/ui/form, label |
-| FormSectionHeader | `form-layout.tsx` | unknown | 1 мест | Да ⚠️ | Да → @/shared/ui/form, label |
-| FieldGroup | `field.tsx` | unknown | 0 мест | Да ⚠️ | Да → @/shared/ui/label, separator |
-| Label | `label.tsx` | unknown | 10 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| FormItem | form.tsx | ✅ да | 4 | канон |
+| FormLabel | form.tsx | ✅ да | 4 | — |
+| FormControl | form.tsx | ✅ да | 4 | — |
+| FormDescription | form.tsx | ✅ да | 0 | — |
+| FormMessage | form.tsx | ✅ да | 4 | — |
+| Form | form.tsx | ✅ да | 4 | — |
+| FormField | form.tsx | ✅ да | 4 | — |
+| FormSectionHeader | form-layout.tsx | ✅ да | 1 | канон |
+| RadioGroupRow | form-layout.tsx | ✅ да | 1 | — |
+| FormSection | form-layout.tsx | ✅ да | 4 | — |
+| FieldStack | form-layout.tsx | ✅ да | 2 | — |
+| FieldRow | form-layout.tsx | ✅ да | 1 | — |
+| FormHelperText | form-layout.tsx | ✅ да | 1 | — |
+| FormErrorText | form-layout.tsx | ✅ да | 0 | — |
+| FormStatusMessage | form-layout.tsx | ✅ да | 4 | — |
+| FieldSet | field.tsx | ✅ да | 0 | обёртка |
+| FieldLegend | field.tsx | ✅ да | 0 | обёртка |
+| FieldGroup | field.tsx | ✅ да | 0 | обёртка |
+| Field | field.tsx | ✅ да | 0 | обёртка |
+| FieldContent | field.tsx | ✅ да | 0 | обёртка |
+| FieldLabel | field.tsx | ✅ да | 0 | обёртка |
+| FieldTitle | field.tsx | ✅ да | 0 | обёртка |
+| FieldDescription | field.tsx | ✅ да | 0 | обёртка |
+| FieldSeparator | field.tsx | ✅ да | 0 | обёртка |
+| FieldError | field.tsx | ✅ да | 0 | обёртка |
+| Label | label.tsx | ✅ да | 10 | — |
 
 ### Overlap
 
-В категории "Form" обнаружено 11 компонентов. 10 из них — обёртки над другими UI-компонентами. 5 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Form" обнаружено 26 компонентов. 25 из них — обёртки. 10 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** form.tsx#FormItem, form-layout.tsx#FormLayout, form-layout.tsx#FieldStack. 
-**Deprecated:**
-- field.tsx#FieldGroup → FormLayout FieldStack
-- label.tsx#Label → standalone, fine as separate
+**Канон:** form-layout.tsx#FormSectionHeader, form.tsx#FormItem.
+**Deprecated кандидаты:**
+- field.tsx#FieldSet → обёртка над Label
+- field.tsx#FieldLegend → обёртка над Label
+- field.tsx#FieldGroup → обёртка над Label
+- field.tsx#Field → обёртка над Label
+- field.tsx#FieldContent → обёртка над Label
+- field.tsx#FieldLabel → обёртка над Label
+- field.tsx#FieldTitle → обёртка над Label
+- field.tsx#FieldDescription → обёртка над Label
+- field.tsx#FieldSeparator → обёртка над Label
+- field.tsx#FieldError → обёртка над Label
 
 
-### Файлы, требующие миграции (первые 30)
-
-- `features/auth/components/ForgotPasswordForm.tsx`
-- `features/auth/components/LoginForm.tsx`
-- `features/auth/components/ResetPasswordForm.tsx`
-- `features/projects/dashboard/components/ProjectReceiptsSection.tsx`
-- `features/projects/estimates/components/table/EstimateTableDialogs.tsx`
-- `features/settings/components/user-settings-page.tsx`
-- `features/settings/screens/AdminGeneralSettingsScreen.tsx`
-- `features/settings/screens/AdminSecuritySettingsScreen.tsx`
-- `features/team/components/InviteTeamMemberCard.tsx`
-- `features/team/components/TeamMembersCard.tsx`
+### Файлы для миграции
+(empty)
 
 ---
 
-## Категория 8: Typography / Text
+## Категория 8: Navigation / Tabs
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| primitiveVisualTypographyClassNames | `primitive-surface.ts` | default, compact | 23 мест | Нет | Нет |
-| primitiveBadgeVariantClassNames | `primitive-badge.ts` | unknown | 0 мест | Нет | Нет |
-| EstimateTabText | `estimate-tab.tsx` | execution, neutral, plan | 0 мест | Да ⚠️ | Да → @/shared/ui/badge |
-| primitive-density | `primitive-density.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-controls | `primitive-controls.ts` | unknown | 0 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Tabs | tabs.tsx | ✅ да | 4 | канон |
+| TabsList | tabs.tsx | ✅ да | 3 | ✅ Radix |
+| TabsTrigger | tabs.tsx | ✅ да | 3 | ✅ Radix |
+| TabsContent | tabs.tsx | ✅ да | 4 | ✅ Radix |
+| WorkspaceTabs | workspace-tabs.tsx | ✅ да | 1 | обёртка |
+| WorkspaceTabsList | workspace-tabs.tsx | ✅ да | 1 | обёртка |
+| WorkspaceTabsTrigger | workspace-tabs.tsx | ✅ да | 1 | обёртка |
+| WorkspaceTabsContent | workspace-tabs.tsx | ✅ да | 1 | обёртка |
+| WorkspaceTabsFallback | workspace-tabs.tsx | ✅ да | 1 | обёртка |
+| SidebarProvider | sidebar.tsx | ✅ да | 2 | канон |
+| Sidebar | sidebar.tsx | ✅ да | 1 | — |
+| SidebarTrigger | sidebar.tsx | ✅ да | 1 | — |
+| SidebarRail | sidebar.tsx | ✅ да | 0 | — |
+| SidebarInset | sidebar.tsx | ✅ да | 2 | — |
+| SidebarInput | sidebar.tsx | ✅ да | 0 | — |
+| SidebarHeader | sidebar.tsx | ✅ да | 1 | — |
+| SidebarFooter | sidebar.tsx | ✅ да | 1 | — |
+| SidebarSeparator | sidebar.tsx | ✅ да | 0 | — |
+| SidebarContent | sidebar.tsx | ✅ да | 1 | — |
+| SidebarGroup | sidebar.tsx | ✅ да | 0 | — |
+| SidebarGroupLabel | sidebar.tsx | ✅ да | 0 | — |
+| SidebarGroupAction | sidebar.tsx | ✅ да | 0 | — |
+| SidebarGroupContent | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenu | sidebar.tsx | ✅ да | 1 | — |
+| SidebarMenuItem | sidebar.tsx | ✅ да | 1 | — |
+| SidebarMenuButton | sidebar.tsx | ✅ да | 1 | — |
+| SidebarMenuAction | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenuBadge | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenuSkeleton | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenuSub | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenuSubItem | sidebar.tsx | ✅ да | 0 | — |
+| SidebarMenuSubButton | sidebar.tsx | ✅ да | 0 | — |
+| AppBreadcrumbs | breadcrumbs.tsx | ✅ да | 0 | канон |
+| Breadcrumb07 | breadcrumbs.tsx | ❌ нет | 0 | — |
+| NavigationMenu | navigation-menu.tsx | ✅ да | 0 | 0 usage |
+| NavigationMenuList | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuItem | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuTrigger | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuContent | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuViewport | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuLink | navigation-menu.tsx | ✅ да | 0 | — |
+| NavigationMenuIndicator | navigation-menu.tsx | ✅ да | 0 | — |
+| MenuTriggerStyle | navigation-menu.tsx | ❌ нет | 0 | — |
+| SidebarNavItem | sidebar-nav-item.tsx | ✅ да | 0 | обёртка |
 
 ### Overlap
 
-В категории "Typography / Text" обнаружено 5 компонентов. 1 из них — обёртки над другими UI-компонентами. 
+В категории "Navigation / Tabs" обнаружено 44 компонентов. 6 из них — обёртки. 7 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** primitive-surface.ts#primitiveVisualTypographyClassNames. 
-**Deprecated:**
-- Raw text classes in features/ → use consistent typography tokens from primitives
-
----
-
-## Категория 9: Navigation / Tabs
-
-### Компоненты
-
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Tabs | `tabs.tsx` | unknown | 4 мест | Нет | Нет |
-| WorkspaceTabs | `workspace-tabs.tsx` | panel | 1 мест | Нет | Да → @/shared/ui/skeleton |
-| Sidebar | `sidebar.tsx` | default, hover, outline | 2 мест | Да ⚠️ | Да → @/shared/ui/button, input, sheet, separator, skeleton |
-| AppHeaderShell | `app-header.tsx` | unknown | 1 мест | Нет | Нет |
-| AppBreadcrumbs | `breadcrumbs.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| NavigationMenu | `navigation-menu.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| MarketingHeader | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingFooter | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingMobileMenu | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-
-### Overlap
-
-В категории "Navigation / Tabs" обнаружено 9 компонентов. 2 из них — обёртки над другими UI-компонентами. 5 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
-
-### Рекомендация
-
-**Канон:** tabs.tsx#Tabs, sidebar.tsx#Sidebar, breadcrumbs.tsx#AppBreadcrumbs. 
-**Deprecated:**
-- workspace-tabs.tsx#WorkspaceTabs → Tabs variant=workspace
-- navigation-menu.tsx#NavigationMenu → Sidebar or standalone (fine as is, different purpose)
+**Канон:** tabs.tsx#Tabs, sidebar.tsx#SidebarProvider, breadcrumbs.tsx#AppBreadcrumbs.
+**Deprecated кандидаты:**
+- workspace-tabs.tsx#WorkspaceTabs → обёртка над Tabs, TabsContent, TabsList, TabsTrigger
+- workspace-tabs.tsx#WorkspaceTabsList → обёртка над Tabs, TabsContent, TabsList, TabsTrigger
+- workspace-tabs.tsx#WorkspaceTabsTrigger → обёртка над Tabs, TabsContent, TabsList, TabsTrigger
+- workspace-tabs.tsx#WorkspaceTabsContent → обёртка над Tabs, TabsContent, TabsList, TabsTrigger
+- workspace-tabs.tsx#WorkspaceTabsFallback → обёртка над Tabs, TabsContent, TabsList, TabsTrigger
+- navigation-menu.tsx#NavigationMenu → 0 usage
+- sidebar-nav-item.tsx#SidebarNavItem → обёртка над SidebarMenuItem, SidebarMenuButton
 
 
-### Файлы, требующие миграции (первые 30)
+### Файлы для миграции
 
 - `features/projects/estimates/screens/EstimateDetailsShell.client.tsx`
 
 ---
 
-## Категория 10: Overlay
+## Категория 9: Overlay
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Dialog | `dialog.tsx` | sm | 8 мест | Да ⚠️ | Да → @/shared/ui/button |
-| Drawer | `drawer.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| Sheet | `sheet.tsx` | sm | 4 мест | Да ⚠️ | Нет |
-| Popover | `popover.tsx` | sm | 8 мест | Нет | Нет |
-| HoverCard | `hover-card.tsx` | unknown | 0 мест | Нет | Нет |
-| AlertDialog | `alert-dialog.tsx` | unknown | 8 мест | Нет | Да → @/shared/ui/button |
-| Tooltip | `tooltip.tsx` | unknown | 8 мест | Да ⚠️ | Нет |
-| ContextMenu | `context-menu.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| Command | `command.tsx` | unknown | 7 мест | Да ⚠️ | Да → @/shared/ui/dialog |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Dialog | dialog.tsx | ✅ да | 8 | канон |
+| DialogTrigger | dialog.tsx | ✅ да | 0 | Radix |
+| DialogPortal | dialog.tsx | ✅ да | 0 | Radix |
+| DialogClose | dialog.tsx | ✅ да | 0 | Radix |
+| DialogOverlay | dialog.tsx | ✅ да | 0 | Radix |
+| DialogContent | dialog.tsx | ✅ да | 8 | ✅ Radix |
+| DialogHeader | dialog.tsx | ✅ да | 8 | ✅ Radix |
+| DialogFooter | dialog.tsx | ✅ да | 7 | ✅ Radix |
+| DialogTitle | dialog.tsx | ✅ да | 8 | ✅ Radix |
+| DialogDescription | dialog.tsx | ✅ да | 7 | ✅ Radix |
+| Drawer | drawer.tsx | ✅ да | 0 | 0 usage |
+| DrawerTrigger | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerPortal | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerClose | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerOverlay | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerContent | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerHeader | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerFooter | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerTitle | drawer.tsx | ✅ да | 0 | Radix |
+| DrawerDescription | drawer.tsx | ✅ да | 0 | Radix |
+| Sheet | sheet.tsx | ✅ да | 4 | канон |
+| SheetTrigger | sheet.tsx | ✅ да | 2 | ✅ Radix |
+| SheetClose | sheet.tsx | ✅ да | 0 | Radix |
+| SheetPortal | sheet.tsx | ❌ нет | 0 | Radix |
+| SheetOverlay | sheet.tsx | ❌ нет | 0 | Radix |
+| SheetContent | sheet.tsx | ✅ да | 4 | ✅ Radix |
+| SheetHeader | sheet.tsx | ✅ да | 3 | ✅ Radix |
+| SheetFooter | sheet.tsx | ✅ да | 1 | ✅ Radix |
+| SheetTitle | sheet.tsx | ✅ да | 4 | ✅ Radix |
+| SheetDescription | sheet.tsx | ✅ да | 3 | ✅ Radix |
+| Popover | popover.tsx | ✅ да | 8 | канон |
+| PopoverTrigger | popover.tsx | ✅ да | 8 | ✅ Radix |
+| PopoverContent | popover.tsx | ✅ да | 8 | ✅ Radix |
+| PopoverAnchor | popover.tsx | ✅ да | 0 | Radix |
+| PopoverHeader | popover.tsx | ✅ да | 0 | Radix |
+| PopoverTitle | popover.tsx | ✅ да | 0 | Radix |
+| PopoverDescription | popover.tsx | ✅ да | 0 | Radix |
+| HoverCard | hover-card.tsx | ✅ да | 0 | 0 usage |
+| HoverCardTrigger | hover-card.tsx | ✅ да | 0 | Radix |
+| HoverCardContent | hover-card.tsx | ✅ да | 0 | Radix |
+| AlertDialog | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogTrigger | alert-dialog.tsx | ✅ да | 4 | ✅ Radix |
+| AlertDialogPortal | alert-dialog.tsx | ✅ да | 0 | Radix |
+| AlertDialogOverlay | alert-dialog.tsx | ✅ да | 0 | Radix |
+| AlertDialogContent | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogHeader | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogFooter | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogTitle | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogDescription | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogMedia | alert-dialog.tsx | ✅ да | 0 | Radix |
+| AlertDialogAction | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| AlertDialogCancel | alert-dialog.tsx | ✅ да | 8 | ✅ Radix |
+| TooltipProvider | tooltip.tsx | ✅ да | 2 | канон |
+| Tooltip | tooltip.tsx | ✅ да | 7 | ✅ Radix |
+| TooltipTrigger | tooltip.tsx | ✅ да | 7 | ✅ Radix |
+| TooltipContent | tooltip.tsx | ✅ да | 7 | ✅ Radix |
+| ContextMenu | context-menu.tsx | ✅ да | 0 | 0 usage |
+| ContextMenuTrigger | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuGroup | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuPortal | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuSub | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuRadioGroup | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuSubTrigger | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuSubContent | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuContent | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuItem | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuCheckboxItem | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuRadioItem | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuLabel | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuSeparator | context-menu.tsx | ✅ да | 0 | Radix |
+| ContextMenuShortcut | context-menu.tsx | ✅ да | 0 | Radix |
+| Command | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandDialog | command.tsx | ✅ да | 0 | Radix |
+| CommandInput | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandList | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandEmpty | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandGroup | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandSeparator | command.tsx | ✅ да | 0 | Radix |
+| CommandItem | command.tsx | ✅ да | 7 | ✅ Radix |
+| CommandShortcut | command.tsx | ✅ да | 0 | Radix |
+| Menubar | menubar.tsx | ✅ да | 0 | 0 usage |
+| MenubarMenu | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarGroup | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarPortal | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarRadioGroup | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarTrigger | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarContent | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarItem | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarCheckboxItem | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarRadioItem | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarLabel | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarSeparator | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarShortcut | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarSub | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarSubTrigger | menubar.tsx | ✅ да | 0 | Radix |
+| MenubarSubContent | menubar.tsx | ✅ да | 0 | Radix |
 
 ### Overlap
 
-В категории "Overlay" обнаружено 9 компонентов. 3 из них — обёртки над другими UI-компонентами. 4 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Overlay" обнаружено 96 компонентов. 9 из них — обёртки. 4 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** dialog.tsx#Dialog, sheet.tsx#Sheet, drawer.tsx#Drawer, popover.tsx#Popover. Все компоненты имеют разное назначение, дублирования не обнаружено.
+**Канон:** dialog.tsx#Dialog, sheet.tsx#Sheet, popover.tsx#Popover, tooltip.tsx#TooltipProvider.
+**Deprecated кандидаты:**
+- drawer.tsx#Drawer → 0 usage
+- hover-card.tsx#HoverCard → 0 usage
+- context-menu.tsx#ContextMenu → 0 usage
+- menubar.tsx#Menubar → 0 usage
+
+
+### Файлы для миграции
+(empty)
 
 ---
 
-## Категория 11: State / Loading
+## Категория 10: State / Loading
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| LoadingState | `states/index.ts` | unknown | 9 мест | Нет | Нет |
-| EmptyState | `states/index.ts` | unknown | 2 мест | Нет | Нет |
-| ErrorState | `states/index.ts` | unknown | 4 мест | Нет | Нет |
-| ForbiddenState | `states/index.ts` | unknown | 2 мест | Нет | Нет |
-| NoResultsState | `states/index.ts` | unknown | 2 мест | Нет | Нет |
-| StateShell | `states/index.ts` | unknown | 0 мест | Нет | Нет |
-| Spinner | `spinner.tsx` | unknown | 0 мест | Нет | Нет |
-| Skeleton | `skeleton.tsx` | unknown | 2 мест | Нет | Нет |
-| LoadingIndicator | `loading-indicator.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| DataTableSkeleton | `data-table/data-table-skeleton.tsx` | unknown | 0 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
-| TableEmptyState | `table-empty-state.tsx` | default | 5 мест | Да ⚠️ | Нет |
-| Empty | `empty.tsx` | default, icon, _svg | 1 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| EmptyState | states/EmptyState.tsx | ✅ да | 2 | — |
+| ErrorState | states/ErrorState.tsx | ✅ да | 4 | — |
+| ForbiddenState | states/ForbiddenState.tsx | ✅ да | 2 | — |
+| LoadingState | states/LoadingState.tsx | ✅ да | 9 | — |
+| NoResultsState | states/NoResultsState.tsx | ✅ да | 2 | — |
+| StateShell | states/StateShell.tsx | ✅ да | 0 | 0 usage |
+| Spinner | spinner.tsx | ✅ да | 0 | 0 usage |
+| Skeleton | skeleton.tsx | ✅ да | 2 | канон |
+| LoadingIndicator | loading-indicator.tsx | ✅ да | 1 | — |
+| TableEmptyState | table-empty-state.tsx | ✅ да | 5 | — |
+| Empty | empty.tsx | ✅ да | 1 | — |
+| EmptyHeader | empty.tsx | ✅ да | 1 | — |
+| EmptyMedia | empty.tsx | ✅ да | 1 | — |
+| EmptyTitle | empty.tsx | ✅ да | 1 | — |
+| EmptyDescription | empty.tsx | ✅ да | 1 | — |
+| EmptyContent | empty.tsx | ✅ да | 0 | 0 usage |
 
 ### Overlap
 
-В категории "State / Loading" обнаружено 12 компонентов. 1 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "State / Loading" обнаружено 16 компонентов. 1 из них — обёртки. 3 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** states/index.ts#LoadingState, states/index.ts#EmptyState, states/index.ts#ErrorState. 
-**Deprecated:**
-- spinner.tsx#Spinner → LoadingState variant=spinner
-- loading-indicator.tsx#LoadingIndicator → LoadingState variant=indicator
-- data-table/data-table-skeleton.tsx#DataTableSkeleton → LoadingState variant=table-skeleton
-- table-empty-state.tsx#TableEmptyState → EmptyState variant=table
-- empty.tsx#Empty → EmptyState variant=generic
+**Канон:** skeleton.tsx#Skeleton.
+**Deprecated кандидаты:**
+- states/StateShell.tsx#StateShell → 0 usage
+- spinner.tsx#Spinner → 0 usage
+- empty.tsx#EmptyContent → 0 usage
 
 
-### Файлы, требующие миграции (первые 30)
-
-- `features/notifications/components/notifications-list.tsx`
-- `features/_shared/directories/components/directory-list-screen.tsx`
-- `features/_shared/guide-catalog/components/CatalogTableWrapper.tsx`
-- `features/global-purchases/components/GlobalPurchasesView.client.tsx`
-- `features/projects/dashboard/components/ProjectEstimatesCards.tsx`
-- `features/projects/estimates/components/table/EstimateTable.client.tsx`
-- `features/projects/list/components/projects-list.tsx`
+### Файлы для миграции
+(empty)
 
 ---
 
-## Категория 12: Inline Editors (Input Cells)
+## Категория 11: Marketing
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| useDenseListInlineEdit | `dense-list/inline-edit.ts` | unknown | 0 мест | Нет | Нет |
-| EditableCell | `cells/editable-cell.tsx` | unknown | 3 мест | Да ⚠️ | Да → @/shared/ui/button, input |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| MarketingSkipLink | marketing-shell.tsx | ✅ да | 1 | канон |
+| MarketingBrandLogo | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingGradientOrbs | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingHeader | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingMobileMenu | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingFooter | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingPageShell | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingSection | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingHero | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingCard | marketing-shell.tsx | ✅ да | 1 | — |
+| MarketingCTA | marketing-shell.tsx | ✅ да | 1 | — |
+| AuthShell | auth-shell.tsx | ✅ да | 2 | канон |
+| AuthPanel | auth-shell.tsx | ✅ да | 1 | — |
+| AuthFeatureCard | auth-shell.tsx | ✅ да | 0 | — |
+| AuthStatusMessage | auth-shell.tsx | ✅ да | 5 | — |
 
 ### Overlap
 
-В категории "Inline Editors (Input Cells)" обнаружено 2 компонентов. 1 из них — обёртки над другими UI-компонентами. 1 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Marketing" обнаружено 15 компонентов. 
 
 ### Рекомендация
 
-**Канон:** cells/editable-cell.tsx#EditableCell. 
-**Deprecated:**
-- dense-list/inline-edit.ts#useDenseListInlineEdit → EditableCell hook
+**Канон:** marketing-shell.tsx#MarketingSkipLink, auth-shell.tsx#AuthShell.
+Дублирования не обнаружено.
 
 ---
 
-## Категория 13: Layout Constants (.ts files with Tailwind strings)
+## Категория 12: Data Display
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| toolbar | `dense-list/toolbar.ts` | unknown | 0 мест | Нет | Нет |
-| table | `dense-list/table.ts` | unknown | 0 мест | Нет | Нет |
-| PickersConstants | `dense-list/pickers.tsx` | unknown | 0 мест | Нет | Да → @/shared/ui/button |
-| primitive-surface | `primitive-surface.ts` | default, compact | 0 мест | Нет | Нет |
-| primitive-spacing | `primitive-spacing.ts` | none | 0 мест | Нет | Нет |
-| primitive-density | `primitive-density.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-controls | `primitive-controls.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-navigation | `primitive-navigation.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-table | `primitive-table.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-badge | `primitive-badge.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-form | `primitive-form.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-overlay | `primitive-overlay.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-chart | `primitive-chart.ts` | unknown | 0 мест | Нет | Нет |
-| primitive-marketing | `primitive-marketing.ts` | unknown | 0 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| DirectoryIndexCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryTextCell | cells/directory-table-cells.tsx | ✅ да | 2 | — |
+| DirectoryNameCell | cells/directory-table-cells.tsx | ✅ да | 3 | — |
+| DirectoryCodeCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryBadgeCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryBadgeTrail | cells/directory-table-cells.tsx | ✅ да | 0 | 0 usage |
+| DirectoryStackCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryCategoryCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryImageCell | cells/directory-table-cells.tsx | ✅ да | 1 | — |
+| DirectoryActionsHeader | cells/directory-table-cells.tsx | ✅ да | 2 | — |
+| DirectoryRowActionMenu | cells/directory-table-cells.tsx | ✅ да | 2 | — |
+| EditableCell | cells/editable-cell.tsx | ✅ да | 3 | — |
+| EstimateCodeCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateNameCellWrapper | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateUnitCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateNumberCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateSectionSumCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateSumCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| EstimateExpenseCell | cells/estimate-table-cells.tsx | ✅ да | 1 | — |
+| ImageCell | cells/image-cell.tsx | ✅ да | 1 | — |
+| MoneyCell | cells/money-cell.tsx | ✅ да | 7 | — |
+| PlaceholderTextCell | cells/table-cell-helpers.tsx | ✅ да | 2 | — |
+| PlaceholderNumberCell | cells/table-cell-helpers.tsx | ✅ да | 2 | — |
+| FormattedCurrencyCell | cells/table-cell-helpers.tsx | ✅ да | 2 | — |
+| CenteredUnitCell | cells/table-cell-helpers.tsx | ✅ да | 2 | — |
 
 ### Overlap
 
-В категории "Layout Constants (.ts files with Tailwind strings)" обнаружено 14 компонентов. 1 из них — обёртки над другими UI-компонентами. 
+В категории "Data Display" обнаружено 25 компонентов. 1 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** primitive-surface.ts, primitive-spacing.ts, primitive-density.ts, primitive-controls.ts, primitive-navigation.ts, primitive-table.ts, primitive-badge.ts, primitive-form.ts, primitive-overlay.ts, primitive-chart.ts, primitive-marketing.ts. 
-**Deprecated:**
-- dense-list/toolbar.ts → merge into primitive-navigation.ts
-- dense-list/table.ts → merge into primitive-table.ts
-- dense-list/pickers.tsx → merge into primitive-controls.ts
+**Канон:** (не указан).
+**Deprecated кандидаты:**
+- cells/directory-table-cells.tsx#DirectoryBadgeTrail → 0 usage
+
+
+### Файлы для миграции
+(empty)
 
 ---
 
-## Категория 14: Data Display
+## Категория 13: Containers / Helpers
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| MoneyCell | `cells/money-cell.tsx` | unknown | 7 мест | Нет | Нет |
-| EditableCell | `cells/editable-cell.tsx` | unknown | 3 мест | Да ⚠️ | Да → @/shared/ui/button, input |
-| CurrencyCell | ❌ cells/currency-cell.tsx | unknown | 0 мест | Нет | Нет |
-| KPICard | `kpi-card.tsx` | default | 3 мест | Да ⚠️ | Да → @/shared/ui/skeleton |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| Separator | separator.tsx | ✅ да | 4 | канон |
+| ScrollArea | scroll-area.tsx | ✅ да | 5 | канон |
+| ScrollBar | scroll-area.tsx | ✅ да | 0 | Radix |
+| Accordion | accordion.tsx | ✅ да | 0 | канон |
+| AccordionItem | accordion.tsx | ✅ да | 0 | Radix |
+| AccordionTrigger | accordion.tsx | ✅ да | 0 | Radix |
+| AccordionContent | accordion.tsx | ✅ да | 0 | Radix |
+| Carousel | carousel.tsx | ✅ да | 0 | 0 usage |
+| CarouselContent | carousel.tsx | ✅ да | 0 | Radix |
+| CarouselItem | carousel.tsx | ✅ да | 0 | Radix |
+| CarouselPrevious | carousel.tsx | ✅ да | 0 | Radix |
+| CarouselNext | carousel.tsx | ✅ да | 0 | Radix |
+| CarouselApi | carousel.tsx | ❌ нет | 0 | Radix |
+| ResizablePanelGroup | resizable.tsx | ✅ да | 0 | Radix |
+| ResizablePanel | resizable.tsx | ✅ да | 0 | 0 usage |
+| ResizableHandle | resizable.tsx | ✅ да | 0 | Radix |
+| Collapsible | collapsible.tsx | ✅ да | 0 | 0 usage |
+| CollapsibleTrigger | collapsible.tsx | ✅ да | 0 | Radix |
+| CollapsibleContent | collapsible.tsx | ✅ да | 0 | Radix |
+| Progress | progress.tsx | ✅ да | 1 | ✅ Radix |
+| Slider | slider.tsx | ✅ да | 0 | 0 usage |
+| Switch | switch.tsx | ✅ да | 1 | ✅ Radix |
+| Checkbox | checkbox.tsx | ✅ да | 0 | 0 usage |
+| RadioGroup | radio-group.tsx | ✅ да | 2 | ✅ Radix |
+| RadioGroupItem | radio-group.tsx | ✅ да | 2 | ✅ Radix |
+| Calendar | calendar.tsx | ✅ да | 1 | ✅ Radix |
+| CalendarDayButton | calendar.tsx | ✅ да | 0 | 0 usage |
+| DatePickerCmp | date-picker.tsx | ❌ нет | 0 | обёртка |
+| Avatar | avatar.tsx | ✅ да | 3 | ✅ Radix |
+| AvatarImage | avatar.tsx | ✅ да | 0 | Radix |
+| AvatarFallback | avatar.tsx | ✅ да | 3 | ✅ Radix |
+| AvatarBadge | avatar.tsx | ✅ да | 0 | Radix |
+| AvatarGroup | avatar.tsx | ✅ да | 0 | Radix |
+| AvatarGroupCount | avatar.tsx | ✅ да | 0 | Radix |
 
 ### Overlap
 
-В категории "Data Display" обнаружено 4 компонентов. 2 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Containers / Helpers" обнаружено 34 компонентов. 1 из них — обёртки. 7 кандидатов на удаление. 
 
 ### Рекомендация
 
-**Канон:** cells/money-cell.tsx#MoneyCell, kpi-card.tsx#KPICard. Все компоненты имеют разное назначение, дублирования не обнаружено.
+**Канон:** separator.tsx#Separator, scroll-area.tsx#ScrollArea, accordion.tsx#Accordion.
+**Deprecated кандидаты:**
+- carousel.tsx#Carousel → 0 usage
+- resizable.tsx#ResizablePanel → 0 usage
+- collapsible.tsx#Collapsible → 0 usage
+- slider.tsx#Slider → 0 usage
+- checkbox.tsx#Checkbox → 0 usage
+- calendar.tsx#CalendarDayButton → 0 usage
+- date-picker.tsx#DatePickerCmp → обёртка над Calendar
+
+
+### Файлы для миграции
+(empty)
 
 ---
 
-## Категория 15: Marketing
+## Категория 14: Layout Constants (.ts files)
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| MarketingShell | `marketing-shell.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| MarketingHeader | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingHero | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingFeatureGrid | `marketing-shell.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| MarketingFooter | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| MarketingMobileMenu | `marketing-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| AuthShell | `auth-shell.tsx` | unknown | 2 мест | Да ⚠️ | Нет |
-| AuthPanel | `auth-shell.tsx` | unknown | 1 мест | Да ⚠️ | Нет |
-| AuthFeatureCard | `auth-shell.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| AuthStatusMessage | `auth-shell.tsx` | unknown | 5 мест | Да ⚠️ | Нет |
-| primitiveMarketingClassNames | `primitive-marketing.ts` | unknown | 0 мест | Нет | Нет |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| __file:primitive-surface.ts__ | primitive-surface.ts | ✅ да | 0 | константы |
+| __file:primitive-spacing.ts__ | primitive-spacing.ts | ✅ да | 0 | константы |
+| __file:primitive-density.ts__ | primitive-density.ts | ✅ да | 0 | константы |
+| __file:primitive-controls.ts__ | primitive-controls.ts | ✅ да | 0 | константы |
+| __file:primitive-navigation.ts__ | primitive-navigation.ts | ✅ да | 0 | константы |
+| __file:primitive-table.ts__ | primitive-table.ts | ✅ да | 0 | константы |
+| __file:primitive-badge.ts__ | primitive-badge.ts | ✅ да | 0 | константы |
+| __file:primitive-form.ts__ | primitive-form.ts | ✅ да | 0 | константы |
+| __file:primitive-overlay.ts__ | primitive-overlay.ts | ✅ да | 0 | константы |
+| __file:primitive-chart.ts__ | primitive-chart.ts | ✅ да | 0 | константы |
+| __file:primitive-marketing.ts__ | primitive-marketing.ts | ✅ да | 0 | константы |
+| __file:dense-list/toolbar.ts__ | dense-list/toolbar.ts | ✅ да | 0 | константы |
+| __file:dense-list/table.ts__ | dense-list/table.ts | ✅ да | 0 | константы |
+| DenseListPickerButton | dense-list/pickers.tsx | ✅ да | 3 | — |
 
 ### Overlap
 
-В категории "Marketing" обнаружено 11 компонентов. 7 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Layout Constants (.ts files)" обнаружено 1 компонентов. (13 файлов содержат только константы/типы.)
 
 ### Рекомендация
 
-**Канон:** marketing-shell.tsx#MarketingShell, auth-shell.tsx#AuthShell. 
-**Deprecated:**
-- primitive-marketing.ts#primitiveMarketingClassNames → marketing-shell.tsx
+**Канон:** primitive-surface.ts#?, primitive-spacing.ts#?, primitive-density.ts#?, primitive-controls.ts#?, primitive-navigation.ts#?, primitive-table.ts#?, primitive-badge.ts#?, primitive-form.ts#?, primitive-overlay.ts#?, primitive-chart.ts#?, primitive-marketing.ts#?.
+Дублирования не обнаружено.
 
 ---
 
-## Категория 16: Containers / Helpers
+## Категория 15: Inline Editors
 
 ### Компоненты
 
-| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |
-|---|---|---|---|---|---|
-| Separator | `separator.tsx` | unknown | 5 мест | Нет | Нет |
-| ScrollArea | `scroll-area.tsx` | unknown | 5 мест | Да ⚠️ | Нет |
-| Accordion | `accordion.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| Carousel | `carousel.tsx` | unknown | 0 мест | Да ⚠️ | Да → @/shared/ui/button |
-| Resizable | `resizable.tsx` | unknown | 0 мест | Да ⚠️ | Нет |
-| Collapsible | `collapsible.tsx` | unknown | 0 мест | Нет | Нет |
-| Command | `command.tsx` | unknown | 7 мест | Да ⚠️ | Да → @/shared/ui/dialog |
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| __file:dense-list/inline-edit.ts__ | dense-list/inline-edit.ts | ✅ да | 0 | константы |
 
 ### Overlap
 
-В категории "Containers / Helpers" обнаружено 7 компонентов. 2 из них — обёртки над другими UI-компонентами. 2 компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. 
+В категории "Inline Editors" обнаружено 0 компонентов. (1 файлов содержат только константы/типы.)
 
 ### Рекомендация
 
-**Канон:** scroll-area.tsx#ScrollArea, separator.tsx#Separator, accordion.tsx#Accordion. Все компоненты имеют разное назначение, дублирования не обнаружено.
+**Канон:** dense-list/inline-edit.ts#?.
+Дублирования не обнаружено.
 
 ---
 
-## Итого
+## Категория 16: Shells / Wrappers
 
-| Метрика | Значение |
+### Компоненты
+
+| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |
+|---|---|---|---|---|
+| DataTableShell | shells/data-table-shell.tsx | ✅ да | 2 | — |
+
+### Overlap
+
+В категории "Shells / Wrappers" обнаружено 1 компонентов. (1 файлов содержат только константы/типы.)
+
+### Рекомендация
+
+**Канон:** (не указан).
+Дублирования не обнаружено.
+
+---
+
+## Summary
+
+| Metric | Value |
 |---|---|
-| Категорий с дублями | 13 |
-| Всего deprecated-кандидатов | 50 |
-| Всего канонических компонентов | 46 |
-| Всего просканировано компонентов | 154 |
+| Categories with deprecated | 12 |
+| Deprecated candidates | 61 |
+| Total components scanned | 395 |

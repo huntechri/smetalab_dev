@@ -1,4 +1,5 @@
-import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
+import { StatusIndicator } from '@/shared/ui/status-badge';
 import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { primitiveVisualIconSizeClassNames } from '@/shared/ui/primitive-controls';
 import { Clock } from 'lucide-react';
@@ -8,7 +9,7 @@ interface DashboardFocusItemProps {
     label: string;
     meta: string;
     status: string;
-    tone: StatusTone;
+    tone: 'default' | 'success' | 'info' | 'warning' | 'danger' | 'neutral' | 'paused';
     icon?: ReactNode;
 }
 
@@ -32,9 +33,9 @@ export function DashboardFocusItem({ label, meta, status, tone, icon }: Dashboar
                     </div>
                 </div>
             </div>
-            <StatusBadge tone={tone}>
+            <Badge variant={tone} size="xs">
                 {status}
-            </StatusBadge>
+            </Badge>
         </div>
     );
 }

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 
 type BadgeVariant = React.ComponentProps<typeof Badge>["variant"]
 
+// tone → variant mapping shared by consumers
 const statusBadgeVariantByTone = {
   brand: "default",
   success: "success",
@@ -41,26 +42,9 @@ const statusIndicatorSizeClassNames = {
 } as const
 
 export type StatusTone = keyof typeof statusBadgeVariantByTone
+export { statusBadgeVariantByTone }
 export type StatusIndicatorPulse = "none" | "soft" | "pulse" | "ping"
 export type StatusIndicatorSize = keyof typeof statusIndicatorSizeClassNames
-
-type StatusBadgeProps = Omit<React.ComponentProps<typeof Badge>, "variant"> & {
-  tone?: StatusTone
-}
-
-function StatusBadge({ tone = "neutral", size = "xs", ...props }: StatusBadgeProps) {
-  return <Badge variant={statusBadgeVariantByTone[tone]} size={size} {...props} />
-}
-
-function StatusBadgeValue({ className, ...props }: React.ComponentProps<"span">) {
-  return (
-    <span
-      data-slot="status-badge-value"
-      className={cn("font-bold tabular-nums normal-case tracking-normal leading-[15px]", className)}
-      {...props}
-    />
-  )
-}
 
 type StatusIndicatorProps = React.ComponentProps<"span"> & {
   tone?: StatusTone
@@ -129,4 +113,4 @@ const StatusIndicator = React.forwardRef<HTMLSpanElement, StatusIndicatorProps>(
   }
 )
 
-export { StatusBadge, StatusBadgeValue, StatusIndicator }
+export { StatusIndicator }

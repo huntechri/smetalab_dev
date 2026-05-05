@@ -2,7 +2,7 @@ import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
 import { Button } from '@/shared/ui/button';
 import { Label } from '@/shared/ui/label';
 import { SearchInput } from '@/shared/ui/search-input';
-import { StatusBadge } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
 import { ActionMenu } from '@/shared/ui/action-menu';
 import { Trash2 } from 'lucide-react';
 import { Surface } from '@/shared/ui/surface';
@@ -103,7 +103,7 @@ export function TeamMembersCard({
                                 </div>
                             </div>
                             <div className="flex items-center justify-between gap-3 sm:justify-end">
-                                <StatusBadge tone={getRoleBadgeVariant(member.role)}>{getRoleLabel(member.role)}</StatusBadge>
+                                <Badge variant={getRoleBadgeVariant(member.role)} size="xs">{getRoleLabel(member.role)}</Badge>
                                 {canManageMembers && (
                                     <ActionMenu
                                         ariaLabel={`Действия для ${member.user.name || member.user.email}`}

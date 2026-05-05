@@ -1,5 +1,6 @@
 import { Button } from '@/shared/ui/button';
-import { StatusBadge, StatusIndicator } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
+import { StatusIndicator } from '@/shared/ui/status-badge';
 import { cn } from '@/lib/utils';
 import { primitiveVisualTypographyClassNames, primitiveCardShellInsetDensityClassNames } from '@/shared/ui/primitive-surface';
 import { NotificationPayload } from '@/features/notifications/components/types';
@@ -46,9 +47,9 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <p className={primitiveVisualTypographyClassNames.itemTitle}>{notification.title}</p>
-            <StatusBadge tone="neutral">
+            <Badge variant="neutral" size="xs">
               Прочитано
-            </StatusBadge>
+            </Badge>
           </div>
           <p className={primitiveVisualTypographyClassNames.mutedMeta}>
             {notification.description}
@@ -70,9 +71,9 @@ export function NotificationItem({ notification, onMarkAsRead }: NotificationIte
       <div className="min-w-0">
         <div className="flex items-center gap-2">
           <p className={primitiveVisualTypographyClassNames.sectionTitle}>{notification.title}</p>
-          <StatusBadge tone="info">
+          <Badge variant="info" size="xs">
             Новое
-          </StatusBadge>
+          </Badge>
         </div>
         <p className={primitiveVisualTypographyClassNames.mutedMeta}>
           {notification.description}

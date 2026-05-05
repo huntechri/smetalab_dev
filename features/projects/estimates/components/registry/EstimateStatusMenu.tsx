@@ -6,12 +6,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/ui/dropdown-menu';
-import { StatusBadge, StatusIndicator, type StatusTone } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
+import { StatusIndicator } from '@/shared/ui/status-badge';
 import { primitiveVisualTypographyClassNames } from '@/shared/ui/primitive-surface';
 import { estimateStatusOrder, getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import type { EstimateStatus } from '../../types/dto';
 
-const statusToneByStatus: Record<EstimateStatus, StatusTone> = {
+const statusVariantByStatus: Record<EstimateStatus, 'success' | 'info' | 'default'> = {
+  approved: 'success',
+  in_progress: 'info',
+  draft: 'default',
+};
+
+const statusToneByStatus: Record<EstimateStatus, 'success' | 'info' | 'brand'> = {
   approved: 'success',
   in_progress: 'info',
   draft: 'brand',
@@ -33,13 +40,13 @@ export function EstimateStatusMenu({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <StatusBadge
-          tone={statusToneByStatus[status]}
+        <Badge
+          variant={statusVariantByStatus[status]}
           size={badgeSize}
           className={className}
         >
           {getEstimateStatusLabel(status)}
-        </StatusBadge>
+        </Badge>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {estimateStatusOrder.map((item) => (

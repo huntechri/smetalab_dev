@@ -2,7 +2,8 @@
 
 import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
 import { EstimateMeta } from '../types/dto';
-import { EstimateStatusBadge } from '@/entities/estimate/ui/EstimateStatusBadge';
+import { Badge } from '@/shared/ui/badge';
+import { getEstimateStatusLabel } from '@/entities/estimate/model/status';
 import { Button } from '@/shared/ui/button';
 import { Trash2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -20,6 +21,12 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "@/shared/ui/alert-dialog";
+
+const estimateStatusVariantMap: Record<string, 'warning' | 'info' | 'success'> = {
+  draft: 'warning',
+  in_progress: 'info',
+  approved: 'success',
+};
 
 export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
     const router = useRouter();
@@ -76,7 +83,12 @@ export function EstimateHeader({ meta }: { meta: EstimateMeta }) {
                     </p>
                 </div>
                 <div className="flex items-center gap-3 sm:justify-end">
-                    <EstimateStatusBadge status={meta.status} />
+                    <Badge
+                      variant={estimateStatusVariantMap[meta.status]}
+                      size="xs"
+                    >
+                      {getEstimateStatusLabel(meta.status)}
+                    </Badge>
                     <div className="h-8 w-px bg-border/40 hidden sm:block mx-1" />
                     <div className="flex flex-col sm:items-end">
                         <span className={`${primitiveVisualTypographyClassNames.estimateSectionLabel} text-muted-foreground leading-none mb-1`}>Итого</span>

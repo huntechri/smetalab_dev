@@ -1,5 +1,6 @@
 import { getTeamDetails } from '@/lib/data/db/admin-queries';
 import { notFound } from 'next/navigation';
+import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import { Tabs, TabsContent } from '@/shared/ui/tabs';
 import {
@@ -16,7 +17,6 @@ import {
     AdminPageShell,
     AdminPersonAvatar,
     AdminRecordText,
-    AdminStatusBadge,
     AdminTabsList,
     AdminTabsTrigger,
 } from '@/shared/ui/admin-surface';
@@ -32,7 +32,49 @@ import Link from 'next/link';
 import { ImpersonateButton } from '@/features/admin';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { getRoleBadgeVariant, getSubscriptionBadgeVariant } from '@/features/admin';
+function getSubscriptionBadgeVariant(status?: string | null): "success" | "info" | "warning" | "danger" | "paused" | "neutral" {
+  const normalizedStatus = (status ?? "free").toLowerCase();
+
+  if (normalizedStatus === "active") {
+    return "success";
+  }
+
+  if (normalizedStatus === "trialing") {
+    return "info";
+  }
+
+  if (normalizedStatus === "past_due" || normalizedStatus === "incomplete") {
+    return "warning";
+  }
+
+  if (normalizedStatus === "unpaid" || normalizedStatus === "incomplete_expired") {
+    return "danger";
+  }
+
+  if (normalizedStatus === "paused") {
+    return "paused";
+  }
+
+  return "neutral";
+}
+
+function getRoleBadgeVariant(role?: string | null): "info" | "paused" | "warning" | "neutral" {
+  const normalizedRole = (role ?? "").toLowerCase();
+
+  if (normalizedRole === "owner" || normalizedRole === "admin") {
+    return "info";
+  }
+
+  if (normalizedRole === "manager") {
+    return "paused";
+  }
+
+  if (normalizedRole === "estimator") {
+    return "warning";
+  }
+
+  return "neutral";
+}
 
 interface PageProps {
     params: Promise<{ tenantId: string }>;
@@ -53,10 +95,10 @@ export default async function TenantDetailsPage({ params }: PageProps) {
             <AdminPageHeader
                 actions={(
                     <>
-                        <AdminStatusBadge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}>
+                        <Badge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)} size="xs">
                             {team.subscriptionStatus || 'free'}
-                        </AdminStatusBadge>
-                        <AdminStatusBadge>{team.planName || 'No Plan'}</AdminStatusBadge>
+                        </Badge>
+                        <Badge variant="neutral" size="xs">{team.planName || 'No Plan'}</Badge>
                     </>
                 )}
             >
@@ -103,9 +145,9 @@ export default async function TenantDetailsPage({ params }: PageProps) {
                                         description={member.user.email}
                                     />
                                     <AdminHeaderActions>
-                                        <AdminStatusBadge variant={getRoleBadgeVariant(member.role)}>
+                                        <Badge variant={getRoleBadgeVariant(member.role)} size="xs">
                                             {member.role}
-                                        </AdminStatusBadge>
+                                        </Badge>
                                     </AdminHeaderActions>
                                 </div>
                                 <AdminHeaderActions>

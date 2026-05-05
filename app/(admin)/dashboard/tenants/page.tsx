@@ -1,15 +1,40 @@
 import { getAllTeams } from '@/lib/data/db/admin-queries';
+import { Badge } from '@/shared/ui/badge';
 import { Button } from '@/shared/ui/button';
 import {
     AdminCardGrid,
     AdminInlineStat,
     AdminPageShell,
-    AdminStatusBadge,
     AdminTenantCard,
 } from '@/shared/ui/admin-surface';
 import { Building2, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
-import { getSubscriptionBadgeVariant } from '@/features/admin';
+
+function getSubscriptionBadgeVariant(status?: string | null): "success" | "info" | "warning" | "danger" | "paused" | "neutral" {
+  const normalizedStatus = (status ?? "free").toLowerCase();
+
+  if (normalizedStatus === "active") {
+    return "success";
+  }
+
+  if (normalizedStatus === "trialing") {
+    return "info";
+  }
+
+  if (normalizedStatus === "past_due" || normalizedStatus === "incomplete") {
+    return "warning";
+  }
+
+  if (normalizedStatus === "unpaid" || normalizedStatus === "incomplete_expired") {
+    return "danger";
+  }
+
+  if (normalizedStatus === "paused") {
+    return "paused";
+  }
+
+  return "neutral";
+}
 
 export const dynamic = 'force-dynamic';
 
@@ -19,7 +44,7 @@ export default async function TenantsPage() {
     return (
         <AdminPageShell
             title="Управление тенантами"
-            actions={<AdminStatusBadge mono>Total: {teams.length}</AdminStatusBadge>}
+            actions={<Badge variant="neutral" size="xs" className="border-none font-mono">Total: {teams.length}</Badge>}
         >
             <AdminCardGrid>
                 {teams.map((team) => (
@@ -28,9 +53,9 @@ export default async function TenantsPage() {
                         icon={Building2}
                         title={team.name}
                         status={(
-                            <AdminStatusBadge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)}>
+                            <Badge variant={getSubscriptionBadgeVariant(team.subscriptionStatus)} size="xs">
                                 {team.subscriptionStatus || 'free'}
-                            </AdminStatusBadge>
+                            </Badge>
                         )}
                         meta={(
                             <>

@@ -14,7 +14,7 @@ import { Input } from '@/shared/ui/input';
 import { Label } from '@/shared/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/shared/ui/select';
 import { EmptyState } from '@/shared/ui/states';
-import { StatusBadge, StatusBadgeValue, type StatusTone } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
 import { Table, TableBody, TableHeader } from '@/shared/ui/table';
 import {
   CompactTableCell,
@@ -81,7 +81,7 @@ type ProjectReceiptsSectionProps = {
   initialAggregates: ProjectReceiptAggregates;
 };
 
-const receiptStatusTone: Record<ProjectReceiptRow['status'], StatusTone> = {
+const receiptStatusVariant: Record<ProjectReceiptRow['status'], 'success' | 'warning' | 'neutral'> = {
   confirmed: 'success',
   pending: 'warning',
   cancelled: 'neutral',
@@ -198,11 +198,11 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
       <CardShellHeader className="flex flex-row items-center justify-between gap-2 space-y-0">
         <h2 className="font-semibold leading-none tracking-tight">Фактические поступления</h2>
         <div className="flex items-center gap-2">
-          <StatusBadge tone="neutral">Платежей: {aggregates.confirmedCount}</StatusBadge>
-          <StatusBadge tone="neutral">
+          <Badge variant="neutral" size="xs">Платежей: {aggregates.confirmedCount}</Badge>
+          <Badge variant="neutral" size="xs" className="tabular-nums">
             <span>Подтверждено:</span>
-            <StatusBadgeValue>{formatCurrency(aggregates.totalConfirmedReceipts)}</StatusBadgeValue>
-          </StatusBadge>
+            <span className="font-bold">{formatCurrency(aggregates.totalConfirmedReceipts)}</span>
+          </Badge>
           <Button size="default" onClick={onAddClick}>
             <Plus className={`mr-1 ${primitiveVisualIconSizeClassNames.md}`} /> Добавить
           </Button>
@@ -235,9 +235,9 @@ export function ProjectReceiptsSection({ projectId, initialRows, initialAggregat
                   {formatCurrency(row.amount)}
                 </CompactTableCell>
                 <CompactTableCell>
-                  <StatusBadge tone={receiptStatusTone[row.status]}>
+                  <Badge variant={receiptStatusVariant[row.status]} size="xs">
                     {receiptStatusOptions.find((option) => option.value === row.status)?.label ?? row.status}
-                  </StatusBadge>
+                  </Badge>
                 </CompactTableCell>
                 <CompactTableCell className="max-w-80" tone="muted" truncate>{row.comment || '—'}</CompactTableCell>
                 <CompactTableCell>

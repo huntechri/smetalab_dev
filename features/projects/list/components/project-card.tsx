@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { Building2, CalendarRange, CircleDollarSign, MapPin } from 'lucide-react';
-import { ProjectStatusBadge } from '@/entities/project/ui/ProjectStatusBadge';
-import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 import { Badge } from '@/shared/ui/badge';
+import { getProjectStatusLabel } from '@/entities/project/model/status';
+import { ProjectStatusDot } from '@/entities/project/ui/ProjectStatusDot';
 import {
     CardShell,
     CardShellBody,
@@ -44,7 +44,17 @@ export function ProjectCard({ project, onDelete, onEdit }: ProjectCardProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                         <div className="flex flex-wrap items-center gap-1.5">
-                            <ProjectStatusBadge status={project.status} />
+                            <Badge
+                              variant={{
+                                active: 'info' as const,
+                                completed: 'success' as const,
+                                planned: 'default' as const,
+                                paused: 'neutral' as const,
+                              }[project.status]}
+                              size="xs"
+                            >
+                              {getProjectStatusLabel(project.status)}
+                            </Badge>
                             <Badge variant="secondary" size="xs">{project.progress}%</Badge>
                         </div>
                         <h3 className={`mt-1.5 ${primitiveVisualTypographyClassNames.itemTitle}`}>

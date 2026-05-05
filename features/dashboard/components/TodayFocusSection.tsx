@@ -2,7 +2,7 @@ import { Badge } from '@/shared/ui/badge';
 import { CardShell, CardShellBody } from '@/shared/ui/card-shell';
 import { Section, SectionHeader, SectionTitle } from '@/shared/ui/section';
 import { DashboardFocusItem } from '@/shared/ui/dashboard-focus-item';
-import type { StatusTone } from '@/shared/ui/status-badge';
+type StatusTone = 'default' | 'success' | 'info' | 'warning' | 'danger' | 'neutral' | 'paused';
 
 const focusItems = [
     { label: 'Закрытие актов «Северный»', meta: 'До 14:00', status: 'Согласование', tone: 'success' },

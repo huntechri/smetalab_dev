@@ -6,4 +6,3 @@ export * from './components/PricingSubmitButton';
 export * from './components/impersonate-button';
 export * from './components/impersonation-banner';
 export * from './components/stop-impersonation-button';
-export * from './lib/badge-tones';

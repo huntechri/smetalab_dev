@@ -1,12 +1,11 @@
 #!/usr/bin/env tsx
 /**
- * UI Component Overlap Audit
+ * UI Component Overlap Audit — Dynamic Edition
  *
- * Scans all UI components in shared/ui/ and their usages in features/ and app/
- * to identify overlapping implementations across 16 categories.
+ * Dynamically scans shared/ui/ for exported components, categorizes them,
+ * finds usages in features/ and app/, and detects overlapping implementations.
  *
  * Usage: tsx scripts/audit-ui-overlap.ts
- * Also registered as: pnpm audit:ui-overlap
  */
 
 import fs from "node:fs"
@@ -18,193 +17,177 @@ const SHARED_UI = path.join(ROOT, "shared/ui")
 const REPORT_JSON = path.join(ROOT, "reports", "ui-overlap.json")
 const REPORT_MD = path.join(ROOT, "reports", "ui-overlap.md")
 
-const SCAN_ROOTS = ["app", "features", "shared/ui", "components"]
+// ─── Category Configuration ───────────────────────────────────────────────
 
-const categories = {
+interface CategoryDef {
+  name: string
+  filePatterns: string[]
+  canonicalFiles: string[]
+}
+
+const categories: Record<string, CategoryDef> = {
   "1": {
     name: "Badge / Token / Pill",
-    components: [
-      "badge.tsx#Badge",
-      "status-badge.tsx#StatusBadge",
-      "status-badge.tsx#StatusIndicator",
-      "catalog-token.tsx#CatalogToken",
-      "catalog-token.tsx#CatalogIndexToken",
-      "dense-list/tokens.tsx#DenseListToken",
-      "dense-list/metrics.tsx#DenseListMetricPill",
-      "dense-list/metrics.tsx#DenseListInlineMetric",
-      "dense-list/metrics.tsx#DenseListStat",
-      "estimate-tab.tsx#EstimateTabToken",
-      "estimate-tab.tsx#EstimateTabSourceToken",
-      "estimate-tab.tsx#EstimateTabMetric",
-      "estimate-tab.tsx#EstimateTabInlineMetric",
+    filePatterns: [
+      "badge.tsx",
+      "status-badge.tsx",
+      "catalog-token.tsx",
+      "dense-list/tokens.tsx",
+      "dense-list/metrics.tsx",
     ],
+    canonicalFiles: ["badge.tsx"],
   },
   "2": {
     name: "Button",
-    components: [
-      "button.tsx#Badge", // placeholder - will be fixed
-      "button.tsx#Button",
-      "toolbar-button.tsx#ToolbarButton",
-      "toggle.tsx#Toggle",
-      "toggle-group.tsx#ToggleGroup",
-      "button-group.tsx#ButtonGroup",
+    filePatterns: [
+      "button.tsx",
+      "toolbar-button.tsx",
+      "toggle.tsx",
+      "toggle-group.tsx",
+      "button-group.tsx",
     ],
+    canonicalFiles: ["button.tsx"],
   },
   "3": {
     name: "Input",
-    components: [
-      "input.tsx#Input",
-      "search-input.tsx#SearchInput",
-      "search-control.tsx#SearchControl",
-      "input-group.tsx#InputGroup",
-      "hidden-input.tsx#HiddenInput",
-      "file-input.tsx#FileInput",
-      "textarea.tsx#Textarea",
-      "select.tsx#Select",
+    filePatterns: [
+      "input.tsx",
+      "search-input.tsx",
+      "search-control.tsx",
+      "input-group.tsx",
+      "hidden-input.tsx",
+      "file-input.tsx",
+      "textarea.tsx",
+      "select.tsx",
     ],
+    canonicalFiles: ["input.tsx", "select.tsx", "textarea.tsx"],
   },
   "4": {
     name: "Card / Surface",
-    components: [
-      "card.tsx#Card",
-      "card-shell.tsx#CardShell",
-      "card-shell.tsx#CardShellHeader",
-      "card-shell.tsx#CardShellBody",
-      "card-shell.tsx#CardShellFooter",
-      "card-shell.tsx#CardShellInset",
-      "surface.tsx#Surface",
-      "dense-card.tsx#DenseCard",
-      "dense-list/cards.tsx#DenseCardTitle",
-      "dense-list/cards.tsx#DenseCardIcon",
-      "dense-list/cards.tsx#DenseCardRowLabel",
-      "kpi-card.tsx#KPICard",
+    filePatterns: [
+      "card.tsx",
+      "card-shell.tsx",
+      "surface.tsx",
+      "dense-card.tsx",
+      "dense-list/cards.tsx",
+      "kpi-card.tsx",
       "editable-data-surface.tsx",
-      "estimate-tab.tsx#EstimateTabCard",
     ],
+    canonicalFiles: ["card.tsx", "surface.tsx"],
   },
   "5": {
     name: "Panel / Layout",
-    components: [
-      "page-shell.tsx#PageShell",
-      "page-shell.tsx#ContentContainer",
-      "page-shell.tsx#WorkspaceMain",
-      "page-shell.tsx#PageHeader",
-      "section.tsx#Section",
-      "section.tsx#SectionHeader",
-      "section.tsx#SectionTitle",
-      "dense-list/layout.tsx#DenseListPanel",
-      "dashboard-layout.tsx#DashboardPanel",
-      "dashboard-layout.tsx#DashboardPageStack",
-      "estimate-tab.tsx#EstimateTabPanel",
-      "auth-shell.tsx#AuthPanel",
-      "marketing-shell.tsx#MarketingSection",
-      "content-container.tsx#ContentContainer",
-      "app-header.tsx#AppHeaderShell",
+    filePatterns: [
+      "page-shell.tsx",
+      "section.tsx",
+      "dense-list/layout.tsx",
+      "dashboard-layout.tsx",
+      "content-container.tsx",
+      "app-header.tsx",
     ],
+    canonicalFiles: ["page-shell.tsx", "section.tsx"],
   },
   "6": {
     name: "Table",
-    components: [
-      "table.tsx#Table",
-      "data-table.tsx#DataTable",
-      "table-density.tsx#CompactTableRow",
-      "table-density.tsx#CompactTableHeaderRow",
-      "table-density.tsx#CompactTableHead",
-      "table-density.tsx#CompactTableCell",
-      "table-actions.tsx#TableRowActions",
-      "table-actions.tsx#TableHeaderActions",
-      "data-table/data-table-row.tsx#DataTableRow",
-      "data-table/data-table-skeleton.tsx#DataTableSkeleton",
-      "data-table/data-table-toolbar.tsx#DataTableToolbar",
-      "estimate-tab.tsx#EstimateTabCodeText",
-      "estimate-tab.tsx#EstimateTabNameText",
-      "estimate-tab.tsx#EstimateTabTitleRow",
+    filePatterns: [
+      "table.tsx",
+      "data-table.tsx",
+      "table-density.tsx",
+      "table-actions.tsx",
+      "data-table/data-table-row.tsx",
+      "data-table/data-table-skeleton.tsx",
+      "data-table/data-table-toolbar.tsx",
     ],
+    canonicalFiles: ["table.tsx"],
   },
   "7": {
     name: "Form",
-    components: [
-      "form.tsx#FormItem",
-      "form.tsx#FormLabel",
-      "form.tsx#FormMessage",
-      "form.tsx#FormControl",
-      "form-layout.tsx#FormLayout",
-      "form-layout.tsx#FormSection",
-      "form-layout.tsx#FieldStack",
-      "form-layout.tsx#FieldRow",
-      "form-layout.tsx#FormSectionHeader",
-      "field.tsx#FieldGroup",
-      "label.tsx#Label",
+    filePatterns: [
+      "form.tsx",
+      "form-layout.tsx",
+      "field.tsx",
+      "label.tsx",
     ],
+    canonicalFiles: ["form-layout.tsx", "form.tsx"],
   },
   "8": {
-    name: "Typography / Text",
-    components: [
-      "primitive-surface.ts#primitiveVisualTypographyClassNames",
-      "primitive-badge.ts#primitiveBadgeVariantClassNames",
-      "estimate-tab.tsx#EstimateTabText",
-      "primitive-density.ts",
-      "primitive-controls.ts",
+    name: "Navigation / Tabs",
+    filePatterns: [
+      "tabs.tsx",
+      "workspace-tabs.tsx",
+      "sidebar.tsx",
+      "breadcrumbs.tsx",
+      "navigation-menu.tsx",
+      "sidebar-nav-item.tsx",
     ],
+    canonicalFiles: ["tabs.tsx", "sidebar.tsx", "breadcrumbs.tsx"],
   },
   "9": {
-    name: "Navigation / Tabs",
-    components: [
-      "tabs.tsx#Tabs",
-      "workspace-tabs.tsx#WorkspaceTabs",
-      "sidebar.tsx#Sidebar",
-      "app-header.tsx#AppHeaderShell",
-      "breadcrumbs.tsx#AppBreadcrumbs",
-      "navigation-menu.tsx#NavigationMenu",
-      "marketing-shell.tsx#MarketingHeader",
-      "marketing-shell.tsx#MarketingFooter",
-      "marketing-shell.tsx#MarketingMobileMenu",
+    name: "Overlay",
+    filePatterns: [
+      "dialog.tsx",
+      "drawer.tsx",
+      "sheet.tsx",
+      "popover.tsx",
+      "hover-card.tsx",
+      "alert-dialog.tsx",
+      "tooltip.tsx",
+      "context-menu.tsx",
+      "command.tsx",
+      "menubar.tsx",
     ],
+    canonicalFiles: ["dialog.tsx", "sheet.tsx", "popover.tsx", "tooltip.tsx"],
   },
   "10": {
-    name: "Overlay",
-    components: [
-      "dialog.tsx#Dialog",
-      "drawer.tsx#Drawer",
-      "sheet.tsx#Sheet",
-      "popover.tsx#Popover",
-      "hover-card.tsx#HoverCard",
-      "alert-dialog.tsx#AlertDialog",
-      "tooltip.tsx#Tooltip",
-      "context-menu.tsx#ContextMenu",
-      "command.tsx#Command",
+    name: "State / Loading",
+    filePatterns: [
+      "states/*",
+      "spinner.tsx",
+      "skeleton.tsx",
+      "loading-indicator.tsx",
+      "table-empty-state.tsx",
+      "empty.tsx",
     ],
+    canonicalFiles: ["skeleton.tsx"],
   },
   "11": {
-    name: "State / Loading",
-    components: [
-      "states/index.ts#LoadingState",
-      "states/index.ts#EmptyState",
-      "states/index.ts#ErrorState",
-      "states/index.ts#ForbiddenState",
-      "states/index.ts#NoResultsState",
-      "states/index.ts#StateShell",
-      "spinner.tsx#Spinner",
-      "skeleton.tsx#Skeleton",
-      "loading-indicator.tsx#LoadingIndicator",
-      "data-table/data-table-skeleton.tsx#DataTableSkeleton",
-      "table-empty-state.tsx#TableEmptyState",
-      "empty.tsx#Empty",
+    name: "Marketing",
+    filePatterns: [
+      "marketing-shell.tsx",
+      "auth-shell.tsx",
     ],
+    canonicalFiles: ["marketing-shell.tsx", "auth-shell.tsx"],
   },
   "12": {
-    name: "Inline Editors (Input Cells)",
-    components: [
-      "dense-list/inline-edit.ts#useDenseListInlineEdit",
-      "cells/editable-cell.tsx#EditableCell",
+    name: "Data Display",
+    filePatterns: [
+      "cells/*",
     ],
+    canonicalFiles: [],
   },
   "13": {
-    name: "Layout Constants (.ts files with Tailwind strings)",
-    components: [
-      "dense-list/toolbar.ts",
-      "dense-list/table.ts",
-      "dense-list/pickers.tsx#PickersConstants",
+    name: "Containers / Helpers",
+    filePatterns: [
+      "separator.tsx",
+      "scroll-area.tsx",
+      "accordion.tsx",
+      "carousel.tsx",
+      "resizable.tsx",
+      "collapsible.tsx",
+      "progress.tsx",
+      "slider.tsx",
+      "switch.tsx",
+      "checkbox.tsx",
+      "radio-group.tsx",
+      "calendar.tsx",
+      "date-picker.tsx",
+      "avatar.tsx",
+    ],
+    canonicalFiles: ["separator.tsx", "scroll-area.tsx", "accordion.tsx"],
+  },
+  "14": {
+    name: "Layout Constants (.ts files)",
+    filePatterns: [
       "primitive-surface.ts",
       "primitive-spacing.ts",
       "primitive-density.ts",
@@ -216,80 +199,78 @@ const categories = {
       "primitive-overlay.ts",
       "primitive-chart.ts",
       "primitive-marketing.ts",
+      "dense-list/toolbar.ts",
+      "dense-list/table.ts",
+      "dense-list/pickers.tsx",
     ],
-  },
-  "14": {
-    name: "Data Display",
-    components: [
-      "cells/money-cell.tsx#MoneyCell",
-      "cells/editable-cell.tsx#EditableCell",
-      "cells/currency-cell.tsx#CurrencyCell",
-      "kpi-card.tsx#KPICard",
+    canonicalFiles: [
+      "primitive-surface.ts", "primitive-spacing.ts", "primitive-density.ts",
+      "primitive-controls.ts", "primitive-navigation.ts", "primitive-table.ts",
+      "primitive-badge.ts", "primitive-form.ts", "primitive-overlay.ts",
+      "primitive-chart.ts", "primitive-marketing.ts",
     ],
   },
   "15": {
-    name: "Marketing",
-    components: [
-      "marketing-shell.tsx#MarketingShell",
-      "marketing-shell.tsx#MarketingHeader",
-      "marketing-shell.tsx#MarketingHero",
-      "marketing-shell.tsx#MarketingFeatureGrid",
-      "marketing-shell.tsx#MarketingFooter",
-      "marketing-shell.tsx#MarketingMobileMenu",
-      "auth-shell.tsx#AuthShell",
-      "auth-shell.tsx#AuthPanel",
-      "auth-shell.tsx#AuthFeatureCard",
-      "auth-shell.tsx#AuthStatusMessage",
-      "primitive-marketing.ts#primitiveMarketingClassNames",
+    name: "Inline Editors",
+    filePatterns: [
+      "dense-list/inline-edit.ts",
     ],
+    canonicalFiles: ["dense-list/inline-edit.ts"],
   },
   "16": {
-    name: "Containers / Helpers",
-    components: [
-      "separator.tsx#Separator",
-      "scroll-area.tsx#ScrollArea",
-      "accordion.tsx#Accordion",
-      "carousel.tsx#Carousel",
-      "resizable.tsx#Resizable",
-      "collapsible.tsx#Collapsible",
-      "command.tsx#Command",
+    name: "Shells / Wrappers",
+    filePatterns: [
+      "shells/*",
     ],
+    canonicalFiles: [],
   },
 }
 
-// Fix category 2 badge placeholder
-categories["2"].components[0] = "button.tsx#Button"
+const EXCLUDED_FILES = new Set([
+  "cells/index.ts",
+  "data-table/index.ts",
+  "shells/index.ts",
+  "states/index.ts",
+])
 
-type ComponentInfo = {
+const FILE_EXTENSIONS = new Set([".ts", ".tsx"])
+
+// ─── Types ─────────────────────────────────────────────────────────────────
+
+interface ComponentInfo {
   file: string
   componentName: string
   hasFile: boolean
-  variants: string
-  variantCount: number
-  usesRawClasses: boolean
-  isWrapper: boolean
-  wrapsWhat: string
+  exported: boolean
+  isComponent: boolean
   usageCount: number
   usageFiles: string[]
+  sameCategoryImports: string[]   // imports from the same category
+  crossCategoryImports: string[]  // imports from other categories
+  containsRawClasses: boolean
+  category: string
+}
+
+interface CategoryReport {
+  name: string
+  components: ComponentInfo[]
+  overlap: string
+  recommendation: string
+  canonical: string[]
+  deprecated: ComponentInfo[]
+  /** Files that exist in the category but have no component exports */
+  nonComponentFiles: string[]
 }
 
 interface OverlapReport {
   generatedAt: string
   summary: {
     totalCategories: number
-    totalOverlapComponents: number
-    totalCanonical: number
+    totalComponents: number
     totalDeprecated: number
     hasDuplicates: boolean
   }
-  categories: Record<string, {
-    name: string
-    components: ComponentInfo[]
-    overlap: string
-    recommendation: string
-    canonical: string[]
-    deprecated: string[]
-  }>
+  categories: Record<string, CategoryReport>
 }
 
 // ─── Utility ───────────────────────────────────────────────────────────────
@@ -310,12 +291,8 @@ function isExcluded(rel: string): boolean {
     rel.startsWith(".git/") ||
     rel.startsWith("dist/") ||
     rel.startsWith("build/")
-  ) {
-    return true
-  }
-  if (rel.endsWith(".test.ts") || rel.endsWith(".test.tsx") || rel.endsWith(".spec.ts") || rel.endsWith(".spec.tsx")) {
-    return true
-  }
+  ) return true
+  if (/\.(test|spec|stories?)\.(ts|tsx)$/.test(rel)) return true
   return false
 }
 
@@ -326,584 +303,729 @@ function walk(dir: string, files: string[] = []): string[] {
     const rel = toPosix(path.relative(ROOT, full))
     if (isExcluded(rel)) continue
     if (entry.isDirectory()) walk(full, files)
-    else if (/\.(ts|tsx|js|jsx|mjs|cjs)$/.test(entry.name)) files.push(full)
+    else if (FILE_EXTENSIONS.has(path.extname(entry.name))) files.push(full)
   }
   return files
 }
 
-function findExportNames(filePath: string): string[] {
+function isComponentName(name: string): boolean {
+  if (!/^[A-Z]/.test(name)) return false
+  // Skip type-like names
+  if (/(Props|Variants|VariantsProps|Variant|Tone|Size|Density|Layout|Mode|Border|Elevation)$/.test(name)) return false
+  // Skip CSS class name constants
+  if (/(ClassName|ClassNames|Padding|Gap|ColorPicker)$/.test(name)) return false
+  // Skip utility strings
+  if (/(BaseSize|BasePadding|IndicatorClassName)$/.test(name)) return false
+  return true
+}
+
+function escapeRegex(s: string): string {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+}
+
+// ─── File Scanning ────────────────────────────────────────────────────────
+
+/**
+ * Map file -> list of component exports
+ */
+function scanFilesForComponents(): Map<string, string[]> {
+  const db = new Map<string, string[]>()
+
+  // Walk shared/ui/ recursively
+  const allFiles = walk(SHARED_UI)
+  for (const f of allFiles) {
+    const rel = toPosix(path.relative(SHARED_UI, f))
+    if (EXCLUDED_FILES.has(rel)) continue
+    const names = extractComponentExports(f)
+    if (names.length > 0) {
+      db.set(rel, names)
+    }
+  }
+
+  return db
+}
+
+/**
+ * Extract React component exports from a file.
+ * Handles patterns:
+ *   - function Xxx / export function Xxx
+ *   - const Xxx = ... (arrow functions)
+ *   - export { Xxx } (single and multi-line)
+ *   - export default function Xxx
+ */
+function extractComponentExports(filePath: string): string[] {
   try {
     const content = fs.readFileSync(filePath, "utf8")
     const names: string[] = []
-    // Match named exports: export function Xxx, export const Xxx, export class Xxx, export interface Xxx
-    const exportRegex = /export\s+(?:function|const|class|interface|type)\s+(\w+)/g
+
+    // 1. Function declarations (with or without export)
+    const funcPattern = /(?:export\s+)?function\s+([A-Z]\w+)/g
     let m: RegExpExecArray | null
-    while ((m = exportRegex.exec(content)) !== null) {
-      names.push(m[1])
+    while ((m = funcPattern.exec(content)) !== null) {
+      if (isComponentName(m[1])) names.push(m[1])
     }
-    // export { Xxx } — inline exports
-    const braceRegex = /export\s+\{\s*([^}]+)\s*\}/g
-    while ((m = braceRegex.exec(content)) !== null) {
-      const inner = m[1].split(",").map((s) => {
+
+    // 2. const/let components (arrow functions, forwardRef, etc.)
+    //    Matches: const Xxx = (..., const Xxx = React.forwardRef(..., const Xxx = React.memo(...
+    const constPattern = /(?:export\s+)?(?:const|let|var)\s+([A-Z]\w+)\s*=\s*(?:\(|[A-Z]\w+\.(?:forwardRef|memo|createRef|createElement|isValidElement))/g
+    while ((m = constPattern.exec(content)) !== null) {
+      if (isComponentName(m[1])) names.push(m[1])
+    }
+
+    // 3. export default function/class
+    const defaultPattern = /export\s+default\s+(?:function|class)\s+([A-Z]\w+)/g
+    while ((m = defaultPattern.exec(content)) !== null) {
+      if (isComponentName(m[1])) names.push(m[1])
+    }
+
+    // 4. export { Xxx } — single-line
+    const singleLineBrace = /^export\s+\{([^}]+)\}/gm
+    while ((m = singleLineBrace.exec(content)) !== null) {
+      const after = content.slice(m.index + m[0].length)
+      if (/^\s*from\b/.test(after)) continue  // skip re-exports
+      const items = m[1].split(",").map(s => {
         const parts = s.trim().split(/\s+as\s+/)
-        return parts[0].trim()
+        return parts.length > 1 ? parts[1].trim() : parts[0].trim()
       })
-      names.push(...inner.filter(Boolean))
+      for (const name of items) {
+        if (isComponentName(name)) names.push(name)
+      }
     }
-    // export default function/class
-    const defaultRegex = /export\s+default\s+(?:function|class)\s+(\w+)/g
-    while ((m = defaultRegex.exec(content)) !== null) {
-      names.push(m[1])
+
+    // 5. export { Xxx, ... } — multi-line
+    const multiLineBrace = /^export\s*\{[\s\S]*?\}/gm
+    while ((m = multiLineBrace.exec(content)) !== null) {
+      const after = content.slice(m.index + m[0].length)
+      if (/^\s*from\b/.test(after)) continue  // skip re-exports
+      const block = m[0]
+      // Extract capitalized names from the block
+      const nameMatches = [...block.matchAll(/([A-Z]\w+)/g)]
+      for (const nm of nameMatches) {
+        if (isComponentName(nm[1])) names.push(nm[1])
+      }
     }
+
     return [...new Set(names)]
   } catch {
     return []
   }
 }
 
-function detectVariants(filePath: string): { variants: string; count: number } {
+/**
+ * Get ALL function definitions (with or without export) to compare against
+ * the export list. This helps detect if a component is actually exported.
+ */
+function getAllFunctionDefs(filePath: string): Set<string> {
   try {
     const content = fs.readFileSync(filePath, "utf8")
-    const variantLines: string[] = []
-    
-    // Match CVA variant definitions
-    const cvaRegex = /variant:\s*\{([^}]+)\}/gs
+    const funcs = new Set<string>()
+
+    const funcPattern = /(?:export\s+)?function\s+([A-Z]\w+)/g
     let m: RegExpExecArray | null
-    while ((m = cvaRegex.exec(content)) !== null) {
-      const block = m[1]
-      const variantKeys = block.match(/(\w+):/g)
-      if (variantKeys) {
-        variantLines.push(...variantKeys.map((k) => k.replace(":", "").trim()))
-      }
-    }
-    
-    // Match variant record objects
-    const recordRegex = /(?:Variant|Tone|Size|Density)\s*=\s*['"]([^'"]+)['"]/g
-    while ((m = recordRegex.exec(content)) !== null) {
-      variantLines.push(m[1])
-    }
-    
-    // Match type unions that look like variants
-    const typeRegex = /type\s+\w+(?:Variant|Tone|Size|Density|Layout|Mode)\s*=\s*'([^']*)'/g
-    while ((m = typeRegex.exec(content)) !== null) {
-      variantLines.push(m[1])
+    while ((m = funcPattern.exec(content)) !== null) {
+      funcs.add(m[1])
     }
 
-    const unique = [...new Set(variantLines)]
-    return {
-      variants: unique.length > 0 ? unique.slice(0, 15).join(", ") : "unknown",
-      count: unique.length,
+    const constPattern = /(?:export\s+)?(?:const|let|var)\s+([A-Z]\w+)\s*=\s*(?:\(|\(\))/g
+    while ((m = constPattern.exec(content)) !== null) {
+      funcs.add(m[1])
     }
+
+    return funcs
   } catch {
-    return { variants: "unknown", count: 0 }
+    return new Set()
+  }
+}
+
+/**
+ * Check if a component is actually exported (not just defined).
+ */
+function isComponentExported(filePath: string, componentName: string): boolean {
+  try {
+    const content = fs.readFileSync(filePath, "utf8")
+    // Check if component is defined
+    const defined = new RegExp(`(?:^|\\n|;)\\s*(?:export\\s+)?function\\s+${escapeRegex(componentName)}`).test(content)
+      || new RegExp(`(?:^|\\n|;)\\s*(?:export\\s+)?(?:const|let|var)\\s+${escapeRegex(componentName)}\\s*=`).test(content)
+    if (!defined) return false
+
+    // Check if it's exported — either inline or in an export block
+    const inlineExport = new RegExp(`export\\s+function\\s+${escapeRegex(componentName)}`).test(content)
+      || new RegExp(`export\\s+(?:const|let|var)\\s+${escapeRegex(componentName)}`).test(content)
+
+    const exportBlock = new RegExp(`export\\s*\\{[^}]*\\b${escapeRegex(componentName)}\\b`).test(content)
+
+    // For multi-line:
+    const multiBlock = new RegExp(`export\\s*\\{[\\s\\S]*?\\b${escapeRegex(componentName)}\\b[\\s\\S]*?\\}`, "m").test(content)
+
+    return inlineExport || exportBlock || multiBlock
+  } catch {
+    return true
+  }
+}
+
+/**
+ * Find imports from @/shared/ui/ grouped by whether they're from
+ * the same category or different category.
+ */
+function detectCategoryImports(
+  filePath: string,
+  sameCategoryFiles: string[],
+): { same: string[]; cross: string[] } {
+  try {
+    const content = fs.readFileSync(filePath, "utf8")
+    const same: string[] = []
+    const cross: string[] = []
+
+    const importPattern = /import\s+\{([^}]+)\}\s+from\s+['"]@\/shared\/ui\/([^'"]+)['"]/g
+    let m: RegExpExecArray | null
+    while ((m = importPattern.exec(content)) !== null) {
+      const names = m[1].split(",").map(n => n.trim()).filter(Boolean)
+      const importPath = m[2]
+
+      const componentNames = names.filter(n => /^[A-Z]/.test(n))
+      if (componentNames.length === 0) continue
+
+      // Check if the import path matches any same-category file
+      const isSameCategory = sameCategoryFiles.some(cf =>
+        importPath === cf.replace(/\.tsx?$/, "") ||
+        importPath.startsWith(cf.replace(/\.tsx?$/, "") + "/")
+      )
+
+      if (isSameCategory) {
+        same.push(...componentNames)
+      } else {
+        cross.push(...componentNames)
+      }
+    }
+
+    return { same: [...new Set(same)], cross: [...new Set(cross)] }
+  } catch {
+    return { same: [], cross: [] }
   }
 }
 
 function detectRawClasses(filePath: string): boolean {
   try {
     const content = fs.readFileSync(filePath, "utf8")
-    // Check for inline Tailwind classes in JSX className props
-    const inlineRegex = /className\s*=\s*["'`][^"'`]*(?:rounded|border|bg-|text-|font-|p[txrble]?-|m[txrble]?-|h-|w-|gap-|flex|grid|shadow|space-|items-|justify-)[^"'`]*["'`]/g
-    return inlineRegex.test(content)
-  } catch {
-    return false
-  }
+    const pattern = /className\s*=\s*["'`][^"'`]*(?:rounded|border|bg-|text-|font-|p[txrble]?-|m[txrble]?-|h-|w-|gap-|flex|grid|shadow|space-|items-|justify-|self-|truncate)[^"'`]*["'`]/g
+    return pattern.test(content)
+  } catch { return false }
 }
 
-function detectWrapper(filePath: string): { isWrapper: boolean; wrapsWhat: string } {
-  try {
-    const content = fs.readFileSync(filePath, "utf8")
-    const importRegex = /import\s+(?:\{[^}]+\}|[^;]+)\s+from\s+['"]@\/shared\/ui\/([^'"]+)['"]/g
-    const imports: string[] = []
-    let m: RegExpExecArray | null
-    while ((m = importRegex.exec(content)) !== null) {
-      imports.push(m[1])
-    }
+function findUsages(componentName: string): { count: number; files: string[] } {
+  if (!componentName) return { count: 0, files: [] }
 
-    // Check if imports a known UI component and wraps it in JSX
-    // Look for patterns like <Badge, <Card, <Surface, <Button, <Input, <Table
-    const knownUi = [
-      "badge", "card", "button", "input", "select", "textarea",
-      "surface", "dialog", "sheet", "popover", "toggle", "table",
-      "form", "label", "separator", "skeleton", "spinner",
-    ]
-    const uiUsages = knownUi.filter((ui) => {
-      const re = new RegExp(`<(?:${ui.charAt(0).toUpperCase() + ui.slice(1)}|${ui})\\b`)
-      return re.test(content)
-    })
+  const dirs = [
+    path.join(ROOT, "features"),
+    path.join(ROOT, "app"),
+  ]
+  const found: string[] = []
 
-    if (uiUsages.length > 0) {
-      return { isWrapper: true, wrapsWhat: `@/shared/ui/${imports.filter((i) => i.includes(uiUsages[0])).join(", ") || uiUsages.join(", ")}` }
+  for (const dir of dirs) {
+    if (!fs.existsSync(dir)) continue
+    const files = walk(dir)
+    for (const f of files) {
+      try {
+        const content = fs.readFileSync(f, "utf8")
+        const importPat = new RegExp(
+          `import\\s+(?:\\{[^}]*\\b${escapeRegex(componentName)}\\b[^}]*\\}|${escapeRegex(componentName)}\\b)\\s+from\\s+['"](?:@/shared/ui/)`,
+          "m"
+        )
+        const jsxPat = new RegExp(`<${escapeRegex(componentName)}(?:\\s|>|/)`, "m")
+        if (importPat.test(content) || jsxPat.test(content)) {
+          found.push(toPosix(path.relative(ROOT, f)))
+        }
+      } catch { /* skip */ }
     }
-    return { isWrapper: false, wrapsWhat: "" }
-  } catch {
-    return { isWrapper: false, wrapsWhat: "" }
   }
+
+  return { count: found.length, files: found.slice(0, 50) }
 }
 
-function findUsages(componentName: string, filePath: string): { count: number; files: string[] } {
-  const importName = componentName.replace(/\s+/g, "")
-  if (!importName) return { count: 0, files: [] }
-
-  const foundFiles: string[] = []
-
-  // Scan all files in SCAN_ROOTS except shared/ui for usages
-  const scanFiles = SCAN_ROOTS.flatMap((root) => {
-    const dir = path.join(ROOT, root)
-    if (root === "shared/ui") return [] // skip self-referential search
-    return walk(dir)
+function fileMatchesCategory(fileRel: string, cat: CategoryDef): boolean {
+  return cat.filePatterns.some(pattern => {
+    if (pattern.endsWith("/*")) {
+      return fileRel.startsWith(pattern.slice(0, -1))
+    }
+    return fileRel === pattern
   })
-
-  for (const sf of scanFiles) {
-    try {
-      const content = fs.readFileSync(sf, "utf8")
-      // Match import of the specific component from shared/ui
-      // Pattern: import { ..., ComponentName, ... } from '@/shared/ui/...'
-      // or import ComponentName from '@/shared/ui/...'
-      const importRegex = new RegExp(
-        `import\\s+(?:\\{[^}]*\\b${importName}\\b[^}]*\\}|${importName}\\b)\\s+from\\s+['"](?:@/shared/ui/|@/components/ui/)`,
-        "m"
-      )
-      
-      // Also match JSX usage directly (components referenced but come from barrel)
-      const jsxRegex = new RegExp(`<${importName}(?:\\s|>|/)`, "m")
-      
-      if (importRegex.test(content) || jsxRegex.test(content)) {
-        const rel = toPosix(path.relative(ROOT, sf))
-        foundFiles.push(rel)
-      }
-    } catch {
-      // skip unreadable files
-    }
-  }
-
-  return {
-    count: foundFiles.length,
-    files: foundFiles.slice(0, 50), // limit to 50 files for report readability
-  }
 }
 
-// ─── Scan ─────────────────────────────────────────────────────────────────
+function isTsConstantsFile(fileRel: string): boolean {
+  return /primitive-\w+\.ts$/.test(fileRel) ||
+         /dense-list\/(toolbar|table)\.ts$/.test(fileRel) ||
+         /dense-list\/inline-edit\.ts$/.test(fileRel)
+}
 
-function scanCategory(cat: { name: string; components: string[] }): ComponentInfo[] {
-  return cat.components.map((entry) => {
-    const hashIdx = entry.lastIndexOf("#")
-    const filePath = hashIdx >= 0 ? entry.slice(0, hashIdx) : entry
-    const componentName = hashIdx >= 0 ? entry.slice(hashIdx + 1) : path.basename(filePath, path.extname(filePath))
-    const fullPath = path.join(SHARED_UI, filePath)
-    const hasFile = fs.existsSync(fullPath)
+// ─── Collection ───────────────────────────────────────────────────────────
 
-    let variants = "unknown"
-    let variantCount = 0
-    let usesRawClasses = false
-    let isWrapper = false
-    let wrapsWhat = ""
+function collectCategoryComponents(
+  catKey: string,
+  cat: CategoryDef,
+  allComponents: Map<string, string[]>,
+): { components: ComponentInfo[]; nonComponentFiles: string[] } {
+  const results: ComponentInfo[] = []
+  const nonComponentFiles: string[] = []
+  const seen = new Set<string>() // file+component dedup
 
-    if (hasFile) {
-      const v = detectVariants(fullPath)
-      variants = v.variants
-      variantCount = v.count
-      usesRawClasses = detectRawClasses(fullPath)
-      const w = detectWrapper(fullPath)
-      isWrapper = w.isWrapper
-      wrapsWhat = w.wrapsWhat
+  // Collect all same-category files for cross-import detection
+  const sameCategoryFiles: string[] = []
+  for (const pattern of cat.filePatterns) {
+    if (pattern.endsWith("/*")) {
+      const dir = path.join(SHARED_UI, pattern.slice(0, -1))
+      if (fs.existsSync(dir)) {
+        for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+          if (entry.isFile() && FILE_EXTENSIONS.has(path.extname(entry.name))) {
+            sameCategoryFiles.push(pattern.slice(0, -1) + entry.name)
+          }
+        }
+      }
+    } else {
+      sameCategoryFiles.push(pattern)
     }
+  }
 
-    const usage = findUsages(componentName, fullPath)
+  for (const pattern of cat.filePatterns) {
+    if (pattern.endsWith("/*")) {
+      const dirRel = pattern.slice(0, -1)
+      const dirPath = path.join(SHARED_UI, dirRel)
+      if (!fs.existsSync(dirPath)) continue
+      for (const entry of fs.readdirSync(dirPath, { withFileTypes: true })) {
+        if (!entry.isFile() || !FILE_EXTENSIONS.has(path.extname(entry.name))) continue
+        const fileRel = dirRel + entry.name
+        processFile(catKey, cat, fileRel, sameCategoryFiles, allComponents, results, nonComponentFiles, seen)
+      }
+    } else {
+      processFile(catKey, cat, pattern, sameCategoryFiles, allComponents, results, nonComponentFiles, seen)
+    }
+  }
 
-    return {
-      file: filePath,
-      componentName,
-      hasFile,
-      variants,
-      variantCount,
-      usesRawClasses,
-      isWrapper,
-      wrapsWhat,
+  return { components: results, nonComponentFiles }
+}
+
+function processFile(
+  catKey: string,
+  _cat: CategoryDef,
+  fileRel: string,
+  sameCategoryFiles: string[],
+  allComponents: Map<string, string[]>,
+  results: ComponentInfo[],
+  nonComponentFiles: string[],
+  seen: Set<string>,
+): void {
+  const relKey = toPosix(fileRel)
+  if (EXCLUDED_FILES.has(relKey)) return
+
+  const fullPath = path.join(SHARED_UI, fileRel)
+  if (!fs.existsSync(fullPath)) return
+
+  const isConstants = isTsConstantsFile(fileRel)
+
+  // For constants files (.ts with primitive*), create a single file-level entry
+  if (isConstants) {
+    const key = `${fileRel}::__file__`
+    if (seen.has(key)) return
+    seen.add(key)
+
+    const usage = findUsages(fileRel.replace(/\.tsx?$/, ""))
+    const rawClasses = detectRawClasses(fullPath)
+    const funcDefs = getAllFunctionDefs(fullPath)
+
+    results.push({
+      file: fileRel,
+      componentName: `__file:${fileRel}__`,
+      hasFile: true,
+      exported: true,
+      isComponent: false,
       usageCount: usage.count,
       usageFiles: usage.files,
+      sameCategoryImports: [],
+      crossCategoryImports: [],
+      containsRawClasses: rawClasses,
+      category: catKey,
+    })
+
+    // Also check if no component names found (mark as non-component)
+    if (funcDefs.size === 0) {
+      nonComponentFiles.push(fileRel)
     }
-  })
+    return
+  }
+
+  // Regular .tsx component file
+  const exports = allComponents.get(fileRel)
+  if (!exports || exports.length === 0) {
+    // File exists but exports nothing matching our criteria
+    nonComponentFiles.push(fileRel)
+    return
+  }
+
+  const rawClasses = detectRawClasses(fullPath)
+  const catImports = detectCategoryImports(fullPath, sameCategoryFiles)
+
+  // Also find all defined functions (component or not) to detect
+  // components that are defined but no longer exported
+  const allDefined = getAllFunctionDefs(fullPath)
+  const allExportNames = new Set(exports)
+
+  // Add entries for defined-but-not-exported components
+  for (const defName of allDefined) {
+    if (allExportNames.has(defName)) continue
+    if (!isComponentName(defName)) continue
+
+    const key = `${fileRel}::${defName}`
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    const usage = findUsages(defName)
+
+    results.push({
+      file: fileRel,
+      componentName: defName,
+      hasFile: true,
+      exported: false,         // defined but NOT exported
+      isComponent: true,
+      usageCount: usage.count,
+      usageFiles: usage.files,
+      sameCategoryImports: catImports.same,
+      crossCategoryImports: catImports.cross,
+      containsRawClasses: rawClasses,
+      category: catKey,
+    })
+  }
+
+  for (const exportName of exports) {
+    const key = `${fileRel}::${exportName}`
+    if (seen.has(key)) continue
+    seen.add(key)
+
+    const exported = isComponentExported(fullPath, exportName)
+    const usage = findUsages(exportName)
+
+    results.push({
+      file: fileRel,
+      componentName: exportName,
+      hasFile: true,
+      exported,
+      isComponent: true,
+      usageCount: usage.count,
+      usageFiles: usage.files,
+      sameCategoryImports: catImports.same,
+      crossCategoryImports: catImports.cross,
+      containsRawClasses: rawClasses,
+      category: catKey,
+    })
+  }
 }
 
 // ─── Analysis ──────────────────────────────────────────────────────────────
 
-function analyzeCategory(catKey: string, components: ComponentInfo[]): {
-  overlap: string
-  recommendation: string
-  canonical: string[]
-  deprecated: string[]
-} {
-  const wrappers = components.filter((c) => c.isWrapper)
-  const rawClassUsers = components.filter((c) => c.usesRawClasses)
-  const noUsage = components.filter((c) => c.usageCount === 0)
-  const highUsage = components.filter((c) => c.usageCount > 5)
-  const catName = categories[catKey as keyof typeof categories]?.name || ""
-
-  let canonical: string[] = []
-  let deprecated: string[] = []
-
-  switch (catKey) {
-    case "1": {
-      // Badge / Token / Pill — Badge is the canonical
-      canonical = ["badge.tsx#Badge"]
-      deprecated = [
-        "dense-list/tokens.tsx#DenseListToken → Badge size=xs",
-        "dense-list/metrics.tsx#DenseListMetricPill → Badge variant=pill",
-        "dense-list/metrics.tsx#DenseListInlineMetric → Badge variant=inline-metric",
-        "dense-list/metrics.tsx#DenseListStat → Badge variant=stat",
-        "estimate-tab.tsx#EstimateTabToken → Badge size=xs",
-        "estimate-tab.tsx#EstimateTabSourceToken → Badge variant=source",
-        "estimate-tab.tsx#EstimateTabMetric → Badge variant=metric-pill",
-        "estimate-tab.tsx#EstimateTabInlineMetric → Badge variant=metric-inline",
-        "catalog-token.tsx#CatalogToken → Badge variant=catalog | catalog-compact",
-      ]
-      break
-    }
-    case "2": {
-      // Button — Button is the canonical
-      canonical = ["button.tsx#Button"]
-      deprecated = [
-        "toolbar-button.tsx#ToolbarButton → Button variant=outline size=xs + shadow-sm",
-        "toggle.tsx#Toggle → separate primitive (not button)",
-        "toggle-group.tsx#ToggleGroup → separate primitive (not button)",
-      ]
-      break
-    }
-    case "3": {
-      // Input — Input is the canonical for text inputs
-      canonical = ["input.tsx#Input", "select.tsx#Select", "textarea.tsx#Textarea"]
-      deprecated = [
-        "search-input.tsx#SearchInput → Input type=search",
-        "search-control.tsx#SearchControl → Input type=search + decoration",
-        "hidden-input.tsx#HiddenInput → raw <input type=hidden>",
-        "file-input.tsx#FileInput → Input type=file",
-        "input-group.tsx#InputGroup → FormLayout FieldRow",
-      ]
-      break
-    }
-    case "4": {
-      // Card / Surface — Surface + CardShell as canonical
-      canonical = ["card.tsx#Card", "surface.tsx#Surface", "card-shell.tsx#CardShell"]
-      deprecated = [
-        "dense-card.tsx#DenseCard → CardShell variant=card density=compact",
-        "dense-list/cards.tsx#DenseCardTitle → CardShell + CardTitle",
-        "dense-list/cards.tsx#DenseCardIcon → CardShell + icon slot",
-        "dense-list/cards.tsx#DenseCardRowLabel → CardShell + label slot",
-        "kpi-card.tsx#KPICard → CardShell variant=card + data display cells",
-        "editable-data-surface.tsx → CardShell variant=card + inline edit",
-        "estimate-tab.tsx#EstimateTabCard → CardShell variant=card density=compact",
-      ]
-      break
-    }
-    case "5": {
-      // Panel / Layout
-      canonical = ["page-shell.tsx#PageShell", "section.tsx#Section"]
-      deprecated = [
-        "dense-list/layout.tsx#DenseListPanel → Section variant=compact",
-        "dashboard-layout.tsx#DashboardPanel → Section variant=card",
-        "dashboard-layout.tsx#DashboardPageStack → PageShell variant=dashboard",
-        "estimate-tab.tsx#EstimateTabPanel → Section variant=estimates",
-      ]
-      break
-    }
-    case "6": {
-      // Table — shadcn Table + DataTable as canonical
-      canonical = ["table.tsx#Table", "table-density.tsx#CompactTableCell", "table-density.tsx#CompactTableHead"]
-      deprecated = [
-        "data-table.tsx#DataTable → uses table-density (fine as is)",
-        "data-table/data-table-row.tsx#DataTableRow → merge into table-density",
-        "data-table/data-table-skeleton.tsx#DataTableSkeleton → merge into table-density",
-        "data-table/data-table-toolbar.tsx#DataTableToolbar → merge into table-density",
-        "estimate-tab.tsx#EstimateTabCodeText → CompactTableCell variant=code",
-        "estimate-tab.tsx#EstimateTabNameText → CompactTableCell variant=name",
-        "estimate-tab.tsx#EstimateTabTitleRow → CompactTableRow variant=title",
-      ]
-      break
-    }
-    case "7": {
-      // Form
-      canonical = ["form.tsx#FormItem", "form-layout.tsx#FormLayout", "form-layout.tsx#FieldStack"]
-      deprecated = [
-        "field.tsx#FieldGroup → FormLayout FieldStack",
-        "label.tsx#Label → standalone, fine as separate",
-      ]
-      break
-    }
-    case "8": {
-      // Typography / Text
-      canonical = ["primitive-surface.ts#primitiveVisualTypographyClassNames"]
-      deprecated = [
-        "Raw text classes in features/ → use consistent typography tokens from primitives",
-      ]
-      break
-    }
-    case "9": {
-      // Navigation / Tabs
-      canonical = ["tabs.tsx#Tabs", "sidebar.tsx#Sidebar", "breadcrumbs.tsx#AppBreadcrumbs"]
-      deprecated = [
-        "workspace-tabs.tsx#WorkspaceTabs → Tabs variant=workspace",
-        "navigation-menu.tsx#NavigationMenu → Sidebar or standalone (fine as is, different purpose)",
-      ]
-      break
-    }
-    case "10": {
-      // Overlay — these are mostly separate primitives with different purposes
-      canonical = ["dialog.tsx#Dialog", "sheet.tsx#Sheet", "drawer.tsx#Drawer", "popover.tsx#Popover"]
-      deprecated = []
-      break
-    }
-    case "11": {
-      // State / Loading
-      canonical = ["states/index.ts#LoadingState", "states/index.ts#EmptyState", "states/index.ts#ErrorState"]
-      deprecated = [
-        "spinner.tsx#Spinner → LoadingState variant=spinner",
-        "loading-indicator.tsx#LoadingIndicator → LoadingState variant=indicator",
-        "data-table/data-table-skeleton.tsx#DataTableSkeleton → LoadingState variant=table-skeleton",
-        "table-empty-state.tsx#TableEmptyState → EmptyState variant=table",
-        "empty.tsx#Empty → EmptyState variant=generic",
-      ]
-      break
-    }
-    case "12": {
-      // Inline Editors
-      canonical = ["cells/editable-cell.tsx#EditableCell"]
-      deprecated = [
-        "dense-list/inline-edit.ts#useDenseListInlineEdit → EditableCell hook",
-      ]
-      break
-    }
-    case "13": {
-      // Layout Constants — all primitive files are the canonical system
-      canonical = [
-        "primitive-surface.ts", "primitive-spacing.ts", "primitive-density.ts",
-        "primitive-controls.ts", "primitive-navigation.ts", "primitive-table.ts",
-        "primitive-badge.ts", "primitive-form.ts", "primitive-overlay.ts",
-        "primitive-chart.ts", "primitive-marketing.ts",
-      ]
-      deprecated = [
-        "dense-list/toolbar.ts → merge into primitive-navigation.ts",
-        "dense-list/table.ts → merge into primitive-table.ts",
-        "dense-list/pickers.tsx → merge into primitive-controls.ts",
-      ]
-      break
-    }
-    case "14": {
-      // Data Display
-      canonical = ["cells/money-cell.tsx#MoneyCell", "kpi-card.tsx#KPICard"]
-      deprecated = []
-      break
-    }
-    case "15": {
-      // Marketing
-      canonical = ["marketing-shell.tsx#MarketingShell", "auth-shell.tsx#AuthShell"]
-      deprecated = [
-        "primitive-marketing.ts#primitiveMarketingClassNames → marketing-shell.tsx",
-      ]
-      break
-    }
-    case "16": {
-      // Containers / Helpers
-      canonical = ["scroll-area.tsx#ScrollArea", "separator.tsx#Separator", "accordion.tsx#Accordion"]
-      deprecated = []
-      break
-    }
-    default:
-      canonical = components.length > 0 ? [components[0].file + "#" + components[0].componentName] : []
-      deprecated = []
-  }
-
-  const overlapText = generateOverlapText(catKey, catName, components, wrappers)
-  const recText = generateRecommendationText(catKey, catName, components, canonical, deprecated)
-
-  return { overlap: overlapText, recommendation: recText, canonical, deprecated }
+/**
+ * For multi-export Radix-like files (dialog.tsx, tooltip.tsx, etc.),
+ * we treat all sub-components as belonging to the same "main" component.
+ * Deprecation applies at the file/group level, not to individual sub-exports.
+ */
+function isRadixPattern(fileRel: string): boolean {
+  const radixFiles = [
+    "dialog.tsx", "drawer.tsx", "sheet.tsx", "popover.tsx",
+    "hover-card.tsx", "alert-dialog.tsx", "tooltip.tsx",
+    "context-menu.tsx", "command.tsx", "menubar.tsx",
+    "tabs.tsx", "accordion.tsx", "collapsible.tsx", "carousel.tsx",
+    "resizable.tsx", "separator.tsx", "scroll-area.tsx",
+    "avatar.tsx", "switch.tsx", "checkbox.tsx", "radio-group.tsx",
+    "select.tsx", "slider.tsx", "progress.tsx",
+    "calendar.tsx", "date-picker.tsx",
+  ]
+  return radixFiles.includes(fileRel)
 }
 
-function generateOverlapText(catKey: string, name: string, components: ComponentInfo[], wrappers: ComponentInfo[]): string {
-  const rawClassUsers = components.filter((c) => c.usesRawClasses)
-  const active = components.filter((c) => c.usageCount > 0)
+function analyzeCategory(
+  catKey: string,
+  cat: CategoryDef,
+  components: ComponentInfo[],
+  nonComponentFiles: string[],
+): { overlap: string; recommendation: string; canonical: string[]; deprecated: ComponentInfo[] } {
+  const canonical: string[] = []
+  const deprecated: ComponentInfo[] = []
 
-  let text = `В категории "${name}" обнаружено ${components.length} компонентов. `
-  
-  if (wrappers.length > 0) {
-    text += `${wrappers.length} из них — обёртки над другими UI-компонентами. `
-  }
-
-  const rawText = rawClassUsers.filter((c) => c.usageCount > 0)
-  if (rawText.length > 0) {
-    text += `${rawText.length} компонент(ов) использует raw Tailwind-классы вместо примитивных токенов. `
-  }
-
-  // Detect functional overlap
-  if (components.length > 3) {
-    // Check how many handle "tag/pill with color and text"
-    if (catKey === "1") {
-      text += "Badge, StatusBadge, CatalogToken, DenseListToken и EstimateTabToken — все делают одно и то же: цветная пилюля с текстом. StatusBadge — обёртка над Badge, DenseListToken — обёртка над Badge с size=xs. Остальные — raw-реализации."
-    } else if (catKey === "4") {
-      text += "Card (shadcn), CardShell, Surface, DenseCard, KPICard, EditableDataSurface — 6 способов сделать карточку. CardShell — обёртка над Surface. DenseCard — raw Tailwind. Остальные — обёртки с разными variant/density пропсами."
-    } else if (catKey === "6") {
-      text += "Две параллельные табличные системы: shadcn Table (table.tsx) для простых случаев и DataTable (@tanstack/react-table + react-virtuoso) для сложных. TableDensity (table-density.tsx) — обёртка над shadcn Table с type-safe пропсами. DataTable частично дублирует table-density."
+  // Build canonical list
+  for (const cf of cat.canonicalFiles) {
+    const fullPath = path.join(SHARED_UI, cf)
+    if (fs.existsSync(fullPath)) {
+      const names = extractComponentExports(fullPath)
+      if (names.length > 0) canonical.push(`${cf}#${names[0]}`)
+      else canonical.push(`${cf}#?`)
+    } else {
+      canonical.push(`${cf}#<missing>`)
     }
   }
 
-  return text
-}
+  if (components.length === 0) {
+    return {
+      overlap: `Категория "${cat.name}" не содержит компонентов.`,
+      recommendation: "",
+      canonical, deprecated,
+    }
+  }
 
-function generateRecommendationText(
-  _catKey: string,
-  name: string,
-  _components: ComponentInfo[],
-  canonical: string[],
-  deprecated: string[]
-): string {
-  let text = `**Канон:** ${canonical.join(", ")}. `
+  // Deduplicate: if a component appears from same file multiple times
+  // (e.g. through multiple category matches), only keep the first occurrence
+  const uniqueComps: ComponentInfo[] = []
+  const seen = new Set<string>()
+  for (const c of components) {
+    const key = `${c.file}::${c.componentName}`
+    if (!seen.has(key)) {
+      seen.add(key)
+      uniqueComps.push(c)
+    }
+  }
+
+  // Group by file
+  const fileGroups = new Map<string, ComponentInfo[]>()
+  for (const comp of uniqueComps) {
+    if (!fileGroups.has(comp.file)) fileGroups.set(comp.file, [])
+    fileGroups.get(comp.file)!.push(comp)
+  }
+
+  // Detect which files are Radix-style multi-export groups
+  const RADIX_LIKE_FILES = new Set([
+    "dialog.tsx", "drawer.tsx", "sheet.tsx", "popover.tsx",
+    "hover-card.tsx", "alert-dialog.tsx", "tooltip.tsx",
+    "context-menu.tsx", "command.tsx", "menubar.tsx",
+    "tabs.tsx", "accordion.tsx", "collapsible.tsx", "carousel.tsx",
+    "resizable.tsx", "slider.tsx", "progress.tsx",
+    "select.tsx", "switch.tsx", "checkbox.tsx", "radio-group.tsx",
+    "calendar.tsx", "date-picker.tsx", "avatar.tsx",
+    "breadcrumbs.tsx",
+    "card-shell.tsx", "form-layout.tsx", "form.tsx",
+    "navigation-menu.tsx", "sidebar.tsx",
+  ])
+
+  // For Radix files with many sub-exports, only deprecate the ENTIRE file
+  // (all members) if the main component has 0 usage.
+  // The "main" component is the one without a sub-component suffix.
+  for (const [file, comps] of fileGroups) {
+    const isRadixLike = RADIX_LIKE_FILES.has(file)
+    const isCanon = cat.canonicalFiles.includes(file)
+
+    if (isRadixLike && comps.length > 2) {
+      // It's a multi-export file. Find the main component.
+      // Main = shortest name or first export
+      const mainComp = comps.reduce((a, b) =>
+        a.componentName.length <= b.componentName.length ? a : b
+      )
+      
+      if (!isCanon) {
+        // Check if the whole file group is unused (main component has 0 usage)
+        const hasAnyUsage = comps.some(c => c.usageCount > 0)
+        if (!hasAnyUsage) {
+          // Mark the file header as deprecated, skip sub-components
+          for (const comp of comps) {
+            if (comp === mainComp && comp.usageCount === 0) {
+              deprecated.push(comp)
+            }
+          }
+        }
+      }
+      continue
+    }
+
+    // Regular single-component or small-group files
+    const canonicalFileSet = new Set(cat.canonicalFiles)
+
+    for (const comp of comps) {
+      const isCanonFile = canonicalFileSet.has(comp.file)
+
+      if (isCanonFile) continue // never deprecate canonical files
+
+      // Check: is this component a wrapper that wraps a same-category canonical?
+      const wrapsCanonical = comp.sameCategoryImports.some(imp => {
+        // Does the imported name match a canonical component?
+        return canonical.some(c => c.includes(imp))
+      })
+
+      // Deprecate if:
+      // 1. Wraps a canonical component AND has low usage (<= 2)
+      if (wrapsCanonical && comp.usageCount <= 2) {
+        deprecated.push(comp)
+        continue
+      }
+      // 2. Zero usage (completely unused)
+      if (comp.usageCount === 0 && comp.isComponent) {
+        deprecated.push(comp)
+        continue
+      }
+      // 3. Wraps any same-category component AND low usage (<= 1)
+      if (comp.sameCategoryImports.length > 0 && comp.usageCount <= 1 && comp.isComponent) {
+        deprecated.push(comp)
+        continue
+      }
+    }
+  }
+
+  // Build overlap text
+  const realComps = components.filter(c => c.isComponent)
+  let overlap = `В категории "${cat.name}" обнаружено ${realComps.length} компонентов. `
+  const wrappers = components.filter(c => c.sameCategoryImports.length > 0)
+  if (wrappers.length > 0) overlap += `${wrappers.length} из них — обёртки. `
+  if (deprecated.length > 0) overlap += `${deprecated.length} кандидатов на удаление. `
+  if (nonComponentFiles.length > 0) overlap += `(${nonComponentFiles.length} файлов содержат только константы/типы.)`
+
+  // Recommendation
+  let recommendation = `**Канон:** ${canonical.length > 0 ? canonical.join(", ") : "(не указан)"}.`
   if (deprecated.length > 0) {
-    text += `\n**Deprecated:**\n${deprecated.map((d) => `- ${d}`).join("\n")}`
-  } else {
-    text += "Все компоненты имеют разное назначение, дублирования не обнаружено."
-  }
-  return text
-}
-
-// ─── Main ──────────────────────────────────────────────────────────────────
-
-function main(): void {
-  const results: OverlapReport = {
-    generatedAt: new Date().toISOString(),
-    summary: { totalCategories: 0, totalOverlapComponents: 0, totalCanonical: 0, totalDeprecated: 0, hasDuplicates: false },
-    categories: {},
-  }
-
-  let totalComponents = 0
-  let totalCanonical = 0
-  let totalDeprecated = 0
-
-  for (const [key, cat] of Object.entries(categories)) {
-    const components = scanCategory(cat)
-    const analysis = analyzeCategory(key, components)
-
-    totalComponents += components.length
-    totalCanonical += analysis.canonical.length
-    totalDeprecated += analysis.deprecated.length
-
-    results.categories[key] = {
-      name: cat.name,
-      components,
-      overlap: analysis.overlap,
-      recommendation: analysis.recommendation,
-      canonical: analysis.canonical,
-      deprecated: analysis.deprecated,
+    recommendation += `\n**Deprecated кандидаты:**\n`
+    for (const dep of deprecated) {
+      const reason = dep.sameCategoryImports.length > 0
+        ? `обёртка над ${dep.sameCategoryImports.join(", ")}`
+        : dep.usageCount === 0
+          ? "0 usage"
+          : ""
+      recommendation += `- ${dep.file}#${dep.componentName} → ${reason}\n`
     }
+  } else {
+    recommendation += "\nДублирования не обнаружено."
   }
 
-  results.summary = {
-    totalCategories: Object.keys(categories).length,
-    totalOverlapComponents: totalComponents,
-    totalCanonical,
-    totalDeprecated,
-    hasDuplicates: totalDeprecated > 0,
-  }
-
-  // Write JSON report
-  fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true })
-  fs.writeFileSync(REPORT_JSON, JSON.stringify(results, null, 2))
-
-  // Generate Markdown
-  const md = generateMarkdown(results)
-  fs.writeFileSync(REPORT_MD, md)
-
-  console.log(`✅ UI Overlap Report generated:`)
-  console.log(`   JSON: ${path.relative(ROOT, REPORT_JSON)}`)
-  console.log(`   MD:   ${path.relative(ROOT, REPORT_MD)}`)
-  console.log(``)
-  console.log(`Summary: ${results.summary.totalCategories} categories, ${totalComponents} components`)
-  console.log(`  Canonical:  ${totalCanonical}`)
-  console.log(`  Deprecated: ${totalDeprecated}`)
-  console.log(`  Has duplicates: ${results.summary.hasDuplicates}`)
+  return { overlap, recommendation, canonical, deprecated }
 }
+
+// ─── Markdown ──────────────────────────────────────────────────────────────
 
 function generateMarkdown(report: OverlapReport): string {
-  let md = `# UI Component Overlap Inventory
+  let md = `# UI Component Overlap Audit
 
 **Generated:** ${report.generatedAt}
 **Total categories:** ${report.summary.totalCategories}
-**Total components audited:** ${report.summary.totalOverlapComponents}
-**Total canonical components:** ${report.summary.totalCanonical}
-**Total deprecated candidates:** ${report.summary.totalDeprecated}
-**Has overlapping duplicates:** ${report.summary.hasDuplicates ? "⚠️ **Да**" : "✅ Нет"}
+**Components found:** ${report.summary.totalComponents}
+**Deprecated candidates:** ${report.summary.totalDeprecated}
 
 ---
 
-## Индекс
+## Index
 
-| # | Категория | Компонентов | Overlap |
-|---|-----------|------------:|---------|
+| # | Category | Components | Overlap |
+|---|----------|----------:|---------|
 `
 
   for (const [key, cat] of Object.entries(report.categories)) {
     const depLen = cat.deprecated.length
-    const depStr = depLen > 0 ? `⚠️ ${depLen} deprecated` : "✅ OK"
-    md += `| ${key} | ${cat.name} | ${cat.components.length} | ${depStr} |\n`
+    const label = depLen > 0 ? `⚠️ ${depLen} deprecated` : "✅ OK"
+    md += `| ${key} | ${cat.name} | ${cat.components.length} | ${label} |\n`
   }
 
   md += `\n---\n\n`
 
   for (const [key, cat] of Object.entries(report.categories)) {
     md += `## Категория ${key}: ${cat.name}\n\n`
+
     md += `### Компоненты\n\n`
-    md += `| Компонент | Файл | Variants | Usage (features/) | Raw Classes? | Wrapper? |\n`
-    md += `|---|---|---|---|---|---|\n`
+    md += `| Компонент | Файл | Экспортируется? | Usage (features/) | Overlap |\n`
+    md += `|---|---|---|---|---|\n`
 
     for (const comp of cat.components) {
-      const fileLink = comp.hasFile ? `\`${comp.file}\`` : `❌ ${comp.file}`
-      const rawClasses = comp.usesRawClasses ? "Да ⚠️" : "Нет"
-      const wrapperStr = comp.isWrapper ? `Да → ${comp.wrapsWhat}` : "Нет"
-      md += `| ${comp.componentName} | ${fileLink} | ${comp.variants} | ${comp.usageCount} мест | ${rawClasses} | ${wrapperStr} |\n`
+      const exportedStr = comp.exported ? "✅ да" : "❌ нет"
+      const isDeprecated = cat.deprecated.includes(comp)
+      const isCanonical = cat.canonical.includes(`${comp.file}#${comp.componentName}`)
+      const isRadixGroup = isRadixPattern(comp.file)
+      const isConstantsFile = isTsConstantsFile(comp.file)
+
+      let overlapLabel = "—"
+      if (isCanonical) overlapLabel = "канон"
+      else if (isDeprecated && comp.sameCategoryImports.length > 0) overlapLabel = "обёртка"
+      else if (isDeprecated && comp.usageCount === 0) overlapLabel = "0 usage"
+      else if (isRadixGroup && comp.usageCount > 0) overlapLabel = "✅ Radix"
+      else if (isRadixGroup) overlapLabel = "Radix"
+      else if (isConstantsFile) overlapLabel = "константы"
+
+      md += `| ${comp.componentName} | ${comp.file} | ${exportedStr} | ${comp.usageCount} | ${overlapLabel} |\n`
     }
 
-    md += `\n### Overlap\n\n`
-    md += cat.overlap + "\n\n"
+    md += `\n### Overlap\n\n${cat.overlap}\n\n`
+    md += `### Рекомендация\n\n${cat.recommendation}\n\n`
 
-    md += `### Рекомендация\n\n`
-    md += cat.recommendation + "\n\n"
-
-    // Show usage files for deprecation candidates
-    const depFiles = new Set<string>()
     if (cat.deprecated.length > 0) {
+      const depFiles = new Set<string>()
       for (const dep of cat.deprecated) {
-        const compName = dep.split("→")[0].trim().split("#")[1] || dep.split("→")[0].trim()
-        for (const comp of cat.components) {
-          if (comp.componentName === compName && comp.usageFiles.length > 0) {
-            comp.usageFiles.forEach((f) => depFiles.add(f))
-          }
-        }
+        if (dep.usageFiles.length > 0) dep.usageFiles.forEach(f => depFiles.add(f))
       }
       if (depFiles.size > 0) {
-        md += `\n### Файлы, требующие миграции (первые 30)\n\n`
-        const filesList = [...depFiles].slice(0, 30)
-        for (const f of filesList) {
-          md += `- \`${f}\`\n`
-        }
-        if (depFiles.size > 30) {
-          md += `- ... и ещё ${depFiles.size - 30} файлов\n`
-        }
+        md += `### Файлы для миграции\n\n`
+        const sorted = [...depFiles].slice(0, 30)
+        for (const f of sorted) md += `- \`${f}\`\n`
+        if (depFiles.size > 30) md += `- ... и ещё ${depFiles.size - 30} файлов\n`
         md += `\n`
+      } else {
+        md += `### Файлы для миграции\n(empty)\n\n`
       }
     }
 
     md += `---\n\n`
   }
 
-  // Overall summary
-  md += `## Итого\n\n`
-  md += `| Метрика | Значение |\n`
+  md += `## Summary\n\n`
+  md += `| Metric | Value |\n`
   md += `|---|---|\n`
-  md += `| Категорий с дублями | ${Object.values(report.categories).filter((c) => c.deprecated.length > 0).length} |\n`
-  md += `| Всего deprecated-кандидатов | ${report.summary.totalDeprecated} |\n`
-  md += `| Всего канонических компонентов | ${report.summary.totalCanonical} |\n`
-  md += `| Всего просканировано компонентов | ${report.summary.totalOverlapComponents} |\n`
+  md += `| Categories with deprecated | ${Object.values(report.categories).filter(c => c.deprecated.length > 0).length} |\n`
+  md += `| Deprecated candidates | ${report.summary.totalDeprecated} |\n`
+  md += `| Total components scanned | ${report.summary.totalComponents} |\n`
 
   return md
+}
+
+// ─── Main ──────────────────────────────────────────────────────────────────
+
+function main(): void {
+  console.log("🔍 Scanning shared/ui/ for React components...\n")
+
+  const allComponents = scanFilesForComponents()
+  console.log(`   Found ${allComponents.size} files with component exports`)
+
+  const report: OverlapReport = {
+    generatedAt: new Date().toISOString(),
+    summary: { totalCategories: 0, totalComponents: 0, totalDeprecated: 0, hasDuplicates: false },
+    categories: {},
+  }
+
+  let totalComponents = 0
+  let totalDeprecated = 0
+
+  for (const [key, cat] of Object.entries(categories)) {
+    const { components, nonComponentFiles } = collectCategoryComponents(key, cat, allComponents)
+    const analysis = analyzeCategory(key, cat, components, nonComponentFiles)
+    totalComponents += components.length
+    totalDeprecated += analysis.deprecated.length
+
+    report.categories[key] = {
+      name: cat.name,
+      components,
+      overlap: analysis.overlap,
+      recommendation: analysis.recommendation,
+      canonical: analysis.canonical,
+      deprecated: analysis.deprecated,
+      nonComponentFiles,
+    }
+
+    console.log(`   [${key}] ${cat.name}: ${components.length} comps, ${analysis.deprecated.length} deprecated`)
+  }
+
+  report.summary = {
+    totalCategories: Object.keys(categories).length,
+    totalComponents,
+    totalDeprecated,
+    hasDuplicates: totalDeprecated > 0,
+  }
+
+  fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true })
+  fs.writeFileSync(REPORT_JSON, JSON.stringify(report, null, 2))
+  fs.writeFileSync(REPORT_MD, generateMarkdown(report))
+
+  console.log(`\n✅ UI Overlap Report generated:`)
+  console.log(`   JSON: ${path.relative(ROOT, REPORT_JSON)}`)
+  console.log(`   MD:   ${path.relative(ROOT, REPORT_MD)}`)
+  console.log(``)
+  console.log(`Summary: ${report.summary.totalCategories} categories, ${totalComponents} components`)
+  console.log(`  Deprecated: ${totalDeprecated}`)
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) {

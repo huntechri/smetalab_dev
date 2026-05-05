@@ -36,7 +36,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
 import { cn } from '@/lib/utils';
 import { CardShellInset } from '@/shared/ui/card-shell';
 import { primitiveCardShellInsetDensityP3 } from '@/shared/ui/primitive-surface';
-import { StatusBadge, type StatusTone } from '@/shared/ui/status-badge';
+import { Badge } from '@/shared/ui/badge';
 import { useUserPreferences } from '@/features/settings/hooks/use-user-preferences';
 
 type PermissionEntry = { code: string; level: 'read' | 'manage' };
@@ -86,7 +86,7 @@ function roleLabel(role?: string | null) {
   return map[role] ?? role;
 }
 
-function permissionBadgeTone(level: PermissionEntry['level']): StatusTone {
+function permissionBadgeVariant(level: PermissionEntry['level']): 'success' | 'info' {
   if (level === 'manage') {
     return 'success';
   }
@@ -252,12 +252,13 @@ export function UserSettingsPage({ user, team, permissions }: SettingsProps) {
                     </p>
                   ) : (
                     sortedPermissions.map((permission) => (
-                      <StatusBadge
+                      <Badge
                         key={permission.code}
-                        tone={permissionBadgeTone(permission.level)}
+                        variant={permissionBadgeVariant(permission.level)}
+                        size="xs"
                       >
                         {permission.code}: {permission.level}
-                      </StatusBadge>
+                      </Badge>
                     ))
                   )}
                 </div>
