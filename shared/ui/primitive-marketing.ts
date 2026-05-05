@@ -68,20 +68,6 @@ export const primitiveMarketingGradientCyanClassName =
 export const primitiveMarketingGradientPurpleClassName =
   'bg-[radial-gradient(circle,rgba(var(--marketing-purple-rgb),0.25),rgba(var(--marketing-bg-rgb),0))]';
 
-// ─── Marketing pill / label tokens ───────────────────────────────────────
-
-/** Primary pill (badge) — used in hero */
-export const primitiveMarketingPillClassName =
-  'inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs uppercase tracking-[0.3em] text-white/80';
-
-/** Small pill token — used in capability tags */
-export const primitiveMarketingPillSmallClassName =
-  'rounded-full border border-white/20 bg-white/5 px-3 py-1';
-
-/** Extra-small pill — used inside demo */
-export const primitiveMarketingPillXsClassName =
-  'rounded-full bg-marketing-bg px-2 py-0.5 text-xs text-white';
-
 /** Section label */
 export const primitiveMarketingSectionLabelClassName =
   'text-xs uppercase tracking-[0.3em] text-white/75';

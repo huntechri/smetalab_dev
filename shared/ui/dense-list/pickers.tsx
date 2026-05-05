@@ -24,10 +24,10 @@ function DenseListPickerButton({ maxWidth = 'default', className, ...props }: De
   return (
     <Button
       type="button"
-      variant="ghost"
+      variant="outline"
       size="xs"
       className={cn(
-        'h-6 justify-start gap-1 rounded-full border border-border bg-muted px-1.5 text-[11px] font-semibold text-foreground hover:bg-muted/80 sm:h-5 sm:text-[10px]',
+        'rounded-full',
         denseListPickerButtonMaxWidthClassName[maxWidth],
         className,
       )}

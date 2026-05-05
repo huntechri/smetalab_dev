@@ -15,10 +15,9 @@ import {
   MarketingMobileMenu,
   MarketingFooter,
 } from '@/shared/ui/marketing-shell';
+import { Badge } from '@/shared/ui/badge';
 import {
-  primitiveMarketingPillSmallClassName,
   primitiveMarketingCardGradientClassName,
-  primitiveMarketingPillXsClassName,
   primitiveMarketingDemoShellClassName,
   primitiveMarketingCodeBlockClassName,
   primitiveMarketingSectionLabelClassName,
@@ -203,19 +202,19 @@ export default function LandingPage() {
                         <>
                             <div className={primitiveMarketingDemoShellClassName}>
                                 <div className="flex items-center justify-between text-xs uppercase tracking-[0.35em] text-white/75">
-                                    <span className={primitiveMarketingPillXsClassName}>Project Control</span>
-                                    <span className={primitiveMarketingPillXsClassName}>Live site</span>
+                                    <Badge variant="outline" size="xs">Project Control</Badge>
+                                    <Badge variant="outline" size="xs">Live site</Badge>
                                 </div>
                                 <div className="mt-6 grid gap-4">
                                     <div className={primitiveMarketingCodeBlockClassName}>
-                                        <p className={primitiveMarketingPillXsClassName}>Статус участка</p>
+                                        <Badge variant="outline" size="xs">Статус участка</Badge>
                                         <p className="mt-2 font-semibold text-white/95">Жилой комплекс &ldquo;Северный&rdquo;. Прогресс: 62%</p>
                                     </div>
                                     <div className="grid gap-4 sm:grid-cols-2">
                                         <div className={cn('rounded-2xl border border-white/10 p-4', primitiveMarketingCardGradientClassName)}>
-                                            <p className={primitiveMarketingPillXsClassName}>Бюджет</p>
+                                            <Badge variant="outline" size="xs">Бюджет</Badge>
                                             <div className={primitiveMarketingDemoBudgetClassName}>84.3 млн ₽</div>
-                                            <p className={primitiveMarketingPillXsClassName}>Отклонение: −2.1%</p>
+                                            <Badge variant="outline" size="xs">Отклонение: −2.1%</Badge>
                                         </div>
                                         <div className={primitiveMarketingCardAltClassName}>
                                             <p className="text-xs text-white/75">Поставки</p>
@@ -248,7 +247,7 @@ export default function LandingPage() {
                             <p className="text-white/80">Система объединяет сметы, графики, снабжение и контроль качества в единой ленте решений.</p>
                             <div className="flex flex-wrap gap-3 text-xs text-white/80">
                                 {capabilityTags.map((tag) => (
-                                    <span key={tag} className={primitiveMarketingPillSmallClassName}>{tag}</span>
+                                    <Badge key={tag} variant="outline" size="xs" className="uppercase tracking-[0.3em]">{tag}</Badge>
                                 ))}
                             </div>
                         </div>

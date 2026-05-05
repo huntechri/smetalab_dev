@@ -63,8 +63,6 @@ export const dataTableAiContainerClassName = primitiveDataTableAiContainerClassN
 export const dataTableAiOverlayClassName = primitiveDataTableAiOverlayClassName;
 export const dataTableLoadingOverlayClassName =
   'pointer-events-none absolute inset-0 z-20 flex items-center justify-center bg-background/18 backdrop-blur-[1px]';
-export const dataTableLoadingBadgeClassName =
-  'flex items-center gap-2 rounded-full border border-border/60 bg-card/90 px-3 py-1.5 text-[12px] font-medium text-muted-foreground shadow-lg';
 export const dataTableEmptyCellClassName = primitiveDataTableEmptyCellClassName;
 
 export interface TableHeaderLabelProps extends React.ComponentPropsWithoutRef<'div'> {

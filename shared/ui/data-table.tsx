@@ -13,6 +13,7 @@ import { TableVirtuoso, TableComponents } from "react-virtuoso"
 import { TooltipProvider } from "@/shared/ui/tooltip"
 
 import { cn } from "@/lib/utils"
+import { Badge } from "@/shared/ui/badge"
 import { useDataTableState } from "@/shared/hooks/use-data-table-state"
 import { EmptyState } from "@/shared/ui/states"
 import {
@@ -24,7 +25,6 @@ import {
     dataTableHeaderCellClassName,
     dataTableHeaderContentClassName,
     dataTableHeaderRowClassName,
-    dataTableLoadingBadgeClassName,
     dataTableLoadingOverlayClassName,
     dataTableSortableHeaderTriggerClassName,
     dataTableStaticHeaderTriggerClassName,
@@ -294,14 +294,15 @@ export function DataTable<TData, TValue>({
                 >
                     {loadingMore && (
                         <div className={dataTableLoadingOverlayClassName}>
-                            <div
+                            <Badge
                                 role="status"
                                 aria-live="polite"
-                                className={dataTableLoadingBadgeClassName}
+                                variant="neutral"
+                                size="xs"
                             >
                                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
                                 <span>Загрузка...</span>
-                            </div>
+                            </Badge>
                         </div>
                     )}
 

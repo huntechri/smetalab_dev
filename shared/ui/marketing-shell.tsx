@@ -3,6 +3,8 @@ import type { LucideIcon } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
 
+import { Badge } from '@/shared/ui/badge';
+
 import {
   primitiveMarketingHeroPaddingClassName,
   primitiveMarketingSectionPaddingClassName,
@@ -14,7 +16,6 @@ import {
   primitiveMarketingCtaBoxClassName,
   primitiveMarketingPricingCardClassName,
   primitiveMarketingPricingAccentClassName,
-  primitiveMarketingPillClassName,
   primitiveMarketingDividerClassName,
   primitiveMarketingBorderWhite10ClassName,
   primitiveMarketingH1ClassName,
@@ -294,7 +295,7 @@ export function MarketingHero({
       <div className={cn('mx-auto w-full max-w-7xl', primitiveMarketingHeroPaddingClassName)}>
         <div className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div className="space-y-8">
-            {pill ? <div className={primitiveMarketingPillClassName}>{pill}</div> : null}
+            {pill ? <Badge variant="outline" size="xs" className="uppercase tracking-[0.3em]">{pill}</Badge> : null}
             <h1 className={primitiveMarketingH1ClassName}>{heading}</h1>
             <p className={cn('max-w-xl', primitiveMarketingHeroTextClassName)}>{lead}</p>
             {actions ? (
