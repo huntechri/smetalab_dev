@@ -9,7 +9,7 @@ type PurchaseMetricProps = {
 
 export function PurchaseMetric({ label, value, tone = 'neutral' }: PurchaseMetricProps) {
   return (
-    <Badge variant={tone} size="xs" className="gap-0.5 px-1 sm:px-1.5">
+    <Badge variant={tone} size="xs">
       <span className="shrink-0 opacity-70">{label}:</span>
       <span className="ml-0.5 tabular-nums">{value}</span>
     </Badge>

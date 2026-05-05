@@ -122,11 +122,11 @@ export function WorkCatalogPicker({ onAddWork, addedWorkNames = new Set() }: Pro
                                         </CatalogIndexToken>
                                         <div className="space-y-0.5 min-w-0 flex-1">
                                             <div className="flex items-center gap-1.5 flex-wrap">
-                                                <Badge variant="outline" size="xs" className="px-1 text-[9px] font-mono uppercase tracking-tight">
+                                                <Badge variant="outline" size="xs" className="font-mono uppercase tracking-tight">
                                                     {work.code}
                                                 </Badge>
                                                 {work.category && (
-                                                    <Badge variant="outline" size="xs" className="px-1 text-[9px] truncate tracking-normal max-w-20 sm:max-w-28">
+                                                    <Badge variant="outline" size="xs" className="truncate tracking-normal max-w-20 sm:max-w-28">
                                                         {work.category}
                                                     </Badge>
                                                 )}
