@@ -2,17 +2,13 @@
 
 import { Loader2 } from "lucide-react";
 import { Button } from "@/shared/ui/button";
-import { Form } from "@/shared/ui/form";
-import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/tabs";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/shared/ui/form";
+import { Input } from "@/shared/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/ui/select";
 
 import { DirectoryEntitySheetShell } from "@/features/_shared/directories";
 import { type CounterpartyRow } from "@/shared/types/domain/counterparty-row";
 import { useCounterpartySheetForm } from "@/features/counterparties/hooks/useCounterpartySheetForm";
-import {
-  CounterpartyBankSection,
-  CounterpartyDetailsSection,
-  CounterpartyGeneralSection,
-} from "@/features/counterparties/components/counterparty-sheet-sections";
 
 interface CreateCounterpartySheetProps {
   open: boolean;
@@ -61,27 +57,277 @@ export function CreateCounterpartySheet({
         <form
           id="counterparty-sheet-form"
           onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-4"
         >
-          <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-4 sm:mb-6">
-              <TabsTrigger value="general" className="text-xs">
-                Общее
-              </TabsTrigger>
-              <TabsTrigger value="details" className="text-xs">
-                Детали
-              </TabsTrigger>
-              <TabsTrigger value="bank" className="text-xs">
-                Банк
-              </TabsTrigger>
-            </TabsList>
+          {/* --- Всегда видимые поля --- */}
 
-            <CounterpartyGeneralSection form={form} />
-            <CounterpartyDetailsSection
-              form={form}
-              legalStatus={legalStatus}
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs">Наименование</FormLabel>
+                <FormControl>
+                  <Input placeholder="Введите название..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs">Тип</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Тип" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="customer" className="text-xs">
+                        Заказчик
+                      </SelectItem>
+                      <SelectItem value="contractor" className="text-xs">
+                        Подрядчик
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <CounterpartyBankSection form={form} />
-          </Tabs>
+
+            <FormField
+              control={form.control}
+              name="legalStatus"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs">Статус</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Статус" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="juridical" className="text-xs">
+                        Юр. лицо
+                      </SelectItem>
+                      <SelectItem value="individual" className="text-xs">
+                        Физ. лицо
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="inn"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs">ИНН</FormLabel>
+                  <FormControl>
+                    <Input placeholder="ИНН" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-xs">Телефон</FormLabel>
+                  <FormControl>
+                    <Input placeholder="+7..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          {/* --- Условные поля: Юр. лицо --- */}
+          {legalStatus === "juridical" && (
+            <div className="space-y-4 rounded-lg border border-border p-4">
+              <p className="text-xs font-medium text-muted-foreground">Реквизиты юрлица</p>
+
+              <FormField
+                control={form.control}
+                name="legalAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Юридический адрес</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Город, улица, дом..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bankName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Наименование банка</FormLabel>
+                    <FormControl>
+                      <Input placeholder="ПАО Сбербанк..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="bik"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">БИК</FormLabel>
+                    <FormControl>
+                      <Input placeholder="9 цифр" maxLength={9} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="corrAccount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">К/С</FormLabel>
+                    <FormControl>
+                      <Input placeholder="20 цифр" maxLength={20} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="accountNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Р/С</FormLabel>
+                    <FormControl>
+                      <Input placeholder="20 цифр" maxLength={20} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
+
+          {/* --- Условные поля: Физ. лицо --- */}
+          {legalStatus === "individual" && (
+            <div className="space-y-4 rounded-lg border border-border p-4">
+              <p className="text-xs font-medium text-muted-foreground">Паспортные данные</p>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="passportSeries"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Серия паспорта</FormLabel>
+                      <FormControl>
+                        <Input placeholder="4 цифры" maxLength={4} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="passportNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-xs">Номер паспорта</FormLabel>
+                      <FormControl>
+                        <Input placeholder="6 цифр" maxLength={6} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="passportIssuedBy"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Кем выдан</FormLabel>
+                    <FormControl>
+                      <Input placeholder="УФМС..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passportIssueDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Дата выдачи</FormLabel>
+                    <FormControl>
+                      <Input placeholder="ДД.ММ.ГГГГ" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passportDepartmentCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Код подразделения</FormLabel>
+                    <FormControl>
+                      <Input placeholder="000-000" maxLength={7} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="passportRegistrationAddress"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-xs">Адрес регистрации</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Город, улица, дом, кв..." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          )}
         </form>
       </Form>
     </DirectoryEntitySheetShell>

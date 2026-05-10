@@ -17,29 +17,25 @@ export async function getCounterparties(
     filters.push(ilike(counterparties.name, `%${search}%`));
   }
 
-  const data = await db
+  const rows = await db
     .select({
       id: counterparties.id,
-      tenantId: counterparties.tenantId,
+      name: counterparties.name,
       type: counterparties.type,
       legalStatus: counterparties.legalStatus,
-      name: counterparties.name,
-      birthDate: counterparties.birthDate,
-      passportSeriesNumber: counterparties.passportSeriesNumber,
-      passportIssuedBy: counterparties.passportIssuedBy,
-      passportIssuedDate: counterparties.passportIssuedDate,
-      departmentCode: counterparties.departmentCode,
-      ogrn: counterparties.ogrn,
       inn: counterparties.inn,
-      kpp: counterparties.kpp,
-      address: counterparties.address,
       phone: counterparties.phone,
-      email: counterparties.email,
+      legalAddress: counterparties.legalAddress,
       bankName: counterparties.bankName,
-      bankAccount: counterparties.bankAccount,
+      bik: counterparties.bik,
       corrAccount: counterparties.corrAccount,
-      bankInn: counterparties.bankInn,
-      bankKpp: counterparties.bankKpp,
+      accountNumber: counterparties.accountNumber,
+      passportSeries: counterparties.passportSeries,
+      passportNumber: counterparties.passportNumber,
+      passportIssuedBy: counterparties.passportIssuedBy,
+      passportIssueDate: counterparties.passportIssueDate,
+      passportDepartmentCode: counterparties.passportDepartmentCode,
+      passportRegistrationAddress: counterparties.passportRegistrationAddress,
       createdAt: counterparties.createdAt,
       updatedAt: counterparties.updatedAt,
       deletedAt: counterparties.deletedAt,
@@ -52,8 +48,42 @@ export async function getCounterparties(
 
   const countQuery = await db.select({ count: sql<number>`count(*)` }).from(counterparties).where(and(...filters));
 
+  const data = rows.map((row) => {
+    const result: CounterpartyRow = {
+      id: row.id,
+      name: row.name,
+      type: row.type as CounterpartyRow['type'],
+      legalStatus: row.legalStatus as CounterpartyRow['legalStatus'],
+      inn: row.inn ?? '',
+      phone: row.phone ?? '',
+      legalAddress: row.legalAddress ?? undefined,
+    };
+
+    if (row.legalStatus === 'juridical' && row.bankName) {
+      result.bankDetails = {
+        bankName: row.bankName ?? '',
+        bik: row.bik ?? '',
+        corrAccount: row.corrAccount ?? '',
+        accountNumber: row.accountNumber ?? '',
+      };
+    }
+
+    if (row.legalStatus === 'individual' && row.passportSeries) {
+      result.passport = {
+        series: row.passportSeries ?? '',
+        number: row.passportNumber ?? '',
+        issuedBy: row.passportIssuedBy ?? '',
+        issueDate: row.passportIssueDate ?? '',
+        departmentCode: row.passportDepartmentCode ?? '',
+        registrationAddress: row.passportRegistrationAddress ?? '',
+      };
+    }
+
+    return result;
+  });
+
   return {
-    data: data as unknown as CounterpartyRow[],
+    data,
     count: Number(countQuery[0].count),
   };
 }

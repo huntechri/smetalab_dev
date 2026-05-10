@@ -58,7 +58,7 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
                     </FormItem>
                     <FormItem className="flex items-center space-x-1 sm:space-x-2 space-y-0">
                       <FormControl>
-                        <RadioGroupItem value="company" className="h-3.5 w-3.5" />
+                        <RadioGroupItem value="juridical" className="h-3.5 w-3.5" />
                       </FormControl>
                       <FormLabel className="font-normal text-[10px] sm:text-xs whitespace-nowrap">
                         Юр. лицо
@@ -91,9 +91,6 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
                     </SelectItem>
                     <SelectItem value="contractor" className="text-xs">
                       Подрядчик
-                    </SelectItem>
-                    <SelectItem value="supplier" className="text-xs">
-                      Поставщик
                     </SelectItem>
                   </SelectContent>
                 </Select>
@@ -129,32 +126,18 @@ export function CounterpartyGeneralSection({ form }: CounterpartySectionProps) {
 
           <FormField
             control={form.control}
-            name="email"
+            name="inn"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">Email</FormLabel>
+                <FormLabel className="text-xs">ИНН</FormLabel>
                 <FormControl>
-                  <Input placeholder="example@mail.ru" {...field} />
+                  <Input placeholder="ИНН" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
         </div>
-
-        <FormField
-          control={form.control}
-          name="address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="text-xs">Адрес</FormLabel>
-              <FormControl>
-                <Input placeholder="Город, улица, дом..." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
       </div>
     </TabsContent>
   );
@@ -176,12 +159,12 @@ export function CounterpartyDetailsSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="birthDate"
+              name="passportSeries"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Дата рождения</FormLabel>
+                  <FormLabel className="text-xs">Серия паспорта</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input placeholder="4 цифры" maxLength={4} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -189,12 +172,12 @@ export function CounterpartyDetailsSection({
             />
             <FormField
               control={form.control}
-              name="passportSeriesNumber"
+              name="passportNumber"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-xs">Серия и номер</FormLabel>
+                  <FormLabel className="text-xs">Номер паспорта</FormLabel>
                   <FormControl>
-                    <Input placeholder="0000 000000" {...field} />
+                    <Input placeholder="6 цифр" maxLength={6} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -219,12 +202,12 @@ export function CounterpartyDetailsSection({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="passportIssuedDate"
+              name="passportIssueDate"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xs">Дата выдачи</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} />
+                    <Input placeholder="ДД.ММ.ГГГГ" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -232,18 +215,32 @@ export function CounterpartyDetailsSection({
             />
             <FormField
               control={form.control}
-              name="departmentCode"
+              name="passportDepartmentCode"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-xs">Код подразделения</FormLabel>
                   <FormControl>
-                    <Input placeholder="000-000" {...field} />
+                    <Input placeholder="000-000" maxLength={7} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="passportRegistrationAddress"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-xs">Адрес регистрации</FormLabel>
+                <FormControl>
+                  <Input placeholder="Город, улица, дом, кв..." {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       ) : (
         <div className="space-y-4">
@@ -254,46 +251,17 @@ export function CounterpartyDetailsSection({
 
           <FormField
             control={form.control}
-            name="inn"
+            name="legalAddress"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-xs">ИНН</FormLabel>
+                <FormLabel className="text-xs">Юридический адрес</FormLabel>
                 <FormControl>
-                  <Input placeholder="ИНН" {...field} />
+                  <Input placeholder="Город, улица, дом..." {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="kpp"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs">КПП</FormLabel>
-                  <FormControl>
-                    <Input placeholder="КПП" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="ogrn"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-xs">ОГРН</FormLabel>
-                  <FormControl>
-                    <Input placeholder="ОГРН" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
         </div>
       )}
     </TabsContent>
@@ -324,12 +292,12 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
 
       <FormField
         control={form.control}
-        name="bankAccount"
+        name="accountNumber"
         render={({ field }) => (
           <FormItem>
             <FormLabel className="text-xs">Расчетный счет</FormLabel>
             <FormControl>
-              <Input placeholder="407..." {...field} />
+              <Input placeholder="20 цифр" maxLength={20} {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -344,7 +312,7 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
             <FormItem>
               <FormLabel className="text-xs">Корр. счет</FormLabel>
               <FormControl>
-                <Input placeholder="301..." {...field} />
+                <Input placeholder="20 цифр" maxLength={20} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -352,12 +320,12 @@ export function CounterpartyBankSection({ form }: CounterpartySectionProps) {
         />
         <FormField
           control={form.control}
-          name="bankInn"
+          name="bik"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs">ИНН Банка</FormLabel>
+              <FormLabel className="text-xs">БИК</FormLabel>
               <FormControl>
-                <Input placeholder="ИНН банка" {...field} />
+                <Input placeholder="9 цифр" maxLength={9} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

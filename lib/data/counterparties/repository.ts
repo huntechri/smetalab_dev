@@ -6,8 +6,8 @@ import { withActiveTenant } from '@/lib/data/db/tenant';
 interface CounterpartyPayload {
   [key: string]: string | null | undefined;
   name: string;
-  type: 'customer' | 'contractor' | 'supplier';
-  legalStatus: 'individual' | 'company';
+  type: 'customer' | 'contractor';
+  legalStatus: 'juridical' | 'individual';
 }
 
 function normalizeCounterpartyPayload(data: CounterpartyPayload): CounterpartyPayload {

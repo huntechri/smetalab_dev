@@ -1,0 +1,167 @@
+import { CounterpartyRow } from "@/shared/types/domain/counterparty-row"
+
+/**
+ * 10 контрагентов: 5 юрлиц + 5 физлиц, среди них 5 заказчиков + 5 подрядчиков.
+ * Юрлица — с bankDetails + legalAddress, ИНН 12 цифр, БИК 9 цифр.
+ * Физлица — с passport, ИНН 10 цифр (77XXXXXXXX / 50XXXXXXXX).
+ */
+export const directoryCounterpartiesMock: CounterpartyRow[] = [
+  // --- Юрлица (5) ---
+  {
+    id: "cp-1",
+    name: "СтройИнвест ООО",
+    type: "customer",
+    legalStatus: "juridical",
+    inn: "771234567890",
+    phone: "+7 (495) 111-22-33",
+    legalAddress: "г. Москва, ул. Строителей, д. 15, офис 302",
+    bankDetails: {
+      bankName: "ПАО Сбербанк",
+      bik: "044525225",
+      corrAccount: "30101810400000000225",
+      accountNumber: "40702810100000001234",
+    },
+  },
+  {
+    id: "cp-2",
+    name: "СантехОпт АО",
+    type: "customer",
+    legalStatus: "juridical",
+    inn: "771234567891",
+    phone: "+7 (812) 222-33-44",
+    legalAddress: "г. Санкт-Петербург, наб. Обводного канала, д. 42, лит. А",
+    bankDetails: {
+      bankName: "АО «Альфа-Банк»",
+      bik: "044525593",
+      corrAccount: "30101810200000000593",
+      accountNumber: "40702810400000002345",
+    },
+  },
+  {
+    id: "cp-3",
+    name: "ЭлектроКомплект ООО",
+    type: "contractor",
+    legalStatus: "juridical",
+    inn: "771234567892",
+    phone: "+7 (383) 333-44-55",
+    legalAddress: "г. Новосибирск, ул. Энергетиков, д. 8, корп. 1",
+    bankDetails: {
+      bankName: "ПАО Банк ВТБ",
+      bik: "044525187",
+      corrAccount: "30101810700000000187",
+      accountNumber: "40702810200000003456",
+    },
+  },
+  {
+    id: "cp-4",
+    name: "МеталлТрейд ООО",
+    type: "contractor",
+    legalStatus: "juridical",
+    inn: "771234567893",
+    phone: "+7 (343) 444-55-66",
+    legalAddress: "г. Екатеринбург, ул. Металлургов, д. 20",
+    bankDetails: {
+      bankName: "ПАО «Промсвязьбанк»",
+      bik: "044525555",
+      corrAccount: "30101810400000000555",
+      accountNumber: "40702810700000004567",
+    },
+  },
+  {
+    id: "cp-5",
+    name: "БетонИнвест АО",
+    type: "customer",
+    legalStatus: "juridical",
+    inn: "501234567894",
+    phone: "+7 (495) 555-66-77",
+    legalAddress: "г. Москва, ул. Бетонная, д. 3, стр. 7",
+    bankDetails: {
+      bankName: "АО «РоссельхозБанк»",
+      bik: "044525111",
+      corrAccount: "30101810200000000111",
+      accountNumber: "40702810900000005678",
+    },
+  },
+
+  // --- Физлица (5) ---
+  {
+    id: "cp-6",
+    name: "ИП Петров А.В.",
+    type: "contractor",
+    legalStatus: "individual",
+    inn: "771234567890",
+    phone: "+7 (926) 111-22-33",
+    passport: {
+      series: "4511",
+      number: "123456",
+      issuedBy: "ОТДЕЛОМ УФМС РОССИИ ПО Г. МОСКВЕ РАЙОНУ СТРОГИНО",
+      issueDate: "2020-05-15",
+      departmentCode: "770-056",
+      registrationAddress: "г. Москва, ул. Катукова, д. 10, кв. 45",
+    },
+  },
+  {
+    id: "cp-7",
+    name: "ИП Сидорова Е.М.",
+    type: "contractor",
+    legalStatus: "individual",
+    inn: "501234567891",
+    phone: "+7 (916) 222-33-44",
+    passport: {
+      series: "4608",
+      number: "234567",
+      issuedBy: "ГУ МВД РОССИИ ПО Г. МОСКВЕ",
+      issueDate: "2019-11-20",
+      departmentCode: "770-001",
+      registrationAddress: "г. Москва, Ленинский пр-т, д. 88, кв. 12",
+    },
+  },
+  {
+    id: "cp-8",
+    name: "ИП Кузьмин Д.С.",
+    type: "customer",
+    legalStatus: "individual",
+    inn: "771234567892",
+    phone: "+7 (903) 333-44-55",
+    passport: {
+      series: "4512",
+      number: "345678",
+      issuedBy: "ОТДЕЛОМ УФМС РОССИИ ПО МОСКОВСКОЙ ОБЛАСТИ",
+      issueDate: "2021-03-10",
+      departmentCode: "500-123",
+      registrationAddress: "г. Химки, ул. Московская, д. 5, кв. 77",
+    },
+  },
+  {
+    id: "cp-9",
+    name: "ИП Васильев Н.П.",
+    type: "customer",
+    legalStatus: "individual",
+    inn: "501234567892",
+    phone: "+7 (925) 444-55-66",
+    passport: {
+      series: "4609",
+      number: "456789",
+      issuedBy: "ТП УФМС РОССИИ ПО Г. САНКТ-ПЕТЕРБУРГУ",
+      issueDate: "2018-07-25",
+      departmentCode: "780-045",
+      registrationAddress: "г. Санкт-Петербург, ул. Невская, д. 30, кв. 15",
+    },
+  },
+  {
+    id: "cp-10",
+    name: "ИП Фёдорова О.И.",
+    type: "contractor",
+    legalStatus: "individual",
+    inn: "771234567893",
+    phone: "+7 (909) 555-66-77",
+    passport: {
+      series: "4513",
+      number: "567890",
+      issuedBy: "МО УФМС РОССИИ ПО КРАСНОДАРСКОМУ КРАЮ",
+      issueDate: "2022-01-12",
+      departmentCode: "230-078",
+      registrationAddress: "г. Краснодар, ул. Красная, д. 100, кв. 3",
+    },
+  },
+]

@@ -27,7 +27,8 @@ export const permissionScopeEnum = pgEnum('permission_scope', ['platform', 'tena
 export const accessLevelEnum = pgEnum('access_level', ['view', 'comment', 'download']);
 export const rbacLevelEnum = pgEnum('rbac_level', ['none', 'read', 'manage']);
 export const workStatusEnum = pgEnum('work_status', ['active', 'draft', 'archived', 'deleted']);
-export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'contractor', 'supplier']);
+export const counterpartyTypeEnum = pgEnum('counterparty_type', ['customer', 'contractor']);
+export const counterpartyLegalStatusEnum = pgEnum('counterparty_legal_status', ['juridical', 'individual']);
 export const legalStatusEnum = pgEnum('legal_status', ['individual', 'company']);
 export const projectStatusEnum = pgEnum('project_status', ['planned', 'active', 'completed', 'paused']);
 export const estimateStatusEnum = pgEnum('estimate_status', ['draft', 'in_progress', 'approved']);
@@ -657,31 +658,24 @@ export const counterparties = pgTable('counterparties', {
 
   name: text('name').notNull(),
   type: counterpartyTypeEnum('type').notNull(),
-  legalStatus: legalStatusEnum('legal_status').notNull(),
-
-  // Individual specific
-  birthDate: varchar('birth_date', { length: 20 }), // Keeping as string for flexibility or use date
-  passportSeriesNumber: varchar('passport_series_number', { length: 50 }),
-  passportIssuedBy: text('passport_issued_by'),
-  passportIssuedDate: varchar('passport_issued_date', { length: 20 }),
-  departmentCode: varchar('department_code', { length: 20 }),
-
-  // Company specific
-  ogrn: varchar('ogrn', { length: 50 }),
+  legalStatus: counterpartyLegalStatusEnum('legal_status').notNull(),
   inn: varchar('inn', { length: 50 }),
-  kpp: varchar('kpp', { length: 50 }),
-
-  // Contact
-  address: text('address'),
   phone: varchar('phone', { length: 50 }),
-  email: varchar('email', { length: 255 }),
 
-  // Bank Details
+  // Juridical specific
+  legalAddress: text('legal_address'),
   bankName: text('bank_name'),
-  bankAccount: varchar('bank_account', { length: 50 }),
+  bik: varchar('bik', { length: 9 }),
   corrAccount: varchar('corr_account', { length: 50 }),
-  bankInn: varchar('bank_inn', { length: 50 }),
-  bankKpp: varchar('bank_kpp', { length: 50 }),
+  accountNumber: varchar('account_number', { length: 50 }),
+
+  // Individual specific (passport)
+  passportSeries: varchar('passport_series', { length: 4 }),
+  passportNumber: varchar('passport_number', { length: 6 }),
+  passportIssuedBy: text('passport_issued_by'),
+  passportIssueDate: varchar('passport_issue_date', { length: 20 }),
+  passportDepartmentCode: varchar('passport_department_code', { length: 10 }),
+  passportRegistrationAddress: text('passport_registration_address'),
 
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updatedAt: timestamp('updated_at').notNull().defaultNow(),
@@ -689,16 +683,12 @@ export const counterparties = pgTable('counterparties', {
 }, (table) => [
   index('counterparties_tenant_updated_idx').on(table.tenantId, table.updatedAt.desc()),
   index('counterparties_name_trgm_idx').using('gin', sql`${table.name} gin_trgm_ops`),
-  index('counterparties_address_trgm_idx').using('gin', sql`${table.address} gin_trgm_ops`),
   index('counterparties_inn_tenant_idx').on(table.tenantId, table.inn),
-  index('counterparties_ogrn_tenant_idx').on(table.tenantId, table.ogrn),
   index('counterparties_phone_trgm_idx').using('gin', sql`${table.phone} gin_trgm_ops`),
-  index('counterparties_email_trgm_idx').using('gin', sql`${table.email} gin_trgm_ops`),
 
-  // Unique identification within tenant (preventing duplicates for docs)
-  uniqueIndex('counterparties_company_inn_kpp_tenant_idx')
-    .on(table.tenantId, table.inn, table.kpp)
-    .where(sql`deleted_at IS NULL AND legal_status = 'company'`),
+  uniqueIndex('counterparties_juridical_inn_tenant_idx')
+    .on(table.tenantId, table.inn)
+    .where(sql`deleted_at IS NULL AND legal_status = 'juridical'`),
   uniqueIndex('counterparties_individual_inn_tenant_idx')
     .on(table.tenantId, table.inn)
     .where(sql`deleted_at IS NULL AND legal_status = 'individual'`),

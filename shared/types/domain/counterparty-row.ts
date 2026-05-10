@@ -1,34 +1,30 @@
-export interface CounterpartyRow {
-    id: string;
-    name: string;
-    type: 'customer' | 'contractor' | 'supplier';
-    legalStatus: 'individual' | 'company';
+export type CounterpartyType = "customer" | "contractor"
+export type LegalStatus = "juridical" | "individual"
 
-    // Individual specific
-    birthDate?: string | null;
-    passportSeriesNumber?: string | null;
-    passportIssuedBy?: string | null;
-    passportIssuedDate?: string | null;
-    departmentCode?: string | null;
+export type BankDetails = {
+  bankName: string
+  bik: string
+  corrAccount: string
+  accountNumber: string
+}
 
-    // Company specific
-    ogrn?: string | null; // OGRN or OGRIP
-    inn?: string | null;
-    kpp?: string | null;
+export type PassportData = {
+  series: string
+  number: string
+  issuedBy: string
+  issueDate: string
+  departmentCode: string
+  registrationAddress: string
+}
 
-    // Contact
-    address?: string | null;
-    phone?: string | null;
-    email?: string | null;
-
-    // Bank Details
-    bankName?: string | null;
-    bankAccount?: string | null;
-    corrAccount?: string | null;
-    bankInn?: string | null;
-    bankKpp?: string | null;
-
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt: Date | null;
+export type CounterpartyRow = {
+  id: string
+  name: string
+  type: CounterpartyType
+  legalStatus: LegalStatus
+  inn: string
+  phone: string
+  legalAddress?: string
+  bankDetails?: BankDetails
+  passport?: PassportData
 }

@@ -14,32 +14,25 @@ import { CounterpartyRow } from '@/shared/types/domain/counterparty-row';
 
 const counterpartySchema = z.object({
     name: z.string().min(1, 'Name is required'),
-    type: z.enum(['customer', 'contractor', 'supplier']),
-    legalStatus: z.enum(['individual', 'company']),
-
-    // Individual
-    birthDate: z.string().optional().nullable().or(z.literal('')),
-    passportSeriesNumber: z.string().optional().nullable().or(z.literal('')),
-    passportIssuedBy: z.string().optional().nullable().or(z.literal('')),
-    passportIssuedDate: z.string().optional().nullable().or(z.literal('')),
-    departmentCode: z.string().optional().nullable().or(z.literal('')),
-
-    // Company
-    ogrn: z.string().optional().nullable().or(z.literal('')),
+    type: z.enum(['customer', 'contractor']),
+    legalStatus: z.enum(['juridical', 'individual']),
     inn: z.string().optional().nullable().or(z.literal('')),
-    kpp: z.string().optional().nullable().or(z.literal('')),
-
-    // Contact
-    address: z.string().optional().nullable().or(z.literal('')),
     phone: z.string().optional().nullable().or(z.literal('')),
-    email: z.string().email().optional().or(z.literal('')).nullable(),
 
-    // Bank
+    // Juridical
+    legalAddress: z.string().optional().nullable().or(z.literal('')),
     bankName: z.string().optional().nullable().or(z.literal('')),
-    bankAccount: z.string().optional().nullable().or(z.literal('')),
+    bik: z.string().optional().nullable().or(z.literal('')),
     corrAccount: z.string().optional().nullable().or(z.literal('')),
-    bankInn: z.string().optional().nullable().or(z.literal('')),
-    bankKpp: z.string().optional().nullable().or(z.literal('')),
+    accountNumber: z.string().optional().nullable().or(z.literal('')),
+
+    // Individual (passport)
+    passportSeries: z.string().optional().nullable().or(z.literal('')),
+    passportNumber: z.string().optional().nullable().or(z.literal('')),
+    passportIssuedBy: z.string().optional().nullable().or(z.literal('')),
+    passportIssueDate: z.string().optional().nullable().or(z.literal('')),
+    passportDepartmentCode: z.string().optional().nullable().or(z.literal('')),
+    passportRegistrationAddress: z.string().optional().nullable().or(z.literal('')),
 });
 
 const counterpartiesPageSchema = z.object({

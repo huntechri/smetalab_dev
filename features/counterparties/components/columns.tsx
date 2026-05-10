@@ -4,9 +4,9 @@ import * as React from "react"
 import { ColumnDef } from "@tanstack/react-table"
 import { CounterpartyRow } from "@/shared/types/domain/counterparty-row"
 import { TableMeta } from "@/shared/ui/data-table"
+import { Badge } from "@/shared/ui/badge"
 import {
     DirectoryActionsHeader,
-    DirectoryBadgeCell,
     DirectoryNameCell,
     DirectoryRowActionMenu,
     DirectoryTextCell,
@@ -23,12 +23,12 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
         header: "Тип",
         cell: ({ row }) => {
             const type = row.getValue("type") as string;
-            const map: Record<string, string> = {
-                customer: "Заказчик",
-                contractor: "Подрядчик",
-                supplier: "Поставщик"
-            };
-            return <DirectoryBadgeCell>{map[type] || type}</DirectoryBadgeCell>;
+            const isCustomer = type === "customer";
+            return (
+                <Badge variant={isCustomer ? "success" : "secondary"} size="xs">
+                    {isCustomer ? "Заказчик" : "Подрядчик"}
+                </Badge>
+            );
         },
     },
     {
@@ -36,11 +36,12 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
         header: "Статус",
         cell: ({ row }) => {
             const status = row.getValue("legalStatus") as string;
-            const map: Record<string, string> = {
-                individual: "Физ. лицо",
-                company: "Юр. лицо"
-            };
-            return <DirectoryTextCell muted>{map[status] || status}</DirectoryTextCell>;
+            const isJuridical = status === "juridical";
+            return (
+                <Badge variant={isJuridical ? "default" : "secondary"} size="xs">
+                    {isJuridical ? "Юр. лицо" : "Физ. лицо"}
+                </Badge>
+            );
         },
     },
     {
@@ -52,11 +53,6 @@ export const columns: ColumnDef<CounterpartyRow>[] = [
         accessorKey: "phone",
         header: "Телефон",
         cell: ({ row }) => <DirectoryTextCell>{row.getValue("phone")}</DirectoryTextCell>,
-    },
-    {
-        accessorKey: "email",
-        header: "Email",
-        cell: ({ row }) => <DirectoryTextCell>{row.getValue("email")}</DirectoryTextCell>,
     },
     {
         id: "actions",
